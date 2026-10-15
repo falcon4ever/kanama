@@ -39,6 +39,7 @@ class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(han
     fun setOpType(type: VisualShaderNodeDerivativeFunc.OpType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -48,7 +49,9 @@ class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(han
      */
     fun getOpType(): VisualShaderNodeDerivativeFunc.OpType {
         checkOpen()
-        return VisualShaderNodeDerivativeFunc.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        val ret = VisualShaderNodeDerivativeFunc.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +62,7 @@ class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(han
     fun setFunction(func: VisualShaderNodeDerivativeFunc.Function) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFunctionBind, segment, func.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +72,9 @@ class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(han
      */
     fun getFunction(): VisualShaderNodeDerivativeFunc.Function {
         checkOpen()
-        return VisualShaderNodeDerivativeFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
+        val ret = VisualShaderNodeDerivativeFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,6 +86,7 @@ class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(han
     fun setPrecision(precision: VisualShaderNodeDerivativeFunc.Precision) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setPrecisionBind, segment, precision.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -90,7 +97,9 @@ class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(han
      */
     fun getPrecision(): VisualShaderNodeDerivativeFunc.Precision {
         checkOpen()
-        return VisualShaderNodeDerivativeFunc.Precision(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPrecisionBind, segment))
+        val ret = VisualShaderNodeDerivativeFunc.Precision(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPrecisionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

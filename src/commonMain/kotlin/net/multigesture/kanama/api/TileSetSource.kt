@@ -19,7 +19,9 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
      */
     fun getTilesCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTilesCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getTilesCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -29,7 +31,9 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
      */
     fun getTileId(index: Int): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2i(Binds.getTileIdBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector2i(Binds.getTileIdBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -39,7 +43,9 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
      */
     fun hasTile(atlasCoords: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.hasTileBind, segment, atlasCoords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.hasTileBind, segment, atlasCoords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -51,7 +57,9 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
      */
     fun getAlternativeTilesCount(atlasCoords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getAlternativeTilesCountBind, segment, atlasCoords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getAlternativeTilesCountBind, segment, atlasCoords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,7 +69,9 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
      */
     fun getAlternativeTileId(atlasCoords: Vector2i, index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(Binds.getAlternativeTileIdBind, segment, atlasCoords, index)
+        val ret = ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(Binds.getAlternativeTileIdBind, segment, atlasCoords, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -72,7 +82,9 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
      */
     fun hasAlternativeTile(atlasCoords: Vector2i, alternativeTile: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetBool(Binds.hasAlternativeTileBind, segment, atlasCoords, alternativeTile)
+        val ret = ObjectCalls.ptrcallWithVector2iAndIntArgRetBool(Binds.hasAlternativeTileBind, segment, atlasCoords, alternativeTile)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

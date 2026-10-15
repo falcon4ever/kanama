@@ -46,6 +46,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
     fun setTargetNode(targetNodepath: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(Binds.setTargetNodeBind, segment, targetNodepath)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -56,7 +57,9 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getTargetNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTargetNodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTargetNodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -69,6 +72,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
     fun setTargetMinimumDistance(minimumDistance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTargetMinimumDistanceBind, segment, minimumDistance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -80,7 +84,9 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getTargetMinimumDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTargetMinimumDistanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTargetMinimumDistanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -93,6 +99,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
     fun setTargetMaximumDistance(maximumDistance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTargetMaximumDistanceBind, segment, maximumDistance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -104,7 +111,9 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getTargetMaximumDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTargetMaximumDistanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTargetMaximumDistanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -116,6 +125,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
     fun setFlipBendDirection(flipDirection: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setFlipBendDirectionBind, segment, flipDirection)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -126,7 +136,9 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getFlipBendDirection(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFlipBendDirectionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getFlipBendDirectionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -137,6 +149,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
     fun setJointOneBone2dNode(bone2dNode: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(Binds.setJointOneBone2dNodeBind, segment, bone2dNode)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -146,7 +159,9 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getJointOneBone2dNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getJointOneBone2dNodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getJointOneBone2dNodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -158,6 +173,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
     fun setJointOneBoneIdx(boneIdx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setJointOneBoneIdxBind, segment, boneIdx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -168,7 +184,9 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getJointOneBoneIdx(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getJointOneBoneIdxBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getJointOneBoneIdxBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -179,6 +197,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
     fun setJointTwoBone2dNode(bone2dNode: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(Binds.setJointTwoBone2dNodeBind, segment, bone2dNode)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -188,7 +207,9 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getJointTwoBone2dNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getJointTwoBone2dNodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getJointTwoBone2dNodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -200,6 +221,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
     fun setJointTwoBoneIdx(boneIdx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setJointTwoBoneIdxBind, segment, boneIdx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -210,7 +232,9 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getJointTwoBoneIdx(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getJointTwoBoneIdxBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getJointTwoBoneIdxBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

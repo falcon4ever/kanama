@@ -424,7 +424,9 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.overlaps_body
      */
     fun overlapsBody(body: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.overlapsBodyBind, segment, body.segment)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.overlapsBodyBind, segment, body.segment)
+        ObjectCalls.keepReachable(body)
+        return ret
     }
 
     /**
@@ -436,7 +438,9 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.overlaps_area
      */
     fun overlapsArea(area: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.overlapsAreaBind, segment, area.segment)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.overlapsAreaBind, segment, area.segment)
+        ObjectCalls.keepReachable(area)
+        return ret
     }
 
     /**

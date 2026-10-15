@@ -26,7 +26,10 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tweenProperty(target: GodotObject, property: NodePath, finalValue: Any?, duration: Double): PropertyTweener {
         checkOpen()
-        return requireGodotReturn(PropertyTweener.wrapOwned(ObjectCalls.ptrcallWithObjectNodePathVariantDoubleArgsRetObject(Binds.tweenPropertyBind, segment, target.segment, property, finalValue, duration)), "Tween.tween_property")
+        val ret = requireGodotReturn(PropertyTweener.wrapOwned(ObjectCalls.ptrcallWithObjectNodePathVariantDoubleArgsRetObject(Binds.tweenPropertyBind, segment, target.segment, property, finalValue, duration)), "Tween.tween_property")
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(target)
+        return ret
     }
 
     /**
@@ -39,7 +42,9 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tweenInterval(time: Double): IntervalTweener {
         checkOpen()
-        return requireGodotReturn(IntervalTweener.wrapOwned(ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.tweenIntervalBind, segment, time)), "Tween.tween_interval")
+        val ret = requireGodotReturn(IntervalTweener.wrapOwned(ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.tweenIntervalBind, segment, time)), "Tween.tween_interval")
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -50,7 +55,10 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tweenCallback(callback: GodotCallable): CallbackTweener {
         checkOpen()
-        return requireGodotReturn(CallbackTweener.wrapOwned(ObjectCalls.ptrcallWithCallableArgRetObject(Binds.tweenCallbackBind, segment, callback.target.segment, callback.method)), "Tween.tween_callback")
+        val ret = requireGodotReturn(CallbackTweener.wrapOwned(ObjectCalls.ptrcallWithCallableArgRetObject(Binds.tweenCallbackBind, segment, callback.target.segment, callback.method)), "Tween.tween_callback")
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(callback)
+        return ret
     }
 
     /**
@@ -65,7 +73,10 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tweenMethod(method: GodotCallable, from: Any?, to: Any?, duration: Double): MethodTweener {
         checkOpen()
-        return requireGodotReturn(MethodTweener.wrapOwned(ObjectCalls.ptrcallWithCallableVariantVariantDoubleArgsRetObject(Binds.tweenMethodBind, segment, method.target.segment, method.method, from, to, duration)), "Tween.tween_method")
+        val ret = requireGodotReturn(MethodTweener.wrapOwned(ObjectCalls.ptrcallWithCallableVariantVariantDoubleArgsRetObject(Binds.tweenMethodBind, segment, method.target.segment, method.method, from, to, duration)), "Tween.tween_method")
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(method)
+        return ret
     }
 
     /**
@@ -76,7 +87,10 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tweenSubtween(subtween: Tween): SubtweenTweener {
         checkOpen()
-        return requireGodotReturn(SubtweenTweener.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.tweenSubtweenBind, segment, subtween.requireOpenHandle())), "Tween.tween_subtween")
+        val ret = requireGodotReturn(SubtweenTweener.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.tweenSubtweenBind, segment, subtween.requireOpenHandle())), "Tween.tween_subtween")
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(subtween)
+        return ret
     }
 
     /**
@@ -91,7 +105,10 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tweenAwait(signal: GodotSignal): AwaitTweener {
         checkOpen()
-        return requireGodotReturn(AwaitTweener.wrapOwned(ObjectCalls.ptrcallWithSignalArgRetObject(Binds.tweenAwaitBind, segment, signal.owner.segment, signal.name)), "Tween.tween_await")
+        val ret = requireGodotReturn(AwaitTweener.wrapOwned(ObjectCalls.ptrcallWithSignalArgRetObject(Binds.tweenAwaitBind, segment, signal.owner.segment, signal.name)), "Tween.tween_await")
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(signal)
+        return ret
     }
 
     /**
@@ -104,7 +121,9 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun customStep(delta: Double): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetBool(Binds.customStepBind, segment, delta)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetBool(Binds.customStepBind, segment, delta)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -117,6 +136,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun stop() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -129,6 +149,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun pause() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.pauseBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -139,6 +160,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun play() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.playBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -149,6 +171,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun kill() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.killBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -161,7 +184,9 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTotalElapsedTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTotalElapsedTimeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTotalElapsedTimeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -173,7 +198,9 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasTweeners(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasTweenersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasTweenersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -183,7 +210,9 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isRunning(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRunningBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isRunningBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -196,7 +225,9 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isValid(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isValidBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isValidBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -212,6 +243,8 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun bindNode(node: Node): Tween {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithObjectArgRetObject(Binds.bindNodeBind, segment, node.segment)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(node)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -228,6 +261,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun setProcessMode(mode: Tween.TweenProcessMode): Tween {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setProcessModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -244,6 +278,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun setPauseMode(mode: Tween.TweenPauseMode): Tween {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setPauseModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -260,6 +295,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun setIgnoreTimeScale(ignore: Boolean = true): Tween {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithBoolArgRetObject(Binds.setIgnoreTimeScaleBind, segment, ignore)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -277,6 +313,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun setParallel(parallel: Boolean = true): Tween {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithBoolArgRetObject(Binds.setParallelBind, segment, parallel)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -299,6 +336,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun setLoops(loops: Int = 0): Tween {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.setLoopsBind, segment, loops)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -315,7 +353,9 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLoopsLeft(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLoopsLeftBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getLoopsLeftBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -326,6 +366,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun setSpeedScale(speed: Double): Tween {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.setSpeedScaleBind, segment, speed)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -342,6 +383,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun setTrans(trans: Tween.TransitionType): Tween {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setTransBind, segment, trans.value)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -358,6 +400,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun setEase(ease: Tween.EaseType): Tween {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setEaseBind, segment, ease.value)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -373,6 +416,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun parallel(): Tween {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.parallelBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -388,6 +432,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun chain(): Tween {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.chainBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this

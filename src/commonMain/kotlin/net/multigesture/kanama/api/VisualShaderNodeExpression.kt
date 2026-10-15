@@ -28,6 +28,7 @@ open class VisualShaderNodeExpression(handle: GodotHandle) : VisualShaderNodeGro
     fun setExpression(expression: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setExpressionBind, segment, expression)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -39,7 +40,9 @@ open class VisualShaderNodeExpression(handle: GodotHandle) : VisualShaderNodeGro
      */
     fun getExpression(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getExpressionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getExpressionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

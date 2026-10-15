@@ -19,7 +19,9 @@ class OpenXRSpatialCapabilityConfigurationAnchor(handle: GodotHandle) : OpenXRSp
      */
     fun getEnabledComponents(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

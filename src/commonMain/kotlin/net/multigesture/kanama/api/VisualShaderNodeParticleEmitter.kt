@@ -27,6 +27,7 @@ open class VisualShaderNodeParticleEmitter(handle: GodotHandle) : VisualShaderNo
     fun setMode2d(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setMode2dBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ open class VisualShaderNodeParticleEmitter(handle: GodotHandle) : VisualShaderNo
      */
     fun isMode2d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMode2dBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isMode2dBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

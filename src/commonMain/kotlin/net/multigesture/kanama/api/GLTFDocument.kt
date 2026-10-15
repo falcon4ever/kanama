@@ -70,6 +70,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
     fun setImageFormat(imageFormat: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setImageFormatBind, segment, imageFormat)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -84,7 +85,9 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
      */
     fun getImageFormat(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getImageFormatBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getImageFormatBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -97,6 +100,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
     fun setLossyQuality(lossyQuality: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLossyQualityBind, segment, lossyQuality)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -108,7 +112,9 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
      */
     fun getLossyQuality(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLossyQualityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLossyQualityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -124,6 +130,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
     fun setFallbackImageFormat(fallbackImageFormat: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setFallbackImageFormatBind, segment, fallbackImageFormat)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -138,7 +145,9 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
      */
     fun getFallbackImageFormat(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getFallbackImageFormatBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getFallbackImageFormatBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -152,6 +161,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
     fun setFallbackImageQuality(fallbackImageQuality: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFallbackImageQualityBind, segment, fallbackImageQuality)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -164,7 +174,9 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
      */
     fun getFallbackImageQuality(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFallbackImageQualityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFallbackImageQualityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -177,6 +189,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
     fun setRootNodeMode(rootNodeMode: GLTFDocument.RootNodeMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setRootNodeModeBind, segment, rootNodeMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -188,7 +201,9 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
      */
     fun getRootNodeMode(): GLTFDocument.RootNodeMode {
         checkOpen()
-        return GLTFDocument.RootNodeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRootNodeModeBind, segment))
+        val ret = GLTFDocument.RootNodeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRootNodeModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -204,6 +219,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
     fun setTextureMapMode(textureMapMode: GLTFDocument.TextureMapMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextureMapModeBind, segment, textureMapMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -218,7 +234,9 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
      */
     fun getTextureMapMode(): GLTFDocument.TextureMapMode {
         checkOpen()
-        return GLTFDocument.TextureMapMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureMapModeBind, segment))
+        val ret = GLTFDocument.TextureMapMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureMapModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -231,6 +249,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
     fun setVisibilityMode(visibilityMode: GLTFDocument.VisibilityMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setVisibilityModeBind, segment, visibilityMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -242,7 +261,9 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
      */
     fun getVisibilityMode(): GLTFDocument.VisibilityMode {
         checkOpen()
-        return GLTFDocument.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVisibilityModeBind, segment))
+        val ret = GLTFDocument.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVisibilityModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -254,7 +275,10 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
      */
     fun appendFromFile(path: String, state: GLTFState?, flags: Long = 0L, basePath: String = ""): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringObjectUInt32StringArgsRetLong(Binds.appendFromFileBind, segment, path, state?.requireOpenHandle() ?: NULL_SEGMENT, flags, basePath))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringObjectUInt32StringArgsRetLong(Binds.appendFromFileBind, segment, path, state?.requireOpenHandle() ?: NULL_SEGMENT, flags, basePath))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(state)
+        return ret
     }
 
     /**
@@ -266,7 +290,10 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
      */
     fun appendFromBuffer(bytes: ByteArray, basePath: String, state: GLTFState?, flags: Long = 0L): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(Binds.appendFromBufferBind, segment, bytes, basePath, state?.requireOpenHandle() ?: NULL_SEGMENT, flags))
+        val ret = GodotError(ObjectCalls.ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(Binds.appendFromBufferBind, segment, bytes, basePath, state?.requireOpenHandle() ?: NULL_SEGMENT, flags))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(state)
+        return ret
     }
 
     /**
@@ -277,7 +304,11 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
      */
     fun appendFromScene(node: Node, state: GLTFState?, flags: Long = 0L): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoObjectUInt32ArgsRetLong(Binds.appendFromSceneBind, segment, node.segment, state?.requireOpenHandle() ?: NULL_SEGMENT, flags))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoObjectUInt32ArgsRetLong(Binds.appendFromSceneBind, segment, node.segment, state?.requireOpenHandle() ?: NULL_SEGMENT, flags))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(node)
+        ObjectCalls.keepReachable(state)
+        return ret
     }
 
     /**
@@ -288,7 +319,10 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
      */
     fun generateScene(state: GLTFState?, bakeFps: Double = 30.0, trimming: Boolean = false, removeImmutableTracks: Boolean = true): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallWithObjectDoubleTwoBoolArgsRetObject(Binds.generateSceneBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT, bakeFps, trimming, removeImmutableTracks))
+        val ret = Node.wrap(ObjectCalls.ptrcallWithObjectDoubleTwoBoolArgsRetObject(Binds.generateSceneBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT, bakeFps, trimming, removeImmutableTracks))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(state)
+        return ret
     }
 
     /**
@@ -298,7 +332,10 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
      */
     fun generateBuffer(state: GLTFState?): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetByteArray(Binds.generateBufferBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetByteArray(Binds.generateBufferBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(state)
+        return ret
     }
 
     /**
@@ -310,7 +347,10 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
      */
     fun writeToFilesystem(state: GLTFState?, path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectAndStringArgRetLong(Binds.writeToFilesystemBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectAndStringArgRetLong(Binds.writeToFilesystemBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT, path))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(state)
+        return ret
     }
 
     /**
@@ -491,7 +531,9 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: GLTFDocument.import_object_model_property
          */
         fun importObjectModelProperty(state: GLTFState?, jsonPointer: String): GLTFObjectModelProperty? {
-            return GLTFObjectModelProperty.wrapOwned(ObjectCalls.ptrcallWithObjectStringArgRetObject(Binds.importObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, jsonPointer))
+            val ret = GLTFObjectModelProperty.wrapOwned(ObjectCalls.ptrcallWithObjectStringArgRetObject(Binds.importObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, jsonPointer))
+            ObjectCalls.keepReachable(state)
+            return ret
         }
 
         /**
@@ -503,7 +545,10 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: GLTFDocument.export_object_model_property
          */
         fun exportObjectModelProperty(state: GLTFState?, nodePath: NodePath, godotNode: Node, gltfNodeIndex: Int): GLTFObjectModelProperty? {
-            return GLTFObjectModelProperty.wrapOwned(ObjectCalls.ptrcallWithObjectNodePathObjectIntArgsRetObject(Binds.exportObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, nodePath, godotNode.segment, gltfNodeIndex))
+            val ret = GLTFObjectModelProperty.wrapOwned(ObjectCalls.ptrcallWithObjectNodePathObjectIntArgsRetObject(Binds.exportObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, nodePath, godotNode.segment, gltfNodeIndex))
+            ObjectCalls.keepReachable(state)
+            ObjectCalls.keepReachable(godotNode)
+            return ret
         }
 
         /**
@@ -517,6 +562,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
          */
         fun registerGltfDocumentExtension(extension: GLTFDocumentExtension?, firstPriority: Boolean = false) {
             ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.registerGltfDocumentExtensionBind, NULL_SEGMENT, extension?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
+            ObjectCalls.keepReachable(extension)
         }
 
         /**
@@ -526,6 +572,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
          */
         fun unregisterGltfDocumentExtension(extension: GLTFDocumentExtension?) {
             ObjectCalls.ptrcallWithObjectArgs(Binds.unregisterGltfDocumentExtensionBind, NULL_SEGMENT, listOf(extension?.requireOpenHandle() ?: NULL_SEGMENT))
+            ObjectCalls.keepReachable(extension)
         }
 
         /**

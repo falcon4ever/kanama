@@ -30,6 +30,7 @@ class FileSystemDock(handle: GodotHandle) : EditorDock(handle) {
      */
     fun addResourceTooltipPlugin(plugin: EditorResourceTooltipPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addResourceTooltipPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(plugin)
     }
 
     /**
@@ -39,6 +40,7 @@ class FileSystemDock(handle: GodotHandle) : EditorDock(handle) {
      */
     fun removeResourceTooltipPlugin(plugin: EditorResourceTooltipPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeResourceTooltipPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(plugin)
     }
 
     /** Signal `inherit(file: String)`; see [TypedSignal]. */

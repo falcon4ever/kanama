@@ -18,7 +18,9 @@ open class SocketServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isConnectionAvailable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isConnectionAvailableBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isConnectionAvailableBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -28,7 +30,9 @@ open class SocketServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isListening(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isListeningBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isListeningBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -39,6 +43,7 @@ open class SocketServer(handle: GodotHandle) : RefCounted(handle) {
     fun stop() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -48,7 +53,9 @@ open class SocketServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun takeSocketConnection(): StreamPeerSocket? {
         checkOpen()
-        return StreamPeerSocket.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.takeSocketConnectionBind, segment))
+        val ret = StreamPeerSocket.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.takeSocketConnectionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

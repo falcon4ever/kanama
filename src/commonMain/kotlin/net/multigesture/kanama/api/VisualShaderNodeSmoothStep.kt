@@ -27,6 +27,7 @@ class VisualShaderNodeSmoothStep(handle: GodotHandle) : VisualShaderNode(handle)
     fun setOpType(opType: VisualShaderNodeSmoothStep.OpType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, opType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeSmoothStep(handle: GodotHandle) : VisualShaderNode(handle)
      */
     fun getOpType(): VisualShaderNodeSmoothStep.OpType {
         checkOpen()
-        return VisualShaderNodeSmoothStep.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        val ret = VisualShaderNodeSmoothStep.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

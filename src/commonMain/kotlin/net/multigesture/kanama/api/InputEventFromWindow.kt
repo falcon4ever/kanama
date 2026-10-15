@@ -26,6 +26,7 @@ open class InputEventFromWindow(handle: GodotHandle) : InputEvent(handle) {
     fun setWindowId(id: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setWindowIdBind, segment, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -35,7 +36,9 @@ open class InputEventFromWindow(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getWindowId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getWindowIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getWindowIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

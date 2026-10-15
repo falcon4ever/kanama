@@ -36,6 +36,7 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setWidth(width: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setWidthBind, segment, width)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -46,6 +47,8 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setCurve(curve: Curve?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -55,7 +58,9 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveBind, segment))
+        val ret = Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -67,6 +72,7 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setTextureMode(textureMode: CurveTexture.TextureMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextureModeBind, segment, textureMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -77,7 +83,9 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getTextureMode(): CurveTexture.TextureMode {
         checkOpen()
-        return CurveTexture.TextureMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureModeBind, segment))
+        val ret = CurveTexture.TextureMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

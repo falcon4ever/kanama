@@ -64,6 +64,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
     fun setThreshold(threshold: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setThresholdBind, segment, threshold)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -74,7 +75,9 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThresholdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThresholdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -87,6 +90,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
     fun setRatio(ratio: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRatioBind, segment, ratio)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -98,7 +102,9 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRatio(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRatioBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRatioBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -109,6 +115,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
     fun setGain(gain: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGainBind, segment, gain)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -118,7 +125,9 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGainBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGainBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -130,6 +139,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
     fun setAttackUs(attackUs: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAttackUsBind, segment, attackUs)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -140,7 +150,9 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getAttackUs(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAttackUsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAttackUsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -152,6 +164,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
     fun setReleaseMs(releaseMs: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setReleaseMsBind, segment, releaseMs)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -162,7 +175,9 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getReleaseMs(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getReleaseMsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getReleaseMsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -174,6 +189,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
     fun setMix(mix: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMixBind, segment, mix)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -184,7 +200,9 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getMix(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMixBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMixBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -195,6 +213,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
     fun setSidechain(sidechain: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.setSidechainBind, segment, sidechain)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -204,7 +223,9 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getSidechain(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getSidechainBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getSidechainBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

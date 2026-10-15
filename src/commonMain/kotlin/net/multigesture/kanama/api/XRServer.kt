@@ -173,6 +173,7 @@ object XRServer {
     @JvmStatic
     fun addInterface(interfaceValue: XRInterface?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(interfaceValue)
     }
 
     /**
@@ -196,6 +197,7 @@ object XRServer {
     @JvmStatic
     fun removeInterface(interfaceValue: XRInterface?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(interfaceValue)
     }
 
     /**
@@ -237,6 +239,7 @@ object XRServer {
     @JvmStatic
     fun addTracker(tracker: XRTracker?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addTrackerBind, singleton, listOf(tracker?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(tracker)
     }
 
     /**
@@ -247,6 +250,7 @@ object XRServer {
     @JvmStatic
     fun removeTracker(tracker: XRTracker?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeTrackerBind, singleton, listOf(tracker?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(tracker)
     }
 
     /**
@@ -287,6 +291,7 @@ object XRServer {
     @JvmStatic
     fun setPrimaryInterface(interfaceValue: XRInterface?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setPrimaryInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(interfaceValue)
     }
 
     /** Signal `reference_frame_changed()`; see [TypedSignal]. */

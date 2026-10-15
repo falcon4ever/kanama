@@ -44,6 +44,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
     fun setVertices(vertices: List<Float>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setVerticesBind, segment, vertices)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -53,7 +54,9 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun getVertices(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getVerticesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getVerticesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -66,6 +69,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
     fun setIndices(indices: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setIndicesBind, segment, indices)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -75,7 +79,9 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun getIndices(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getIndicesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getIndicesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -87,6 +93,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
     fun appendArrays(vertices: List<Float>, indices: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListAndPackedInt32ListArgs(Binds.appendArraysBind, segment, vertices, indices)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -97,6 +104,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -106,7 +114,9 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun hasData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -119,6 +129,8 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
     fun addMesh(mesh: Mesh?, xform: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectAndTransform3DArg(Binds.addMeshBind, segment, mesh?.requireOpenHandle() ?: NULL_SEGMENT, xform)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(mesh)
     }
 
     /**
@@ -133,6 +145,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
     fun addMeshArray(meshArray: List<Any?>, xform: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayTransform3DArgs(Binds.addMeshArrayBind, segment, meshArray, xform)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -146,6 +159,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
     fun addFaces(faces: List<Vector3>, xform: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListAndTransform3DArg(Binds.addFacesBind, segment, faces, xform)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -157,6 +171,8 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
     fun merge(otherGeometry: NavigationMeshSourceGeometryData3D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.mergeBind, segment, listOf(otherGeometry?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(otherGeometry)
     }
 
     /**
@@ -170,6 +186,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
     fun addProjectedObstruction(vertices: List<Vector3>, elevation: Double, height: Double, carve: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListTwoDoubleAndBoolArgs(Binds.addProjectedObstructionBind, segment, vertices, elevation, height, carve)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -180,6 +197,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
     fun clearProjectedObstructions() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearProjectedObstructionsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -191,6 +209,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
     fun setProjectedObstructions(projectedObstructions: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setProjectedObstructionsBind, segment, projectedObstructions)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -205,7 +224,9 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun getProjectedObstructions(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getProjectedObstructionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getProjectedObstructionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -217,7 +238,9 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun getBounds(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getBoundsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetAABB(Binds.getBoundsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

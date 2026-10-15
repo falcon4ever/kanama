@@ -20,6 +20,7 @@ class ImageFormatLoaderExtension(handle: GodotHandle) : ImageFormatLoader(handle
     fun addFormatLoader() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.addFormatLoaderBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -30,6 +31,7 @@ class ImageFormatLoaderExtension(handle: GodotHandle) : ImageFormatLoader(handle
     fun removeFormatLoader() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.removeFormatLoaderBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

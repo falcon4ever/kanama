@@ -28,6 +28,7 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
     fun setEvents(events: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setEventsBind, segment, events)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -38,7 +39,9 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
      */
     fun getEvents(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getEventsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getEventsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -48,7 +51,9 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
      */
     fun hasValidEvent(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasValidEventBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasValidEventBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,7 +64,10 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
      */
     fun matchesEvent(event: InputEvent?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.matchesEventBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.matchesEventBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(event)
+        return ret
     }
 
     /**
@@ -69,7 +77,9 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
      */
     fun getAsText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getAsTextBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getAsTextBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

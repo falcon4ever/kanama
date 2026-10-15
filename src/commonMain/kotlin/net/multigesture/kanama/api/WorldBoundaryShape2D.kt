@@ -34,6 +34,7 @@ class WorldBoundaryShape2D(handle: GodotHandle) : Shape2D(handle) {
     fun setNormal(normal: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setNormalBind, segment, normal)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -44,7 +45,9 @@ class WorldBoundaryShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun getNormal(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getNormalBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getNormalBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -58,6 +61,7 @@ class WorldBoundaryShape2D(handle: GodotHandle) : Shape2D(handle) {
     fun setDistance(distance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDistanceBind, segment, distance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -70,7 +74,9 @@ class WorldBoundaryShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun getDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

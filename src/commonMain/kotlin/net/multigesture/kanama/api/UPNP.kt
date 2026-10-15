@@ -40,7 +40,9 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDeviceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDeviceCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getDeviceCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -50,7 +52,9 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDevice(index: Int): UPNPDevice? {
         checkOpen()
-        return UPNPDevice.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getDeviceBind, segment, index))
+        val ret = UPNPDevice.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getDeviceBind, segment, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,6 +65,8 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
     fun addDevice(device: UPNPDevice?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.addDeviceBind, segment, listOf(device?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(device)
     }
 
     /**
@@ -71,6 +77,8 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
     fun setDevice(index: Int, device: UPNPDevice?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setDeviceBind, segment, index, device?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(device)
     }
 
     /**
@@ -81,6 +89,7 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
     fun removeDevice(index: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeDeviceBind, segment, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -91,6 +100,7 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
     fun clearDevices() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearDevicesBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -101,7 +111,9 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGateway(): UPNPDevice? {
         checkOpen()
-        return UPNPDevice.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGatewayBind, segment))
+        val ret = UPNPDevice.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGatewayBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -114,7 +126,9 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
      */
     fun discover(timeout: Int = 2000, ttl: Int = 2, deviceFilter: String = "InternetGatewayDevice"): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntStringArgsRetInt(Binds.discoverBind, segment, timeout, ttl, deviceFilter)
+        val ret = ObjectCalls.ptrcallWithTwoIntStringArgsRetInt(Binds.discoverBind, segment, timeout, ttl, deviceFilter)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -125,7 +139,9 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
      */
     fun queryExternalAddress(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.queryExternalAddressBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.queryExternalAddressBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -155,7 +171,9 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addPortMapping(port: Int, portInternal: Int = 0, desc: String = "", proto: String = "UDP", duration: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(Binds.addPortMappingBind, segment, port, portInternal, desc, proto, duration)
+        val ret = ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(Binds.addPortMappingBind, segment, port, portInternal, desc, proto, duration)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -169,7 +187,9 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
      */
     fun deletePortMapping(port: Int, proto: String = "UDP"): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetInt(Binds.deletePortMappingBind, segment, port, proto)
+        val ret = ObjectCalls.ptrcallWithIntAndStringArgRetInt(Binds.deletePortMappingBind, segment, port, proto)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -180,6 +200,7 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
     fun setDiscoverMulticastIf(mIf: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setDiscoverMulticastIfBind, segment, mIf)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -189,7 +210,9 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDiscoverMulticastIf(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDiscoverMulticastIfBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getDiscoverMulticastIfBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -202,6 +225,7 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
     fun setDiscoverLocalPort(port: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setDiscoverLocalPortBind, segment, port)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -213,7 +237,9 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDiscoverLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDiscoverLocalPortBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getDiscoverLocalPortBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -224,6 +250,7 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
     fun setDiscoverIpv6(ipv6: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDiscoverIpv6Bind, segment, ipv6)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -233,7 +260,9 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isDiscoverIpv6(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDiscoverIpv6Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDiscoverIpv6Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

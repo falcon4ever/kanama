@@ -18,7 +18,9 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun getFormat(): Image.Format {
         checkOpen()
-        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        val ret = Image.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -28,7 +30,9 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun getWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWidthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getWidthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -38,7 +42,9 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -49,7 +55,9 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun getDepth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDepthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getDepthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,7 +67,9 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun hasMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMipmapsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMipmapsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -70,7 +80,9 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun getData(): List<Image> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getDataBind, segment, Image::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getDataBind, segment, Image::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -81,6 +93,7 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
     fun createPlaceholder(): Resource? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.createPlaceholderBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this

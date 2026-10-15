@@ -23,6 +23,7 @@ object PhysicsServer2DManager {
     @JvmStatic
     fun registerServer(name: String, createCallback: GodotCallable) {
         ObjectCalls.ptrcallWithStringCallableArgs(Binds.registerServerBind, singleton, name, createCallback.target.segment, createCallback.method)
+        ObjectCalls.keepReachable(createCallback)
     }
 
     /**

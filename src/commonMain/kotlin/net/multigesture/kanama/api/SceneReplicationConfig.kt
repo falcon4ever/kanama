@@ -20,7 +20,9 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
      */
     fun getProperties(): List<NodePath> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(Binds.getPropertiesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetNodePathList(Binds.getPropertiesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -33,6 +35,7 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
     fun addProperty(path: NodePath, index: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathAndIntArg(Binds.addPropertyBind, segment, path, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -42,7 +45,9 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
      */
     fun hasProperty(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.hasPropertyBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.hasPropertyBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +58,7 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
     fun removeProperty(path: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(Binds.removePropertyBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,7 +68,9 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
      */
     fun propertyGetIndex(path: NodePath): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetInt(Binds.propertyGetIndexBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithNodePathArgRetInt(Binds.propertyGetIndexBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -73,7 +81,9 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
      */
     fun propertyGetSpawn(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.propertyGetSpawnBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.propertyGetSpawnBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -85,6 +95,7 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
     fun propertySetSpawn(path: NodePath, enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathAndBoolArgs(Binds.propertySetSpawnBind, segment, path, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -94,7 +105,9 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
      */
     fun propertyGetReplicationMode(path: NodePath): SceneReplicationConfig.ReplicationMode {
         checkOpen()
-        return SceneReplicationConfig.ReplicationMode(ObjectCalls.ptrcallWithNodePathArgRetLong(Binds.propertyGetReplicationModeBind, segment, path))
+        val ret = SceneReplicationConfig.ReplicationMode(ObjectCalls.ptrcallWithNodePathArgRetLong(Binds.propertyGetReplicationModeBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -105,6 +118,7 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
     fun propertySetReplicationMode(path: NodePath, mode: SceneReplicationConfig.ReplicationMode) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathAndLongArg(Binds.propertySetReplicationModeBind, segment, path, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -115,7 +129,9 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
      */
     fun propertyGetSync(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.propertyGetSyncBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.propertyGetSyncBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -127,6 +143,7 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
     fun propertySetSync(path: NodePath, enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathAndBoolArgs(Binds.propertySetSyncBind, segment, path, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -137,7 +154,9 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
      */
     fun propertyGetWatch(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.propertyGetWatchBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.propertyGetWatchBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -149,6 +168,7 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
     fun propertySetWatch(path: NodePath, enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathAndBoolArgs(Binds.propertySetWatchBind, segment, path, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

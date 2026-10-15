@@ -27,6 +27,7 @@ open class VideoStream(handle: GodotHandle) : Resource(handle) {
     fun setFile(file: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setFileBind, segment, file)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ open class VideoStream(handle: GodotHandle) : Resource(handle) {
      */
     fun getFile(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getFileBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getFileBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

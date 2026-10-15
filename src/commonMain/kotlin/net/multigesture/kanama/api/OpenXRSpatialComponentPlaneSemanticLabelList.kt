@@ -19,7 +19,9 @@ class OpenXRSpatialComponentPlaneSemanticLabelList(handle: GodotHandle) : OpenXR
      */
     fun getPlaneSemanticLabel(index: Long): OpenXRSpatialComponentPlaneSemanticLabelList.PlaneSemanticLabel {
         checkOpen()
-        return OpenXRSpatialComponentPlaneSemanticLabelList.PlaneSemanticLabel(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getPlaneSemanticLabelBind, segment, index))
+        val ret = OpenXRSpatialComponentPlaneSemanticLabelList.PlaneSemanticLabel(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getPlaneSemanticLabelBind, segment, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

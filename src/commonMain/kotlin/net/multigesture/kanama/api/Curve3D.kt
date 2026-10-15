@@ -45,7 +45,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPointCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPointCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -56,6 +58,7 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
     fun setPointCount(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setPointCountBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -71,6 +74,7 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
     fun addPoint(position: Vector3, inValue: Vector3, out: Vector3, index: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeVector3AndIntArg(Binds.addPointBind, segment, position, inValue, out, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -82,6 +86,7 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
     fun setPointPosition(idx: Int, position: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector3Arg(Binds.setPointPositionBind, segment, idx, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -92,7 +97,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointPosition(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getPointPositionBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getPointPositionBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -106,6 +113,7 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
     fun setPointTilt(idx: Int, tilt: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setPointTiltBind, segment, idx, tilt)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -116,7 +124,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointTilt(idx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPointTiltBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPointTiltBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -128,6 +138,7 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
     fun setPointIn(idx: Int, position: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector3Arg(Binds.setPointInBind, segment, idx, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -139,7 +150,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointIn(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getPointInBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getPointInBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -151,6 +164,7 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
     fun setPointOut(idx: Int, position: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector3Arg(Binds.setPointOutBind, segment, idx, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -162,7 +176,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointOut(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getPointOutBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getPointOutBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -173,6 +189,7 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
     fun removePoint(idx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removePointBind, segment, idx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -183,6 +200,7 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
     fun clearPoints() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearPointsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -196,7 +214,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun sample(idx: Int, t: Double): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetVector3(Binds.sampleBind, segment, idx, t)
+        val ret = ObjectCalls.ptrcallWithIntAndDoubleArgRetVector3(Binds.sampleBind, segment, idx, t)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -207,12 +227,15 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun samplef(fofs: Double): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetVector3(Binds.samplefBind, segment, fofs)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetVector3(Binds.samplefBind, segment, fofs)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setCurveClosed(closed: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCurveClosedBind, segment, closed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -223,7 +246,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun isClosed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isClosedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isClosedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -237,6 +262,7 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
     fun setBakeInterval(distance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBakeIntervalBind, segment, distance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -249,7 +275,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakeInterval(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakeIntervalBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakeIntervalBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -262,6 +290,7 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
     fun setUpVectorEnabled(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUpVectorEnabledBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -273,7 +302,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun isUpVectorEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUpVectorEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUpVectorEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -284,7 +315,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakedLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakedLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakedLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -298,7 +331,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun sampleBaked(offset: Double = 0.0, cubic: Boolean = false): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector3(Binds.sampleBakedBind, segment, offset, cubic)
+        val ret = ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector3(Binds.sampleBakedBind, segment, offset, cubic)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -311,7 +346,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun sampleBakedWithRotation(offset: Double = 0.0, cubic: Boolean = false, applyTilt: Boolean = false): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndTwoBoolArgsRetTransform3D(Binds.sampleBakedWithRotationBind, segment, offset, cubic, applyTilt)
+        val ret = ObjectCalls.ptrcallWithDoubleAndTwoBoolArgsRetTransform3D(Binds.sampleBakedWithRotationBind, segment, offset, cubic, applyTilt)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -325,7 +362,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun sampleBakedUpVector(offset: Double, applyTilt: Boolean = false): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector3(Binds.sampleBakedUpVectorBind, segment, offset, applyTilt)
+        val ret = ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector3(Binds.sampleBakedUpVectorBind, segment, offset, applyTilt)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -335,7 +374,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakedPoints(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getBakedPointsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getBakedPointsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -345,7 +386,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakedTilts(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getBakedTiltsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getBakedTiltsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -356,7 +399,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakedUpVectors(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getBakedUpVectorsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getBakedUpVectorsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -367,7 +412,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getClosestPoint(toPoint: Vector3): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector3ArgRetVector3(Binds.getClosestPointBind, segment, toPoint)
+        val ret = ObjectCalls.ptrcallWithVector3ArgRetVector3(Binds.getClosestPointBind, segment, toPoint)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -378,7 +425,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getClosestOffset(toPoint: Vector3): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector3ArgRetDouble(Binds.getClosestOffsetBind, segment, toPoint)
+        val ret = ObjectCalls.ptrcallWithVector3ArgRetDouble(Binds.getClosestOffsetBind, segment, toPoint)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -395,7 +444,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun tessellate(maxStages: Int = 5, toleranceDegrees: Double = 4.0): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector3List(Binds.tessellateBind, segment, maxStages, toleranceDegrees)
+        val ret = ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector3List(Binds.tessellateBind, segment, maxStages, toleranceDegrees)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -409,7 +460,9 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
      */
     fun tessellateEvenLength(maxStages: Int = 5, toleranceLength: Double = 0.2): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector3List(Binds.tessellateEvenLengthBind, segment, maxStages, toleranceLength)
+        val ret = ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector3List(Binds.tessellateEvenLengthBind, segment, maxStages, toleranceLength)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

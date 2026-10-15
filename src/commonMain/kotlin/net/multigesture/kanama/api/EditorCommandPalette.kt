@@ -22,6 +22,7 @@ class EditorCommandPalette(handle: GodotHandle) : ConfirmationDialog(handle) {
      */
     fun addCommand(commandName: String, keyName: String, bindedCallable: GodotCallable, shortcutText: String = "None") {
         ObjectCalls.ptrcallWithTwoStringCallableStringArgs(Binds.addCommandBind, segment, commandName, keyName, bindedCallable.target.segment, bindedCallable.method, shortcutText)
+        ObjectCalls.keepReachable(bindedCallable)
     }
 
     /**

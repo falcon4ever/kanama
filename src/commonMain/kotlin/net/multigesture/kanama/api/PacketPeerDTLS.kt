@@ -22,6 +22,7 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
     fun poll() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.pollBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -34,7 +35,11 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun connectToPeer(packetPeer: PacketPeerUDP?, hostname: String, clientOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(Binds.connectToPeerBind, segment, packetPeer?.requireOpenHandle() ?: NULL_SEGMENT, hostname, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(Binds.connectToPeerBind, segment, packetPeer?.requireOpenHandle() ?: NULL_SEGMENT, hostname, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(packetPeer)
+        ObjectCalls.keepReachable(clientOptions)
+        return ret
     }
 
     /**
@@ -44,7 +49,9 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getStatus(): PacketPeerDTLS.Status {
         checkOpen()
-        return PacketPeerDTLS.Status(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
+        val ret = PacketPeerDTLS.Status(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -55,6 +62,7 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
     fun disconnectFromPeer() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.disconnectFromPeerBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

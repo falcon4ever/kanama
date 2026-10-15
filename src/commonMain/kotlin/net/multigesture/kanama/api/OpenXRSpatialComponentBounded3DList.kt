@@ -20,7 +20,9 @@ class OpenXRSpatialComponentBounded3DList(handle: GodotHandle) : OpenXRSpatialCo
      */
     fun getCenterPose(index: Long): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getCenterPoseBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getCenterPoseBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class OpenXRSpatialComponentBounded3DList(handle: GodotHandle) : OpenXRSpatialCo
      */
     fun getSize(index: Long): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector3(Binds.getSizeBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithLongArgRetVector3(Binds.getSizeBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

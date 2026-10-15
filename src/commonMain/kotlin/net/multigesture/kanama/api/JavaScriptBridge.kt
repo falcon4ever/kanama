@@ -53,7 +53,9 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun createCallback(callable: GodotCallable): JavaScriptObject? {
-        return JavaScriptObject.wrapOwned(ObjectCalls.ptrcallWithCallableArgRetObject(Binds.createCallbackBind, singleton, callable.target.segment, callable.method))
+        val ret = JavaScriptObject.wrapOwned(ObjectCalls.ptrcallWithCallableArgRetObject(Binds.createCallbackBind, singleton, callable.target.segment, callable.method))
+        ObjectCalls.keepReachable(callable)
+        return ret
     }
 
     /**
@@ -68,7 +70,9 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun isJsBuffer(javascriptObject: JavaScriptObject?): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isJsBufferBind, singleton, javascriptObject?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isJsBufferBind, singleton, javascriptObject?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(javascriptObject)
+        return ret
     }
 
     /**
@@ -79,7 +83,9 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun jsBufferToPackedByteArray(javascriptBuffer: JavaScriptObject?): ByteArray {
-        return ObjectCalls.ptrcallWithObjectArgRetByteArray(Binds.jsBufferToPackedByteArrayBind, singleton, javascriptBuffer?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetByteArray(Binds.jsBufferToPackedByteArrayBind, singleton, javascriptBuffer?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(javascriptBuffer)
+        return ret
     }
 
     /**

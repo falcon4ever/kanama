@@ -234,7 +234,9 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.register_skin
      */
     fun registerSkin(skin: Skin?): SkinReference? {
-        return SkinReference.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.registerSkinBind, segment, skin?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = SkinReference.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.registerSkinBind, segment, skin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(skin)
+        return ret
     }
 
     /**

@@ -81,6 +81,7 @@ open class StaticBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      */
     fun setPhysicsMaterialOverride(physicsMaterialOverride: PhysicsMaterial?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setPhysicsMaterialOverrideBind, segment, listOf(physicsMaterialOverride?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(physicsMaterialOverride)
     }
 
     /**

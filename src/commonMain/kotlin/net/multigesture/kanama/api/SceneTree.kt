@@ -236,6 +236,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      */
     fun setEditedSceneRoot(scene: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setEditedSceneRootBind, segment, listOf(scene.segment))
+        ObjectCalls.keepReachable(scene)
     }
 
     /**
@@ -378,6 +379,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      */
     fun queueDelete(obj: GodotObject) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.queueDeleteBind, segment, listOf(obj.segment))
+        ObjectCalls.keepReachable(obj)
     }
 
     /**
@@ -496,6 +498,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      */
     fun setCurrentScene(childNode: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCurrentSceneBind, segment, listOf(childNode.segment))
+        ObjectCalls.keepReachable(childNode)
     }
 
     /**
@@ -531,7 +534,9 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.change_scene_to_packed
      */
     fun changeSceneToPacked(packedScene: PackedScene): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.changeSceneToPackedBind, segment, packedScene.requireOpenHandle()))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.changeSceneToPackedBind, segment, packedScene.requireOpenHandle()))
+        ObjectCalls.keepReachable(packedScene)
+        return ret
     }
 
     /**
@@ -553,7 +558,9 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.change_scene_to_node
      */
     fun changeSceneToNode(node: Node): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.changeSceneToNodeBind, segment, node.segment))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.changeSceneToNodeBind, segment, node.segment))
+        ObjectCalls.keepReachable(node)
+        return ret
     }
 
     /**
@@ -590,6 +597,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      */
     fun setMultiplayer(multiplayer: MultiplayerAPI?, rootPath: NodePath) {
         ObjectCalls.ptrcallWithObjectAndNodePathArg(Binds.setMultiplayerBind, segment, multiplayer?.requireOpenHandle() ?: NULL_SEGMENT, rootPath)
+        ObjectCalls.keepReachable(multiplayer)
     }
 
     /**

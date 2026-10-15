@@ -39,7 +39,9 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
      */
     fun getDefaultInputPort(type: VisualShaderNode.PortType): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getDefaultInputPortBind, segment, type.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetInt(Binds.getDefaultInputPortBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -51,6 +53,7 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
     fun setOutputPortForPreview(port: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setOutputPortForPreviewBind, segment, port)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -61,7 +64,9 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
      */
     fun getOutputPortForPreview(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutputPortForPreviewBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutputPortForPreviewBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -72,6 +77,7 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
     fun setInputPortDefaultValue(port: Int, value: Any?, prevValue: Any? = null) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndTwoVariantArgs(Binds.setInputPortDefaultValueBind, segment, port, value, prevValue)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -81,7 +87,9 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
      */
     fun getInputPortDefaultValue(port: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getInputPortDefaultValueBind, segment, port)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getInputPortDefaultValueBind, segment, port)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,6 +100,7 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
     fun removeInputPortDefaultValue(port: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeInputPortDefaultValueBind, segment, port)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -102,6 +111,7 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
     fun clearDefaultInputValues() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearDefaultInputValuesBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -113,6 +123,7 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
     fun setDefaultInputValues(values: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setDefaultInputValuesBind, segment, values)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -123,7 +134,9 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
      */
     fun getDefaultInputValues(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getDefaultInputValuesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getDefaultInputValuesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -135,6 +148,7 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
     fun setFrame(frame: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setFrameBind, segment, frame)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -145,7 +159,9 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
      */
     fun getFrame(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFrameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFrameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

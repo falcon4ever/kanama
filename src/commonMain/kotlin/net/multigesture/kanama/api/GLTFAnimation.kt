@@ -29,7 +29,9 @@ class GLTFAnimation(handle: GodotHandle) : Resource(handle) {
      */
     fun getOriginalName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOriginalNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getOriginalNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,16 +42,20 @@ class GLTFAnimation(handle: GodotHandle) : Resource(handle) {
     fun setOriginalName(originalName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setOriginalNameBind, segment, originalName)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getLoopBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getLoopBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setLoop(loop: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setLoopBind, segment, loop)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -63,7 +69,9 @@ class GLTFAnimation(handle: GodotHandle) : Resource(handle) {
      */
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -77,6 +85,7 @@ class GLTFAnimation(handle: GodotHandle) : Resource(handle) {
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setAdditionalDataBind, segment, extensionName, additionalData)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

@@ -82,6 +82,8 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      */
     fun setSlot(slotIndex: Int, enableLeftPort: Boolean, typeLeft: Int, colorLeft: Color, enableRightPort: Boolean, typeRight: Int, colorRight: Color, customIconLeft: Texture2D?, customIconRight: Texture2D?, drawStylebox: Boolean = true) {
         ObjectCalls.ptrcallWithIntBoolIntColorBoolIntColorTwoObjectBoolArgs(Binds.setSlotBind, segment, slotIndex, enableLeftPort, typeLeft, colorLeft, enableRightPort, typeRight, colorRight, customIconLeft?.requireOpenHandle() ?: NULL_SEGMENT, customIconRight?.requireOpenHandle() ?: NULL_SEGMENT, drawStylebox)
+        ObjectCalls.keepReachable(customIconLeft)
+        ObjectCalls.keepReachable(customIconRight)
     }
 
     /**
@@ -167,6 +169,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      */
     fun setSlotCustomIconLeft(slotIndex: Int, customIcon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setSlotCustomIconLeftBind, segment, slotIndex, customIcon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(customIcon)
     }
 
     /**
@@ -261,6 +264,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      */
     fun setSlotCustomIconRight(slotIndex: Int, customIcon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setSlotCustomIconRightBind, segment, slotIndex, customIcon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(customIcon)
     }
 
     /**

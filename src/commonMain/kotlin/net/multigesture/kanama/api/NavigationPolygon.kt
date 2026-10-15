@@ -89,6 +89,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun setVertices(vertices: List<Vector2>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setVerticesBind, segment, vertices)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -98,7 +99,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getVertices(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getVerticesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getVerticesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -109,6 +112,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun addPolygon(polygon: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.addPolygonBind, segment, polygon)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -118,7 +122,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getPolygonCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPolygonCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPolygonCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -128,7 +134,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getPolygon(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getPolygonBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getPolygonBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -139,6 +147,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun clearPolygons() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearPolygonsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -150,7 +159,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getNavigationMesh(): NavigationMesh? {
         checkOpen()
-        return NavigationMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNavigationMeshBind, segment))
+        val ret = NavigationMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNavigationMeshBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -162,6 +173,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun addOutline(outline: List<Vector2>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.addOutlineBind, segment, outline)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -173,6 +185,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun addOutlineAtIndex(outline: List<Vector2>, index: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListAndIntArgs(Binds.addOutlineAtIndexBind, segment, outline, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -182,7 +195,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getOutlineCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutlineCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutlineCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -194,6 +209,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun setOutline(idx: Int, outline: List<Vector2>) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndPackedVector2ListArgs(Binds.setOutlineBind, segment, idx, outline)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -204,7 +220,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getOutline(idx: Int): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(Binds.getOutlineBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetPackedVector2List(Binds.getOutlineBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -216,6 +234,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun removeOutline(idx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeOutlineBind, segment, idx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -227,6 +246,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun clearOutlines() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearOutlinesBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -237,6 +257,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun makePolygonsFromOutlines() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.makePolygonsFromOutlinesBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -248,6 +269,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun setCellSize(cellSize: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCellSizeBind, segment, cellSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -258,7 +280,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getCellSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -271,6 +295,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun setBorderSize(borderSize: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBorderSizeBind, segment, borderSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -282,7 +307,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getBorderSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBorderSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBorderSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -293,6 +320,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun setSamplePartitionType(samplePartitionType: NavigationPolygon.SamplePartitionType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSamplePartitionTypeBind, segment, samplePartitionType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -302,7 +330,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getSamplePartitionType(): NavigationPolygon.SamplePartitionType {
         checkOpen()
-        return NavigationPolygon.SamplePartitionType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSamplePartitionTypeBind, segment))
+        val ret = NavigationPolygon.SamplePartitionType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSamplePartitionTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -313,6 +343,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun setParsedGeometryType(geometryType: NavigationPolygon.ParsedGeometryType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setParsedGeometryTypeBind, segment, geometryType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -322,7 +353,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getParsedGeometryType(): NavigationPolygon.ParsedGeometryType {
         checkOpen()
-        return NavigationPolygon.ParsedGeometryType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getParsedGeometryTypeBind, segment))
+        val ret = NavigationPolygon.ParsedGeometryType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getParsedGeometryTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -334,6 +367,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun setParsedCollisionMask(mask: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setParsedCollisionMaskBind, segment, mask)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -344,7 +378,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getParsedCollisionMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getParsedCollisionMaskBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getParsedCollisionMaskBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -356,6 +392,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun setParsedCollisionMaskValue(layerNumber: Int, value: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setParsedCollisionMaskValueBind, segment, layerNumber, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -366,7 +403,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getParsedCollisionMaskValue(layerNumber: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getParsedCollisionMaskValueBind, segment, layerNumber)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.getParsedCollisionMaskValueBind, segment, layerNumber)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -377,6 +416,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun setSourceGeometryMode(geometryMode: NavigationPolygon.SourceGeometryMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSourceGeometryModeBind, segment, geometryMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -386,7 +426,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceGeometryMode(): NavigationPolygon.SourceGeometryMode {
         checkOpen()
-        return NavigationPolygon.SourceGeometryMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceGeometryModeBind, segment))
+        val ret = NavigationPolygon.SourceGeometryMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceGeometryModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -399,6 +441,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun setSourceGeometryGroupName(groupName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.setSourceGeometryGroupNameBind, segment, groupName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -410,7 +453,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceGeometryGroupName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getSourceGeometryGroupNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getSourceGeometryGroupNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -425,6 +470,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun setAgentRadius(agentRadius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAgentRadiusBind, segment, agentRadius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -438,7 +484,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getAgentRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -450,6 +498,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun setBakingRect(rect: Rect2) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2Arg(Binds.setBakingRectBind, segment, rect)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -460,7 +509,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakingRect(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getBakingRectBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRect2(Binds.getBakingRectBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -471,6 +522,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun setBakingRectOffset(rectOffset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setBakingRectOffsetBind, segment, rectOffset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -480,7 +532,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakingRectOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBakingRectOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBakingRectOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -491,6 +545,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

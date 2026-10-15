@@ -26,7 +26,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOpenxrVersion(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpenxrVersionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpenxrVersionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -37,7 +39,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getInstance(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getInstanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getInstanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -48,7 +52,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSystemId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSystemIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getSystemIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,7 +65,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSession(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSessionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getSessionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -73,7 +81,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun xrResult(result: Long, format: String, args: List<Any?>): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongStringArrayArgsRetBool(Binds.xrResultBind, segment, result, format, args)
+        val ret = ObjectCalls.ptrcallWithLongStringArrayArgsRetBool(Binds.xrResultBind, segment, result, format, args)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -86,7 +96,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getInstanceProcAddr(name: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(Binds.getInstanceProcAddrBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetLong(Binds.getInstanceProcAddrBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -97,7 +109,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getErrorString(result: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getErrorStringBind, segment, result)
+        val ret = ObjectCalls.ptrcallWithLongArgRetString(Binds.getErrorStringBind, segment, result)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -107,7 +121,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSwapchainFormatName(swapchainFormat: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getSwapchainFormatNameBind, segment, swapchainFormat)
+        val ret = ObjectCalls.ptrcallWithLongArgRetString(Binds.getSwapchainFormatNameBind, segment, swapchainFormat)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -119,6 +135,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun setObjectName(objectType: Long, objectHandle: Long, objectName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoLongStringArgs(Binds.setObjectNameBind, segment, objectType, objectHandle, objectName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -130,6 +147,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun beginDebugLabelRegion(labelName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.beginDebugLabelRegionBind, segment, labelName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -141,6 +159,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun endDebugLabelRegion() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.endDebugLabelRegionBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -153,6 +172,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun insertDebugLabel(labelName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.insertDebugLabelBind, segment, labelName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -163,7 +183,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getViewCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getViewCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getViewCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -175,7 +197,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getViewConfiguration(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getViewConfigurationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getViewConfigurationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -185,7 +209,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isInitialized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInitializedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isInitializedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -197,7 +223,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isRunning(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRunningBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isRunningBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -208,7 +236,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPlaySpace(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlaySpaceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlaySpaceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -218,7 +248,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPredictedDisplayTime(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPredictedDisplayTimeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getPredictedDisplayTimeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -228,7 +260,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNextFrameTime(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getNextFrameTimeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getNextFrameTimeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -238,7 +272,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun canRender(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.canRenderBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.canRenderBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -249,7 +285,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun findAction(name: String, actionSet: RID): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndRIDArgRetRID(Binds.findActionBind, segment, name, actionSet)
+        val ret = ObjectCalls.ptrcallWithStringAndRIDArgRetRID(Binds.findActionBind, segment, name, actionSet)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -259,7 +297,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun actionGetHandle(action: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.actionGetHandleBind, segment, action)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.actionGetHandleBind, segment, action)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -269,7 +309,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getHandTracker(handIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(Binds.getHandTrackerBind, segment, handIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetLong(Binds.getHandTrackerBind, segment, handIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -282,6 +324,8 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun registerCompositionLayerProvider(extension: OpenXRExtensionWrapper) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.registerCompositionLayerProviderBind, segment, listOf(extension.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(extension)
     }
 
     /**
@@ -293,6 +337,8 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun unregisterCompositionLayerProvider(extension: OpenXRExtensionWrapper) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.unregisterCompositionLayerProviderBind, segment, listOf(extension.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(extension)
     }
 
     /**
@@ -305,6 +351,8 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun registerProjectionViewsExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.registerProjectionViewsExtensionBind, segment, listOf(extension.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(extension)
     }
 
     /**
@@ -316,6 +364,8 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun unregisterProjectionViewsExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.unregisterProjectionViewsExtensionBind, segment, listOf(extension.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(extension)
     }
 
     /**
@@ -331,6 +381,8 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun registerFrameInfoExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.registerFrameInfoExtensionBind, segment, listOf(extension.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(extension)
     }
 
     /**
@@ -342,6 +394,8 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun unregisterFrameInfoExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.unregisterFrameInfoExtensionBind, segment, listOf(extension.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(extension)
     }
 
     /**
@@ -355,6 +409,8 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun registerProjectionLayerExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.registerProjectionLayerExtensionBind, segment, listOf(extension.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(extension)
     }
 
     /**
@@ -366,6 +422,8 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun unregisterProjectionLayerExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.unregisterProjectionLayerExtensionBind, segment, listOf(extension.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(extension)
     }
 
     /**
@@ -376,7 +434,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRenderStateZNear(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRenderStateZNearBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRenderStateZNearBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -387,7 +447,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRenderStateZFar(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRenderStateZFarBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRenderStateZFarBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -398,6 +460,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun setVelocityTexture(renderTarget: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setVelocityTextureBind, segment, renderTarget)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -408,6 +471,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun setVelocityDepthTexture(renderTarget: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setVelocityDepthTextureBind, segment, renderTarget)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -418,6 +482,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun setVelocityTargetSize(targetSize: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setVelocityTargetSizeBind, segment, targetSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -427,7 +492,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSupportedSwapchainFormats(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getSupportedSwapchainFormatsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getSupportedSwapchainFormatsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -437,7 +504,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun openxrSwapchainCreate(createFlags: Long, usageFlags: Long, swapchainFormat: Long, width: Long, height: Long, sampleCount: Long, arraySize: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeLongFourUInt32ArgsRetLong(Binds.openxrSwapchainCreateBind, segment, createFlags, usageFlags, swapchainFormat, width, height, sampleCount, arraySize)
+        val ret = ObjectCalls.ptrcallWithThreeLongFourUInt32ArgsRetLong(Binds.openxrSwapchainCreateBind, segment, createFlags, usageFlags, swapchainFormat, width, height, sampleCount, arraySize)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -448,6 +517,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun openxrSwapchainFree(swapchain: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.openxrSwapchainFreeBind, segment, swapchain)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -457,7 +527,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun openxrSwapchainGetSwapchain(swapchain: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(Binds.openxrSwapchainGetSwapchainBind, segment, swapchain)
+        val ret = ObjectCalls.ptrcallWithLongArgRetLong(Binds.openxrSwapchainGetSwapchainBind, segment, swapchain)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -468,6 +540,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun openxrSwapchainAcquire(swapchain: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.openxrSwapchainAcquireBind, segment, swapchain)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -477,7 +550,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun openxrSwapchainGetImage(swapchain: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetRID(Binds.openxrSwapchainGetImageBind, segment, swapchain)
+        val ret = ObjectCalls.ptrcallWithLongArgRetRID(Binds.openxrSwapchainGetImageBind, segment, swapchain)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -488,6 +563,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun openxrSwapchainRelease(swapchain: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.openxrSwapchainReleaseBind, segment, swapchain)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -498,7 +574,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getProjectionLayer(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getProjectionLayerBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getProjectionLayerBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -509,6 +587,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun setRenderRegion(renderRegion: Rect2i) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2iArg(Binds.setRenderRegionBind, segment, renderRegion)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -520,6 +599,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun setEmulateEnvironmentBlendModeAlphaBlend(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEmulateEnvironmentBlendModeAlphaBlendBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -531,7 +611,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isEnvironmentBlendModeAlphaSupported(): OpenXRAPIExtension.OpenXRAlphaBlendModeSupport {
         checkOpen()
-        return OpenXRAPIExtension.OpenXRAlphaBlendModeSupport(ObjectCalls.ptrcallNoArgsRetLong(Binds.isEnvironmentBlendModeAlphaSupportedBind, segment))
+        val ret = OpenXRAPIExtension.OpenXRAlphaBlendModeSupport(ObjectCalls.ptrcallNoArgsRetLong(Binds.isEnvironmentBlendModeAlphaSupportedBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -543,6 +625,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun updateMainSwapchainSize() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.updateMainSwapchainSizeBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

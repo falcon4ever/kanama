@@ -20,6 +20,7 @@ open class OpenXRSpatialComponentData(handle: GodotHandle) : RefCounted(handle) 
     fun setCapacity(capacity: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setCapacityBind, segment, capacity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -29,7 +30,9 @@ open class OpenXRSpatialComponentData(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getComponentType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getComponentTypeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getComponentTypeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

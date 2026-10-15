@@ -62,6 +62,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
     fun appendNodePath(nodePath: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(Binds.appendNodePathBind, segment, nodePath)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -74,6 +75,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
     fun appendPathToProperty(nodePath: NodePath, propName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathStringNameArgs(Binds.appendPathToPropertyBind, segment, nodePath, propName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -85,7 +87,9 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAccessorType(): GLTFAccessor.GLTFAccessorType {
         checkOpen()
-        return GLTFAccessor.GLTFAccessorType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAccessorTypeBind, segment))
+        val ret = GLTFAccessor.GLTFAccessorType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAccessorTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -98,7 +102,9 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGltfToGodotExpression(): Expression? {
         checkOpen()
-        return Expression.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGltfToGodotExpressionBind, segment))
+        val ret = Expression.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGltfToGodotExpressionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -112,6 +118,8 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
     fun setGltfToGodotExpression(gltfToGodotExpr: Expression?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setGltfToGodotExpressionBind, segment, listOf(gltfToGodotExpr?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(gltfToGodotExpr)
     }
 
     /**
@@ -124,7 +132,9 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGodotToGltfExpression(): Expression? {
         checkOpen()
-        return Expression.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGodotToGltfExpressionBind, segment))
+        val ret = Expression.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGodotToGltfExpressionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -138,6 +148,8 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
     fun setGodotToGltfExpression(godotToGltfExpr: Expression?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setGodotToGltfExpressionBind, segment, listOf(godotToGltfExpr?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(godotToGltfExpr)
     }
 
     /**
@@ -152,7 +164,9 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodePaths(): List<NodePath> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(Binds.getNodePathsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetNodePathList(Binds.getNodePathsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,7 +178,9 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasNodePaths(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasNodePathsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasNodePathsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -180,6 +196,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
     fun setNodePaths(nodePaths: List<NodePath>) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathListArg(Binds.setNodePathsBind, segment, nodePaths)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -190,7 +207,9 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getObjectModelType(): GLTFObjectModelProperty.GLTFObjectModelType {
         checkOpen()
-        return GLTFObjectModelProperty.GLTFObjectModelType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getObjectModelTypeBind, segment))
+        val ret = GLTFObjectModelProperty.GLTFObjectModelType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getObjectModelTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -202,6 +221,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
     fun setObjectModelType(type: GLTFObjectModelProperty.GLTFObjectModelType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setObjectModelTypeBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -214,7 +234,9 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getJsonPointers(): List<List<String>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringListList(Binds.getJsonPointersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringListList(Binds.getJsonPointersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -226,7 +248,9 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasJsonPointers(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasJsonPointersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasJsonPointersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -240,6 +264,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
     fun setJsonPointers(jsonPointers: List<List<String>>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListListArg(Binds.setJsonPointersBind, segment, jsonPointers)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -250,7 +275,9 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVariantType(): VariantType {
         checkOpen()
-        return VariantType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVariantTypeBind, segment))
+        val ret = VariantType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVariantTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -262,6 +289,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
     fun setVariantType(variantType: VariantType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setVariantTypeBind, segment, variantType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -274,6 +302,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
     fun setTypes(variantType: VariantType, objModelType: GLTFObjectModelProperty.GLTFObjectModelType) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoLongArgs(Binds.setTypesBind, segment, variantType.value, objModelType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

@@ -33,6 +33,8 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
     fun setGradient(gradient: Gradient?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setGradientBind, segment, listOf(gradient?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(gradient)
     }
 
     /**
@@ -42,7 +44,9 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getGradient(): Gradient? {
         checkOpen()
-        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGradientBind, segment))
+        val ret = Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGradientBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +57,7 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
     fun setWidth(width: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setWidthBind, segment, width)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -66,6 +71,7 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
     fun setUseHdr(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseHdrBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -78,7 +84,9 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun isUsingHdr(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingHdrBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingHdrBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

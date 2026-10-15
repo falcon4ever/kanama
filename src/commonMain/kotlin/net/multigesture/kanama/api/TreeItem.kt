@@ -346,6 +346,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setIcon(column: Int, texture: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setIconBind, segment, column, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -365,6 +366,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setIconOverlay(column: Int, texture: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setIconOverlayBind, segment, column, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -499,6 +501,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setCustomDraw(column: Int, objectValue: GodotObject, callback: String) {
         ObjectCalls.ptrcallWithIntObjectStringNameArgs(Binds.setCustomDrawBind, segment, column, objectValue.segment, callback)
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**
@@ -512,6 +515,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setCustomDrawCallback(column: Int, callback: GodotCallable) {
         ObjectCalls.ptrcallWithIntCallableArgs(Binds.setCustomDrawCallbackBind, segment, column, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -531,6 +535,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setCustomStylebox(column: Int, stylebox: StyleBox?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setCustomStyleboxBind, segment, column, stylebox?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(stylebox)
     }
 
     /**
@@ -733,6 +738,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setCustomFont(column: Int, font: Font?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setCustomFontBind, segment, column, font?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -829,6 +835,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addButton(column: Int, button: Texture2D?, id: Int = -1, disabled: Boolean = false, tooltipText: String = "", description: String = "") {
         ObjectCalls.ptrcallWithIntObjectIntBoolTwoStringArgs(Binds.addButtonBind, segment, column, button?.requireOpenHandle() ?: NULL_SEGMENT, id, disabled, tooltipText, description)
+        ObjectCalls.keepReachable(button)
     }
 
     /**
@@ -903,6 +910,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setButton(column: Int, buttonIndex: Int, button: Texture2D?) {
         ObjectCalls.ptrcallWithTwoIntAndObjectArg(Binds.setButtonBind, segment, column, buttonIndex, button?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(button)
     }
 
     /**
@@ -1059,6 +1067,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addChild(child: TreeItem) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addChildBind, segment, listOf(child.segment))
+        ObjectCalls.keepReachable(child)
     }
 
     /**
@@ -1071,6 +1080,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      */
     fun removeChild(child: TreeItem) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeChildBind, segment, listOf(child.segment))
+        ObjectCalls.keepReachable(child)
     }
 
     /**
@@ -1210,6 +1220,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      */
     fun moveBefore(item: TreeItem) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.moveBeforeBind, segment, listOf(item.segment))
+        ObjectCalls.keepReachable(item)
     }
 
     /**
@@ -1220,6 +1231,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      */
     fun moveAfter(item: TreeItem) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.moveAfterBind, segment, listOf(item.segment))
+        ObjectCalls.keepReachable(item)
     }
 
     /**

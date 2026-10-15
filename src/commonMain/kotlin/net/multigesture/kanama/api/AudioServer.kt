@@ -264,6 +264,7 @@ object AudioServer {
     @JvmStatic
     fun addBusEffect(busIdx: Int, effect: AudioEffect?, atPosition: Int = -1) {
         ObjectCalls.ptrcallWithIntObjectAndIntArgs(Binds.addBusEffectBind, singleton, busIdx, effect?.requireOpenHandle() ?: NULL_SEGMENT, atPosition)
+        ObjectCalls.keepReachable(effect)
     }
 
     /**
@@ -612,6 +613,7 @@ object AudioServer {
     @JvmStatic
     fun setBusLayout(busLayout: AudioBusLayout?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setBusLayoutBind, singleton, listOf(busLayout?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(busLayout)
     }
 
     /**
@@ -645,7 +647,9 @@ object AudioServer {
      */
     @JvmStatic
     fun isStreamRegisteredAsSample(stream: AudioStream?): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isStreamRegisteredAsSampleBind, singleton, stream?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isStreamRegisteredAsSampleBind, singleton, stream?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(stream)
+        return ret
     }
 
     /**
@@ -659,6 +663,7 @@ object AudioServer {
     @JvmStatic
     fun registerStreamAsSample(stream: AudioStream?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.registerStreamAsSampleBind, singleton, listOf(stream?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(stream)
     }
 
     /** Signal `bus_layout_changed()`; see [TypedSignal]. */

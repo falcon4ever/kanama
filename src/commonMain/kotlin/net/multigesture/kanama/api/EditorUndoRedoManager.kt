@@ -30,6 +30,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      */
     fun createAction(name: String, mergeMode: UndoRedo.MergeMode = UndoRedo.MergeMode.DISABLE, customContext: GodotObject, backwardUndoOps: Boolean = false, markUnsaved: Boolean = true) {
         ObjectCalls.ptrcallWithStringLongObjectTwoBoolArgs(Binds.createActionBind, segment, name, mergeMode.value, customContext.segment, backwardUndoOps, markUnsaved)
+        ObjectCalls.keepReachable(customContext)
     }
 
     /**
@@ -93,6 +94,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addDoProperty(objectValue: GodotObject, property: String, value: Any?) {
         ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(Binds.addDoPropertyBind, segment, objectValue.segment, property, value)
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**
@@ -103,6 +105,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addUndoProperty(objectValue: GodotObject, property: String, value: Any?) {
         ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(Binds.addUndoPropertyBind, segment, objectValue.segment, property, value)
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**
@@ -113,6 +116,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addDoReference(objectValue: GodotObject) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addDoReferenceBind, segment, listOf(objectValue.segment))
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**
@@ -123,6 +127,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addUndoReference(objectValue: GodotObject) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addUndoReferenceBind, segment, listOf(objectValue.segment))
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**
@@ -132,7 +137,9 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.get_object_history_id
      */
     fun getObjectHistoryId(objectValue: GodotObject): Int {
-        return ObjectCalls.ptrcallWithObjectArgRetInt(Binds.getObjectHistoryIdBind, segment, objectValue.segment)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetInt(Binds.getObjectHistoryIdBind, segment, objectValue.segment)
+        ObjectCalls.keepReachable(objectValue)
+        return ret
     }
 
     /**

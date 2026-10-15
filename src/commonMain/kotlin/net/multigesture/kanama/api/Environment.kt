@@ -582,6 +582,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setBackground(mode: Environment.BGMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBackgroundBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -591,7 +592,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getBackground(): Environment.BGMode {
         checkOpen()
-        return Environment.BGMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBackgroundBind, segment))
+        val ret = Environment.BGMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBackgroundBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -602,6 +605,8 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSky(sky: Sky?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSkyBind, segment, listOf(sky?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(sky)
     }
 
     /**
@@ -611,7 +616,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSky(): Sky? {
         checkOpen()
-        return Sky.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkyBind, segment))
+        val ret = Sky.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkyBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -623,6 +630,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSkyCustomFov(scale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSkyCustomFovBind, segment, scale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -633,7 +641,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSkyCustomFov(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSkyCustomFovBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSkyCustomFovBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -644,6 +654,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSkyRotation(eulerRadians: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setSkyRotationBind, segment, eulerRadians)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -653,7 +664,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSkyRotation(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSkyRotationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSkyRotationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -665,6 +678,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setBgColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setBgColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -675,7 +689,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getBgColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getBgColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getBgColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -687,6 +703,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setBgEnergyMultiplier(energy: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBgEnergyMultiplierBind, segment, energy)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -697,7 +714,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getBgEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBgEnergyMultiplierBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBgEnergyMultiplierBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -710,6 +729,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setBgIntensity(energy: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBgIntensityBind, segment, energy)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -721,7 +741,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getBgIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBgIntensityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBgIntensityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -732,6 +754,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setCanvasMaxLayer(layer: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setCanvasMaxLayerBind, segment, layer)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -741,7 +764,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getCanvasMaxLayer(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCanvasMaxLayerBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCanvasMaxLayerBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -752,6 +777,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setCameraFeedId(id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setCameraFeedIdBind, segment, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -761,7 +787,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getCameraFeedId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCameraFeedIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCameraFeedIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -773,6 +801,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setAmbientLightColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setAmbientLightColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -783,7 +812,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAmbientLightColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getAmbientLightColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getAmbientLightColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -794,6 +825,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setAmbientSource(source: Environment.AmbientSource) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAmbientSourceBind, segment, source.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -803,7 +835,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAmbientSource(): Environment.AmbientSource {
         checkOpen()
-        return Environment.AmbientSource(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAmbientSourceBind, segment))
+        val ret = Environment.AmbientSource(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAmbientSourceBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -815,6 +849,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setAmbientLightEnergy(energy: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAmbientLightEnergyBind, segment, energy)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -825,7 +860,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAmbientLightEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAmbientLightEnergyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAmbientLightEnergyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -841,6 +878,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setAmbientLightSkyContribution(ratio: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAmbientLightSkyContributionBind, segment, ratio)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -855,7 +893,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAmbientLightSkyContribution(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAmbientLightSkyContributionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAmbientLightSkyContributionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -866,6 +906,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setReflectionSource(source: Environment.ReflectionSource) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setReflectionSourceBind, segment, source.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -875,7 +916,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getReflectionSource(): Environment.ReflectionSource {
         checkOpen()
-        return Environment.ReflectionSource(ObjectCalls.ptrcallNoArgsRetLong(Binds.getReflectionSourceBind, segment))
+        val ret = Environment.ReflectionSource(ObjectCalls.ptrcallNoArgsRetLong(Binds.getReflectionSourceBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -887,6 +930,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setTonemapper(mode: Environment.ToneMapper) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTonemapperBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -897,7 +941,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getTonemapper(): Environment.ToneMapper {
         checkOpen()
-        return Environment.ToneMapper(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTonemapperBind, segment))
+        val ret = Environment.ToneMapper(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTonemapperBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -912,6 +958,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setTonemapExposure(exposure: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTonemapExposureBind, segment, exposure)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -925,7 +972,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getTonemapExposure(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTonemapExposureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTonemapExposureBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -944,6 +993,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setTonemapWhite(white: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTonemapWhiteBind, segment, white)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -961,7 +1011,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getTonemapWhite(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTonemapWhiteBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTonemapWhiteBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -981,6 +1033,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setTonemapAgxWhite(white: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTonemapAgxWhiteBind, segment, white)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -999,7 +1052,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getTonemapAgxWhite(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTonemapAgxWhiteBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTonemapAgxWhiteBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1012,6 +1067,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setTonemapAgxContrast(contrast: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTonemapAgxContrastBind, segment, contrast)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1023,7 +1079,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getTonemapAgxContrast(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTonemapAgxContrastBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTonemapAgxContrastBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1038,6 +1096,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsrEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setSsrEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1051,7 +1110,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isSsrEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSsrEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isSsrEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1062,6 +1123,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsrMaxSteps(maxSteps: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSsrMaxStepsBind, segment, maxSteps)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1071,7 +1133,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsrMaxSteps(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSsrMaxStepsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSsrMaxStepsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1084,6 +1148,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsrFadeIn(fadeIn: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsrFadeInBind, segment, fadeIn)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1095,7 +1160,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsrFadeIn(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsrFadeInBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsrFadeInBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1108,6 +1175,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsrFadeOut(fadeOut: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsrFadeOutBind, segment, fadeOut)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1119,7 +1187,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsrFadeOut(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsrFadeOutBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsrFadeOutBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1130,6 +1200,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsrDepthTolerance(depthTolerance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsrDepthToleranceBind, segment, depthTolerance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1139,7 +1210,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsrDepthTolerance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsrDepthToleranceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsrDepthToleranceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1156,6 +1229,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsaoEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setSsaoEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1171,7 +1245,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isSsaoEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSsaoEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isSsaoEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1184,6 +1260,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsaoRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1195,7 +1272,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1207,6 +1286,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsaoIntensity(intensity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoIntensityBind, segment, intensity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1217,7 +1297,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoIntensityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoIntensityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1229,6 +1311,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsaoPower(power: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoPowerBind, segment, power)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1239,7 +1322,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoPower(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoPowerBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoPowerBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1252,6 +1337,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsaoDetail(detail: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoDetailBind, segment, detail)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1263,7 +1349,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoDetail(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoDetailBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoDetailBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1276,6 +1364,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsaoHorizon(horizon: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoHorizonBind, segment, horizon)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1287,7 +1376,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoHorizon(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoHorizonBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoHorizonBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1300,6 +1391,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsaoSharpness(sharpness: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoSharpnessBind, segment, sharpness)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1311,7 +1403,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoSharpnessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoSharpnessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1324,6 +1418,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsaoDirectLightAffect(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoDirectLightAffectBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1335,7 +1430,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoDirectLightAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoDirectLightAffectBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoDirectLightAffectBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1347,6 +1444,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsaoAoChannelAffect(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoAoChannelAffectBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1357,7 +1455,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoAoChannelAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoAoChannelAffectBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoAoChannelAffectBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1374,6 +1474,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsilEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setSsilEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1389,7 +1490,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isSsilEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSsilEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isSsilEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1402,6 +1505,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsilRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsilRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1413,7 +1517,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsilRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsilRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsilRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1425,6 +1531,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsilIntensity(intensity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsilIntensityBind, segment, intensity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1435,7 +1542,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsilIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsilIntensityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsilIntensityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1448,6 +1557,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsilSharpness(sharpness: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsilSharpnessBind, segment, sharpness)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1459,7 +1569,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsilSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsilSharpnessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsilSharpnessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1475,6 +1587,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSsilNormalRejection(normalRejection: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSsilNormalRejectionBind, segment, normalRejection)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1489,7 +1602,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsilNormalRejection(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsilNormalRejectionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsilNormalRejectionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1512,6 +1627,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSdfgiEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setSdfgiEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1533,7 +1649,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isSdfgiEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSdfgiEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isSdfgiEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1547,6 +1665,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSdfgiCascades(amount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSdfgiCascadesBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1559,7 +1678,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiCascades(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSdfgiCascadesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSdfgiCascadesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1575,6 +1696,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSdfgiMinCellSize(size: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiMinCellSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1589,7 +1711,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiMinCellSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiMinCellSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiMinCellSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1603,6 +1727,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSdfgiMaxDistance(distance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiMaxDistanceBind, segment, distance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1615,7 +1740,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiMaxDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiMaxDistanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiMaxDistanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1627,6 +1754,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSdfgiCascade0Distance(distance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiCascade0DistanceBind, segment, distance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1637,7 +1765,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiCascade0Distance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiCascade0DistanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiCascade0DistanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1651,6 +1781,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSdfgiYScale(scale: Environment.SDFGIYScale) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSdfgiYScaleBind, segment, scale.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1663,7 +1794,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiYScale(): Environment.SDFGIYScale {
         checkOpen()
-        return Environment.SDFGIYScale(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSdfgiYScaleBind, segment))
+        val ret = Environment.SDFGIYScale(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSdfgiYScaleBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1676,6 +1809,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSdfgiUseOcclusion(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setSdfgiUseOcclusionBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1687,7 +1821,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isSdfgiUsingOcclusion(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSdfgiUsingOcclusionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isSdfgiUsingOcclusionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1703,6 +1839,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSdfgiBounceFeedback(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiBounceFeedbackBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1717,7 +1854,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiBounceFeedback(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiBounceFeedbackBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiBounceFeedbackBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1729,6 +1868,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSdfgiReadSkyLight(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setSdfgiReadSkyLightBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1739,7 +1879,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isSdfgiReadingSkyLight(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSdfgiReadingSkyLightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isSdfgiReadingSkyLightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1751,6 +1893,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSdfgiEnergy(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiEnergyBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1761,7 +1904,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiEnergyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiEnergyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1773,6 +1918,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSdfgiNormalBias(bias: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiNormalBiasBind, segment, bias)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1783,7 +1929,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiNormalBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiNormalBiasBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiNormalBiasBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1795,6 +1943,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setSdfgiProbeBias(bias: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiProbeBiasBind, segment, bias)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1805,7 +1954,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiProbeBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiProbeBiasBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiProbeBiasBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1823,6 +1974,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setGlowEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setGlowEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1839,7 +1991,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isGlowEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isGlowEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isGlowEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1852,6 +2006,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setGlowLevel(idx: Int, intensity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setGlowLevelBind, segment, idx, intensity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1863,7 +2018,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowLevel(idx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getGlowLevelBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getGlowLevelBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1876,6 +2033,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setGlowNormalized(normalize: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setGlowNormalizedBind, segment, normalize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1887,7 +2045,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isGlowNormalized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isGlowNormalizedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isGlowNormalizedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1900,6 +2060,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setGlowIntensity(intensity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowIntensityBind, segment, intensity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1911,7 +2072,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowIntensityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowIntensityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1926,6 +2089,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setGlowStrength(strength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowStrengthBind, segment, strength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1939,7 +2103,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowStrengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowStrengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1954,6 +2120,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setGlowMix(mix: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowMixBind, segment, mix)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1967,7 +2134,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowMix(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowMixBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowMixBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1979,6 +2148,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setGlowBloom(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowBloomBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1989,7 +2159,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowBloom(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowBloomBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowBloomBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2001,6 +2173,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setGlowBlendMode(mode: Environment.GlowBlendMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setGlowBlendModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2011,7 +2184,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowBlendMode(): Environment.GlowBlendMode {
         checkOpen()
-        return Environment.GlowBlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getGlowBlendModeBind, segment))
+        val ret = Environment.GlowBlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getGlowBlendModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2025,6 +2200,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setGlowHdrBleedThreshold(threshold: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowHdrBleedThresholdBind, segment, threshold)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2037,7 +2213,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowHdrBleedThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowHdrBleedThresholdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowHdrBleedThresholdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2050,6 +2228,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setGlowHdrBleedScale(scale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowHdrBleedScaleBind, segment, scale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2061,7 +2240,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowHdrBleedScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowHdrBleedScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowHdrBleedScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2073,6 +2254,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setGlowHdrLuminanceCap(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowHdrLuminanceCapBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2083,7 +2265,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowHdrLuminanceCap(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowHdrLuminanceCapBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowHdrLuminanceCapBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2099,6 +2283,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setGlowMapStrength(strength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowMapStrengthBind, segment, strength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2113,7 +2298,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowMapStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowMapStrengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowMapStrengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2130,6 +2317,8 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setGlowMap(mode: Texture?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setGlowMapBind, segment, listOf(mode?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(mode)
     }
 
     /**
@@ -2145,7 +2334,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowMap(): Texture? {
         checkOpen()
-        return Texture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGlowMapBind, segment))
+        val ret = Texture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGlowMapBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2156,6 +2347,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setFogEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setFogEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2165,7 +2357,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isFogEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFogEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isFogEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2176,6 +2370,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setFogMode(mode: Environment.FogMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFogModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2185,7 +2380,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogMode(): Environment.FogMode {
         checkOpen()
-        return Environment.FogMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFogModeBind, segment))
+        val ret = Environment.FogMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFogModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2196,6 +2393,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setFogLightColor(lightColor: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setFogLightColorBind, segment, lightColor)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2205,7 +2403,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogLightColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getFogLightColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getFogLightColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2216,6 +2416,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setFogLightEnergy(lightEnergy: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFogLightEnergyBind, segment, lightEnergy)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2225,7 +2426,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogLightEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogLightEnergyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogLightEnergyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2237,6 +2440,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setFogSunScatter(sunScatter: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFogSunScatterBind, segment, sunScatter)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2247,7 +2451,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogSunScatter(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogSunScatterBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogSunScatterBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2262,6 +2468,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setFogDensity(density: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFogDensityBind, segment, density)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2275,7 +2482,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogDensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogDensityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogDensityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2286,6 +2495,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setFogHeight(height: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFogHeightBind, segment, height)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2295,7 +2505,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2307,6 +2519,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setFogHeightDensity(heightDensity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFogHeightDensityBind, segment, heightDensity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2317,7 +2530,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogHeightDensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogHeightDensityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogHeightDensityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2338,6 +2553,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setFogAerialPerspective(aerialPerspective: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFogAerialPerspectiveBind, segment, aerialPerspective)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2357,7 +2573,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogAerialPerspective(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogAerialPerspectiveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogAerialPerspectiveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2371,6 +2589,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setFogSkyAffect(skyAffect: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFogSkyAffectBind, segment, skyAffect)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2383,7 +2602,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogSkyAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogSkyAffectBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogSkyAffectBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2395,6 +2616,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setFogDepthCurve(curve: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFogDepthCurveBind, segment, curve)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2405,7 +2627,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogDepthCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogDepthCurveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogDepthCurveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2417,6 +2641,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setFogDepthBegin(begin: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFogDepthBeginBind, segment, begin)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2427,7 +2652,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogDepthBegin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogDepthBeginBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogDepthBeginBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2440,6 +2667,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setFogDepthEnd(end: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFogDepthEndBind, segment, end)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2451,7 +2679,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogDepthEnd(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogDepthEndBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogDepthEndBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2467,6 +2697,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setVolumetricFogEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setVolumetricFogEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2481,7 +2712,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isVolumetricFogEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVolumetricFogEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isVolumetricFogEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2495,6 +2728,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setVolumetricFogEmission(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setVolumetricFogEmissionBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2507,7 +2741,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogEmission(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getVolumetricFogEmissionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getVolumetricFogEmissionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2519,6 +2755,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setVolumetricFogAlbedo(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setVolumetricFogAlbedoBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2529,7 +2766,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogAlbedo(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getVolumetricFogAlbedoBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getVolumetricFogAlbedoBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2546,6 +2785,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setVolumetricFogDensity(density: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogDensityBind, segment, density)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2561,7 +2801,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogDensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogDensityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogDensityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2572,6 +2814,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setVolumetricFogEmissionEnergy(begin: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogEmissionEnergyBind, segment, begin)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2581,7 +2824,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogEmissionEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogEmissionEnergyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogEmissionEnergyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2595,6 +2840,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setVolumetricFogAnisotropy(anisotropy: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogAnisotropyBind, segment, anisotropy)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2607,7 +2853,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogAnisotropy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogAnisotropyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogAnisotropyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2621,6 +2869,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setVolumetricFogLength(length: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogLengthBind, segment, length)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2633,7 +2882,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2645,6 +2896,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setVolumetricFogDetailSpread(detailSpread: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogDetailSpreadBind, segment, detailSpread)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2655,7 +2907,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogDetailSpread(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogDetailSpreadBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogDetailSpreadBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2672,6 +2926,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setVolumetricFogGiInject(giInject: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogGiInjectBind, segment, giInject)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2687,7 +2942,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogGiInject(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogGiInjectBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogGiInjectBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2701,6 +2958,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setVolumetricFogAmbientInject(enabled: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogAmbientInjectBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2713,7 +2971,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogAmbientInject(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogAmbientInjectBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogAmbientInjectBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2728,6 +2988,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setVolumetricFogSkyAffect(skyAffect: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogSkyAffectBind, segment, skyAffect)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2741,7 +3002,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogSkyAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogSkyAffectBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogSkyAffectBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2757,6 +3020,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setVolumetricFogTemporalReprojectionEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setVolumetricFogTemporalReprojectionEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2771,7 +3035,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isVolumetricFogTemporalReprojectionEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVolumetricFogTemporalReprojectionEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isVolumetricFogTemporalReprojectionEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2784,6 +3050,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setVolumetricFogTemporalReprojectionAmount(temporalReprojectionAmount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogTemporalReprojectionAmountBind, segment, temporalReprojectionAmount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2795,7 +3062,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogTemporalReprojectionAmount(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogTemporalReprojectionAmountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogTemporalReprojectionAmountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2807,6 +3076,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setAdjustmentEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAdjustmentEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2817,7 +3087,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isAdjustmentEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAdjustmentEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAdjustmentEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2830,6 +3102,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setAdjustmentBrightness(brightness: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAdjustmentBrightnessBind, segment, brightness)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2841,7 +3114,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAdjustmentBrightness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAdjustmentBrightnessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAdjustmentBrightnessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2855,6 +3130,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setAdjustmentContrast(contrast: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAdjustmentContrastBind, segment, contrast)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2867,7 +3143,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAdjustmentContrast(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAdjustmentContrastBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAdjustmentContrastBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2880,6 +3158,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setAdjustmentSaturation(saturation: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAdjustmentSaturationBind, segment, saturation)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2891,7 +3170,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAdjustmentSaturation(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAdjustmentSaturationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAdjustmentSaturationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2905,6 +3186,8 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     fun setAdjustmentColorCorrection(colorCorrection: Texture?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setAdjustmentColorCorrectionBind, segment, listOf(colorCorrection?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(colorCorrection)
     }
 
     /**
@@ -2917,7 +3200,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAdjustmentColorCorrection(): Texture? {
         checkOpen()
-        return Texture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getAdjustmentColorCorrectionBind, segment))
+        val ret = Texture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getAdjustmentColorCorrectionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

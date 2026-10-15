@@ -28,7 +28,9 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVar(allowObjects: Boolean = false): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(Binds.getVarBind, segment, allowObjects)
+        val ret = ObjectCalls.ptrcallWithBoolArgRetVariantScalar(Binds.getVarBind, segment, allowObjects)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,7 +42,9 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putVar(varValue: Any?, fullObjects: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithVariantAndBoolArgRetLong(Binds.putVarBind, segment, varValue, fullObjects))
+        val ret = GodotError(ObjectCalls.ptrcallWithVariantAndBoolArgRetLong(Binds.putVarBind, segment, varValue, fullObjects))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -50,7 +54,9 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPacket(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getPacketBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getPacketBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -60,7 +66,9 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putPacket(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.putPacketBind, segment, buffer))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.putPacketBind, segment, buffer))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -70,7 +78,9 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPacketError(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPacketErrorBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPacketErrorBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,7 +90,9 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAvailablePacketCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getAvailablePacketCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getAvailablePacketCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,7 +106,9 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEncodeBufferMaxSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getEncodeBufferMaxSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getEncodeBufferMaxSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -109,6 +123,7 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
     fun setEncodeBufferMaxSize(maxSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setEncodeBufferMaxSizeBind, segment, maxSize)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

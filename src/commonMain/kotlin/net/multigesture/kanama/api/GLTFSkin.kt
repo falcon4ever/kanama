@@ -74,102 +74,133 @@ class GLTFSkin(handle: GodotHandle) : Resource(handle) {
 
     fun getSkinRoot(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSkinRootBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSkinRootBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setSkinRoot(skinRoot: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSkinRootBind, segment, skinRoot)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getJointsOriginal(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getJointsOriginalBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getJointsOriginalBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setJointsOriginal(jointsOriginal: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setJointsOriginalBind, segment, jointsOriginal)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getInverseBinds(): List<Transform3D> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3DList(Binds.getInverseBindsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTransform3DList(Binds.getInverseBindsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setInverseBinds(inverseBinds: List<Transform3D>) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform3DListArg(Binds.setInverseBindsBind, segment, inverseBinds)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getJoints(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getJointsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getJointsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setJoints(joints: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setJointsBind, segment, joints)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getNonJoints(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getNonJointsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getNonJointsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setNonJoints(nonJoints: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setNonJointsBind, segment, nonJoints)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getRoots(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getRootsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getRootsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setRoots(roots: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setRootsBind, segment, roots)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getSkeleton(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSkeletonBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSkeletonBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setSkeleton(skeleton: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSkeletonBind, segment, skeleton)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getJointIToBoneI(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getJointIToBoneIBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getJointIToBoneIBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setJointIToBoneI(jointIToBoneI: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setJointIToBoneIBind, segment, jointIToBoneI)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getJointIToName(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getJointIToNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getJointIToNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setJointIToName(jointIToName: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setJointIToNameBind, segment, jointIToName)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getGodotSkin(): Skin? {
         checkOpen()
-        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGodotSkinBind, segment))
+        val ret = Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGodotSkinBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setGodotSkin(godotSkin: Skin?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setGodotSkinBind, segment, listOf(godotSkin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(godotSkin)
     }
 
     companion object {

@@ -769,6 +769,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setDirection(degrees: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setDirectionBind, segment, degrees)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -778,7 +779,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getDirection(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getDirectionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getDirectionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -790,6 +793,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setInheritVelocityRatio(ratio: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setInheritVelocityRatioBind, segment, ratio)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -800,7 +804,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getInheritVelocityRatio(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInheritVelocityRatioBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInheritVelocityRatioBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -811,6 +817,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setSpread(degrees: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSpreadBind, segment, degrees)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -820,7 +827,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSpread(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpreadBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpreadBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -831,6 +840,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setFlatness(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFlatnessBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -840,7 +850,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getFlatness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFlatnessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFlatnessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -852,6 +864,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setParam(param: ParticleProcessMaterial.Parameter, value: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndVector2Arg(Binds.setParamBind, segment, param.value, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -862,7 +875,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParam(param: ParticleProcessMaterial.Parameter): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector2(Binds.getParamBind, segment, param.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetVector2(Binds.getParamBind, segment, param.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -875,6 +890,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setParamMin(param: ParticleProcessMaterial.Parameter, value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setParamMinBind, segment, param.value, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -886,7 +902,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParamMin(param: ParticleProcessMaterial.Parameter): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamMinBind, segment, param.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamMinBind, segment, param.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -899,6 +917,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setParamMax(param: ParticleProcessMaterial.Parameter, value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setParamMaxBind, segment, param.value, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -910,7 +929,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParamMax(param: ParticleProcessMaterial.Parameter): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamMaxBind, segment, param.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamMaxBind, segment, param.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -922,6 +943,8 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setParamTexture(param: ParticleProcessMaterial.Parameter, texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndObjectArg(Binds.setParamTextureBind, segment, param.value, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -932,7 +955,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParamTexture(param: ParticleProcessMaterial.Parameter): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(Binds.getParamTextureBind, segment, param.value))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(Binds.getParamTextureBind, segment, param.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -947,6 +972,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -960,7 +986,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -971,6 +999,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setUseScale3d(usingScale3d: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseScale3dBind, segment, usingScale3d)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -980,7 +1009,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun isUsingScale3d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingScale3dBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingScale3dBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -992,6 +1023,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setScale3dMin(scale3dMin: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setScale3dMinBind, segment, scale3dMin)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1002,7 +1034,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getScale3dMin(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getScale3dMinBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getScale3dMinBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1014,6 +1048,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setScale3dMax(scale3dMax: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setScale3dMaxBind, segment, scale3dMax)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1024,7 +1059,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getScale3dMax(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getScale3dMaxBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getScale3dMaxBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1035,6 +1072,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setUseRotation3d(usingRotation3d: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseRotation3dBind, segment, usingRotation3d)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1044,7 +1082,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun isUsingRotation3d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingRotation3dBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingRotation3dBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1055,6 +1095,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setRotation3dMin(rotation3dMin: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setRotation3dMinBind, segment, rotation3dMin)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1064,7 +1105,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRotation3dMin(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotation3dMinBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotation3dMinBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1075,6 +1118,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setRotation3dMax(rotation3dMax: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setRotation3dMaxBind, segment, rotation3dMax)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1084,7 +1128,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRotation3dMax(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotation3dMaxBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotation3dMaxBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1099,6 +1145,8 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setColorRamp(ramp: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(ramp)
     }
 
     /**
@@ -1112,7 +1160,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getColorRamp(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColorRampBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColorRampBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1127,6 +1177,8 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setAlphaCurve(curve: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setAlphaCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -1140,7 +1192,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getAlphaCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getAlphaCurveBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getAlphaCurveBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1155,6 +1209,8 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionCurve(curve: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -1168,7 +1224,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEmissionCurveBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEmissionCurveBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1183,6 +1241,8 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setColorInitialRamp(ramp: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(ramp)
     }
 
     /**
@@ -1196,7 +1256,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getColorInitialRamp(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColorInitialRampBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColorInitialRampBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1207,6 +1269,8 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setVelocityLimitCurve(curve: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setVelocityLimitCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -1216,7 +1280,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getVelocityLimitCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getVelocityLimitCurveBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getVelocityLimitCurveBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1227,6 +1293,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setParticleFlag(particleFlag: ParticleProcessMaterial.ParticleFlags, enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setParticleFlagBind, segment, particleFlag.value, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1236,7 +1303,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParticleFlag(particleFlag: ParticleProcessMaterial.ParticleFlags): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getParticleFlagBind, segment, particleFlag.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetBool(Binds.getParticleFlagBind, segment, particleFlag.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1247,6 +1316,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setVelocityPivot(pivot: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setVelocityPivotBind, segment, pivot)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1256,7 +1326,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getVelocityPivot(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getVelocityPivotBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getVelocityPivotBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1267,6 +1339,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionShape(shape: ParticleProcessMaterial.EmissionShape) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setEmissionShapeBind, segment, shape.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1276,7 +1349,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionShape(): ParticleProcessMaterial.EmissionShape {
         checkOpen()
-        return ParticleProcessMaterial.EmissionShape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEmissionShapeBind, segment))
+        val ret = ParticleProcessMaterial.EmissionShape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEmissionShapeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1287,6 +1362,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionSphereRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionSphereRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1296,7 +1372,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionSphereRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionSphereRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionSphereRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1309,6 +1387,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionBoxExtents(extents: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setEmissionBoxExtentsBind, segment, extents)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1320,7 +1399,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionBoxExtents(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionBoxExtentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionBoxExtentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1334,6 +1415,8 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionPointTexture(texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionPointTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -1346,7 +1429,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionPointTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEmissionPointTextureBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEmissionPointTextureBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1360,6 +1445,8 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionNormalTexture(texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionNormalTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -1372,7 +1459,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionNormalTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEmissionNormalTextureBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEmissionNormalTextureBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1388,6 +1477,8 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionColorTexture(texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionColorTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -1402,7 +1493,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionColorTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEmissionColorTextureBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEmissionColorTextureBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1414,6 +1507,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionPointCount(pointCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setEmissionPointCountBind, segment, pointCount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1424,7 +1518,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getEmissionPointCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getEmissionPointCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1435,6 +1531,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionRingAxis(axis: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setEmissionRingAxisBind, segment, axis)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1444,7 +1541,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionRingAxis(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionRingAxisBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionRingAxisBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1455,6 +1554,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionRingHeight(height: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionRingHeightBind, segment, height)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1464,7 +1564,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionRingHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1475,6 +1577,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionRingRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionRingRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1484,7 +1587,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionRingRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1495,6 +1600,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionRingInnerRadius(innerRadius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionRingInnerRadiusBind, segment, innerRadius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1504,7 +1610,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionRingInnerRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingInnerRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingInnerRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1519,6 +1627,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionRingConeAngle(coneAngle: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionRingConeAngleBind, segment, coneAngle)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1532,7 +1641,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionRingConeAngle(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingConeAngleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingConeAngleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1543,6 +1654,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionShapeOffset(emissionShapeOffset: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setEmissionShapeOffsetBind, segment, emissionShapeOffset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1552,7 +1664,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionShapeOffset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionShapeOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionShapeOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1563,6 +1677,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmissionShapeScale(emissionShapeScale: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setEmissionShapeScaleBind, segment, emissionShapeScale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1572,7 +1687,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionShapeScale(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionShapeScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionShapeScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1588,7 +1705,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getTurbulenceEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getTurbulenceEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getTurbulenceEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1605,6 +1724,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setTurbulenceEnabled(turbulenceEnabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setTurbulenceEnabledBind, segment, turbulenceEnabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1615,7 +1735,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getTurbulenceNoiseStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTurbulenceNoiseStrengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTurbulenceNoiseStrengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1627,6 +1749,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setTurbulenceNoiseStrength(turbulenceNoiseStrength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTurbulenceNoiseStrengthBind, segment, turbulenceNoiseStrength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1638,7 +1761,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getTurbulenceNoiseScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTurbulenceNoiseScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTurbulenceNoiseScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1651,6 +1776,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setTurbulenceNoiseScale(turbulenceNoiseScale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTurbulenceNoiseScaleBind, segment, turbulenceNoiseScale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1661,7 +1787,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getTurbulenceNoiseSpeedRandom(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTurbulenceNoiseSpeedRandomBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTurbulenceNoiseSpeedRandomBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1673,6 +1801,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setTurbulenceNoiseSpeedRandom(turbulenceNoiseSpeedRandom: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTurbulenceNoiseSpeedRandomBind, segment, turbulenceNoiseSpeedRandom)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1683,7 +1812,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getTurbulenceNoiseSpeed(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getTurbulenceNoiseSpeedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getTurbulenceNoiseSpeedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1695,6 +1826,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setTurbulenceNoiseSpeed(turbulenceNoiseSpeed: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setTurbulenceNoiseSpeedBind, segment, turbulenceNoiseSpeed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1704,7 +1836,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getGravity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getGravityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getGravityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1715,6 +1849,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setGravity(accelVec: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setGravityBind, segment, accelVec)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1727,6 +1862,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setLifetimeRandomness(randomness: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLifetimeRandomnessBind, segment, randomness)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1738,7 +1874,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getLifetimeRandomness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLifetimeRandomnessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLifetimeRandomnessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1749,7 +1887,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSubEmitterMode(): ParticleProcessMaterial.SubEmitterMode {
         checkOpen()
-        return ParticleProcessMaterial.SubEmitterMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSubEmitterModeBind, segment))
+        val ret = ParticleProcessMaterial.SubEmitterMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSubEmitterModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1761,6 +1901,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setSubEmitterMode(mode: ParticleProcessMaterial.SubEmitterMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSubEmitterModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1774,7 +1915,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSubEmitterFrequency(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSubEmitterFrequencyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSubEmitterFrequencyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1789,6 +1932,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setSubEmitterFrequency(hz: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSubEmitterFrequencyBind, segment, hz)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1802,7 +1946,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSubEmitterAmountAtEnd(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubEmitterAmountAtEndBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubEmitterAmountAtEndBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1817,6 +1963,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setSubEmitterAmountAtEnd(amount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSubEmitterAmountAtEndBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1831,7 +1978,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSubEmitterAmountAtCollision(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubEmitterAmountAtCollisionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubEmitterAmountAtCollisionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1847,6 +1996,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setSubEmitterAmountAtCollision(amount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSubEmitterAmountAtCollisionBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1860,7 +2010,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSubEmitterAmountAtStart(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubEmitterAmountAtStartBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubEmitterAmountAtStartBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1875,6 +2027,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setSubEmitterAmountAtStart(amount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSubEmitterAmountAtStartBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1884,7 +2037,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSubEmitterKeepVelocity(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSubEmitterKeepVelocityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getSubEmitterKeepVelocityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1895,6 +2050,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setSubEmitterKeepVelocity(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setSubEmitterKeepVelocityBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1906,6 +2062,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setAttractorInteractionEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAttractorInteractionEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1916,7 +2073,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun isAttractorInteractionEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAttractorInteractionEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAttractorInteractionEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1932,6 +2091,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setCollisionMode(mode: ParticleProcessMaterial.CollisionMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setCollisionModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1946,7 +2106,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getCollisionMode(): ParticleProcessMaterial.CollisionMode {
         checkOpen()
-        return ParticleProcessMaterial.CollisionMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCollisionModeBind, segment))
+        val ret = ParticleProcessMaterial.CollisionMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCollisionModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1958,6 +2120,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setCollisionUseScale(radius: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCollisionUseScaleBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1968,7 +2131,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun isCollisionUsingScale(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollisionUsingScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollisionUsingScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1980,6 +2145,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setCollisionFriction(friction: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCollisionFrictionBind, segment, friction)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1990,7 +2156,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getCollisionFriction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionFrictionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionFrictionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2002,6 +2170,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setCollisionBounce(bounce: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCollisionBounceBind, segment, bounce)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2012,7 +2181,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getCollisionBounce(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionBounceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionBounceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2023,6 +2194,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setUsingRotationVelocity3d(useRotationVelocity3d: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUsingRotationVelocity3dBind, segment, useRotationVelocity3d)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2032,7 +2204,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun isUsingRotationVelocity3d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingRotationVelocity3dBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingRotationVelocity3dBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2044,6 +2218,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setRotationVelocity3dMax(rotationVelocity3dMax: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setRotationVelocity3dMaxBind, segment, rotationVelocity3dMax)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2054,7 +2229,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRotationVelocity3dMax(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotationVelocity3dMaxBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotationVelocity3dMaxBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2066,6 +2243,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setRotationVelocity3dMin(rotationVelocity3dMin: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setRotationVelocity3dMinBind, segment, rotationVelocity3dMin)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2076,7 +2254,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRotationVelocity3dMin(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotationVelocity3dMinBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotationVelocity3dMinBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2087,6 +2267,8 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     fun setRotationVelocity3dCurve(rotationVelocity3dCurve: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setRotationVelocity3dCurveBind, segment, listOf(rotationVelocity3dCurve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(rotationVelocity3dCurve)
     }
 
     /**
@@ -2096,7 +2278,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRotationVelocity3dCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRotationVelocity3dCurveBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRotationVelocity3dCurveBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `emission_shape_changed()`; see [TypedSignal]. */
@@ -2454,7 +2638,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         // Downcast a Resource to ParticleProcessMaterial (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ParticleProcessMaterial? =
-            if (value.isClass("ParticleProcessMaterial")) RefCounted.retained(ParticleProcessMaterial(value.handle)) else null
+            if (value.isClass("ParticleProcessMaterial")) RefCounted.retained(ParticleProcessMaterial(value.handle), value) else null
     }
 
     private object Binds {

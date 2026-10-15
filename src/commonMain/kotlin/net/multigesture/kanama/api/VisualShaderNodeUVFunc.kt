@@ -28,6 +28,7 @@ class VisualShaderNodeUVFunc(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setFunction(func: VisualShaderNodeUVFunc.Function) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFunctionBind, segment, func.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ class VisualShaderNodeUVFunc(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getFunction(): VisualShaderNodeUVFunc.Function {
         checkOpen()
-        return VisualShaderNodeUVFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
+        val ret = VisualShaderNodeUVFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

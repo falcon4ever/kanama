@@ -20,7 +20,9 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun hasSetting(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasSettingBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasSettingBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -32,6 +34,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
     fun setSetting(name: String, value: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndVariantArg(Binds.setSettingBind, segment, name, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -42,7 +45,9 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getSetting(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetVariantScalar(Binds.getSettingBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetVariantScalar(Binds.getSettingBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +58,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
     fun erase(property: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.eraseBind, segment, property)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -65,6 +71,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
     fun setInitialValue(name: String, value: Any?, updateCurrent: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameVariantBoolArgs(Binds.setInitialValueBind, segment, name, value, updateCurrent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -77,6 +84,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
     fun addPropertyInfo(info: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.addPropertyInfoBind, segment, info)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -89,6 +97,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
     fun setProjectMetadata(section: String, key: String, data: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringAndVariantArg(Binds.setProjectMetadataBind, segment, section, key, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -99,7 +108,9 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getProjectMetadata(section: String, key: String, default: Any? = null): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(Binds.getProjectMetadataBind, segment, section, key, default)
+        val ret = ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(Binds.getProjectMetadataBind, segment, section, key, default)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -110,6 +121,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
     fun setFavorites(dirs: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setFavoritesBind, segment, dirs)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -119,7 +131,9 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getFavorites(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFavoritesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFavoritesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -130,6 +144,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
     fun setRecentDirs(dirs: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setRecentDirsBind, segment, dirs)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -139,7 +154,9 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getRecentDirs(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getRecentDirsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getRecentDirsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -150,6 +167,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
     fun setBuiltinActionOverride(name: String, actionsList: List<InputEvent>) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndObjectListArgs(Binds.setBuiltinActionOverrideBind, segment, name, actionsList)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -169,6 +187,8 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
     fun addShortcut(path: String, shortcut: Shortcut?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndObjectArg(Binds.addShortcutBind, segment, path, shortcut?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(shortcut)
     }
 
     /**
@@ -179,6 +199,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
     fun removeShortcut(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.removeShortcutBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -189,7 +210,10 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun isShortcut(path: String, event: InputEvent?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndObjectArgRetBool(Binds.isShortcutBind, segment, path, event?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithStringAndObjectArgRetBool(Binds.isShortcutBind, segment, path, event?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(event)
+        return ret
     }
 
     /**
@@ -199,7 +223,9 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun hasShortcut(path: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasShortcutBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasShortcutBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -211,7 +237,9 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getShortcut(path: String): Shortcut? {
         checkOpen()
-        return Shortcut.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.getShortcutBind, segment, path))
+        val ret = Shortcut.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.getShortcutBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -221,7 +249,9 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getShortcutList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getShortcutListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getShortcutListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -232,7 +262,9 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun checkChangedSettingsInGroup(settingPrefix: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.checkChangedSettingsInGroupBind, segment, settingPrefix)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.checkChangedSettingsInGroupBind, segment, settingPrefix)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -244,7 +276,9 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getChangedSettings(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getChangedSettingsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getChangedSettingsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -256,6 +290,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
     fun markSettingChanged(setting: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.markSettingChangedBind, segment, setting)
+        ObjectCalls.keepReachable(this)
     }
 
     /** Signal `settings_changed()`; see [TypedSignal]. */

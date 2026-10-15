@@ -32,6 +32,7 @@ open class VisualShaderNodeVarying(handle: GodotHandle) : VisualShaderNode(handl
     fun setVaryingName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setVaryingNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -41,7 +42,9 @@ open class VisualShaderNodeVarying(handle: GodotHandle) : VisualShaderNode(handl
      */
     fun getVaryingName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getVaryingNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getVaryingNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -52,6 +55,7 @@ open class VisualShaderNodeVarying(handle: GodotHandle) : VisualShaderNode(handl
     fun setVaryingType(type: VisualShader.VaryingType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setVaryingTypeBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -61,7 +65,9 @@ open class VisualShaderNodeVarying(handle: GodotHandle) : VisualShaderNode(handl
      */
     fun getVaryingType(): VisualShader.VaryingType {
         checkOpen()
-        return VisualShader.VaryingType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVaryingTypeBind, segment))
+        val ret = VisualShader.VaryingType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVaryingTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

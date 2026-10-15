@@ -40,6 +40,7 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
     fun setTargetNode(targetNodepath: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(Binds.setTargetNodeBind, segment, targetNodepath)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -50,7 +51,9 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
      */
     fun getTargetNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTargetNodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTargetNodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,6 +65,7 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
     fun setTipNode(tipNodepath: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(Binds.setTipNodeBind, segment, tipNodepath)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -72,7 +76,9 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
      */
     fun getTipNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTipNodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTipNodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -83,6 +89,7 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
     fun setCcdikDataChainLength(length: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setCcdikDataChainLengthBind, segment, length)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -92,7 +99,9 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
      */
     fun getCcdikDataChainLength(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCcdikDataChainLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCcdikDataChainLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -103,6 +112,7 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
     fun setCcdikJointBone2dNode(jointIdx: Int, bone2dNodepath: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndNodePathArg(Binds.setCcdikJointBone2dNodeBind, segment, jointIdx, bone2dNodepath)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -112,7 +122,9 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
      */
     fun getCcdikJointBone2dNode(jointIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getCcdikJointBone2dNodeBind, segment, jointIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getCcdikJointBone2dNodeBind, segment, jointIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -124,6 +136,7 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
     fun setCcdikJointBoneIndex(jointIdx: Int, boneIdx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setCcdikJointBoneIndexBind, segment, jointIdx, boneIdx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -133,7 +146,9 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
      */
     fun getCcdikJointBoneIndex(jointIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getCcdikJointBoneIndexBind, segment, jointIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getCcdikJointBoneIndexBind, segment, jointIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -145,6 +160,7 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
     fun setCcdikJointRotateFromJoint(jointIdx: Int, rotateFromJoint: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCcdikJointRotateFromJointBind, segment, jointIdx, rotateFromJoint)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -155,7 +171,9 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
      */
     fun getCcdikJointRotateFromJoint(jointIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCcdikJointRotateFromJointBind, segment, jointIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCcdikJointRotateFromJointBind, segment, jointIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -167,6 +185,7 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
     fun setCcdikJointEnableConstraint(jointIdx: Int, enableConstraint: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCcdikJointEnableConstraintBind, segment, jointIdx, enableConstraint)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -176,7 +195,9 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
      */
     fun getCcdikJointEnableConstraint(jointIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCcdikJointEnableConstraintBind, segment, jointIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCcdikJointEnableConstraintBind, segment, jointIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -187,6 +208,7 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
     fun setCcdikJointConstraintAngleMin(jointIdx: Int, angleMin: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setCcdikJointConstraintAngleMinBind, segment, jointIdx, angleMin)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -196,7 +218,9 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
      */
     fun getCcdikJointConstraintAngleMin(jointIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getCcdikJointConstraintAngleMinBind, segment, jointIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getCcdikJointConstraintAngleMinBind, segment, jointIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -207,6 +231,7 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
     fun setCcdikJointConstraintAngleMax(jointIdx: Int, angleMax: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setCcdikJointConstraintAngleMaxBind, segment, jointIdx, angleMax)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -216,7 +241,9 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
      */
     fun getCcdikJointConstraintAngleMax(jointIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getCcdikJointConstraintAngleMaxBind, segment, jointIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getCcdikJointConstraintAngleMaxBind, segment, jointIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -230,6 +257,7 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
     fun setCcdikJointConstraintAngleInvert(jointIdx: Int, invert: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCcdikJointConstraintAngleInvertBind, segment, jointIdx, invert)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -240,7 +268,9 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
      */
     fun getCcdikJointConstraintAngleInvert(jointIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCcdikJointConstraintAngleInvertBind, segment, jointIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCcdikJointConstraintAngleInvertBind, segment, jointIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

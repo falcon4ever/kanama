@@ -84,7 +84,9 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.add_animation_library
      */
     fun addAnimationLibrary(name: String, library: AnimationLibrary?): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(Binds.addAnimationLibraryBind, segment, name, library?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(Binds.addAnimationLibraryBind, segment, name, library?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(library)
+        return ret
     }
 
     /**
@@ -513,7 +515,9 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.find_animation
      */
     fun findAnimation(animation: Animation?): String {
-        return ObjectCalls.ptrcallWithObjectArgRetStringName(Binds.findAnimationBind, segment, animation?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetStringName(Binds.findAnimationBind, segment, animation?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(animation)
+        return ret
     }
 
     /**
@@ -523,7 +527,9 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.find_animation_library
      */
     fun findAnimationLibrary(animation: Animation?): String {
-        return ObjectCalls.ptrcallWithObjectArgRetStringName(Binds.findAnimationLibraryBind, segment, animation?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetStringName(Binds.findAnimationLibraryBind, segment, animation?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(animation)
+        return ret
     }
 
     /** Signal `animation_list_changed()`; see [TypedSignal]. */

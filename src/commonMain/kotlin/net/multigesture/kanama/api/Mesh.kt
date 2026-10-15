@@ -31,6 +31,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
     fun setLightmapSizeHint(size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setLightmapSizeHintBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -40,7 +41,9 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getLightmapSizeHint(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getLightmapSizeHintBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getLightmapSizeHintBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -51,7 +54,9 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getAabbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetAABB(Binds.getAabbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,7 +67,9 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getFaces(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getFacesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getFacesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -73,7 +80,9 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSurfaceCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSurfaceCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -84,7 +93,9 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun surfaceGetArrays(surfIdx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.surfaceGetArraysBind, segment, surfIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetArray(Binds.surfaceGetArraysBind, segment, surfIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,7 +105,9 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun surfaceGetBlendShapeArrays(surfIdx: Int): List<List<Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArrayList(Binds.surfaceGetBlendShapeArraysBind, segment, surfIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetArrayList(Binds.surfaceGetBlendShapeArraysBind, segment, surfIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -109,6 +122,8 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
     fun surfaceSetMaterial(surfIdx: Int, material: Material?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.surfaceSetMaterialBind, segment, surfIdx, material?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -122,7 +137,9 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun surfaceGetMaterial(surfIdx: Int): Material? {
         checkOpen()
-        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.surfaceGetMaterialBind, segment, surfIdx))
+        val ret = Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.surfaceGetMaterialBind, segment, surfIdx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -133,6 +150,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
     fun createPlaceholder(): Resource? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.createPlaceholderBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -147,7 +165,9 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun createTrimeshShape(): ConcavePolygonShape3D? {
         checkOpen()
-        return ConcavePolygonShape3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.createTrimeshShapeBind, segment))
+        val ret = ConcavePolygonShape3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.createTrimeshShapeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -160,7 +180,9 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun createConvexShape(clean: Boolean = true, simplify: Boolean = false): ConvexPolygonShape3D? {
         checkOpen()
-        return ConvexPolygonShape3D.wrapOwned(ObjectCalls.ptrcallWithTwoBoolArgsRetObject(Binds.createConvexShapeBind, segment, clean, simplify))
+        val ret = ConvexPolygonShape3D.wrapOwned(ObjectCalls.ptrcallWithTwoBoolArgsRetObject(Binds.createConvexShapeBind, segment, clean, simplify))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -172,6 +194,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
     fun createOutline(margin: Double): Mesh? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.createOutlineBind, segment, margin)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -187,7 +210,9 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun generateTriangleMesh(): TriangleMesh? {
         checkOpen()
-        return TriangleMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.generateTriangleMeshBind, segment))
+        val ret = TriangleMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.generateTriangleMeshBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -658,7 +683,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         // Downcast a GodotObject to Mesh (null if not).
         @JvmStatic
         fun fromObject(value: GodotObject): Mesh? =
-            if (value.isClass("Mesh")) RefCounted.retained(Mesh(value.handle)) else null
+            if (value.isClass("Mesh")) RefCounted.retained(Mesh(value.handle), value) else null
     }
 
     private object Binds {

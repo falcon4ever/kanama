@@ -18,7 +18,9 @@ class ZIPReader(handle: GodotHandle) : RefCounted(handle) {
      */
     fun open(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.openBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.openBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -28,7 +30,9 @@ class ZIPReader(handle: GodotHandle) : RefCounted(handle) {
      */
     fun closeArchive(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.closeArchiveBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.closeArchiveBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -38,7 +42,9 @@ class ZIPReader(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFiles(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFilesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFilesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -49,7 +55,9 @@ class ZIPReader(handle: GodotHandle) : RefCounted(handle) {
      */
     fun readFile(path: String, caseSensitive: Boolean = true): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetByteArray(Binds.readFileBind, segment, path, caseSensitive)
+        val ret = ObjectCalls.ptrcallWithStringAndBoolArgRetByteArray(Binds.readFileBind, segment, path, caseSensitive)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,7 +67,9 @@ class ZIPReader(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fileExists(path: String, caseSensitive: Boolean = true): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(Binds.fileExistsBind, segment, path, caseSensitive)
+        val ret = ObjectCalls.ptrcallWithStringAndBoolArgRetBool(Binds.fileExistsBind, segment, path, caseSensitive)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -70,7 +80,9 @@ class ZIPReader(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCompressionLevel(path: String, caseSensitive: Boolean = true): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetInt(Binds.getCompressionLevelBind, segment, path, caseSensitive)
+        val ret = ObjectCalls.ptrcallWithStringAndBoolArgRetInt(Binds.getCompressionLevelBind, segment, path, caseSensitive)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

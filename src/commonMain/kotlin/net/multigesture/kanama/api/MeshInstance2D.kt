@@ -32,6 +32,7 @@ class MeshInstance2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setMesh(mesh: Mesh?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(mesh)
     }
 
     /**
@@ -51,6 +52,7 @@ class MeshInstance2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**

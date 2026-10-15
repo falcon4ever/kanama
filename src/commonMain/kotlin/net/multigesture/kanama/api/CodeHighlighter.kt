@@ -63,6 +63,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun addKeywordColor(keyword: String, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndColorArg(Binds.addKeywordColorBind, segment, keyword, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -73,6 +74,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun removeKeywordColor(keyword: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.removeKeywordColorBind, segment, keyword)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -82,7 +84,9 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
      */
     fun hasKeywordColor(keyword: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasKeywordColorBind, segment, keyword)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasKeywordColorBind, segment, keyword)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,7 +96,9 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
      */
     fun getKeywordColor(keyword: String): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetColor(Binds.getKeywordColorBind, segment, keyword)
+        val ret = ObjectCalls.ptrcallWithStringArgRetColor(Binds.getKeywordColorBind, segment, keyword)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -104,6 +110,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun setKeywordColors(keywords: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setKeywordColorsBind, segment, keywords)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -114,6 +121,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun clearKeywordColors() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearKeywordColorsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -124,7 +132,9 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
      */
     fun getKeywordColors(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getKeywordColorsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getKeywordColorsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -136,6 +146,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun addMemberKeywordColor(memberKeyword: String, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndColorArg(Binds.addMemberKeywordColorBind, segment, memberKeyword, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -146,6 +157,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun removeMemberKeywordColor(memberKeyword: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.removeMemberKeywordColorBind, segment, memberKeyword)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -155,7 +167,9 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
      */
     fun hasMemberKeywordColor(memberKeyword: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasMemberKeywordColorBind, segment, memberKeyword)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasMemberKeywordColorBind, segment, memberKeyword)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -165,7 +179,9 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
      */
     fun getMemberKeywordColor(memberKeyword: String): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetColor(Binds.getMemberKeywordColorBind, segment, memberKeyword)
+        val ret = ObjectCalls.ptrcallWithStringArgRetColor(Binds.getMemberKeywordColorBind, segment, memberKeyword)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -177,6 +193,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun setMemberKeywordColors(memberKeyword: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setMemberKeywordColorsBind, segment, memberKeyword)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -187,6 +204,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun clearMemberKeywordColors() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearMemberKeywordColorsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -197,7 +215,9 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
      */
     fun getMemberKeywordColors(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getMemberKeywordColorsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getMemberKeywordColorsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -210,6 +230,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun addColorRegion(startKey: String, endKey: String, color: Color, lineOnly: Boolean = false) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringColorBoolArgs(Binds.addColorRegionBind, segment, startKey, endKey, color, lineOnly)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -220,6 +241,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun removeColorRegion(startKey: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.removeColorRegionBind, segment, startKey)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -229,7 +251,9 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
      */
     fun hasColorRegion(startKey: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasColorRegionBind, segment, startKey)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasColorRegionBind, segment, startKey)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -241,6 +265,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun setColorRegions(colorRegions: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setColorRegionsBind, segment, colorRegions)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -251,6 +276,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun clearColorRegions() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearColorRegionsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -261,7 +287,9 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
      */
     fun getColorRegions(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getColorRegionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getColorRegionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -272,6 +300,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun setFunctionColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setFunctionColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -281,7 +310,9 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
      */
     fun getFunctionColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getFunctionColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getFunctionColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -292,6 +323,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun setNumberColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setNumberColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -301,7 +333,9 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
      */
     fun getNumberColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getNumberColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getNumberColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -312,6 +346,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun setSymbolColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setSymbolColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -321,7 +356,9 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
      */
     fun getSymbolColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getSymbolColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getSymbolColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -333,6 +370,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     fun setMemberVariableColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setMemberVariableColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -343,7 +381,9 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
      */
     fun getMemberVariableColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getMemberVariableColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getMemberVariableColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

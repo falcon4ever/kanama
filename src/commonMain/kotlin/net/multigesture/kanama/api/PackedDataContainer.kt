@@ -20,7 +20,9 @@ class PackedDataContainer(handle: GodotHandle) : Resource(handle) {
      */
     fun pack(value: Any?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithVariantArgRetLong(Binds.packBind, segment, value))
+        val ret = GodotError(ObjectCalls.ptrcallWithVariantArgRetLong(Binds.packBind, segment, value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class PackedDataContainer(handle: GodotHandle) : Resource(handle) {
      */
     fun size(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.sizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.sizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

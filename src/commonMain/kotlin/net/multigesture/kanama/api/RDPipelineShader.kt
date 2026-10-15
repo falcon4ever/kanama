@@ -33,6 +33,7 @@ class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
     fun setShader(pMember: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setShaderBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -42,7 +43,9 @@ class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getShader(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getShaderBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getShaderBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +56,7 @@ class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
     fun setSpecializationConstants(specializationConstants: List<RDPipelineSpecializationConstant>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setSpecializationConstantsBind, segment, specializationConstants)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,7 +66,9 @@ class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSpecializationConstants(): List<RDPipelineSpecializationConstant> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getSpecializationConstantsBind, segment, RDPipelineSpecializationConstant::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getSpecializationConstantsBind, segment, RDPipelineSpecializationConstant::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

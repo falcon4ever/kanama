@@ -38,6 +38,7 @@ class LightOccluder2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setOccluderPolygon(polygon: OccluderPolygon2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setOccluderPolygonBind, segment, listOf(polygon?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(polygon)
     }
 
     /**

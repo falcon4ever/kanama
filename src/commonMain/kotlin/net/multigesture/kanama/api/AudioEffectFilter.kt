@@ -45,6 +45,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
     fun setCutoff(freq: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCutoffBind, segment, freq)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -54,7 +55,9 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getCutoff(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCutoffBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCutoffBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -70,6 +73,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
     fun setResonance(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setResonanceBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -84,7 +88,9 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getResonance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getResonanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getResonanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -96,6 +102,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
     fun setGain(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGainBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -106,7 +113,9 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGainBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGainBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -119,6 +128,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
     fun setDb(amount: AudioEffectFilter.FilterDB) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDbBind, segment, amount.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -130,7 +140,9 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDb(): AudioEffectFilter.FilterDB {
         checkOpen()
-        return AudioEffectFilter.FilterDB(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDbBind, segment))
+        val ret = AudioEffectFilter.FilterDB(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDbBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

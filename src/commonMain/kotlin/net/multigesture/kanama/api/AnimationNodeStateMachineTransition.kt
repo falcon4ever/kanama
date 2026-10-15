@@ -76,6 +76,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     fun setSwitchMode(mode: AnimationNodeStateMachineTransition.SwitchMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSwitchModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -85,7 +86,9 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getSwitchMode(): AnimationNodeStateMachineTransition.SwitchMode {
         checkOpen()
-        return AnimationNodeStateMachineTransition.SwitchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSwitchModeBind, segment))
+        val ret = AnimationNodeStateMachineTransition.SwitchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSwitchModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -98,6 +101,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     fun setAdvanceMode(mode: AnimationNodeStateMachineTransition.AdvanceMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAdvanceModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -109,7 +113,9 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getAdvanceMode(): AnimationNodeStateMachineTransition.AdvanceMode {
         checkOpen()
-        return AnimationNodeStateMachineTransition.AdvanceMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAdvanceModeBind, segment))
+        val ret = AnimationNodeStateMachineTransition.AdvanceMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAdvanceModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -122,6 +128,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     fun setAdvanceCondition(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.setAdvanceConditionBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -133,7 +140,9 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getAdvanceCondition(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getAdvanceConditionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getAdvanceConditionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -148,6 +157,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     fun setXfadeTime(secs: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setXfadeTimeBind, segment, secs)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -161,7 +171,9 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getXfadeTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getXfadeTimeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getXfadeTimeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -173,6 +185,8 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     fun setXfadeCurve(curve: Curve?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setXfadeCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -183,7 +197,9 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getXfadeCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getXfadeCurveBind, segment))
+        val ret = Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getXfadeCurveBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -195,6 +211,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     fun setBreakLoopAtEnd(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setBreakLoopAtEndBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -205,7 +222,9 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun isLoopBrokenAtEnd(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLoopBrokenAtEndBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isLoopBrokenAtEndBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -216,6 +235,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     fun setReset(reset: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setResetBind, segment, reset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -225,7 +245,9 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun isReset(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isResetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isResetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -237,6 +259,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     fun setPriority(priority: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setPriorityBind, segment, priority)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -247,7 +270,9 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getPriority(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPriorityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPriorityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -260,6 +285,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     fun setAdvanceExpression(text: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setAdvanceExpressionBind, segment, text)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -271,7 +297,9 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getAdvanceExpression(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getAdvanceExpressionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getAdvanceExpressionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `advance_condition_changed()`; see [TypedSignal]. */

@@ -70,6 +70,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
     fun setPredelayMsec(msec: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPredelayMsecBind, segment, msec)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -80,7 +81,9 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPredelayMsec(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPredelayMsecBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPredelayMsecBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,6 +95,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
     fun setPredelayFeedback(feedback: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPredelayFeedbackBind, segment, feedback)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -102,7 +106,9 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPredelayFeedback(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPredelayFeedbackBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPredelayFeedbackBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -113,6 +119,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
     fun setRoomSize(size: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRoomSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -122,7 +129,9 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRoomSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRoomSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRoomSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -134,6 +143,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
     fun setDamping(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDampingBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -144,7 +154,9 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDamping(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDampingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDampingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -156,6 +168,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
     fun setSpread(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSpreadBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -166,7 +179,9 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getSpread(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpreadBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpreadBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -178,6 +193,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
     fun setDry(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDryBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -188,7 +204,9 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDry(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDryBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDryBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -200,6 +218,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
     fun setWet(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setWetBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -210,7 +229,9 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getWet(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -222,6 +243,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
     fun setHpf(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setHpfBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -232,7 +254,9 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getHpf(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHpfBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHpfBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

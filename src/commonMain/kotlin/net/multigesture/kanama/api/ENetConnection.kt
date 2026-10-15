@@ -23,7 +23,9 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createHostBound(bindAddress: String, bindPort: Int, maxPeers: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(Binds.createHostBoundBind, segment, bindAddress, bindPort, maxPeers, maxChannels, inBandwidth, outBandwidth))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(Binds.createHostBoundBind, segment, bindAddress, bindPort, maxPeers, maxChannels, inBandwidth, outBandwidth))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -37,7 +39,9 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createHost(maxPeers: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithFourIntArgsRetLong(Binds.createHostBind, segment, maxPeers, maxChannels, inBandwidth, outBandwidth))
+        val ret = GodotError(ObjectCalls.ptrcallWithFourIntArgsRetLong(Binds.createHostBind, segment, maxPeers, maxChannels, inBandwidth, outBandwidth))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -48,6 +52,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
     fun destroy() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.destroyBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -60,7 +65,9 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun connectToHost(address: String, port: Int, channels: Int = 0, data: Int = 0): ENetPacketPeer? {
         checkOpen()
-        return ENetPacketPeer.wrapOwned(ObjectCalls.ptrcallWithStringAndThreeIntArgsRetObject(Binds.connectToHostBind, segment, address, port, channels, data))
+        val ret = ENetPacketPeer.wrapOwned(ObjectCalls.ptrcallWithStringAndThreeIntArgsRetObject(Binds.connectToHostBind, segment, address, port, channels, data))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -76,7 +83,9 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun service(timeout: Int = 0): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.serviceBind, segment, timeout)
+        val ret = ObjectCalls.ptrcallWithIntArgRetArray(Binds.serviceBind, segment, timeout)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -87,6 +96,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
     fun flush() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.flushBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -97,6 +107,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
     fun bandwidthLimit(inBandwidth: Int = 0, outBandwidth: Int = 0) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.bandwidthLimitBind, segment, inBandwidth, outBandwidth)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -107,6 +118,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
     fun channelLimit(limit: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.channelLimitBind, segment, limit)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -118,6 +130,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
     fun broadcast(channel: Int, packet: ByteArray, flags: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntByteArrayIntArgs(Binds.broadcastBind, segment, channel, packet, flags)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -134,6 +147,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
     fun compress(mode: ENetConnection.CompressionMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.compressBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -145,7 +159,10 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun dtlsServerSetup(serverOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.dtlsServerSetupBind, segment, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.dtlsServerSetupBind, segment, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(serverOptions)
+        return ret
     }
 
     /**
@@ -159,7 +176,10 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun dtlsClientSetup(hostname: String, clientOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(Binds.dtlsClientSetupBind, segment, hostname, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(Binds.dtlsClientSetupBind, segment, hostname, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(clientOptions)
+        return ret
     }
 
     /**
@@ -171,6 +191,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
     fun refuseNewConnections(refuse: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.refuseNewConnectionsBind, segment, refuse)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -180,7 +201,9 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun popStatistic(statistic: ENetConnection.HostStatistic): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.popStatisticBind, segment, statistic.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetDouble(Binds.popStatisticBind, segment, statistic.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -190,7 +213,9 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMaxChannels(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxChannelsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxChannelsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -200,7 +225,9 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -211,7 +238,9 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPeers(): List<ENetPacketPeer> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getPeersBind, segment, ENetPacketPeer::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getPeersBind, segment, ENetPacketPeer::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -232,6 +261,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
     fun socketSend(destinationAddress: String, destinationPort: Int, packet: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithStringIntByteArrayArgs(Binds.socketSendBind, segment, destinationAddress, destinationPort, packet)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

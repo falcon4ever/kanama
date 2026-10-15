@@ -51,7 +51,9 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
      */
     fun getDiffuseImg(): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDiffuseImgBind, segment))
+        val ret = Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDiffuseImgBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,6 +64,8 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
     fun setDiffuseImg(diffuseImg: Image?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setDiffuseImgBind, segment, listOf(diffuseImg?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(diffuseImg)
     }
 
     /**
@@ -71,7 +75,9 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
      */
     fun getDiffuseFactor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getDiffuseFactorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getDiffuseFactorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -82,6 +88,7 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
     fun setDiffuseFactor(diffuseFactor: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setDiffuseFactorBind, segment, diffuseFactor)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -91,7 +98,9 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlossFactor(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlossFactorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlossFactorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -102,6 +111,7 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
     fun setGlossFactor(glossFactor: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGlossFactorBind, segment, glossFactor)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -111,7 +121,9 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
      */
     fun getSpecularFactor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getSpecularFactorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getSpecularFactorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -122,6 +134,7 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
     fun setSpecularFactor(specularFactor: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setSpecularFactorBind, segment, specularFactor)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -131,7 +144,9 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
      */
     fun getSpecGlossImg(): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSpecGlossImgBind, segment))
+        val ret = Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSpecGlossImgBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -142,6 +157,8 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
     fun setSpecGlossImg(specGlossImg: Image?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSpecGlossImgBind, segment, listOf(specGlossImg?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(specGlossImg)
     }
 
     companion object {

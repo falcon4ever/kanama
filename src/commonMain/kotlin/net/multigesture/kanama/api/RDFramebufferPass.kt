@@ -51,6 +51,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
     fun setColorAttachments(pMember: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setColorAttachmentsBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -61,7 +62,9 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColorAttachments(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getColorAttachmentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getColorAttachmentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -73,6 +76,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
     fun setInputAttachments(pMember: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setInputAttachmentsBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -83,7 +87,9 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getInputAttachments(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getInputAttachmentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getInputAttachmentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,6 +100,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
     fun setResolveAttachments(pMember: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setResolveAttachmentsBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -103,7 +110,9 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getResolveAttachments(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getResolveAttachmentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getResolveAttachmentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -114,6 +123,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
     fun setPreserveAttachments(pMember: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setPreserveAttachmentsBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -123,7 +133,9 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPreserveAttachments(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getPreserveAttachmentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getPreserveAttachmentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -134,6 +146,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
     fun setDepthAttachment(pMember: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setDepthAttachmentBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -143,7 +156,9 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepthAttachment(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDepthAttachmentBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getDepthAttachmentBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

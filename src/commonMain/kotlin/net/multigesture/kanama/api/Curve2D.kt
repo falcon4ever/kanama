@@ -33,7 +33,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPointCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPointCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -44,6 +46,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
     fun setPointCount(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setPointCountBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -59,6 +62,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
     fun addPoint(position: Vector2, inValue: Vector2 = Vector2(0.0, 0.0), out: Vector2 = Vector2(0.0, 0.0), index: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeVector2AndIntArg(Binds.addPointBind, segment, position, inValue, out, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -70,6 +74,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
     fun setPointPosition(idx: Int, position: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setPointPositionBind, segment, idx, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -80,7 +85,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointPosition(idx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getPointPositionBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getPointPositionBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,6 +99,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
     fun setPointIn(idx: Int, position: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setPointInBind, segment, idx, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -103,7 +111,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointIn(idx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getPointInBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getPointInBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,6 +125,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
     fun setPointOut(idx: Int, position: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setPointOutBind, segment, idx, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -126,7 +137,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointOut(idx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getPointOutBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getPointOutBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -137,6 +150,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
     fun removePoint(idx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removePointBind, segment, idx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -147,6 +161,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
     fun clearPoints() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearPointsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -160,7 +175,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun sample(idx: Int, t: Double): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetVector2(Binds.sampleBind, segment, idx, t)
+        val ret = ObjectCalls.ptrcallWithIntAndDoubleArgRetVector2(Binds.sampleBind, segment, idx, t)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -171,7 +188,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun samplef(fofs: Double): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetVector2(Binds.samplefBind, segment, fofs)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetVector2(Binds.samplefBind, segment, fofs)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -185,6 +204,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
     fun setBakeInterval(distance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBakeIntervalBind, segment, distance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -197,7 +217,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakeInterval(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakeIntervalBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakeIntervalBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -208,7 +230,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakedLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakedLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakedLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -222,7 +246,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun sampleBaked(offset: Double = 0.0, cubic: Boolean = false): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector2(Binds.sampleBakedBind, segment, offset, cubic)
+        val ret = ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector2(Binds.sampleBakedBind, segment, offset, cubic)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -235,7 +261,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun sampleBakedWithRotation(offset: Double = 0.0, cubic: Boolean = false): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetTransform2D(Binds.sampleBakedWithRotationBind, segment, offset, cubic)
+        val ret = ObjectCalls.ptrcallWithDoubleAndBoolArgRetTransform2D(Binds.sampleBakedWithRotationBind, segment, offset, cubic)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -245,7 +273,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakedPoints(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getBakedPointsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getBakedPointsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -256,7 +286,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getClosestPoint(toPoint: Vector2): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2(Binds.getClosestPointBind, segment, toPoint)
+        val ret = ObjectCalls.ptrcallWithVector2ArgRetVector2(Binds.getClosestPointBind, segment, toPoint)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -267,7 +299,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getClosestOffset(toPoint: Vector2): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetDouble(Binds.getClosestOffsetBind, segment, toPoint)
+        val ret = ObjectCalls.ptrcallWithVector2ArgRetDouble(Binds.getClosestOffsetBind, segment, toPoint)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -284,7 +318,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun tessellate(maxStages: Int = 5, toleranceDegrees: Double = 4.0): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector2List(Binds.tessellateBind, segment, maxStages, toleranceDegrees)
+        val ret = ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector2List(Binds.tessellateBind, segment, maxStages, toleranceDegrees)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -298,7 +334,9 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun tessellateEvenLength(maxStages: Int = 5, toleranceLength: Double = 20.0): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector2List(Binds.tessellateEvenLengthBind, segment, maxStages, toleranceLength)
+        val ret = ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector2List(Binds.tessellateEvenLengthBind, segment, maxStages, toleranceLength)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

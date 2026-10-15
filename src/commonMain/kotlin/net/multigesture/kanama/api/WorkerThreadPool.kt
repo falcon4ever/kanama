@@ -26,7 +26,9 @@ object WorkerThreadPool {
      */
     @JvmStatic
     fun addTask(action: GodotCallable, highPriority: Boolean = false, description: String = ""): Long {
-        return ObjectCalls.ptrcallWithCallableBoolStringArgsRetLong(Binds.addTaskBind, singleton, action.target.segment, action.method, highPriority, description)
+        val ret = ObjectCalls.ptrcallWithCallableBoolStringArgsRetLong(Binds.addTaskBind, singleton, action.target.segment, action.method, highPriority, description)
+        ObjectCalls.keepReachable(action)
+        return ret
     }
 
     /**
@@ -87,7 +89,9 @@ object WorkerThreadPool {
      */
     @JvmStatic
     fun addGroupTask(action: GodotCallable, elements: Int, tasksNeeded: Int = -1, highPriority: Boolean = false, description: String = ""): Long {
-        return ObjectCalls.ptrcallWithCallableTwoIntBoolStringArgsRetLong(Binds.addGroupTaskBind, singleton, action.target.segment, action.method, elements, tasksNeeded, highPriority, description)
+        val ret = ObjectCalls.ptrcallWithCallableTwoIntBoolStringArgsRetLong(Binds.addGroupTaskBind, singleton, action.target.segment, action.method, elements, tasksNeeded, highPriority, description)
+        ObjectCalls.keepReachable(action)
+        return ret
     }
 
     /**

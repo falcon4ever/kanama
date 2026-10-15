@@ -53,6 +53,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setFrames(frames: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setFramesBind, segment, frames)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -64,7 +65,9 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFramesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFramesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -76,6 +79,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setCurrentFrame(frame: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setCurrentFrameBind, segment, frame)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -86,7 +90,9 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurrentFrame(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentFrameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentFrameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -98,6 +104,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setPause(pause: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPauseBind, segment, pause)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -108,7 +115,9 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getPause(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPauseBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getPauseBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -120,6 +129,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setOneShot(oneShot: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setOneShotBind, segment, oneShot)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -130,7 +140,9 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getOneShot(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getOneShotBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getOneShotBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -142,6 +154,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setSpeedScale(scale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSpeedScaleBind, segment, scale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -152,7 +165,9 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSpeedScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpeedScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpeedScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -166,6 +181,8 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setFrameTexture(frame: Int, texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setFrameTextureBind, segment, frame, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -176,6 +193,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
     fun getFrameTexture(frame: Int): Texture2D? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getFrameTextureBind, segment, frame)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -192,6 +210,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setFrameDuration(frame: Int, duration: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setFrameDurationBind, segment, frame, duration)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -201,7 +220,9 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getFrameDuration(frame: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getFrameDurationBind, segment, frame)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getFrameDurationBind, segment, frame)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

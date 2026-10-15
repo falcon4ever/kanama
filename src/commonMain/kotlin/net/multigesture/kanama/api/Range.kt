@@ -283,6 +283,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      */
     fun share(with: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.shareBind, segment, listOf(with.segment))
+        ObjectCalls.keepReachable(with)
     }
 
     /**

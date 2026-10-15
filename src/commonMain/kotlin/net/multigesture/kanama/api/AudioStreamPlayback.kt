@@ -22,6 +22,8 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
     fun setSamplePlayback(playbackSample: AudioSamplePlayback?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSamplePlaybackBind, segment, listOf(playbackSample?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(playbackSample)
     }
 
     /**
@@ -32,7 +34,9 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSamplePlayback(): AudioSamplePlayback? {
         checkOpen()
-        return AudioSamplePlayback.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSamplePlaybackBind, segment))
+        val ret = AudioSamplePlayback.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSamplePlaybackBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -45,7 +49,9 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
      */
     fun mixAudio(rateScale: Double, frames: Int): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndIntArgsRetPackedVector2List(Binds.mixAudioBind, segment, rateScale, frames)
+        val ret = ObjectCalls.ptrcallWithDoubleAndIntArgsRetPackedVector2List(Binds.mixAudioBind, segment, rateScale, frames)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -56,6 +62,7 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
     fun start(fromPos: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.startBind, segment, fromPos)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -66,6 +73,7 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
     fun seek(time: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.seekBind, segment, time)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -76,6 +84,7 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
     fun stop() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -85,7 +94,9 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLoopCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLoopCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getLoopCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -95,7 +106,9 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPlaybackPosition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPlaybackPositionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPlaybackPositionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -105,7 +118,9 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPlaying(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPlayingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isPlayingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -40,6 +40,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      */
     fun setProfile(profile: SkeletonProfile?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setProfileBind, segment, listOf(profile?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(profile)
     }
 
     /**

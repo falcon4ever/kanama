@@ -106,6 +106,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      */
     fun setFoldableGroup(buttonGroup: FoldableGroup?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setFoldableGroupBind, segment, listOf(buttonGroup?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(buttonGroup)
     }
 
     /**
@@ -238,6 +239,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      */
     fun addTitleBarControl(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addTitleBarControlBind, segment, listOf(control.segment))
+        ObjectCalls.keepReachable(control)
     }
 
     /**
@@ -248,6 +250,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      */
     fun removeTitleBarControl(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeTitleBarControlBind, segment, listOf(control.segment))
+        ObjectCalls.keepReachable(control)
     }
 
     /** Signal `folding_changed(is_folded: bool)`; see [TypedSignal]. */

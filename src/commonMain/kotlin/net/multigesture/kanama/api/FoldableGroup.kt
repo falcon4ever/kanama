@@ -26,7 +26,9 @@ class FoldableGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun getExpandedContainer(): FoldableContainer? {
         checkOpen()
-        return FoldableContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getExpandedContainerBind, segment))
+        val ret = FoldableContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getExpandedContainerBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -38,7 +40,9 @@ class FoldableGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun getContainers(): List<FoldableContainer> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getContainersBind, segment, FoldableContainer::wrap)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getContainersBind, segment, FoldableContainer::wrap)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -49,6 +53,7 @@ class FoldableGroup(handle: GodotHandle) : Resource(handle) {
     fun setAllowFoldingAll(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAllowFoldingAllBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -58,7 +63,9 @@ class FoldableGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun isAllowFoldingAll(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowFoldingAllBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowFoldingAllBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `expanded(container: FoldableContainer)`; see [TypedSignal]. */

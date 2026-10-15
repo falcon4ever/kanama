@@ -21,7 +21,9 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun bind(port: Int, host: String = "*"): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(Binds.bindBind, segment, port, host))
+        val ret = GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(Binds.bindBind, segment, port, host))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -32,7 +34,9 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun connectToHost(host: String, port: Int): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(Binds.connectToHostBind, segment, host, port))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(Binds.connectToHostBind, segment, host, port))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -42,7 +46,9 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun getConnectedHost(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getConnectedHostBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getConnectedHostBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -52,7 +58,9 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun getConnectedPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getConnectedPortBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getConnectedPortBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,7 +70,9 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -77,6 +87,7 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
     fun setNoDelay(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setNoDelayBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

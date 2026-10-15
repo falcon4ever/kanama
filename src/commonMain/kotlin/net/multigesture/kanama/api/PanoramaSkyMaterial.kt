@@ -39,6 +39,8 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setPanorama(texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setPanoramaBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -48,7 +50,9 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getPanorama(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPanoramaBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPanoramaBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +63,7 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setFilteringEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setFilteringEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +73,9 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun isFilteringEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFilteringEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isFilteringEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -79,6 +86,7 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setEnergyMultiplier(multiplier: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEnergyMultiplierBind, segment, multiplier)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -88,7 +96,9 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnergyMultiplierBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnergyMultiplierBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

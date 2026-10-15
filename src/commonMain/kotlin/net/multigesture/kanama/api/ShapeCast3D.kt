@@ -87,6 +87,7 @@ class ShapeCast3D(handle: GodotHandle) : Node3D(handle) {
      */
     fun resourceChanged(resource: Resource?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(resource)
     }
 
     /**
@@ -114,6 +115,7 @@ class ShapeCast3D(handle: GodotHandle) : Node3D(handle) {
      */
     fun setShape(shape: Shape3D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(shape)
     }
 
     /**
@@ -299,6 +301,7 @@ class ShapeCast3D(handle: GodotHandle) : Node3D(handle) {
      */
     fun addException(node: CollisionObject3D) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addExceptionBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -317,6 +320,7 @@ class ShapeCast3D(handle: GodotHandle) : Node3D(handle) {
      */
     fun removeException(node: CollisionObject3D) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeExceptionBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**

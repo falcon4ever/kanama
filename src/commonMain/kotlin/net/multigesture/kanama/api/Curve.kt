@@ -57,7 +57,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPointCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPointCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -68,6 +70,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun setPointCount(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setPointCountBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -79,7 +82,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun addPoint(position: Vector2, leftTangent: Double = 0.0, rightTangent: Double = 0.0, leftMode: Curve.TangentMode = Curve.TangentMode.FREE, rightMode: Curve.TangentMode = Curve.TangentMode.FREE): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2TwoDoubleTwoLongArgsRetInt(Binds.addPointBind, segment, position, leftTangent, rightTangent, leftMode.value, rightMode.value)
+        val ret = ObjectCalls.ptrcallWithVector2TwoDoubleTwoLongArgsRetInt(Binds.addPointBind, segment, position, leftTangent, rightTangent, leftMode.value, rightMode.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -90,6 +95,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun removePoint(index: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removePointBind, segment, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -100,6 +106,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun clearPoints() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearPointsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -109,7 +116,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointPosition(index: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getPointPositionBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getPointPositionBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -120,6 +129,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun setPointValue(index: Int, y: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setPointValueBind, segment, index, y)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -129,7 +139,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun setPointOffset(index: Int, offset: Double): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetInt(Binds.setPointOffsetBind, segment, index, offset)
+        val ret = ObjectCalls.ptrcallWithIntAndDoubleArgRetInt(Binds.setPointOffsetBind, segment, index, offset)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -139,7 +151,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun sample(offset: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetFloat(Binds.sampleBind, segment, offset)
+        val ret = ObjectCalls.ptrcallWithFloatArgRetFloat(Binds.sampleBind, segment, offset)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -150,7 +164,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun sampleBaked(offset: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetFloat(Binds.sampleBakedBind, segment, offset)
+        val ret = ObjectCalls.ptrcallWithFloatArgRetFloat(Binds.sampleBakedBind, segment, offset)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -160,7 +176,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointLeftTangent(index: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPointLeftTangentBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPointLeftTangentBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -170,7 +188,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointRightTangent(index: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPointRightTangentBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPointRightTangentBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -180,7 +200,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointLeftMode(index: Int): Curve.TangentMode {
         checkOpen()
-        return Curve.TangentMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getPointLeftModeBind, segment, index))
+        val ret = Curve.TangentMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getPointLeftModeBind, segment, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -190,7 +212,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointRightMode(index: Int): Curve.TangentMode {
         checkOpen()
-        return Curve.TangentMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getPointRightModeBind, segment, index))
+        val ret = Curve.TangentMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getPointRightModeBind, segment, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -201,6 +225,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun setPointLeftTangent(index: Int, tangent: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setPointLeftTangentBind, segment, index, tangent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -211,6 +236,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun setPointRightTangent(index: Int, tangent: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setPointRightTangentBind, segment, index, tangent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -221,6 +247,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun setPointLeftMode(index: Int, mode: Curve.TangentMode) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setPointLeftModeBind, segment, index, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -231,6 +258,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun setPointRightMode(index: Int, mode: Curve.TangentMode) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setPointRightModeBind, segment, index, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -241,7 +269,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getMinValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinValueBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinValueBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -253,6 +283,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun setMinValue(min: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMinValueBind, segment, min)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -263,7 +294,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getMaxValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxValueBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxValueBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -275,6 +308,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun setMaxValue(max: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxValueBind, segment, max)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -284,7 +318,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getValueRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getValueRangeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getValueRangeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -294,7 +330,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getMinDomain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinDomainBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinDomainBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -305,6 +343,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun setMinDomain(min: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMinDomainBind, segment, min)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -314,7 +353,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getMaxDomain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxDomainBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxDomainBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -325,6 +366,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun setMaxDomain(max: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxDomainBind, segment, max)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -334,7 +376,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getDomainRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainRangeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainRangeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -346,6 +390,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun cleanDupes() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.cleanDupesBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -356,6 +401,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun bake() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.bakeBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -365,7 +411,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakeResolution(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBakeResolutionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBakeResolutionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -376,6 +424,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     fun setBakeResolution(resolution: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBakeResolutionBind, segment, resolution)
+        ObjectCalls.keepReachable(this)
     }
 
     /** Signal `range_changed()`; see [TypedSignal]. */

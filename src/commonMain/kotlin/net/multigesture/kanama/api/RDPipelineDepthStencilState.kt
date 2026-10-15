@@ -149,6 +149,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setEnableDepthTest(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnableDepthTestBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -161,7 +162,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableDepthTest(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableDepthTestBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableDepthTestBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -173,6 +176,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setEnableDepthWrite(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnableDepthWriteBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -183,7 +187,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableDepthWrite(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableDepthWriteBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableDepthWriteBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -194,6 +200,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setDepthCompareOperator(pMember: RenderingDevice.CompareOperator) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDepthCompareOperatorBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -203,7 +210,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepthCompareOperator(): RenderingDevice.CompareOperator {
         checkOpen()
-        return RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDepthCompareOperatorBind, segment))
+        val ret = RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDepthCompareOperatorBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -215,6 +224,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setEnableDepthRange(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnableDepthRangeBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -225,7 +235,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableDepthRange(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableDepthRangeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableDepthRangeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -236,6 +248,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setDepthRangeMin(pMember: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthRangeMinBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -245,7 +258,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepthRangeMin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthRangeMinBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthRangeMinBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -256,6 +271,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setDepthRangeMax(pMember: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthRangeMaxBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -265,7 +281,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepthRangeMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthRangeMaxBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthRangeMaxBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -278,6 +296,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setEnableStencil(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnableStencilBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -289,7 +308,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableStencil(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableStencilBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableStencilBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -300,6 +321,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setFrontOpFail(pMember: RenderingDevice.StencilOperation) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFrontOpFailBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -309,7 +331,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrontOpFail(): RenderingDevice.StencilOperation {
         checkOpen()
-        return RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrontOpFailBind, segment))
+        val ret = RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrontOpFailBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -320,6 +344,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setFrontOpPass(pMember: RenderingDevice.StencilOperation) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFrontOpPassBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -329,7 +354,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrontOpPass(): RenderingDevice.StencilOperation {
         checkOpen()
-        return RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrontOpPassBind, segment))
+        val ret = RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrontOpPassBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -341,6 +368,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setFrontOpDepthFail(pMember: RenderingDevice.StencilOperation) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFrontOpDepthFailBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -351,7 +379,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrontOpDepthFail(): RenderingDevice.StencilOperation {
         checkOpen()
-        return RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrontOpDepthFailBind, segment))
+        val ret = RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrontOpDepthFailBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -362,6 +392,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setFrontOpCompare(pMember: RenderingDevice.CompareOperator) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFrontOpCompareBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -371,7 +402,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrontOpCompare(): RenderingDevice.CompareOperator {
         checkOpen()
-        return RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrontOpCompareBind, segment))
+        val ret = RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrontOpCompareBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -382,6 +415,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setFrontOpCompareMask(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setFrontOpCompareMaskBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -391,7 +425,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrontOpCompareMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getFrontOpCompareMaskBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getFrontOpCompareMaskBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -402,6 +438,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setFrontOpWriteMask(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setFrontOpWriteMaskBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -411,7 +448,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrontOpWriteMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getFrontOpWriteMaskBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getFrontOpWriteMaskBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -422,6 +461,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setFrontOpReference(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setFrontOpReferenceBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -431,7 +471,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrontOpReference(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getFrontOpReferenceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getFrontOpReferenceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -442,6 +484,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setBackOpFail(pMember: RenderingDevice.StencilOperation) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBackOpFailBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -451,7 +494,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBackOpFail(): RenderingDevice.StencilOperation {
         checkOpen()
-        return RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBackOpFailBind, segment))
+        val ret = RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBackOpFailBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -462,6 +507,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setBackOpPass(pMember: RenderingDevice.StencilOperation) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBackOpPassBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -471,7 +517,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBackOpPass(): RenderingDevice.StencilOperation {
         checkOpen()
-        return RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBackOpPassBind, segment))
+        val ret = RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBackOpPassBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -483,6 +531,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setBackOpDepthFail(pMember: RenderingDevice.StencilOperation) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBackOpDepthFailBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -493,7 +542,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBackOpDepthFail(): RenderingDevice.StencilOperation {
         checkOpen()
-        return RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBackOpDepthFailBind, segment))
+        val ret = RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBackOpDepthFailBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -504,6 +555,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setBackOpCompare(pMember: RenderingDevice.CompareOperator) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBackOpCompareBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -513,7 +565,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBackOpCompare(): RenderingDevice.CompareOperator {
         checkOpen()
-        return RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBackOpCompareBind, segment))
+        val ret = RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBackOpCompareBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -524,6 +578,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setBackOpCompareMask(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setBackOpCompareMaskBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -533,7 +588,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBackOpCompareMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getBackOpCompareMaskBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getBackOpCompareMaskBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -544,6 +601,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setBackOpWriteMask(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setBackOpWriteMaskBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -553,7 +611,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBackOpWriteMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getBackOpWriteMaskBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getBackOpWriteMaskBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -564,6 +624,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     fun setBackOpReference(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setBackOpReferenceBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -573,7 +634,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBackOpReference(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getBackOpReferenceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getBackOpReferenceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

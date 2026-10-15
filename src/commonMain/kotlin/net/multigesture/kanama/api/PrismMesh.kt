@@ -52,6 +52,7 @@ class PrismMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setLeftToRight(leftToRight: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLeftToRightBind, segment, leftToRight)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,7 +63,9 @@ class PrismMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getLeftToRight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLeftToRightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLeftToRightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -73,6 +76,7 @@ class PrismMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSize(size: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -82,7 +86,9 @@ class PrismMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -93,6 +99,7 @@ class PrismMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSubdivideWidth(segments: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideWidthBind, segment, segments)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -102,7 +109,9 @@ class PrismMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSubdivideWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideWidthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideWidthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -113,6 +122,7 @@ class PrismMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSubdivideHeight(segments: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideHeightBind, segment, segments)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -122,7 +132,9 @@ class PrismMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSubdivideHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -133,6 +145,7 @@ class PrismMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSubdivideDepth(segments: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideDepthBind, segment, segments)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -142,7 +155,9 @@ class PrismMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSubdivideDepth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideDepthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideDepthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -67,7 +67,9 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture2dCreate(image: Image?): RID {
-        return ObjectCalls.ptrcallWithObjectArgRetRID(Binds.texture2dCreateBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetRID(Binds.texture2dCreateBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(image)
+        return ret
     }
 
     /**
@@ -142,6 +144,7 @@ object RenderingServer {
     @JvmStatic
     fun texture2dUpdate(texture: RID, image: Image?, layer: Int) {
         ObjectCalls.ptrcallWithRIDObjectIntArgs(Binds.texture2dUpdateBind, singleton, texture, image?.requireOpenHandle() ?: NULL_SEGMENT, layer)
+        ObjectCalls.keepReachable(image)
     }
 
     /**
@@ -2858,6 +2861,8 @@ object RenderingServer {
     @JvmStatic
     fun visibilityNotifierSetCallbacks(notifier: RID, enterCallable: GodotCallable, exitCallable: GodotCallable) {
         ObjectCalls.ptrcallWithRIDTwoCallableArgs(Binds.visibilityNotifierSetCallbacksBind, singleton, notifier, enterCallable.target.segment, enterCallable.method, exitCallable.target.segment, exitCallable.method)
+        ObjectCalls.keepReachable(enterCallable)
+        ObjectCalls.keepReachable(exitCallable)
     }
 
     /**
@@ -3748,6 +3753,7 @@ object RenderingServer {
     @JvmStatic
     fun compositorEffectSetCallback(effect: RID, callbackType: RenderingServer.CompositorEffectCallbackType, callback: GodotCallable) {
         ObjectCalls.ptrcallWithRIDLongCallableArgs(Binds.compositorEffectSetCallbackBind, singleton, effect, callbackType.value, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -5372,6 +5378,8 @@ object RenderingServer {
     @JvmStatic
     fun canvasItemSetVisibilityNotifier(item: RID, enable: Boolean, area: Rect2, enterCallable: GodotCallable, exitCallable: GodotCallable) {
         ObjectCalls.ptrcallWithRIDBoolRect2TwoCallableArgs(Binds.canvasItemSetVisibilityNotifierBind, singleton, item, enable, area, enterCallable.target.segment, enterCallable.method, exitCallable.target.segment, exitCallable.method)
+        ObjectCalls.keepReachable(enterCallable)
+        ObjectCalls.keepReachable(exitCallable)
     }
 
     /**
@@ -5894,6 +5902,7 @@ object RenderingServer {
     @JvmStatic
     fun requestFrameDrawnCallback(callable: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(Binds.requestFrameDrawnCallbackBind, singleton, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**
@@ -6062,6 +6071,7 @@ object RenderingServer {
     @JvmStatic
     fun setBootImageWithStretch(image: Image?, color: Color, stretchMode: RenderingServer.SplashStretchMode, useFilter: Boolean = true) {
         ObjectCalls.ptrcallWithObjectColorLongBoolArgs(Binds.setBootImageWithStretchBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, color, stretchMode.value, useFilter)
+        ObjectCalls.keepReachable(image)
     }
 
     /**
@@ -6075,6 +6085,7 @@ object RenderingServer {
     @JvmStatic
     fun setBootImage(image: Image?, color: Color, scale: Boolean, useFilter: Boolean = true) {
         ObjectCalls.ptrcallWithObjectColorTwoBoolArgs(Binds.setBootImageBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, color, scale, useFilter)
+        ObjectCalls.keepReachable(image)
     }
 
     /**
@@ -6224,6 +6235,7 @@ object RenderingServer {
     @JvmStatic
     fun callOnRenderThread(callable: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(Binds.callOnRenderThreadBind, singleton, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**

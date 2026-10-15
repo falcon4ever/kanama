@@ -41,6 +41,8 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     fun addNode(name: String, node: AnimationNode?, position: Vector2 = Vector2(0.0, 0.0)) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(Binds.addNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, position)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -51,6 +53,8 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     fun replaceNode(name: String, node: AnimationNode?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.replaceNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -61,6 +65,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     fun getNode(name: String): AnimationNode? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getNodeBind, segment, name)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -76,6 +81,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     fun removeNode(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.removeNodeBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -86,6 +92,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     fun renameNode(name: String, newName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.renameNodeBind, segment, name, newName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -95,7 +102,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun hasNode(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasNodeBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasNodeBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -105,7 +114,10 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getNodeName(node: AnimationNode?): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetStringName(Binds.getNodeNameBind, segment, node?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetStringName(Binds.getNodeNameBind, segment, node?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(node)
+        return ret
     }
 
     /**
@@ -115,7 +127,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getNodeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getNodeListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getNodeListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -126,6 +140,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     fun setNodePosition(name: String, position: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVector2Arg(Binds.setNodePositionBind, segment, name, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -135,7 +150,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getNodePosition(name: String): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVector2(Binds.getNodePositionBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetVector2(Binds.getNodePositionBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -145,7 +162,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun hasTransition(from: String, to: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasTransitionBind, segment, from, to)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasTransitionBind, segment, from, to)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -156,6 +175,8 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     fun addTransition(from: String, to: String, transition: AnimationNodeStateMachineTransition?) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(Binds.addTransitionBind, segment, from, to, transition?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(transition)
     }
 
     /**
@@ -165,7 +186,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getTransition(idx: Int): AnimationNodeStateMachineTransition? {
         checkOpen()
-        return AnimationNodeStateMachineTransition.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getTransitionBind, segment, idx))
+        val ret = AnimationNodeStateMachineTransition.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getTransitionBind, segment, idx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -175,7 +198,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getTransitionFrom(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getTransitionFromBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getTransitionFromBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -185,7 +210,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getTransitionTo(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getTransitionToBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getTransitionToBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -195,7 +222,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getTransitionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTransitionCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getTransitionCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -206,6 +235,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     fun removeTransitionByIndex(idx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeTransitionByIndexBind, segment, idx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -216,6 +246,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     fun removeTransition(from: String, to: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.removeTransitionBind, segment, from, to)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -226,6 +257,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     fun setGraphOffset(offset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setGraphOffsetBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -235,7 +267,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getGraphOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGraphOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGraphOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -247,6 +281,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     fun setStateMachineType(stateMachineType: AnimationNodeStateMachine.StateMachineType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setStateMachineTypeBind, segment, stateMachineType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -257,7 +292,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getStateMachineType(): AnimationNodeStateMachine.StateMachineType {
         checkOpen()
-        return AnimationNodeStateMachine.StateMachineType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStateMachineTypeBind, segment))
+        val ret = AnimationNodeStateMachine.StateMachineType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStateMachineTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -270,6 +307,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     fun setAllowTransitionToSelf(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAllowTransitionToSelfBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -281,7 +319,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun isAllowTransitionToSelf(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowTransitionToSelfBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowTransitionToSelfBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -295,6 +335,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     fun setResetEnds(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setResetEndsBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -307,7 +348,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun areEndsReset(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.areEndsResetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.areEndsResetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

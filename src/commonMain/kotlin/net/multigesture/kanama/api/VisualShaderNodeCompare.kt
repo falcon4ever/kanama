@@ -39,6 +39,7 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setComparisonType(type: VisualShaderNodeCompare.ComparisonType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setComparisonTypeBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -48,7 +49,9 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getComparisonType(): VisualShaderNodeCompare.ComparisonType {
         checkOpen()
-        return VisualShaderNodeCompare.ComparisonType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getComparisonTypeBind, segment))
+        val ret = VisualShaderNodeCompare.ComparisonType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getComparisonTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +62,7 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setFunction(func: VisualShaderNodeCompare.Function) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFunctionBind, segment, func.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +72,9 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getFunction(): VisualShaderNodeCompare.Function {
         checkOpen()
-        return VisualShaderNodeCompare.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
+        val ret = VisualShaderNodeCompare.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -79,6 +85,7 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setCondition(condition: VisualShaderNodeCompare.Condition) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setConditionBind, segment, condition.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -88,7 +95,9 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getCondition(): VisualShaderNodeCompare.Condition {
         checkOpen()
-        return VisualShaderNodeCompare.Condition(ObjectCalls.ptrcallNoArgsRetLong(Binds.getConditionBind, segment))
+        val ret = VisualShaderNodeCompare.Condition(ObjectCalls.ptrcallNoArgsRetLong(Binds.getConditionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

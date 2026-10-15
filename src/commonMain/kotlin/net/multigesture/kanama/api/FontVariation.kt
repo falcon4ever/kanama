@@ -95,6 +95,8 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
     fun setBaseFont(font: Font?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setBaseFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -105,6 +107,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
     fun getBaseFont(): Font? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getBaseFontBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -127,6 +130,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
     fun setVariationOpentype(coords: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setVariationOpentypeBind, segment, coords)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -143,7 +147,9 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getVariationOpentype(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getVariationOpentypeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getVariationOpentypeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -156,6 +162,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
     fun setVariationEmbolden(strength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVariationEmboldenBind, segment, strength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -167,7 +174,9 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getVariationEmbolden(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVariationEmboldenBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVariationEmboldenBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -178,6 +187,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
     fun setVariationFaceIndex(faceIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setVariationFaceIndexBind, segment, faceIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -187,7 +197,9 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getVariationFaceIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVariationFaceIndexBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getVariationFaceIndexBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -200,6 +212,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
     fun setVariationTransform(transform: Transform2D) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform2DArg(Binds.setVariationTransformBind, segment, transform)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -211,7 +224,9 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getVariationTransform(): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getVariationTransformBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getVariationTransformBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -223,6 +238,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
     fun setOpentypeFeatures(features: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setOpentypeFeaturesBind, segment, features)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -233,6 +249,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
     fun setSpacing(spacing: TextServer.SpacingType, value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(Binds.setSpacingBind, segment, spacing.value, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -243,6 +260,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
     fun setBaselineOffset(baselineOffset: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBaselineOffsetBind, segment, baselineOffset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -252,7 +270,9 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getBaselineOffset(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBaselineOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBaselineOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -262,7 +282,9 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getPaletteIndex(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPaletteIndexBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getPaletteIndexBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -273,6 +295,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
     fun setPaletteIndex(paletteIndex: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setPaletteIndexBind, segment, paletteIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -283,7 +306,9 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getPaletteCustomColors(): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(Binds.getPaletteCustomColorsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedColorList(Binds.getPaletteCustomColorsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -295,6 +320,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
     fun setPaletteCustomColors(colors: List<Color>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedColorListArg(Binds.setPaletteCustomColorsBind, segment, colors)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

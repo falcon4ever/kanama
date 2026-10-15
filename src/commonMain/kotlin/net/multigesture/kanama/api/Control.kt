@@ -1295,6 +1295,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      */
     fun setTheme(theme: Theme?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setThemeBind, segment, listOf(theme?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(theme)
     }
 
     /**
@@ -1372,6 +1373,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      */
     fun addThemeIconOverride(name: String, texture: Texture2D) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeIconOverrideBind, segment, name, texture.requireOpenHandle())
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -1383,6 +1385,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      */
     fun addThemeStyleboxOverride(name: String, stylebox: StyleBox) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeStyleboxOverrideBind, segment, name, stylebox.requireOpenHandle())
+        ObjectCalls.keepReachable(stylebox)
     }
 
     /**
@@ -1394,6 +1397,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      */
     fun addThemeFontOverride(name: String, font: Font) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeFontOverrideBind, segment, name, font.requireOpenHandle())
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -1969,6 +1973,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      */
     fun forceDrag(data: Any?, preview: Control) {
         ObjectCalls.ptrcallWithVariantAndObjectArg(Binds.forceDragBind, segment, data, preview.segment)
+        ObjectCalls.keepReachable(preview)
     }
 
     /**
@@ -2249,6 +2254,9 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      */
     fun setDragForwarding(dragFunc: GodotCallable, canDropFunc: GodotCallable, dropFunc: GodotCallable) {
         ObjectCalls.ptrcallWithThreeCallableArgs(Binds.setDragForwardingBind, segment, dragFunc.target.segment, dragFunc.method, canDropFunc.target.segment, canDropFunc.method, dropFunc.target.segment, dropFunc.method)
+        ObjectCalls.keepReachable(dragFunc)
+        ObjectCalls.keepReachable(canDropFunc)
+        ObjectCalls.keepReachable(dropFunc)
     }
 
     /**
@@ -2261,6 +2269,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      */
     fun setDragPreview(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setDragPreviewBind, segment, listOf(control.segment))
+        ObjectCalls.keepReachable(control)
     }
 
     /**
@@ -2293,6 +2302,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      */
     fun setShortcutContext(node: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setShortcutContextBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**

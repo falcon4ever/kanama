@@ -185,6 +185,7 @@ class RayCast2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun addException(node: CollisionObject2D) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addExceptionBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -203,6 +204,7 @@ class RayCast2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun removeException(node: CollisionObject2D) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeExceptionBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**

@@ -46,6 +46,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     fun addPoint(offset: Double, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleAndColorArg(Binds.addPointBind, segment, offset, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -56,6 +57,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     fun removePoint(point: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removePointBind, segment, point)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -66,6 +68,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     fun setOffset(point: Int, offset: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setOffsetBind, segment, point, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -75,7 +78,9 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getOffset(point: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getOffsetBind, segment, point)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getOffsetBind, segment, point)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -88,6 +93,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     fun reverse() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.reverseBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -98,6 +104,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     fun setColor(point: Int, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(Binds.setColorBind, segment, point, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -107,7 +114,9 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getColor(point: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getColorBind, segment, point)
+        val ret = ObjectCalls.ptrcallWithIntArgRetColor(Binds.getColorBind, segment, point)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -121,7 +130,9 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun sample(offset: Double): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetColor(Binds.sampleBind, segment, offset)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetColor(Binds.sampleBind, segment, offset)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -131,7 +142,9 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPointCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPointCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -143,6 +156,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     fun setOffsets(offsets: List<Float>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setOffsetsBind, segment, offsets)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -153,7 +167,9 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getOffsets(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getOffsetsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getOffsetsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -165,6 +181,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     fun setColors(colors: List<Color>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedColorListArg(Binds.setColorsBind, segment, colors)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -175,7 +192,9 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getColors(): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(Binds.getColorsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedColorList(Binds.getColorsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -186,6 +205,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     fun setInterpolationMode(interpolationMode: Gradient.InterpolationMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setInterpolationModeBind, segment, interpolationMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -195,7 +215,9 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getInterpolationMode(): Gradient.InterpolationMode {
         checkOpen()
-        return Gradient.InterpolationMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getInterpolationModeBind, segment))
+        val ret = Gradient.InterpolationMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getInterpolationModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -208,6 +230,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     fun setInterpolationColorSpace(interpolationColorSpace: Gradient.ColorSpace) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setInterpolationColorSpaceBind, segment, interpolationColorSpace.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -219,7 +242,9 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getInterpolationColorSpace(): Gradient.ColorSpace {
         checkOpen()
-        return Gradient.ColorSpace(ObjectCalls.ptrcallNoArgsRetLong(Binds.getInterpolationColorSpaceBind, segment))
+        val ret = Gradient.ColorSpace(ObjectCalls.ptrcallNoArgsRetLong(Binds.getInterpolationColorSpaceBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

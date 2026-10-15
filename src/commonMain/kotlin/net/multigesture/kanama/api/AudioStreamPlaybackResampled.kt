@@ -20,6 +20,7 @@ open class AudioStreamPlaybackResampled(handle: GodotHandle) : AudioStreamPlayba
     fun beginResample() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.beginResampleBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

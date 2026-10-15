@@ -24,6 +24,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -34,7 +35,10 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createFromSurface(mesh: ArrayMesh?, surface: Int): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectAndIntArgRetLong(Binds.createFromSurfaceBind, segment, mesh?.requireOpenHandle() ?: NULL_SEGMENT, surface))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectAndIntArgRetLong(Binds.createFromSurfaceBind, segment, mesh?.requireOpenHandle() ?: NULL_SEGMENT, surface))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(mesh)
+        return ret
     }
 
     /**
@@ -44,7 +48,10 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun commitToSurface(mesh: ArrayMesh?, compressionFlags: Long = 0L): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectAndLongArgRetLong(Binds.commitToSurfaceBind, segment, mesh?.requireOpenHandle() ?: NULL_SEGMENT, compressionFlags))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectAndLongArgRetLong(Binds.commitToSurfaceBind, segment, mesh?.requireOpenHandle() ?: NULL_SEGMENT, compressionFlags))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(mesh)
+        return ret
     }
 
     /**
@@ -56,7 +63,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -66,7 +75,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVertexCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVertexCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getVertexCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -76,7 +87,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEdgeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getEdgeCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getEdgeCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -86,7 +99,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFaceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFaceCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFaceCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -97,6 +112,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun setVertex(idx: Int, vertex: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector3Arg(Binds.setVertexBind, segment, idx, vertex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -106,7 +122,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVertex(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getVertexBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getVertexBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -117,6 +135,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun setVertexNormal(idx: Int, normal: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector3Arg(Binds.setVertexNormalBind, segment, idx, normal)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -126,7 +145,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVertexNormal(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getVertexNormalBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getVertexNormalBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -139,6 +160,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun setVertexTangent(idx: Int, tangent: Plane) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndPlaneArg(Binds.setVertexTangentBind, segment, idx, tangent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -148,7 +170,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVertexTangent(idx: Int): Plane {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPlane(Binds.getVertexTangentBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetPlane(Binds.getVertexTangentBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -159,6 +183,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun setVertexUv(idx: Int, uv: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setVertexUvBind, segment, idx, uv)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -168,7 +193,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVertexUv(idx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getVertexUvBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getVertexUvBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -179,6 +206,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun setVertexUv2(idx: Int, uv2: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setVertexUv2Bind, segment, idx, uv2)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -188,7 +216,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVertexUv2(idx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getVertexUv2Bind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getVertexUv2Bind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -199,6 +229,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun setVertexColor(idx: Int, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(Binds.setVertexColorBind, segment, idx, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -208,7 +239,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVertexColor(idx: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getVertexColorBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetColor(Binds.getVertexColorBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -219,6 +252,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun setVertexBones(idx: Int, bones: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndPackedInt32ListArgs(Binds.setVertexBonesBind, segment, idx, bones)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -228,7 +262,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVertexBones(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getVertexBonesBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getVertexBonesBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -239,6 +275,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun setVertexWeights(idx: Int, weights: List<Float>) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndPackedFloat32ListArgs(Binds.setVertexWeightsBind, segment, idx, weights)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -248,7 +285,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVertexWeights(idx: Int): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedFloat32List(Binds.getVertexWeightsBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetPackedFloat32List(Binds.getVertexWeightsBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -259,6 +298,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun setVertexMeta(idx: Int, meta: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVariantArg(Binds.setVertexMetaBind, segment, idx, meta)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -268,7 +308,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVertexMeta(idx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getVertexMetaBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getVertexMetaBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -278,7 +320,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVertexEdges(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getVertexEdgesBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getVertexEdgesBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -288,7 +332,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVertexFaces(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getVertexFacesBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getVertexFacesBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -299,7 +345,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEdgeVertex(idx: Int, vertex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getEdgeVertexBind, segment, idx, vertex)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getEdgeVertexBind, segment, idx, vertex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -309,7 +357,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEdgeFaces(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getEdgeFacesBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getEdgeFacesBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -320,6 +370,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun setEdgeMeta(idx: Int, meta: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVariantArg(Binds.setEdgeMetaBind, segment, idx, meta)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -329,7 +380,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEdgeMeta(idx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getEdgeMetaBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getEdgeMetaBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -340,7 +393,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFaceVertex(idx: Int, vertex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getFaceVertexBind, segment, idx, vertex)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getFaceVertexBind, segment, idx, vertex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -351,7 +406,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFaceEdge(idx: Int, edge: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getFaceEdgeBind, segment, idx, edge)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getFaceEdgeBind, segment, idx, edge)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -362,6 +419,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun setFaceMeta(idx: Int, meta: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVariantArg(Binds.setFaceMetaBind, segment, idx, meta)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -371,7 +429,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFaceMeta(idx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getFaceMetaBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getFaceMetaBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -381,7 +441,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFaceNormal(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getFaceNormalBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getFaceNormalBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -392,6 +454,8 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun setMaterial(material: Material?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -401,7 +465,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMaterial(): Material? {
         checkOpen()
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
+        val ret = Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

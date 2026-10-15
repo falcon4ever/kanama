@@ -18,7 +18,9 @@ class PackedDataContainerRef(handle: GodotHandle) : RefCounted(handle) {
      */
     fun size(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.sizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.sizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

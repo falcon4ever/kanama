@@ -27,6 +27,7 @@ class JointLimitationCone3D(handle: GodotHandle) : JointLimitation3D(handle) {
     fun setAngle(angle: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAngleBind, segment, angle)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ class JointLimitationCone3D(handle: GodotHandle) : JointLimitation3D(handle) {
      */
     fun getAngle(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAngleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAngleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

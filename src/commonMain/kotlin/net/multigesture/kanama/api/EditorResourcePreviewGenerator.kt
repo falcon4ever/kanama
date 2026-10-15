@@ -20,6 +20,7 @@ class EditorResourcePreviewGenerator(handle: GodotHandle) : RefCounted(handle) {
     fun requestDrawAndWait(viewport: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.requestDrawAndWaitBind, segment, viewport)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

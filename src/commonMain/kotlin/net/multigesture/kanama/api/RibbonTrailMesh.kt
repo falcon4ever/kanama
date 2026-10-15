@@ -59,6 +59,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSize(size: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -69,7 +70,9 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,6 +83,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSections(sections: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSectionsBind, segment, sections)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -89,7 +93,9 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSections(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSectionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSectionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -100,6 +106,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSectionLength(sectionLength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSectionLengthBind, segment, sectionLength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -109,7 +116,9 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSectionLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSectionLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSectionLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -121,6 +130,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSectionSegments(sectionSegments: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSectionSegmentsBind, segment, sectionSegments)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -131,7 +141,9 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSectionSegments(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSectionSegmentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSectionSegmentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -144,6 +156,8 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setCurve(curve: Curve?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -155,7 +169,9 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveBind, segment))
+        val ret = Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -166,6 +182,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setShape(shape: RibbonTrailMesh.Shape) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setShapeBind, segment, shape.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -175,7 +192,9 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getShape(): RibbonTrailMesh.Shape {
         checkOpen()
-        return RibbonTrailMesh.Shape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getShapeBind, segment))
+        val ret = RibbonTrailMesh.Shape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getShapeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

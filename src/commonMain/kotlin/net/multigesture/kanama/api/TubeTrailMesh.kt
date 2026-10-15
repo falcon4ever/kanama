@@ -70,6 +70,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -80,7 +81,9 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,6 +95,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setRadialSteps(radialSteps: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setRadialStepsBind, segment, radialSteps)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -102,7 +106,9 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRadialSteps(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRadialStepsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getRadialStepsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -113,6 +119,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSections(sections: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSectionsBind, segment, sections)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -122,7 +129,9 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSections(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSectionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSectionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -133,6 +142,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSectionLength(sectionLength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSectionLengthBind, segment, sectionLength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -142,7 +152,9 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSectionLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSectionLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSectionLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -154,6 +166,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSectionRings(sectionRings: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSectionRingsBind, segment, sectionRings)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -164,7 +177,9 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSectionRings(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSectionRingsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSectionRingsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -176,6 +191,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setCapTop(capTop: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCapTopBind, segment, capTop)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -186,7 +202,9 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun isCapTop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCapTopBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCapTopBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -198,6 +216,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setCapBottom(capBottom: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCapBottomBind, segment, capBottom)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -208,7 +227,9 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun isCapBottom(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCapBottomBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCapBottomBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -221,6 +242,8 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setCurve(curve: Curve?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -232,7 +255,9 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveBind, segment))
+        val ret = Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

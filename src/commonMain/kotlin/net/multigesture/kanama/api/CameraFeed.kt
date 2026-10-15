@@ -38,7 +38,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -48,7 +50,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +63,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
     fun setActive(active: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setActiveBind, segment, active)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +73,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -79,6 +86,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
     fun setName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -88,7 +96,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPosition(): CameraFeed.FeedPosition {
         checkOpen()
-        return CameraFeed.FeedPosition(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPositionBind, segment))
+        val ret = CameraFeed.FeedPosition(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPositionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -99,6 +109,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
     fun setPosition(position: CameraFeed.FeedPosition) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setPositionBind, segment, position.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -108,7 +119,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTransform(): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getTransformBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getTransformBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -119,6 +132,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
     fun setTransform(transform: Transform2D) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform2DArg(Binds.setTransformBind, segment, transform)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -129,6 +143,8 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
     fun setRgbImage(rgbImage: Image?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setRgbImageBind, segment, listOf(rgbImage?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(rgbImage)
     }
 
     /**
@@ -139,6 +155,8 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
     fun setYcbcrImage(ycbcrImage: Image?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setYcbcrImageBind, segment, listOf(ycbcrImage?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(ycbcrImage)
     }
 
     /**
@@ -149,6 +167,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
     fun setYcbcrImages(yImage: Image?, cbcrImage: Image?) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoObjectArgs(Binds.setYcbcrImagesBind, segment, yImage?.requireOpenHandle() ?: NULL_SEGMENT, cbcrImage?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(yImage)
+        ObjectCalls.keepReachable(cbcrImage)
     }
 
     /**
@@ -159,6 +180,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
     fun setExternal(width: Int, height: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setExternalBind, segment, width, height)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -169,7 +191,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTextureTexId(feedImageType: CameraServer.FeedImage): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(Binds.getTextureTexIdBind, segment, feedImageType.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetLong(Binds.getTextureTexIdBind, segment, feedImageType.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -179,7 +203,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDatatype(): CameraFeed.FeedDataType {
         checkOpen()
-        return CameraFeed.FeedDataType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDatatypeBind, segment))
+        val ret = CameraFeed.FeedDataType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDatatypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -189,7 +215,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFormats(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getFormatsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getFormatsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -203,7 +231,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setFormat(index: Int, parameters: Map<String, Any?>): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDictionaryArgRetBool(Binds.setFormatBind, segment, index, parameters)
+        val ret = ObjectCalls.ptrcallWithIntAndDictionaryArgRetBool(Binds.setFormatBind, segment, index, parameters)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `frame_changed()`; see [TypedSignal]. */

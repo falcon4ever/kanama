@@ -27,6 +27,7 @@ class AudioStreamPolyphonic(handle: GodotHandle) : AudioStream(handle) {
     fun setPolyphony(voices: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setPolyphonyBind, segment, voices)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class AudioStreamPolyphonic(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getPolyphony(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPolyphonyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPolyphonyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

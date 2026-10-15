@@ -38,6 +38,7 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setFormat(pMember: RenderingDevice.DataFormat) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFormatBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -47,7 +48,9 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFormat(): RenderingDevice.DataFormat {
         checkOpen()
-        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        val ret = RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -58,6 +61,7 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setSamples(pMember: RenderingDevice.TextureSamples) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSamplesBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -67,7 +71,9 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSamples(): RenderingDevice.TextureSamples {
         checkOpen()
-        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSamplesBind, segment))
+        val ret = RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSamplesBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -78,6 +84,7 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setUsageFlags(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setUsageFlagsBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -87,7 +94,9 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUsageFlags(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getUsageFlagsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getUsageFlagsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

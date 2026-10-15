@@ -52,6 +52,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
     fun setMode(mode: AudioEffectDistortion.Mode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -61,7 +62,9 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getMode(): AudioEffectDistortion.Mode {
         checkOpen()
-        return AudioEffectDistortion.Mode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModeBind, segment))
+        val ret = AudioEffectDistortion.Mode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -72,6 +75,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
     fun setPreGain(preGain: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPreGainBind, segment, preGain)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -81,7 +85,9 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPreGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPreGainBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPreGainBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -93,6 +99,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
     fun setKeepHfHz(keepHfHz: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setKeepHfHzBind, segment, keepHfHz)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -103,7 +110,9 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getKeepHfHz(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getKeepHfHzBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getKeepHfHzBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,6 +124,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
     fun setDrive(drive: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDriveBind, segment, drive)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -125,7 +135,9 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDrive(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDriveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDriveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -136,6 +148,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
     fun setPostGain(postGain: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPostGainBind, segment, postGain)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -145,7 +158,9 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPostGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPostGainBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPostGainBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

@@ -429,6 +429,7 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
     fun setStreamCount(streamCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setStreamCountBind, segment, streamCount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -438,7 +439,9 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getStreamCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStreamCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getStreamCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -448,7 +451,9 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getBpm(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBpmBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBpmBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -459,6 +464,8 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
     fun setListStream(streamIndex: Int, audioStream: AudioStream?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setListStreamBind, segment, streamIndex, audioStream?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(audioStream)
     }
 
     /**
@@ -469,6 +476,7 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
     fun getListStream(streamIndex: Int): AudioStream? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getListStreamBind, segment, streamIndex)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -484,6 +492,7 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
     fun setShuffle(shuffle: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setShuffleBind, segment, shuffle)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -493,7 +502,9 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getShuffle(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getShuffleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getShuffleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -505,6 +516,7 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
     fun setFadeTime(dec: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFadeTimeBind, segment, dec)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -515,7 +527,9 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getFadeTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadeTimeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadeTimeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -527,6 +541,7 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
     fun setLoop(loop: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setLoopBind, segment, loop)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -537,7 +552,9 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
      */
     fun hasLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasLoopBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasLoopBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

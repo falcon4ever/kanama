@@ -140,6 +140,7 @@ class RDShaderSPIRV(handle: GodotHandle) : Resource(handle) {
     fun setStageBytecode(stage: RenderingDevice.ShaderStage, bytecode: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndByteArrayArg(Binds.setStageBytecodeBind, segment, stage.value, bytecode)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -149,7 +150,9 @@ class RDShaderSPIRV(handle: GodotHandle) : Resource(handle) {
      */
     fun getStageBytecode(stage: RenderingDevice.ShaderStage): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetByteArray(Binds.getStageBytecodeBind, segment, stage.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetByteArray(Binds.getStageBytecodeBind, segment, stage.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -161,6 +164,7 @@ class RDShaderSPIRV(handle: GodotHandle) : Resource(handle) {
     fun setStageCompileError(stage: RenderingDevice.ShaderStage, compileError: String) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndStringArg(Binds.setStageCompileErrorBind, segment, stage.value, compileError)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -171,7 +175,9 @@ class RDShaderSPIRV(handle: GodotHandle) : Resource(handle) {
      */
     fun getStageCompileError(stage: RenderingDevice.ShaderStage): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getStageCompileErrorBind, segment, stage.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetString(Binds.getStageCompileErrorBind, segment, stage.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

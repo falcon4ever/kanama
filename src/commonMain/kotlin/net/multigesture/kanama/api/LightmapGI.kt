@@ -155,6 +155,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      */
     fun setLightData(data: LightmapGIData?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setLightDataBind, segment, listOf(data?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(data)
     }
 
     /**
@@ -317,6 +318,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      */
     fun setEnvironmentCustomSky(sky: Sky?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setEnvironmentCustomSkyBind, segment, listOf(sky?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(sky)
     }
 
     /**
@@ -663,6 +665,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      */
     fun setCameraAttributes(cameraAttributes: CameraAttributes?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCameraAttributesBind, segment, listOf(cameraAttributes?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(cameraAttributes)
     }
 
     /**

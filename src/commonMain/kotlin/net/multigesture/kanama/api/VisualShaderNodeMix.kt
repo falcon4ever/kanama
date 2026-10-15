@@ -27,6 +27,7 @@ class VisualShaderNodeMix(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setOpType(opType: VisualShaderNodeMix.OpType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, opType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeMix(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getOpType(): VisualShaderNodeMix.OpType {
         checkOpen()
-        return VisualShaderNodeMix.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        val ret = VisualShaderNodeMix.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

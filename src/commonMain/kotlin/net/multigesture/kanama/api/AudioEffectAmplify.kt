@@ -33,6 +33,7 @@ class AudioEffectAmplify(handle: GodotHandle) : AudioEffect(handle) {
     fun setVolumeDb(volume: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumeDbBind, segment, volume)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -43,7 +44,9 @@ class AudioEffectAmplify(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVolumeDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumeDbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumeDbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -57,6 +60,7 @@ class AudioEffectAmplify(handle: GodotHandle) : AudioEffect(handle) {
     fun setVolumeLinear(volume: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumeLinearBind, segment, volume)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -69,7 +73,9 @@ class AudioEffectAmplify(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVolumeLinear(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumeLinearBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumeLinearBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

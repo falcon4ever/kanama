@@ -748,6 +748,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -850,6 +851,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setParamCurve(param: CPUParticles2D.Parameter, curve: Curve?) {
         ObjectCalls.ptrcallWithLongAndObjectArg(Binds.setParamCurveBind, segment, param.value, curve?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -887,6 +889,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setColorRamp(ramp: Gradient?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(ramp)
     }
 
     /**
@@ -906,6 +909,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setColorInitialRamp(ramp: Gradient?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(ramp)
     }
 
     /**
@@ -1139,6 +1143,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setScaleCurveX(scaleCurve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setScaleCurveXBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(scaleCurve)
     }
 
     /**
@@ -1159,6 +1164,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setScaleCurveY(scaleCurve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setScaleCurveYBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(scaleCurve)
     }
 
     /**
@@ -1169,6 +1175,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun convertFromParticles(particles: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.convertFromParticlesBind, segment, listOf(particles.segment))
+        ObjectCalls.keepReachable(particles)
     }
 
     /** Signal `finished()`; see [TypedSignal]. */

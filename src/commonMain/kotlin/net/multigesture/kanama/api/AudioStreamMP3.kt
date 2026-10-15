@@ -59,6 +59,7 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
     fun setData(data: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithByteArrayArg(Binds.setDataBind, segment, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -70,7 +71,9 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -83,6 +86,7 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
     fun setLoop(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setLoopBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -94,7 +98,9 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
      */
     fun hasLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasLoopBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasLoopBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -105,6 +111,7 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
     fun setLoopOffset(seconds: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLoopOffsetBind, segment, seconds)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -114,7 +121,9 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getLoopOffset(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLoopOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLoopOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -125,6 +134,7 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
     fun setBpm(bpm: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBpmBind, segment, bpm)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -134,7 +144,9 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getBpm(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBpmBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBpmBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -147,6 +159,7 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
     fun setBeatCount(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBeatCountBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -158,7 +171,9 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getBeatCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBeatCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBeatCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -169,6 +184,7 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
     fun setBarBeats(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBarBeatsBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -178,7 +194,9 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getBarBeats(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBarBeatsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBarBeatsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

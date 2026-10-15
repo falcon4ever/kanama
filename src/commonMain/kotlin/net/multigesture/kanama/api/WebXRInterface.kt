@@ -60,6 +60,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun isSessionSupported(sessionMode: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.isSessionSupportedBind, segment, sessionMode)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -73,6 +74,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setSessionMode(sessionMode: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setSessionModeBind, segment, sessionMode)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -85,7 +87,9 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getSessionMode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSessionModeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getSessionModeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -101,6 +105,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setRequiredFeatures(requiredFeatures: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setRequiredFeaturesBind, segment, requiredFeatures)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -115,7 +120,9 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getRequiredFeatures(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getRequiredFeaturesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getRequiredFeaturesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -132,6 +139,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setOptionalFeatures(optionalFeatures: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setOptionalFeaturesBind, segment, optionalFeatures)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -147,7 +155,9 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getOptionalFeatures(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOptionalFeaturesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getOptionalFeaturesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -162,7 +172,9 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getReferenceSpaceType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getReferenceSpaceTypeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getReferenceSpaceTypeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -176,7 +188,9 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getEnabledFeatures(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEnabledFeaturesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getEnabledFeaturesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -194,6 +208,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setRequestedReferenceSpaceTypes(requestedReferenceSpaceTypes: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setRequestedReferenceSpaceTypesBind, segment, requestedReferenceSpaceTypes)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -210,7 +225,9 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getRequestedReferenceSpaceTypes(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getRequestedReferenceSpaceTypesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getRequestedReferenceSpaceTypesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -220,7 +237,9 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun isInputSourceActive(inputSourceId: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isInputSourceActiveBind, segment, inputSourceId)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.isInputSourceActiveBind, segment, inputSourceId)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -236,7 +255,9 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getInputSourceTracker(inputSourceId: Int): XRControllerTracker? {
         checkOpen()
-        return XRControllerTracker.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getInputSourceTrackerBind, segment, inputSourceId))
+        val ret = XRControllerTracker.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getInputSourceTrackerBind, segment, inputSourceId))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -249,7 +270,9 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getInputSourceTargetRayMode(inputSourceId: Int): WebXRInterface.TargetRayMode {
         checkOpen()
-        return WebXRInterface.TargetRayMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getInputSourceTargetRayModeBind, segment, inputSourceId))
+        val ret = WebXRInterface.TargetRayMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getInputSourceTargetRayModeBind, segment, inputSourceId))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -261,7 +284,9 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getVisibilityState(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getVisibilityStateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getVisibilityStateBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -272,7 +297,9 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getDisplayRefreshRate(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDisplayRefreshRateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDisplayRefreshRateBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -284,6 +311,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setDisplayRefreshRate(refreshRate: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDisplayRefreshRateBind, segment, refreshRate)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -294,7 +322,9 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getAvailableDisplayRefreshRates(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getAvailableDisplayRefreshRatesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getAvailableDisplayRefreshRatesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `session_supported(session_mode: String, supported: bool)`; see [TypedSignal]. */

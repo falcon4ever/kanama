@@ -230,6 +230,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setCurve(curve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -268,6 +269,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setGradient(color: Gradient?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setGradientBind, segment, listOf(color?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(color)
     }
 
     /**
@@ -287,6 +289,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**

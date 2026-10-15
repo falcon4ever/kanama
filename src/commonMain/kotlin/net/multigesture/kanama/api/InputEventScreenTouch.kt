@@ -39,6 +39,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
     fun setIndex(index: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setIndexBind, segment, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -48,7 +49,9 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
      */
     fun getIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getIndexBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getIndexBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +62,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
     fun setPosition(position: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setPositionBind, segment, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +72,9 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
      */
     fun getPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -79,6 +85,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
     fun setPressed(pressed: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPressedBind, segment, pressed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -89,6 +96,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
     fun setCanceled(canceled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCanceledBind, segment, canceled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -99,6 +107,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
     fun setDoubleTap(doubleTap: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDoubleTapBind, segment, doubleTap)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -108,7 +117,9 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
      */
     fun isDoubleTap(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDoubleTapBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDoubleTapBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {
@@ -130,7 +141,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
         // Downcast a GodotObject to InputEventScreenTouch (null if not).
         @JvmStatic
         fun from(value: GodotObject): InputEventScreenTouch? =
-            if (value.isClass("InputEventScreenTouch")) RefCounted.retained(InputEventScreenTouch(value.handle)) else null
+            if (value.isClass("InputEventScreenTouch")) RefCounted.retained(InputEventScreenTouch(value.handle), value) else null
     }
 
     private object Binds {

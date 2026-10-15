@@ -191,6 +191,7 @@ object TranslationServer {
     @JvmStatic
     fun addTranslation(translation: Translation?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addTranslationBind, singleton, listOf(translation?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(translation)
     }
 
     /**
@@ -201,6 +202,7 @@ object TranslationServer {
     @JvmStatic
     fun removeTranslation(translation: Translation?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeTranslationBind, singleton, listOf(translation?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(translation)
     }
 
     /**
@@ -256,7 +258,9 @@ object TranslationServer {
      */
     @JvmStatic
     fun hasTranslation(translation: Translation?): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.hasTranslationBind, singleton, translation?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.hasTranslationBind, singleton, translation?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(translation)
+        return ret
     }
 
     /**

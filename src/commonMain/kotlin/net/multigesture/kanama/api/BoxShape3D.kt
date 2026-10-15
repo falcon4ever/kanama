@@ -27,6 +27,7 @@ class BoxShape3D(handle: GodotHandle) : Shape3D(handle) {
     fun setSize(size: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class BoxShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {
@@ -58,7 +61,7 @@ class BoxShape3D(handle: GodotHandle) : Shape3D(handle) {
         // Downcast a Resource to BoxShape3D (null if not).
         @JvmStatic
         fun fromResource(value: Resource): BoxShape3D? =
-            if (value.isClass("BoxShape3D")) RefCounted.retained(BoxShape3D(value.handle)) else null
+            if (value.isClass("BoxShape3D")) RefCounted.retained(BoxShape3D(value.handle), value) else null
     }
 
     private object Binds {

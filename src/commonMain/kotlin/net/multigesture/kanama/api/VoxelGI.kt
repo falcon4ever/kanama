@@ -46,6 +46,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      */
     fun setProbeData(data: VoxelGIData?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setProbeDataBind, segment, listOf(data?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(data)
     }
 
     /**
@@ -109,6 +110,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      */
     fun setCameraAttributes(cameraAttributes: CameraAttributes?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCameraAttributesBind, segment, listOf(cameraAttributes?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(cameraAttributes)
     }
 
     /**
@@ -140,6 +142,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      */
     fun bake(fromNode: Node, createVisualDebug: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.bakeBind, segment, fromNode.segment, createVisualDebug)
+        ObjectCalls.keepReachable(fromNode)
     }
 
     /**

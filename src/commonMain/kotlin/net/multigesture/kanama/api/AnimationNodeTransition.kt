@@ -39,6 +39,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setInputCount(inputCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setInputCountBind, segment, inputCount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -51,6 +52,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setInputAsAutoAdvance(input: Int, enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setInputAsAutoAdvanceBind, segment, input, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -60,7 +62,9 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun isInputSetAsAutoAdvance(input: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isInputSetAsAutoAdvanceBind, segment, input)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.isInputSetAsAutoAdvanceBind, segment, input)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -72,6 +76,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setInputBreakLoopAtEnd(input: Int, enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setInputBreakLoopAtEndBind, segment, input, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -81,7 +86,9 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun isInputLoopBrokenAtEnd(input: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isInputLoopBrokenAtEndBind, segment, input)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.isInputLoopBrokenAtEndBind, segment, input)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,6 +99,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setInputReset(input: Int, enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setInputResetBind, segment, input, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -101,7 +109,9 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun isInputReset(input: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isInputResetBind, segment, input)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.isInputResetBind, segment, input)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -116,6 +126,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setXfadeTime(time: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setXfadeTimeBind, segment, time)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -129,7 +140,9 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getXfadeTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getXfadeTimeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getXfadeTimeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -141,6 +154,8 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setXfadeCurve(curve: Curve?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setXfadeCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -151,7 +166,9 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getXfadeCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getXfadeCurveBind, segment))
+        val ret = Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getXfadeCurveBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -163,6 +180,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setAllowTransitionToSelf(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAllowTransitionToSelfBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -173,7 +191,9 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun isAllowTransitionToSelf(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowTransitionToSelfBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowTransitionToSelfBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

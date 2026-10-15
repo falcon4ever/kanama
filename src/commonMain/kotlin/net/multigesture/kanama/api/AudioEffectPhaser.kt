@@ -52,6 +52,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
     fun setRangeMinHz(hz: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRangeMinHzBind, segment, hz)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,7 +63,9 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRangeMinHz(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRangeMinHzBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRangeMinHzBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -74,6 +77,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
     fun setRangeMaxHz(hz: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRangeMaxHzBind, segment, hz)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -84,7 +88,9 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRangeMaxHz(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRangeMaxHzBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRangeMaxHzBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -96,6 +102,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
     fun setRateHz(hz: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRateHzBind, segment, hz)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -106,7 +113,9 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRateHz(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRateHzBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRateHzBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -119,6 +128,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
     fun setFeedback(fbk: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFeedbackBind, segment, fbk)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -130,7 +140,9 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getFeedback(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFeedbackBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFeedbackBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -141,6 +153,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
     fun setDepth(depth: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthBind, segment, depth)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -150,7 +163,9 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDepth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

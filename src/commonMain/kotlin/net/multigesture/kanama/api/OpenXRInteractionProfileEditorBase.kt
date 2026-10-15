@@ -19,6 +19,8 @@ open class OpenXRInteractionProfileEditorBase(handle: GodotHandle) : HBoxContain
      */
     fun setup(actionMap: OpenXRActionMap?, interactionProfile: OpenXRInteractionProfile?) {
         ObjectCalls.ptrcallWithTwoObjectArgs(Binds.setupBind, segment, actionMap?.requireOpenHandle() ?: NULL_SEGMENT, interactionProfile?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(actionMap)
+        ObjectCalls.keepReachable(interactionProfile)
     }
 
     companion object {

@@ -39,6 +39,7 @@ class OpenXRAction(handle: GodotHandle) : Resource(handle) {
     fun setLocalizedName(localizedName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setLocalizedNameBind, segment, localizedName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -48,7 +49,9 @@ class OpenXRAction(handle: GodotHandle) : Resource(handle) {
      */
     fun getLocalizedName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLocalizedNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getLocalizedNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +62,7 @@ class OpenXRAction(handle: GodotHandle) : Resource(handle) {
     fun setActionType(actionType: OpenXRAction.ActionType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setActionTypeBind, segment, actionType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +72,9 @@ class OpenXRAction(handle: GodotHandle) : Resource(handle) {
      */
     fun getActionType(): OpenXRAction.ActionType {
         checkOpen()
-        return OpenXRAction.ActionType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getActionTypeBind, segment))
+        val ret = OpenXRAction.ActionType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getActionTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -79,6 +85,7 @@ class OpenXRAction(handle: GodotHandle) : Resource(handle) {
     fun setToplevelPaths(toplevelPaths: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setToplevelPathsBind, segment, toplevelPaths)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -88,7 +95,9 @@ class OpenXRAction(handle: GodotHandle) : Resource(handle) {
      */
     fun getToplevelPaths(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getToplevelPathsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getToplevelPathsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

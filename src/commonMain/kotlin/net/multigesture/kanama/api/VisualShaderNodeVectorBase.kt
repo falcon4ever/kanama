@@ -27,6 +27,7 @@ open class VisualShaderNodeVectorBase(handle: GodotHandle) : VisualShaderNode(ha
     fun setOpType(type: VisualShaderNodeVectorBase.OpType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ open class VisualShaderNodeVectorBase(handle: GodotHandle) : VisualShaderNode(ha
      */
     fun getOpType(): VisualShaderNodeVectorBase.OpType {
         checkOpen()
-        return VisualShaderNodeVectorBase.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        val ret = VisualShaderNodeVectorBase.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

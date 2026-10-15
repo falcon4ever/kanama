@@ -33,6 +33,7 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
     fun setUniformType(pMember: RenderingDevice.UniformType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setUniformTypeBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -42,7 +43,9 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUniformType(): RenderingDevice.UniformType {
         checkOpen()
-        return RenderingDevice.UniformType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getUniformTypeBind, segment))
+        val ret = RenderingDevice.UniformType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getUniformTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +56,7 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
     fun setBinding(pMember: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBindingBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,7 +66,9 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBinding(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -74,6 +80,7 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
     fun addId(id: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.addIdBind, segment, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -84,6 +91,7 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
     fun clearIds() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearIdsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -93,7 +101,9 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIds(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getIdsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getIdsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -24,6 +24,9 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addMenuShortcut(shortcut: Shortcut?, callback: GodotCallable) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectCallableArgs(Binds.addMenuShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(shortcut)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -36,6 +39,9 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addContextMenuItem(name: String, callback: GodotCallable, icon: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringCallableObjectArgs(Binds.addContextMenuItemBind, segment, name, callback.target.segment, callback.method, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(callback)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -48,6 +54,9 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addContextMenuItemFromShortcut(name: String, shortcut: Shortcut?, icon: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndTwoObjectArgs(Binds.addContextMenuItemFromShortcutBind, segment, name, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(shortcut)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -60,6 +69,9 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addContextSubmenuItem(name: String, menu: PopupMenu, icon: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndTwoObjectArgs(Binds.addContextSubmenuItemBind, segment, name, menu.segment, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(menu)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**

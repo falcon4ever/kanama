@@ -113,6 +113,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setPathfindingAlgorithm(pathfindingAlgorithm: NavigationPathQueryParameters3D.PathfindingAlgorithm) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setPathfindingAlgorithmBind, segment, pathfindingAlgorithm.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -122,7 +123,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPathfindingAlgorithm(): NavigationPathQueryParameters3D.PathfindingAlgorithm {
         checkOpen()
-        return NavigationPathQueryParameters3D.PathfindingAlgorithm(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPathfindingAlgorithmBind, segment))
+        val ret = NavigationPathQueryParameters3D.PathfindingAlgorithm(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPathfindingAlgorithmBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -133,6 +136,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setPathPostprocessing(pathPostprocessing: NavigationPathQueryParameters3D.PathPostProcessing) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setPathPostprocessingBind, segment, pathPostprocessing.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -142,7 +146,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPathPostprocessing(): NavigationPathQueryParameters3D.PathPostProcessing {
         checkOpen()
-        return NavigationPathQueryParameters3D.PathPostProcessing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPathPostprocessingBind, segment))
+        val ret = NavigationPathQueryParameters3D.PathPostProcessing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPathPostprocessingBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -153,6 +159,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setMap(map: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setMapBind, segment, map)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -162,7 +169,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMap(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getMapBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getMapBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -173,6 +182,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setStartPosition(startPosition: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setStartPositionBind, segment, startPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -182,7 +192,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getStartPosition(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getStartPositionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getStartPositionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -193,6 +205,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setTargetPosition(targetPosition: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setTargetPositionBind, segment, targetPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -202,7 +215,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getTargetPosition(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getTargetPositionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getTargetPositionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -213,6 +228,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setNavigationLayers(navigationLayers: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setNavigationLayersBind, segment, navigationLayers)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -222,7 +238,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getNavigationLayers(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getNavigationLayersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getNavigationLayersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -233,6 +251,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setMetadataFlags(flags: NavigationPathQueryParameters3D.PathMetadataFlags) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setMetadataFlagsBind, segment, flags.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -242,7 +261,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMetadataFlags(): NavigationPathQueryParameters3D.PathMetadataFlags {
         checkOpen()
-        return NavigationPathQueryParameters3D.PathMetadataFlags(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMetadataFlagsBind, segment))
+        val ret = NavigationPathQueryParameters3D.PathMetadataFlags(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMetadataFlagsBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -257,6 +278,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setSimplifyPath(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setSimplifyPathBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -270,7 +292,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getSimplifyPath(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSimplifyPathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getSimplifyPathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -281,6 +305,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setSimplifyEpsilon(epsilon: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSimplifyEpsilonBind, segment, epsilon)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -290,7 +315,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getSimplifyEpsilon(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSimplifyEpsilonBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSimplifyEpsilonBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -306,6 +333,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setIncludedRegions(regions: List<RID>) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(Binds.setIncludedRegionsBind, segment, regions)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -320,7 +348,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getIncludedRegions(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getIncludedRegionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getIncludedRegionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -335,6 +365,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setExcludedRegions(regions: List<RID>) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(Binds.setExcludedRegionsBind, segment, regions)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -348,7 +379,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getExcludedRegions(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getExcludedRegionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getExcludedRegionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -360,6 +393,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setPathReturnMaxLength(length: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPathReturnMaxLengthBind, segment, length)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -370,7 +404,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPathReturnMaxLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathReturnMaxLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathReturnMaxLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -384,6 +420,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setPathReturnMaxRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPathReturnMaxRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -396,7 +433,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPathReturnMaxRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathReturnMaxRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathReturnMaxRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -412,6 +451,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setPathSearchMaxPolygons(maxPolygons: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setPathSearchMaxPolygonsBind, segment, maxPolygons)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -426,7 +466,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPathSearchMaxPolygons(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPathSearchMaxPolygonsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPathSearchMaxPolygonsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -443,6 +485,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     fun setPathSearchMaxDistance(distance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPathSearchMaxDistanceBind, segment, distance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -458,7 +501,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPathSearchMaxDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathSearchMaxDistanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathSearchMaxDistanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

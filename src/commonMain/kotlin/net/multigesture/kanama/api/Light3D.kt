@@ -466,6 +466,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      */
     fun setProjector(projector: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setProjectorBind, segment, listOf(projector?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(projector)
     }
 
     /**

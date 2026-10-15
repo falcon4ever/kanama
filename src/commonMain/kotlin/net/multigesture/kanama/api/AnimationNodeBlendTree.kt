@@ -29,6 +29,8 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
     fun addNode(name: String, node: AnimationNode?, position: Vector2 = Vector2(0.0, 0.0)) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(Binds.addNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, position)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -39,6 +41,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
     fun getNode(name: String): AnimationNode? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getNodeBind, segment, name)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -54,6 +57,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
     fun removeNode(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.removeNodeBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -64,6 +68,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
     fun renameNode(name: String, newName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.renameNodeBind, segment, name, newName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -73,7 +78,9 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun hasNode(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasNodeBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasNodeBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -85,6 +92,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
     fun connectNode(inputNode: String, inputIndex: Int, outputNode: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameIntAndStringNameArgs(Binds.connectNodeBind, segment, inputNode, inputIndex, outputNode)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -95,6 +103,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
     fun disconnectNode(inputNode: String, inputIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndIntArg(Binds.disconnectNodeBind, segment, inputNode, inputIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -104,7 +113,9 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getNodeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getNodeListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getNodeListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,6 +126,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
     fun setNodePosition(name: String, position: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVector2Arg(Binds.setNodePositionBind, segment, name, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -124,7 +136,9 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getNodePosition(name: String): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVector2(Binds.getNodePositionBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetVector2(Binds.getNodePositionBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -135,6 +149,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
     fun setGraphOffset(offset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setGraphOffsetBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -144,7 +159,9 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getGraphOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGraphOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGraphOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `node_changed(node_name: StringName)`; see [TypedSignal]. */

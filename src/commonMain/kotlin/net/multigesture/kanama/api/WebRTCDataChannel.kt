@@ -24,7 +24,9 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun poll(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -35,6 +37,7 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
     fun closeConnection() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.closeConnectionBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -44,7 +47,9 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun wasStringPacket(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.wasStringPacketBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.wasStringPacketBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -55,6 +60,7 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
     fun setWriteMode(writeMode: WebRTCDataChannel.WriteMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setWriteModeBind, segment, writeMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -64,7 +70,9 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getWriteMode(): WebRTCDataChannel.WriteMode {
         checkOpen()
-        return WebRTCDataChannel.WriteMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getWriteModeBind, segment))
+        val ret = WebRTCDataChannel.WriteMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getWriteModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -74,7 +82,9 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getReadyState(): WebRTCDataChannel.ChannelState {
         checkOpen()
-        return WebRTCDataChannel.ChannelState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getReadyStateBind, segment))
+        val ret = WebRTCDataChannel.ChannelState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getReadyStateBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -84,7 +94,9 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getLabel(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLabelBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getLabelBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,7 +106,9 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun isOrdered(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOrderedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isOrderedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -106,7 +120,9 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -117,7 +133,9 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getMaxPacketLifeTime(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxPacketLifeTimeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxPacketLifeTimeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -128,7 +146,9 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getMaxRetransmits(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxRetransmitsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxRetransmitsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -139,7 +159,9 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getProtocol(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getProtocolBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getProtocolBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -149,7 +171,9 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun isNegotiated(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNegotiatedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isNegotiatedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -159,7 +183,9 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getBufferedAmount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferedAmountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferedAmountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

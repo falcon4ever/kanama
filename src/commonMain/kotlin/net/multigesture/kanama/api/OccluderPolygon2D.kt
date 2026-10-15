@@ -35,11 +35,14 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
     fun setPolygonClosed(closed: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPolygonClosedBind, segment, closed)
+        ObjectCalls.keepReachable(this)
     }
 
     fun isPolygonClosed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPolygonClosedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isPolygonClosedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -50,6 +53,7 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
     fun setCullMode(cullMode: OccluderPolygon2D.CullMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setCullModeBind, segment, cullMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -59,7 +63,9 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getCullMode(): OccluderPolygon2D.CullMode {
         checkOpen()
-        return OccluderPolygon2D.CullMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCullModeBind, segment))
+        val ret = OccluderPolygon2D.CullMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCullModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -70,6 +76,7 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
     fun setPolygon(polygon: List<Vector2>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setPolygonBind, segment, polygon)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -79,7 +86,9 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPolygon(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getPolygonBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getPolygonBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

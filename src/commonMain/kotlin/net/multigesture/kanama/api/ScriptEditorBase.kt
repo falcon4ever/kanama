@@ -20,6 +20,7 @@ class ScriptEditorBase(handle: GodotHandle) : VBoxContainer(handle) {
      */
     fun addSyntaxHighlighter(highlighter: EditorSyntaxHighlighter?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addSyntaxHighlighterBind, segment, listOf(highlighter?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(highlighter)
     }
 
     /**

@@ -355,6 +355,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setProcessMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setProcessMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -649,6 +650,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setDrawPassMesh(pass: Int, mesh: Mesh?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setDrawPassMeshBind, segment, pass, mesh?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(mesh)
     }
 
     /**
@@ -671,6 +673,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
     fun setSkin(skin: Skin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(skin)
     }
 
     fun getSkin(): Skin? {
@@ -847,6 +850,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun convertFromParticles(particles: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.convertFromParticlesBind, segment, listOf(particles.segment))
+        ObjectCalls.keepReachable(particles)
     }
 
     /**

@@ -52,6 +52,8 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
     fun setMaterial(material: Material?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -61,7 +63,9 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getMaterial(): Material? {
         checkOpen()
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
+        val ret = Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -71,7 +75,9 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getMeshArrays(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getMeshArraysBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getMeshArraysBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -83,6 +89,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
     fun setCustomAabb(aabb: AABB) {
         checkOpen()
         ObjectCalls.ptrcallWithAABBArg(Binds.setCustomAabbBind, segment, aabb)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -93,7 +100,9 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getCustomAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getCustomAabbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetAABB(Binds.getCustomAabbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -106,6 +115,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
     fun setFlipFaces(flipFaces: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setFlipFacesBind, segment, flipFaces)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -117,7 +127,9 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getFlipFaces(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFlipFacesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getFlipFacesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -129,6 +141,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
     fun setAddUv2(addUv2: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAddUv2Bind, segment, addUv2)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -139,7 +152,9 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getAddUv2(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAddUv2Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getAddUv2Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -154,6 +169,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
     fun setUv2Padding(uv2Padding: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setUv2PaddingBind, segment, uv2Padding)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -167,7 +183,9 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getUv2Padding(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getUv2PaddingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getUv2PaddingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -178,6 +196,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
     fun requestUpdate() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.requestUpdateBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

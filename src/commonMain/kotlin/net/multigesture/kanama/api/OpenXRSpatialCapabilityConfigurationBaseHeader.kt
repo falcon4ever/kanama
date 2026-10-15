@@ -19,7 +19,9 @@ open class OpenXRSpatialCapabilityConfigurationBaseHeader(handle: GodotHandle) :
      */
     fun hasValidConfiguration(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasValidConfigurationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasValidConfigurationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ open class OpenXRSpatialCapabilityConfigurationBaseHeader(handle: GodotHandle) :
      */
     fun getConfiguration(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getConfigurationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getConfigurationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

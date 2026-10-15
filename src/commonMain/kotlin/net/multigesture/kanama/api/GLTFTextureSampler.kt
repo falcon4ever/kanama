@@ -44,7 +44,9 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
      */
     fun getMagFilter(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMagFilterBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMagFilterBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -56,6 +58,7 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
     fun setMagFilter(filterMode: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMagFilterBind, segment, filterMode)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -66,7 +69,9 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
      */
     fun getMinFilter(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinFilterBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinFilterBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -78,6 +83,7 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
     fun setMinFilter(filterMode: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMinFilterBind, segment, filterMode)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -87,7 +93,9 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
      */
     fun getWrapS(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWrapSBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getWrapSBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -98,6 +106,7 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
     fun setWrapS(wrapMode: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setWrapSBind, segment, wrapMode)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -107,7 +116,9 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
      */
     fun getWrapT(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWrapTBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getWrapTBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -118,6 +129,7 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
     fun setWrapT(wrapMode: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setWrapTBind, segment, wrapMode)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

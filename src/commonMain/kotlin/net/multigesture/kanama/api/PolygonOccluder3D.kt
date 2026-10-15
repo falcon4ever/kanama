@@ -29,6 +29,7 @@ class PolygonOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
     fun setPolygon(polygon: List<Vector2>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setPolygonBind, segment, polygon)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -40,7 +41,9 @@ class PolygonOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
      */
     fun getPolygon(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getPolygonBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getPolygonBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

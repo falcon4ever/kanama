@@ -149,6 +149,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      */
     fun setTexture(type: Decal.DecalTexture, texture: Texture2D?) {
         ObjectCalls.ptrcallWithLongAndObjectArg(Binds.setTextureBind, segment, type.value, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**

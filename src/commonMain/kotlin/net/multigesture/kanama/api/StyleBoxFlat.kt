@@ -160,6 +160,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setBgColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setBgColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -169,7 +170,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getBgColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getBgColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getBgColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -180,6 +183,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setBorderColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setBorderColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -189,7 +193,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getBorderColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getBorderColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getBorderColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -200,6 +206,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setBorderWidthAll(width: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBorderWidthAllBind, segment, width)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -209,7 +216,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getBorderWidthMin(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBorderWidthMinBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBorderWidthMinBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -220,6 +229,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setBorderWidth(margin: Side, width: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(Binds.setBorderWidthBind, segment, margin.value, width)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -229,7 +239,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getBorderWidth(margin: Side): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getBorderWidthBind, segment, margin.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetInt(Binds.getBorderWidthBind, segment, margin.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -240,6 +252,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setBorderBlend(blend: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setBorderBlendBind, segment, blend)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -249,7 +262,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getBorderBlend(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getBorderBlendBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getBorderBlendBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -260,6 +275,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setCornerRadiusAll(radius: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setCornerRadiusAllBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -270,6 +286,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setCornerRadius(corner: Corner, radius: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(Binds.setCornerRadiusBind, segment, corner.value, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -279,7 +296,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getCornerRadius(corner: Corner): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getCornerRadiusBind, segment, corner.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetInt(Binds.getCornerRadiusBind, segment, corner.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -294,6 +313,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setExpandMargin(margin: Side, size: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setExpandMarginBind, segment, margin.value, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -304,6 +324,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setExpandMarginAll(size: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setExpandMarginAllBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -317,7 +338,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getExpandMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getExpandMarginBind, segment, margin.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getExpandMarginBind, segment, margin.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -328,6 +351,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setDrawCenter(drawCenter: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDrawCenterBind, segment, drawCenter)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -337,7 +361,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun isDrawCenterEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawCenterEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawCenterEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -355,6 +381,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setSkew(skew: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setSkewBind, segment, skew)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -371,7 +398,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getSkew(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSkewBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSkewBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -382,6 +411,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setShadowColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setShadowColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -391,7 +421,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getShadowColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getShadowColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getShadowColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -402,6 +434,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setShadowSize(size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setShadowSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -411,7 +444,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getShadowSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getShadowSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getShadowSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -422,6 +457,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setShadowOffset(offset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setShadowOffsetBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -431,7 +467,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getShadowOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getShadowOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getShadowOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -445,6 +483,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setAntiAliased(antiAliased: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAntiAliasedBind, segment, antiAliased)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -457,7 +496,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun isAntiAliased(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAntiAliasedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAntiAliasedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -471,6 +512,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setAaSize(size: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAaSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -483,7 +525,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getAaSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAaSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAaSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -499,6 +543,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     fun setCornerDetail(detail: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setCornerDetailBind, segment, detail)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -513,7 +558,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getCornerDetail(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCornerDetailBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCornerDetailBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

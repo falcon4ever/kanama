@@ -21,6 +21,7 @@ class ResourcePreloader(handle: GodotHandle) : Node(handle) {
      */
     fun addResource(name: String, resource: Resource?) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addResourceBind, segment, name, resource?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(resource)
     }
 
     /**

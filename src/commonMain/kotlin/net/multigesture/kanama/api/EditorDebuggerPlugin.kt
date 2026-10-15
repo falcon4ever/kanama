@@ -18,7 +18,9 @@ class EditorDebuggerPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSession(id: Int): EditorDebuggerSession? {
         checkOpen()
-        return EditorDebuggerSession.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSessionBind, segment, id))
+        val ret = EditorDebuggerSession.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSessionBind, segment, id))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -29,7 +31,9 @@ class EditorDebuggerPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSessions(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getSessionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getSessionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

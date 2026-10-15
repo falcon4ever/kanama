@@ -70,6 +70,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
     fun setAnimation(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.setAnimationBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -80,7 +81,9 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getAnimation(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getAnimationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getAnimationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -91,6 +94,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
     fun setPlayMode(mode: AnimationNodeAnimation.PlayMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setPlayModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -100,7 +104,9 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getPlayMode(): AnimationNodeAnimation.PlayMode {
         checkOpen()
-        return AnimationNodeAnimation.PlayMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlayModeBind, segment))
+        val ret = AnimationNodeAnimation.PlayMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlayModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -113,6 +119,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
     fun setAdvanceOnStart(advanceOnStart: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAdvanceOnStartBind, segment, advanceOnStart)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -124,7 +131,9 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun isAdvanceOnStart(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAdvanceOnStartBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAdvanceOnStartBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -136,6 +145,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
     fun setUseCustomTimeline(useCustomTimeline: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseCustomTimelineBind, segment, useCustomTimeline)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -146,7 +156,9 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun isUsingCustomTimeline(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingCustomTimelineBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingCustomTimelineBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -158,6 +170,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
     fun setTimelineLength(timelineLength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTimelineLengthBind, segment, timelineLength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -168,7 +181,9 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getTimelineLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimelineLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimelineLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -182,6 +197,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
     fun setStretchTimeScale(stretchTimeScale: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setStretchTimeScaleBind, segment, stretchTimeScale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -194,7 +210,9 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun isStretchingTimeScale(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isStretchingTimeScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isStretchingTimeScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -206,6 +224,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
     fun setStartOffset(startOffset: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setStartOffsetBind, segment, startOffset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -216,7 +235,9 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getStartOffset(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStartOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStartOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -231,6 +252,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
     fun setLoopMode(loopMode: Animation.LoopMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setLoopModeBind, segment, loopMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -244,7 +266,9 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getLoopMode(): Animation.LoopMode {
         checkOpen()
-        return Animation.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLoopModeBind, segment))
+        val ret = Animation.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLoopModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

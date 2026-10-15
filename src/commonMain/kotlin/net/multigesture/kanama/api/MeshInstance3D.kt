@@ -39,6 +39,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setMesh(mesh: Mesh?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(mesh)
     }
 
     /**
@@ -81,6 +82,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setSkin(skin: Skin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(skin)
     }
 
     /**
@@ -124,6 +126,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setSurfaceOverrideMaterial(surface: Int, material: Material?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setSurfaceOverrideMaterialBind, segment, surface, material?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -184,6 +187,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun createMultipleConvexCollisions(settings: MeshConvexDecompositionSettings?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.createMultipleConvexCollisionsBind, segment, listOf(settings?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(settings)
     }
 
     /**
@@ -245,7 +249,9 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.bake_mesh_from_current_blend_shape_mix
      */
     fun bakeMeshFromCurrentBlendShapeMix(existing: ArrayMesh?): ArrayMesh? {
-        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.bakeMeshFromCurrentBlendShapeMixBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.bakeMeshFromCurrentBlendShapeMixBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(existing)
+        return ret
     }
 
     /**
@@ -258,7 +264,9 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.bake_mesh_from_current_skeleton_pose
      */
     fun bakeMeshFromCurrentSkeletonPose(existing: ArrayMesh?): ArrayMesh? {
-        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.bakeMeshFromCurrentSkeletonPoseBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.bakeMeshFromCurrentSkeletonPoseBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(existing)
+        return ret
     }
 
     companion object {

@@ -33,6 +33,7 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
     fun setCustomSolverBias(bias: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCustomSolverBiasBind, segment, bias)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -44,7 +45,9 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomSolverBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCustomSolverBiasBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCustomSolverBiasBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -56,7 +59,10 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun collide(localXform: Transform2D, withShape: Shape2D, shapeXform: Transform2D): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetBool(Binds.collideBind, segment, localXform, withShape.requireOpenHandle(), shapeXform)
+        val ret = ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetBool(Binds.collideBind, segment, localXform, withShape.requireOpenHandle(), shapeXform)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(withShape)
+        return ret
     }
 
     /**
@@ -70,7 +76,10 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun collideWithMotion(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D, shapeXform: Transform2D, shapeMotion: Vector2): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool(Binds.collideWithMotionBind, segment, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
+        val ret = ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool(Binds.collideWithMotionBind, segment, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(withShape)
+        return ret
     }
 
     /**
@@ -87,7 +96,10 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun collideAndGetContacts(localXform: Transform2D, withShape: Shape2D, shapeXform: Transform2D): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List(Binds.collideAndGetContactsBind, segment, localXform, withShape.requireOpenHandle(), shapeXform)
+        val ret = ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List(Binds.collideAndGetContactsBind, segment, localXform, withShape.requireOpenHandle(), shapeXform)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(withShape)
+        return ret
     }
 
     /**
@@ -106,7 +118,10 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun collideWithMotionAndGetContacts(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D, shapeXform: Transform2D, shapeMotion: Vector2): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List(Binds.collideWithMotionAndGetContactsBind, segment, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
+        val ret = ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List(Binds.collideWithMotionAndGetContactsBind, segment, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(withShape)
+        return ret
     }
 
     /**
@@ -118,6 +133,7 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
     fun draw(canvasItem: RID, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndColorArg(Binds.drawBind, segment, canvasItem, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -127,7 +143,9 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getRect(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRectBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRectBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

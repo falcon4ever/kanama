@@ -41,6 +41,7 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
     fun setCeilingDb(ceiling: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCeilingDbBind, segment, ceiling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -52,7 +53,9 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getCeilingDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCeilingDbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCeilingDbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -63,6 +66,7 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
     fun setPreGainDb(preGain: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPreGainDbBind, segment, preGain)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -72,7 +76,9 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPreGainDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPreGainDbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPreGainDbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -84,6 +90,7 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
     fun setRelease(release: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setReleaseBind, segment, release)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -94,7 +101,9 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRelease(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getReleaseBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getReleaseBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

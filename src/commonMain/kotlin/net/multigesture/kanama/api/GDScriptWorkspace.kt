@@ -14,6 +14,8 @@ class GDScriptWorkspace(handle: GodotHandle) : RefCounted(handle) {
     fun applyNewSignal(obj: GodotObject, function: String, args: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectStringAndPackedStringListArgs(Binds.applyNewSignalBind, segment, obj.segment, function, args)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(obj)
     }
 
     /**
@@ -23,7 +25,9 @@ class GDScriptWorkspace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFilePath(uri: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(Binds.getFilePathBind, segment, uri)
+        val ret = ObjectCalls.ptrcallWithStringArgRetString(Binds.getFilePathBind, segment, uri)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -33,7 +37,9 @@ class GDScriptWorkspace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFileUri(path: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(Binds.getFileUriBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithStringArgRetString(Binds.getFileUriBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -43,27 +49,35 @@ class GDScriptWorkspace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun generateScriptApi(path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetDictionary(Binds.generateScriptApiBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithStringArgRetDictionary(Binds.generateScriptApiBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun didDeleteFiles(params: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.didDeleteFilesBind, segment, params)
+        ObjectCalls.keepReachable(this)
     }
 
     fun parseScript(path: String, content: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.parseScriptBind, segment, path, content))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.parseScriptBind, segment, path, content))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun parseLocalScript(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.parseLocalScriptBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.parseLocalScriptBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun publishDiagnostics(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.publishDiagnosticsBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

@@ -29,7 +29,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun addInput(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.addInputBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.addInputBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,6 +42,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
     fun removeInput(index: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeInputBind, segment, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -49,7 +52,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun setInputName(input: Int, name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetBool(Binds.setInputNameBind, segment, input, name)
+        val ret = ObjectCalls.ptrcallWithIntAndStringArgRetBool(Binds.setInputNameBind, segment, input, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,7 +64,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun getInputName(input: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getInputNameBind, segment, input)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getInputNameBind, segment, input)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -70,7 +77,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun getInputCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInputCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getInputCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,7 +89,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun findInput(name: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetInt(Binds.findInputBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetInt(Binds.findInputBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -91,6 +102,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
     fun setFilterPath(path: NodePath, enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathAndBoolArgs(Binds.setFilterPathBind, segment, path, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -100,7 +112,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun isPathFiltered(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.isPathFilteredBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.isPathFilteredBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -111,6 +125,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
     fun setFilterEnabled(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setFilterEnabledBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -120,7 +135,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun isFilterEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFilterEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isFilterEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -132,7 +149,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun getProcessingAnimationTreeInstanceId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getProcessingAnimationTreeInstanceIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getProcessingAnimationTreeInstanceIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -142,7 +161,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun isProcessTesting(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isProcessTestingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isProcessTestingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -155,6 +176,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
     fun blendAnimation(animation: String, time: Double, delta: Double, seeked: Boolean, isExternalSeeking: Boolean, blend: Double, loopedFlag: Animation.LoopedFlag = Animation.LoopedFlag.NONE) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs(Binds.blendAnimationBind, segment, animation, time, delta, seeked, isExternalSeeking, blend, loopedFlag.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -166,7 +188,10 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun blendNode(name: String, node: AnimationNode?, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: AnimationNode.FilterAction = AnimationNode.FilterAction.IGNORE, sync: Boolean = true, testOnly: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(Binds.blendNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, time, seek, isExternalSeeking, blend, filter.value, sync, testOnly)
+        val ret = ObjectCalls.ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(Binds.blendNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, time, seek, isExternalSeeking, blend, filter.value, sync, testOnly)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(node)
+        return ret
     }
 
     /**
@@ -178,7 +203,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun blendInput(inputIndex: Int, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: AnimationNode.FilterAction = AnimationNode.FilterAction.IGNORE, sync: Boolean = true, testOnly: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(Binds.blendInputBind, segment, inputIndex, time, seek, isExternalSeeking, blend, filter.value, sync, testOnly)
+        val ret = ObjectCalls.ptrcallWithIntDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(Binds.blendInputBind, segment, inputIndex, time, seek, isExternalSeeking, blend, filter.value, sync, testOnly)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -190,6 +217,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
     fun setParameter(name: String, value: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setParameterBind, segment, name, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -200,7 +228,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun getParameter(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getParameterBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getParameterBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `tree_changed()`; see [TypedSignal]. */

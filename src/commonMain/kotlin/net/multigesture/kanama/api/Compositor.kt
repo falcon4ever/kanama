@@ -27,6 +27,7 @@ class Compositor(handle: GodotHandle) : Resource(handle) {
     fun setCompositorEffects(compositorEffects: List<CompositorEffect>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setCompositorEffectsBind, segment, compositorEffects)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ class Compositor(handle: GodotHandle) : Resource(handle) {
      */
     fun getCompositorEffects(): List<CompositorEffect> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getCompositorEffectsBind, segment, CompositorEffect::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getCompositorEffectsBind, segment, CompositorEffect::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -21,6 +21,7 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun peerDisconnect(data: Int = 0) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.peerDisconnectBind, segment, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -33,6 +34,7 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun peerDisconnectLater(data: Int = 0) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.peerDisconnectLaterBind, segment, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -45,6 +47,7 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun peerDisconnectNow(data: Int = 0) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.peerDisconnectNowBind, segment, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -56,6 +59,7 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun ping() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.pingBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -69,6 +73,7 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun pingInterval(pingInterval: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.pingIntervalBind, segment, pingInterval)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -80,6 +85,7 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun reset() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.resetBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -90,7 +96,9 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun send(channel: Int, packet: ByteArray, flags: Int): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntByteArrayIntArgsRetLong(Binds.sendBind, segment, channel, packet, flags))
+        val ret = GodotError(ObjectCalls.ptrcallWithIntByteArrayIntArgsRetLong(Binds.sendBind, segment, channel, packet, flags))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -113,6 +121,7 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun throttleConfigure(interval: Int, acceleration: Int, deceleration: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeIntArgs(Binds.throttleConfigureBind, segment, interval, acceleration, deceleration)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -129,6 +138,7 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun setTimeout(timeout: Int, timeoutMin: Int, timeoutMax: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeIntArgs(Binds.setTimeoutBind, segment, timeout, timeoutMin, timeoutMax)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -140,7 +150,9 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getPacketFlags(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPacketFlagsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPacketFlagsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -150,7 +162,9 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getRemoteAddress(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getRemoteAddressBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getRemoteAddressBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -160,7 +174,9 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getRemotePort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRemotePortBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getRemotePortBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -170,7 +186,9 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getStatistic(statistic: ENetPacketPeer.PeerStatistic): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getStatisticBind, segment, statistic.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getStatisticBind, segment, statistic.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -180,7 +198,9 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getState(): ENetPacketPeer.PeerState {
         checkOpen()
-        return ENetPacketPeer.PeerState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStateBind, segment))
+        val ret = ENetPacketPeer.PeerState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStateBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -190,7 +210,9 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getChannels(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getChannelsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getChannelsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -201,7 +223,9 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun isActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

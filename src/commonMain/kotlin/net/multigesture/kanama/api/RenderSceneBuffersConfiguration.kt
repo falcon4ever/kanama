@@ -81,7 +81,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getRenderTarget(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRenderTargetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getRenderTargetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,6 +94,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
     fun setRenderTarget(renderTarget: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setRenderTargetBind, segment, renderTarget)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -101,7 +104,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getInternalSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getInternalSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getInternalSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -112,6 +117,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
     fun setInternalSize(internalSize: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setInternalSizeBind, segment, internalSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -121,7 +127,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getTargetSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getTargetSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getTargetSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -132,6 +140,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
     fun setTargetSize(targetSize: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setTargetSizeBind, segment, targetSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -141,7 +150,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getViewCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getViewCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getViewCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -152,6 +163,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
     fun setViewCount(viewCount: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setViewCountBind, segment, viewCount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -162,7 +174,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getScaling3dMode(): RenderingServer.ViewportScaling3DMode {
         checkOpen()
-        return RenderingServer.ViewportScaling3DMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScaling3dModeBind, segment))
+        val ret = RenderingServer.ViewportScaling3DMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScaling3dModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -174,6 +188,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
     fun setScaling3dMode(scaling3dMode: RenderingServer.ViewportScaling3DMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setScaling3dModeBind, segment, scaling3dMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -183,7 +198,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMsaa3d(): RenderingServer.ViewportMSAA {
         checkOpen()
-        return RenderingServer.ViewportMSAA(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMsaa3dBind, segment))
+        val ret = RenderingServer.ViewportMSAA(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMsaa3dBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -194,6 +211,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
     fun setMsaa3d(msaa3d: RenderingServer.ViewportMSAA) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setMsaa3dBind, segment, msaa3d.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -203,7 +221,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getScreenSpaceAa(): RenderingServer.ViewportScreenSpaceAA {
         checkOpen()
-        return RenderingServer.ViewportScreenSpaceAA(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScreenSpaceAaBind, segment))
+        val ret = RenderingServer.ViewportScreenSpaceAA(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScreenSpaceAaBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -214,6 +234,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
     fun setScreenSpaceAa(screenSpaceAa: RenderingServer.ViewportScreenSpaceAA) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setScreenSpaceAaBind, segment, screenSpaceAa.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -223,7 +244,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getFsrSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFsrSharpnessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFsrSharpnessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -234,6 +257,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
     fun setFsrSharpness(fsrSharpness: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFsrSharpnessBind, segment, fsrSharpness)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -245,7 +269,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getTextureMipmapBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTextureMipmapBiasBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTextureMipmapBiasBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -258,6 +284,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
     fun setTextureMipmapBias(textureMipmapBias: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTextureMipmapBiasBind, segment, textureMipmapBias)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -267,7 +294,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getAnisotropicFilteringLevel(): RenderingServer.ViewportAnisotropicFiltering {
         checkOpen()
-        return RenderingServer.ViewportAnisotropicFiltering(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAnisotropicFilteringLevelBind, segment))
+        val ret = RenderingServer.ViewportAnisotropicFiltering(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAnisotropicFilteringLevelBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -278,6 +307,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
     fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: RenderingServer.ViewportAnisotropicFiltering) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAnisotropicFilteringLevelBind, segment, anisotropicFilteringLevel.value)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

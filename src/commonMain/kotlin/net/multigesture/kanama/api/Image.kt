@@ -23,7 +23,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWidthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getWidthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -33,7 +35,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -43,7 +47,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,7 +59,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun hasMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMipmapsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMipmapsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -63,7 +71,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getFormat(): Image.Format {
         checkOpen()
-        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        val ret = Image.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -73,7 +83,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -83,7 +95,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getDataSize(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getDataSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getDataSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,6 +108,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun convert(format: Image.Format) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.convertBind, segment, format.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -105,7 +120,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getMipmapCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMipmapCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMipmapCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -116,7 +133,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getMipmapOffset(mipmap: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(Binds.getMipmapOffsetBind, segment, mipmap)
+        val ret = ObjectCalls.ptrcallWithIntArgRetLong(Binds.getMipmapOffsetBind, segment, mipmap)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -129,6 +148,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun resizeToPo2(square: Boolean = false, interpolation: Image.Interpolation = Image.Interpolation.BILINEAR) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolAndLongArgs(Binds.resizeToPo2Bind, segment, square, interpolation.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -142,6 +162,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun resize(width: Int, height: Int, interpolation: Image.Interpolation = Image.Interpolation.BILINEAR) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndLongArgs(Binds.resizeBind, segment, width, height, interpolation.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -152,6 +173,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun shrinkX2() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.shrinkX2Bind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -163,6 +185,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun crop(width: Int, height: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.cropBind, segment, width, height)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -173,6 +196,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun flipX() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.flipXBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -183,6 +207,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun flipY() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.flipYBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -199,7 +224,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun generateMipmaps(renormalize: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(Binds.generateMipmapsBind, segment, renormalize))
+        val ret = GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(Binds.generateMipmapsBind, segment, renormalize))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -210,6 +237,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun clearMipmaps() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearMipmapsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -220,6 +248,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun setData(width: Int, height: Int, useMipmaps: Boolean, format: Image.Format, data: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgs(Binds.setDataBind, segment, width, height, useMipmaps, format.value, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -229,7 +258,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun isEmpty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmptyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmptyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -244,7 +275,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun load(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -254,7 +287,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun savePng(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.savePngBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.savePngBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -264,7 +299,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun savePngToBuffer(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.savePngToBufferBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.savePngToBufferBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -279,7 +316,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveJpg(path: String, quality: Double = 0.75): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(Binds.saveJpgBind, segment, path, quality))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(Binds.saveJpgBind, segment, path, quality))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -294,7 +333,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveJpgToBuffer(quality: Double = 0.75): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetByteArray(Binds.saveJpgToBufferBind, segment, quality)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetByteArray(Binds.saveJpgToBufferBind, segment, quality)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -312,7 +353,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveExr(path: String, grayscale: Boolean = false, colorImage: Boolean = false, maxLinearValue: Double = -1.0): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringTwoBoolAndDoubleArgRetLong(Binds.saveExrBind, segment, path, grayscale, colorImage, maxLinearValue))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringTwoBoolAndDoubleArgRetLong(Binds.saveExrBind, segment, path, grayscale, colorImage, maxLinearValue))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -330,7 +373,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveExrToBuffer(grayscale: Boolean = false, colorImage: Boolean = false, maxLinearValue: Double = -1.0): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoBoolAndDoubleArgRetByteArray(Binds.saveExrToBufferBind, segment, grayscale, colorImage, maxLinearValue)
+        val ret = ObjectCalls.ptrcallWithTwoBoolAndDoubleArgRetByteArray(Binds.saveExrToBufferBind, segment, grayscale, colorImage, maxLinearValue)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -344,7 +389,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveDds(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveDdsBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveDdsBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -358,7 +405,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveDdsToBuffer(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.saveDdsToBufferBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.saveDdsToBufferBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -372,7 +421,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveWebp(path: String, lossy: Boolean = false, quality: Double = 0.75): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringBoolDoubleArgsRetLong(Binds.saveWebpBind, segment, path, lossy, quality))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringBoolDoubleArgsRetLong(Binds.saveWebpBind, segment, path, lossy, quality))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -385,7 +436,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveWebpToBuffer(lossy: Boolean = false, quality: Double = 0.75): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolAndDoubleArgRetByteArray(Binds.saveWebpToBufferBind, segment, lossy, quality)
+        val ret = ObjectCalls.ptrcallWithBoolAndDoubleArgRetByteArray(Binds.saveWebpToBufferBind, segment, lossy, quality)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -397,7 +450,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun detectAlpha(): Image.AlphaMode {
         checkOpen()
-        return Image.AlphaMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.detectAlphaBind, segment))
+        val ret = Image.AlphaMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.detectAlphaBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -408,7 +463,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun isInvisible(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInvisibleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isInvisibleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -419,7 +476,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun detectUsedChannels(source: Image.CompressSource = Image.CompressSource.GENERIC): Image.UsedChannels {
         checkOpen()
-        return Image.UsedChannels(ObjectCalls.ptrcallWithLongArgRetLong(Binds.detectUsedChannelsBind, segment, source.value))
+        val ret = Image.UsedChannels(ObjectCalls.ptrcallWithLongArgRetLong(Binds.detectUsedChannelsBind, segment, source.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -435,7 +494,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun compress(mode: Image.CompressMode, source: Image.CompressSource = Image.CompressSource.GENERIC, astcFormat: Image.ASTCFormat = Image.ASTCFormat.FORMAT_4x4): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(Binds.compressBind, segment, mode.value, source.value, astcFormat.value))
+        val ret = GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(Binds.compressBind, segment, mode.value, source.value, astcFormat.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -452,7 +513,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun compressFromChannels(mode: Image.CompressMode, channels: Image.UsedChannels, astcFormat: Image.ASTCFormat = Image.ASTCFormat.FORMAT_4x4): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(Binds.compressFromChannelsBind, segment, mode.value, channels.value, astcFormat.value))
+        val ret = GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(Binds.compressFromChannelsBind, segment, mode.value, channels.value, astcFormat.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -466,7 +529,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun decompress(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.decompressBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.decompressBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -476,7 +541,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun isCompressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCompressedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCompressedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -489,6 +556,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun rotate90(direction: ClockDirection) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.rotate90Bind, segment, direction.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -499,6 +567,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun rotate180() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.rotate180Bind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -509,6 +578,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun fixAlphaEdges() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.fixAlphaEdgesBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -520,6 +590,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun premultiplyAlpha() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.premultiplyAlphaBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -534,6 +605,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun srgbToLinear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.srgbToLinearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -545,6 +617,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun linearToSrgb() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.linearToSrgbBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -557,6 +630,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun normalMapToXy() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.normalMapToXyBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -568,6 +642,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun rgbeToSrgb(): Image? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.rgbeToSrgbBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -584,6 +659,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun bumpMapToNormalMap(bumpScale: Double = 1.0) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.bumpMapToNormalMapBind, segment, bumpScale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -595,7 +671,10 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun computeImageMetrics(comparedImage: Image?, useLuma: Boolean): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(Binds.computeImageMetricsBind, segment, comparedImage?.requireOpenHandle() ?: NULL_SEGMENT, useLuma)
+        val ret = ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(Binds.computeImageMetricsBind, segment, comparedImage?.requireOpenHandle() ?: NULL_SEGMENT, useLuma)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(comparedImage)
+        return ret
     }
 
     /**
@@ -610,6 +689,8 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun blitRect(src: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(Binds.blitRectBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(src)
     }
 
     /**
@@ -624,6 +705,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun blitRectMask(src: Image?, mask: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(Binds.blitRectMaskBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, mask?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(src)
+        ObjectCalls.keepReachable(mask)
     }
 
     /**
@@ -636,6 +720,8 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun blendRect(src: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(Binds.blendRectBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(src)
     }
 
     /**
@@ -651,6 +737,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun blendRectMask(src: Image?, mask: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(Binds.blendRectMaskBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, mask?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(src)
+        ObjectCalls.keepReachable(mask)
     }
 
     /**
@@ -661,6 +750,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun fill(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.fillBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -671,6 +761,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun fillRect(rect: Rect2i, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2iAndColorArg(Binds.fillRectBind, segment, rect, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -681,7 +772,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getUsedRect(): Rect2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2i(Binds.getUsedRectBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRect2i(Binds.getUsedRectBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -692,6 +785,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun getRegion(region: Rect2i): Image? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithRect2iArgRetObject(Binds.getRegionBind, segment, region)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -707,6 +801,8 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun copyFrom(src: Image?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.copyFromBind, segment, listOf(src?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(src)
     }
 
     /**
@@ -717,7 +813,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getPixelv(point: Vector2i): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetColor(Binds.getPixelvBind, segment, point)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetColor(Binds.getPixelvBind, segment, point)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -728,7 +826,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getPixel(x: Int, y: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(Binds.getPixelBind, segment, x, y)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetColor(Binds.getPixelBind, segment, x, y)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -739,6 +839,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun setPixelv(point: Vector2i, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iAndColorArg(Binds.setPixelvBind, segment, point, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -749,6 +850,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun setPixel(x: Int, y: Int, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndColorArg(Binds.setPixelBind, segment, x, y, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -760,6 +862,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     fun adjustBcs(brightness: Double, contrast: Double, saturation: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeDoubleArgs(Binds.adjustBcsBind, segment, brightness, contrast, saturation)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -769,7 +872,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadPngFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadPngFromBufferBind, segment, buffer))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadPngFromBufferBind, segment, buffer))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -779,7 +884,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadJpgFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadJpgFromBufferBind, segment, buffer))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadJpgFromBufferBind, segment, buffer))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -789,7 +896,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadWebpFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadWebpFromBufferBind, segment, buffer))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadWebpFromBufferBind, segment, buffer))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -801,7 +910,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadTgaFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadTgaFromBufferBind, segment, buffer))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadTgaFromBufferBind, segment, buffer))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -815,7 +926,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadBmpFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadBmpFromBufferBind, segment, buffer))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadBmpFromBufferBind, segment, buffer))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -830,7 +943,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadKtxFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadKtxFromBufferBind, segment, buffer))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadKtxFromBufferBind, segment, buffer))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -842,7 +957,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadDdsFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadDdsFromBufferBind, segment, buffer))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadDdsFromBufferBind, segment, buffer))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -852,7 +969,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadExrFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadExrFromBufferBind, segment, buffer))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadExrFromBufferBind, segment, buffer))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -866,7 +985,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadSvgFromBuffer(buffer: ByteArray, scale: Double = 1.0): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayAndDoubleArgRetLong(Binds.loadSvgFromBufferBind, segment, buffer, scale))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayAndDoubleArgRetLong(Binds.loadSvgFromBufferBind, segment, buffer, scale))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -878,7 +999,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadSvgFromString(svgStr: String, scale: Double = 1.0): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(Binds.loadSvgFromStringBind, segment, svgStr, scale))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(Binds.loadSvgFromStringBind, segment, svgStr, scale))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

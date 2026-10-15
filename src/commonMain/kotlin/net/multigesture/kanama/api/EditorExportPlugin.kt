@@ -22,6 +22,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addSharedObject(path: String, tags: List<String>, target: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringPackedStringListAndStringArgs(Binds.addSharedObjectBind, segment, path, tags, target)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,6 +37,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addFile(path: String, file: ByteArray, remap: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithStringByteArrayBoolArgs(Binds.addFileBind, segment, path, file, remap)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -46,6 +48,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addAppleEmbeddedPlatformProjectStaticLib(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformProjectStaticLibBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -57,6 +60,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addAppleEmbeddedPlatformFramework(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformFrameworkBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -70,6 +74,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addAppleEmbeddedPlatformEmbeddedFramework(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformEmbeddedFrameworkBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -80,6 +85,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addAppleEmbeddedPlatformPlistContent(plistContent: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformPlistContentBind, segment, plistContent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -90,6 +96,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addAppleEmbeddedPlatformLinkerFlags(flags: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformLinkerFlagsBind, segment, flags)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -100,6 +107,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addAppleEmbeddedPlatformBundleFile(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformBundleFileBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -111,6 +119,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addAppleEmbeddedPlatformCppCode(code: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformCppCodeBind, segment, code)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -121,6 +130,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addIosProjectStaticLib(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addIosProjectStaticLibBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -132,6 +142,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addIosFramework(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addIosFrameworkBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -145,6 +156,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addIosEmbeddedFramework(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addIosEmbeddedFrameworkBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -155,6 +167,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addIosPlistContent(plistContent: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addIosPlistContentBind, segment, plistContent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -165,6 +178,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addIosLinkerFlags(flags: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addIosLinkerFlagsBind, segment, flags)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -175,6 +189,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addIosBundleFile(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addIosBundleFileBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -186,6 +201,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addIosCppCode(code: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addIosCppCodeBind, segment, code)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -197,6 +213,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addMacosPluginFile(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addMacosPluginFileBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -207,6 +224,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun skip() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.skipBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -216,7 +234,9 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOption(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getOptionBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getOptionBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -226,7 +246,9 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExportPreset(): EditorExportPreset? {
         checkOpen()
-        return EditorExportPreset.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getExportPresetBind, segment))
+        val ret = EditorExportPreset.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getExportPresetBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -236,7 +258,9 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExportPlatform(): EditorExportPlatform? {
         checkOpen()
-        return EditorExportPlatform.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getExportPlatformBind, segment))
+        val ret = EditorExportPlatform.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getExportPlatformBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

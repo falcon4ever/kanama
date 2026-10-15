@@ -36,6 +36,7 @@ object Performance {
     @JvmStatic
     fun addCustomMonitor(id: String, callable: GodotCallable, arguments: List<Any?> = emptyList(), type: Performance.MonitorType = Performance.MonitorType.QUANTITY) {
         ObjectCalls.ptrcallWithStringNameCallableArrayLongArgs(Binds.addCustomMonitorBind, singleton, id, callable.target.segment, callable.method, arguments, type.value)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**

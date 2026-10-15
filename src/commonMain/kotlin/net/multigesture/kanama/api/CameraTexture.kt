@@ -38,6 +38,7 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setCameraFeedId(feedId: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setCameraFeedIdBind, segment, feedId)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -47,7 +48,9 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCameraFeedId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCameraFeedIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCameraFeedIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +62,7 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setWhichFeed(whichFeed: CameraServer.FeedImage) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setWhichFeedBind, segment, whichFeed.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -69,7 +73,9 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getWhichFeed(): CameraServer.FeedImage {
         checkOpen()
-        return CameraServer.FeedImage(ObjectCalls.ptrcallNoArgsRetLong(Binds.getWhichFeedBind, segment))
+        val ret = CameraServer.FeedImage(ObjectCalls.ptrcallNoArgsRetLong(Binds.getWhichFeedBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,6 +86,7 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setCameraActive(active: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCameraActiveBind, segment, active)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -89,7 +96,9 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCameraActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getCameraActiveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getCameraActiveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

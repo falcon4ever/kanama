@@ -119,6 +119,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      */
     fun setUnderTexture(tex: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setUnderTextureBind, segment, listOf(tex?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(tex)
     }
 
     /**
@@ -140,6 +141,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      */
     fun setProgressTexture(tex: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setProgressTextureBind, segment, listOf(tex?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(tex)
     }
 
     /**
@@ -162,6 +164,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      */
     fun setOverTexture(tex: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setOverTextureBind, segment, listOf(tex?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(tex)
     }
 
     /**

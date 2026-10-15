@@ -23,6 +23,7 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
     fun createMaterial(name: String, color: Color, billboard: Boolean = false, onTop: Boolean = false, useVertexColor: Boolean = false) {
         checkOpen()
         ObjectCalls.ptrcallWithStringColorThreeBoolArgs(Binds.createMaterialBind, segment, name, color, billboard, onTop, useVertexColor)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -35,6 +36,8 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
     fun createIconMaterial(name: String, texture: Texture2D?, onTop: Boolean = false, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithStringObjectBoolColorArgs(Binds.createIconMaterialBind, segment, name, texture?.requireOpenHandle() ?: NULL_SEGMENT, onTop, color)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -48,6 +51,8 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
     fun createHandleMaterial(name: String, billboard: Boolean = false, texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringBoolObjectArgs(Binds.createHandleMaterialBind, segment, name, billboard, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -59,6 +64,8 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
     fun addMaterial(name: String, material: StandardMaterial3D?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndObjectArg(Binds.addMaterialBind, segment, name, material?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -69,7 +76,10 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
      */
     fun getMaterial(name: String, gizmo: EditorNode3DGizmo?): StandardMaterial3D? {
         checkOpen()
-        return StandardMaterial3D.wrapOwned(ObjectCalls.ptrcallWithStringAndObjectArgRetObject(Binds.getMaterialBind, segment, name, gizmo?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = StandardMaterial3D.wrapOwned(ObjectCalls.ptrcallWithStringAndObjectArgRetObject(Binds.getMaterialBind, segment, name, gizmo?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(gizmo)
+        return ret
     }
 
     companion object {

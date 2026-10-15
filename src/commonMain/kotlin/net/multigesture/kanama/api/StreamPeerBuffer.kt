@@ -26,6 +26,7 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
     fun seek(position: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.seekBind, segment, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -35,7 +36,9 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun getSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -45,7 +48,9 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun getPosition(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPositionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPositionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -56,6 +61,7 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
     fun resize(size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.resizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -66,6 +72,7 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
     fun setDataArray(data: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithByteArrayArg(Binds.setDataArrayBind, segment, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -75,7 +82,9 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun getDataArray(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataArrayBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataArrayBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -86,6 +95,7 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -96,6 +106,7 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
     fun duplicate(): StreamPeerBuffer? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.duplicateBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this

@@ -37,6 +37,7 @@ open class Container(handle: GodotHandle) : Control(handle) {
      */
     fun fitChildInRect(child: Control, rect: Rect2) {
         ObjectCalls.ptrcallWithObjectAndRect2Arg(Binds.fitChildInRectBind, segment, child.segment, rect)
+        ObjectCalls.keepReachable(child)
     }
 
     /**

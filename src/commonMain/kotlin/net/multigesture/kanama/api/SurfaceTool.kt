@@ -29,6 +29,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun setSkinWeightCount(count: SurfaceTool.SkinWeightCount) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSkinWeightCountBind, segment, count.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -40,7 +41,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSkinWeightCount(): SurfaceTool.SkinWeightCount {
         checkOpen()
-        return SurfaceTool.SkinWeightCount(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSkinWeightCountBind, segment))
+        val ret = SurfaceTool.SkinWeightCount(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSkinWeightCountBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -52,6 +55,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun setCustomFormat(channelIndex: Int, format: SurfaceTool.CustomFormat) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setCustomFormatBind, segment, channelIndex, format.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,7 +66,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCustomFormat(channelIndex: Int): SurfaceTool.CustomFormat {
         checkOpen()
-        return SurfaceTool.CustomFormat(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getCustomFormatBind, segment, channelIndex))
+        val ret = SurfaceTool.CustomFormat(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getCustomFormatBind, segment, channelIndex))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -74,6 +80,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun begin(primitive: Mesh.PrimitiveType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.beginBind, segment, primitive.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -85,6 +92,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun addVertex(vertex: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.addVertexBind, segment, vertex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -98,6 +106,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun setColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -109,6 +118,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun setNormal(normal: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setNormalBind, segment, normal)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -123,6 +133,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun setTangent(tangent: Plane) {
         checkOpen()
         ObjectCalls.ptrcallWithPlaneArg(Binds.setTangentBind, segment, tangent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -135,6 +146,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun setUv(uv: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setUvBind, segment, uv)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -147,6 +159,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun setUv2(uv2: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setUv2Bind, segment, uv2)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -157,6 +170,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun setBones(bones: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setBonesBind, segment, bones)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -169,6 +183,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun setWeights(weights: List<Float>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setWeightsBind, segment, weights)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -180,6 +195,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun setCustom(channelIndex: Int, customColor: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(Binds.setCustomBind, segment, channelIndex, customColor)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -194,6 +210,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun setSmoothGroup(index: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setSmoothGroupBind, segment, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -205,6 +222,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun addTriangleFan(vertices: List<Vector3>, uvs: List<Vector2>, colors: List<Color>, uv2s: List<Vector2>, normals: List<Vector3>, tangents: List<Plane>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListPackedVector2ListPackedColorListPackedVector2ListPackedVector3ListPlaneListArgs(Binds.addTriangleFanBind, segment, vertices, uvs, colors, uv2s, normals, tangents)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -216,6 +234,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun addIndex(index: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.addIndexBind, segment, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -227,6 +246,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun index() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.indexBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -237,6 +257,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun deindex() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.deindexBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -255,6 +276,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun generateNormals(flip: Boolean = false) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.generateNormalsBind, segment, flip)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -266,6 +288,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun generateTangents() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.generateTangentsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -277,6 +300,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun optimizeIndicesForCache() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.optimizeIndicesForCacheBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -286,7 +310,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getAabbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetAABB(Binds.getAabbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -297,7 +323,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun generateLod(ndThreshold: Double, targetIndexCount: Int = 3): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndIntArgsRetPackedInt32List(Binds.generateLodBind, segment, ndThreshold, targetIndexCount)
+        val ret = ObjectCalls.ptrcallWithDoubleAndIntArgsRetPackedInt32List(Binds.generateLodBind, segment, ndThreshold, targetIndexCount)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -308,6 +336,8 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun setMaterial(material: Material?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -317,7 +347,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPrimitiveType(): Mesh.PrimitiveType {
         checkOpen()
-        return Mesh.PrimitiveType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPrimitiveTypeBind, segment))
+        val ret = Mesh.PrimitiveType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPrimitiveTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -328,6 +360,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -338,6 +371,8 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun createFrom(existing: Mesh?, surface: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectAndIntArg(Binds.createFromBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT, surface)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(existing)
     }
 
     /**
@@ -351,6 +386,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun createFromArrays(arrays: List<Any?>, primitiveType: Mesh.PrimitiveType = Mesh.PrimitiveType.TRIANGLES) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayLongArgs(Binds.createFromArraysBind, segment, arrays, primitiveType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -362,6 +398,8 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun createFromBlendShape(existing: Mesh?, surface: Int, blendShape: String) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectIntStringArgs(Binds.createFromBlendShapeBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT, surface, blendShape)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(existing)
     }
 
     /**
@@ -373,6 +411,8 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun appendFrom(existing: Mesh?, surface: Int, transform: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectIntTransform3DArgs(Binds.appendFromBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT, surface, transform)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(existing)
     }
 
     /**
@@ -385,7 +425,10 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun commit(existing: ArrayMesh? = null, flags: Long = 0L): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectAndLongArgsRetObject(Binds.commitBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT, flags))
+        val ret = ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectAndLongArgsRetObject(Binds.commitBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT, flags))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(existing)
+        return ret
     }
 
     /**
@@ -397,7 +440,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      */
     fun commitToArrays(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.commitToArraysBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.commitToArraysBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

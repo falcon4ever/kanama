@@ -18,7 +18,9 @@ class OpenXRSpatialQueryResultData(handle: GodotHandle) : OpenXRSpatialComponent
      */
     fun getCapacity(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getCapacityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getCapacityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -28,7 +30,9 @@ class OpenXRSpatialQueryResultData(handle: GodotHandle) : OpenXRSpatialComponent
      */
     fun getEntityId(index: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(Binds.getEntityIdBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithLongArgRetLong(Binds.getEntityIdBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -38,7 +42,9 @@ class OpenXRSpatialQueryResultData(handle: GodotHandle) : OpenXRSpatialComponent
      */
     fun getEntityState(index: Long): OpenXRSpatialEntityTracker.EntityTrackingState {
         checkOpen()
-        return OpenXRSpatialEntityTracker.EntityTrackingState(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getEntityStateBind, segment, index))
+        val ret = OpenXRSpatialEntityTracker.EntityTrackingState(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getEntityStateBind, segment, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

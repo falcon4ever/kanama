@@ -39,6 +39,7 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
     fun setAction(action: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.setActionBind, segment, action)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -49,7 +50,9 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getAction(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getActionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getActionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -60,6 +63,7 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
     fun setPressed(pressed: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPressedBind, segment, pressed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -72,6 +76,7 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
     fun setStrength(strength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setStrengthBind, segment, strength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -83,7 +88,9 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStrengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStrengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -96,6 +103,7 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
     fun setEventIndex(index: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setEventIndexBind, segment, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -107,7 +115,9 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getEventIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getEventIndexBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getEventIndexBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

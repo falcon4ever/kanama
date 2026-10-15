@@ -21,6 +21,8 @@ class SkeletonModification2DStackHolder(handle: GodotHandle) : SkeletonModificat
     fun setHeldModificationStack(heldModificationStack: SkeletonModificationStack2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setHeldModificationStackBind, segment, listOf(heldModificationStack?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(heldModificationStack)
     }
 
     /**
@@ -30,7 +32,9 @@ class SkeletonModification2DStackHolder(handle: GodotHandle) : SkeletonModificat
      */
     fun getHeldModificationStack(): SkeletonModificationStack2D? {
         checkOpen()
-        return SkeletonModificationStack2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getHeldModificationStackBind, segment))
+        val ret = SkeletonModificationStack2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getHeldModificationStackBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

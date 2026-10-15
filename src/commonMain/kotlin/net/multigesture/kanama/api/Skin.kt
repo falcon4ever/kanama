@@ -13,56 +13,71 @@ class Skin(handle: GodotHandle) : Resource(handle) {
     fun setBindCount(bindCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBindCountBind, segment, bindCount)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getBindCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun addBind(bone: Int, pose: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.addBindBind, segment, bone, pose)
+        ObjectCalls.keepReachable(this)
     }
 
     fun addNamedBind(name: String, pose: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndTransform3DArg(Binds.addNamedBindBind, segment, name, pose)
+        ObjectCalls.keepReachable(this)
     }
 
     fun setBindPose(bindIndex: Int, pose: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.setBindPoseBind, segment, bindIndex, pose)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getBindPose(bindIndex: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getBindPoseBind, segment, bindIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getBindPoseBind, segment, bindIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setBindName(bindIndex: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setBindNameBind, segment, bindIndex, name)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getBindName(bindIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBindNameBind, segment, bindIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBindNameBind, segment, bindIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setBindBone(bindIndex: Int, bone: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setBindBoneBind, segment, bindIndex, bone)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getBindBone(bindIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getBindBoneBind, segment, bindIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getBindBoneBind, segment, bindIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun clearBinds() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBindsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

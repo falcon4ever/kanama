@@ -60,6 +60,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addDoMethod(callable: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(Binds.addDoMethodBind, segment, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**
@@ -69,6 +70,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addUndoMethod(callable: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(Binds.addUndoMethodBind, segment, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**
@@ -78,6 +80,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addDoProperty(objectValue: GodotObject, property: String, value: Any?) {
         ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(Binds.addDoPropertyBind, segment, objectValue.segment, property, value)
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**
@@ -87,6 +90,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addUndoProperty(objectValue: GodotObject, property: String, value: Any?) {
         ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(Binds.addUndoPropertyBind, segment, objectValue.segment, property, value)
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**
@@ -99,6 +103,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addDoReference(objectValue: GodotObject) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addDoReferenceBind, segment, listOf(objectValue.segment))
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**
@@ -111,6 +116,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addUndoReference(objectValue: GodotObject) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addUndoReferenceBind, segment, listOf(objectValue.segment))
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**

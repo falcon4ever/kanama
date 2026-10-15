@@ -47,6 +47,8 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setAtlas(atlas: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setAtlasBind, segment, listOf(atlas?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(atlas)
     }
 
     /**
@@ -58,6 +60,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun getAtlas(): Texture2D? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getAtlasBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -75,6 +78,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setRegion(region: Rect2) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2Arg(Binds.setRegionBind, segment, region)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -86,7 +90,9 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getRegion(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRegionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRegionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -99,6 +105,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setMargin(margin: Rect2) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2Arg(Binds.setMarginBind, segment, margin)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -110,7 +117,9 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getMargin(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getMarginBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRect2(Binds.getMarginBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -122,6 +131,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setFilterClip(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setFilterClipBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -132,7 +142,9 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun hasFilterClip(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasFilterClipBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasFilterClipBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

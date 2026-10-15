@@ -35,6 +35,7 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
     fun setSpatialContext(spatialContext: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setSpatialContextBind, segment, spatialContext)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -44,7 +45,9 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
      */
     fun getSpatialContext(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getSpatialContextBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getSpatialContextBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -55,6 +58,7 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
     fun setEntity(entity: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setEntityBind, segment, entity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -64,7 +68,9 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
      */
     fun getEntity(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getEntityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getEntityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -75,6 +81,7 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
     fun setSpatialTrackingState(spatialTrackingState: OpenXRSpatialEntityTracker.EntityTrackingState) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSpatialTrackingStateBind, segment, spatialTrackingState.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -84,7 +91,9 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
      */
     fun getSpatialTrackingState(): OpenXRSpatialEntityTracker.EntityTrackingState {
         checkOpen()
-        return OpenXRSpatialEntityTracker.EntityTrackingState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSpatialTrackingStateBind, segment))
+        val ret = OpenXRSpatialEntityTracker.EntityTrackingState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSpatialTrackingStateBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,7 +103,9 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
      */
     fun getNext(): OpenXRStructureBase? {
         checkOpen()
-        return OpenXRStructureBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNextBind, segment))
+        val ret = OpenXRStructureBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNextBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -106,6 +117,8 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
     fun addNext(next: OpenXRStructureBase?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.addNextBind, segment, listOf(next?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(next)
     }
 
     /**
@@ -116,6 +129,8 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
     fun removeNext(next: OpenXRStructureBase?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeNextBind, segment, listOf(next?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(next)
     }
 
     /** Signal `next_changed()`; see [TypedSignal]. */

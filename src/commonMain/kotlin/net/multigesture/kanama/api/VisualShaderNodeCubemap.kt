@@ -40,6 +40,7 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setSource(value: VisualShaderNodeCubemap.Source) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSourceBind, segment, value.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -49,7 +50,9 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getSource(): VisualShaderNodeCubemap.Source {
         checkOpen()
-        return VisualShaderNodeCubemap.Source(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceBind, segment))
+        val ret = VisualShaderNodeCubemap.Source(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -60,6 +63,8 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setCubeMap(value: TextureLayered?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCubeMapBind, segment, listOf(value?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(value)
     }
 
     /**
@@ -69,7 +74,9 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getCubeMap(): TextureLayered? {
         checkOpen()
-        return TextureLayered.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCubeMapBind, segment))
+        val ret = TextureLayered.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCubeMapBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,6 +87,7 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setTextureType(value: VisualShaderNodeCubemap.TextureType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextureTypeBind, segment, value.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -89,7 +97,9 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getTextureType(): VisualShaderNodeCubemap.TextureType {
         checkOpen()
-        return VisualShaderNodeCubemap.TextureType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureTypeBind, segment))
+        val ret = VisualShaderNodeCubemap.TextureType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

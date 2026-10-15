@@ -46,7 +46,9 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun getMinimumSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMinimumSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMinimumSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +61,7 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
     fun setContentMargin(margin: Side, offset: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setContentMarginBind, segment, margin.value, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -69,6 +72,7 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
     fun setContentMarginAll(offset: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setContentMarginAllBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -80,7 +84,9 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun getContentMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getContentMarginBind, segment, margin.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getContentMarginBind, segment, margin.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -91,7 +97,9 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun getMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getMarginBind, segment, margin.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getMarginBind, segment, margin.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -102,7 +110,9 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun getOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -116,6 +126,7 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
     fun draw(canvasItem: RID, rect: Rect2) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndRect2Arg(Binds.drawBind, segment, canvasItem, rect)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -126,7 +137,9 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun getCurrentItemDrawn(): CanvasItem? {
         checkOpen()
-        return CanvasItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurrentItemDrawnBind, segment))
+        val ret = CanvasItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurrentItemDrawnBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -136,7 +149,9 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun testMask(point: Vector2, rect: Rect2): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2Rect2ArgsRetBool(Binds.testMaskBind, segment, point, rect)
+        val ret = ObjectCalls.ptrcallWithVector2Rect2ArgsRetBool(Binds.testMaskBind, segment, point, rect)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

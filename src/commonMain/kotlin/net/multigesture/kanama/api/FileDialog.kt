@@ -858,6 +858,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          */
         fun setGetIconCallback(callback: GodotCallable) {
             ObjectCalls.ptrcallWithCallableArg(Binds.setGetIconCallbackBind, NULL_SEGMENT, callback.target.segment, callback.method)
+            ObjectCalls.keepReachable(callback)
         }
 
         /**
@@ -871,6 +872,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          */
         fun setGetThumbnailCallback(callback: GodotCallable) {
             ObjectCalls.ptrcallWithCallableArg(Binds.setGetThumbnailCallbackBind, NULL_SEGMENT, callback.target.segment, callback.method)
+            ObjectCalls.keepReachable(callback)
         }
 
         @JvmStatic

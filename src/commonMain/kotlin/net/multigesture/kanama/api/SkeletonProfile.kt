@@ -49,6 +49,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setRootBone(boneName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.setRootBoneBind, segment, boneName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -59,7 +60,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getRootBone(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getRootBoneBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getRootBoneBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -71,6 +74,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setScaleBaseBone(boneName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.setScaleBaseBoneBind, segment, boneName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -81,7 +85,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getScaleBaseBone(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getScaleBaseBoneBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getScaleBaseBoneBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,6 +100,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setGroupSize(size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setGroupSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -105,7 +112,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getGroupSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getGroupSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getGroupSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -116,7 +125,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getGroupName(groupIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getGroupNameBind, segment, groupIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getGroupNameBind, segment, groupIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -128,6 +139,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setGroupName(groupIdx: Int, groupName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setGroupNameBind, segment, groupIdx, groupName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -138,7 +150,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getTexture(groupIdx: Int): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getTextureBind, segment, groupIdx))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getTextureBind, segment, groupIdx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -150,6 +164,8 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setTexture(groupIdx: Int, texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setTextureBind, segment, groupIdx, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -162,6 +178,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setBoneSize(size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBoneSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -173,7 +190,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBoneSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -183,7 +202,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun findBone(boneName: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetInt(Binds.findBoneBind, segment, boneName)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetInt(Binds.findBoneBind, segment, boneName)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -194,7 +215,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBoneName(boneIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBoneNameBind, segment, boneIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBoneNameBind, segment, boneIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -206,6 +229,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setBoneName(boneIdx: Int, boneName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setBoneNameBind, segment, boneIdx, boneName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -216,7 +240,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBoneParent(boneIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBoneParentBind, segment, boneIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBoneParentBind, segment, boneIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -228,6 +254,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setBoneParent(boneIdx: Int, boneParent: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setBoneParentBind, segment, boneIdx, boneParent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -237,7 +264,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getTailDirection(boneIdx: Int): SkeletonProfile.TailDirection {
         checkOpen()
-        return SkeletonProfile.TailDirection(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getTailDirectionBind, segment, boneIdx))
+        val ret = SkeletonProfile.TailDirection(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getTailDirectionBind, segment, boneIdx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -250,6 +279,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setTailDirection(boneIdx: Int, tailDirection: SkeletonProfile.TailDirection) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setTailDirectionBind, segment, boneIdx, tailDirection.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -259,7 +289,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBoneTail(boneIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBoneTailBind, segment, boneIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBoneTailBind, segment, boneIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -270,6 +302,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setBoneTail(boneIdx: Int, boneTail: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setBoneTailBind, segment, boneIdx, boneTail)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -279,7 +312,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getReferencePose(boneIdx: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getReferencePoseBind, segment, boneIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getReferencePoseBind, segment, boneIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -290,6 +325,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setReferencePose(boneIdx: Int, boneName: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.setReferencePoseBind, segment, boneIdx, boneName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -300,7 +336,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getHandleOffset(boneIdx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getHandleOffsetBind, segment, boneIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getHandleOffsetBind, segment, boneIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -312,6 +350,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setHandleOffset(boneIdx: Int, handleOffset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setHandleOffsetBind, segment, boneIdx, handleOffset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -321,7 +360,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getGroup(boneIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getGroupBind, segment, boneIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getGroupBind, segment, boneIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -332,6 +373,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setGroup(boneIdx: Int, group: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setGroupBind, segment, boneIdx, group)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -343,7 +385,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun isRequired(boneIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isRequiredBind, segment, boneIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.isRequiredBind, segment, boneIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -354,6 +398,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     fun setRequired(boneIdx: Int, required: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setRequiredBind, segment, boneIdx, required)
+        ObjectCalls.keepReachable(this)
     }
 
     /** Signal `profile_updated()`; see [TypedSignal]. */

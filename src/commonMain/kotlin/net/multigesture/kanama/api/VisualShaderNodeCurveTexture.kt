@@ -27,6 +27,8 @@ class VisualShaderNodeCurveTexture(handle: GodotHandle) : VisualShaderNodeResiza
     fun setTexture(texture: CurveTexture?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -36,7 +38,9 @@ class VisualShaderNodeCurveTexture(handle: GodotHandle) : VisualShaderNodeResiza
      */
     fun getTexture(): CurveTexture? {
         checkOpen()
-        return CurveTexture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
+        val ret = CurveTexture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

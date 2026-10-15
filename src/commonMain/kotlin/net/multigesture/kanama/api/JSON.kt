@@ -32,7 +32,9 @@ class JSON(handle: GodotHandle) : Resource(handle) {
      */
     fun parse(jsonText: String, keepText: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.parseBind, segment, jsonText, keepText))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.parseBind, segment, jsonText, keepText))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -42,7 +44,9 @@ class JSON(handle: GodotHandle) : Resource(handle) {
      */
     fun getData(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +57,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
     fun setData(data: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithVariantArg(Binds.setDataBind, segment, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,7 +67,9 @@ class JSON(handle: GodotHandle) : Resource(handle) {
      */
     fun getParsedText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getParsedTextBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getParsedTextBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -73,7 +80,9 @@ class JSON(handle: GodotHandle) : Resource(handle) {
      */
     fun getErrorLine(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getErrorLineBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getErrorLineBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -84,7 +93,9 @@ class JSON(handle: GodotHandle) : Resource(handle) {
      */
     fun getErrorMessage(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getErrorMessageBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getErrorMessageBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

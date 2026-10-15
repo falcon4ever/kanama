@@ -20,7 +20,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTravel(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getTravelBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getTravelBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRemainder(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRemainderBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRemainderBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -41,7 +45,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionSafeFraction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionSafeFractionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionSafeFractionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -52,7 +58,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionUnsafeFraction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionUnsafeFractionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionUnsafeFractionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,7 +70,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCollisionCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCollisionCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -73,7 +83,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionPoint(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getCollisionPointBind, segment, collisionIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getCollisionPointBind, segment, collisionIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -84,7 +96,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionNormal(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getCollisionNormalBind, segment, collisionIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getCollisionNormalBind, segment, collisionIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -95,7 +109,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderVelocity(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getColliderVelocityBind, segment, collisionIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getColliderVelocityBind, segment, collisionIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -106,7 +122,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderId(collisionIndex: Int = 0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(Binds.getColliderIdBind, segment, collisionIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetLong(Binds.getColliderIdBind, segment, collisionIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -117,7 +135,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderRid(collisionIndex: Int = 0): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetRID(Binds.getColliderRidBind, segment, collisionIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetRID(Binds.getColliderRidBind, segment, collisionIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -128,7 +148,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollider(collisionIndex: Int = 0): GodotObject? {
         checkOpen()
-        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getColliderBind, segment, collisionIndex))
+        val ret = GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getColliderBind, segment, collisionIndex))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -139,7 +161,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderShape(collisionIndex: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getColliderShapeBind, segment, collisionIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getColliderShapeBind, segment, collisionIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -150,7 +174,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionLocalShape(collisionIndex: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getCollisionLocalShapeBind, segment, collisionIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getCollisionLocalShapeBind, segment, collisionIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -161,7 +187,9 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionDepth(collisionIndex: Int = 0): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getCollisionDepthBind, segment, collisionIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getCollisionDepthBind, segment, collisionIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

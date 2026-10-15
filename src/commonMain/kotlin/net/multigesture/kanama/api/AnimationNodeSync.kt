@@ -27,6 +27,7 @@ open class AnimationNodeSync(handle: GodotHandle) : AnimationNode(handle) {
     fun setUseSync(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseSyncBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ open class AnimationNodeSync(handle: GodotHandle) : AnimationNode(handle) {
      */
     fun isUsingSync(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingSyncBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingSyncBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

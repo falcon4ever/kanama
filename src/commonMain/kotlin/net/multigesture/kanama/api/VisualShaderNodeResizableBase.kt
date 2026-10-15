@@ -27,6 +27,7 @@ open class VisualShaderNodeResizableBase(handle: GodotHandle) : VisualShaderNode
     fun setSize(size: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ open class VisualShaderNodeResizableBase(handle: GodotHandle) : VisualShaderNode
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

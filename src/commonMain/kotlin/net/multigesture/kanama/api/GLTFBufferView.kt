@@ -58,7 +58,10 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
      */
     fun loadBufferViewData(state: GLTFState?): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetByteArray(Binds.loadBufferViewDataBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetByteArray(Binds.loadBufferViewDataBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(state)
+        return ret
     }
 
     /**
@@ -68,7 +71,9 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
      */
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -79,7 +84,9 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
      */
     fun getBuffer(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -91,6 +98,7 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
     fun setBuffer(buffer: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBufferBind, segment, buffer)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -100,7 +108,9 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
      */
     fun getByteOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -111,6 +121,7 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
     fun setByteOffset(byteOffset: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setByteOffsetBind, segment, byteOffset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -120,7 +131,9 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
      */
     fun getByteLength(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -131,6 +144,7 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
     fun setByteLength(byteLength: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setByteLengthBind, segment, byteLength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -140,7 +154,9 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
      */
     fun getByteStride(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteStrideBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteStrideBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -151,6 +167,7 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
     fun setByteStride(byteStride: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setByteStrideBind, segment, byteStride)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -164,7 +181,9 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
      */
     fun getIndices(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIndicesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getIndicesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -179,6 +198,7 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
     fun setIndices(indices: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setIndicesBind, segment, indices)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -192,7 +212,9 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
      */
     fun getVertexAttributes(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getVertexAttributesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getVertexAttributesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -207,6 +229,7 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
     fun setVertexAttributes(isAttributes: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setVertexAttributesBind, segment, isAttributes)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

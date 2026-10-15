@@ -26,7 +26,9 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
      */
     fun getBlendShape(blendShape: XRFaceTracker.BlendShapeEntry): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getBlendShapeBind, segment, blendShape.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getBlendShapeBind, segment, blendShape.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -37,6 +39,7 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
     fun setBlendShape(blendShape: XRFaceTracker.BlendShapeEntry, weight: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setBlendShapeBind, segment, blendShape.value, weight)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -46,7 +49,9 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
      */
     fun getBlendShapes(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getBlendShapesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getBlendShapesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -57,6 +62,7 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
     fun setBlendShapes(weights: List<Float>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setBlendShapesBind, segment, weights)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

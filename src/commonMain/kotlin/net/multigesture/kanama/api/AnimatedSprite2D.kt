@@ -82,6 +82,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setSpriteFrames(spriteFrames: SpriteFrames?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSpriteFramesBind, segment, listOf(spriteFrames?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(spriteFrames)
     }
 
     /**

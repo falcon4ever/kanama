@@ -20,7 +20,9 @@ class HashingContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun start(type: HashingContext.HashType): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongArgRetLong(Binds.startBind, segment, type.value))
+        val ret = GodotError(ObjectCalls.ptrcallWithLongArgRetLong(Binds.startBind, segment, type.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class HashingContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun update(chunk: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.updateBind, segment, chunk))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.updateBind, segment, chunk))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,7 +44,9 @@ class HashingContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun finish(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.finishBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.finishBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

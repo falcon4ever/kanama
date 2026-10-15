@@ -20,7 +20,9 @@ class VideoStreamPlayback(handle: GodotHandle) : Resource(handle) {
      */
     fun mixAudio(numFrames: Int, buffer: List<Float>, offset: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntPackedFloat32ListAndIntArgsRetInt(Binds.mixAudioBind, segment, numFrames, buffer, offset)
+        val ret = ObjectCalls.ptrcallWithIntPackedFloat32ListAndIntArgsRetInt(Binds.mixAudioBind, segment, numFrames, buffer, offset)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

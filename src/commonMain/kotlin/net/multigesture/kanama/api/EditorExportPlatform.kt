@@ -23,7 +23,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOsName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOsNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getOsNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -33,7 +35,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createPreset(): EditorExportPreset? {
         checkOpen()
-        return EditorExportPreset.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.createPresetBind, segment))
+        val ret = EditorExportPreset.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.createPresetBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -46,7 +50,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun findExportTemplate(templateFileName: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetDictionary(Binds.findExportTemplateBind, segment, templateFileName)
+        val ret = ObjectCalls.ptrcallWithStringArgRetDictionary(Binds.findExportTemplateBind, segment, templateFileName)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -56,7 +62,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCurrentPresets(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getCurrentPresetsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getCurrentPresetsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -71,7 +79,10 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun savePack(preset: EditorExportPreset?, debug: Boolean, path: String, embed: Boolean = false): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringBoolArgsRetDictionary(Binds.savePackBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, embed)
+        val ret = ObjectCalls.ptrcallWithObjectBoolStringBoolArgsRetDictionary(Binds.savePackBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, embed)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(preset)
+        return ret
     }
 
     /**
@@ -83,7 +94,10 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun saveZip(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(Binds.saveZipBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
+        val ret = ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(Binds.saveZipBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(preset)
+        return ret
     }
 
     /**
@@ -95,7 +109,10 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun savePackPatch(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(Binds.savePackPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
+        val ret = ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(Binds.savePackPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(preset)
+        return ret
     }
 
     /**
@@ -107,7 +124,10 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun saveZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(Binds.saveZipPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
+        val ret = ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(Binds.saveZipPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(preset)
+        return ret
     }
 
     /**
@@ -118,7 +138,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun genExportFlags(flags: EditorExportPlatform.DebugFlags): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(Binds.genExportFlagsBind, segment, flags.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetPackedStringList(Binds.genExportFlagsBind, segment, flags.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -136,7 +158,12 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportProjectFiles(preset: EditorExportPreset?, debug: Boolean, saveCb: GodotCallable, sharedCb: GodotCallable): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectBoolTwoCallableArgsRetLong(Binds.exportProjectFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, saveCb.target.segment, saveCb.method, sharedCb.target.segment, sharedCb.method))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectBoolTwoCallableArgsRetLong(Binds.exportProjectFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, saveCb.target.segment, saveCb.method, sharedCb.target.segment, sharedCb.method))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(preset)
+        ObjectCalls.keepReachable(saveCb)
+        ObjectCalls.keepReachable(sharedCb)
+        return ret
     }
 
     /**
@@ -147,7 +174,10 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportProject(preset: EditorExportPreset?, debug: Boolean, path: String, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L), notify: Boolean = true): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongBoolArgsRetLong(Binds.exportProjectBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value, notify))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongBoolArgsRetLong(Binds.exportProjectBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value, notify))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(preset)
+        return ret
     }
 
     /**
@@ -157,7 +187,10 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportPack(preset: EditorExportPreset?, debug: Boolean, path: String, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L)): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(Binds.exportPackBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(Binds.exportPackBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(preset)
+        return ret
     }
 
     /**
@@ -167,7 +200,10 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportZip(preset: EditorExportPreset?, debug: Boolean, path: String, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L)): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(Binds.exportZipBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(Binds.exportZipBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(preset)
+        return ret
     }
 
     /**
@@ -180,7 +216,10 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportPackPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L)): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(Binds.exportPackPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags.value))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(Binds.exportPackPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags.value))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(preset)
+        return ret
     }
 
     /**
@@ -193,7 +232,10 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L)): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(Binds.exportZipPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags.value))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(Binds.exportZipPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags.value))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(preset)
+        return ret
     }
 
     /**
@@ -204,6 +246,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
     fun clearMessages() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearMessagesBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -214,6 +257,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
     fun addMessage(type: EditorExportPlatform.ExportMessageType, category: String, message: String) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndTwoStringArgs(Binds.addMessageBind, segment, type.value, category, message)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -223,7 +267,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMessageCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMessageCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMessageCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -233,7 +279,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMessageType(index: Int): EditorExportPlatform.ExportMessageType {
         checkOpen()
-        return EditorExportPlatform.ExportMessageType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getMessageTypeBind, segment, index))
+        val ret = EditorExportPlatform.ExportMessageType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getMessageTypeBind, segment, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -243,7 +291,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMessageCategory(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getMessageCategoryBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getMessageCategoryBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -253,7 +303,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMessageText(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getMessageTextBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getMessageTextBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -263,7 +315,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getWorstMessageType(): EditorExportPlatform.ExportMessageType {
         checkOpen()
-        return EditorExportPlatform.ExportMessageType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getWorstMessageTypeBind, segment))
+        val ret = EditorExportPlatform.ExportMessageType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getWorstMessageTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -274,7 +328,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun sshRunOnRemote(host: String, port: String, sshArg: List<String>, cmdArgs: String, output: List<Any?> = emptyList(), portFwd: Int = -1): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringPackedStringListStringArrayIntArgsRetLong(Binds.sshRunOnRemoteBind, segment, host, port, sshArg, cmdArgs, output, portFwd))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringPackedStringListStringArrayIntArgsRetLong(Binds.sshRunOnRemoteBind, segment, host, port, sshArg, cmdArgs, output, portFwd))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -285,7 +341,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun sshRunOnRemoteNoWait(host: String, port: String, sshArgs: List<String>, cmdArgs: String, portFwd: Int = -1): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringPackedStringListStringIntArgsRetLong(Binds.sshRunOnRemoteNoWaitBind, segment, host, port, sshArgs, cmdArgs, portFwd)
+        val ret = ObjectCalls.ptrcallWithTwoStringPackedStringListStringIntArgsRetLong(Binds.sshRunOnRemoteNoWaitBind, segment, host, port, sshArgs, cmdArgs, portFwd)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -295,7 +353,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun sshPushToRemote(host: String, port: String, scpArgs: List<String>, srcFile: String, dstFile: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(Binds.sshPushToRemoteBind, segment, host, port, scpArgs, srcFile, dstFile))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(Binds.sshPushToRemoteBind, segment, host, port, scpArgs, srcFile, dstFile))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -307,7 +367,10 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getInternalExportFiles(preset: EditorExportPreset?, debug: Boolean): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(Binds.getInternalExportFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug)
+        val ret = ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(Binds.getInternalExportFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(preset)
+        return ret
     }
 
     /**
@@ -418,7 +481,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: EditorExportPlatform.get_forced_export_files
          */
         fun getForcedExportFiles(preset: EditorExportPreset?): List<String> {
-            return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(Binds.getForcedExportFilesBind, NULL_SEGMENT, preset?.requireOpenHandle() ?: NULL_SEGMENT)
+            val ret = ObjectCalls.ptrcallWithObjectArgRetPackedStringList(Binds.getForcedExportFilesBind, NULL_SEGMENT, preset?.requireOpenHandle() ?: NULL_SEGMENT)
+            ObjectCalls.keepReachable(preset)
+            return ret
         }
 
         @JvmStatic

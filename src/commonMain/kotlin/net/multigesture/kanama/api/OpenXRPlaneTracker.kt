@@ -40,6 +40,7 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
     fun setBoundsSize(boundsSize: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setBoundsSizeBind, segment, boundsSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -49,7 +50,9 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
      */
     fun getBoundsSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBoundsSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBoundsSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -60,6 +63,7 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
     fun setPlaneAlignment(planeAlignment: OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setPlaneAlignmentBind, segment, planeAlignment.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -69,7 +73,9 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
      */
     fun getPlaneAlignment(): OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment {
         checkOpen()
-        return OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlaneAlignmentBind, segment))
+        val ret = OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlaneAlignmentBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,6 +86,7 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
     fun setPlaneLabel(planeLabel: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setPlaneLabelBind, segment, planeLabel)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -89,7 +96,9 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
      */
     fun getPlaneLabel(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPlaneLabelBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getPlaneLabelBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -101,6 +110,7 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
     fun setMeshData(origin: Transform3D, vertices: List<Vector2>, indices: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform3DPackedVector2ListPackedInt32ListArgs(Binds.setMeshDataBind, segment, origin, vertices, indices)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -112,6 +122,7 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
     fun clearMeshData() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearMeshDataBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -122,7 +133,9 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
      */
     fun getMeshOffset(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getMeshOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getMeshOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -132,7 +145,9 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
      */
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
+        val ret = Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -142,7 +157,9 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
      */
     fun getShape(thickness: Double = 0.01): Shape3D? {
         checkOpen()
-        return Shape3D.wrapOwned(ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.getShapeBind, segment, thickness))
+        val ret = Shape3D.wrapOwned(ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.getShapeBind, segment, thickness))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `mesh_changed()`; see [TypedSignal]. */

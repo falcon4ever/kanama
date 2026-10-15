@@ -24,7 +24,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun bind(port: Int, bindAddress: String = "*", recvBufSize: Int = 65536): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntStringAndIntArgsRetLong(Binds.bindBind, segment, port, bindAddress, recvBufSize))
+        val ret = GodotError(ObjectCalls.ptrcallWithIntStringAndIntArgsRetLong(Binds.bindBind, segment, port, bindAddress, recvBufSize))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -35,6 +37,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
     fun closeConnection() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.closeConnectionBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -45,7 +48,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun waitBlocking(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.waitBlockingBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.waitBlockingBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -55,7 +60,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun isBound(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBoundBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isBoundBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -72,7 +79,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun connectToHost(host: String, port: Int): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(Binds.connectToHostBind, segment, host, port))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(Binds.connectToHostBind, segment, host, port))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -83,7 +92,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun isSocketConnected(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSocketConnectedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isSocketConnectedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,7 +105,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getPacketIp(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPacketIpBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getPacketIpBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -105,7 +118,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getPacketPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPacketPortBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPacketPortBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,7 +130,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -127,7 +144,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun setDestAddress(host: String, port: Int): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(Binds.setDestAddressBind, segment, host, port))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(Binds.setDestAddressBind, segment, host, port))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -141,6 +160,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
     fun setBroadcastEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setBroadcastEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -153,7 +173,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun joinMulticastGroup(multicastAddress: String, interfaceName: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.joinMulticastGroupBind, segment, multicastAddress, interfaceName))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.joinMulticastGroupBind, segment, multicastAddress, interfaceName))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,7 +186,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun leaveMulticastGroup(multicastAddress: String, interfaceName: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.leaveMulticastGroupBind, segment, multicastAddress, interfaceName))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.leaveMulticastGroupBind, segment, multicastAddress, interfaceName))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

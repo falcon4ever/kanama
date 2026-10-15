@@ -51,6 +51,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
     fun setCommandOrControlAutoremap(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCommandOrControlAutoremapBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -61,7 +62,9 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun isCommandOrControlAutoremap(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCommandOrControlAutoremapBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCommandOrControlAutoremapBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -72,7 +75,9 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun isCommandOrControlPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCommandOrControlPressedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCommandOrControlPressedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -83,6 +88,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
     fun setAltPressed(pressed: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAltPressedBind, segment, pressed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -92,7 +98,9 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun isAltPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAltPressedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAltPressedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -103,6 +111,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
     fun setShiftPressed(pressed: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setShiftPressedBind, segment, pressed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -112,7 +121,9 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun isShiftPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShiftPressedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isShiftPressedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -123,6 +134,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
     fun setCtrlPressed(pressed: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCtrlPressedBind, segment, pressed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -132,7 +144,9 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun isCtrlPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCtrlPressedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCtrlPressedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -144,6 +158,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
     fun setMetaPressed(pressed: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setMetaPressedBind, segment, pressed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -154,7 +169,9 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun isMetaPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMetaPressedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isMetaPressedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,7 +181,9 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun getModifiersMask(): KeyModifierMask {
         checkOpen()
-        return KeyModifierMask(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModifiersMaskBind, segment))
+        val ret = KeyModifierMask(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModifiersMaskBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

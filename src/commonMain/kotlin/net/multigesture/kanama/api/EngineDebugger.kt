@@ -33,6 +33,7 @@ object EngineDebugger {
     @JvmStatic
     fun registerProfiler(name: String, profiler: EngineProfiler?) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.registerProfilerBind, singleton, name, profiler?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(profiler)
     }
 
     /**
@@ -98,6 +99,7 @@ object EngineDebugger {
     @JvmStatic
     fun registerMessageCapture(name: String, callable: GodotCallable) {
         ObjectCalls.ptrcallWithStringNameAndCallableArgs(Binds.registerMessageCaptureBind, singleton, name, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**
@@ -162,6 +164,7 @@ object EngineDebugger {
     @JvmStatic
     fun scriptDebug(language: ScriptLanguage, canContinue: Boolean = true, isErrorBreakpoint: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndTwoBoolArgs(Binds.scriptDebugBind, singleton, language.segment, canContinue, isErrorBreakpoint)
+        ObjectCalls.keepReachable(language)
     }
 
     /**

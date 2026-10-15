@@ -96,6 +96,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setLineSpacing(spacing: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLineSpacingBind, segment, spacing)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -106,7 +107,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getLineSpacing(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineSpacingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineSpacingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -117,6 +120,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setParagraphSpacing(spacing: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setParagraphSpacingBind, segment, spacing)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -126,7 +130,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getParagraphSpacing(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getParagraphSpacingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getParagraphSpacingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -137,6 +143,8 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setFont(font: Font?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -146,7 +154,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getFont(): Font? {
         checkOpen()
-        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFontBind, segment))
+        val ret = Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFontBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -157,6 +167,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setFontSize(size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setFontSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -166,7 +177,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFontSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFontSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -177,6 +190,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setFontColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setFontColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -186,7 +200,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getFontColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getFontColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -197,6 +213,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setOutlineSize(size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setOutlineSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -206,7 +223,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getOutlineSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutlineSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutlineSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -217,6 +236,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setOutlineColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setOutlineColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -226,7 +246,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getOutlineColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getOutlineColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getOutlineColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -237,6 +259,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setShadowSize(size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setShadowSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -246,7 +269,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getShadowSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getShadowSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getShadowSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -257,6 +282,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setShadowColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setShadowColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -266,7 +292,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getShadowColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getShadowColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getShadowColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -277,6 +305,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setShadowOffset(offset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setShadowOffsetBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -286,7 +315,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getShadowOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getShadowOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getShadowOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -296,7 +327,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedOutlineCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStackedOutlineCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getStackedOutlineCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -307,6 +340,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setStackedOutlineCount(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setStackedOutlineCountBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -318,6 +352,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun addStackedOutline(index: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.addStackedOutlineBind, segment, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -329,6 +364,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun moveStackedOutline(fromIndex: Int, toPosition: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveStackedOutlineBind, segment, fromIndex, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -339,6 +375,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun removeStackedOutline(index: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeStackedOutlineBind, segment, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -349,6 +386,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setStackedOutlineSize(index: Int, size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setStackedOutlineSizeBind, segment, index, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -358,7 +396,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedOutlineSize(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getStackedOutlineSizeBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getStackedOutlineSizeBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -369,6 +409,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setStackedOutlineColor(index: Int, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(Binds.setStackedOutlineColorBind, segment, index, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -378,7 +419,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedOutlineColor(index: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getStackedOutlineColorBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetColor(Binds.getStackedOutlineColorBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -388,7 +431,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedShadowCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStackedShadowCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getStackedShadowCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -399,6 +444,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setStackedShadowCount(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setStackedShadowCountBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -410,6 +456,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun addStackedShadow(index: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.addStackedShadowBind, segment, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -420,6 +467,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun moveStackedShadow(fromIndex: Int, toPosition: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveStackedShadowBind, segment, fromIndex, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -430,6 +478,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun removeStackedShadow(index: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeStackedShadowBind, segment, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -440,6 +489,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setStackedShadowOffset(index: Int, offset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setStackedShadowOffsetBind, segment, index, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -449,7 +499,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedShadowOffset(index: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getStackedShadowOffsetBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getStackedShadowOffsetBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -460,6 +512,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setStackedShadowColor(index: Int, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(Binds.setStackedShadowColorBind, segment, index, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -469,7 +522,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedShadowColor(index: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getStackedShadowColorBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetColor(Binds.getStackedShadowColorBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -480,6 +535,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     fun setStackedShadowOutlineSize(index: Int, size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setStackedShadowOutlineSizeBind, segment, index, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -489,7 +545,9 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedShadowOutlineSize(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getStackedShadowOutlineSizeBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getStackedShadowOutlineSizeBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

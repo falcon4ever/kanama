@@ -24,7 +24,9 @@ class FBXState(handle: GodotHandle) : GLTFState(handle) {
      */
     fun getAllowGeometryHelperNodes(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAllowGeometryHelperNodesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getAllowGeometryHelperNodesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -36,6 +38,7 @@ class FBXState(handle: GodotHandle) : GLTFState(handle) {
     fun setAllowGeometryHelperNodes(allow: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAllowGeometryHelperNodesBind, segment, allow)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

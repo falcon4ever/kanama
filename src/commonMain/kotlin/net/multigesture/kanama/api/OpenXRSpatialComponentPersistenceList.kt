@@ -18,7 +18,9 @@ class OpenXRSpatialComponentPersistenceList(handle: GodotHandle) : OpenXRSpatial
      */
     fun getPersistentUuid(index: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getPersistentUuidBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithLongArgRetString(Binds.getPersistentUuidBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -28,7 +30,9 @@ class OpenXRSpatialComponentPersistenceList(handle: GodotHandle) : OpenXRSpatial
      */
     fun getPersistentState(index: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(Binds.getPersistentStateBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithLongArgRetLong(Binds.getPersistentStateBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

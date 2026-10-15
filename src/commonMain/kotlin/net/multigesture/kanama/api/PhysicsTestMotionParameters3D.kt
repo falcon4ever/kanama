@@ -71,7 +71,9 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrom(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getFromBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getFromBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -83,6 +85,7 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setFrom(from: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(Binds.setFromBind, segment, from)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -92,7 +95,9 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMotion(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getMotionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getMotionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -103,6 +108,7 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setMotion(motion: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setMotionBind, segment, motion)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -112,7 +118,9 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMargin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMarginBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMarginBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -123,6 +131,7 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setMargin(margin: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMarginBind, segment, margin)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -133,7 +142,9 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMaxCollisions(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxCollisionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxCollisionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -145,6 +156,7 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setMaxCollisions(maxCollisions: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMaxCollisionsBind, segment, maxCollisions)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -157,7 +169,9 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isCollideSeparationRayEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollideSeparationRayEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollideSeparationRayEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -171,6 +185,7 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setCollideSeparationRayEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCollideSeparationRayEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -181,7 +196,9 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExcludeBodies(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getExcludeBodiesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getExcludeBodiesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -193,6 +210,7 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setExcludeBodies(excludeList: List<RID>) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(Binds.setExcludeBodiesBind, segment, excludeList)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -203,7 +221,9 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExcludeObjects(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLongList(Binds.getExcludeObjectsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLongList(Binds.getExcludeObjectsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -215,6 +235,7 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setExcludeObjects(excludeList: List<Long>) {
         checkOpen()
         ObjectCalls.ptrcallWithTypedIntListArg(Binds.setExcludeObjectsBind, segment, excludeList)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -227,7 +248,9 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isRecoveryAsCollisionEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRecoveryAsCollisionEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isRecoveryAsCollisionEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -241,6 +264,7 @@ class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setRecoveryAsCollisionEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setRecoveryAsCollisionEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

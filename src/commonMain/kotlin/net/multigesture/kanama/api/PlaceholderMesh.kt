@@ -20,6 +20,7 @@ class PlaceholderMesh(handle: GodotHandle) : Mesh(handle) {
     fun setAabb(aabb: AABB) {
         checkOpen()
         ObjectCalls.ptrcallWithAABBArg(Binds.setAabbBind, segment, aabb)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

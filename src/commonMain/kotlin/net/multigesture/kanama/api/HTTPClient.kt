@@ -43,7 +43,10 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun connectToHost(host: String, port: Int = -1, tlsOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringIntObjectArgsRetLong(Binds.connectToHostBind, segment, host, port, tlsOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringIntObjectArgsRetLong(Binds.connectToHostBind, segment, host, port, tlsOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(tlsOptions)
+        return ret
     }
 
     /**
@@ -54,6 +57,8 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
     fun setConnection(connection: StreamPeer?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setConnectionBind, segment, listOf(connection?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(connection)
     }
 
     /**
@@ -63,7 +68,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnection(): StreamPeer? {
         checkOpen()
-        return StreamPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getConnectionBind, segment))
+        val ret = StreamPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getConnectionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -78,7 +85,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun requestRaw(method: HTTPClient.Method, url: String, headers: List<String>, body: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongStringPackedStringListByteArrayArgsRetLong(Binds.requestRawBind, segment, method.value, url, headers, body))
+        val ret = GodotError(ObjectCalls.ptrcallWithLongStringPackedStringListByteArrayArgsRetLong(Binds.requestRawBind, segment, method.value, url, headers, body))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -93,7 +102,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun request(method: HTTPClient.Method, url: String, headers: List<String>, body: String = ""): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongStringPackedStringListStringArgsRetLong(Binds.requestBind, segment, method.value, url, headers, body))
+        val ret = GodotError(ObjectCalls.ptrcallWithLongStringPackedStringListStringArgsRetLong(Binds.requestBind, segment, method.value, url, headers, body))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -104,6 +115,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
     fun closeConnection() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.closeConnectionBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -113,7 +125,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasResponse(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasResponseBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasResponseBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -123,7 +137,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isResponseChunked(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isResponseChunkedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isResponseChunkedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -133,7 +149,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getResponseCode(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getResponseCodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getResponseCodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -143,7 +161,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getResponseHeaders(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getResponseHeadersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getResponseHeadersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -155,7 +175,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getResponseHeadersAsDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getResponseHeadersAsDictionaryBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getResponseHeadersAsDictionaryBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -168,7 +190,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getResponseBodyLength(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getResponseBodyLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getResponseBodyLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -178,7 +202,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun readResponseBodyChunk(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.readResponseBodyChunkBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.readResponseBodyChunkBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -190,6 +216,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
     fun setReadChunkSize(bytes: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setReadChunkSizeBind, segment, bytes)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -200,7 +227,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getReadChunkSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getReadChunkSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getReadChunkSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -211,6 +240,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
     fun setBlockingMode(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setBlockingModeBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -220,7 +250,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isBlockingModeEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBlockingModeEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isBlockingModeEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -230,7 +262,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getStatus(): HTTPClient.Status {
         checkOpen()
-        return HTTPClient.Status(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
+        val ret = HTTPClient.Status(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -240,7 +274,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun poll(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -252,6 +288,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
     fun setHttpProxy(host: String, port: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndIntArg(Binds.setHttpProxyBind, segment, host, port)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -263,6 +300,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
     fun setHttpsProxy(host: String, port: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndIntArg(Binds.setHttpsProxyBind, segment, host, port)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -273,7 +311,9 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun queryStringFromDict(fields: Map<String, Any?>): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetString(Binds.queryStringFromDictBind, segment, fields)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetString(Binds.queryStringFromDictBind, segment, fields)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

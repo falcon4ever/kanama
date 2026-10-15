@@ -1057,6 +1057,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      */
     fun setTooltipRequestFunc(callback: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(Binds.setTooltipRequestFuncBind, segment, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -2422,6 +2423,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      */
     fun setGutterCustomDraw(column: Int, drawCallback: GodotCallable) {
         ObjectCalls.ptrcallWithIntCallableArgs(Binds.setGutterCustomDrawBind, segment, column, drawCallback.target.segment, drawCallback.method)
+        ObjectCalls.keepReachable(drawCallback)
     }
 
     /**
@@ -2479,6 +2481,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      */
     fun setLineGutterIcon(line: Int, gutter: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithTwoIntAndObjectArg(Binds.setLineGutterIconBind, segment, line, gutter, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -2559,6 +2562,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      */
     fun setSyntaxHighlighter(syntaxHighlighter: SyntaxHighlighter?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(syntaxHighlighter)
     }
 
     /**

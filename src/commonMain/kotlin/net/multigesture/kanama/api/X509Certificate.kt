@@ -18,7 +18,9 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
      */
     fun save(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -28,7 +30,9 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
      */
     fun load(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -39,7 +43,9 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
      */
     fun saveToString(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.saveToStringBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.saveToStringBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -49,7 +55,9 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
      */
     fun loadFromString(string: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadFromStringBind, segment, string))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadFromStringBind, segment, string))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

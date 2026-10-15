@@ -41,6 +41,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -50,7 +51,9 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun hasData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,6 +64,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
     fun setTraversableOutlines(traversableOutlines: List<List<Vector2>>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListListArg(Binds.setTraversableOutlinesBind, segment, traversableOutlines)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -70,7 +74,9 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun getTraversableOutlines(): List<List<Vector2>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(Binds.getTraversableOutlinesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(Binds.getTraversableOutlinesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -81,6 +87,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
     fun setObstructionOutlines(obstructionOutlines: List<List<Vector2>>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListListArg(Binds.setObstructionOutlinesBind, segment, obstructionOutlines)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -90,7 +97,9 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun getObstructionOutlines(): List<List<Vector2>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(Binds.getObstructionOutlinesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(Binds.getObstructionOutlinesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -102,6 +111,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
     fun appendTraversableOutlines(traversableOutlines: List<List<Vector2>>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListListArg(Binds.appendTraversableOutlinesBind, segment, traversableOutlines)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -113,6 +123,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
     fun appendObstructionOutlines(obstructionOutlines: List<List<Vector2>>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListListArg(Binds.appendObstructionOutlinesBind, segment, obstructionOutlines)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -123,6 +134,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
     fun addTraversableOutline(shapeOutline: List<Vector2>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.addTraversableOutlineBind, segment, shapeOutline)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -133,6 +145,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
     fun addObstructionOutline(shapeOutline: List<Vector2>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.addObstructionOutlineBind, segment, shapeOutline)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -144,6 +157,8 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
     fun merge(otherGeometry: NavigationMeshSourceGeometryData2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.mergeBind, segment, listOf(otherGeometry?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(otherGeometry)
     }
 
     /**
@@ -156,6 +171,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
     fun addProjectedObstruction(vertices: List<Vector2>, carve: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListAndBoolArg(Binds.addProjectedObstructionBind, segment, vertices, carve)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -166,6 +182,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
     fun clearProjectedObstructions() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearProjectedObstructionsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -177,6 +194,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
     fun setProjectedObstructions(projectedObstructions: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setProjectedObstructionsBind, segment, projectedObstructions)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -190,7 +208,9 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun getProjectedObstructions(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getProjectedObstructionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getProjectedObstructionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -202,7 +222,9 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun getBounds(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getBoundsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRect2(Binds.getBoundsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -111,6 +111,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setMagFilter(pMember: RenderingDevice.SamplerFilter) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setMagFilterBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -121,7 +122,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMagFilter(): RenderingDevice.SamplerFilter {
         checkOpen()
-        return RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMagFilterBind, segment))
+        val ret = RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMagFilterBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -133,6 +136,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setMinFilter(pMember: RenderingDevice.SamplerFilter) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setMinFilterBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -143,7 +147,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMinFilter(): RenderingDevice.SamplerFilter {
         checkOpen()
-        return RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMinFilterBind, segment))
+        val ret = RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMinFilterBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -154,6 +160,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setMipFilter(pMember: RenderingDevice.SamplerFilter) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setMipFilterBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -163,7 +170,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMipFilter(): RenderingDevice.SamplerFilter {
         checkOpen()
-        return RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMipFilterBind, segment))
+        val ret = RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMipFilterBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -175,6 +184,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setRepeatU(pMember: RenderingDevice.SamplerRepeatMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setRepeatUBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -185,7 +195,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRepeatU(): RenderingDevice.SamplerRepeatMode {
         checkOpen()
-        return RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRepeatUBind, segment))
+        val ret = RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRepeatUBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -197,6 +209,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setRepeatV(pMember: RenderingDevice.SamplerRepeatMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setRepeatVBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -207,7 +220,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRepeatV(): RenderingDevice.SamplerRepeatMode {
         checkOpen()
-        return RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRepeatVBind, segment))
+        val ret = RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRepeatVBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -219,6 +234,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setRepeatW(pMember: RenderingDevice.SamplerRepeatMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setRepeatWBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -229,7 +245,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRepeatW(): RenderingDevice.SamplerRepeatMode {
         checkOpen()
-        return RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRepeatWBind, segment))
+        val ret = RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRepeatWBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -243,6 +261,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setLodBias(pMember: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLodBiasBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -255,7 +274,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLodBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLodBiasBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLodBiasBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -266,6 +287,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setUseAnisotropy(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseAnisotropyBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -275,7 +297,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUseAnisotropy(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseAnisotropyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseAnisotropyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -290,6 +314,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setAnisotropyMax(pMember: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAnisotropyMaxBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -303,7 +328,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAnisotropyMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAnisotropyMaxBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAnisotropyMaxBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -317,6 +344,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setEnableCompare(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnableCompareBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -329,7 +357,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableCompare(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableCompareBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableCompareBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -340,6 +370,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setCompareOp(pMember: RenderingDevice.CompareOperator) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setCompareOpBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -349,7 +380,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCompareOp(): RenderingDevice.CompareOperator {
         checkOpen()
-        return RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCompareOpBind, segment))
+        val ret = RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCompareOpBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -361,6 +394,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setMinLod(pMember: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMinLodBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -371,7 +405,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMinLod(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinLodBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinLodBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -383,6 +419,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setMaxLod(pMember: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxLodBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -393,7 +430,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMaxLod(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxLodBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxLodBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -405,6 +444,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setBorderColor(pMember: RenderingDevice.SamplerBorderColor) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBorderColorBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -415,7 +455,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBorderColor(): RenderingDevice.SamplerBorderColor {
         checkOpen()
-        return RenderingDevice.SamplerBorderColor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBorderColorBind, segment))
+        val ret = RenderingDevice.SamplerBorderColor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBorderColorBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -427,6 +469,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     fun setUnnormalizedUvw(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUnnormalizedUvwBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -437,7 +480,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUnnormalizedUvw(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUnnormalizedUvwBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getUnnormalizedUvwBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

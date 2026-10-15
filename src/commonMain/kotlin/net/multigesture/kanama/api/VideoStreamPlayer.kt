@@ -92,6 +92,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      */
     fun setStream(stream: VideoStream?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setStreamBind, segment, listOf(stream?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(stream)
     }
 
     /**

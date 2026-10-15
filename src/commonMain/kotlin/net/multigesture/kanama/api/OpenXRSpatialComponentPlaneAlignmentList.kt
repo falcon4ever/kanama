@@ -19,7 +19,9 @@ class OpenXRSpatialComponentPlaneAlignmentList(handle: GodotHandle) : OpenXRSpat
      */
     fun getPlaneAlignment(index: Long): OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment {
         checkOpen()
-        return OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getPlaneAlignmentBind, segment, index))
+        val ret = OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getPlaneAlignmentBind, segment, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

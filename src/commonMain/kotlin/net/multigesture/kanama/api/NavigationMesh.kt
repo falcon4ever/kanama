@@ -174,6 +174,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setSamplePartitionType(samplePartitionType: NavigationMesh.SamplePartitionType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSamplePartitionTypeBind, segment, samplePartitionType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -183,7 +184,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSamplePartitionType(): NavigationMesh.SamplePartitionType {
         checkOpen()
-        return NavigationMesh.SamplePartitionType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSamplePartitionTypeBind, segment))
+        val ret = NavigationMesh.SamplePartitionType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSamplePartitionTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -194,6 +197,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setParsedGeometryType(geometryType: NavigationMesh.ParsedGeometryType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setParsedGeometryTypeBind, segment, geometryType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -203,7 +207,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getParsedGeometryType(): NavigationMesh.ParsedGeometryType {
         checkOpen()
-        return NavigationMesh.ParsedGeometryType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getParsedGeometryTypeBind, segment))
+        val ret = NavigationMesh.ParsedGeometryType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getParsedGeometryTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -215,6 +221,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setCollisionMask(mask: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setCollisionMaskBind, segment, mask)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -225,7 +232,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getCollisionMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionMaskBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionMaskBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -237,6 +246,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCollisionMaskValueBind, segment, layerNumber, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -247,7 +257,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCollisionMaskValueBind, segment, layerNumber)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCollisionMaskValueBind, segment, layerNumber)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -258,6 +270,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setSourceGeometryMode(mask: NavigationMesh.SourceGeometryMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSourceGeometryModeBind, segment, mask.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -267,7 +280,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceGeometryMode(): NavigationMesh.SourceGeometryMode {
         checkOpen()
-        return NavigationMesh.SourceGeometryMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceGeometryModeBind, segment))
+        val ret = NavigationMesh.SourceGeometryMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceGeometryModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -279,6 +294,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setSourceGroupName(mask: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.setSourceGroupNameBind, segment, mask)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -289,7 +305,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceGroupName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getSourceGroupNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getSourceGroupNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -301,6 +319,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setCellSize(cellSize: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCellSizeBind, segment, cellSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -311,7 +330,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getCellSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -323,6 +344,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setCellHeight(cellHeight: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCellHeightBind, segment, cellHeight)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -333,7 +355,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getCellHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -348,6 +372,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setBorderSize(borderSize: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBorderSizeBind, segment, borderSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -361,7 +386,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getBorderSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBorderSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBorderSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -374,6 +401,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setAgentHeight(agentHeight: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAgentHeightBind, segment, agentHeight)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -385,7 +413,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getAgentHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -401,6 +431,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setAgentRadius(agentRadius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAgentRadiusBind, segment, agentRadius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -415,7 +446,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getAgentRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -427,6 +460,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setAgentMaxClimb(agentMaxClimb: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAgentMaxClimbBind, segment, agentMaxClimb)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -437,7 +471,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getAgentMaxClimb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentMaxClimbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentMaxClimbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -448,6 +484,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setAgentMaxSlope(agentMaxSlope: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAgentMaxSlopeBind, segment, agentMaxSlope)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -457,7 +494,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getAgentMaxSlope(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentMaxSlopeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentMaxSlopeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -470,6 +509,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setRegionMinSize(regionMinSize: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRegionMinSizeBind, segment, regionMinSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -481,7 +521,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getRegionMinSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRegionMinSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRegionMinSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -494,6 +536,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setRegionMergeSize(regionMergeSize: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRegionMergeSizeBind, segment, regionMergeSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -505,7 +548,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getRegionMergeSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRegionMergeSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRegionMergeSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -518,6 +563,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setEdgeMaxLength(edgeMaxLength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEdgeMaxLengthBind, segment, edgeMaxLength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -529,7 +575,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getEdgeMaxLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEdgeMaxLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEdgeMaxLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -541,6 +589,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setEdgeMaxError(edgeMaxError: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEdgeMaxErrorBind, segment, edgeMaxError)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -551,7 +600,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getEdgeMaxError(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEdgeMaxErrorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEdgeMaxErrorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -563,6 +614,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setVerticesPerPolygon(verticesPerPolygon: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVerticesPerPolygonBind, segment, verticesPerPolygon)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -573,7 +625,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getVerticesPerPolygon(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVerticesPerPolygonBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVerticesPerPolygonBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -584,6 +638,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setDetailSampleDistance(detailSampleDist: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDetailSampleDistanceBind, segment, detailSampleDist)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -593,7 +648,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getDetailSampleDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDetailSampleDistanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDetailSampleDistanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -604,6 +661,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setDetailSampleMaxError(detailSampleMaxError: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDetailSampleMaxErrorBind, segment, detailSampleMaxError)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -613,7 +671,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getDetailSampleMaxError(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDetailSampleMaxErrorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDetailSampleMaxErrorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -625,6 +685,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setFilterLowHangingObstacles(filterLowHangingObstacles: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setFilterLowHangingObstaclesBind, segment, filterLowHangingObstacles)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -635,7 +696,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getFilterLowHangingObstacles(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFilterLowHangingObstaclesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getFilterLowHangingObstaclesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -646,6 +709,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setFilterLedgeSpans(filterLedgeSpans: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setFilterLedgeSpansBind, segment, filterLedgeSpans)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -655,7 +719,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getFilterLedgeSpans(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFilterLedgeSpansBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getFilterLedgeSpansBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -667,6 +733,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setFilterWalkableLowHeightSpans(filterWalkableLowHeightSpans: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setFilterWalkableLowHeightSpansBind, segment, filterWalkableLowHeightSpans)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -677,7 +744,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getFilterWalkableLowHeightSpans(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFilterWalkableLowHeightSpansBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getFilterWalkableLowHeightSpansBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -689,6 +758,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setFilterBakingAabb(bakingAabb: AABB) {
         checkOpen()
         ObjectCalls.ptrcallWithAABBArg(Binds.setFilterBakingAabbBind, segment, bakingAabb)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -699,7 +769,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getFilterBakingAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getFilterBakingAabbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetAABB(Binds.getFilterBakingAabbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -710,6 +782,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setFilterBakingAabbOffset(bakingAabbOffset: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setFilterBakingAabbOffsetBind, segment, bakingAabbOffset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -719,7 +792,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getFilterBakingAabbOffset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getFilterBakingAabbOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getFilterBakingAabbOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -730,6 +805,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun setVertices(vertices: List<Vector3>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListArg(Binds.setVerticesBind, segment, vertices)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -739,7 +815,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getVertices(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getVerticesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getVerticesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -750,6 +828,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun addPolygon(polygon: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.addPolygonBind, segment, polygon)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -759,7 +838,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getPolygonCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPolygonCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPolygonCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -769,7 +850,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getPolygon(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getPolygonBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getPolygonBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -780,6 +863,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun clearPolygons() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearPolygonsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -791,6 +875,8 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun createFromMesh(mesh: Mesh?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.createFromMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(mesh)
     }
 
     /**
@@ -801,6 +887,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

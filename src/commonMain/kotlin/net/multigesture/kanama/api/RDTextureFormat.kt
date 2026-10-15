@@ -86,6 +86,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setFormat(pMember: RenderingDevice.DataFormat) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFormatBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -95,7 +96,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFormat(): RenderingDevice.DataFormat {
         checkOpen()
-        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        val ret = RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -106,6 +109,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setWidth(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setWidthBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -115,7 +119,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getWidth(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getWidthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getWidthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -126,6 +132,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setHeight(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setHeightBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -135,7 +142,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getHeight(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -146,6 +155,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setDepth(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setDepthBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -155,7 +165,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepth(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getDepthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getDepthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -166,6 +178,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setArrayLayers(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setArrayLayersBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -175,7 +188,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getArrayLayers(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getArrayLayersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getArrayLayersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -186,6 +201,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setMipmaps(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setMipmapsBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -195,7 +211,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMipmaps(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getMipmapsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getMipmapsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -206,6 +224,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setTextureType(pMember: RenderingDevice.TextureType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextureTypeBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -215,7 +234,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTextureType(): RenderingDevice.TextureType {
         checkOpen()
-        return RenderingDevice.TextureType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureTypeBind, segment))
+        val ret = RenderingDevice.TextureType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -226,6 +247,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setSamples(pMember: RenderingDevice.TextureSamples) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSamplesBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -235,7 +257,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSamples(): RenderingDevice.TextureSamples {
         checkOpen()
-        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSamplesBind, segment))
+        val ret = RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSamplesBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -246,6 +270,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setUsageBits(pMember: RenderingDevice.TextureUsageBits) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setUsageBitsBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -255,7 +280,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUsageBits(): RenderingDevice.TextureUsageBits {
         checkOpen()
-        return RenderingDevice.TextureUsageBits(ObjectCalls.ptrcallNoArgsRetLong(Binds.getUsageBitsBind, segment))
+        val ret = RenderingDevice.TextureUsageBits(ObjectCalls.ptrcallNoArgsRetLong(Binds.getUsageBitsBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -266,6 +293,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setIsResolveBuffer(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setIsResolveBufferBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -275,7 +303,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIsResolveBuffer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsResolveBufferBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsResolveBufferBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -289,6 +319,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     fun setIsDiscardable(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setIsDiscardableBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -301,7 +332,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIsDiscardable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsDiscardableBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsDiscardableBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -314,6 +347,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     fun addShareableFormat(format: RenderingDevice.DataFormat) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.addShareableFormatBind, segment, format.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -325,6 +359,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     fun removeShareableFormat(format: RenderingDevice.DataFormat) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.removeShareableFormatBind, segment, format.value)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

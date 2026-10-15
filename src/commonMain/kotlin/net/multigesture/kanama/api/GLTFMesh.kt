@@ -44,7 +44,9 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getOriginalName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOriginalNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getOriginalNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -55,6 +57,7 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
     fun setOriginalName(originalName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setOriginalNameBind, segment, originalName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -64,7 +67,9 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getMesh(): ImporterMesh? {
         checkOpen()
-        return ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
+        val ret = ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -75,6 +80,8 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
     fun setMesh(mesh: ImporterMesh?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(mesh)
     }
 
     /**
@@ -84,7 +91,9 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getBlendWeights(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getBlendWeightsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getBlendWeightsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -95,6 +104,7 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
     fun setBlendWeights(blendWeights: List<Float>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setBlendWeightsBind, segment, blendWeights)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -104,7 +114,9 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getInstanceMaterials(): List<Material> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getInstanceMaterialsBind, segment, Material::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getInstanceMaterialsBind, segment, Material::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,6 +127,7 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
     fun setInstanceMaterials(instanceMaterials: List<Material>) {
         checkOpen()
         ObjectCalls.ptrcallWithTypedMaterialListArg(Binds.setInstanceMaterialsBind, segment, instanceMaterials)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -128,7 +141,9 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -142,6 +157,7 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setAdditionalDataBind, segment, extensionName, additionalData)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

@@ -27,6 +27,7 @@ class VisualShaderNodeClamp(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setOpType(opType: VisualShaderNodeClamp.OpType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, opType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeClamp(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getOpType(): VisualShaderNodeClamp.OpType {
         checkOpen()
-        return VisualShaderNodeClamp.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        val ret = VisualShaderNodeClamp.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

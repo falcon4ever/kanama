@@ -21,7 +21,9 @@ class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createFromFaces(faces: List<Vector3>): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithPackedVector3ListArgRetBool(Binds.createFromFacesBind, segment, faces)
+        val ret = ObjectCalls.ptrcallWithPackedVector3ListArgRetBool(Binds.createFromFacesBind, segment, faces)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -32,7 +34,9 @@ class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFaces(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getFacesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getFacesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -46,7 +50,9 @@ class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
      */
     fun intersectSegment(begin: Vector3, end: Vector3): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(Binds.intersectSegmentBind, segment, begin, end)
+        val ret = ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(Binds.intersectSegmentBind, segment, begin, end)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,7 +67,9 @@ class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
      */
     fun intersectRay(begin: Vector3, dir: Vector3): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(Binds.intersectRayBind, segment, begin, dir)
+        val ret = ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(Binds.intersectRayBind, segment, begin, dir)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

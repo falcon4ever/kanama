@@ -23,7 +23,9 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun initialize(configuration: Map<String, Any?> = emptyMap()): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithDictionaryArgRetLong(Binds.initializeBind, segment, configuration))
+        val ret = GodotError(ObjectCalls.ptrcallWithDictionaryArgRetLong(Binds.initializeBind, segment, configuration))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -38,7 +40,9 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createDataChannel(label: String, options: Map<String, Any?> = emptyMap()): WebRTCDataChannel? {
         checkOpen()
-        return WebRTCDataChannel.wrapOwned(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(Binds.createDataChannelBind, segment, label, options))
+        val ret = WebRTCDataChannel.wrapOwned(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(Binds.createDataChannelBind, segment, label, options))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -51,7 +55,9 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createOffer(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.createOfferBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.createOfferBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -63,7 +69,9 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setLocalDescription(type: String, sdp: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.setLocalDescriptionBind, segment, type, sdp))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.setLocalDescriptionBind, segment, type, sdp))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -76,7 +84,9 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setRemoteDescription(type: String, sdp: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.setRemoteDescriptionBind, segment, type, sdp))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.setRemoteDescriptionBind, segment, type, sdp))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -87,7 +97,9 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addIceCandidate(media: String, index: Int, name: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringIntStringArgsRetLong(Binds.addIceCandidateBind, segment, media, index, name))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringIntStringArgsRetLong(Binds.addIceCandidateBind, segment, media, index, name))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -98,7 +110,9 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun poll(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -110,6 +124,7 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
     fun closeConnection() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.closeConnectionBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -119,7 +134,9 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionState(): WebRTCPeerConnection.ConnectionState {
         checkOpen()
-        return WebRTCPeerConnection.ConnectionState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getConnectionStateBind, segment))
+        val ret = WebRTCPeerConnection.ConnectionState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getConnectionStateBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -130,7 +147,9 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGatheringState(): WebRTCPeerConnection.GatheringState {
         checkOpen()
-        return WebRTCPeerConnection.GatheringState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getGatheringStateBind, segment))
+        val ret = WebRTCPeerConnection.GatheringState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getGatheringStateBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -141,7 +160,9 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSignalingState(): WebRTCPeerConnection.SignalingState {
         checkOpen()
-        return WebRTCPeerConnection.SignalingState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSignalingStateBind, segment))
+        val ret = WebRTCPeerConnection.SignalingState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSignalingStateBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `session_description_created(type: String, sdp: String)`; see [TypedSignal]. */

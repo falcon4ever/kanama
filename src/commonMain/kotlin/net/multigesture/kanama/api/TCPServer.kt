@@ -23,7 +23,9 @@ class TCPServer(handle: GodotHandle) : SocketServer(handle) {
      */
     fun listen(port: Int, bindAddress: String = "*"): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(Binds.listenBind, segment, port, bindAddress))
+        val ret = GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(Binds.listenBind, segment, port, bindAddress))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -33,7 +35,9 @@ class TCPServer(handle: GodotHandle) : SocketServer(handle) {
      */
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -43,7 +47,9 @@ class TCPServer(handle: GodotHandle) : SocketServer(handle) {
      */
     fun takeConnection(): StreamPeerTCP? {
         checkOpen()
-        return StreamPeerTCP.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.takeConnectionBind, segment))
+        val ret = StreamPeerTCP.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.takeConnectionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

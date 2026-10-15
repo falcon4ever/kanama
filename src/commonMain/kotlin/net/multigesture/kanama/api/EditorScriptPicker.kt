@@ -23,6 +23,7 @@ class EditorScriptPicker(handle: GodotHandle) : EditorResourcePicker(handle) {
      */
     fun setScriptOwner(ownerNode: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setScriptOwnerBind, segment, listOf(ownerNode.segment))
+        ObjectCalls.keepReachable(ownerNode)
     }
 
     /**

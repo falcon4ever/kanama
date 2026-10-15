@@ -104,6 +104,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setStream(stream: AudioStream?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setStreamBind, segment, listOf(stream?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(stream)
     }
 
     /**

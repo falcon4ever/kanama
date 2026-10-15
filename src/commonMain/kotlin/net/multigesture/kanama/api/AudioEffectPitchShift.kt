@@ -42,6 +42,7 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
     fun setPitchScale(rate: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPitchScaleBind, segment, rate)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -53,7 +54,9 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPitchScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPitchScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPitchScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -65,6 +68,7 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
     fun setOversampling(amount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setOversamplingBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -75,7 +79,9 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getOversampling(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOversamplingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getOversamplingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -89,6 +95,7 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
     fun setFftSize(size: AudioEffectPitchShift.FFTSize) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFftSizeBind, segment, size.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -101,7 +108,9 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getFftSize(): AudioEffectPitchShift.FFTSize {
         checkOpen()
-        return AudioEffectPitchShift.FFTSize(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFftSizeBind, segment))
+        val ret = AudioEffectPitchShift.FFTSize(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFftSizeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

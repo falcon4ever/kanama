@@ -56,7 +56,9 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getSpace(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getSpaceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getSpaceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -66,7 +68,9 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getNavigationMap(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getNavigationMapBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getNavigationMapBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -76,7 +80,9 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getScenario(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getScenarioBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getScenarioBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -87,6 +93,8 @@ class World3D(handle: GodotHandle) : Resource(handle) {
     fun setEnvironment(env: Environment?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(env)
     }
 
     /**
@@ -96,7 +104,9 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getEnvironment(): Environment? {
         checkOpen()
-        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEnvironmentBind, segment))
+        val ret = Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEnvironmentBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -107,6 +117,8 @@ class World3D(handle: GodotHandle) : Resource(handle) {
     fun setFallbackEnvironment(env: Environment?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setFallbackEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(env)
     }
 
     /**
@@ -116,7 +128,9 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getFallbackEnvironment(): Environment? {
         checkOpen()
-        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFallbackEnvironmentBind, segment))
+        val ret = Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFallbackEnvironmentBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -127,6 +141,8 @@ class World3D(handle: GodotHandle) : Resource(handle) {
     fun setCameraAttributes(attributes: CameraAttributes?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCameraAttributesBind, segment, listOf(attributes?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(attributes)
     }
 
     /**
@@ -136,7 +152,9 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getCameraAttributes(): CameraAttributes? {
         checkOpen()
-        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCameraAttributesBind, segment))
+        val ret = CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCameraAttributesBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -148,7 +166,9 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getDirectSpaceState(): PhysicsDirectSpaceState3D? {
         checkOpen()
-        return PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDirectSpaceStateBind, segment))
+        val ret = PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDirectSpaceStateBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

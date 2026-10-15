@@ -32,6 +32,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
     fun setLocale(locale: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setLocaleBind, segment, locale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -41,7 +42,9 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getLocale(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLocaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getLocaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +56,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
     fun addMessage(srcMessage: String, xlatedMessage: String, context: String = "") {
         checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.addMessageBind, segment, srcMessage, xlatedMessage, context)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -65,6 +69,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
     fun addPluralMessage(srcMessage: String, xlatedMessages: List<String>, context: String = "") {
         checkOpen()
         ObjectCalls.ptrcallWithStringNamePackedStringListAndStringNameArgs(Binds.addPluralMessageBind, segment, srcMessage, xlatedMessages, context)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -74,7 +79,9 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMessage(srcMessage: String, context: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(Binds.getMessageBind, segment, srcMessage, context)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(Binds.getMessageBind, segment, srcMessage, context)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -87,7 +94,9 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getPluralMessage(srcMessage: String, srcPluralMessage: String, n: Int, context: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(Binds.getPluralMessageBind, segment, srcMessage, srcPluralMessage, n, context)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(Binds.getPluralMessageBind, segment, srcMessage, srcPluralMessage, n, context)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -98,6 +107,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
     fun eraseMessage(srcMessage: String, context: String = "") {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.eraseMessageBind, segment, srcMessage, context)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -110,7 +120,9 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMessageList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getMessageListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getMessageListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -120,7 +132,9 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getTranslatedMessageList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getTranslatedMessageListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getTranslatedMessageListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -130,7 +144,9 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMessageCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMessageCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMessageCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -144,6 +160,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
     fun setPluralRulesOverride(rules: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setPluralRulesOverrideBind, segment, rules)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -156,7 +173,9 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getPluralRulesOverride(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPluralRulesOverrideBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getPluralRulesOverrideBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

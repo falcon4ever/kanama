@@ -22,7 +22,9 @@ open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
      */
     fun getLineSyntaxHighlighting(line: Int): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDictionary(Binds.getLineSyntaxHighlightingBind, segment, line)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDictionary(Binds.getLineSyntaxHighlightingBind, segment, line)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -34,6 +36,7 @@ open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
     fun updateCache() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.updateCacheBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -45,6 +48,7 @@ open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
     fun clearHighlightingCache() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearHighlightingCacheBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -54,7 +58,9 @@ open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
      */
     fun getTextEdit(): TextEdit? {
         checkOpen()
-        return TextEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextEditBind, segment))
+        val ret = TextEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextEditBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -27,6 +27,7 @@ open class PlaceholderTextureLayered(handle: GodotHandle) : TextureLayered(handl
     fun setSize(size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ open class PlaceholderTextureLayered(handle: GodotHandle) : TextureLayered(handl
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -47,6 +50,7 @@ open class PlaceholderTextureLayered(handle: GodotHandle) : TextureLayered(handl
     fun setLayers(layers: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setLayersBind, segment, layers)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

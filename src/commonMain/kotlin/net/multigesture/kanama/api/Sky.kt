@@ -42,6 +42,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
     fun setRadianceSize(size: Sky.RadianceSize) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setRadianceSizeBind, segment, size.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -53,7 +54,9 @@ class Sky(handle: GodotHandle) : Resource(handle) {
      */
     fun getRadianceSize(): Sky.RadianceSize {
         checkOpen()
-        return Sky.RadianceSize(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRadianceSizeBind, segment))
+        val ret = Sky.RadianceSize(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRadianceSizeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -66,6 +69,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
     fun setProcessMode(mode: Sky.ProcessMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setProcessModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -77,7 +81,9 @@ class Sky(handle: GodotHandle) : Resource(handle) {
      */
     fun getProcessMode(): Sky.ProcessMode {
         checkOpen()
-        return Sky.ProcessMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getProcessModeBind, segment))
+        val ret = Sky.ProcessMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getProcessModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -89,6 +95,8 @@ class Sky(handle: GodotHandle) : Resource(handle) {
     fun setMaterial(material: Material?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -99,7 +107,9 @@ class Sky(handle: GodotHandle) : Resource(handle) {
      */
     fun getMaterial(): Material? {
         checkOpen()
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
+        val ret = Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

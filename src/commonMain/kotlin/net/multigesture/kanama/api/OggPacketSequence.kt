@@ -38,6 +38,7 @@ class OggPacketSequence(handle: GodotHandle) : Resource(handle) {
     fun setPacketData(packetData: List<List<Any?>>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayListArg(Binds.setPacketDataBind, segment, packetData)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -47,7 +48,9 @@ class OggPacketSequence(handle: GodotHandle) : Resource(handle) {
      */
     fun getPacketData(): List<List<Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArrayList(Binds.getPacketDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArrayList(Binds.getPacketDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -58,6 +61,7 @@ class OggPacketSequence(handle: GodotHandle) : Resource(handle) {
     fun setPacketGranulePositions(granulePositions: List<Long>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt64ListArg(Binds.setPacketGranulePositionsBind, segment, granulePositions)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -67,7 +71,9 @@ class OggPacketSequence(handle: GodotHandle) : Resource(handle) {
      */
     fun getPacketGranulePositions(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getPacketGranulePositionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getPacketGranulePositionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -79,6 +85,7 @@ class OggPacketSequence(handle: GodotHandle) : Resource(handle) {
     fun setSamplingRate(samplingRate: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSamplingRateBind, segment, samplingRate)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -89,7 +96,9 @@ class OggPacketSequence(handle: GodotHandle) : Resource(handle) {
      */
     fun getSamplingRate(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSamplingRateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSamplingRateBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -99,7 +108,9 @@ class OggPacketSequence(handle: GodotHandle) : Resource(handle) {
      */
     fun getLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

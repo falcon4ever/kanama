@@ -404,6 +404,7 @@ object AccessibilityServer {
     @JvmStatic
     fun updateAddAction(id: RID, action: AccessibilityServer.AccessibilityAction, callable: GodotCallable) {
         ObjectCalls.ptrcallWithRIDLongCallableArgs(Binds.updateAddActionBind, singleton, id, action.value, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**

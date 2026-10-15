@@ -128,7 +128,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun loadBitmapFont(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBitmapFontBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBitmapFontBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -141,7 +143,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun loadDynamicFont(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadDynamicFontBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadDynamicFontBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -152,6 +156,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setData(data: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithByteArrayArg(Binds.setDataBind, segment, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -161,7 +166,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -172,6 +179,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setFontName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setFontNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -182,6 +190,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setFontStyleName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setFontStyleNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -192,6 +201,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setFontStyle(style: TextServer.FontStyle) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFontStyleBind, segment, style.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -203,6 +213,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setFontWeight(weight: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setFontWeightBind, segment, weight)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -213,6 +224,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setFontStretch(stretch: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setFontStretchBind, segment, stretch)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -223,6 +235,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setAntialiasing(antialiasing: TextServer.FontAntialiasing) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAntialiasingBind, segment, antialiasing.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -232,7 +245,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getAntialiasing(): TextServer.FontAntialiasing {
         checkOpen()
-        return TextServer.FontAntialiasing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAntialiasingBind, segment))
+        val ret = TextServer.FontAntialiasing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAntialiasingBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -244,6 +259,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setDisableEmbeddedBitmaps(disableEmbeddedBitmaps: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDisableEmbeddedBitmapsBind, segment, disableEmbeddedBitmaps)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -254,7 +270,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getDisableEmbeddedBitmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDisableEmbeddedBitmapsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getDisableEmbeddedBitmapsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -265,6 +283,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setGenerateMipmaps(generateMipmaps: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setGenerateMipmapsBind, segment, generateMipmaps)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -274,7 +293,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGenerateMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getGenerateMipmapsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getGenerateMipmapsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -296,6 +317,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setMultichannelSignedDistanceField(msdf: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setMultichannelSignedDistanceFieldBind, segment, msdf)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -316,7 +338,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun isMultichannelSignedDistanceField(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMultichannelSignedDistanceFieldBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isMultichannelSignedDistanceFieldBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -330,6 +354,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setMsdfPixelRange(msdfPixelRange: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMsdfPixelRangeBind, segment, msdfPixelRange)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -342,7 +367,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getMsdfPixelRange(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMsdfPixelRangeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMsdfPixelRangeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -355,6 +382,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setMsdfSize(msdfSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMsdfSizeBind, segment, msdfSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -366,7 +394,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getMsdfSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMsdfSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMsdfSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -377,6 +407,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setFixedSize(fixedSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setFixedSizeBind, segment, fixedSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -386,7 +417,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getFixedSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFixedSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFixedSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -397,6 +430,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setFixedSizeScaleMode(fixedSizeScaleMode: TextServer.FixedSizeScaleMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFixedSizeScaleModeBind, segment, fixedSizeScaleMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -406,7 +440,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getFixedSizeScaleMode(): TextServer.FixedSizeScaleMode {
         checkOpen()
-        return TextServer.FixedSizeScaleMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFixedSizeScaleModeBind, segment))
+        val ret = TextServer.FixedSizeScaleMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFixedSizeScaleModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -417,6 +453,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setAllowSystemFallback(allowSystemFallback: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAllowSystemFallbackBind, segment, allowSystemFallback)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -426,7 +463,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun isAllowSystemFallback(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowSystemFallbackBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowSystemFallbackBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -438,6 +477,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setForceAutohinter(forceAutohinter: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setForceAutohinterBind, segment, forceAutohinter)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -448,7 +488,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun isForceAutohinter(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isForceAutohinterBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isForceAutohinterBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -460,6 +502,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setModulateColorGlyphs(modulate: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setModulateColorGlyphsBind, segment, modulate)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -470,7 +513,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun isModulateColorGlyphs(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isModulateColorGlyphsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isModulateColorGlyphsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -481,6 +526,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setHinting(hinting: TextServer.Hinting) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setHintingBind, segment, hinting.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -490,7 +536,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getHinting(): TextServer.Hinting {
         checkOpen()
-        return TextServer.Hinting(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintingBind, segment))
+        val ret = TextServer.Hinting(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintingBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -504,6 +552,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setSubpixelPositioning(subpixelPositioning: TextServer.SubpixelPositioning) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSubpixelPositioningBind, segment, subpixelPositioning.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -516,7 +565,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getSubpixelPositioning(): TextServer.SubpixelPositioning {
         checkOpen()
-        return TextServer.SubpixelPositioning(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSubpixelPositioningBind, segment))
+        val ret = TextServer.SubpixelPositioning(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSubpixelPositioningBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -529,6 +580,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setKeepRoundingRemainders(keepRoundingRemainders: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setKeepRoundingRemaindersBind, segment, keepRoundingRemainders)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -540,7 +592,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getKeepRoundingRemainders(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getKeepRoundingRemaindersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getKeepRoundingRemaindersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -553,6 +607,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setOversampling(oversampling: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setOversamplingBind, segment, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -564,7 +619,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getOversampling(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOversamplingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOversamplingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -574,7 +631,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCacheCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCacheCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCacheCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -585,6 +644,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun clearCache() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearCacheBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -595,6 +655,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun removeCache(cacheIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeCacheBind, segment, cacheIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -605,7 +666,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getSizeCacheList(cacheIndex: Int): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2iList(Binds.getSizeCacheListBind, segment, cacheIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector2iList(Binds.getSizeCacheListBind, segment, cacheIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -616,6 +679,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun clearSizeCache(cacheIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.clearSizeCacheBind, segment, cacheIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -626,6 +690,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun removeSizeCache(cacheIndex: Int, size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2iArg(Binds.removeSizeCacheBind, segment, cacheIndex, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -637,6 +702,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setVariationCoordinates(cacheIndex: Int, variationCoordinates: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDictionaryArg(Binds.setVariationCoordinatesBind, segment, cacheIndex, variationCoordinates)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -647,7 +713,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getVariationCoordinates(cacheIndex: Int): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDictionary(Binds.getVariationCoordinatesBind, segment, cacheIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDictionary(Binds.getVariationCoordinatesBind, segment, cacheIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -659,6 +727,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setEmbolden(cacheIndex: Int, strength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setEmboldenBind, segment, cacheIndex, strength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -669,7 +738,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getEmbolden(cacheIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getEmboldenBind, segment, cacheIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getEmboldenBind, segment, cacheIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -681,6 +752,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setTransform(cacheIndex: Int, transform: Transform2D) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform2DArg(Binds.setTransformBind, segment, cacheIndex, transform)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -691,7 +763,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getTransform(cacheIndex: Int): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform2D(Binds.getTransformBind, segment, cacheIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetTransform2D(Binds.getTransformBind, segment, cacheIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -702,6 +776,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setExtraSpacing(cacheIndex: Int, spacing: TextServer.SpacingType, value: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithIntTwoLongArgs(Binds.setExtraSpacingBind, segment, cacheIndex, spacing.value, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -711,7 +786,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getExtraSpacing(cacheIndex: Int, spacing: TextServer.SpacingType): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndLongArgsRetLong(Binds.getExtraSpacingBind, segment, cacheIndex, spacing.value)
+        val ret = ObjectCalls.ptrcallWithIntAndLongArgsRetLong(Binds.getExtraSpacingBind, segment, cacheIndex, spacing.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -722,6 +799,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setExtraBaselineOffset(cacheIndex: Int, baselineOffset: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setExtraBaselineOffsetBind, segment, cacheIndex, baselineOffset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -731,7 +809,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getExtraBaselineOffset(cacheIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getExtraBaselineOffsetBind, segment, cacheIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getExtraBaselineOffsetBind, segment, cacheIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -742,6 +822,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setFaceIndex(cacheIndex: Int, faceIndex: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setFaceIndexBind, segment, cacheIndex, faceIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -751,7 +832,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getFaceIndex(cacheIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(Binds.getFaceIndexBind, segment, cacheIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetLong(Binds.getFaceIndexBind, segment, cacheIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -762,6 +845,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setCacheAscent(cacheIndex: Int, size: Int, ascent: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.setCacheAscentBind, segment, cacheIndex, size, ascent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -771,7 +855,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCacheAscent(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheAscentBind, segment, cacheIndex, size)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheAscentBind, segment, cacheIndex, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -782,6 +868,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setCacheDescent(cacheIndex: Int, size: Int, descent: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.setCacheDescentBind, segment, cacheIndex, size, descent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -791,7 +878,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCacheDescent(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheDescentBind, segment, cacheIndex, size)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheDescentBind, segment, cacheIndex, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -802,6 +891,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setCacheUnderlinePosition(cacheIndex: Int, size: Int, underlinePosition: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.setCacheUnderlinePositionBind, segment, cacheIndex, size, underlinePosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -811,7 +901,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCacheUnderlinePosition(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheUnderlinePositionBind, segment, cacheIndex, size)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheUnderlinePositionBind, segment, cacheIndex, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -822,6 +914,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setCacheUnderlineThickness(cacheIndex: Int, size: Int, underlineThickness: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.setCacheUnderlineThicknessBind, segment, cacheIndex, size, underlineThickness)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -831,7 +924,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCacheUnderlineThickness(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheUnderlineThicknessBind, segment, cacheIndex, size)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheUnderlineThicknessBind, segment, cacheIndex, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -842,6 +937,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setCacheScale(cacheIndex: Int, size: Int, scale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.setCacheScaleBind, segment, cacheIndex, size, scale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -851,7 +947,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCacheScale(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheScaleBind, segment, cacheIndex, size)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheScaleBind, segment, cacheIndex, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -861,7 +959,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getTextureCount(cacheIndex: Int, size: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndVector2iArgRetInt(Binds.getTextureCountBind, segment, cacheIndex, size)
+        val ret = ObjectCalls.ptrcallWithIntAndVector2iArgRetInt(Binds.getTextureCountBind, segment, cacheIndex, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -873,6 +973,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun clearTextures(cacheIndex: Int, size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2iArg(Binds.clearTexturesBind, segment, cacheIndex, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -884,6 +985,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun removeTexture(cacheIndex: Int, size: Vector2i, textureIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(Binds.removeTextureBind, segment, cacheIndex, size, textureIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -894,6 +996,8 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int, image: Image?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntObjectArgs(Binds.setTextureImageBind, segment, cacheIndex, size, textureIndex, image?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(image)
     }
 
     /**
@@ -903,7 +1007,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallWithIntVector2iIntArgsRetObject(Binds.getTextureImageBind, segment, cacheIndex, size, textureIndex))
+        val ret = Image.wrapOwned(ObjectCalls.ptrcallWithIntVector2iIntArgsRetObject(Binds.getTextureImageBind, segment, cacheIndex, size, textureIndex))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -914,6 +1020,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: Int, offset: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntPackedInt32ListArgs(Binds.setTextureOffsetsBind, segment, cacheIndex, size, textureIndex, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -923,7 +1030,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetPackedInt32List(Binds.getTextureOffsetsBind, segment, cacheIndex, size, textureIndex)
+        val ret = ObjectCalls.ptrcallWithIntVector2iIntArgsRetPackedInt32List(Binds.getTextureOffsetsBind, segment, cacheIndex, size, textureIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -933,7 +1042,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphList(cacheIndex: Int, size: Vector2i): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iArgsRetPackedInt32List(Binds.getGlyphListBind, segment, cacheIndex, size)
+        val ret = ObjectCalls.ptrcallWithIntVector2iArgsRetPackedInt32List(Binds.getGlyphListBind, segment, cacheIndex, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -945,6 +1056,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun clearGlyphs(cacheIndex: Int, size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2iArg(Binds.clearGlyphsBind, segment, cacheIndex, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -956,6 +1068,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun removeGlyph(cacheIndex: Int, size: Vector2i, glyph: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(Binds.removeGlyphBind, segment, cacheIndex, size, glyph)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -967,6 +1080,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setGlyphAdvance(cacheIndex: Int, size: Int, glyph: Int, advance: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeIntAndVector2Arg(Binds.setGlyphAdvanceBind, segment, cacheIndex, size, glyph, advance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -977,7 +1091,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphAdvance(cacheIndex: Int, size: Int, glyph: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntArgsRetVector2(Binds.getGlyphAdvanceBind, segment, cacheIndex, size, glyph)
+        val ret = ObjectCalls.ptrcallWithThreeIntArgsRetVector2(Binds.getGlyphAdvanceBind, segment, cacheIndex, size, glyph)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -988,6 +1104,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setGlyphOffset(cacheIndex: Int, size: Vector2i, glyph: Int, offset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntVector2Args(Binds.setGlyphOffsetBind, segment, cacheIndex, size, glyph, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -997,7 +1114,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphOffset(cacheIndex: Int, size: Vector2i, glyph: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(Binds.getGlyphOffsetBind, segment, cacheIndex, size, glyph)
+        val ret = ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(Binds.getGlyphOffsetBind, segment, cacheIndex, size, glyph)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1008,6 +1127,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setGlyphSize(cacheIndex: Int, size: Vector2i, glyph: Int, glSize: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntVector2Args(Binds.setGlyphSizeBind, segment, cacheIndex, size, glyph, glSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1017,7 +1137,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphSize(cacheIndex: Int, size: Vector2i, glyph: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(Binds.getGlyphSizeBind, segment, cacheIndex, size, glyph)
+        val ret = ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(Binds.getGlyphSizeBind, segment, cacheIndex, size, glyph)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1028,6 +1150,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setGlyphUvRect(cacheIndex: Int, size: Vector2i, glyph: Int, uvRect: Rect2) {
         checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntRect2Args(Binds.setGlyphUvRectBind, segment, cacheIndex, size, glyph, uvRect)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1037,7 +1160,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphUvRect(cacheIndex: Int, size: Vector2i, glyph: Int): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetRect2(Binds.getGlyphUvRectBind, segment, cacheIndex, size, glyph)
+        val ret = ObjectCalls.ptrcallWithIntVector2iIntArgsRetRect2(Binds.getGlyphUvRectBind, segment, cacheIndex, size, glyph)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1048,6 +1173,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setGlyphTextureIdx(cacheIndex: Int, size: Vector2i, glyph: Int, textureIdx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(Binds.setGlyphTextureIdxBind, segment, cacheIndex, size, glyph, textureIdx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1057,7 +1183,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphTextureIdx(cacheIndex: Int, size: Vector2i, glyph: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetInt(Binds.getGlyphTextureIdxBind, segment, cacheIndex, size, glyph)
+        val ret = ObjectCalls.ptrcallWithIntVector2iIntArgsRetInt(Binds.getGlyphTextureIdxBind, segment, cacheIndex, size, glyph)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1067,7 +1195,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getKerningList(cacheIndex: Int, size: Int): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2iList(Binds.getKerningListBind, segment, cacheIndex, size)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetVector2iList(Binds.getKerningListBind, segment, cacheIndex, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1078,6 +1208,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun clearKerningMap(cacheIndex: Int, size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.clearKerningMapBind, segment, cacheIndex, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1088,6 +1219,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun removeKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndVector2iArg(Binds.removeKerningBind, segment, cacheIndex, size, glyphPair)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1098,6 +1230,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i, kerning: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntVector2iVector2Args(Binds.setKerningBind, segment, cacheIndex, size, glyphPair, kerning)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1107,7 +1240,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntVector2iArgRetVector2(Binds.getKerningBind, segment, cacheIndex, size, glyphPair)
+        val ret = ObjectCalls.ptrcallWithTwoIntVector2iArgRetVector2(Binds.getKerningBind, segment, cacheIndex, size, glyphPair)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1118,6 +1253,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun renderRange(cacheIndex: Int, size: Vector2i, start: Int, end: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(Binds.renderRangeBind, segment, cacheIndex, size, start, end)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1128,6 +1264,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun renderGlyph(cacheIndex: Int, size: Vector2i, index: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(Binds.renderGlyphBind, segment, cacheIndex, size, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1138,6 +1275,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setLanguageSupportOverride(language: String, supported: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndBoolArg(Binds.setLanguageSupportOverrideBind, segment, language, supported)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1147,7 +1285,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getLanguageSupportOverride(language: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.getLanguageSupportOverrideBind, segment, language)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.getLanguageSupportOverrideBind, segment, language)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1158,6 +1298,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun removeLanguageSupportOverride(language: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.removeLanguageSupportOverrideBind, segment, language)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1167,7 +1308,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getLanguageSupportOverrides(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getLanguageSupportOverridesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getLanguageSupportOverridesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1178,6 +1321,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setScriptSupportOverride(script: String, supported: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndBoolArg(Binds.setScriptSupportOverrideBind, segment, script, supported)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1187,7 +1331,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getScriptSupportOverride(script: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.getScriptSupportOverrideBind, segment, script)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.getScriptSupportOverrideBind, segment, script)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1198,6 +1344,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun removeScriptSupportOverride(script: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.removeScriptSupportOverrideBind, segment, script)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1207,7 +1354,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getScriptSupportOverrides(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getScriptSupportOverridesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getScriptSupportOverridesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1218,6 +1367,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     fun setOpentypeFeatureOverrides(overrides: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setOpentypeFeatureOverridesBind, segment, overrides)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1227,7 +1377,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getOpentypeFeatureOverrides(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getOpentypeFeatureOverridesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getOpentypeFeatureOverridesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1237,7 +1389,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphIndex(size: Int, char: Int, variationSelector: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntArgsRetInt(Binds.getGlyphIndexBind, segment, size, char, variationSelector)
+        val ret = ObjectCalls.ptrcallWithThreeIntArgsRetInt(Binds.getGlyphIndexBind, segment, size, char, variationSelector)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1248,7 +1402,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCharFromGlyphIndex(size: Int, glyphIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getCharFromGlyphIndexBind, segment, size, glyphIndex)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getCharFromGlyphIndexBind, segment, size, glyphIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

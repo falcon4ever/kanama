@@ -26,6 +26,7 @@ class VisualShaderNodeParticleMultiplyByAxisAngle(handle: GodotHandle) : VisualS
     fun setDegreesMode(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDegreesModeBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -35,7 +36,9 @@ class VisualShaderNodeParticleMultiplyByAxisAngle(handle: GodotHandle) : VisualS
      */
     fun isDegreesMode(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDegreesModeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDegreesModeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

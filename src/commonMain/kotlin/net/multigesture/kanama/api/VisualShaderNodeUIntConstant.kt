@@ -26,6 +26,7 @@ class VisualShaderNodeUIntConstant(handle: GodotHandle) : VisualShaderNodeConsta
     fun setConstant(constant: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setConstantBind, segment, constant)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -35,7 +36,9 @@ class VisualShaderNodeUIntConstant(handle: GodotHandle) : VisualShaderNodeConsta
      */
     fun getConstant(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getConstantBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getConstantBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

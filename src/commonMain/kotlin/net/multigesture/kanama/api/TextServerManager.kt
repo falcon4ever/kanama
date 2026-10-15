@@ -24,6 +24,7 @@ object TextServerManager {
     @JvmStatic
     fun addInterface(interfaceValue: TextServer?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(interfaceValue)
     }
 
     /**
@@ -45,6 +46,7 @@ object TextServerManager {
     @JvmStatic
     fun removeInterface(interfaceValue: TextServer?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(interfaceValue)
     }
 
     /**
@@ -85,6 +87,7 @@ object TextServerManager {
     @JvmStatic
     fun setPrimaryInterface(index: TextServer?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setPrimaryInterfaceBind, singleton, listOf(index?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(index)
     }
 
     /**

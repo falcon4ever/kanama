@@ -20,7 +20,10 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
      */
     fun pack(path: Node): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.packBind, segment, path.segment))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.packBind, segment, path.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(path)
+        return ret
     }
 
     /**
@@ -31,7 +34,9 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
      */
     fun instantiate(editState: PackedScene.GenEditState = PackedScene.GenEditState.DISABLED): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallWithLongArgRetObject(Binds.instantiateBind, segment, editState.value))
+        val ret = Node.wrap(ObjectCalls.ptrcallWithLongArgRetObject(Binds.instantiateBind, segment, editState.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -41,7 +46,9 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
      */
     fun canInstantiate(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.canInstantiateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.canInstantiateBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -51,7 +58,9 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
      */
     fun getState(): SceneState? {
         checkOpen()
-        return SceneState.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getStateBind, segment))
+        val ret = SceneState.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getStateBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

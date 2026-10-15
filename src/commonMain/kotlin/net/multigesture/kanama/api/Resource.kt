@@ -51,6 +51,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
     fun setPath(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setPathBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,6 +63,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
     fun takeOverPath(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.takeOverPathBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -75,7 +77,9 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getPathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -88,6 +92,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
     fun setPathCache(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setPathCacheBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -103,6 +108,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
     fun setName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -117,7 +123,9 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -129,7 +137,9 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRidBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getRidBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -143,6 +153,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
     fun setLocalToScene(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setLocalToSceneBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -155,7 +166,9 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isLocalToScene(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLocalToSceneBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isLocalToSceneBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -167,7 +180,9 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocalScene(): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getLocalSceneBind, segment))
+        val ret = Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getLocalSceneBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -180,6 +195,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
     fun setupLocalToScene() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.setupLocalToSceneBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -192,6 +208,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
     fun resetState() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.resetStateBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -206,6 +223,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
     fun setIdForPath(path: String, id: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringArgs(Binds.setIdForPathBind, segment, path, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -219,7 +237,9 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIdForPath(path: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(Binds.getIdForPathBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithStringArgRetString(Binds.getIdForPathBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -229,7 +249,9 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isBuiltIn(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBuiltInBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isBuiltInBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -247,6 +269,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
     fun setSceneUniqueId(id: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setSceneUniqueIdBind, segment, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -263,7 +286,9 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSceneUniqueId(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSceneUniqueIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getSceneUniqueIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -277,6 +302,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
     fun emitChanged() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.emitChangedBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -301,6 +327,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
     fun duplicate(deep: Boolean = false): Resource? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithBoolArgRetObject(Binds.duplicateBind, segment, deep)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -317,6 +344,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
     fun duplicateDeep(deepSubresourcesMode: Resource.DeepDuplicateMode = Resource.DeepDuplicateMode.INTERNAL): Resource? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.duplicateDeepBind, segment, deepSubresourcesMode.value)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -331,7 +359,10 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun copyFromResource(resource: Resource?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.copyFromResourceBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.copyFromResourceBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(resource)
+        return ret
     }
 
     /** Signal `changed()`; see [TypedSignal]. */
@@ -411,7 +442,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
         // Downcast a GodotObject to Resource (null if not).
         @JvmStatic
         fun fromObject(value: GodotObject): Resource? =
-            if (value.isClass("Resource")) RefCounted.retained(Resource(value.handle)) else null
+            if (value.isClass("Resource")) RefCounted.retained(Resource(value.handle), value) else null
     }
 
     private object Binds {

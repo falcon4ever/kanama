@@ -27,7 +27,9 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun listen(port: Int, bindAddress: String = "*"): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(Binds.listenBind, segment, port, bindAddress))
+        val ret = GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(Binds.listenBind, segment, port, bindAddress))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -41,7 +43,9 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun poll(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -51,7 +55,9 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isConnectionAvailable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isConnectionAvailableBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isConnectionAvailableBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,7 +67,9 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -71,7 +79,9 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isListening(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isListeningBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isListeningBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -83,7 +93,9 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun takeConnection(): PacketPeerUDP? {
         checkOpen()
-        return PacketPeerUDP.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.takeConnectionBind, segment))
+        val ret = PacketPeerUDP.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.takeConnectionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -95,6 +107,7 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
     fun stop() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -107,6 +120,7 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
     fun setMaxPendingConnections(maxPendingConnections: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMaxPendingConnectionsBind, segment, maxPendingConnections)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -118,7 +132,9 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMaxPendingConnections(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxPendingConnectionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxPendingConnectionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

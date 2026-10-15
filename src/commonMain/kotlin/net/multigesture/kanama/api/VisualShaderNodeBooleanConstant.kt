@@ -26,6 +26,7 @@ class VisualShaderNodeBooleanConstant(handle: GodotHandle) : VisualShaderNodeCon
     fun setConstant(constant: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setConstantBind, segment, constant)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -35,7 +36,9 @@ class VisualShaderNodeBooleanConstant(handle: GodotHandle) : VisualShaderNodeCon
      */
     fun getConstant(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getConstantBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getConstantBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

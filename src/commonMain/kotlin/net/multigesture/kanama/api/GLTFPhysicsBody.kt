@@ -71,7 +71,9 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
      */
     fun toNode(): CollisionObject3D? {
         checkOpen()
-        return CollisionObject3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.toNodeBind, segment))
+        val ret = CollisionObject3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.toNodeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -82,7 +84,9 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
      */
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -95,7 +99,9 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
      */
     fun getBodyType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getBodyTypeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getBodyTypeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -109,6 +115,7 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
     fun setBodyType(bodyType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setBodyTypeBind, segment, bodyType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -119,7 +126,9 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
      */
     fun getMass(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMassBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMassBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -131,6 +140,7 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
     fun setMass(mass: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMassBind, segment, mass)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -141,7 +151,9 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
      */
     fun getLinearVelocity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getLinearVelocityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getLinearVelocityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -153,6 +165,7 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
     fun setLinearVelocity(linearVelocity: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setLinearVelocityBind, segment, linearVelocity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -163,7 +176,9 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
      */
     fun getAngularVelocity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getAngularVelocityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getAngularVelocityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -175,6 +190,7 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
     fun setAngularVelocity(angularVelocity: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setAngularVelocityBind, segment, angularVelocity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -185,7 +201,9 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
      */
     fun getCenterOfMass(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getCenterOfMassBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getCenterOfMassBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -197,6 +215,7 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
     fun setCenterOfMass(centerOfMass: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setCenterOfMassBind, segment, centerOfMass)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -209,7 +228,9 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
      */
     fun getInertiaDiagonal(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getInertiaDiagonalBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getInertiaDiagonalBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -223,6 +244,7 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
     fun setInertiaDiagonal(inertiaDiagonal: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setInertiaDiagonalBind, segment, inertiaDiagonal)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -234,7 +256,9 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
      */
     fun getInertiaOrientation(): Quaternion {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getInertiaOrientationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getInertiaOrientationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -247,6 +271,7 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
     fun setInertiaOrientation(inertiaOrientation: Quaternion) {
         checkOpen()
         ObjectCalls.ptrcallWithQuaternionArg(Binds.setInertiaOrientationBind, segment, inertiaOrientation)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -258,7 +283,9 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
      */
     fun getInertiaTensor(): Basis {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBasis(Binds.getInertiaTensorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBasis(Binds.getInertiaTensorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -271,6 +298,7 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
     fun setInertiaTensor(inertiaTensor: Basis) {
         checkOpen()
         ObjectCalls.ptrcallWithBasisArg(Binds.setInertiaTensorBind, segment, inertiaTensor)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {
@@ -280,7 +308,9 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: GLTFPhysicsBody.from_node
          */
         fun fromNode(bodyNode: CollisionObject3D): GLTFPhysicsBody? {
-            return GLTFPhysicsBody.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, bodyNode.segment))
+            val ret = GLTFPhysicsBody.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, bodyNode.segment))
+            ObjectCalls.keepReachable(bodyNode)
+            return ret
         }
 
         /**

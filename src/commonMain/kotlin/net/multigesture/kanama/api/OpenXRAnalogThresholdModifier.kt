@@ -47,6 +47,7 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
     fun setOnThreshold(onThreshold: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setOnThresholdBind, segment, onThreshold)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -57,7 +58,9 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
      */
     fun getOnThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOnThresholdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOnThresholdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -68,6 +71,7 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
     fun setOffThreshold(offThreshold: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setOffThresholdBind, segment, offThreshold)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -77,7 +81,9 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
      */
     fun getOffThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOffThresholdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOffThresholdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -88,6 +94,8 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
     fun setOnHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setOnHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(haptic)
     }
 
     /**
@@ -97,7 +105,9 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
      */
     fun getOnHaptic(): OpenXRHapticBase? {
         checkOpen()
-        return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOnHapticBind, segment))
+        val ret = OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOnHapticBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -108,6 +118,8 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
     fun setOffHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setOffHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(haptic)
     }
 
     /**
@@ -117,7 +129,9 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
      */
     fun getOffHaptic(): OpenXRHapticBase? {
         checkOpen()
-        return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOffHapticBind, segment))
+        val ret = OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOffHapticBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -65,6 +65,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
     fun setTilt(tilt: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setTiltBind, segment, tilt)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -76,7 +77,9 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getTilt(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getTiltBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getTiltBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -87,6 +90,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
     fun setPressure(pressure: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPressureBind, segment, pressure)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -96,7 +100,9 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getPressure(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPressureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPressureBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -108,6 +114,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
     fun setPenInverted(penInverted: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPenInvertedBind, segment, penInverted)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -118,7 +125,9 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getPenInverted(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPenInvertedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getPenInvertedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -136,6 +145,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
     fun setRelative(relative: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setRelativeBind, segment, relative)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -152,7 +162,9 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getRelative(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getRelativeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getRelativeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -169,6 +181,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
     fun setScreenRelative(relative: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setScreenRelativeBind, segment, relative)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -184,7 +197,9 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getScreenRelative(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScreenRelativeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScreenRelativeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -200,6 +215,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
     fun setVelocity(velocity: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setVelocityBind, segment, velocity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -214,7 +230,9 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getVelocity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getVelocityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getVelocityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -229,6 +247,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
     fun setScreenVelocity(velocity: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setScreenVelocityBind, segment, velocity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -242,7 +261,9 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getScreenVelocity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScreenVelocityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScreenVelocityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {
@@ -259,7 +280,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
         // Downcast a GodotObject to InputEventMouseMotion (null if not).
         @JvmStatic
         fun from(value: GodotObject): InputEventMouseMotion? =
-            if (value.isClass("InputEventMouseMotion")) RefCounted.retained(InputEventMouseMotion(value.handle)) else null
+            if (value.isClass("InputEventMouseMotion")) RefCounted.retained(InputEventMouseMotion(value.handle), value) else null
     }
 
     private object Binds {

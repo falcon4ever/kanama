@@ -28,6 +28,7 @@ class ColorPalette(handle: GodotHandle) : Resource(handle) {
     fun setColors(colors: List<Color>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedColorListArg(Binds.setColorsBind, segment, colors)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ class ColorPalette(handle: GodotHandle) : Resource(handle) {
      */
     fun getColors(): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(Binds.getColorsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedColorList(Binds.getColorsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

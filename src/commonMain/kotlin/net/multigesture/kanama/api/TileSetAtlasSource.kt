@@ -55,6 +55,8 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun setTexture(texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -64,7 +66,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -75,6 +79,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun setMargins(margins: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setMarginsBind, segment, margins)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -84,7 +89,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getMargins(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getMarginsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getMarginsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -95,6 +102,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun setSeparation(separation: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setSeparationBind, segment, separation)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -104,7 +112,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getSeparation(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSeparationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSeparationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -116,6 +126,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun setTextureRegionSize(textureRegionSize: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setTextureRegionSizeBind, segment, textureRegionSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -126,7 +137,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTextureRegionSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getTextureRegionSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getTextureRegionSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -140,6 +153,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun setUseTexturePadding(useTexturePadding: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseTexturePaddingBind, segment, useTexturePadding)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -152,7 +166,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getUseTexturePadding(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseTexturePaddingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseTexturePaddingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -163,6 +179,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun createTile(atlasCoords: Vector2i, size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoVector2iArgs(Binds.createTileBind, segment, atlasCoords, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -173,6 +190,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun removeTile(atlasCoords: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.removeTileBind, segment, atlasCoords)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -187,6 +205,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun moveTileInAtlas(atlasCoords: Vector2i, newAtlasCoords: Vector2i, newSize: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeVector2iArgs(Binds.moveTileInAtlasBind, segment, atlasCoords, newAtlasCoords, newSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -196,7 +215,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileSizeInAtlas(atlasCoords: Vector2i): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(Binds.getTileSizeInAtlasBind, segment, atlasCoords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetVector2i(Binds.getTileSizeInAtlasBind, segment, atlasCoords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -208,7 +229,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun hasRoomForTile(atlasCoords: Vector2i, size: Vector2i, animationColumns: Int, animationSeparation: Vector2i, framesCount: Int, ignoredTile: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2iIntVector2iIntVector2iArgsRetBool(Binds.hasRoomForTileBind, segment, atlasCoords, size, animationColumns, animationSeparation, framesCount, ignoredTile)
+        val ret = ObjectCalls.ptrcallWithTwoVector2iIntVector2iIntVector2iArgsRetBool(Binds.hasRoomForTileBind, segment, atlasCoords, size, animationColumns, animationSeparation, framesCount, ignoredTile)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -220,7 +243,10 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTilesToBeRemovedOnChange(texture: Texture2D?, margins: Vector2i, separation: Vector2i, textureRegionSize: Vector2i): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List(Binds.getTilesToBeRemovedOnChangeBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, margins, separation, textureRegionSize)
+        val ret = ObjectCalls.ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List(Binds.getTilesToBeRemovedOnChangeBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, margins, separation, textureRegionSize)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
+        return ret
     }
 
     /**
@@ -231,7 +257,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAtCoords(atlasCoords: Vector2i): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(Binds.getTileAtCoordsBind, segment, atlasCoords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetVector2i(Binds.getTileAtCoordsBind, segment, atlasCoords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -242,7 +270,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun hasTilesOutsideTexture(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasTilesOutsideTextureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasTilesOutsideTextureBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -254,6 +284,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun clearTilesOutsideTexture() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearTilesOutsideTextureBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -266,6 +297,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun setTileAnimationColumns(atlasCoords: Vector2i, frameColumns: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iAndIntArg(Binds.setTileAnimationColumnsBind, segment, atlasCoords, frameColumns)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -275,7 +307,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationColumns(atlasCoords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getTileAnimationColumnsBind, segment, atlasCoords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getTileAnimationColumnsBind, segment, atlasCoords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -287,6 +321,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun setTileAnimationSeparation(atlasCoords: Vector2i, separation: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoVector2iArgs(Binds.setTileAnimationSeparationBind, segment, atlasCoords, separation)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -297,7 +332,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationSeparation(atlasCoords: Vector2i): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(Binds.getTileAnimationSeparationBind, segment, atlasCoords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetVector2i(Binds.getTileAnimationSeparationBind, segment, atlasCoords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -308,6 +345,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun setTileAnimationSpeed(atlasCoords: Vector2i, speed: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iAndDoubleArg(Binds.setTileAnimationSpeedBind, segment, atlasCoords, speed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -317,7 +355,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationSpeed(atlasCoords: Vector2i): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetDouble(Binds.getTileAnimationSpeedBind, segment, atlasCoords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetDouble(Binds.getTileAnimationSpeedBind, segment, atlasCoords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -329,6 +369,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun setTileAnimationMode(atlasCoords: Vector2i, mode: TileSetAtlasSource.TileAnimationMode) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iAndLongArg(Binds.setTileAnimationModeBind, segment, atlasCoords, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -339,7 +380,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationMode(atlasCoords: Vector2i): TileSetAtlasSource.TileAnimationMode {
         checkOpen()
-        return TileSetAtlasSource.TileAnimationMode(ObjectCalls.ptrcallWithVector2iArgRetLong(Binds.getTileAnimationModeBind, segment, atlasCoords))
+        val ret = TileSetAtlasSource.TileAnimationMode(ObjectCalls.ptrcallWithVector2iArgRetLong(Binds.getTileAnimationModeBind, segment, atlasCoords))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -350,6 +393,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun setTileAnimationFramesCount(atlasCoords: Vector2i, framesCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iAndIntArg(Binds.setTileAnimationFramesCountBind, segment, atlasCoords, framesCount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -359,7 +403,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationFramesCount(atlasCoords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getTileAnimationFramesCountBind, segment, atlasCoords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getTileAnimationFramesCountBind, segment, atlasCoords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -371,6 +417,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun setTileAnimationFrameDuration(atlasCoords: Vector2i, frameIndex: Int, duration: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iIntDoubleArgs(Binds.setTileAnimationFrameDurationBind, segment, atlasCoords, frameIndex, duration)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -381,7 +428,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationFrameDuration(atlasCoords: Vector2i, frameIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetDouble(Binds.getTileAnimationFrameDurationBind, segment, atlasCoords, frameIndex)
+        val ret = ObjectCalls.ptrcallWithVector2iAndIntArgRetDouble(Binds.getTileAnimationFrameDurationBind, segment, atlasCoords, frameIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -392,7 +441,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationTotalDuration(atlasCoords: Vector2i): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetDouble(Binds.getTileAnimationTotalDurationBind, segment, atlasCoords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetDouble(Binds.getTileAnimationTotalDurationBind, segment, atlasCoords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -405,7 +456,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun createAlternativeTile(atlasCoords: Vector2i, alternativeIdOverride: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(Binds.createAlternativeTileBind, segment, atlasCoords, alternativeIdOverride)
+        val ret = ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(Binds.createAlternativeTileBind, segment, atlasCoords, alternativeIdOverride)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -417,6 +470,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun removeAlternativeTile(atlasCoords: Vector2i, alternativeTile: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iAndIntArg(Binds.removeAlternativeTileBind, segment, atlasCoords, alternativeTile)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -428,6 +482,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     fun setAlternativeTileId(atlasCoords: Vector2i, alternativeTile: Int, newId: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iAndTwoIntArgs(Binds.setAlternativeTileIdBind, segment, atlasCoords, alternativeTile, newId)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -437,7 +492,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getNextAlternativeTileId(atlasCoords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getNextAlternativeTileIdBind, segment, atlasCoords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getNextAlternativeTileIdBind, segment, atlasCoords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -447,7 +504,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileData(atlasCoords: Vector2i, alternativeTile: Int): TileData? {
         checkOpen()
-        return TileData.wrap(ObjectCalls.ptrcallWithVector2iAndIntArgRetObject(Binds.getTileDataBind, segment, atlasCoords, alternativeTile))
+        val ret = TileData.wrap(ObjectCalls.ptrcallWithVector2iAndIntArgRetObject(Binds.getTileDataBind, segment, atlasCoords, alternativeTile))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -458,7 +517,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getAtlasGridSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getAtlasGridSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getAtlasGridSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -469,7 +530,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileTextureRegion(atlasCoords: Vector2i, frame: Int = 0): Rect2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(Binds.getTileTextureRegionBind, segment, atlasCoords, frame)
+        val ret = ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(Binds.getTileTextureRegionBind, segment, atlasCoords, frame)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -480,7 +543,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getRuntimeTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRuntimeTextureBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRuntimeTextureBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -492,7 +557,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getRuntimeTileTextureRegion(atlasCoords: Vector2i, frame: Int): Rect2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(Binds.getRuntimeTileTextureRegionBind, segment, atlasCoords, frame)
+        val ret = ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(Binds.getRuntimeTileTextureRegionBind, segment, atlasCoords, frame)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

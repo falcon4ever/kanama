@@ -37,6 +37,8 @@ open class Material(handle: GodotHandle) : Resource(handle) {
     fun setNextPass(nextPass: Material?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setNextPassBind, segment, listOf(nextPass?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(nextPass)
     }
 
     /**
@@ -51,6 +53,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
     fun getNextPass(): Material? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getNextPassBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -72,6 +75,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
     fun setRenderPriority(priority: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setRenderPriorityBind, segment, priority)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -87,7 +91,9 @@ open class Material(handle: GodotHandle) : Resource(handle) {
      */
     fun getRenderPriority(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRenderPriorityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getRenderPriorityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -100,6 +106,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
     fun inspectNativeShaderCode() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.inspectNativeShaderCodeBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -110,6 +117,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
     fun createPlaceholder(): Resource? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.createPlaceholderBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -134,7 +142,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
         // Downcast a Resource to Material (null if not).
         @JvmStatic
         fun fromResource(value: Resource?): Material? =
-            value?.takeIf { it.isClass("Material") }?.let { RefCounted.retained(Material(it.handle)) }
+            value?.takeIf { it.isClass("Material") }?.let { RefCounted.retained(Material(it.handle), it) }
     }
 
     private object Binds {

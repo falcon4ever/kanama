@@ -104,6 +104,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -114,6 +115,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun duplicate(): TextParagraph? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.duplicateBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -129,6 +131,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setDirection(direction: TextServer.Direction) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDirectionBind, segment, direction.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -138,7 +141,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDirection(): TextServer.Direction {
         checkOpen()
-        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDirectionBind, segment))
+        val ret = TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDirectionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -148,7 +153,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getInferredDirection(): TextServer.Direction {
         checkOpen()
-        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getInferredDirectionBind, segment))
+        val ret = TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getInferredDirectionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -160,6 +167,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setCustomPunctuation(customPunctuation: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setCustomPunctuationBind, segment, customPunctuation)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -170,7 +178,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCustomPunctuation(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCustomPunctuationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getCustomPunctuationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -181,6 +191,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setOrientation(orientation: TextServer.Orientation) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOrientationBind, segment, orientation.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -190,7 +201,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOrientation(): TextServer.Orientation {
         checkOpen()
-        return TextServer.Orientation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOrientationBind, segment))
+        val ret = TextServer.Orientation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOrientationBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -201,6 +214,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setPreserveInvalid(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPreserveInvalidBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -210,7 +224,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPreserveInvalid(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPreserveInvalidBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getPreserveInvalidBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -221,6 +237,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setPreserveControl(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPreserveControlBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -230,7 +247,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPreserveControl(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPreserveControlBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getPreserveControlBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -242,6 +261,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setBidiOverride(override: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setBidiOverrideBind, segment, override)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -252,7 +272,10 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDropcap(text: String, font: Font?, fontSize: Int, dropcapMargins: Rect2, language: String = ""): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringObjectIntRect2StringArgsRetBool(Binds.setDropcapBind, segment, text, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize, dropcapMargins, language)
+        val ret = ObjectCalls.ptrcallWithStringObjectIntRect2StringArgsRetBool(Binds.setDropcapBind, segment, text, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize, dropcapMargins, language)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(font)
+        return ret
     }
 
     /**
@@ -263,6 +286,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun clearDropcap() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearDropcapBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -272,7 +296,10 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addString(text: String, font: Font?, fontSize: Int, language: String = "", meta: Any? = null): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(Binds.addStringBind, segment, text, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize, language, meta)
+        val ret = ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(Binds.addStringBind, segment, text, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize, language, meta)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(font)
+        return ret
     }
 
     /**
@@ -283,7 +310,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addObject(key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, length: Int = 1, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(Binds.addObjectBind, segment, key, size, inlineAlign.value, length, baseline)
+        val ret = ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(Binds.addObjectBind, segment, key, size, inlineAlign.value, length, baseline)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -293,7 +322,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun resizeObject(key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(Binds.resizeObjectBind, segment, key, size, inlineAlign.value, baseline)
+        val ret = ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(Binds.resizeObjectBind, segment, key, size, inlineAlign.value, baseline)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -303,7 +334,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasObject(key: Any?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantArgRetBool(Binds.hasObjectBind, segment, key)
+        val ret = ObjectCalls.ptrcallWithVariantArgRetBool(Binds.hasObjectBind, segment, key)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -314,6 +347,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setAlignment(alignment: HorizontalAlignment) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAlignmentBind, segment, alignment.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -323,7 +357,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAlignment(): HorizontalAlignment {
         checkOpen()
-        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlignmentBind, segment))
+        val ret = HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlignmentBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -334,6 +370,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun tabAlign(tabStops: List<Float>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.tabAlignBind, segment, tabStops)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -344,6 +381,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setBreakFlags(flags: TextServer.LineBreakFlag) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBreakFlagsBind, segment, flags.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -353,7 +391,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBreakFlags(): TextServer.LineBreakFlag {
         checkOpen()
-        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBreakFlagsBind, segment))
+        val ret = TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBreakFlagsBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -364,6 +404,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setJustificationFlags(flags: TextServer.JustificationFlag) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setJustificationFlagsBind, segment, flags.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -373,7 +414,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getJustificationFlags(): TextServer.JustificationFlag {
         checkOpen()
-        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getJustificationFlagsBind, segment))
+        val ret = TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getJustificationFlagsBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -384,6 +427,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextOverrunBehaviorBind, segment, overrunBehavior.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -393,7 +437,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTextOverrunBehavior(): TextServer.OverrunBehavior {
         checkOpen()
-        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextOverrunBehaviorBind, segment))
+        val ret = TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextOverrunBehaviorBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -404,6 +450,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setEllipsisChar(char: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setEllipsisCharBind, segment, char)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -413,7 +460,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEllipsisChar(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEllipsisCharBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getEllipsisCharBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -424,6 +473,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setWidth(width: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setWidthBind, segment, width)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -433,7 +483,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWidthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWidthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -443,7 +495,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNonWrappedSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getNonWrappedSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getNonWrappedSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -453,7 +507,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -463,7 +519,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRidBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getRidBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -473,7 +531,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineRid(line: Int): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetRID(Binds.getLineRidBind, segment, line)
+        val ret = ObjectCalls.ptrcallWithIntArgRetRID(Binds.getLineRidBind, segment, line)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -483,7 +543,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDropcapRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getDropcapRidBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getDropcapRidBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -493,7 +555,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRange(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getRangeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getRangeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -503,7 +567,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLineCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getLineCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -514,6 +580,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setMaxLinesVisible(maxLinesVisible: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMaxLinesVisibleBind, segment, maxLinesVisible)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -523,7 +590,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMaxLinesVisible(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxLinesVisibleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxLinesVisibleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -535,6 +604,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun setLineSpacing(lineSpacing: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLineSpacingBind, segment, lineSpacing)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -545,7 +615,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineSpacing(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineSpacingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineSpacingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -555,7 +627,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineObjects(line: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getLineObjectsBind, segment, line)
+        val ret = ObjectCalls.ptrcallWithIntArgRetArray(Binds.getLineObjectsBind, segment, line)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -565,7 +639,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineObjectRect(line: Int, key: Any?): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndVariantArgRetRect2(Binds.getLineObjectRectBind, segment, line, key)
+        val ret = ObjectCalls.ptrcallWithIntAndVariantArgRetRect2(Binds.getLineObjectRectBind, segment, line, key)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -575,7 +651,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineSize(line: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getLineSizeBind, segment, line)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getLineSizeBind, segment, line)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -585,7 +663,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineRange(line: Int): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2i(Binds.getLineRangeBind, segment, line)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector2i(Binds.getLineRangeBind, segment, line)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -596,7 +676,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineAscent(line: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineAscentBind, segment, line)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineAscentBind, segment, line)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -607,7 +689,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineDescent(line: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineDescentBind, segment, line)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineDescentBind, segment, line)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -617,7 +701,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineWidth(line: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineWidthBind, segment, line)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineWidthBind, segment, line)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -627,7 +713,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineUnderlinePosition(line: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineUnderlinePositionBind, segment, line)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineUnderlinePositionBind, segment, line)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -637,7 +725,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineUnderlineThickness(line: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineUnderlineThicknessBind, segment, line)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineUnderlineThicknessBind, segment, line)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -647,7 +737,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDropcapSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getDropcapSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getDropcapSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -657,7 +749,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDropcapLines(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDropcapLinesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getDropcapLinesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -670,6 +764,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun draw(canvas: RID, pos: Vector2, color: Color, dcColor: Color, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2TwoColorDoubleArgs(Binds.drawBind, segment, canvas, pos, color, dcColor, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -683,6 +778,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun drawOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, dcColor: Color, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2IntTwoColorDoubleArgs(Binds.drawOutlineBind, segment, canvas, pos, outlineSize, color, dcColor, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -695,6 +791,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun drawLine(canvas: RID, pos: Vector2, line: Int, color: Color, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(Binds.drawLineBind, segment, canvas, pos, line, color, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -707,6 +804,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun drawLineOutline(canvas: RID, pos: Vector2, line: Int, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgs(Binds.drawLineOutlineBind, segment, canvas, pos, line, outlineSize, color, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -719,6 +817,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun drawDropcap(canvas: RID, pos: Vector2, color: Color, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2ColorDoubleArgs(Binds.drawDropcapBind, segment, canvas, pos, color, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -731,6 +830,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     fun drawDropcapOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(Binds.drawDropcapOutlineBind, segment, canvas, pos, outlineSize, color, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -741,7 +841,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hitTest(coords: Vector2): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetInt(Binds.hitTestBind, segment, coords)
+        val ret = ObjectCalls.ptrcallWithVector2ArgRetInt(Binds.hitTestBind, segment, coords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

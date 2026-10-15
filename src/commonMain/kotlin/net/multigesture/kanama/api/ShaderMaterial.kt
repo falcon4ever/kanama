@@ -27,6 +27,8 @@ class ShaderMaterial(handle: GodotHandle) : Material(handle) {
     fun setShader(shader: Shader?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setShaderBind, segment, listOf(shader?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(shader)
     }
 
     /**
@@ -36,7 +38,9 @@ class ShaderMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getShader(): Shader? {
         checkOpen()
-        return Shader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getShaderBind, segment))
+        val ret = Shader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getShaderBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -54,6 +58,7 @@ class ShaderMaterial(handle: GodotHandle) : Material(handle) {
     fun setShaderParameter(param: String, value: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setShaderParameterBind, segment, param, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -63,7 +68,9 @@ class ShaderMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getShaderParameter(param: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getShaderParameterBind, segment, param)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getShaderParameterBind, segment, param)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {
@@ -80,12 +87,12 @@ class ShaderMaterial(handle: GodotHandle) : Material(handle) {
         // Downcast a GodotObject to ShaderMaterial (null if not).
         @JvmStatic
         fun fromObject(value: GodotObject): ShaderMaterial? =
-            if (value.isClass("ShaderMaterial")) RefCounted.retained(ShaderMaterial(value.handle)) else null
+            if (value.isClass("ShaderMaterial")) RefCounted.retained(ShaderMaterial(value.handle), value) else null
 
         // Downcast a Resource to ShaderMaterial (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ShaderMaterial? =
-            if (value.isClass("ShaderMaterial")) RefCounted.retained(ShaderMaterial(value.handle)) else null
+            if (value.isClass("ShaderMaterial")) RefCounted.retained(ShaderMaterial(value.handle), value) else null
     }
 
     private object Binds {

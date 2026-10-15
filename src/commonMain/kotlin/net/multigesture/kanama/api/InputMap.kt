@@ -94,6 +94,7 @@ object InputMap {
     @JvmStatic
     fun actionAddEvent(action: String, event: InputEvent) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.actionAddEventBind, singleton, action, event.requireOpenHandle())
+        ObjectCalls.keepReachable(event)
     }
 
     /**
@@ -103,7 +104,9 @@ object InputMap {
      */
     @JvmStatic
     fun actionHasEvent(action: String, event: InputEvent): Boolean {
-        return ObjectCalls.ptrcallWithStringNameAndObjectArgRetBool(Binds.actionHasEventBind, singleton, action, event.requireOpenHandle())
+        val ret = ObjectCalls.ptrcallWithStringNameAndObjectArgRetBool(Binds.actionHasEventBind, singleton, action, event.requireOpenHandle())
+        ObjectCalls.keepReachable(event)
+        return ret
     }
 
     /**
@@ -114,6 +117,7 @@ object InputMap {
     @JvmStatic
     fun actionEraseEvent(action: String, event: InputEvent) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.actionEraseEventBind, singleton, action, event.requireOpenHandle())
+        ObjectCalls.keepReachable(event)
     }
 
     /**
@@ -150,7 +154,9 @@ object InputMap {
      */
     @JvmStatic
     fun eventIsAction(event: InputEvent, action: String, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithObjectStringNameAndBoolArgRetBool(Binds.eventIsActionBind, singleton, event.requireOpenHandle(), action, exactMatch)
+        val ret = ObjectCalls.ptrcallWithObjectStringNameAndBoolArgRetBool(Binds.eventIsActionBind, singleton, event.requireOpenHandle(), action, exactMatch)
+        ObjectCalls.keepReachable(event)
+        return ret
     }
 
     /**

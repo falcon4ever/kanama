@@ -32,6 +32,7 @@ class MissingResource(handle: GodotHandle) : Resource(handle) {
     fun setOriginalClass(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setOriginalClassBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -41,7 +42,9 @@ class MissingResource(handle: GodotHandle) : Resource(handle) {
      */
     fun getOriginalClass(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOriginalClassBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getOriginalClassBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +56,7 @@ class MissingResource(handle: GodotHandle) : Resource(handle) {
     fun setRecordingProperties(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setRecordingPropertiesBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -63,7 +67,9 @@ class MissingResource(handle: GodotHandle) : Resource(handle) {
      */
     fun isRecordingProperties(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRecordingPropertiesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isRecordingPropertiesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {
