@@ -14,6 +14,7 @@ BUILD_JOBS=1
 CONSOLE_SECONDS=30
 DEVICE_LABEL="${KANAMA_IOS_DEVICE_LABEL:-}"
 START_AT=""
+CHECK_RESULTS=""
 CLEAN_INSTALLED=1
 GATE_BUNDLE_ID="${KANAMA_IOS_GATE_BUNDLE_ID:-net.multigesture.kanama.devicegate}"
 # Task 111: the demos runner reads this for the launch stage (see its usage); default on.
@@ -74,6 +75,9 @@ Options:
                                30, 0 = launch-only as before). Needs a demos checkout whose
                                ios_device_run.sh supports KANAMA_IOS_CONSOLE_SECONDS. The log is
                                kept as <output-dir>/<App>.console.log. Costs 9 x N seconds per run.
+  --check-results FILE         Only apply the gate's verdict (no FAIL row, one row per planned step) to a
+                               saved results.tsv and exit; with --fresh-only / --demos-only it judges that
+                               plan. Needs no device or environment (the verdict's red runs, task 138 item 10).
   --help, -h                   Show this help.
 
 The script reads private device/signing values only from the environment. Do not
@@ -137,6 +141,10 @@ while [[ $# -gt 0 ]]; do
       CONSOLE_SECONDS="${2:-}"
       shift 2
       ;;
+    --check-results)
+      CHECK_RESULTS="${2:-}"
+      shift 2
+      ;;
     --help|-h)
       usage
       exit 0
@@ -153,6 +161,89 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+demo_names=(
+  "Bunnymark"
+  "Starter-Kit-Match3"
+  "Starter-Kit-3D-Platformer"
+  "godot-demo-2d-dodge-the-creeps"
+  "godot-demo-3d-squash-the-creeps"
+  "godot-4-3d-character-controller"
+  "Starter-Kit-Racing"
+  "Starter-Kit-FPS"
+  "godot-4-3d-third-person-controller"
+)
+demo_dirs=(
+  "Bunnymark"
+  "Starter-Kit-Match3"
+  "Starter-Kit-3D-Platformer"
+  "godot-demo-2d-dodge-the-creeps"
+  "godot-demo-3d-squash-the-creeps"
+  "godot-4-3d-character-controller-tutorial"
+  "Starter-Kit-Racing"
+  "Starter-Kit-FPS"
+  "godot-4-3d-third-person-controller"
+)
+demo_bundles=(
+  "net.multigesture.kanama.bunnymark"
+  "net.multigesture.kanama.match3"
+  "net.multigesture.kanama.platformer3d"
+  "net.multigesture.kanama.dodge"
+  "net.multigesture.kanama.squash3d"
+  "net.multigesture.kanama.charactercontroller"
+  "net.multigesture.kanama.racing"
+  "net.multigesture.kanama.fps"
+  "net.multigesture.kanama.thirdperson"
+)
+fresh_bundle="net.multigesture.kanama.iosvisualsmoke"
+demo_apps=(
+  "KanamaBunnymark"
+  "KanamaMatch3"
+  "KanamaPlatformer3D"
+  "KanamaDodge"
+  "KanamaSquash3D"
+  "KanamaCharacterController"
+  "KanamaRacing"
+  "KanamaFPS"
+  "KanamaThirdPerson"
+)
+
+# The gate's verdict over a results.tsv: no FAIL row is not enough (task 118) -- every planned step must have a row
+# (a step that never ran leaves none, and the old check printed PASS for the rows that did).
+results_verdict() {
+  local tsv="$1" expected_rows actual_rows planned_demos idx
+  if grep -Eq $'\tFAIL\t' "$tsv"; then
+    echo "[ios_device_gate] one or more gate steps failed; summary: ${SUMMARY:-$tsv}" >&2
+    return 1
+  fi
+  # A --start-at run plans the demos from that one on (it used to be held to the full matrix and exited 1 over rows
+  # it never planned, so a partial run that passed every step still failed).
+  planned_demos=${#demo_names[@]}
+  if [[ -n "$START_AT" ]]; then
+    for idx in "${!demo_names[@]}"; do
+      if [[ "$START_AT" == "${demo_names[$idx]}" || "$START_AT" == "${demo_dirs[$idx]}" || "$START_AT" == "${demo_apps[$idx]}" ]]; then
+        planned_demos=$((${#demo_names[@]} - idx))
+        break
+      fi
+    done
+  fi
+  expected_rows=$((RUN_FRESH + RUN_DEMOS * planned_demos))
+  actual_rows=$(($(wc -l <"$tsv") - 1))
+  if [[ "$actual_rows" -ne "$expected_rows" ]]; then
+    echo "[ios_device_gate] expected $expected_rows result rows (fresh=$RUN_FRESH demos=$RUN_DEMOS) but $tsv has $actual_rows; a step did not run" >&2
+    return 1
+  fi
+}
+
+if [[ -n "$CHECK_RESULTS" ]]; then
+  if [[ ! -f "$CHECK_RESULTS" ]]; then
+    echo "[ios_device_gate] --check-results: no such file: $CHECK_RESULTS" >&2
+    exit 2
+  fi
+  results_verdict "$CHECK_RESULTS" || exit 1
+  echo "[ios_device_gate] results verdict: PASS ($CHECK_RESULTS)"
+  exit 0
+fi
 
 DEVICE_ID="${KANAMA_IOS_DEVICE:-}"
 DEVELOPMENT_TEAM="${KANAMA_IOS_TEAM:-${KANAMA_IOS_DEVELOPMENT_TEAM:-}}"
@@ -230,52 +321,6 @@ fi
 SUMMARY="$OUTPUT_DIR/summary.md"
 RESULTS_TSV="$OUTPUT_DIR/results.tsv"
 RUN_STARTED="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
-
-demo_names=(
-  "Bunnymark"
-  "Starter-Kit-Match3"
-  "Starter-Kit-3D-Platformer"
-  "godot-demo-2d-dodge-the-creeps"
-  "godot-demo-3d-squash-the-creeps"
-  "godot-4-3d-character-controller"
-  "Starter-Kit-Racing"
-  "Starter-Kit-FPS"
-  "godot-4-3d-third-person-controller"
-)
-demo_dirs=(
-  "Bunnymark"
-  "Starter-Kit-Match3"
-  "Starter-Kit-3D-Platformer"
-  "godot-demo-2d-dodge-the-creeps"
-  "godot-demo-3d-squash-the-creeps"
-  "godot-4-3d-character-controller-tutorial"
-  "Starter-Kit-Racing"
-  "Starter-Kit-FPS"
-  "godot-4-3d-third-person-controller"
-)
-demo_bundles=(
-  "net.multigesture.kanama.bunnymark"
-  "net.multigesture.kanama.match3"
-  "net.multigesture.kanama.platformer3d"
-  "net.multigesture.kanama.dodge"
-  "net.multigesture.kanama.squash3d"
-  "net.multigesture.kanama.charactercontroller"
-  "net.multigesture.kanama.racing"
-  "net.multigesture.kanama.fps"
-  "net.multigesture.kanama.thirdperson"
-)
-fresh_bundle="net.multigesture.kanama.iosvisualsmoke"
-demo_apps=(
-  "KanamaBunnymark"
-  "KanamaMatch3"
-  "KanamaPlatformer3D"
-  "KanamaDodge"
-  "KanamaSquash3D"
-  "KanamaCharacterController"
-  "KanamaRacing"
-  "KanamaFPS"
-  "KanamaThirdPerson"
-)
 
 warn_before_launch() {
   local label="$1"
@@ -610,18 +655,7 @@ if [[ "$RUN_DEMOS" -eq 1 ]]; then
     exit 2
   fi
 fi
-if grep -Eq $'\tFAIL\t' "$RESULTS_TSV"; then
-  echo "[ios_device_gate] one or more gate steps failed; summary: $SUMMARY" >&2
-  exit 1
-fi
-# Task 118: no FAIL row is not enough. Every planned step must have a row (a step that never ran leaves
-# none, and the old check printed PASS for the rows that did).
-expected_rows=$((RUN_FRESH + RUN_DEMOS * ${#demo_names[@]}))
-actual_rows=$(($(wc -l <"$RESULTS_TSV") - 1))
-if [[ "$actual_rows" -ne "$expected_rows" ]]; then
-  echo "[ios_device_gate] expected $expected_rows result rows (fresh=$RUN_FRESH demos=$RUN_DEMOS) but $RESULTS_TSV has $actual_rows; a step did not run" >&2
-  exit 1
-fi
+results_verdict "$RESULTS_TSV" || exit 1
 
 echo "[ios_device_gate] PASS"
 echo "[ios_device_gate] summary: $SUMMARY"

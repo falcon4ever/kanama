@@ -229,6 +229,27 @@ with open(out, "w") as handle:
   done
 }
 
+# Godot 4.7.2's headless editor sometimes aborts (exit 134, SIGABRT) a few
+# seconds AFTER a complete export (all files packed), on the charactercontroller
+# demo, roughly one run in several on hosted Linux runners; the rerun passes. It
+# is an engine exit-path abort, not a Kanama export failure, so the export is
+# retried once when -- and only when -- Gradle reports that exact exit value.
+# The first failure's output stays in the log, and any other failure is final.
+export_with_retry() {
+  local log status
+  log="$(mktemp)"
+  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" "$@" 2>&1 | tee "$log"
+  status="${PIPESTATUS[0]}"
+  if [[ "$status" -ne 0 ]] && grep -q 'finished with non-zero exit value 134' "$log"; then
+    echo "[web_ci_matrix] export aborted with exit 134 (known flaky Godot 4.7.2 editor abort); retrying once" >&2
+    rm -rf "$export_dir"
+    status=0
+    "$ROOT_DIR/gradlew" -p "$ROOT_DIR" "$@" || status=$?
+  fi
+  rm -f "$log"
+  return "$status"
+}
+
 FAILED=0
 RUN_INDEX=0
 
@@ -266,7 +287,7 @@ for demo in "${DEMOS[@]}"; do
       done < <(kanama_web_demo_export_args "$export_key")
     fi
 
-    if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" "${gradle_args[@]}"; then
+    if ! export_with_retry "${gradle_args[@]}"; then
       echo "[web_ci_matrix] $demo: EXPORT FAILED" >&2
       FAILED=1
       record_unrun_demo "$demo" "export failed"
