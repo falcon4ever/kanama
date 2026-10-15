@@ -9,7 +9,7 @@ import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class MeshLibrary(godotObject: GodotHandle) : Resource(godotObject), AutoCloseable {
+class MeshLibrary(godotObject: GodotHandle) : Resource(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun createItem(id: Int) {
     GodotBackendCalls.invokeLongArg(D.MESHLIBRARY_CREATE_ITEM, requireOpenHandle(), id.toLong())
@@ -31,11 +31,6 @@ class MeshLibrary(godotObject: GodotHandle) : Resource(godotObject), AutoCloseab
       id.toLong(),
       meshTransform.toBackend(),
     )
-  }
-
-  /** Releases the owned handle (already-released is an error). */
-  override fun close() {
-    releaseWebConstructedObject(handle.value)
   }
 
   companion object {

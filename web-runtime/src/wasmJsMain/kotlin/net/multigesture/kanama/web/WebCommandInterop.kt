@@ -334,6 +334,18 @@ internal class WebCommandBuffer(capacity: Int) {
   }
 }
 
+/**
+ * Applies both command queues before a release a script makes now (`close()`): a command queued
+ * before it may hand the object to the engine (`button.buttonGroup = group; group.close()`, a
+ * `drawTexture` in `_draw`), and on desktop that call reached the engine before the close. The
+ * ordering barrier every immediate call makes; without it the release erases the proxies' reference
+ * first and the queued command finds no object.
+ */
+internal fun flushWebCommandsBeforeRelease() {
+  commands.flush()
+  drawCommands.flush()
+}
+
 private fun flushWebCommands(words: WebInt32Array, wordCount: Int, commandCount: Int): Int =
   js("globalThis.KanamaWebBridge?.flushCommands(words, wordCount, commandCount) ?? commandCount")
 

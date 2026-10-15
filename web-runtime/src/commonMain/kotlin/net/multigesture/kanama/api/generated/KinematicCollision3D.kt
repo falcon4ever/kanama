@@ -9,7 +9,7 @@ import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class KinematicCollision3D(godotObject: GodotHandle) : RefCounted(godotObject), AutoCloseable {
+class KinematicCollision3D(godotObject: GodotHandle) : RefCounted(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun getCollider(collisionIndex: Int = 0): GodotObject? {
     require(collisionIndex == 0) { "Web KinematicCollision3D.get_collider supports only collisionIndex = 0" }
@@ -25,20 +25,6 @@ class KinematicCollision3D(godotObject: GodotHandle) : RefCounted(godotObject), 
       D.KINEMATICCOLLISION3D_GET_NORMAL,
       requireOpenHandle(),
     ).toApi()
-  }
-
-  private var closed = false
-
-  override fun requireOpenHandle(): BackendGodotHandle {
-    check(!closed) { "KinematicCollision3D is closed" }
-    return backendHandle
-  }
-
-  /** Releases the owned handle; a second close is a no-op, any later call fails loud. */
-  override fun close() {
-    if (closed) return
-    closed = true
-    releaseWebCollision(handle.value)
   }
 }
 

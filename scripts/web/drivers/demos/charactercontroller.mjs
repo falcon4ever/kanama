@@ -10,7 +10,7 @@
 // SmokeQuit.smoke_teardown frees the Events autoload + scene root, draining every live
 // handle to zero.
 
-import { callSmokeMethod } from "../envelope.mjs";
+import { callSmokeMethod, collecting } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // How far below the start height counts as "off the platform and falling". The level's
@@ -302,7 +302,7 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
   // the scene root; every node exits the tree and releases its handles.
   trace("smoke_teardown");
   await callSmokeMethod(evaluate, exportDir, "charactercontroller.SmokeQuit", "smoke_teardown");
-  const teardown = await observe(evaluate, peak, 8_000, deadline, (snap) => snap.liveHandles === 0);
+  const teardown = await observe(collecting(evaluate), peak, 8_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} callbacks=${settled.callbacks} errs=${settled.callbackErrors}`);
 

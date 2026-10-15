@@ -27,7 +27,7 @@
 // Duration comes from KANAMA_WEB_SOAK_SECONDS (default 600). The smoke shell's
 // --timeout must exceed it; scripts/web/demos.sh derives that budget.
 
-import { callSmokeMethod } from "../envelope.mjs";
+import { callSmokeMethod, collecting } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -174,7 +174,7 @@ export async function runSoak({ url, evaluate, navigate, deadline, exportDir }) 
   const teardownUntil = Math.min(deadline, Date.now() + 15_000);
   let settled = last;
   while (Date.now() < teardownUntil) {
-    const snap = await snapshot(evaluate);
+    const snap = await snapshot(collecting(evaluate));
     if (snap) {
       settled = snap;
       if (snap.liveHandles === 0) break;

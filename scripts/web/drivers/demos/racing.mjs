@@ -7,7 +7,7 @@
 // Smoke.smoke_teardown frees the scene root and the Smoke autoload, draining every live handle
 // to zero.
 
-import { callSmokeMethod } from "../envelope.mjs";
+import { callSmokeMethod, collecting } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -203,7 +203,7 @@ export async function runRacing({ url, evaluate, navigate, deadline, exportDir }
   // and releases its handles.
   trace("smoke_teardown");
   await callSmokeMethod(evaluate, exportDir, "racing.Smoke", "smoke_teardown");
-  const teardown = await observe(evaluate, peak, 12_000, deadline, (snap) => snap.liveHandles === 0);
+  const teardown = await observe(collecting(evaluate), peak, 12_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} callbacks=${settled.callbacks} errs=${settled.callbackErrors}`);
 

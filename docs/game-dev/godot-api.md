@@ -432,9 +432,9 @@ keeps your reference (the object stays usable for `isOpen()`, `getError()`).
 
 **On every platform, a Godot object you receive (a signal or callback argument, a lookup, a call's
 result) is one value per object, valid for as long as the object lives: a `Node` or plain `Object`
-until it is freed, a `RefCounted` while Godot or one of your owned references still holds it** (on
-Web, two exceptions for a `RefCounted`, below). So a handler can keep its argument
-(`lastHit = body`) and use it frames later, and `body == player` is `true` when both are the same
+until it is freed, a `RefCounted` while Godot or one of your Kotlin references still holds it;
+`close()` releases your reference early.** So a handler can keep its argument (`lastHit = body`,
+`lastEvent = event`) and use it frames later, and `body == player` is `true` when both are the same
 node, on Web as on desktop. Using it after the engine freed the object throws the
 `IllegalStateException` "Invalid access to previously freed instance", which a script can catch. A
 node you receive as an argument and `queueFree()` stays usable until the end of the frame, as in
@@ -443,34 +443,22 @@ result is released as soon as you `queueFree()` it, so using that value afterwar
 frame, throws "Stale Kanama Web browser handle" where desktop keeps it usable until the end of the
 frame. Read what you need from it before you call `queueFree()`, or `queueFree()` last.
 
-**Web limits for a `RefCounted` argument** (an `InputEvent`, a `Resource`). Desktop, Android and iOS
-keep one alive until you `close()` it or the garbage collector releases it. On Web:
-
-- **One that only your Kotlin code keeps** stays valid for the call and the next 2 frames (a new
-  dispatch of it starts the 2 frames again), which covers an `await()` that resumes a frame later
-  and keeping "the last event" for the next frame. After that it lives only while Godot holds it (a
-  node, a resource, a GDScript variable, one of your owned references), and a use after it was freed
-  throws "Invalid access to previously freed instance".
-- **One that another of your scripts owns** (that script created it, or resolved it as below) is
-  handed to you as that script's reference: your copy is valid while that script holds it, and once
-  that script is freed a use throws an `IllegalStateException` ("Stale Kanama Web browser handle").
-
-To keep one longer on Web, keep a Godot reference to it, or resolve an owned reference inside the
-handler: `kept = GD.instanceFromId(event.instanceId)` is a call's result, so it is owned by your
-script and lives until the script is freed (or you `close()` it, where its type has `close()`).
-Each reference you resolve stays that long, so resolve only what you keep: resolving every event a
-handler receives keeps every one of them alive until the script goes. To remember something about
-the last event, copy the values you need (`lastKey = event.keycode`) instead of keeping the event.
-On Web the owned reference and the argument are one handle, so `close()` on it ends the argument
-too; close it only when you are done with both. These limits will be lifted when Web can release
-objects through the browser's garbage collector (tracked in
-[#332](https://github.com/falcon4ever/kanama/issues/332)).
+On Web a `RefCounted` you keep (an `InputEvent` argument, a loaded `Resource`, a `create()` result)
+is released when the browser collects your last wrapper of it, or when you `close()` it; `close()`
+ends that wrapper only, so another wrapper of the same object stays valid. Like a forgotten
+`close()` on desktop, a dropped one is released late, when the browser's garbage collector runs
+(Chrome collects within about a second under game load, Firefox only under allocation pressure).
+At most 4096 `RefCounted` arguments that only your Kotlin code holds stay alive this way: past that
+the oldest are released first, and using one you still kept throws "Invalid access to previously
+freed instance". C# has no such cap; it is Kanama's bound for Firefox, which in a quiet scene would
+otherwise keep every mouse-motion event until it collects. To remember something about the last
+event, copy the values you need (`lastKey = event.keycode`) rather than keeping thousands of events.
 
 ### Which category is it?
 
 | Category | What it covers | What to do |
 |---|---|---|
-| **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, **every element of a returned typed `Array` of `RefCounted`** (`getMaterials()`, `actionGetEvents()`, `getProcessedTweens()`, …), every `RefCounted` element of an `Array`/`Dictionary` that `call(...)` (or `callv`, `callDeferred`, `callThreadSafe`, `ClassDB.classCallStatic`, `GodotCallable.call`/`callv`) returns, the `from*` downcasts (`Mesh.fromObject(...)`, `ArrayMesh.fromResource(...)`), the checked casts to a `RefCounted` class (`res.cast<Texture2D>()`, `castOrNull`), and `@Export` reads of resource-typed fields and collections | `close()` it, or `use { }`, to release it early — for a list, each element (`list.forEach { it.close() }`). Forgotten, it is released after the GC drops the wrapper |
+| **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, **every element of a returned typed `Array` of `RefCounted`** (`getMaterials()`, `actionGetEvents()`, `getProcessedTweens()`, …), every `RefCounted` element of an `Array`/`Dictionary` that `call(...)` (or `callv`, `callDeferred`, `callThreadSafe`, `ClassDB.classCallStatic`, `GodotCallable.call`/`callv`) returns, the `from*` downcasts (`Mesh.fromObject(...)`, `ArrayMesh.fromResource(...)`), the checked casts to a `RefCounted` class (`res.cast<Texture2D>()`, `castOrNull`), and `@Export` reads of resource-typed fields and collections | `close()` it, or `use { }`, to release it early — for a list, each element (`list.forEach { it.close() }`). Forgotten, it is released after the GC drops the wrapper (on Web, the browser's) |
 | **Borrowed view** | A wrapper *you* build over a raw handle you already have: `Resource.fromHandle(...)`, a wrapper constructor (`Mesh(other.handle)`), a script's own `self`, and the `RefCounted` elements of a container (`Array`/`Dictionary`) that arrives as an argument of a signal lambda or a script method (including an `Any?` parameter): the caller's Variant holds them for the call, so do not `close()` them or keep them past it | Keep the wrapper you got the handle from while you use the view: the view takes no reference. `close()` on it releases nothing (debug builds warn) |
 | **Engine-owned, live** | A running `Tween` (from `createTween()` or an element of `getProcessedTweens()`), anything living in the scene tree | To **stop** it use the Godot lifecycle (`kill()`, `queueFree()`): `close()` never stops it. Your wrapper of a tween is still an owned `+1` — close it when you stop using that wrapper (see below) |
 | **Nodes and plain `Object`s** | Anything not `RefCounted` — no refcount exists, and `GodotObject` has no `close()` | `Node.queueFree()` |
@@ -564,10 +552,11 @@ Desktop, Android 13+ and iOS run the same mechanism; the desktop runtime smoke
 checks it on every run, while the Android and iOS device runs are still to be
 recorded. Android 8-12 debug installs have no `java.lang.ref.Cleaner`, so there
 `close()` stays the only release (Kanama's Android release builds need
-Android 13 anyway). Web keeps the explicit rule for
-now, and its `RefCounted` is not `AutoCloseable` (see the Web note in
-[Properties and Resources](properties-resources.md)). `KANAMA_GC_RELEASES=0` in
-the game's environment turns the fallback off, for measurements.
+Android 13 anyway). Web releases a dropped wrapper's reference through the
+browser's collector the same way, and every `RefCounted` is `AutoCloseable`
+there too (see [Objects you receive](#objects-you-receive)).
+`KANAMA_GC_RELEASES=0` in the game's environment turns the fallback off, for
+measurements.
 
 ### A script object keeps its resource alive
 

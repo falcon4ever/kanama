@@ -273,9 +273,9 @@ func emit_capped(rounds: int) -> int:
 	return rounds
 
 
-## L13: a RefCounted nobody keeps, handed over now and again 2 frames later (the twin finds it
-## through a weak reference): the second dispatch renews its 2 frames. `_process` records whether it
-## is alive 4 frames after the first dispatch and gone by 8.
+## L13: a RefCounted nobody here keeps, handed over now and again 2 frames later (the twin finds it
+## through a weak reference). `_process` records whether it is alive 4 frames after the first
+## dispatch and gone by 8 (Kotlin keeps it: it must not be).
 func emit_renew(_unused: int) -> int:
 	var fresh := Resource.new()
 	fresh.resource_name = "LentRenewed"
@@ -286,6 +286,8 @@ func emit_renew(_unused: int) -> int:
 
 
 func renew_state(which: int) -> int:
+	if which == 2:
+		return 1 if renew_rc != null and renew_rc.get_ref() != null else 0
 	return renew_alive if which == 0 else renew_gone
 
 
@@ -309,9 +311,10 @@ func burst_free(_unused: int) -> int:
 	return 1
 
 
-## L15: a node and a RefCounted nobody keeps handed over, then the tree is paused (no Kanama script
-## processes) and the node freed; `_process` (this node runs while paused) reads the live lent
-## handles 6 frames later and resumes the tree. 1 = both handles were released while paused.
+## L15: a node and a RefCounted nobody here keeps handed over, then the tree is paused (no Kanama
+## script processes) and the node freed; `_process` (this node runs while paused) reads the live
+## lent handles 6 frames later and resumes the tree. 1 = the node's handle was released while
+## paused and the RefCounted Kotlin keeps still lives.
 func emit_paused(_unused: int) -> int:
 	paused_node = Node.new()
 	paused_node.name = "LentPaused"
@@ -416,8 +419,8 @@ func _process(_delta: float) -> void:
 			renew_frame = -1
 	if paused_frame >= 0 and frame >= paused_frame + 6:
 		paused_lent_after = counter("liveLent")
-		var released := paused_lent_after == paused_base - 2
-		paused_result = 1 if released and paused_rc.get_ref() == null else 0
+		var released := paused_lent_after == paused_base - 1
+		paused_result = 1 if released and paused_rc.get_ref() != null else 0
 		paused_frame = -1
 		get_tree().paused = false
 	if adopt_frame >= 0 and frame >= adopt_frame + 6:

@@ -19,8 +19,15 @@ open class GodotObject(godotObject: GodotHandle) {
   /** Backend-handle form for the generated proxies and the wrappers' own returns. */
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
 
-  /** The live backend handle; guarded wrappers (closeable resources) override this. */
+  /** The live backend handle; RefCounted overrides this (a closed wrapper fails loud). */
   internal open fun requireOpenHandle(): BackendGodotHandle = backendHandle
+
+  init {
+    // A wrapper of a RefCounted browser handle holds it (protocol 37): the bridge keeps the handle
+    // while this wrapper is reachable. A Node or plain-Object wrapper, or a script's, costs nothing.
+    val token = backendHandle.backendToken().toInt()
+    if ((token and 0x40000000) != 0) webWrapperCreated(this, token)
+  }
 
   fun emitSignal(signal: String, value: Int) {
     GodotBackendCalls.invokeStringNameIntRetInt(

@@ -133,6 +133,9 @@ async function main() {
       "--use-mock-keychain",
       "--password-store=basic",
       "--hide-scrollbars",
+      // The web3d ownership rows (O2) collect the page's garbage with `gc()` instead of waiting
+      // for allocation to trigger a collection.
+      "--js-flags=--expose-gc",
       "--force-device-scale-factor=1",
       `--user-data-dir=${profileDir}`,
       `--remote-debugging-port=${debugPort}`,

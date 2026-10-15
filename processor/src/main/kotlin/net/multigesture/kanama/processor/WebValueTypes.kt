@@ -265,7 +265,9 @@ internal object WebValueTypes {
     appendLine(
       "\t# script, as a generic call's object return does. A result naming a lent object keeps it"
     )
-    appendLine("\t# lent (a RefCounted becomes owned by this script, like any object result).")
+    appendLine(
+      "\t# lent; a RefCounted one is held by the Kotlin wrappers of it (the bridge decides)."
+    )
     appendLine("\tif value == null:")
     appendLine("\t\treturn 0")
     appendLine("\tif value.has_method(\"_kanama_ensure_created\"):")
@@ -276,10 +278,7 @@ internal object WebValueTypes {
     appendLine("\t\treturn _kanama_web_pack_object(value)")
     appendLine("\tvar existing := _kanama_tracked_handle(value)")
     appendLine("\tif existing != 0:")
-    appendLine("\t\tif KanamaWebHandles.lent.has(existing):")
-    appendLine("\t\t\tif value is RefCounted:")
-    appendLine("\t\t\t\t_kanama_own_lent(existing, value)")
-    appendLine("\t\telse:")
+    appendLine("\t\tif not KanamaWebHandles.lent.has(existing):")
     appendLine("\t\t\t_kanama_bridge.retainSharedHandle(existing, _kanama_handle)")
     appendLine("\t\treturn existing")
     appendLine("\tvar kind := \"object\"")

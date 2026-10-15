@@ -58,10 +58,8 @@ A `RefCounted` argument (an `InputEvent`, a `Resource`) is owned by its wrapper,
 keeping it is safe, as in GDScript: `control.guiInput.connect { ev -> lastEvent = ev }`
 and `val ev = control.guiInput.await()` (which resumes a frame later) both hold a
 reference of their own. `close()` it when you are done, or the garbage collector
-releases it (see [Resource Ownership](godot-api.md#resource-ownership)). On Web, a
-`RefCounted` argument that only your Kotlin code keeps is valid for the call and the
-next 2 frames; after that it lives while Godot holds it (tracked in
-[#332](https://github.com/falcon4ever/kanama/issues/332); see the Web limit in
+releases it (see [Resource Ownership](godot-api.md#resource-ownership)), on Web too,
+where the browser's collector does (see the Web cap in
 [Objects you receive](godot-api.md#objects-you-receive)). A `Node` or plain `Object` argument is
 a view, as in GDScript, on every platform: you can store it and use it later (it is
 the same value as your own reference to the node), a node freed in the frame its
