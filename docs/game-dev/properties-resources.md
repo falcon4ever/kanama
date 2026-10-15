@@ -50,7 +50,9 @@ conversion GDScript applies: an `int` for a `Double` and the other way, a `Strin
 `Double` (parsed), a `StringName` or `NodePath` for a `String`, a `Vector2i` for a `Vector2` and the
 other way (the same for `Vector3`, `Vector4` and `Rect2`), a `Basis` for a `Quaternion` and the other
 way, a `Basis`, `Quaternion`, `Transform2D` or `Projection` for a `Transform3D`, a `Transform3D`
-for a `Transform2D` or a `Projection`, a `Vector3` for a `Plane`, a packed array for a `List`. Any
+for a `Transform2D` or a `Projection`, a `Vector3` for a `Plane`, a `String` (a colour name or
+code) or an `int` (a packed RGBA value) for a `Color`, a `Boolean` for a number and the other way, a
+`String` for a `NodePath`, a packed array for a `List`. Any
 other value is **refused**: the property keeps what it held and Godot prints a script error that
 names the property, the expected and the actual type, for example `Expected Vector3 for property
 'velocity' but the Variant holds Vector2`. It is never stored as `0`, `Vector3.ZERO` or an empty list. This holds for the
