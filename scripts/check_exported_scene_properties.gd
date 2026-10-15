@@ -17,8 +17,12 @@ extends SceneTree
 ## exit 1 = at least one property missing (each named on stderr), or, with --require-converted, no
 ## scene was converted (a caller whose project has scenes passes it: an export that wrote nothing,
 ## or wrote its scenes unconverted, must not pass as "nothing to compare"); exit 2 = a scene failed to load.
+## A project that sets editor/export/convert_text_resources_to_binary=false exports its scenes as text,
+## with every value intact: the check passes with a note in both modes and does not compare any old
+## conversion cache. (A per-feature override of that setting, `....<feature tag>`, is not consulted.)
 
 const TAG := "[check_exported_scenes]"
+const CONVERT_SETTING := "editor/export/convert_text_resources_to_binary"
 
 # ClassDB has no class_has_property(); cache each class's inherited property-name set instead.
 var _native_props := {}
@@ -38,6 +42,9 @@ func _initialize() -> void:
 
 func _run() -> int:
 	var require_converted := OS.get_cmdline_user_args().has("--require-converted")
+	if not bool(ProjectSettings.get_setting(CONVERT_SETTING, true)):
+		print("%s PASS: conversion disabled by the project (%s=false); text scenes keep their values, nothing to compare" % [TAG, CONVERT_SETTING])
+		return 0
 	var exported_root := "res://.godot/exported"
 	var dir := DirAccess.open(exported_root)
 	if dir == null:

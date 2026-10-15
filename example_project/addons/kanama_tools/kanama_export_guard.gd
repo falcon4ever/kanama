@@ -9,7 +9,7 @@ extends EditorExportPlugin
 ## export and ships the scenes that use them unconverted and unchecked. Godot reports neither as an
 ## export failure. GDScript projects cannot reach that state, so a Kanama project must not either.
 ##
-## _export_begin runs before Godot writes anything. It checks the `.kt` scripts that the scenes and
+## _export_begin runs when the export begins. It checks the `.kt` scripts that the scenes and
 ## resources this preset exports attach, and the `.kt` autoloads (a helper `.kt` that nothing
 ## attaches is not a script class and is not checked). A script binds when the editor loads it as a
 ## Script that can instantiate; a missing loader makes `load` return null, a script missing from the
@@ -19,12 +19,14 @@ extends EditorExportPlugin
 ## in the export dialog, and the platform exporters (Android, iOS, macOS, PCK/ZIP) finish and exit 0
 ## whatever a plugin reports. So, when a script does not bind:
 ## - a command-line export (`--export-release`, `--export-debug`, `--export-pack`, `--export-patch`)
-##   prints the message and ends the editor process before any file is written: the exit status is
-##   non-zero and no artifact is produced on every platform;
+##   prints the message and ends the editor process in _export_begin, so the exit status is non-zero
+##   and the exporter writes nothing after that point. Most exporters run _export_begin before they
+##   write any file; the Windows exporter copies the template's DLLs into the export folder first;
 ## - an editor (GUI) export reports the message as an export error ("Failed" in the export dialog)
-##   and is otherwise left exactly as Godot produces it; a one-click deploy (Remote Deploy), which
-##   Godot exports into the editor's temp folder and installs right after, has that temporary export
-##   removed in _export_end, so nothing reaches the device and the deploy reports the error.
+##   and is otherwise left exactly as Godot produces it. An Android or iOS one-click deploy (Remote
+##   Deploy), which Godot exports under a fixed name in the editor's temp folder and installs right
+##   after, has that temporary export removed in _export_end, so nothing reaches the device and the
+##   install step fails.
 ## Every message starts with the stable line `Kanama: Export stopped`.
 ##
 ## Opt out with the project setting `kanama/tools/export_guard_enabled` (default true).
@@ -38,6 +40,10 @@ const TEXT_RESOURCE_EXTENSIONS := ["tscn", "tres"]
 const KOTLIN_EXTENSION := "kt"
 const SCRIPT_CLASS := "KanamaScript"
 const COMMAND_LINE_EXPORT_ARGS := ["--export-release", "--export-debug", "--export-pack", "--export-patch"]
+## The names Godot gives a one-click deploy's temporary export, relative to the editor's temp folder:
+## Android `tmpexport.<unix time>.apk` (platform/android/export/export_plugin.cpp, run()), iOS
+## `tmpexport.<unix time>/export.ipa` (editor/export/editor_export_platform_apple_embedded.cpp, run()).
+const ONE_CLICK_EXPORT_PATTERN := "^tmpexport\\.[0-9]+(\\.apk|/export\\.ipa)$"
 
 const REASON_NO_LOADER := "no .kt loader: the desktop addon (addons/kanama) is missing or did not load, so the export would leave the script out and could not convert or check the scenes that use it"
 const REASON_NOT_BOUND := "not in kanama-scripts.jar: the scenes that use it would be exported without its property values"
@@ -59,7 +65,7 @@ func _export_begin(_features: PackedStringArray, _is_debug: bool, path: String, 
     var message := format_message(problems)
     get_export_platform().add_message(EditorExportPlatform.EXPORT_MESSAGE_ERROR, CATEGORY, message)
     if is_command_line_export():
-        printerr("%s: ending the export process before it writes any file (the exit status is non-zero)." % STOP_LINE)
+        printerr("%s: ending the export process (the exit status is non-zero)." % STOP_LINE)
         end_process()
         return
     if is_one_click_deploy(path):
@@ -80,37 +86,74 @@ static func is_command_line_export() -> bool:
 
 
 ## Ends this process at once with a non-zero status. On Unix OS.kill sends SIGKILL (status 137). On
-## Windows OS.kill terminates with status 0, so taskkill /F (status 1) runs first.
+## Windows OS.kill terminates with status 0 (TerminateProcess(..., 0)), so taskkill /F (status 1) runs
+## instead, and if it returns without ending the process, OS.crash aborts it.
 static func end_process() -> void:
     var pid := OS.get_process_id()
     if OS.get_name() == "Windows":
         OS.execute("taskkill", ["/F", "/PID", str(pid)])
-    OS.kill(pid)
+    else:
+        OS.kill(pid)
+    OS.crash(STOP_LINE)
 
 
-## Godot exports a one-click deploy into the editor's temp folder and installs it from there.
+## The editor's temp folder, where Godot writes a one-click deploy's export (EditorPaths' temp dir,
+## which 4.7 does not expose to scripts): editor_data/temp beside a self-contained editor, else the
+## OS temp folder.
+static func editor_temp_dir() -> String:
+    var editor := _editor()
+    if editor != null:
+        var paths: EditorPaths = editor.get_editor_paths()
+        if paths.is_self_contained():
+            return paths.get_data_dir().path_join("temp")
+    return OS.get_temp_dir()
+
+
+## True only for the temporary export of an Android or iOS one-click deploy: Godot's own file name
+## directly in the editor's temp folder (ONE_CLICK_EXPORT_PATTERN), never an export the user aimed at
+## the temp folder (on Linux that is /tmp).
 static func is_one_click_deploy(path: String) -> bool:
-    var temp_dir: String = _editor().get_editor_paths().get_temp_dir()
-    return not temp_dir.is_empty() and path.simplify_path().begins_with(temp_dir.simplify_path().path_join(""))
+    var temp_dir := editor_temp_dir()
+    if temp_dir.is_empty():
+        return false
+    var prefix := temp_dir.simplify_path().path_join("")
+    var target := path.simplify_path()
+    if not target.begins_with(prefix):
+        return false
+    return RegEx.create_from_string(ONE_CLICK_EXPORT_PATTERN).search(target.substr(prefix.length())) != null
 
 
-## Removes a one-click deploy's temporary export: the file (an Android APK, its .idsig) and, for iOS,
-## the Xcode archive Godot installs the app from.
+## Removes a one-click deploy's temporary export: the Android APK and its .idsig, or the Xcode archive
+## Godot installs an iOS app from. Does nothing for any other path.
 static func discard_export(path: String) -> void:
+    if not is_one_click_deploy(path):
+        return
     for file in [path, path + ".idsig"]:
         if FileAccess.file_exists(file):
             DirAccess.remove_absolute(file)
     _remove_tree(path.get_basename() + ".xcarchive")
 
 
+## Deletes a folder and everything in it, hidden files included. A symbolic link is removed as a link:
+## the folder it points to is never entered.
 static func _remove_tree(dir: String) -> void:
-    if not DirAccess.dir_exists_absolute(dir):
+    if _is_link(dir):
+        DirAccess.remove_absolute(dir)
         return
-    for file in DirAccess.get_files_at(dir):
-        DirAccess.remove_absolute(dir.path_join(file))
-    for sub in DirAccess.get_directories_at(dir):
+    var access := DirAccess.open(dir)
+    if access == null:
+        return
+    access.include_hidden = true
+    for sub in access.get_directories():
         _remove_tree(dir.path_join(sub))
+    for file in access.get_files():
+        DirAccess.remove_absolute(dir.path_join(file))
     DirAccess.remove_absolute(dir)
+
+
+static func _is_link(path: String) -> bool:
+    var parent := DirAccess.open(path.get_base_dir())
+    return parent != null and parent.is_link(path)
 
 
 ## The `.kt` scripts the export uses that do not bind in this editor: [{"path", "reason"}]. With a

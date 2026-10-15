@@ -57,8 +57,8 @@ loads only `addons/kanama` without the Kanama Tools plugin enabled can still cra
 When `kanama-scripts.jar` does not contain a `.kt` script, Godot's export converts every scene that
 uses it without the script's property values; when the desktop addon is missing, the export leaves the
 `.kt` scripts out and ships the scenes that use them unconverted. Godot finishes both exports without an
-error; GDScript projects cannot get into that state. The Kanama Tools editor plugin now checks, before
-the export writes anything, the `.kt` scripts that the scenes and resources the preset exports attach
+error; GDScript projects cannot get into that state. The Kanama Tools editor plugin now checks, when
+the export begins, the `.kt` scripts that the scenes and resources the preset exports attach
 (its export mode, selected files and filters; addon folders included, `.gdignore` folders and nested
 projects skipped like Godot does), plus `.kt` autoloads. When one does not bind, it prints one error
 that starts with `Kanama: Export stopped:` and names the scripts, the reason, the fix and the opt-out
@@ -66,16 +66,23 @@ setting `kanama/tools/export_guard_enabled`. Godot 4.7 has no way for a plugin t
 its Android, iOS and macOS exporters and `--export-pack` ignore plugin errors, so:
 
 - a command-line export (`--export-release`, `--export-debug`, `--export-pack`, `--export-patch`) ends
-  the editor process before any file is written: a non-zero exit status (137 on macOS and Linux) and no
-  artifact, on every platform (verified for Web, Android APK, iOS, macOS and PCK/ZIP exports);
+  the editor process when the export begins: a non-zero exit status and no artifact. Verified on a
+  macOS host for Web, Android APK, iOS, macOS and PCK/ZIP exports (exit 137); Linux and Windows hosts
+  are not tested yet. The Windows exporter copies the template's DLLs into the export folder before
+  export plugins run, so those can be left there;
 - an export from the editor's Export dialog shows the error and is marked failed; its files are left
-  as Godot writes them. A one-click deploy has its temporary export removed before the install step.
+  as Godot writes them. An Android or iOS one-click deploy (Remote Deploy) has its temporary export
+  (Godot's own `tmpexport.<n>` name in the editor's temp folder) removed before the install step; an
+  export you aim at the temp folder yourself is never touched.
 
 A `.kt` file that no scene attaches (helper code) is not checked. A project whose scripts all bind
 exports with no extra output; the check takes about 0.4 s for 1,000 scenes and 5,000 resources. The
 Android and iOS smoke scripts fail on the `Kanama: Export stopped` line, and
-`scripts/check_exported_scene_properties.gd -- --require-converted` fails when no scene was converted.
-See `docs/exporting/android.md` (Export Guard).
+`scripts/check_exported_scene_properties.gd -- --require-converted` fails when no scene was converted,
+unless the project sets `editor/export/convert_text_resources_to_binary=false` (its scenes then ship
+as text with their values, and the check passes with a note).
+`tool_smoke.sh` checks the one-click clean-up in a headless editor on scratch files in the real temp
+folder. See `docs/exporting/android.md` (Export Guard).
 
 ### Fixed — iOS: a value-type script property set to a value of another type follows GDScript
 

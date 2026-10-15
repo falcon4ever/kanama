@@ -163,4 +163,24 @@ if ! grep -Fq "[export_guard] PASS" "$LOG_FILE.guard"; then
   smoke_fail "export guard check did not report PASS" "scripts/check_export_guard.gd (log: $LOG_FILE.guard)"
 fi
 
+# The guard's one-click deploy clean-up (is_one_click_deploy, discard_export) runs only in the editor: an
+# editor plugin in a scratch project (scripts/check_export_guard_discard.gd) makes Godot-named and user files
+# in the editor's temp folder and checks which ones the guard deletes. --quit-after bounds the run if the
+# plugin never loads (then there is no PASS line).
+DISCARD_PROJECT="$JDK_SCRATCH/guard_discard"
+mkdir -p "$DISCARD_PROJECT/addons/guard_discard_test"
+cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$DISCARD_PROJECT/addons/"
+cp "$ROOT_DIR/scripts/check_export_guard_discard.gd" "$DISCARD_PROJECT/addons/guard_discard_test/plugin.gd"
+printf '[plugin]\n\nname="guard_discard_test"\ndescription=""\nauthor=""\nversion=""\nscript="plugin.gd"\n' \
+  >"$DISCARD_PROJECT/addons/guard_discard_test/plugin.cfg"
+printf 'config_version=5\n\n[application]\nconfig/name="kanama-guard-discard"\n\n[editor_plugins]\nenabled=PackedStringArray("res://addons/guard_discard_test/plugin.cfg")\n' \
+  >"$DISCARD_PROJECT/project.godot"
+discard_rc=0
+(cd "$DISCARD_PROJECT" && "$GODOT_BIN" --headless --editor --path . --quit-after 3000) >"$LOG_FILE.discard" 2>&1 || discard_rc=$?
+if [[ "$discard_rc" -ne 0 ]] || ! grep -Fq "[export_guard_discard] PASS" "$LOG_FILE.discard" ||
+  grep -Fq "SCRIPT ERROR" "$LOG_FILE.discard"; then
+  grep -E "export_guard_discard|SCRIPT ERROR|ERROR:|at: " "$LOG_FILE.discard" >&2 || tail -n 40 "$LOG_FILE.discard" >&2
+  smoke_fail "export guard one-click clean-up test failed (exit $discard_rc)" "scripts/check_export_guard_discard.gd (log: $LOG_FILE.discard)"
+fi
+
 echo "[tool_smoke] PASS"

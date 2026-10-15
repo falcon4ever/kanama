@@ -826,13 +826,24 @@ case("check_exported_scene_properties_selftest.sh (--require-converted)", ["bash
      [Edit("scripts/check_exported_scene_properties.gd", 'OS.get_cmdline_user_args().has("--require-converted")', "false")],
      "--require-converted passed", "the scene check stops honouring --require-converted: a caller that expects converted scenes would pass an export that converted none",
      requires_env="KANAMA_GODOT_BIN", slow=True)
-case("tool_smoke.sh (export guard check)", ["bash", "scripts/tool_smoke.sh", GODOT],
+case("check_exported_scene_properties_selftest.sh (conversion off)", ["bash", "scripts/check_exported_scene_properties_selftest.sh", GODOT],
+     [Edit("scripts/check_exported_scene_properties.gd", "\tif not bool(ProjectSettings.get_setting(CONVERT_SETTING, true)):", "\tif false:")],
+     "on a project that turns conversion off", "the scene check ignores editor/export/convert_text_resources_to_binary=false: --require-converted fails a project whose scenes ship as text with their values",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (export guard check)",["bash", "scripts/tool_smoke.sh", GODOT],
      [Create("example_project/export_guard_red.tscn",
              '[gd_scene load_steps=2 format=3]\n\n[ext_resource type="Script" path="res://ExportGuardRed.kt" id="1"]\n\n[node name="Red" type="Node"]\nscript = ExtResource("1")\n'),
       Create("example_project/ExportGuardRed.kt", "class ExportGuardRed\n")],
      "ExportGuardRed.kt (not in kanama-scripts.jar:", "a scene attaches a .kt script that kanama-scripts.jar does not contain: the editor export guard's check must name it",
      requires_env="KANAMA_GODOT_BIN", slow=True)
-case("export_guard_selftest.sh", ["bash", "scripts/export_guard_selftest.sh", GODOT],
+GUARD_ONE_CLICK_NAME = ("    return RegEx.create_from_string(ONE_CLICK_EXPORT_PATTERN).search(target.substr(prefix.length())) != null\n",
+                        "    return true\n")
+case("tool_smoke.sh (export guard one-click clean-up)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", *GUARD_ONE_CLICK_NAME),
+      Edit("example_project/addons/kanama_tools/kanama_export_guard.gd", *GUARD_ONE_CLICK_NAME)],
+     "[export_guard_discard] FAIL: discard_export deleted", "the guard takes any export into the temp folder for a one-click deploy: a user's /tmp/game.apk would be deleted after a failed check",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("export_guard_selftest.sh",["bash", "scripts/export_guard_selftest.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", "    if problems.is_empty():\n        return\n    var message", "    if true:\n        return\n    var message")],
      "the stale export exited 0", "the export guard stops finding problems: a stale-jar export must still exit non-zero with the message (its own green and red exports are inside the self-test)",
      requires_env="KANAMA_GODOT_BIN", slow=True)

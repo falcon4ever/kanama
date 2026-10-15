@@ -8,7 +8,8 @@
 #           and reports one script property checked on main.tscn;
 #   red   — a property is added to the SOURCE main.tscn after the export (`extra = 5`, default 1),
 #           so the converted scene lacks it and the check must FAIL naming node `Sub/inner`;
-#   none  — before the export, `-- --require-converted` must FAIL (nothing converted), and pass after it.
+#   none  — before the export, `-- --require-converted` must FAIL (nothing converted), and pass after it;
+#   off   — with editor/export/convert_text_resources_to_binary=false, `--require-converted` passes with a note.
 # Needs the pinned Godot's Web export templates (web_nothreads_*.zip) installed.
 # Finding while building this (task 119): Godot's re-pack keeps an override on an instanced child
 # ONLY when the instance is editable (`[editable path="Sub"]`, which the editor always writes); a
@@ -86,4 +87,17 @@ if ! printf '%s\n' "$red" | grep -qE "FAIL res://main.tscn: node '[^']*inner' \(
   echo "[scene_check_selftest] FAIL: the missing override property was not reported" >&2
   exit 1
 fi
-echo "[scene_check_selftest] PASS (green run kept the override, red run caught the loss, --require-converted fails with nothing converted)"
+echo "[scene_check_selftest] conversion off: a project with convert_text_resources_to_binary=false must pass --require-converted"
+# The demos' third-person controller sets this: its scenes ship as text with their values, and the cache
+# left by the export above must not be compared (the red edit to main.tscn is still in place).
+perl -pi -e 's/^export\/convert_text_resources_to_binary=true$/export\/convert_text_resources_to_binary=false/' "$work/project.godot"
+grep -q '^export/convert_text_resources_to_binary=false$' "$work/project.godot" ||
+  { echo "[scene_check_selftest] FAIL: could not turn conversion off in the fixture" >&2; exit 1; }
+off_rc=0
+off="$("$GODOT_BIN" --headless --path "$work" --script "$CHECK" -- --require-converted 2>&1)" || off_rc=$?
+if [[ "$off_rc" -ne 0 ]] || ! printf '%s\n' "$off" | grep -q 'PASS: conversion disabled by the project'; then
+  echo "[scene_check_selftest] FAIL: --require-converted did not pass (exit $off_rc) on a project that turns conversion off" >&2
+  printf '%s\n' "$off" | tail -5 >&2
+  exit 1
+fi
+echo "[scene_check_selftest] PASS (green run kept the override, red run caught the loss, --require-converted fails with nothing converted and passes with conversion off)"

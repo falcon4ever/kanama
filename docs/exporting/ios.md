@@ -132,16 +132,17 @@ gets its registrars, and the same sources are compiled into the desktop
 know the scripts' `@Export` names — Godot's export instantiates and
 re-packs every scene when it converts text resources to binary and keeps only
 the properties the script instance reports, so an unknown script would lose every
-scene-stored value without any error. The Kanama Tools editor plugin checks, before
-the export writes anything, that every `.kt` script the exported scenes and resources
+scene-stored value without any error. The Kanama Tools editor plugin checks, when
+the export begins, that every `.kt` script the exported scenes and resources
 attach binds in the export-time editor. When one does not, it prints one error starting
 with `Kanama: Export stopped:` that names the scripts, the fix (`installIosAddon` with
 the script-dir properties above) and the opt-out setting. Godot's iOS exporter ignores
 an export plugin's error, so on a command-line export (`--export-debug iOS …`) the
 plugin ends the editor process before any file is written: the exit status is non-zero
-and there is no Xcode project. In the editor's Export dialog the error marks the export
-failed, but the files Godot writes are left as they are; do not build them. A one-click
-deploy removes its temporary export before installing. The plugin must be enabled (the
+and there is no Xcode project (verified on a macOS host). In the editor's Export dialog
+the error marks the export failed, but the files Godot writes are left as they are; do
+not build them. A one-click deploy has its temporary Xcode archive removed before the
+install step, so nothing is installed. The plugin must be enabled (the
 starter projects do); `kanama/tools/export_guard_enabled` switches the check off.
 `-PkanamaProjectScriptsDir` may still be
 passed explicitly (for example with a different desktop source set); it wins
@@ -204,8 +205,11 @@ godot --headless --path /absolute/path/to/godot_project \
 ```
 
 It loads every converted scene next to its source `.tscn` and fails, naming the
-node and property, when a script-declared property was dropped. The demos' iOS
-runner and the starter smoke run it after every export.
+node and property, when a script-declared property was dropped; with
+`--require-converted` it also fails when no scene was converted. A project that sets
+`editor/export/convert_text_resources_to_binary=false` exports its scenes as text with
+their values, so the check passes with a note saying so. The demos' iOS runner and the
+starter smoke run it after every export.
 
 `System.getenv` works on iOS: the value comes from the app's process
 environment, which `xcrun devicectl device process launch --environment-variables

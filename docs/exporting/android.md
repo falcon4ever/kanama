@@ -86,8 +86,8 @@ Requirements:
   the export leaves the scripts out and ships the scenes that use them unconverted.
   With a `kanama-scripts.jar` that predates a script, Godot's export re-packs the
   scenes that use it with **no script properties**. Godot finishes either export
-  without an error, so the Kanama Tools editor plugin checks, before the export
-  writes anything, every `.kt` script that the exported scenes and resources attach
+  without an error, so the Kanama Tools editor plugin checks, when the export
+  begins, every `.kt` script that the exported scenes and resources attach
   (see [Export Guard](#export-guard)). The install step below stays necessary; the
   check only makes forgetting it loud. Install with
   `./gradlew installAddonJar -PkanamaProjectDir=<project> -PkanamaProjectScriptsDir=<project>/kotlin-src`
@@ -150,6 +150,9 @@ godot --headless --path /absolute/path/to/godot_project \
   -- --require-converted   # fails if a scene lost a script property, or if no scene was converted
 ```
 
+A project that sets `editor/export/convert_text_resources_to_binary=false` exports its
+scenes as text with their values; the check then passes with a note and compares nothing.
+
 Use a Godot binary that matches the project export preset and installed Android
 export templates.
 
@@ -161,15 +164,17 @@ the Kanama Tools editor plugin stops the export with one error that starts with
 `Kanama: Export stopped:` and names the scripts, the reason, the fix and the opt-out
 setting:
 
-- A command-line export (`--export-debug`, `--export-release`, `--export-pack`) ends
-  before it writes any file: the exit status is non-zero (137 on macOS and Linux) and
+- A command-line export (`--export-debug`, `--export-release`, `--export-pack`,
+  `--export-patch`) ends before it writes any file: the exit status is non-zero and
   there is no APK. Godot's Android exporter ignores an export plugin's error, so the
   plugin ends the editor process itself; scripts can also look for the
-  `Kanama: Export stopped` line.
+  `Kanama: Export stopped` line. This is verified on a macOS host (exit 137); Linux
+  and Windows hosts are not tested yet.
 - An export from the editor's Export dialog shows the error and reports the export as
   failed; the APK it writes is the one Godot would have written without the check, so
-  do not ship it. A one-click deploy (Remote Deploy) removes its temporary APK before
-  the install step, so nothing is installed and the deploy reports the error.
+  do not ship it. A one-click deploy (Remote Deploy) has its temporary APK (Godot's
+  `tmpexport.<n>.apk` in the editor's temp folder) removed before the install step, so
+  nothing is installed and the install step fails.
 
 Only the scenes and resources the export preset exports are checked (its export mode,
 selected files and include and exclude filters); a `.kt` file that no scene attaches
