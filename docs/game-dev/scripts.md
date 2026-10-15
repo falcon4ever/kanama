@@ -705,21 +705,14 @@ That is also the rule for your own threads: **hand results back to the main
 thread** with `MainThread.post` or a script coroutine before touching a
 node (see [Kotlin Style → Coroutines](style-guide.md#coroutines)).
 
-A `RefCounted` wrapper you get on another thread is still yours, but it gets
-**no garbage-collector fallback**: a worker can still be inside a call through
-it when the main thread would release it, so Kanama only registers the fallback
-for wrappers made on the main thread. That covers every owned wrapper a worker
-makes: a getter result, a loaded resource, and a `from*` downcast (which takes a
-reference of its own). **Close what you create or downcast on a worker**
-(`use { }`), or hand it to the main thread first; a forgotten one is never
-released ([Resource Ownership](godot-api.md#a-forgotten-close-is-a-late-release)).
-
-The other direction needs care too: a wrapper made on the main thread and
-handed to a worker is released by the main thread once the collector finds it
-unreachable — and the collector may decide that while the worker is still
-inside its last call through it. Keep such a wrapper reachable until the worker
-is done (close it after, from the main thread, or keep it in a field), rather
-than making the worker's call its last use.
+`RefCounted` wrappers behave the same on every thread. One you get on a
+worker (a getter result, a loaded resource, a `from*` downcast) is yours, and a
+forgotten one is released by the garbage collector like one made on the main
+thread ([Resource Ownership](godot-api.md#a-forgotten-close-is-a-late-release)).
+The release always runs on the main thread, and a wrapper stays reachable until
+its last call has returned, so it is never released while a worker, or the
+main thread, is still calling through it. `close()` (`use { }`) still releases
+early, from any thread.
 
 Kanama performs **no thread-affinity checks**. A wrapper method called from a
 `Dispatchers.Default` coroutine or a `Thread` you started ptrcalls the engine

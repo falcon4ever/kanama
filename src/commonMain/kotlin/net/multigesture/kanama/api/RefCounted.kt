@@ -44,7 +44,7 @@ open class RefCounted internal constructor(
         private set
 
     // The fallback release of that +1 (task 132 D2): null for a borrowed view, once close()
-    // released it, while the fallback is off, or for a wrapper built off the main thread.
+    // released it, or while the fallback is off. Set on whichever thread built the wrapper.
     // [releaseRegistration] is the platform's cleaner registration (JVM `Cleaner.Cleanable`,
     // Kotlin/Native `Cleaner`): it must live as long as this wrapper.
     private var pendingRelease: PendingRelease? = null
@@ -95,9 +95,9 @@ open class RefCounted internal constructor(
 
     /**
      * Marks this wrapper as the owner of the `+1` its handle carries (task 132 D1) and registers
-     * the fallback release (D2) unless the fallback is off or this is not the engine main thread
-     * (a wrapper built on a worker may still be in use there when the main thread would drain its
-     * release). Idempotent.
+     * the fallback release (D2) unless the fallback is off. Any thread (task 138 item 6): every
+     * engine call through a wrapper ends with `ObjectCalls.keepReachable`, so a release drained on
+     * the main thread never lands inside a worker's call. Idempotent.
      */
     internal fun markOwned() {
         owned = true

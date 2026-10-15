@@ -133,16 +133,22 @@ class OwnedReleasesTest {
     assertEquals(listOf(0x7100L), released)
   }
 
+  // Task 138 item 6 (R6.1): the thread that builds an owned wrapper does not matter. A wrapper made
+  // on a worker registers its release; the cleanup fires (here: now, as the cleaner thread would)
+  // and the drain on this thread -- the main thread of the test -- releases its handle once.
   @Test
-  fun aWrapperMadeOffTheMainThreadIsOwnedButRegistersNoFallback() {
-    OwnedReleaseCleaner.noteMainThread()
+  fun aWrapperMadeOnAWorkerRegistersAndTheMainThreadDrainReleasesIt() {
     var offThread: RefCounted? = null
     val worker = Thread { offThread = RefCounted.wrapOwned(segment(0x7200)) }
     worker.start()
     worker.join()
-    assertTrue(offThread!!.isOwned)
-    assertFalse(offThread!!.hasPendingRelease)
-    assertTrue(RefCounted.wrapOwned(segment(0x7300))!!.hasPendingRelease)
+    val wrapper = offThread!!
+    assertTrue(wrapper.isOwned)
+    assertTrue(wrapper.hasPendingRelease)
+    assertTrue(OwnedReleases.firePendingForTest(wrapper))
+    OwnedReleases.drain()
+    assertEquals(listOf(0x7200L), released)
+    assertFalse(wrapper.cancelOwnedRelease()) // the fallback won: a later close() releases nothing
   }
 
   private fun dropMany(base: Long, count: Int) {

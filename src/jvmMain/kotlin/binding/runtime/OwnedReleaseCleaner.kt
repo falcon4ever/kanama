@@ -15,8 +15,8 @@ import net.multigesture.kanama.api.GD
  * actions; the queue they feed is a `ConcurrentLinkedQueue` (lock-free). `java.lang.ref.Cleaner`
  * exists on every desktop JDK and on Android from API 33 (Android 13, the floor of Kanama's Android
  * release builds); on older Android debug installs [available] is false and `close()` stays the
- * only release. The `Cleaner` type is touched only inside [JdkCleaner], which loads once the class
- * is known to exist.
+ * only release. [register] runs on any thread (the cleaner and the queue are thread-agnostic). The
+ * `Cleaner` type is touched only inside [JdkCleaner], which loads once the class is known to exist.
  */
 internal actual object OwnedReleaseCleaner {
   private val cleaner: JdkCleaner? =
@@ -31,13 +31,21 @@ internal actual object OwnedReleaseCleaner {
 
   private val pending = ConcurrentLinkedQueue<PendingRelease>()
 
-  @Volatile private var mainThread: Thread? = null
-
+  // Both or nothing (task 138 item 6): a wrapper built on a worker registers a release, which is
+  // only safe while ObjectCalls.keepReachable keeps it reachable through each engine call.
+  // `Reference.reachabilityFence` is on Android from API 28 and `Cleaner` from API 33, so on stock
+  // runtimes the second condition never decides; it keeps the race closed on one that has a
+  // Cleaner but no fence.
   actual val available: Boolean
-    get() = cleaner != null
+    get() = cleaner != null && ObjectCalls.hasReachabilityFence
 
   actual val unavailableReason: String
-    get() = if (cleaner != null) "" else "java.lang.ref.Cleaner needs Android 13 (API 33)"
+    get() =
+      when {
+        cleaner == null -> "java.lang.ref.Cleaner needs Android 13 (API 33)"
+        !ObjectCalls.hasReachabilityFence -> "java.lang.ref.Reference.reachabilityFence is missing"
+        else -> ""
+      }
 
   actual val mechanism: String
     get() = "java.lang.ref.Cleaner"
@@ -87,15 +95,6 @@ internal actual object OwnedReleaseCleaner {
 
   actual fun ownerHasPlainScript(address: Long): Boolean =
     net.multigesture.kanama.binding.ScriptOwnerLinks.ownerHasPlainScript(address)
-
-  actual fun noteMainThread() {
-    mainThread = Thread.currentThread()
-  }
-
-  actual fun isMainThread(): Boolean {
-    val main = mainThread
-    return main == null || main === Thread.currentThread()
-  }
 
   /** The `java.lang.ref.Cleaner` itself, isolated so a runtime without the class never loads it. */
   private class JdkCleaner {

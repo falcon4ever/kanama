@@ -16,6 +16,7 @@ import net.multigesture.kanama.binding.KanamaScript
 import net.multigesture.kanama.binding.KanamaScriptLanguage
 import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.FreedObjectChecks
+import net.multigesture.kanama.binding.runtime.GcStress
 import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.InstanceBindings
 import net.multigesture.kanama.binding.runtime.ObjectRuntime
@@ -202,6 +203,7 @@ object KanamaBinding {
         System.err.println(
           "[kanama:kt] owned-reference GC releases: ${OwnedReleases.configureFromEngine()}"
         )
+        GcStress.configureFromEngine()?.let { System.err.println("[kanama:kt] GC stress: $it") }
         // Register Script resource class before the language (language creates scripts).
         KanamaScript.register(library)
         // Register and add the Kanama script language to the engine.
