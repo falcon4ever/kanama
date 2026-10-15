@@ -172,8 +172,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * 2-frame grace with its weak demotion are gone. 38: every Node or plain Object handle lives as
      * long as its object, whichever script obtained it (the proxies' `_kanama_track` puts it in the
      * sweep's ring; `lendHandle` no longer takes a handle over, `kanamaWebIsNodeHandle` replaces
-     * `kanamaWebSetLentHandle`, `mintGenericHandle` takes `tween`); the shared-holder counting is
-     * gone.
+     * `kanamaWebSetLentHandle`, `mintGenericHandle` takes `tween`, `releaseHandleNow` leaves a
+     * Node's or plain Object's handle alone); the shared-holder counting is gone. The uint32
+     * setters (`layers`, `collision_layer`, `collision_mask`) read their word unsigned.
      */
     const val PROTOCOL_VERSION = 38
 
@@ -935,14 +936,15 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
               "# Every Node or plain Object handle, which lives as long as its object (handle -> true,"
             )
             appendLine(
-              "# lent by a dispatch or not), the ring of their instance ids the sweep walks, its"
+              "# lent by a dispatch or not), the ring of their instance ids the sweep walks (each id"
             )
             appendLine(
-              "# cursor and the process frame it last ran in. A RefCounted is none of these: the"
+              "# once: `ring_ids`), its cursor and the process frame it last ran in. A RefCounted is"
             )
-            appendLine("# bridge holds it while Kotlin wraps it.")
+            appendLine("# none of these: the bridge holds it while Kotlin wraps it.")
             appendLine("static var lent: Dictionary = {}")
             appendLine("static var lent_ring: Array[int] = []")
+            appendLine("static var ring_ids: Dictionary = {}")
             appendLine("static var ring_cursor: int = 0")
             appendLine("static var sweep_frame: int = -1")
             appendLine()
@@ -1046,6 +1048,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             appendLine("\t\t\treturn false")
             appendLine("\tlent_ring[at] = lent_ring[lent_ring.size() - 1]")
             appendLine("\tlent_ring.pop_back()")
+            appendLine("\tring_ids.erase(id)")
             appendLine("\tif dead:")
             appendLine("\t\tuntrack(handle)")
             appendLine("\t\tfreed.append(str(handle))")
@@ -4560,7 +4563,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t\tKanamaWebHandles.hook_drain()")
     appendLine("\t\treturn")
     appendLine("\tKanamaWebHandles.lent[handle] = true")
-    appendLine("\tKanamaWebHandles.lent_ring.append(id)")
+    appendLine("\tif not KanamaWebHandles.ring_ids.has(id):")
+    appendLine("\t\t# A later handle of an object already in the ring: one entry is enough.")
+    appendLine("\t\tKanamaWebHandles.ring_ids[id] = true")
+    appendLine("\t\tKanamaWebHandles.lent_ring.append(id)")
     appendLine(
       "\tif tracked is SceneTree or (tracked is Window and (tracked as Window).get_parent() == null):"
     )

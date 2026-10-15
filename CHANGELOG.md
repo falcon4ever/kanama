@@ -185,7 +185,8 @@ you hold is valid until the engine frees it, however you got it and whichever sc
 node you `queueFree()` stays usable to the end of the frame. A `PhysicsDirectSpaceState3D` ray that
 hits a body no script looked up now answers that body as `collider` (it answered `null`), so
 `hit.collider == getNode(...)` holds. On Web the `SceneTree`, viewport, camera and parent you get
-are the same value on every call. The Web bridge protocol is 38.
+are the same value on every call, and `close()` on a `WebExperimentalGenericCall` result for a node
+leaves the node's handle alone (another script may hold it). The Web bridge protocol is 38.
 
 On Web a script constructor that applied the queued engine calls (a `close()`, a call that returns
 a value) and then threw could make a call queued before it run twice; it now runs once. And a

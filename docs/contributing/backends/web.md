@@ -425,7 +425,9 @@ not who keeps it: when that script goes, `releaseBrowserHandlesOwnedBy` re-route
 companion holds (`nodeOutlivesItsReceiver`), stays valid; the last proxy releases everything. The
 SceneTree and the root Window live as long as the page: `_kanama_track` marks their one handle each
 (`markPageHandle`), which the bridge counts in `pageHandles`, apart from the live handles a scene's
-teardown returns to zero (an autoload's proxy keeps routing them after the scene is gone). A
+teardown returns to zero (an autoload's proxy keeps routing them after the scene is gone). The generic tier's `WebGenericCallResult.close()`
+releases a RefCounted's or a tween's minted handle; on a Node's or plain Object's, which another
+script may hold, it does nothing (`genericCloseKeepsSharedNode`). A
 retired handle's entry in the proxies' shared `_kanama_object_handles` dictionary is erased
 (through any installed proxy's release callback), so a later lookup of the same object mints a fresh
 handle instead of finding a dead one. The calls that answer a live object (a collider, `getParent`,
@@ -459,8 +461,9 @@ reads its last refresh, the rule for every non-self node).
 per process frame from `KanamaWebHandles.drain_frame`, the shared class's `SceneTree.process_frame`
 hook (made by the first track, bound to the class, not a proxy), which fires every frame even while
 the tree is paused, a script called `set_process(false)` or only non-Node scripts exist. Every Node
-or plain Object handle `_kanama_track` enters joins its ring (`KanamaWebHandles.lent`, `lent_ring`).
-It checks up to 32 handles from a ring cursor; a handle whose object is gone
+or plain Object handle `_kanama_track` enters joins its ring (`KanamaWebHandles.lent`, `lent_ring`;
+an object's instance id is in the ring once, `ring_ids`, however many handles it had: the web3d row
+`handleRingBounded`). It checks up to 32 handles from a ring cursor; a handle whose object is gone
 (`is_instance_id_valid`, or a dead weak entry) is untracked and released in one
 `bridge.releaseFreedHandles` call, which drops the slot's per-kind state too (an adopted
 `AudioStreamPlayer`'s audio state, a `Resource`'s path) as an owner teardown does. So K lent handles

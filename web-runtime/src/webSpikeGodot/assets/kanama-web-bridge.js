@@ -1722,12 +1722,15 @@
       this.retireBrowserSlot(handle, slot);
     },
     /**
-     * The generic tier's minted results (`WebGenericCallResult.close`): the caller owns the handle
-     * outright and releases it now, whatever else holds it. 1 when it was live.
+     * The generic tier's minted results (`WebGenericCallResult.close`): a RefCounted's or a tween's
+     * handle is released now. A Node's or plain Object's is the one handle of its object, which
+     * other scripts may hold too: it lives as long as the object, so closing it does nothing. 1 when
+     * it was live.
      */
     releaseHandleNow(handle) {
       const slot = this.browserHandleSlot(handle);
       if (!slot) return 0;
+      if (!slot.refCounted && !OWNER_BOUND_KINDS.has(slot.kind)) return 1;
       if (slot.refCounted) this.rcReleasedByClose += 1;
       this.releaseHeldHandle(handle, slot);
       return 1;
@@ -2048,9 +2051,9 @@
       // Task 76: an immediate generic call returned an engine object that is neither
       // script-backed nor already tracked. Mint a tracked browser handle of the kind the
       // GDScript arm classified (node / resource / tween / object), routed through the calling
-      // script: released explicitly through `WebGenericCallResult.close` (releaseHandleNow), by
-      // its Kotlin wrappers' end for a RefCounted (the proxy marks it), when the engine frees a
-      // Node or plain Object, or with the calling script for a tween.
+      // script: a RefCounted is released by `WebGenericCallResult.close` (releaseHandleNow) or its
+      // Kotlin wrappers' end (the proxy marks it), a tween by its close or with the calling script,
+      // and a Node or plain Object when the engine frees it (its close does nothing).
       if (kindTag === "node") {
         const handle = this.allocateBrowserHandle("Node", ownerHandle);
         this.api.kanamaWebAdoptNodeHandle(handle);

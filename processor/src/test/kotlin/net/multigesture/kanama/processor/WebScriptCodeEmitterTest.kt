@@ -178,6 +178,8 @@ class WebScriptCodeEmitterTest {
       handles,
     )
     assertTrue(handles.contains("static func untrack(handle: int) -> void:"), handles)
+    // An entry leaving the ring leaves its id's one-entry mark with it.
+    assertTrue(handles.contains("\tlent_ring.pop_back()\n\tring_ids.erase(id)\n"), handles)
     assertFalse(handles.contains("sweep_hook"), handles)
   }
 
@@ -1809,7 +1811,10 @@ class WebScriptCodeEmitterTest {
           "\t\t\t\tKanamaWebHandles.hook_drain()\n" +
           "\t\treturn\n" +
           "\tKanamaWebHandles.lent[handle] = true\n" +
-          "\tKanamaWebHandles.lent_ring.append(id)\n"
+          "\tif not KanamaWebHandles.ring_ids.has(id):\n" +
+          "\t\t# A later handle of an object already in the ring: one entry is enough.\n" +
+          "\t\tKanamaWebHandles.ring_ids[id] = true\n" +
+          "\t\tKanamaWebHandles.lent_ring.append(id)\n"
       ),
       proxy,
     )
