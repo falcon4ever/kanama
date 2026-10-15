@@ -438,11 +438,16 @@ case("ios_device_gate.sh --check-results (row missing)", IOS_RESULTS_CHECK,
 case("ios_device_gate.sh --check-results (FAIL row)", IOS_RESULTS_CHECK,
      [Edit("scripts/fixtures/ios_gate_results.tsv", "Bunnymark\tPASS", "Bunnymark\tFAIL")],
      "one or more gate steps failed", "a step recorded FAIL")
-# A --start-at run plans the demos from that one on; the same verdict, over the rows such a run writes (FPS and the last demo).
-case("ios_device_gate.sh --check-results (--start-at plan, row missing)",
-     ["bash", "scripts/ios_device_gate.sh", "--demos-only", "--start-at", "Starter-Kit-FPS", "--check-results", "scripts/fixtures/ios_gate_results_start_at.tsv"],
-     [Edit("scripts/fixtures/ios_gate_results_start_at.tsv", "godot-4-3d-third-person-controller\tPASS\t120\tgodot-4-3d-third-person-controller.log\n", "")],
-     "expected 2 result rows (fresh=0 demos=1) but", "a --start-at run planned two demos and left one row: the partial plan is held to its own count, not the full matrix")
+# A --start-at run writes a SKIP row for every demo before the start demo (the fixture holds the rows such a run writes:
+# seven SKIP rows, then FPS and the last demo); the verdict holds each planned step to exactly one row of its kind.
+IOS_RESULTS_START_AT = "scripts/fixtures/ios_gate_results_start_at.tsv"
+IOS_RESULTS_START_AT_CHECK = ["bash", "scripts/ios_device_gate.sh", "--demos-only", "--start-at", "Starter-Kit-FPS", "--check-results", IOS_RESULTS_START_AT]
+case("ios_device_gate.sh --check-results (--start-at plan, row missing)", IOS_RESULTS_START_AT_CHECK,
+     [Edit(IOS_RESULTS_START_AT, "godot-4-3d-third-person-controller\tPASS\t120\tgodot-4-3d-third-person-controller.log\n", "")],
+     "no result row for the planned step 'godot-4-3d-third-person-controller'", "a --start-at run left no row for a demo it planned, while the SKIP rows keep the row total at the full matrix")
+case("ios_device_gate.sh --check-results (--start-at plan, skipped demo not SKIP)", IOS_RESULTS_START_AT_CHECK,
+     [Edit(IOS_RESULTS_START_AT, "Starter-Kit-Racing\tSKIP", "Starter-Kit-Racing\tPASS")],
+     "comes before --start-at Starter-Kit-FPS but its row is PASS, not SKIP", "a demo before the --start-at demo has a PASS row: the rows are not the ones this plan writes")
 case("check_jdk_locations_parity.py", py("check_jdk_locations_parity.py"),
      [Edit("bootstrap/bootstrap.c", '{"linux", "/usr/lib64/jvm", "", ""},', '{"linux", "/usr/lib65/jvm", "", ""},')],
      "differs from bootstrap/bootstrap.c", "one JDK location row differs between bootstrap.c and the plugins")

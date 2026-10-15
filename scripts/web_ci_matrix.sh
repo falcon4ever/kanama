@@ -233,15 +233,23 @@ with open(out, "w") as handle:
 # seconds AFTER a complete export (all files packed), on the charactercontroller
 # demo, roughly one run in several on hosted Linux runners; the rerun passes. It
 # is an engine exit-path abort, not a Kanama export failure, so the export is
-# retried once when -- and only when -- Gradle reports that exact exit value.
-# The first failure's output stays in the log, and any other failure is final.
+# retried once when -- and only when -- the first attempt's log shows the pack
+# step finished (`[ DONE ] savepack`) AND Gradle reports that exact exit value.
+# An abort before the pack was written, and any other failure, is final. A retry
+# is never silent: it prints a GitHub `::warning::` line and is listed in the
+# summary table and the evidence JSON (`retriedExports`).
+RETRIED_EXPORTS=()
 export_with_retry() {
-  local log status
+  local demo="$1" log status
+  shift
   log="$(mktemp)"
   "$ROOT_DIR/gradlew" -p "$ROOT_DIR" "$@" 2>&1 | tee "$log"
   status="${PIPESTATUS[0]}"
-  if [[ "$status" -ne 0 ]] && grep -q 'finished with non-zero exit value 134' "$log"; then
-    echo "[web_ci_matrix] export aborted with exit 134 (known flaky Godot 4.7.2 editor abort); retrying once" >&2
+  if [[ "$status" -ne 0 ]] && grep -q 'finished with non-zero exit value 134' "$log" &&
+     grep -Eq 'DONE.*savepack' "$log"; then
+    echo "::warning title=Web export retried::$demo: the Godot editor aborted (exit 134) after a complete export ([ DONE ] savepack); retrying the export once"
+    echo "[web_ci_matrix] $demo: export aborted with exit 134 after savepack finished (known flaky Godot 4.7.2 editor abort); retrying once" >&2
+    RETRIED_EXPORTS+=("$demo|exit 134 after [ DONE ] savepack; retried once")
     rm -rf "$export_dir"
     status=0
     "$ROOT_DIR/gradlew" -p "$ROOT_DIR" "$@" || status=$?
@@ -287,7 +295,7 @@ for demo in "${DEMOS[@]}"; do
       done < <(kanama_web_demo_export_args "$export_key")
     fi
 
-    if ! export_with_retry "${gradle_args[@]}"; then
+    if ! export_with_retry "$demo" "${gradle_args[@]}"; then
       echo "[web_ci_matrix] $demo: EXPORT FAILED" >&2
       FAILED=1
       record_unrun_demo "$demo" "export failed"
@@ -418,19 +426,28 @@ with open(out, "w") as handle:
 done
 
 printf '%s\n' "${SKIPPED_DEMOS[@]+"${SKIPPED_DEMOS[@]}"}" >"$RESULT_DIR/skipped.txt"
+printf '%s\n' "${RETRIED_EXPORTS[@]+"${RETRIED_EXPORTS[@]}"}" >"$RESULT_DIR/retried.txt"
 python3 - "$EVIDENCE" "$ROOT_DIR" "$GODOT_BIN" "$TEMPLATE" "$FAILED" "$RUNS_DIR" \
-  "${DEMOS_DIR:-}" "${SUMMARY_MD:-}" "${DEMO_SET:-custom}" "$RESULT_DIR/skipped.txt" <<'PY'
+  "${DEMOS_DIR:-}" "${SUMMARY_MD:-}" "${DEMO_SET:-custom}" "$RESULT_DIR/skipped.txt" "$RESULT_DIR/retried.txt" <<'PY'
 import datetime, glob, json, os, subprocess, sys
 
 (path, root, godot, template, failed, runs_dir, demos_dir, summary_md, demo_set,
- skipped_path) = sys.argv[1:]
-skipped = []
-if os.path.exists(skipped_path):
-    for line in open(skipped_path):
-        line = line.strip()
-        if line:
-            demo, _, reason = line.partition("|")
-            skipped.append({"demo": demo, "reason": reason})
+ skipped_path, retried_path) = sys.argv[1:]
+
+
+def demo_reasons(list_path):
+    entries = []
+    if os.path.exists(list_path):
+        for line in open(list_path):
+            line = line.strip()
+            if line:
+                demo, _, reason = line.partition("|")
+                entries.append({"demo": demo, "reason": reason})
+    return entries
+
+
+skipped = demo_reasons(skipped_path)
+retried = demo_reasons(retried_path)
 runs = [json.load(open(name)) for name in sorted(glob.glob(os.path.join(runs_dir, "*.json")))]
 
 
@@ -462,6 +479,8 @@ evidence = {
     # Demos a hosted runner cannot build. Recorded, not omitted: a corpus that
     # quietly shrinks is how "the corpus is green" stops meaning anything.
     "skipped": skipped,
+    # Exports retried once after the known exit-134 editor abort: a green cell that needed a retry says so.
+    "retriedExports": retried,
     "pass": failed == "0",
 }
 with open(path, "w") as handle:
@@ -490,10 +509,12 @@ for run in runs:
             protocol=run.get("protocolVersion") or "-",
         )
     )
-if skipped:
+if skipped or retried:
     lines.append("")
     for entry in skipped:
         lines.append(f"> **skipped** `{entry['demo']}` — {entry['reason']}")
+    for entry in retried:
+        lines.append(f"> **export retried** `{entry['demo']}` — {entry['reason']}")
 table = "\n".join(lines)
 print(table)
 if summary_md:

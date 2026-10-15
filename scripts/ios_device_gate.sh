@@ -75,9 +75,11 @@ Options:
                                30, 0 = launch-only as before). Needs a demos checkout whose
                                ios_device_run.sh supports KANAMA_IOS_CONSOLE_SECONDS. The log is
                                kept as <output-dir>/<App>.console.log. Costs 9 x N seconds per run.
-  --check-results FILE         Only apply the gate's verdict (no FAIL row, one row per planned step) to a
-                               saved results.tsv and exit; with --fresh-only / --demos-only it judges that
-                               plan. Needs no device or environment (the verdict's red runs, task 138 item 10).
+  --check-results FILE         Only apply the gate's verdict (no FAIL row; exactly one row per planned step,
+                               SKIP for a demo before --start-at, PASS for the rest) to a saved results.tsv
+                               and exit; with --fresh-only / --demos-only / --start-at it judges that plan
+                               (an unknown --start-at exits 2, as a run does). Needs no device or
+                               environment (the verdict's red runs, task 138 item 10).
   --help, -h                   Show this help.
 
 The script reads private device/signing values only from the environment. Do not
@@ -208,29 +210,87 @@ demo_apps=(
   "KanamaThirdPerson"
 )
 
+# Index of the --start-at demo (matched by name, directory or app), 0 without one; prints nothing and returns 1
+# when START_AT names no demo.
+start_at_index() {
+  local idx
+  if [[ -z "$START_AT" ]]; then
+    echo 0
+    return 0
+  fi
+  for idx in "${!demo_names[@]}"; do
+    if [[ "$START_AT" == "${demo_names[$idx]}" || "$START_AT" == "${demo_dirs[$idx]}" || "$START_AT" == "${demo_apps[$idx]}" ]]; then
+      echo "$idx"
+      return 0
+    fi
+  done
+  return 1
+}
+
 # The gate's verdict over a results.tsv: no FAIL row is not enough (task 118) -- every planned step must have a row
-# (a step that never ran leaves none, and the old check printed PASS for the rows that did).
+# (a step that never ran leaves none, and the old check printed PASS for the rows that did). Held per step name, not
+# by a row count: a --start-at run writes a SKIP row for every demo before the start demo, so its results.tsv has a
+# row for the whole matrix whether or not the demos it ran all finished. Each planned step must have exactly one row:
+# SKIP for a demo before the start demo, PASS or FAIL for a step the run executed; and no row may name a step the plan
+# does not have. Returns 2 when --start-at names no demo (as a real run exits), 1 on a red verdict.
 results_verdict() {
-  local tsv="$1" expected_rows actual_rows planned_demos idx
+  local tsv="$1" start_idx idx name want rows count status problems=0
+  local -a plan_names=() plan_want=()
+  if ! start_idx="$(start_at_index)"; then
+    echo "[ios_device_gate] --start-at did not match any demo: $START_AT" >&2
+    return 2
+  fi
   if grep -Eq $'\tFAIL\t' "$tsv"; then
     echo "[ios_device_gate] one or more gate steps failed; summary: ${SUMMARY:-$tsv}" >&2
     return 1
   fi
-  # A --start-at run plans the demos from that one on (it used to be held to the full matrix and exited 1 over rows
-  # it never planned, so a partial run that passed every step still failed).
-  planned_demos=${#demo_names[@]}
-  if [[ -n "$START_AT" ]]; then
+  if [[ "$RUN_FRESH" -eq 1 ]]; then
+    plan_names+=("fresh-starter-project")
+    plan_want+=("run")
+  fi
+  if [[ "$RUN_DEMOS" -eq 1 ]]; then
     for idx in "${!demo_names[@]}"; do
-      if [[ "$START_AT" == "${demo_names[$idx]}" || "$START_AT" == "${demo_dirs[$idx]}" || "$START_AT" == "${demo_apps[$idx]}" ]]; then
-        planned_demos=$((${#demo_names[@]} - idx))
-        break
-      fi
+      plan_names+=("${demo_names[$idx]}")
+      if [[ "$idx" -lt "$start_idx" ]]; then plan_want+=("skip"); else plan_want+=("run"); fi
     done
   fi
-  expected_rows=$((RUN_FRESH + RUN_DEMOS * planned_demos))
-  actual_rows=$(($(wc -l <"$tsv") - 1))
-  if [[ "$actual_rows" -ne "$expected_rows" ]]; then
-    echo "[ios_device_gate] expected $expected_rows result rows (fresh=$RUN_FRESH demos=$RUN_DEMOS) but $tsv has $actual_rows; a step did not run" >&2
+  for idx in "${!plan_names[@]}"; do
+    name="${plan_names[$idx]}"
+    want="${plan_want[$idx]}"
+    if ! rows="$(awk -F'\t' -v n="$name" 'NR > 1 && $1 == n { c++; s = s " " $2 } END { printf "%d%s", c, s }' "$tsv")"; then
+      echo "[ios_device_gate] could not read $tsv" >&2
+      return 1
+    fi
+    count="${rows%% *}"
+    status="${rows#"$count"}"
+    status="${status# }"
+    if [[ "$count" -eq 0 ]]; then
+      echo "[ios_device_gate] no result row for the planned step '$name'; a step did not run" >&2
+      problems=$((problems + 1))
+    elif [[ "$count" -ne 1 ]]; then
+      echo "[ios_device_gate] $count result rows for the step '$name' ($status), expected exactly one" >&2
+      problems=$((problems + 1))
+    elif [[ "$want" == "skip" && "$status" != "SKIP" ]]; then
+      echo "[ios_device_gate] the step '$name' comes before --start-at $START_AT but its row is $status, not SKIP" >&2
+      problems=$((problems + 1))
+    elif [[ "$want" == "run" && "$status" != "PASS" ]]; then
+      echo "[ios_device_gate] the planned step '$name' has a $status row, not PASS; a step did not run" >&2
+      problems=$((problems + 1))
+    fi
+  done
+  # A row the plan does not name (another matrix, a renamed demo) would otherwise pass unnoticed.
+  local unplanned
+  if ! unplanned="$(printf '%s\n' ${plan_names[@]+"${plan_names[@]}"} |
+      awk -F'\t' 'FNR == NR { known[$0] = 1; next } FNR > 1 && !($1 in known) { print $1 }' - "$tsv")"; then
+    echo "[ios_device_gate] could not read $tsv" >&2
+    return 1
+  fi
+  if [[ -n "$unplanned" ]]; then
+    echo "[ios_device_gate] result row(s) for a step this plan does not have: $(printf '%s' "$unplanned" | tr '\n' ' ')" >&2
+    problems=$((problems + 1))
+  fi
+  if [[ "$problems" -ne 0 ]]; then
+    echo "[ios_device_gate] results verdict: $problems problem(s) in $tsv (fresh=$RUN_FRESH demos=$RUN_DEMOS start-at=${START_AT:-none})" >&2
     return 1
   fi
 }
@@ -240,7 +300,15 @@ if [[ -n "$CHECK_RESULTS" ]]; then
     echo "[ios_device_gate] --check-results: no such file: $CHECK_RESULTS" >&2
     exit 2
   fi
-  results_verdict "$CHECK_RESULTS" || exit 1
+  if [[ -n "$START_AT" && "$RUN_DEMOS" -ne 1 ]]; then
+    echo "[ios_device_gate] --start-at only applies when running the demo matrix." >&2
+    exit 2
+  fi
+  verdict_status=0
+  results_verdict "$CHECK_RESULTS" || verdict_status=$?
+  if [[ "$verdict_status" -ne 0 ]]; then
+    exit "$verdict_status"
+  fi
   echo "[ios_device_gate] results verdict: PASS ($CHECK_RESULTS)"
   exit 0
 fi
