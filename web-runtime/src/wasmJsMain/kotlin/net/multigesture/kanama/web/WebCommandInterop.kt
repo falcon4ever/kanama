@@ -239,6 +239,15 @@ internal class WebCommandBuffer(capacity: Int) {
     words[offset + 2] = value.toInt()
   }
 
+  /** A uint32 argument (a layer or collision mask): the word is its bit pattern, read unsigned. */
+  fun appendUInt32Mutation(opcode: Int, objectHandle: Int, value: Long) {
+    require(value in 0L..0xffffffffL)
+    val offset = reserve(WORDS_OBJECT_ARG)
+    words[offset] = opcode
+    words[offset + 1] = objectHandle
+    words[offset + 2] = value.toInt()
+  }
+
   fun appendDoubleMutation(opcode: Int, objectHandle: Int, value: Double) {
     val bits = value.toBits()
     val offset = reserve(WORDS_SCALAR_OR_VECTOR)

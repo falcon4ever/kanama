@@ -166,6 +166,13 @@ survive a reload, as in GDScript. A build whose objects are still alive (a scene
 reloaded) keeps its connections. `retired-loader-check` lines gain `swept=N`. See
 [Signals: hot reload](docs/game-dev/signals.md#hot-reload).
 
+### Fixed — Web: layer and collision masks take all 32 bits
+
+On Web, a ray query made with `PhysicsRayQueryParameters3D.create(from, to)`, whose default mask is
+`0xffffffff`, failed with "Failed requirement." at `intersectRay`, and `collisionLayer`,
+`collisionMask` and `VisualInstance3D.layers` refused a mask with bit 31 set. They now take the
+whole uint32 range `0..0xffffffff`, as on desktop.
+
 ### Fixed — Web: a node you looked up lives as long as the node
 
 On Web, a `Node` or plain `Object` you got from a lookup (`getNode`, `getChild`), a call's result,
