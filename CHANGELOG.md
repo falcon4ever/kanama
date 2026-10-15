@@ -166,6 +166,26 @@ survive a reload, as in GDScript. A build whose objects are still alive (a scene
 reloaded) keeps its connections. `retired-loader-check` lines gain `swept=N`. See
 [Signals: hot reload](docs/game-dev/signals.md#hot-reload).
 
+### Fixed — Web: a node you looked up lives as long as the node
+
+On Web, a `Node` or plain `Object` you got from a lookup (`getNode`, `getChild`), a call's result,
+a construction (`Sprite2D.create()`) or an instantiated scene was released with the script that got
+it, and at once by its `queueFree()`. So a node kept in a companion object or another script went
+stale when that script was freed ("Stale Kanama Web browser handle"), a node made by a top-level or
+companion initializer went with whichever script first touched it, and a node used after
+`queueFree()`, even in the same frame, threw. Web now follows desktop: every node or plain object
+you hold is valid until the engine frees it, however you got it and whichever script got it, and a
+node you `queueFree()` stays usable to the end of the frame. A `PhysicsDirectSpaceState3D` ray that
+hits a body no script looked up now answers that body as `collider` (it answered `null`), so
+`hit.collider == getNode(...)` holds. On Web the `SceneTree`, viewport, camera and parent you get
+are the same value on every call. The Web bridge protocol is 38.
+
+On Web a script constructor that applied the queued engine calls (a `close()`, a call that returns
+a value) and then threw could make a call queued before it run twice; it now runs once. And a
+scripted `Resource` (`@ScriptClass(attachTo = "Resource")`) that Godot freed skipped part of its
+teardown (its pending `await`s and lambda connections stayed; a debug export logged "Attempt to call
+function ... in base 'null instance'"); it now ends them like a scripted node does.
+
 ### Fixed — Web: a RefCounted lives while Kotlin holds it, and every RefCounted has `close()` (closes [#332](https://github.com/falcon4ever/kanama/issues/332))
 
 On Web, a `RefCounted` that only your Kotlin code kept did not follow desktop's rule. An argument
@@ -183,7 +203,7 @@ another wrapper of the same object stays valid. A dropped one is released late, 
 garbage collector runs, as a forgotten `close()` is on desktop. At most 4096 `RefCounted` arguments
 that only Kotlin holds stay alive this way (Kanama's bound for Firefox, which collects only under
 allocation pressure; C# has none): past that the oldest go first. A `Sprite2D`'s `texture` keeps
-answering after the code that set it dropped its wrapper. The Web bridge protocol is 37. See
+answering after the code that set it dropped its wrapper. See
 [Objects you receive](docs/game-dev/godot-api.md#objects-you-receive).
 
 Three Web behaviours change with it. A second `close()` does nothing (on `ConfigFile`,
@@ -226,16 +246,11 @@ argument answers until the node is freed, then a use throws "Invalid access to p
 instance", as on desktop; `body.position` inside a handler reads the node's position (it used to
 fail with "Missing Web Node3D.get_position snapshot"), and `body.queueFree()` on an argument works
 (it used to fail a handle-kind check) and leaves the node usable to the end of the frame, as on
-desktop (a node you looked up or got as a call's result is still released at once by its
-`queueFree()` on Web, see below). Handing over an object a script already saw costs no extra bridge call (a Node2D / Node3D /
+desktop. Handing over an object a script already saw costs no extra bridge call (a Node2D / Node3D /
 Control: one, its transform), where every dispatch used to cost two.
 
-Web limits remain, documented in [Objects you receive](docs/game-dev/godot-api.md#objects-you-receive).
-A node you looked up (`getNode`) or got as a call's result and then `queueFree()` is released at
-once on Web: using that value afterwards, even in the same frame, throws "Stale Kanama Web browser
-handle", where desktop keeps it usable until the end of the frame (read what you need first, or
-`queueFree()` last). A `RefCounted` argument follows desktop's rule too, see "Web: a RefCounted
-lives while Kotlin holds it" above.
+A `RefCounted` argument follows desktop's rule too, see "Web: a RefCounted lives while Kotlin holds
+it" above; a node you looked up, see "Web: a node you looked up lives as long as the node".
 
 ### Changed — iOS: the runtime self-tests no longer run or ship in users' builds (task 138 item 24)
 
@@ -365,14 +380,6 @@ That was silent. `docs/reference/generated/wrapper-generator-report.md` now has 
 Expressed" section with every case (294 parameters today), and the report check fails when the list
 changes without the page being regenerated, so a new required parameter, or a default that is
 gained, shows up in the pull request. Expressing the defaults is a separate, additive change.
-
-### Known limits — Web signal and callback arguments
-
-Two things differ from desktop on Web and are being fixed. An object received as a signal or callback
-argument and stored for use after the handler returns is not yet valid unless something inside the
-handler resolved it through a result (`kept = GD.instanceFromId(arg.instanceId)` is the workaround).
-And `body == player` inside a handler can be `false` on Web even when both are the same node: compare
-`instanceId` instead. Documented in the Godot API guide (Web section) and the Web backend notes.
 
 ### Changed — Web compiles the shared `GD`, `Mathf` and `GodotCallable` (task 129 E, task 138 items 2 and 4)
 
