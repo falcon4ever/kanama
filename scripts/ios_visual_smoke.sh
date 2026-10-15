@@ -461,12 +461,16 @@ export_dir="$work_dir/export"
 derived_dir="$work_dir/derived"
 app_name="KanamaIosVisualSmoke"
 bundle_id="net.multigesture.kanama.iosvisualsmoke"
+# --kanama-script-probe's proof that the runtime bound res://kanama_ios_probe.kt to its built-in probe and ran its
+# _ready (KanamaIosRuntime logs it after a successful call). This used to wait for "script instance ready", a line no
+# runtime version ever printed, so the mode failed every launch on the simulator and the device alike.
+script_probe_ready_pattern='built-in probe method call handle=[0-9]+ path=res://kanama_ios_probe\.kt method=_ready'
 
 
 # Poll the launch logs for PATTERN (grep -E) until it appears or TIMEOUT seconds pass; leaves the seconds spent in
 # `waited` and returns 1 on a timeout. The launch waits below use it instead of a fixed sleep (task 138 item 16: the
-# simulator `--kanama-script-probe` run closed its 3 s window before "script instance ready" streamed and failed a
-# healthy app). A timeout is not itself the verdict: the assertions after the capture window decide pass/fail.
+# simulator `--kanama-script-probe` run closed its 3 s window before its ready line streamed and failed a healthy
+# app). A timeout is not itself the verdict: the assertions after the capture window decide pass/fail.
 wait_for_log_line() {
   local pattern="$1" timeout="$2"
   waited=0
@@ -2812,7 +2816,7 @@ else
   if [[ "$kanama_probe" -eq 1 ]]; then
     sim_ready_pattern='updated grouped probe label'
   elif [[ "$kanama_script_probe" -eq 1 ]]; then
-    sim_ready_pattern='script instance ready'
+    sim_ready_pattern="$script_probe_ready_pattern"
   fi
   if [[ -n "$sim_ready_pattern" && -n "$launch_pid" ]]; then
     sim_launch_timeout="${KANAMA_IOS_LAUNCH_TIMEOUT:-60}"
@@ -2886,10 +2890,10 @@ if [[ "$kanama_probe" -eq 1 ]]; then
 fi
 
 if [[ "$kanama_script_probe" -eq 1 ]]; then
-  if grep -Eq 'script instance ready' "$stderr_log" "$stdout_log"; then
-    echo "[ios_visual_smoke] script instance ready log detected"
+  if grep -Eq "$script_probe_ready_pattern" "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] built-in probe _ready log detected"
   else
-    echo "[ios_visual_smoke] script instance ready log missing" >&2
+    echo "[ios_visual_smoke] built-in probe _ready log missing: no /$script_probe_ready_pattern/ line" >&2
     exit 1
   fi
 fi
