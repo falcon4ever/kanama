@@ -8,7 +8,7 @@
 // crossings advancing) and the post-teardown trough, and asserts a clean run with no
 // callback faults.
 
-import { callSmokeMethod } from "../envelope.mjs";
+import { callSmokeMethod, collecting } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -318,7 +318,7 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
 
   trace("smoke_teardown");
   await callTeardown(evaluate, exportDir);
-  const teardown = await observe(evaluate, { ...peak, maxLiveHandles: peak.maxLiveHandles }, 6_000, deadline, (snap) => snap.liveHandles === 0);
+  const teardown = await observe(collecting(evaluate), { ...peak, maxLiveHandles: peak.maxLiveHandles }, 6_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} (peak=${peak.maxLiveHandles}) callbacks=${settled.callbacks} pending=${settled.pending} jobs=${settled.jobs} errs=${settled.callbackErrors}`);
 

@@ -9,7 +9,7 @@
 // run under that window. Smoke.smoke_teardown releases the cached scenes and the
 // settings ConfigFile, then frees the scene root and the Smoke autoload, draining every live handle to zero.
 
-import { callSmokeMethod } from "../envelope.mjs";
+import { callSmokeMethod, collecting } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -236,7 +236,7 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline, exportDir 
   // ConfigFile, then frees the scene root; every node exits the tree and drops its handles.
   trace("smoke_teardown");
   await callSmokeMethod(evaluate, exportDir, "tps.Smoke", "smoke_teardown");
-  const teardown = await observe(evaluate, peak, 20_000, deadline, (snap) => snap.liveHandles === 0);
+  const teardown = await observe(collecting(evaluate), peak, 20_000, deadline, (snap) => snap.liveHandles === 0);
   const torndown = teardown.last ?? atPeak;
   trace(`teardown: live=${torndown.liveHandles} callbacks=${torndown.callbacks} errs=${torndown.callbackErrors}`);
 

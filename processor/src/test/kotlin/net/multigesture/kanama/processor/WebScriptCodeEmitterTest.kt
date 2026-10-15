@@ -1746,6 +1746,8 @@ class WebScriptCodeEmitterTest {
           "\t\tif handle == 0:\n" +
           "\t\t\thandle = int(_kanama_bridge.lendHandle(_kanama_handle, 0, 16, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0))\n" +
           "\t\t\t_kanama_track(handle, object, false)\n" +
+          "\t\t\tif not KanamaWebHandles.drain_hook.is_valid():\n" +
+          "\t\t\t\tKanamaWebHandles.hook_drain()\n" +
           "\t\treturn handle\n"
       ),
       proxy,
@@ -1763,7 +1765,9 @@ class WebScriptCodeEmitterTest {
     assertTrue(
       proxy.contains(
         "\tif mark and tracked is RefCounted and not (tracked is Tween or tracked is Tweener):\n" +
-          "\t\t_kanama_bridge.markRefCounted(handle)\n"
+          "\t\t_kanama_bridge.markRefCounted(handle)\n" +
+          "\t\tif not KanamaWebHandles.drain_hook.is_valid():\n" +
+          "\t\t\tKanamaWebHandles.hook_drain()\n"
       ),
       proxy,
     )

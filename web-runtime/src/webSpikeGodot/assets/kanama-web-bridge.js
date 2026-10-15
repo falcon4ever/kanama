@@ -339,6 +339,7 @@
     lentRefCountedByAge: new Set(),
     // Engine frames the drain has seen (the frame scheduler's pump; a lend's grace counts them).
     ownershipFrame: 0,
+    lastDrainRafTick: -1,
     // The handles whose object the engine freed (the sweep released them), most recent last: a
     // later use of one is the freed-instance error, not "no proxy owns handle". A handle carries
     // its slot's generation, so a reused slot's new handle never matches. Capped (the oldest goes):
@@ -1673,12 +1674,17 @@
       return 1;
     },
     /**
-     * Once per engine frame (the frame scheduler's pump, inside a Godot callback): release every
+     * Once per engine frame (inside a Godot callback): release every
      * RefCounted handle whose last hold went (a lent one only once its grace is over), then, above
      * RC_LENT_CAP pinned lends, the oldest lends. A capped one Kotlin still holds is released as
      * freed: its later use is the freed-instance error.
      */
     drainUnheldHandles() {
+      // Two callers, once per engine frame between them: the pump, and the SceneTree.process_frame
+      // hook (KanamaWebHandles.drain_frame) that runs when no proxy processes (only scripted
+      // resources left after a teardown).
+      if (this.rafTick === this.lastDrainRafTick) return;
+      this.lastDrainRafTick = this.rafTick;
       this.ownershipFrame += 1;
       if (this.pendingUnheld.size > 0) {
         for (const handle of [...this.pendingUnheld]) {

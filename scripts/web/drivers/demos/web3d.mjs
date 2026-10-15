@@ -1,4 +1,4 @@
-import { callScriptMethod, callSmokeMethod, resolveMethodId } from "../envelope.mjs";
+import { callScriptMethod, callSmokeMethod, resolveMethodId, collecting } from "../envelope.mjs";
 // demos/web3d.mjs -- 3D render-foundation smoke: observe + teardown assertions.
 //
 // The web3d scene auto-runs: Main._ready applies the platformer's Compatibility-renderer
@@ -639,7 +639,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
 
   trace("smoke_teardown");
   await callSmokeMethod(evaluate, exportDir, "web3d.SmokeQuit", "smoke_teardown");
-  const teardown = await observe(evaluate, peak, 6_000, deadline, (snap) => snap.liveHandles === 0);
+  const teardown = await observe(collecting(evaluate), peak, 6_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} errs=${settled.callbackErrors}`);
 

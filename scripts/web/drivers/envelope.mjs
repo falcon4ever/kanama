@@ -9,6 +9,30 @@ import path from "node:path";
 
 const SCHEMA_VERSION = 1;
 
+// Protocol 37: a RefCounted handle lives while a Kotlin wrapper of it is reachable, so after a
+// teardown a handle that a freed script's dropped wrapper still holds goes when the browser collects
+// that wrapper (desktop's late release), on the next frame of a proxy that still runs (a smoke
+// autoload). A teardown check waits for that collection: gc() where the page exposes it (Chrome,
+// --expose-gc), else a burst of short-lived allocation (Firefox collects under allocation pressure).
+const COLLECT_EXPRESSION = `(() => {
+  if (typeof globalThis.gc === "function") { globalThis.gc(); return 1; }
+  let kept = 0;
+  for (let round = 0; round < 32; round += 1) {
+    const chunk = new Array(16384);
+    for (let index = 0; index < chunk.length; index += 1) chunk[index] = { index, round };
+    kept += chunk.length;
+  }
+  return kept > 0 ? 0 : -1;
+})()`;
+
+/** `evaluate`, asking the page to collect before every call (the teardown checks' polls). */
+export function collecting(evaluate) {
+  return async (...args) => {
+    await evaluate(COLLECT_EXPRESSION);
+    return evaluate(...args);
+  };
+}
+
 export function collectPayload(exportDir, url, sourceChecksum) {
   const files = [];
   let totalBytes = 0;

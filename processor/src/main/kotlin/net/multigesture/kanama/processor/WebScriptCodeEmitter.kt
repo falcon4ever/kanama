@@ -942,6 +942,28 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             appendLine("# until a proxy lends, and again once that proxy is freed.")
             appendLine("static var sweep_hook: Callable = Callable()")
             appendLine()
+            appendLine(
+              "# Protocol 37: the bridge's drain of RefCounted handles no Kotlin wrapper holds any"
+            )
+            appendLine(
+              "# more, once per process frame whatever runs (no proxy has to process): bound to this"
+            )
+            appendLine("# class, not to a proxy, so it outlives every script. Made by the first mark.")
+            appendLine("static var drain_hook: Callable = Callable()")
+            appendLine()
+            appendLine("static func hook_drain() -> void:")
+            appendLine("\tvar tree := Engine.get_main_loop() as SceneTree")
+            appendLine("\tif tree == null:")
+            appendLine("\t\treturn")
+            appendLine("\tdrain_hook = Callable(KanamaWebHandles, \"drain_frame\")")
+            appendLine("\tif not tree.process_frame.is_connected(drain_hook):")
+            appendLine("\t\ttree.process_frame.connect(drain_hook)")
+            appendLine()
+            appendLine("static func drain_frame() -> void:")
+            appendLine("\tvar bridge = JavaScriptBridge.get_interface(\"KanamaWebBridge\")")
+            appendLine("\tif bridge != null:")
+            appendLine("\t\tbridge.drainUnheldHandles()")
+            appendLine()
             appendLine("# Task 129 E: one parsed Expression per utility function and arity (see")
             appendLine("# _kanama_web_utility_call), shared by every proxy.")
             appendLine("static var utility_expressions: Dictionary = {}")
@@ -4467,6 +4489,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\tif mark and tracked is RefCounted and not (tracked is Tween or tracked is Tweener):"
     )
     appendLine("\t\t_kanama_bridge.markRefCounted(handle)")
+    appendLine("\t\tif not KanamaWebHandles.drain_hook.is_valid():")
+    appendLine("\t\t\tKanamaWebHandles.hook_drain()")
     appendLine()
     appendLine("func $UNTRACK(handle: int) -> void:")
     appendLine(
@@ -4534,6 +4558,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t\t\thandle = int(_kanama_bridge.lendHandle(_kanama_handle, 0, 16, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0))"
     )
     appendLine("\t\t\t$TRACK(handle, object, false)")
+    appendLine("\t\t\tif not KanamaWebHandles.drain_hook.is_valid():")
+    appendLine("\t\t\t\tKanamaWebHandles.hook_drain()")
     appendLine("\t\treturn handle")
     appendLine("\tvar flags := 0")
     appendLine("\tif handle != 0:")

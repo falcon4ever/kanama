@@ -26,7 +26,7 @@
 // coinsSpilledByPlayerDamage/coinsCollectedByTweenCallbacks go false (and the census gate
 // fail naming Player.damage, Player.collect_coin, Coin._follow and Coin._collect).
 
-import { resolveMethodId } from "../envelope.mjs";
+import { resolveMethodId, collecting } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -414,7 +414,7 @@ export async function runThirdperson({ url, evaluate, navigate, deadline, export
   await evaluate(
     `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.smokeHandle, ${smokeTeardownId}); true`,
   );
-  const teardown = await observe(evaluate, runPeak, 12_000, deadline, (snap) => snap.liveHandles === 0);
+  const teardown = await observe(collecting(evaluate), runPeak, 12_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} callbacks=${settled.callbacks} errs=${settled.callbackErrors}`);
 

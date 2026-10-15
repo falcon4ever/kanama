@@ -496,11 +496,16 @@ unregister token; a Node or plain-Object wrapper costs a set lookup and no cross
 wrapper is one hold and the slot counts them (`wrappers`). A decoded RefCounted handle is wrapped as
 a `RefCounted` (`webWrap`), so `as? AutoCloseable` and `use { }` work on a Variant result. When the
 browser collects the last wrapper, the registry's callback (between tasks: bookkeeping only) queues
-the handle, and the frame scheduler's pump (inside a proxy's `_process`, once per engine frame)
-drains the queue: it erases the proxies' dictionary entry through any installed proxy, tells
+the handle, and the drain (once per engine frame, inside a Godot callback: the frame scheduler's
+pump, or `KanamaWebHandles.drain_frame` on `SceneTree.process_frame`, bound to that class so it
+runs when no proxy processes, as after a teardown that leaves only scripted resources) empties the
+queue: it erases the proxies' dictionary entry through any installed proxy, tells
 Kotlin, and retires the slot, as desktop's `OwnedReleases` drains the GC's cleanups on the next
 frame. `close()` unregisters its wrapper and releases the handle at once when that was the last
-hold (`closeWrapper`), so another wrapper of the same object keeps it. Owner teardown re-routes a
+hold (`closeWrapper`), so another wrapper of the same object keeps it. A conversion that builds
+the typed wrapper over a temporary one (a typed load over `load()`'s `Resource`, a generic call's
+typed return) ends the temporary's hold (`webRetyped`, bridge `dropWrapper`), so `close()` on the
+wrapper the script got releases at once. Owner teardown re-routes a
 RefCounted handle that still has wrappers to another proxy, like a lent one; the last proxy
 releases everything, so full teardown stays deterministic. A Sprite2D texture snapshot is a hold
 too (`holdRefCounted`): `sprite.texture` answers after the code that set it dropped its wrapper.
@@ -517,7 +522,10 @@ measured) makes `registerWrapper` answer 0 after one console warning: a RefCount
 then goes with its script, a lent one after its 2 frames (the protocol-36 rule, loud). Every
 driver's performance section reports `maxRcPinned`, `rcReleasedByGc`, `rcReleasedByClose`,
 `rcReleasedByGrace`, `rcReleasedByCap`, `wrapperRegistrations` and `wrapperRegistry` (0 for the
-fallback).
+fallback). Because a freed script's dropped wrappers release its handles only once the browser
+collects them, every demo driver's teardown check asks the page to collect before each poll
+(`collecting` in `scripts/web/drivers/envelope.mjs`: `gc()` on Chrome, an allocation burst on
+Firefox), and match3's mid-game bound leaves out the RefCounted handles still pinned (`rcPinned`).
 
 The web3d `LentProbe` rows (`lentStoredArgumentStaysValid`, `lentArgumentIdentity`,
 `lentNestedDispatchIdentity`, `lentArgumentOutlivesItsReceiver`, `lentEngineFreeIsFreedInstance`,

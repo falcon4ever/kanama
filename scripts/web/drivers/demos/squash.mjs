@@ -34,7 +34,7 @@
 //   no-chase  -> mob-drop choreography skipped: mobSquashScoredOnHud false
 //   no-death  -> death steer skipped (player stays pinned aloft): playerFreedOnMobContact false
 
-import { callSmokeMethod } from "../envelope.mjs";
+import { callSmokeMethod, collecting } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -424,7 +424,7 @@ export async function runSquash({ url, evaluate, navigate, deadline, exportDir }
   let settled = atPeak;
   const teardownDeadline = Math.min(deadline, Date.now() + 8_000);
   while (Date.now() < teardownDeadline) {
-    const snap = await snapshot(evaluate);
+    const snap = await snapshot(collecting(evaluate));
     if (snap) {
       mergeSnap(state, snap);
       settled = snap;
