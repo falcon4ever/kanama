@@ -1,4 +1,4 @@
-import { callScriptMethod, callSmokeMethod, resolveMethodId } from "../envelope.mjs";
+import { callScriptMethod, callSmokeMethod, resolveMethodId, collecting } from "../envelope.mjs";
 // demos/web3d.mjs -- 3D render-foundation smoke: observe + teardown assertions.
 //
 // The web3d scene auto-runs: Main._ready applies the platformer's Compatibility-renderer
@@ -37,6 +37,7 @@ async function snapshot(evaluate) {
         continuations: bridge.frameSchedulerContinuations ?? 0,
         appliedCommands: bridge.appliedCommands,
         liveHandles: bridge.liveBrowserHandleCount,
+        rcPinned: bridge.rcPinned ?? 0,
         maxLiveHandles: bridge.maxLiveBrowserHandles,
         crossings: bridge.kotlinToGodotCalls,
         callbackErrors: bridge.callbackErrors,
@@ -469,8 +470,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   // Batch of two (Main.freed_batch_probe): a setter on the freed node, then a command on a live one,
   // in one batch. The freed one is skipped and reported; the live command must still apply, and a
   // live `queueFree` after the skip must release its bridge slot (live handles back to where they
-  // were).
-  const liveBeforeBatch = (await snapshot(evaluate))?.liveHandles;
+  // were; the RefCounted ones are left out, a collection of their wrappers may release some meanwhile).
+  const nonRefCounted = (snap) => (snap ? snap.liveHandles - snap.rcPinned : undefined);
+  const liveBeforeBatch = nonRefCounted(await snapshot(evaluate));
   await evaluate(
     `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("freed_batch_probe")}, 0)`,
   );
@@ -484,7 +486,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     await delay(150);
     freedBatchAfter = await readFreedBatchAfter();
   }
-  const liveAfterBatch = (await snapshot(evaluate))?.liveHandles;
+  const liveAfterBatch = nonRefCounted(await snapshot(evaluate));
   trace(`freedBatchAfter: ${freedBatchAfter} liveHandles ${liveBeforeBatch} -> ${liveAfterBatch}`);
   // The web bundle (task 129 E, task 138 items 2, 20, 22; see Main.bundle_probe): two lambdas on
   // one signal, the signal queries, GodotCallable, Map/List/Array/Dictionary on the builtin and
@@ -512,7 +514,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   trace(`bundle: probe=${bundleProbe} values=${bundleValues} after=${bundleAfter}`);
   // The objects a dispatch lends Kotlin (see LentProbe): stored arguments stay valid, are one value
   // per object, fail as freed instances once the engine frees them, stay bounded, and a RefCounted
-  // only Kotlin keeps lives for the dispatch plus 2 frames. The rows run over ~25 frames.
+  // Kotlin keeps lives until close() (or its wrappers are collected). The rows run over ~25 frames.
   const callMain = (name, value = 0) =>
     evaluate(
       `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId(name)}, ${value})`,
@@ -531,6 +533,22 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   for (let index = 0; index < 4; index += 1) lentCost.push(await callMain("lent_cost", index));
   trace(`lent: done=${lentDone} maskA=${lentA} maskB=${lentB} maskC=${lentC} cost=${lentCost.join(",")}`);
   trace(`lent notes: ${await evaluate("String(globalThis.KanamaWebLentNotes ?? '')")}`);
+  // The RefCounted-ownership rows (see OwnProbe): a RefCounted held only by Kotlin lives while a
+  // wrapper of it is reachable, until close(); released once the browser collects the wrappers. The
+  // rows run over up to ~750 frames (O2/O6 wait for a collection: gc() on Chrome, allocation on
+  // Firefox).
+  await callMain("own_probe");
+  let ownDone = await callMain("own_probe_done");
+  const ownDeadline = Math.min(deadline, Date.now() + 60_000);
+  while (ownDone !== 1 && Date.now() < ownDeadline) {
+    await delay(150);
+    ownDone = await callMain("own_probe_done");
+  }
+  const ownMask = await callMain("own_mask");
+  const ownCost = [];
+  for (let index = 0; index < 5; index += 1) ownCost.push(await callMain("own_cost", index));
+  trace(`own: done=${ownDone} mask=${ownMask} cost=${ownCost.join(",")}`);
+  trace(`own notes: ${await evaluate("String(globalThis.KanamaWebOwnNotes ?? '')")}`);
   const readLeakAfter = () =>
     evaluate(
       `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("leak_probe_after")}, 0)`,
@@ -623,7 +641,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
 
   trace("smoke_teardown");
   await callSmokeMethod(evaluate, exportDir, "web3d.SmokeQuit", "smoke_teardown");
-  const teardown = await observe(evaluate, peak, 6_000, deadline, (snap) => snap.liveHandles === 0);
+  const teardown = await observe(collecting(evaluate), peak, 6_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} errs=${settled.callbackErrors}`);
 
@@ -732,8 +750,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     lentHandlesBounded: (lentB & 112) === 112,
     // L7: a RefCounted only Kotlin keeps answers during the dispatch and the next 2 frames...
     lentRefCountedGracePeriod: (lentB & 128) === 128,
-    // ...then it is freed (a use throws the freed-instance error); one Godot holds stays valid
-    // until Godot drops it; one the handler resolved to an owned reference stays valid.
+    // ...and after them: no frame count expires it, close() does (gone a frame later); one Godot
+    // also held stays valid once Godot drops it; one the handler also resolved stays valid.
     lentRefCountedExpiry: (lentB & 34560) === 34560,
     // L8: a Node3D argument's `position` reads the node's current value.
     lentNodeSnapshotReads: (lentB & 6144) === 6144,
@@ -745,12 +763,13 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // L12: a use of a handle freed more than the 4096 remembered frees ago still throws an
     // IllegalStateException (typed and through call), not a bridge error.
     lentLongFreedHandleIsIllegalState: (lentC & 2) === 2,
-    // L13: a new dispatch of a RefCounted renews its 2 frames.
+    // L13: a RefCounted Kotlin keeps, handed over twice, is one value and lives 8 frames on (no
+    // renewal needed: the wrappers hold it); close() on both releases it.
     lentRefCountedGraceRenewed: (lentC & 4) === 4,
     // L14: 256 nodes handed over then freed at once drain within K + 3 frames (32 checked a frame,
     // K = ceil(lent / 32)).
     lentBurstDrains: (lentC & 8) === 8,
-    // L15: freed objects are released and RefCounted demoted while the tree is paused.
+    // L15: freed objects are released while the tree is paused; a RefCounted Kotlin keeps stays.
     lentSweepRunsWhilePaused: (lentC & 16) === 16,
     // L16: a handle a script created and a dispatch takes over refreshes its snapshot (a Sprite2D's
     // position reads the moved value) and is the created value.
@@ -764,6 +783,26 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // L19: a takeover (not a mint) of a handle a script created connects the sweep when nothing
     // else does: the tree is paused, and the freed node's handle is released while paused.
     lentTakeoverConnectsSweep: (lentC & 256) === 256,
+    // O1: a RefCounted only Kotlin keeps (a signal argument on either arm, an input event) still
+    // answers 2, 30 and 120 frames after its dispatch, and the object lives.
+    rcHeldByKotlinOutlives: ownDone === 1 && (ownMask & 7) === 7,
+    // O2: once Kotlin drops them and the browser collects, the objects are gone and their handles
+    // released (lent handles and pinned RefCounted back to the baseline, rcReleasedByGc counted).
+    rcReleasedWhenCollected: (ownMask & 8) === 8,
+    // O3: close() on a RefCounted's one wrapper releases it at once; another wrapper of the same
+    // object stays valid; a use of the closed wrapper throws "RefCounted handle is closed".
+    rcCloseReleasesNow: (ownMask & 112) === 112,
+    // O3b: `ButtonGroup.create().use { button.buttonGroup = it }`: the queued set reaches the engine
+    // before the close releases the handle, so the button keeps the group (desktop's order).
+    rcCloseAfterQueuedSet: (ownMask & 1024) === 1024,
+    // O5: a RefCounted argument a script stored outlives that script.
+    rcOutlivesItsReceiver: (ownMask & 128) === 128,
+    // O6: a resource a script loaded into a companion outlives the script, and is released once
+    // dropped and collected.
+    rcResultOutlivesItsScript: (ownMask & 768) === 768,
+    // O10: handing over an already-seen InputEvent costs at most one JS call (the wrapper's
+    // registration); a plain Node still none.
+    rcDispatchCost: ownCost[0] >= 0 && ownCost[0] <= 1010 && ownCost[1] >= 0 && ownCost[1] <= 10,
     // L10: handing over an already-seen object costs no GDScript->JS call for a plain Node and one
     // (its transform snapshot) for a Node3D; the old lending cost two for every dispatch.
     lentDispatchCost: lentCost[0] <= 10 && lentCost[1] <= 1010,
@@ -961,6 +1000,14 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
       lentCallsPer1000Node3D: Math.max(0, lentCost[1]),
       lentMicrosPer1000PlainNode: Math.max(0, lentCost[2]),
       lentMicrosPer1000Node3D: Math.max(0, lentCost[3]),
+      // O10: the lending's GDScript->JS calls plus wrapper registrations, and microseconds, per 1000
+      // dispatches of a seen InputEvent and plain Node.
+      ownCallsPer1000InputEvent: Math.max(0, ownCost[0]),
+      ownCallsPer1000PlainNode: Math.max(0, ownCost[1]),
+      ownMicrosPer1000InputEvent: Math.max(0, ownCost[2]),
+      ownMicrosPer1000PlainNode: Math.max(0, ownCost[3]),
+      // O2: the frames until the browser collected the dropped wrappers (gc() on Chrome).
+      ownCollectFrames: Math.max(0, ownCost[4]),
       genericVsTypedRatioX100:
         generic.typedMs > 0 ? Math.max(0, Math.round((generic.genericMs / generic.typedMs) * 100)) : 0,
     },

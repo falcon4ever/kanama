@@ -8,7 +8,7 @@ import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class Mesh(godotObject: GodotHandle) : Resource(godotObject), AutoCloseable {
+class Mesh(godotObject: GodotHandle) : Resource(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun surfaceGetMaterial(surfIdx: Int): Material? =
     GodotBackendCalls.invokeLongRetHandle(
@@ -24,11 +24,6 @@ class Mesh(godotObject: GodotHandle) : Resource(godotObject), AutoCloseable {
       surfIdx.toLong(),
       material?.requireOpenHandle(),
     )
-  }
-
-  /** Releases the owned handle (already-released is an error). */
-  override fun close() {
-    releaseWebTrackedObject(handle.value)
   }
 
   value class PrimitiveType(override val value: Long) : GodotEnumValue {

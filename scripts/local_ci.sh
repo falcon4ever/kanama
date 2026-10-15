@@ -791,6 +791,12 @@ if [[ $skip_web -eq 0 ]]; then
     stage "web bridge simulated-clock self-test"
     node "$ROOT_DIR/scripts/web/bridge_simtime_selftest.mjs"
 
+    # The bridge's RefCounted holds where no browser run reaches them: without a working
+    # FinalizationRegistry a snapshot hold or a dropped temporary releases nothing, and the lent cap
+    # evicts the least recently wrapped lend.
+    stage "web bridge RefCounted-hold self-test"
+    node "$ROOT_DIR/scripts/web/bridge_rc_ownership_selftest.mjs"
+
     # The dodge driver's round restarts are a budget: a build that kills the player on the first mob of every
     # round must fail instead of passing on the mobs spawned across the restarts (tooling bundle fix round 2).
     stage "web dodge restart-budget self-test"

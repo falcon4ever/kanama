@@ -20,6 +20,18 @@ import kotlin.js.JsException
 internal fun jsReportScriptError(text: String): Unit =
   js("globalThis.KanamaWebBridge.reportScriptError(text)")
 
+/**
+ * Releases a browser handle the caller owns outright, now (the generic tier's minted results): the
+ * bridge erases its dictionary entry and retires the slot, and Kotlin's registration goes with it.
+ * 1 when the handle was live.
+ */
+internal fun releaseWebHandleNow(handle: Int): Int =
+  js("globalThis.KanamaWebBridge.releaseHandleNow(handle)")
+
+/** A hold on a RefCounted handle that is not a wrapper ([delta] +1 / -1): a texture snapshot. */
+internal fun jsHoldRefCounted(handle: Int, delta: Int): Int =
+  js("globalThis.KanamaWebBridge.holdRefCounted(handle, delta)")
+
 internal fun immediateWebChildCount(objectId: Int, includeInternal: Boolean): Int =
   js("globalThis.KanamaWebBridge.immediateChildCount(objectId, includeInternal)")
 

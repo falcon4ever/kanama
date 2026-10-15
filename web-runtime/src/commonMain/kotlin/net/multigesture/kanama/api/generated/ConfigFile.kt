@@ -9,7 +9,7 @@ import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.web.WebPackedFloats
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class ConfigFile(godotObject: GodotHandle) : RefCounted(godotObject), AutoCloseable {
+class ConfigFile(godotObject: GodotHandle) : RefCounted(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun load(path: String): GodotError =
     GodotBackendCalls.invokeStringNameRetLong(
@@ -61,11 +61,6 @@ class ConfigFile(godotObject: GodotHandle) : RefCounted(godotObject), AutoClosea
       tagged.startsWith("s:") -> body
       else -> null
     }
-  }
-
-  /** Releases the owned handle (already-released is an error). */
-  override fun close() {
-    releaseWebConstructedObject(handle.value)
   }
 
   companion object {

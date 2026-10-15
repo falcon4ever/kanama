@@ -7,9 +7,8 @@ import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsExport
 import net.multigesture.kanama.api.GodotEnumValue
 import net.multigesture.kanama.api.GodotObject
-import net.multigesture.kanama.api.releaseWebConstructedObject
-import net.multigesture.kanama.api.releaseWebResource
-import net.multigesture.kanama.api.releaseWebTrackedObject
+import net.multigesture.kanama.api.openToken
+import net.multigesture.kanama.api.webWrap
 
 /**
  * Task 76: "call any Godot method by name" fallback for the Web backend.
@@ -43,7 +42,7 @@ object WebExperimentalGenericCall {
    * the next flush, in order with the queued typed mutations around it.
    */
   fun queueVoidCall(target: GodotObject, method: String, args: List<Any?> = emptyList()) {
-    commands.appendGenericVoidCall(target.handle.value, method, encodeArgs(args))
+    commands.appendGenericVoidCall(target.openToken(), method, encodeArgs(args))
   }
 
   /**
@@ -59,7 +58,7 @@ object WebExperimentalGenericCall {
     // The typed calls' liveness check (freed first, then stale), made in Kotlin before crossing:
     // a handle the bridge no longer owns is a script error here, and one the two sides disagree
     // about stays the bridge's fatal "No Kanama Web proxy owns handle".
-    requireLiveWebHandle(target.handle.value)
+    requireLiveWebHandle(target.openToken())
     commands.flush()
     val packed = buildString {
       append(method)
@@ -107,7 +106,7 @@ object WebExperimentalGenericCall {
       is Double -> "d:${WebPackedFloats.encode(arg)}"
       is Float -> "d:${WebPackedFloats.encode(arg.toDouble())}"
       is String -> "s:${escapeStringPayload(arg)}"
-      is GodotObject -> "h:${arg.handle.value}"
+      is GodotObject -> "h:${arg.openToken()}"
       // Task 128: a typed Godot enum / bitfield crosses as the INT it stands for.
       is GodotEnumValue -> encodeArg(arg.value)
       // Task 134 D1: a value type or NodePath as a Variant (`v:<Variant.Type>:<payload>`).
@@ -180,7 +179,7 @@ class WebGenericCallResult internal constructor(val tag: String, val payload: Li
       "v2",
       "v3" -> asValue()
       "v" -> WebPackedValues.decodeVariant(payload[0])
-      "o" -> GodotObject(WebObjectId(asObjectHandle()))
+      "o" -> webWrap(WebObjectId(asObjectHandle()))
       else ->
         error(
           "Generic call returned a ${payload.firstOrNull() ?: tag}, which Kanama Web does not carry"
@@ -205,20 +204,18 @@ class WebGenericCallResult internal constructor(val tag: String, val payload: Li
     get() = objectKind == "node" || objectKind == "resource" || objectKind == "object"
 
   /**
-   * Releases a MINTED handle through its kind-specific release path (task-61 "close what you
-   * create"): the proxy erases its dictionary reference and the browser slot retires. Handles that
-   * resolved to `script`/`tracked` are not owned by this caller and refuse to close.
+   * Releases a MINTED handle now (task-61 "close what you create"), whatever else holds it: the
+   * proxy erases its dictionary reference and the browser slot retires. Handles that resolved to
+   * `script`/`tracked` are not owned by this caller and refuse to close.
    */
   fun close() {
+    check(isMintedHandle) {
+      "Generic call handle kind '$objectKind' is not owned by this caller (only minted handles close)"
+    }
     val handle = asObjectHandle()
-    when (objectKind) {
-      "node" -> releaseWebConstructedObject(handle)
-      "resource" -> releaseWebResource(handle)
-      "object" -> releaseWebTrackedObject(handle)
-      else ->
-        error(
-          "Generic call handle kind '$objectKind' is not owned by this caller (only minted handles close)"
-        )
+    flushWebCommandsBeforeRelease()
+    check(releaseWebHandleNow(handle) == 1) {
+      "Unknown or already released Kanama Web handle=$handle"
     }
   }
 

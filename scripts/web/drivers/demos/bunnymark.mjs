@@ -84,7 +84,7 @@ export async function runBunnymark({ url, evaluate, navigate, deadline }) {
   await evaluate(`globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.firstHandle, globalThis.KanamaWebBridge.bunnymarkMethodId("finish")); true`);
   await delay(750);
   const finished = await snapshot(evaluate);
-  trace(`finished: live=${finished.liveBrowserHandles} frees=${finished.objectFrees} signal=${finished.signalEmits}`);
+  trace(`finished: live=${finished.liveBrowserHandles} frees=${finished.objectFrees} signal=${finished.signalEmits} resourceReleases=${finished.resourceReleases}`);
 
   const protocolVersion = Number(await evaluate("globalThis.KanamaWebBridge.results.protocolVersion"));
   const processDelta = running.processCalls - windowStart.processCalls;
@@ -115,8 +115,12 @@ export async function runBunnymark({ url, evaluate, navigate, deadline }) {
       finished.signalEmits === 1 &&
       finished.lastSignalName === "benchmark_finished" &&
       finished.lastSignalValue === BUNNY_COUNT,
+    // The texture's handle goes once nothing holds it: the script's close(), or (protocol 37) the
+    // sprites' texture snapshots, which hold it past that close() until the sprites go, so it may
+    // be released with the script instead of by the close(). Either way exactly once, and nothing
+    // is left.
     deterministicTeardown:
-      finished.resourceReleases === 1 &&
+      finished.resourceReleases <= 1 &&
       finished.objectFrees === BUNNY_COUNT + 1 &&
       finished.liveBrowserHandles === 0,
   };

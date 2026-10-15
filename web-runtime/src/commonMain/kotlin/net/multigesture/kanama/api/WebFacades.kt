@@ -647,8 +647,8 @@ object DisplayServer {
  * Threaded-load store behind `ResourceLoader.loadThreadedRequest` / `loadThreadedGetStatus…` /
  * `loadThreadedGet…` (generated members since task 64 parcel 8). The Web export is a `nothreads`
  * build, so a background load would never make progress: the request loads synchronously and
- * every later poll reports LOADED. The demo's loading screen still runs its normal status /
- * progress path, it just completes on the first poll.
+ * every later poll reports LOADED until `loadThreadedGet` takes the scene (as Godot, the store keeps
+ * it no longer: INVALID_RESOURCE after). The loading screen just completes on the first poll.
  */
 internal object ThreadedLoad {
   private val loaded = mutableMapOf<String, PackedScene?>()
@@ -659,10 +659,10 @@ internal object ThreadedLoad {
 
   fun status(path: String): ResourceLoader.ThreadLoadStatus =
     when {
-      !loaded.containsKey(path) -> ResourceLoader.ThreadLoadStatus.IN_PROGRESS
+      !loaded.containsKey(path) -> ResourceLoader.ThreadLoadStatus.INVALID_RESOURCE
       loaded[path] == null -> ResourceLoader.ThreadLoadStatus.FAILED
       else -> ResourceLoader.ThreadLoadStatus.LOADED
     }
 
-  fun take(path: String): PackedScene? = loaded[path]
+  fun take(path: String): PackedScene? = loaded.remove(path)
 }

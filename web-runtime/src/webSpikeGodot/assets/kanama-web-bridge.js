@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 36;
+  const KANAMA_WEB_PROTOCOL_VERSION = 37;
   // Prefix of a contained script error's message (Main.kt WEB_SCRIPT_ERROR_MARKER).
   const SCRIPT_ERROR_MARKER = "Kanama Web script error (contained):";
   // Added after the marker when Godot's error log could not be reached (Main.kt
@@ -23,6 +23,14 @@
   // Task 138 item 32: how many engine-freed lent handles the bridge (and Kotlin) remember, so a later
   // use of one reads as a freed instance. Bounded: one int each.
   const FREED_HANDLES_REMEMBERED = 4096;
+  // A RefCounted handle Kotlin holds lives while a Kotlin wrapper of it is reachable, or until
+  // close() (desktop's rule). A lent one (a dispatch's argument) a handler never wrapped is held
+  // for its dispatch plus these engine frames, the floor for an argument nobody materialized.
+  const LENT_GRACE_FRAMES = 2;
+  // At most this many lent RefCounted handles stay pinned past their grace: above it the drain
+  // releases the oldest lends first. Kanama's own bound (C# has none): Firefox collects only under
+  // allocation pressure, so a quiet scene with mouse motion would otherwise pin every event.
+  const RC_LENT_CAP = 4096;
   // Task 134 D1: the proxy's object-query arm that runs one builtin (value-type) method.
   const KANAMA_WEB_OPCODE_BUILTIN_CALL = 1003;
 
@@ -300,19 +308,38 @@
     liveBrowserHandleCount: 0,
     maxLiveBrowserHandles: 0,
     // The handles lent to Kotlin for a dispatch's object arguments (a signal argument, `_input`'s
-    // event, a method's object argument), held for the object's lifetime (task 138 item 32):
-    // minted, taken over from a lookup, released (all), released because the engine freed the
-    // object (swept), handed to a script as an owned result, live now and at most, and the
+    // event, a method's object argument), held for the object's lifetime (task 138 item 32; a
+    // RefCounted one while Kotlin wraps it): minted, taken over from a lookup, released (all),
+    // released because the engine freed the object (swept), live now and at most, and the
     // GDScript->JS calls the lending made (the dispatch-cost measure; the dispatch itself is not
     // counted). Every driver's performance section reports them.
     lentMints: 0,
     lentAdopts: 0,
     lentReleases: 0,
     lentSwept: 0,
-    lentOwned: 0,
     liveLent: 0,
     maxLiveLent: 0,
     lendBridgeCalls: 0,
+    // RefCounted handles held by Kotlin wrappers (registerWrapper): live now and at most, released
+    // because the browser collected their last wrapper, by close(), because a lent one nobody
+    // wrapped passed its grace, or by the lent cap; wrapper registrations; and whether the
+    // browser's FinalizationRegistry accepted a Kotlin/Wasm object (null until the first try).
+    rcPinned: 0,
+    maxRcPinned: 0,
+    rcReleasedByGc: 0,
+    rcReleasedByClose: 0,
+    rcReleasedByGrace: 0,
+    rcReleasedByCap: 0,
+    wrapperRegistrations: 0,
+    wrapperRegistryWorks: null,
+    wrapperRegistry: null,
+    // Handles whose last wrapper went (collected, or never made for a lent one): the drain at the
+    // next engine frame releases them. Lent RefCounted still pinned, oldest lend first (the cap).
+    pendingUnheld: new Set(),
+    lentRefCountedByAge: new Set(),
+    // Engine frames the drain has seen (the frame scheduler's pump; a lend's grace counts them).
+    ownershipFrame: 0,
+    lastDrainRafTick: -1,
     // The handles whose object the engine freed (the sweep released them), most recent last: a
     // later use of one is the freed-instance error, not "no proxy owns handle". A handle carries
     // its slot's generation, so a reused slot's new handle never matches. Capped (the oldest goes):
@@ -785,6 +812,10 @@
       this.pumpDispatchedHandles.clear();
       this.pumpDispatchedHandles.add(handle);
       this.frameSchedulerPumps += 1;
+      // Once per engine frame, inside a Godot callback (this runs from a proxy's `_process`): the
+      // RefCounted handles whose last wrapper went are released here, as desktop's OwnedReleases
+      // drains the GC's cleanups on the next frame.
+      this.drainUnheldHandles();
       const executed = this.invoke(
         0,
         "frame_scheduler",
@@ -1445,6 +1476,10 @@
       slot.lent = false;
       slot.snapshots = false;
       slot.freeQueued = false;
+      slot.refCounted = false;
+      slot.wrappers = 0;
+      slot.lendFrame = 0;
+      slot.collected = false;
       const handle = BROWSER_HANDLE_NAMESPACE | (slot.generation << 16) | slotIndex;
       this.freedHandles.delete(handle);
       this.handleOwners.set(handle, owner);
@@ -1455,12 +1490,13 @@
     /**
      * Task 138 item 32: a dispatch hands Kotlin an object argument (`_kanama_lend` in the proxy).
      * One call per lend at most: `handle` 0 mints a slot for the object's lifetime (flags 1: a Node,
-     * adopted as NODE so its snapshot and `queueFree` work, otherwise OBJECT); flags 2 takes over
-     * a handle a lookup or a result already tracks (its holders no longer matter); flags 4 / 8
-     * refresh a Node2D-or-Control / Node3D snapshot from the nine values. A lent handle is
-     * released when the engine frees its object (releaseFreedHandles), never when the dispatch
-     * returns; its owner is only the proxy its calls route through (releaseBrowserHandlesOwnedBy
-     * re-routes it).
+     * adopted as NODE so its snapshot and `queueFree` work, otherwise OBJECT; flags 16: a
+     * RefCounted, held by Kotlin wrappers from now on and released LENT_GRACE_FRAMES after the
+     * lend if none was made); flags 2 takes over a handle a lookup or a result already tracks (its
+     * holders no longer matter); flags 4 / 8 refresh a Node2D-or-Control / Node3D snapshot from
+     * the nine values. A lent Node or Object handle is released when the engine frees its object
+     * (releaseFreedHandles), never when the dispatch returns; its owner is only the proxy its calls
+     * route through (releaseBrowserHandlesOwnedBy re-routes it).
      */
     lendHandle(owner, handle, flags, a0, a1, a2, a3, a4, a5, a6, a7, a8) {
       this.lendBridgeCalls += 1;
@@ -1469,7 +1505,16 @@
         handle = this.allocateBrowserHandle(node ? "Node" : "Object", owner);
         if (node) this.api.kanamaWebAdoptNodeHandle(handle);
         else this.api.kanamaWebAdoptObjectHandle(handle);
-        this.countLent(handle, this.browserHandleSlot(handle));
+        const slot = this.browserHandleSlot(handle);
+        this.countLent(handle, slot);
+        if ((flags & 16) !== 0) {
+          // No wrapper holds it yet: unless the handler makes one, the drain releases it once its
+          // grace is over. Oldest lends first, for the cap.
+          this.markRefCounted(handle);
+          slot.lendFrame = this.ownershipFrame;
+          this.pendingUnheld.add(handle);
+          this.lentRefCountedByAge.add(handle);
+        }
         this.lentMints += 1;
       } else if ((flags & 2) !== 0) {
         const slot = this.browserHandleSlot(handle);
@@ -1506,17 +1551,220 @@
       this.liveLent -= 1;
     },
     /**
-     * A call's result named a lent RefCounted: like any object result it is owned by the calling
-     * script from now on (released with it), no longer by the object's lifetime.
+     * A browser handle names a RefCounted (the proxy's `_kanama_track` says so, or a lend's flag
+     * 16): from now on it lives while a Kotlin wrapper of it is reachable, or until that wrapper's
+     * close(), not with the script that made it (desktop's rule). Kotlin keeps the same mark, so
+     * the wrappers it builds for the handle register (registerWrapper).
      */
-    ownLentHandle(handle, owner) {
+    markRefCounted(handle) {
       const slot = this.browserHandleSlot(handle);
-      if (!slot?.lent) return;
-      slot.lent = false;
-      this.api.kanamaWebSetLentHandle(handle, 0);
-      this.liveLent -= 1;
-      this.lentOwned += 1;
-      this.handleOwners.set(handle, owner);
+      if (!slot || slot.refCounted) return 0;
+      slot.refCounted = true;
+      slot.wrappers = 0;
+      this.forgetSharedHandle(handle);
+      this.rcPinned += 1;
+      this.maxRcPinned = Math.max(this.maxRcPinned, this.rcPinned);
+      this.api.kanamaWebMarkRefCountedHandle(handle);
+      return 1;
+    },
+    /**
+     * The one FinalizationRegistry every RefCounted wrapper registers with, or null when this
+     * browser refuses a Kotlin/Wasm object as a target (then a RefCounted only Kotlin keeps is
+     * released when its grace ends or its script goes, the protocol-36 limit, and one warning
+     * says so).
+     */
+    wrapperRegistryOrNull() {
+      if (this.wrapperRegistryWorks === false) return null;
+      if (this.wrapperRegistry === null) {
+        if (typeof FinalizationRegistry !== "function") {
+          this.disableWrapperRegistry("FinalizationRegistry is missing");
+          return null;
+        }
+        this.wrapperRegistry = new FinalizationRegistry((handle) => this.onWrapperFinalized(handle));
+      }
+      return this.wrapperRegistry;
+    },
+    disableWrapperRegistry(reason) {
+      if (this.wrapperRegistryWorks === false) return;
+      this.wrapperRegistryWorks = false;
+      console.warn(
+        `Kanama Web: this browser cannot watch Kotlin wrappers (${reason}); a RefCounted only ` +
+          "Kotlin keeps is released when its script goes, a dispatch argument 2 frames after it",
+      );
+    },
+    /**
+     * Kotlin built a wrapper of `handle` (the `GodotObject` root's init): while `ref` is reachable
+     * the handle stays. 1 when it now counts as a hold; 0 for a handle that is not a RefCounted
+     * (nodes and plain objects live as long as their object) or without a working registry.
+     */
+    registerWrapper(ref, handle) {
+      const slot = this.browserHandleSlot(handle);
+      if (!slot?.refCounted) return 0;
+      const registry = this.wrapperRegistryOrNull();
+      if (!registry) return 0;
+      try {
+        registry.register(ref, handle, ref);
+      } catch (error) {
+        this.disableWrapperRegistry(String(error?.message ?? error));
+        return 0;
+      }
+      this.wrapperRegistryWorks = true;
+      slot.wrappers += 1;
+      this.wrapperRegistrations += 1;
+      // A lent one Kotlin wraps again is in use: the cap evicts the least recently wrapped first.
+      if (slot.lent && this.lentRefCountedByAge.delete(handle)) this.lentRefCountedByAge.add(handle);
+      return 1;
+    },
+    /**
+     * The browser collected a wrapper of `handle` (a FinalizationRegistry callback: between tasks,
+     * outside any Godot callback, so bookkeeping only). The handle's generation makes a slot reused
+     * since a miss. The last one queues the handle for the next frame's drain.
+     */
+    onWrapperFinalized(handle) {
+      const slot = this.browserHandleSlot(handle);
+      if (!slot?.refCounted || slot.wrappers <= 0) return;
+      slot.wrappers -= 1;
+      if (slot.wrappers === 0) {
+        slot.collected = true;
+        this.pendingUnheld.add(handle);
+      }
+    },
+    /**
+     * Kotlin's `close()` on one wrapper: that wrapper's hold ends now; the last hold's end releases
+     * the handle at once (deterministic, as desktop's close() unreferences). Another wrapper of the
+     * same object keeps it. A handle that is not a RefCounted one (a tween, which lives until it
+     * finishes) is left alone. 1 when the handle was live.
+     */
+    closeWrapper(ref, handle) {
+      const slot = this.browserHandleSlot(handle);
+      if (!slot) return 0;
+      if (!slot.refCounted) return 1;
+      if (this.wrapperRegistry?.unregister(ref) && slot.wrappers > 0) slot.wrappers -= 1;
+      if (slot.wrappers > 0) return 1;
+      this.rcReleasedByClose += 1;
+      this.releaseHeldHandle(handle, slot);
+      return 1;
+    },
+    /**
+     * A temporary wrapper another one replaced (Kotlin's `webRetyped`: a load's `Resource` becoming
+     * a `Texture2D`): its hold ends, never releasing at once; the last hold's end goes to the drain.
+     * Without a working registry no wrapper is counted, so `wrappers` says nothing about the ones
+     * Kotlin still uses: nothing to end (the handle goes with its script, the fallback's rule).
+     */
+    dropWrapper(ref, handle) {
+      if (this.wrapperRegistryWorks === false) return 0;
+      const slot = this.browserHandleSlot(handle);
+      if (!slot?.refCounted) return 0;
+      if (this.wrapperRegistry?.unregister(ref) && slot.wrappers > 0) {
+        slot.wrappers -= 1;
+        if (slot.wrappers === 0) {
+          slot.collected = true;
+          this.pendingUnheld.add(handle);
+        }
+      }
+      return 1;
+    },
+    /**
+     * A hold that is not a wrapper (`delta` +1 / -1): Kotlin's Sprite2D texture snapshot names the
+     * texture's handle, so the handle stays while a snapshot names it. Not without a working
+     * registry: the wrappers Kotlin still uses are not counted there, so the snapshot's -1 would
+     * release a handle a wrapper still names (`sprite.texture = a; sprite.texture = b` would drop
+     * `a`); the handle goes with its script instead (the fallback's rule).
+     */
+    holdRefCounted(handle, delta) {
+      if (this.wrapperRegistryWorks === false) return 0;
+      const slot = this.browserHandleSlot(handle);
+      if (!slot?.refCounted) return 0;
+      slot.wrappers = Math.max(0, slot.wrappers + delta);
+      if (slot.wrappers === 0) {
+        slot.collected = true;
+        this.pendingUnheld.add(handle);
+      }
+      return 1;
+    },
+    /**
+     * Once per engine frame (inside a Godot callback): release every
+     * RefCounted handle whose last hold went (a lent one only once its grace is over), then, above
+     * RC_LENT_CAP pinned lends, the oldest lends. A capped one Kotlin still holds is released as
+     * freed: its later use is the freed-instance error.
+     */
+    drainUnheldHandles() {
+      // Two callers, once per engine frame between them: the pump, and the SceneTree.process_frame
+      // hook (KanamaWebHandles.drain_frame) that runs when no proxy processes (only scripted
+      // resources left after a teardown).
+      if (this.rafTick === this.lastDrainRafTick) return;
+      this.lastDrainRafTick = this.rafTick;
+      this.ownershipFrame += 1;
+      if (this.pendingUnheld.size > 0) {
+        for (const handle of [...this.pendingUnheld]) {
+          const slot = this.browserHandleSlot(handle);
+          if (!slot?.refCounted || slot.wrappers > 0) {
+            this.pendingUnheld.delete(handle);
+            continue;
+          }
+          if (slot.lent && this.ownershipFrame - slot.lendFrame <= LENT_GRACE_FRAMES) continue;
+          this.pendingUnheld.delete(handle);
+          if (slot.collected) this.rcReleasedByGc += 1;
+          else this.rcReleasedByGrace += 1;
+          this.releaseHeldHandle(handle, slot);
+        }
+      }
+      if (this.lentRefCountedByAge.size > RC_LENT_CAP) {
+        for (const handle of [...this.lentRefCountedByAge]) {
+          if (this.lentRefCountedByAge.size <= RC_LENT_CAP) break;
+          const slot = this.browserHandleSlot(handle);
+          if (!slot) {
+            this.lentRefCountedByAge.delete(handle);
+            continue;
+          }
+          if (this.ownershipFrame - slot.lendFrame <= LENT_GRACE_FRAMES) break;
+          this.rcReleasedByCap += 1;
+          this.releaseHeldHandle(handle, slot, slot.wrappers > 0);
+        }
+      }
+    },
+    /**
+     * Releases one handle nobody holds any more (the drain, close()): erase the proxies' dictionary
+     * entry through any installed proxy, drop the per-kind state, tell Kotlin, retire the slot.
+     * `freed`: Kotlin may still hold it (the lent cap), so its use reads as a freed instance.
+     */
+    releaseHeldHandle(handle, slot, freed = false) {
+      const owner = this.handleOwners.get(handle);
+      if (slot.kind === "Resource") {
+        // A release by its holders (not a teardown sweep): counted as a resource release.
+        this.resourceReleases += 1;
+        if (this.resourcePathByHandle.get(handle)?.typeHint === "AudioStream") {
+          this.match3AudioResourceReleases += 1;
+        }
+      }
+      this.forgetHandleKindState(handle, slot, owner, slot.freeQueued === true);
+      this.tweenChildren.delete(handle);
+      const via = this.resourceReleaseCallbacks.has(owner) ? owner : this.lentRouteOtherThan(0);
+      this.eraseObjectHandleEntry(handle, via);
+      if (freed) {
+        this.api.kanamaWebDiscardFreedHandle(handle);
+        this.rememberFreed(handle);
+      } else {
+        this.api.kanamaWebDiscardBrowserHandle(handle);
+      }
+      this.retireBrowserSlot(handle, slot);
+    },
+    /**
+     * The generic tier's minted results (`WebGenericCallResult.close`): the caller owns the handle
+     * outright and releases it now, whatever else holds it. 1 when it was live.
+     */
+    releaseHandleNow(handle) {
+      const slot = this.browserHandleSlot(handle);
+      if (!slot) return 0;
+      if (slot.refCounted) this.rcReleasedByClose += 1;
+      this.releaseHeldHandle(handle, slot);
+      return 1;
+    },
+    rememberFreed(handle) {
+      this.freedHandles.add(handle);
+      if (this.freedHandles.size > FREED_HANDLES_REMEMBERED) {
+        this.freedHandles.delete(this.freedHandles.values().next().value);
+      }
     },
     /**
      * The proxy's sweep found these lent handles' objects freed by the engine (comma-separated; it
@@ -1537,10 +1785,7 @@
         }
         this.api.kanamaWebDiscardFreedHandle(handle);
         this.retireBrowserSlot(handle, slot);
-        this.freedHandles.add(handle);
-        if (this.freedHandles.size > FREED_HANDLES_REMEMBERED) {
-          this.freedHandles.delete(this.freedHandles.values().next().value);
-        }
+        this.rememberFreed(handle);
         this.lentSwept += 1;
       }
     },
@@ -1577,6 +1822,14 @@
     /** Frees a live slot: the one place a browser handle stops being live. */
     retireBrowserSlot(handle, slot) {
       this.uncountLent(handle, slot);
+      if (slot.refCounted) {
+        slot.refCounted = false;
+        slot.wrappers = 0;
+        this.rcPinned -= 1;
+        this.pendingUnheld.delete(handle);
+        this.lentRefCountedByAge.delete(handle);
+      }
+      slot.collected = false;
       slot.live = false;
       slot.kind = null;
       this.handleOwners.delete(handle);
@@ -1587,8 +1840,9 @@
     retainSharedHandle(handle, holder) {
       // A lookup answered with an EXISTING tracked handle instead of its proposed one: `holder`
       // now holds it too. A script handle (not a browser handle) has its own lifetime, and so has
-      // a lent one (its object's: task 138 item 32).
-      if (!holder || !this.browserHandleSlot(handle) || this.browserHandleSlot(handle).lent) return;
+      // a lent one (its object's: task 138 item 32) and a RefCounted one (its wrappers' holds).
+      const slot = this.browserHandleSlot(handle);
+      if (!holder || !slot || slot.lent || slot.refCounted) return;
       let holders = this.sharedHandleOwners.get(handle);
       if (!holders) {
         const first = this.firstHolderByHandle.get(handle) ?? this.handleOwners.get(handle);
@@ -1680,9 +1934,10 @@
         const slot = this.browserHandleSlot(handle);
         if (!slot) continue;
         if (this.rerouteSharedHandle(handle, owner)) continue;
-        if (slot.lent) {
-          // Task 138 item 32: a lent handle lives with its object, so a copy another script stored
-          // stays valid: its calls route through another proxy. The last proxy releases it.
+        if (slot.refCounted ? slot.wrappers > 0 : slot.lent) {
+          // Task 138 item 32: a lent handle lives with its object, and a RefCounted one with its
+          // Kotlin wrappers, so a copy another script stored stays valid: its calls route through
+          // another proxy. The last proxy releases it. A RefCounted nobody wraps goes now.
           const route = this.lentRouteOtherThan(owner);
           if (route !== 0) {
             this.handleOwners.set(handle, route);
@@ -1858,29 +2113,6 @@
       }
       return this.immediateResourceReleaseResult;
     },
-    releaseConstructedObject(handle) {
-      // Release a ClassDB-constructed handle whose bridge kind is its class name (e.g. a
-      // constructed MeshLibrary Resource): the applier erases the dictionary reference and
-      // the slot retires under its recorded kind.
-      const slot = this.browserHandleSlot(handle);
-      if (!slot) {
-        throw new Error(`Stale Kanama Web constructed handle=${handle}`);
-      }
-      const callback = this.callbackFor(
-        this.resourceReleaseCallbacks,
-        handle,
-        "Godot constructed release",
-      );
-      this.immediateResourceReleaseResult = null;
-      callback(handle);
-      if (!Number.isInteger(this.immediateResourceReleaseResult)) {
-        throw new Error("Godot constructed release callback did not publish a result");
-      }
-      if (this.immediateResourceReleaseResult === 1) {
-        this.releaseBrowserHandle(handle, slot.kind);
-      }
-      return this.immediateResourceReleaseResult;
-    },
     allocateFoundNodeHandle(ownerHandle) {
       // Node.find_children match without a script or existing handle: mint and adopt a
       // tracked browser Node handle for the applier to register.
@@ -1893,8 +2125,9 @@
       // script-backed nor already tracked. Mint a tracked browser handle of the kind the
       // GDScript arm classified (node / resource / object), OWNED by the calling script
       // per the task-61 "close what you create" contract: released explicitly through
-      // the kind-specific release paths (releaseResource / releaseConstructedObject) or
-      // implicitly by releaseBrowserHandlesOwnedBy at the owner script's teardown.
+      // `WebGenericCallResult.close` (releaseHandleNow), by its Kotlin wrappers' end for a
+      // RefCounted (the proxy marks it), or by releaseBrowserHandlesOwnedBy at the owner
+      // script's teardown.
       if (kindTag === "node") {
         const handle = this.allocateBrowserHandle("Node", ownerHandle);
         this.api.kanamaWebAdoptNodeHandle(handle);
@@ -2023,45 +2256,6 @@
       }
       if (this.mode === "match3") this.match3Vector2iSignalEmits += 1;
       return this.immediateSignalResult;
-    },
-    releaseResource(handle) {
-      const callback = this.callbackFor(
-        this.resourceReleaseCallbacks,
-        handle,
-        "Godot resource release",
-      );
-      this.immediateResourceReleaseResult = null;
-      callback(handle);
-      if (!Number.isInteger(this.immediateResourceReleaseResult)) {
-        throw new Error("Godot resource release callback did not publish a result");
-      }
-      if (this.immediateResourceReleaseResult === 1) {
-        if (this.resourcePathByHandle.get(handle)?.typeHint === "AudioStream") {
-          this.match3AudioResourceReleases += 1;
-        }
-        this.resourcePathByHandle.delete(handle);
-        this.releaseBrowserHandle(handle, "Resource");
-      }
-      return this.immediateResourceReleaseResult;
-    },
-    releaseCollision(handle) {
-      // KinematicCollision3D records ride the same proxy release channel as resources
-      // (the applier erases the object from its handle dictionary), but the browser
-      // handle was allocated with the KinematicCollision3D kind.
-      const callback = this.callbackFor(
-        this.resourceReleaseCallbacks,
-        handle,
-        "Godot collision release",
-      );
-      this.immediateResourceReleaseResult = null;
-      callback(handle);
-      if (!Number.isInteger(this.immediateResourceReleaseResult)) {
-        throw new Error("Godot collision release callback did not publish a result");
-      }
-      if (this.immediateResourceReleaseResult === 1) {
-        this.releaseBrowserHandle(handle, "KinematicCollision3D");
-      }
-      return this.immediateResourceReleaseResult;
     },
     immediatePropertyObjectQuery(opcode, handle, name) {
       // Object-valued property/animation read: the proxy resolves the named object,
@@ -3528,10 +3722,17 @@
         lentAdopts: this.lentAdopts,
         lentReleases: this.lentReleases,
         lentSwept: this.lentSwept,
-        lentOwned: this.lentOwned,
         liveLent: this.liveLent,
         maxLiveLent: this.maxLiveLent,
         lendBridgeCalls: this.lendBridgeCalls,
+        rcPinned: this.rcPinned,
+        maxRcPinned: this.maxRcPinned,
+        rcReleasedByGc: this.rcReleasedByGc,
+        rcReleasedByClose: this.rcReleasedByClose,
+        rcReleasedByGrace: this.rcReleasedByGrace,
+        rcReleasedByCap: this.rcReleasedByCap,
+        wrapperRegistrations: this.wrapperRegistrations,
+        wrapperRegistry: this.wrapperRegistryWorks !== false,
         lastConstructedObjectHandle: this.lastConstructedObjectHandle,
         lastFreedObjectHandle: this.lastFreedObjectHandle,
         objectHandleGenerationAdvanced: this.objectHandleGenerationAdvanced,

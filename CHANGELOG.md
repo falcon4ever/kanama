@@ -142,6 +142,39 @@ survive a reload, as in GDScript. A build whose objects are still alive (a scene
 reloaded) keeps its connections. `retired-loader-check` lines gain `swept=N`. See
 [Signals: hot reload](docs/game-dev/signals.md#hot-reload).
 
+### Fixed — Web: a RefCounted lives while Kotlin holds it, and every RefCounted has `close()` (closes [#332](https://github.com/falcon4ever/kanama/issues/332))
+
+On Web, a `RefCounted` that only your Kotlin code kept did not follow desktop's rule. An argument
+(an `InputEvent`, a `Resource`) stayed valid for its call and the next 2 frames, then lived only
+while Godot held it, so `lastEvent = event` read a frame later could throw "Invalid access to
+previously freed instance"; a resource a script loaded or created (a `load()`, a `create()`, a
+call's result) was released when that script was freed, so a copy kept in a companion object or
+another script went stale; and only some classes (`Texture2D`, `KinematicCollision3D`, ...) had
+`close()`, while `RefCounted` itself was not `AutoCloseable`. Web now follows desktop: a
+`RefCounted` you keep lives while Godot or one of your Kotlin references holds it, wherever you keep
+it, and is released when the browser collects your last wrapper of it, or at once when you
+`close()` it. Every `RefCounted` is `AutoCloseable` (`use { }` works on any of them, also on a
+Variant result such as `call(...) as RefCounted`), and `close()` ends that wrapper's reference only:
+another wrapper of the same object stays valid. A dropped one is released late, when the browser's
+garbage collector runs, as a forgotten `close()` is on desktop. At most 4096 `RefCounted` arguments
+that only Kotlin holds stay alive this way (Kanama's bound for Firefox, which collects only under
+allocation pressure; C# has none): past that the oldest go first. A `Sprite2D`'s `texture` keeps
+answering after the code that set it dropped its wrapper. The Web bridge protocol is 37. See
+[Objects you receive](docs/game-dev/godot-api.md#objects-you-receive).
+
+Three Web behaviours change with it. A second `close()` does nothing (on `ConfigFile`,
+`AudioStream`, `PackedScene` and most other classes that had `close()` it threw "Unknown or already
+released"). `close()` ends only that wrapper's reference (`Texture2D.close()` released the texture's
+handle for every wrapper of it, so another script's wrapper went stale), and it applies the engine
+calls made before it first, so `ButtonGroup.create().use { button.buttonGroup = it }` leaves the
+button its group. `ResourceLoader.loadThreadedGet` removes the finished load, as Godot's
+`load_threaded_get` does: a later `loadThreadedGetStatus` for that path answers `INVALID_RESOURCE`,
+where it stayed `LOADED`.
+
+- **Source break:** (Web) `Texture2D` `AudioStream` `PackedScene` `InputEventKey` `InputEventMouseButton` `Mesh` `Material` `ButtonGroup` `ConfigFile` `FastNoiseLite` `MeshLibrary` `KinematicCollision3D` `ScriptResource`:
+  no longer declare `close()` and `AutoCloseable` themselves; both come from `RefCounted` now, so
+  every call still compiles (`ScriptResource.close()` overrides it). Nothing to migrate.
+
 ### Changed — tooling: script portability gate, module-class KDoc, three gate fixes (task 138 items 15, 25, 28, 34)
 
 Tooling and documentation only; no change to the API a script sees beyond IDE docs. The wrapper KDoc now
@@ -177,13 +210,8 @@ Web limits remain, documented in [Objects you receive](docs/game-dev/godot-api.m
 A node you looked up (`getNode`) or got as a call's result and then `queueFree()` is released at
 once on Web: using that value afterwards, even in the same frame, throws "Stale Kanama Web browser
 handle", where desktop keeps it usable until the end of the frame (read what you need first, or
-`queueFree()` last). A `RefCounted` argument (an `InputEvent`, a `Resource`) that only your Kotlin
-code keeps stays valid for the call and the next 2 frames, then lives only while Godot holds it;
-desktop keeps it until you `close()` it. Keep a Godot reference to it, or
-`GD.instanceFromId(event.instanceId)` inside the handler (an owned result, which then lives until
-the script is freed: resolve only what you keep), to keep it longer. A `RefCounted` another of your
-scripts owns is valid while that script holds it. Lifting these is tracked in
-[#332](https://github.com/falcon4ever/kanama/issues/332). The Web bridge protocol is 36.
+`queueFree()` last). A `RefCounted` argument follows desktop's rule too, see "Web: a RefCounted
+lives while Kotlin holds it" above.
 
 ### Changed — iOS: the runtime self-tests no longer run or ship in users' builds (task 138 item 24)
 

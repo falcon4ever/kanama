@@ -9,6 +9,34 @@ import path from "node:path";
 
 const SCHEMA_VERSION = 1;
 
+// Protocol 37: a RefCounted handle lives while a Kotlin wrapper of it is reachable, so after a
+// teardown a handle that a freed script's dropped wrapper still holds goes when the browser collects
+// that wrapper (desktop's late release), on the next frame of a proxy that still runs (a smoke
+// autoload). A teardown check waits for that collection: gc() where the page exposes it (Chrome,
+// --expose-gc), else a burst of short-lived allocation (Firefox collects under allocation pressure).
+// The burst is kept until the next poll, so it survives a minor collection and grows the old
+// generation: that, not short-lived garbage, is what makes Firefox run the full collection a long-held
+// wrapper needs.
+const COLLECT_EXPRESSION = `(() => {
+  if (typeof globalThis.gc === "function") { globalThis.gc(); return 1; }
+  const burst = [new ArrayBuffer(8 << 20)];
+  for (let round = 0; round < 32; round += 1) {
+    const chunk = new Array(16384);
+    for (let index = 0; index < chunk.length; index += 1) chunk[index] = { index, round };
+    burst.push(chunk);
+  }
+  globalThis.__kanamaCollectBurst = burst;
+  return 0;
+})()`;
+
+/** `evaluate`, asking the page to collect before every call (the teardown checks' polls). */
+export function collecting(evaluate) {
+  return async (...args) => {
+    await evaluate(COLLECT_EXPRESSION);
+    return evaluate(...args);
+  };
+}
+
 export function collectPayload(exportDir, url, sourceChecksum) {
   const files = [];
   let totalBytes = 0;
@@ -70,14 +98,26 @@ export async function collectPerformance(evaluate) {
         builtinCallsPerTick: ticks > 0 ? Math.round(((bridge.builtinCalls ?? 0) / ticks) * 100) / 100 : 0,
         // The handles lent to Kotlin for dispatch arguments (signal / input / method object
         // arguments): how many were minted, taken over from a lookup, released (swept: the engine
-        // freed the object; owned: a call's result made a script own it), the most alive at once,
-        // and the GDScript->JS calls the lending cost. Reported, not budgeted.
+        // freed the object), the most alive at once, and the GDScript->JS calls the lending cost.
+        // Reported, not budgeted.
         lentMints: bridge.lentMints ?? 0,
         lentAdopts: bridge.lentAdopts ?? 0,
         lentReleases: bridge.lentReleases ?? 0,
         lentSwept: bridge.lentSwept ?? 0,
-        lentOwned: bridge.lentOwned ?? 0,
         maxLiveLent: bridge.maxLiveLent ?? 0,
+        // RefCounted handles held by Kotlin wrappers (protocol 37): the most pinned at once, how
+        // many the browser's collection of their last wrapper released (and close(), the 2-frame
+        // floor for a lent one nobody wrapped, the lent cap), and the wrapper registrations.
+        // Reported, not budgeted.
+        maxRcPinned: bridge.maxRcPinned ?? 0,
+        rcReleasedByGc: bridge.rcReleasedByGc ?? 0,
+        rcReleasedByClose: bridge.rcReleasedByClose ?? 0,
+        rcReleasedByGrace: bridge.rcReleasedByGrace ?? 0,
+        rcReleasedByCap: bridge.rcReleasedByCap ?? 0,
+        wrapperRegistrations: bridge.wrapperRegistrations ?? 0,
+        // 0 when this browser's FinalizationRegistry refused a Kotlin/Wasm wrapper (the fallback:
+        // a RefCounted only Kotlin keeps then goes with its script, a lent one after 2 frames).
+        wrapperRegistry: bridge.wrapperRegistryWorks === false ? 0 : 1,
         maxLiveBrowserHandles: bridge.maxLiveBrowserHandles ?? 0,
         lendBridgeCalls: bridge.lendBridgeCalls ?? 0,
         lendBridgeCallsPerTick:

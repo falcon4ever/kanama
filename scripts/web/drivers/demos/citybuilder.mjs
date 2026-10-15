@@ -10,7 +10,7 @@
 // smoke_teardown releases hydrated structure assets, frees the Audio autoload
 // and the scene root, draining every live handle to zero.
 
-import { callSmokeMethod } from "../envelope.mjs";
+import { callSmokeMethod, collecting } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Cells the authored sample city occupies -- 122 structures in `sample map/map.tres`,
@@ -262,7 +262,7 @@ export async function runCitybuilder({ url, evaluate, navigate, deadline, export
   // the Audio autoload and the scene root; every node exits and releases its handles.
   trace("smoke_teardown");
   await callSmokeMethod(evaluate, exportDir, "citybuilder.Smoke", "smoke_teardown");
-  const teardown = await observe(evaluate, peak, 12_000, deadline, (snap) => snap.liveHandles === 0);
+  const teardown = await observe(collecting(evaluate), peak, 12_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} callbacks=${settled.callbacks} errs=${settled.callbackErrors}`);
   if (DEBUG && settled.liveHandles !== 0) {

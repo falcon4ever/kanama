@@ -9,7 +9,7 @@
 // coverage the player->enemy damage path has ever had), then triggers Smoke.smoke_teardown —
 // which frees the Audio autoload and the scene root — and polls live handles to zero.
 
-import { callSmokeMethod } from "../envelope.mjs";
+import { callSmokeMethod, collecting } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -210,7 +210,7 @@ export async function runFps({ url, evaluate, navigate, deadline, exportDir }) {
   // Audio autoload and the scene root, draining every live handle to zero.
   trace("smoke_teardown");
   await callSmokeMethod(evaluate, exportDir, "fps.Smoke", "smoke_teardown");
-  const teardown = await observe(evaluate, peak, 8_000, deadline, (snap) => snap.liveHandles === 0);
+  const teardown = await observe(collecting(evaluate), peak, 8_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} callbacks=${settled.callbacks} errs=${settled.callbackErrors}`);
 

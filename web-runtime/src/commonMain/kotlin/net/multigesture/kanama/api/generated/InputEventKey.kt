@@ -8,7 +8,7 @@ import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class InputEventKey(godotObject: GodotHandle) : InputEventWithModifiers(godotObject), AutoCloseable {
+class InputEventKey(godotObject: GodotHandle) : InputEventWithModifiers(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setKeycode(keycode: Key) {
     GodotBackendCalls.invokeLongArg(D.INPUTEVENTKEY_SET_KEYCODE, requireOpenHandle(), keycode.value)
@@ -41,11 +41,6 @@ class InputEventKey(godotObject: GodotHandle) : InputEventWithModifiers(godotObj
   var physicalKeycode: Key
     get() = getPhysicalKeycode()
     set(newValue) = setPhysicalKeycode(newValue)
-
-  /** Releases the owned handle (already-released is an error). */
-  override fun close() {
-    releaseWebConstructedObject(handle.value)
-  }
 
   companion object {
     /** Constructs a new InputEventKey engine-side; the wrapper owns the handle (close what you create). */
