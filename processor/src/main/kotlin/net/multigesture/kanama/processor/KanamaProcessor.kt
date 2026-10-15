@@ -5532,8 +5532,61 @@ internal class ScriptCodeEmitter(
         property.isMutableMap -> ".toMutableMap()"
         else -> ""
       }
-    return variantReadPropertyBaseExpr(property, variantPtr, localName) + mutableSuffix
+    val expected =
+      assignableVariantType(property)
+        ?: return variantReadPropertyBaseExpr(property, variantPtr, localName) + mutableSuffix
+    // The decode reads the Variant readAssignableVariant hands it: the one offered, or the one the
+    // engine converted it to (destroyed after the decode).
+    val source = "${localName}Variant"
+    val decoded = "${localName}Decoded"
+    val read = variantReadPropertyBaseExpr(property, source, decoded) + mutableSuffix
+    return "val $localName = BuiltinTypes.readAssignableVariant($variantPtr, VariantType.$expected, " +
+      "\"property '${kotlinStringLiteral(property.godotName)}'\") { $source -> $read; $decoded }"
   }
+
+  /**
+   * Task 138 items 26 and 27: GDScript refuses a Variant of the wrong type for a typed script
+   * property (`Invalid assignment of property ... with value of type 'Vector2'`) and applies only
+   * the conversions `Variant::construct` has (int and float, a String to a number, a Vector2i to a
+   * Vector2, a Basis to a Quaternion, a Vector3 to a Plane, ...). The decodes below take any
+   * Variant and fell back to `0`, `ZERO` or an empty list, or refused every other type. The
+   * property's decode therefore runs inside `BuiltinTypes.readAssignableVariant`, on the offered
+   * Variant or on the one the engine converted it to, and a Variant the engine cannot convert is an
+   * error: `Expected Vector3 for property 'v' but the Variant holds Vector2`. Null when the
+   * property takes no such rule (an object, a Variant, an enum list keeps its own decode).
+   */
+  private fun assignableVariantType(property: ScriptPropertyModel): String? =
+    when (property.type) {
+      TypeMapping.INT -> "INT"
+      TypeMapping.FLOAT -> "FLOAT"
+      TypeMapping.BOOL -> "BOOL"
+      TypeMapping.STRING -> "STRING"
+      TypeMapping.NODE_PATH -> "NODE_PATH"
+      TypeMapping.VECTOR2 -> "VECTOR2"
+      TypeMapping.VECTOR2I -> "VECTOR2I"
+      TypeMapping.VECTOR3 -> "VECTOR3"
+      TypeMapping.VECTOR3I -> "VECTOR3I"
+      TypeMapping.COLOR -> "COLOR"
+      // The value types that decode through readVariantValue: without the conversion a Rect2i for a
+      // Rect2 or a Basis for a Quaternion was refused where GDScript converts it.
+      TypeMapping.VECTOR4 -> "VECTOR4"
+      TypeMapping.VECTOR4I -> "VECTOR4I"
+      TypeMapping.RECT2 -> "RECT2"
+      TypeMapping.RECT2I -> "RECT2I"
+      TypeMapping.PLANE -> "PLANE"
+      TypeMapping.QUATERNION -> "QUATERNION"
+      TypeMapping.AABB -> "AABB"
+      TypeMapping.BASIS -> "BASIS"
+      TypeMapping.TRANSFORM2D -> "TRANSFORM2D"
+      TypeMapping.TRANSFORM3D -> "TRANSFORM3D"
+      TypeMapping.PROJECTION -> "PROJECTION"
+      TypeMapping.RID -> "RID"
+      // Every typed List<T> export is an Array, every typed Map<K, V> and Map<String, Any?> a
+      // Dictionary; what is inside (the elements' types) is decoded fail-soft, as before.
+      TypeMapping.ARRAY -> "ARRAY"
+      TypeMapping.DICTIONARY -> "DICTIONARY"
+      else -> null
+    }
 
   private fun variantReadPropertyBaseExpr(
     property: ScriptPropertyModel,

@@ -736,7 +736,10 @@ val t = GD.inverseLerp(0.0, 10.0, 2.5)
   `max` and `min` have typed overloads for numbers: `val m: Double = GD.max(1.5, 2.0)`,
   `val n: Long = GD.max(1L, 2L)`, `val i: Int = GD.clamp(x, 0, 10)` (`Double` for all of them;
   `Long` and `Int` where Godot has an int form: `abs`, `sign`, `max`, `min`, `clamp`, `wrap`). They
-  call the typed functions (`maxf`, `clampi`, ...). Vectors, mixed types and three or more values
+  call the typed functions (`maxf`, `wrapi`, ...), except `clamp`, which is GDScript's `clamp` and
+  runs in Kotlin on every platform: it sets the value to `min` if it is less, then to `max` if it is
+  greater, so `GD.clamp(0.0, 3.0, 1.0)` is `1.0` as in GDScript (`clampf` and `clampi` keep Godot's
+  typed result, `3.0`, when `min` is greater than `max`). Vectors, mixed types and three or more values
   (`GD.max(a, b, c)`) take the `Any?` form, which returns whatever Godot returns for the arguments
   (`GD.abs(Vector3(-1.0, 2.0, -3.0))` is a `Vector3`, as an `Any?`).
 - `print`, `printErr`, `printS`, `printT`, `printRaw`, `printRich`, `printVerbose`, `pushError`,

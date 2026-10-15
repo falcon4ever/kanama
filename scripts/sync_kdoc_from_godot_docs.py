@@ -31,6 +31,17 @@ CLASS_KDOC_NOTES: dict[str, str] = {
     ),
 }
 
+# A Kanama paragraph after Godot's description of one method, keyed (docs class, Godot method name): where
+# a Kotlin overload set states a behaviour Godot's prose leaves out.
+METHOD_KDOC_NOTES: dict[tuple[str, str], str] = {
+    ("@GlobalScope", "clamp"): (
+        "The `Double`, `Long` and `Int` overloads do the same in Kotlin on every platform: `value` is set to "
+        "`min` if it is less, then to `max` if it is greater, so with `min > max` the result is `max` and "
+        "`clamp(0.0, 3.0, 1.0)` is `1.0`, as in GDScript. `clampf` and `clampi` keep Godot's typed result "
+        "(`3.0` there)."
+    ),
+}
+
 # The api scope covers the shared wrapper tree plus the desktop per-platform files and their
 # generated companions (task 103); pass --api-dir to sync one directory only.
 DEFAULT_API_DIR = DESKTOP_API_DIR
@@ -418,7 +429,12 @@ def collect_api_replacements(path: Path, docs: GodotClassDocs) -> tuple[list[Rep
             Replacement(
                 start=replace_start if replace_start is not None else insert_at,
                 end=insert_at,
-                lines=kdoc_block(fun_match.group(1), description, f"{docs.class_name}.{godot_name}"),
+                lines=kdoc_block(
+                    fun_match.group(1),
+                    description,
+                    f"{docs.class_name}.{godot_name}",
+                    note=METHOD_KDOC_NOTES.get((docs.class_name, godot_name)),
+                ),
             ),
         )
         documented_methods += 1

@@ -188,6 +188,15 @@ extern int32_t kanama_ios_runtime_script_instance_set_property_value(
     const uint8_t *bytes,
     int32_t length
 );
+// Task 138 item 27: a value-type @Export (Quaternion, Basis, Rect2, ...) offered a Variant of another
+// type (a Vector2, a Nil, an int): the runtime reports `Expected Quaternion for property 'rot' but the
+// Variant holds Vector2` as a script error and answers 1 (the property is the script's; the write was
+// refused and the old value kept), like containPropertySet.
+extern int32_t kanama_ios_runtime_script_instance_set_property_wrong_type(
+    int64_t instance_handle,
+    int32_t property_index,
+    int32_t actual_variant_type
+);
 extern void kanama_ios_runtime_script_instance_free(int64_t instance_handle);
 // Task 132: a script instance on a RefCounted owner holds a +1 on it and switches its link to the
 // Kotlin script object strong (count > 1) / weak (count 1), as C#'s CSharpInstance does.
@@ -414,6 +423,9 @@ static GDExtensionInterfaceVariantGetPtrKeyedChecker g_variant_get_ptr_keyed_che
 static GDExtensionInterfaceGetVariantFromTypeConstructor g_get_variant_from_type_constructor = NULL;
 static GDExtensionInterfaceGetVariantToTypeConstructor g_get_variant_to_type_constructor = NULL;
 static GDExtensionInterfaceVariantDestroy g_variant_destroy = NULL;
+// Task 138: Variant::construct, the conversion GDScript applies to a value of another type that it
+// assigns to a typed script property (a Vector2i for a Vector2, a Basis for a Quaternion, ...).
+static GDExtensionInterfaceVariantConstruct g_variant_construct = NULL;
 static GDExtensionInterfaceVariantGetType g_variant_get_type = NULL;
 static GDExtensionInterfaceVariantGetObjectInstanceId g_variant_get_object_instance_id = NULL;
 static GDExtensionInterfaceVariantNewNil g_variant_new_nil = NULL;
@@ -990,6 +1002,7 @@ static int kanama_ios_resolve_godot_api(void) {
         "get_variant_to_type_constructor"
     );
     g_variant_destroy = (GDExtensionInterfaceVariantDestroy)kanama_ios_lookup("variant_destroy");
+    g_variant_construct = (GDExtensionInterfaceVariantConstruct)kanama_ios_lookup("variant_construct");
     g_array_set_typed = (GDExtensionInterfaceArraySetTyped)kanama_ios_lookup("array_set_typed");
     g_variant_get_type = (GDExtensionInterfaceVariantGetType)kanama_ios_lookup("variant_get_type");
     // Optional: lambda/bound signal callbacks need this. Not added to the required
@@ -9360,6 +9373,23 @@ int64_t kanama_ios_godot_take_pending_object_handles(
     return count;
 }
 
+// Task 138 item 27: the Variant types of the value-type properties the runtime assigns through
+// setPropertyValue (`value as Vector3` and the like): Vector2 ... Color (5..20: the vectors, Rect2,
+// Rect2i, Transform2D, Plane, Quaternion, AABB, Basis, Transform3D, Projection, Color) and NodePath.
+// IosScriptCodeEmitter registers every property with a valueTypeClassName under one of these and no
+// other property under them; the processor test IosValueTypePropertySetTest pins that pairing.
+static int kanama_ios_is_value_type_property(int32_t variant_type) {
+    return (variant_type >= KANAMA_IOS_VARIANT_TYPE_VECTOR2 && variant_type <= KANAMA_IOS_VARIANT_TYPE_COLOR)
+        || variant_type == KANAMA_IOS_VARIANT_TYPE_NODE_PATH;
+}
+
+static GDExtensionBool kanama_ios_script_instance_set_property_of_type(
+    KanamaIosScriptInstance *instance,
+    int32_t property_index,
+    GDExtensionConstVariantPtr value,
+    GDExtensionVariantType type
+);
+
 static GDExtensionBool kanama_ios_script_instance_set_property(
     GDExtensionScriptInstanceDataPtr data,
     GDExtensionConstStringNamePtr name,
@@ -9379,6 +9409,52 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
     GDExtensionVariantType type = g_variant_get_type != NULL
         ? g_variant_get_type(value)
         : KANAMA_IOS_VARIANT_TYPE_NIL;
+    // Task 138: a value-type property follows GDScript's rule (GDScriptInstance::set), as on desktop.
+    // A Variant of its own type is assigned as it is. A Variant of another type is converted by
+    // Variant::construct when the engine has that conversion (a Vector2i for a Vector2, a Basis for a
+    // Quaternion, a String for a NodePath, ...) and the converted Variant is assigned. Anything else
+    // (a Vector2 for a Vector3, a Nil, a scalar, an Object) is reported by name: `Expected Vector3
+    // for property 'v' but the Variant holds Vector2`, the value kept. Before, a mismatch reached
+    // `value as Vector3` in setPropertyValue (a bare ClassCastException) or, for a Nil, the object
+    // path, which dropped it without a word.
+    if (instance->script->script_property_types != NULL
+        && property_index < instance->script->script_property_count) {
+        int32_t expected_type = instance->script->script_property_types[property_index];
+        if (kanama_ios_is_value_type_property(expected_type) && (int32_t)type != expected_type) {
+            // A Variant is 24 bytes in this (single-precision) build; 8-byte aligned.
+            uint64_t converted[3] = { 0, 0, 0 };
+            GDExtensionCallError error = { GDEXTENSION_CALL_ERROR_INVALID_METHOD, 0, 0 };
+            if (g_variant_construct != NULL && g_variant_destroy != NULL) {
+                const GDExtensionConstVariantPtr args[1] = { value };
+                // The engine placement-news the Variant before it constructs: destroyed either way.
+                g_variant_construct((GDExtensionVariantType)expected_type,
+                    (GDExtensionUninitializedVariantPtr)converted, args, 1, &error);
+                if (error.error == GDEXTENSION_CALL_OK
+                    && g_variant_get_type((GDExtensionConstVariantPtr)converted)
+                        == (GDExtensionVariantType)expected_type) {
+                    GDExtensionBool ok = kanama_ios_script_instance_set_property_of_type(
+                        instance, property_index, (GDExtensionConstVariantPtr)converted,
+                        (GDExtensionVariantType)expected_type);
+                    g_variant_destroy((GDExtensionVariantPtr)converted);
+                    return ok;
+                }
+                g_variant_destroy((GDExtensionVariantPtr)converted);
+            }
+            return (GDExtensionBool)kanama_ios_runtime_script_instance_set_property_wrong_type(
+                instance->runtime_handle, property_index, (int32_t)type);
+        }
+    }
+    return kanama_ios_script_instance_set_property_of_type(instance, property_index, value, type);
+}
+
+// The set of a Variant [value] of type [type] into property [property_index], dispatched on [type]
+// (a value-type property sees only its own type here: kanama_ios_script_instance_set_property).
+static GDExtensionBool kanama_ios_script_instance_set_property_of_type(
+    KanamaIosScriptInstance *instance,
+    int32_t property_index,
+    GDExtensionConstVariantPtr value,
+    GDExtensionVariantType type
+) {
     int64_t arg = 0;
     // Task 132: an object (or nil) set records the object it now holds in the runtime's registry
     // once the set succeeded (kanama_ios_runtime_script_instance_retain_property_objects). This

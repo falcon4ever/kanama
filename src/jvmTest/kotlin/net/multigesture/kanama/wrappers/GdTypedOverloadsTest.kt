@@ -1,6 +1,7 @@
 package net.multigesture.kanama.wrappers
 
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.types.Vector3
@@ -32,5 +33,21 @@ class GdTypedOverloadsTest {
   @Test
   fun typedOverloadsResolve() {
     assertNotNull(probe)
+  }
+
+  /**
+   * The untyped `clamp` on numbers is GDScript's Variant `clamp` (`< min`, then `> max`): with the
+   * bounds swapped the result is the upper bound, where the typed `clampf` / `clampi` give the
+   * lower. Plain Kotlin: no engine needed.
+   */
+  @Test
+  fun untypedClampFollowsTheVariantFunction() {
+    assertEquals(1.0, GD.clamp(0.0, 3.0, 1.0))
+    assertEquals(1L, GD.clamp(0L, 3L, 1L))
+    assertEquals(1, GD.clamp(0, 3, 1))
+    assertEquals(0.5, GD.clamp(0.5, 0.0, 1.0))
+    assertEquals(0.0, GD.clamp(-2.0, 0.0, 1.0))
+    assertEquals(1L, GD.clamp(9L, 0L, 1L))
+    assertEquals(true, GD.clamp(Double.NaN, 0.0, 1.0).isNaN())
   }
 }

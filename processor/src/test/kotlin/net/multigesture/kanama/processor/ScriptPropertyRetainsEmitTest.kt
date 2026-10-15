@@ -94,12 +94,16 @@ class ScriptPropertyRetainsEmitTest {
       "one registered read per retaining property, none for the others",
     )
     // The read inside the capture is the retaining reader, and its result is what is assigned.
+    // It reads the Variant GDScript would assign (task 138 item 26): a List is an Array.
     assertTrue(
       source.contains(
-        "ScriptBridge.retainScriptProperty(godotObject, \"items\", { val read = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObjectArrayRetainedHandles("
+        "ScriptBridge.retainScriptProperty(godotObject, \"items\", { val read = BuiltinTypes.readAssignableVariant(value, VariantType.ARRAY, \"property 'items'\") { readVariant -> val readDecoded = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObjectArrayRetainedHandles(readVariant, "
       )
     )
-    assertTrue(source.contains(".toMutableList(); read }"), "MutableList keeps its copy")
+    assertTrue(
+      source.contains(".toMutableList(); readDecoded }; read }"),
+      "MutableList keeps its copy",
+    )
     // The assignment runs inside the call: the old references go only once it succeeded.
     assertTrue(source.contains("; read }) { v -> kt.items = v }"))
   }

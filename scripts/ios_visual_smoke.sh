@@ -663,8 +663,11 @@ import net.multigesture.kanama.api.Mathf
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.PackedScene
 import net.multigesture.kanama.api.RefCounted
+import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.NodePath
+import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
 
 enum class IosSmokeMode { EASY, NORMAL, HARD }
@@ -705,6 +708,18 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
 
     @Export
     var probeTags: List<String> = emptyList()
+
+    // Task 138 item 27: value-type @Exports. _ready offers each a value of another type: what
+    // GDScript converts is converted (a Basis for the Quaternion, a Vector2i for the Vector2), the
+    // rest is refused by name and the value stays.
+    @Export
+    var probeRot: Quaternion = Quaternion.IDENTITY
+
+    @Export
+    var probeVec2: Vector2 = Vector2.ZERO
+
+    @Export
+    var probeVec3: Vector3 = Vector3.ZERO
 
     // task 64 iOS mirror — an object-typed export (RESOURCE_TYPE hint). The
     // class_name probe below asserts the engine-visible PropertyInfo carries
@@ -846,6 +861,31 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
                 "string=${engineName == "kanama"} " +
                 "nodepath=${(engineView as? String) == "../Background"} " +
                 "tags=${engineTags == listOf("alpha", "beta")} tagsSet=$tagsSetOk",
+        )
+        // Task 138 item 27: a Variant of another type offered to a value-type property follows
+        // GDScript: Godot's conversions apply (a Basis for a Quaternion, a Vector2i for a Vector2),
+        // anything else is a script error that names the property, the expected and the actual type
+        // (the same message as desktop), and the property keeps its value; a Quaternion still
+        // applies.
+        probeRot = Quaternion(0.0, 1.0, 0.0, 0.0)
+        self.set("probe_rot", Vector2(1.0, 2.0))
+        self.set("probe_rot", 5L)
+        val wrongTypeKept = probeRot == Quaternion(0.0, 1.0, 0.0, 0.0)
+        self.set("probe_rot", Quaternion(0.0, 0.0, 1.0, 0.0))
+        val applied = probeRot == Quaternion(0.0, 0.0, 1.0, 0.0)
+        self.set("probe_rot", Basis.IDENTITY)
+        val basisConverted = probeRot == Quaternion.IDENTITY
+        probeVec2 = Vector2(9.0, 9.0)
+        self.set("probe_vec2", Vector2i(3, 4))
+        val vector2iConverted = probeVec2 == Vector2(3.0, 4.0)
+        probeVec3 = Vector3(9.0, 9.0, 9.0)
+        self.set("probe_vec3", Vector2(1.0, 2.0))
+        self.set("probe_vec3", null)
+        val vec3Kept = probeVec3 == Vector3(9.0, 9.0, 9.0)
+        println(
+            "[kanama][ios][kn] task138 wrong-typed value-type property set " +
+                "kept=$wrongTypeKept applied=$applied basis=$basisConverted " +
+                "vector2i=$vector2iConverted vec3Kept=$vec3Kept",
         )
         // Task 115: Object-typed @Export through the engine setter and getter. Object.get
         // must call the ScriptInstance getter and hand back the very node that was set.
@@ -2735,7 +2775,12 @@ else
   echo "[ios_visual_smoke] warning: no Kanama iOS loader log captured from simctl stdout/stderr" >&2
 fi
 
-if grep -Eq 'SCRIPT ERROR|Parse Error|Failed to load script' "$stderr_log" "$stdout_log"; then
+# The user-script probe refuses four wrong-typed values on purpose (task 138 item 27, checked below): those four
+# script errors are expected, any other is not.
+if grep -Eh 'SCRIPT ERROR|Parse Error|Failed to load script' "$stderr_log" "$stdout_log" \
+  | grep -Ev "SCRIPT ERROR: .*Expected Quaternion for property 'probe_rot' but the Variant holds (Vector2|int)$" \
+  | grep -Ev "SCRIPT ERROR: .*Expected Vector3 for property 'probe_vec3' but the Variant holds (Vector2|null \(Nil\))$" \
+  | grep -Eq .; then
   echo "[ios_visual_smoke] script error detected in launch logs" >&2
   exit 1
 fi
@@ -2801,6 +2846,19 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] task 39 narrow/enum property conversions delivered and round-tripped"
   else
     echo "[ios_visual_smoke] task 39 property conversion probe failed" >&2
+    exit 1
+  fi
+  # Task 138 item 27: a Vector2 and an int offered to a Quaternion @Export, and a Vector2 and a nil offered to a
+  # Vector3 @Export, are refused by name, like desktop, and the value stays (the property then takes a Quaternion
+  # again); a Basis for the Quaternion and a Vector2i for a Vector2 @Export are converted, as GDScript converts them.
+  if grep -Eq "Expected Quaternion for property 'probe_rot' but the Variant holds Vector2" "$stderr_log" "$stdout_log" \
+    && grep -Eq "Expected Quaternion for property 'probe_rot' but the Variant holds int" "$stderr_log" "$stdout_log" \
+    && grep -Eq "Expected Vector3 for property 'probe_vec3' but the Variant holds Vector2" "$stderr_log" "$stdout_log" \
+    && grep -Eq "Expected Vector3 for property 'probe_vec3' but the Variant holds null \(Nil\)" "$stderr_log" "$stdout_log" \
+    && grep -Eq 'task138 wrong-typed value-type property set kept=true applied=true basis=true vector2i=true vec3Kept=true' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] wrong-typed value-type property sets converted as GDScript converts, refused by name otherwise"
+  else
+    echo "[ios_visual_smoke] wrong-typed value-type property set probe failed (task 138 item 27)" >&2
     exit 1
   fi
   # Data @Export get parity: Vector2/Vector3/String/NodePath read back through the engine

@@ -43,6 +43,7 @@ import net.multigesture.kanama.binding.runtime.OwnedReleases
 import net.multigesture.kanama.binding.runtime.PendingRelease
 import net.multigesture.kanama.binding.runtime.ReleaseHook
 import net.multigesture.kanama.binding.runtime.ScriptPropertyRetains
+import net.multigesture.kanama.binding.runtime.VariantTypeNames
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_string_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_set_first_node_in_group_text
@@ -461,6 +462,20 @@ internal object KanamaIosRuntime {
       instance?.resource?.descriptor?.properties?.getOrNull(propertyIndex)?.name
         ?: "<property $propertyIndex>"
     return "${path.substringAfterLast('/').removeSuffix(".kt")} property $name $op"
+  }
+
+  /**
+   * The message for a Variant of type [actualVariantType] offered to property [propertyIndex] (task
+   * 138 item 27); the expected type is the one the property is registered with.
+   */
+  fun wrongTypedPropertyMessage(handle: Long, propertyIndex: Int, actualVariantType: Int): String {
+    val property =
+      scriptInstances[handle]?.resource?.descriptor?.properties?.getOrNull(propertyIndex)
+    return VariantTypeNames.assignmentError(
+      property?.variantType ?: 0,
+      actualVariantType,
+      "property '${property?.name ?: "<property $propertyIndex>"}'",
+    )
   }
 
   fun readyScriptInstance(handle: Long) {
@@ -2046,6 +2061,26 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyValue(
     KanamaIosRuntime.setScriptInstancePropertyValue(instanceHandle, propertyIndex, value)
   }
 }
+
+/**
+ * A value-type property (a Quaternion, a Rect2, ...) offered a Variant of another type: the C shim
+ * checks the registered type before it decodes, and this reports it by name (task 138 item 27),
+ * `Expected Quaternion for property 'rot' but the Variant holds Vector2`, as desktop does. Answers
+ * 1 like [containPropertySet]: the property is the script's, the write was refused, the old value
+ * kept.
+ */
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_set_property_wrong_type")
+fun kanamaIosRuntimeScriptInstanceSetPropertyWrongType(
+  instanceHandle: Long,
+  propertyIndex: Int,
+  actualVariantType: Int,
+): Int =
+  containPropertySet(instanceHandle, propertyIndex) {
+    error(
+      KanamaIosRuntime.wrongTypedPropertyMessage(instanceHandle, propertyIndex, actualVariantType)
+    )
+  }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_call_v")

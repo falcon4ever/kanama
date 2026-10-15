@@ -41,6 +41,26 @@ processor folds the way GDScript does: numbers, `+ - * /`, parentheses, `PI` /
 `Math.toRadians(...)`. `@ExportRange(0.0, 360.0, 0.1, radiansAsDegrees = true) var fov = Mathf.PI / 3.0`
 reports `1.0471975511965976`, as GDScript's `var fov := PI / 3.0`.
 
+### A value of the wrong type
+
+Setting a typed property with `node.set("health", value)` (or `node.health = value` from GDScript)
+follows GDScript's rule for a typed `@export var`. A value of the declared type is stored. A value of
+another type is converted when Godot's constructor for the declared type takes it, which is the
+conversion GDScript applies: an `int` for a `Double` and the other way, a `String` for a `Long` or
+`Double` (parsed), a `StringName` or `NodePath` for a `String`, a `Vector2i` for a `Vector2` and the
+other way (the same for `Vector3`, `Vector4` and `Rect2`), a `Basis` for a `Quaternion` and the other
+way, a `Basis`, `Quaternion`, `Transform2D` or `Projection` for a `Transform3D`, a `Transform3D`
+for a `Transform2D` or a `Projection`, a `Vector3` for a `Plane`, a `String` (a colour name or
+code) or an `int` (a packed RGBA value) for a `Color`, a `Boolean` for a number and the other way, a
+`String` for a `NodePath`, a packed array for a `List`. Any
+other value is **refused**: the property keeps what it held and Godot prints a script error that
+names the property, the expected and the actual type, for example `Expected Vector3 for property
+'velocity' but the Variant holds Vector2`. It is never stored as `0`, `Vector3.ZERO` or an empty list. This holds for the
+number, `String`, `NodePath`, vector, `Color` and other value types (`Quaternion`, `Rect2`,
+`Transform3D`, ...), `List<T>` (an `Array`) and `Map<K, V>` (a `Dictionary`) properties. On iOS it
+holds for `NodePath`, `Color` and the vector and other value types; a `Boolean`, `Long`, `Double`,
+`String`, `List` or `Map` property there keeps its earlier handling of a value of another type.
+
 ## Export Hints
 
 Each GDScript `@export_*` annotation of Godot 4.7 has a typed Kotlin twin. The

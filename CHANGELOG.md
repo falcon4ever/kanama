@@ -39,6 +39,49 @@ only `--write`.
 
 ## Unreleased
 
+### Fixed — iOS: a value-type script property set to a value of another type follows GDScript
+
+A `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, `Vector4i`, `Rect2`, `Rect2i`, `Plane`,
+`Quaternion`, `AABB`, `Basis`, `Transform2D`, `Transform3D`, `Projection`, `Color` or `NodePath`
+property that received a Variant of another type failed with a bare `ClassCastException` that did not
+name the property (a `Vector2` for a `Vector3`, and also a `Vector2i` for a `Vector2`, which GDScript
+converts), or, for a `null`, was dropped without a message. The runtime now applies GDScript's rule
+before it decodes, as desktop and Android do: a value Godot converts is converted (a `Vector2i` for a
+`Vector2`, a `Basis` for a `Quaternion`, a `String` for a `NodePath`, ...), anything else is refused
+with `Expected Quaternion for property 'rot' but the Variant holds Vector2` (`null (Nil)` for a nil)
+and the property keeps its value. The on-device probe sets wrong-typed and convertible values on a
+`Quaternion`, a `Vector2` and a `Vector3` property and requires the messages, the unchanged values
+and the converted ones. The `Boolean`, `Long`, `Double`, `String`, `List` and `Map` properties are
+unchanged on iOS.
+
+### Fixed — Desktop and Android: a script property set to a value of the wrong type is an error, not a zero value
+
+A `@Export` property of type `Boolean`, `Long`, `Double`, `String`, `NodePath`, `Vector2`,
+`Vector2i`, `Vector3`, `Vector3i`, `Color`, `List<T>` or `Map<K, V>` that received a Variant of
+another type (`null`, a `Vector2` for a `Vector3`, a `Dictionary` for an `int`, ...) silently became
+`false`, `0`, `""`, the zero vector, black or an empty list or map.
+GDScript refuses such a value and converts only what Godot converts (`int` and `float`, a `String` to
+a number, a `Vector2i` to a `Vector2`, ...). Kanama now asks Godot the same question before it
+decodes: the Variants GDScript accepts are accepted, and the others fail with `Expected Vector3 for
+property 'velocity' but the Variant holds Vector2`, naming the property, the expected and the actual
+type, and the property keeps its value, as in GDScript. The other value types (`Quaternion`,
+`Rect2`, `Transform3D`, ...), which already refused a value of another type, now take the same
+conversions instead of refusing them (a `Rect2i` for a `Rect2`, a `Basis` for a `Quaternion`, a
+`Quaternion` for a `Transform3D`, a `Vector3` for a `Plane`, ...), and a refusal names Godot's type
+(`holds Array`, `holds Object`), not the Kotlin class (`ArrayList`, `GodotObject`). A value is
+converted once, so an unknown colour name is reported once, as in GDScript. The runtime smoke drives
+each shape against its GDScript twin. Function arguments keep their own decoding (a value-type
+argument of another type is refused, now also named by Godot's type), and the contents of a list or
+map (an element of the wrong type) still decode fail-soft.
+
+### Fixed — `GD.clamp` on numbers matches GDScript when `min` is greater than `max`
+
+`GD.clamp(Double, Double, Double)` (and the `Long` and `Int` overloads) called the typed `clampf` /
+`clampi`, so `GD.clamp(0.0, 3.0, 1.0)` was `3.0` in Kotlin and `1.0` in GDScript. GDScript's `clamp`
+sets the value to `min` if it is less, then to `max` if it is greater; the three overloads now do the
+same, in Kotlin on every platform (no engine call). `clampf` and `clampi` keep Godot's typed result.
+Both are pinned against GDScript in the runtime smoke's parity rows.
+
 ### Changed — tooling: script portability gate, module-class KDoc, three gate fixes (task 138 items 15, 25, 28, 34)
 
 Tooling and documentation only; no change to the API a script sees beyond IDE docs. The wrapper KDoc now
