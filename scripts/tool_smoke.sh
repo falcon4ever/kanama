@@ -12,12 +12,14 @@ fi
 
 GODOT_BIN="$1"
 PROJECT_DIR_FOR_GODOT="$PROJECT_DIR"
+GUARD_CHECK_FOR_GODOT="$ROOT_DIR/scripts/check_export_guard.gd"
 
 case "$(uname -s)" in
   MINGW*|MSYS*|CYGWIN*)
     if command -v cygpath >/dev/null 2>&1; then
       GODOT_BIN="$(cygpath -u "$GODOT_BIN")"
       PROJECT_DIR_FOR_GODOT="$(cygpath -m "$PROJECT_DIR")"
+      GUARD_CHECK_FOR_GODOT="$(cygpath -m "$GUARD_CHECK_FOR_GODOT")"
     fi
     ;;
 esac
@@ -100,10 +102,12 @@ check_absent "\[kanama:adapter\] downcall .* phase=post-boundary"
 # then JAVA_HOME, then the install locations, and fail with one clear message instead of running a
 # build that dies in the native bootstrap's compile. The editor plugin lives twice
 # (the starter template and the example project) and the two must not drift.
-if ! cmp -s "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd" \
-  "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd"; then
-  smoke_fail "plugin copies differ" "templates/starter/addons/kanama_tools/plugin.gd vs example_project/addons/kanama_tools/plugin.gd"
-fi
+for plugin_file in plugin.gd kanama_export_guard.gd; do
+  if ! cmp -s "$ROOT_DIR/templates/starter/addons/kanama_tools/$plugin_file" \
+    "$ROOT_DIR/example_project/addons/kanama_tools/$plugin_file"; then
+    smoke_fail "plugin copies differ" "templates/starter/addons/kanama_tools/$plugin_file vs example_project/addons/kanama_tools/$plugin_file"
+  fi
+done
 JDK_SCRATCH="$(mktemp -d "${TMPDIR:-/tmp}/kanama_jdk_resolution_gd.XXXXXX")"
 trap 'rm -rf "$JDK_SCRATCH"' EXIT
 mkdir -p "$JDK_SCRATCH/project/addons" "$JDK_SCRATCH/jdks"
@@ -145,6 +149,38 @@ fi
 if ! grep -Fq "doesn't have an \`export_presets.cfg\` file" "$LOG_FILE.export"; then
   tail -n 40 "$LOG_FILE.export" >&2
   smoke_fail "failing export of a fresh project did not print Godot's export error" "$LOG_FILE.export"
+fi
+
+# The editor export guard (kanama_export_guard.gd) refuses an export whose scripts do not bind. Its check runs here
+# on the example project, whose scenes attach real scripts from the freshly synced jar: all must bind. The exports
+# that prove the refusal itself are scripts/export_guard_selftest.sh.
+if ! "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --script "$GUARD_CHECK_FOR_GODOT" >"$LOG_FILE.guard" 2>&1; then
+  cat "$LOG_FILE.guard" >&2
+  smoke_fail "export guard check failed" "scripts/check_export_guard.gd (log: $LOG_FILE.guard)"
+fi
+if ! grep -Fq "[export_guard] PASS" "$LOG_FILE.guard"; then
+  cat "$LOG_FILE.guard" >&2
+  smoke_fail "export guard check did not report PASS" "scripts/check_export_guard.gd (log: $LOG_FILE.guard)"
+fi
+
+# The guard's one-click deploy clean-up (is_one_click_deploy, discard_export) runs only in the editor: an
+# editor plugin in a scratch project (scripts/check_export_guard_discard.gd) makes Godot-named and user files
+# in the editor's temp folder and checks which ones the guard deletes. --quit-after bounds the run if the
+# plugin never loads (then there is no PASS line).
+DISCARD_PROJECT="$JDK_SCRATCH/guard_discard"
+mkdir -p "$DISCARD_PROJECT/addons/guard_discard_test"
+cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$DISCARD_PROJECT/addons/"
+cp "$ROOT_DIR/scripts/check_export_guard_discard.gd" "$DISCARD_PROJECT/addons/guard_discard_test/plugin.gd"
+printf '[plugin]\n\nname="guard_discard_test"\ndescription=""\nauthor=""\nversion=""\nscript="plugin.gd"\n' \
+  >"$DISCARD_PROJECT/addons/guard_discard_test/plugin.cfg"
+printf 'config_version=5\n\n[application]\nconfig/name="kanama-guard-discard"\n\n[editor_plugins]\nenabled=PackedStringArray("res://addons/guard_discard_test/plugin.cfg")\n' \
+  >"$DISCARD_PROJECT/project.godot"
+discard_rc=0
+(cd "$DISCARD_PROJECT" && "$GODOT_BIN" --headless --editor --path . --quit-after 3000) >"$LOG_FILE.discard" 2>&1 || discard_rc=$?
+if [[ "$discard_rc" -ne 0 ]] || ! grep -Fq "[export_guard_discard] PASS" "$LOG_FILE.discard" ||
+  grep -Fq "SCRIPT ERROR" "$LOG_FILE.discard"; then
+  grep -E "export_guard_discard|SCRIPT ERROR|ERROR:|at: " "$LOG_FILE.discard" >&2 || tail -n 40 "$LOG_FILE.discard" >&2
+  smoke_fail "export guard one-click clean-up test failed (exit $discard_rc)" "scripts/check_export_guard_discard.gd (log: $LOG_FILE.discard)"
 fi
 
 echo "[tool_smoke] PASS"

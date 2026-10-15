@@ -181,18 +181,26 @@ GRADLE
 rm -rf "$DEMO_DIR/.godot/exported" # task 106/116: never reuse a conversion made without the desktop addon
 EXPORT_LOG="${KANAMA_ANDROID_EXPORT_LOG:-${APK_PATH%.apk}.export.log}"
 echo "[android_minified] export release (R8): $APK_PATH (log: $EXPORT_LOG)"
-# `if !` keeps errexit from aborting the pipeline before the status is read (pipefail is on).
-if ! "$GODOT_BIN" --headless \
+# `|| export_status=` keeps errexit from aborting the pipeline before the status is read (pipefail is on).
+export_status=0
+"$GODOT_BIN" --headless \
   --path "$DEMO_DIR" \
-  --export-release Android "$APK_PATH" 2>&1 | tee "$EXPORT_LOG"; then
-  echo "[android_minified] Godot export failed (exit ${PIPESTATUS[0]}); log: $EXPORT_LOG" >&2
+  --export-release Android "$APK_PATH" 2>&1 | tee "$EXPORT_LOG" || export_status="${PIPESTATUS[0]}"
+# The Kanama Tools export guard prints this line, and ends the export, when a .kt script the export
+# uses does not bind in the export-time editor (desktop addon missing, or kanama-scripts.jar stale).
+if grep -q 'Kanama: Export stopped' "$EXPORT_LOG"; then
+  echo "[android_minified] the Kanama export guard stopped the export: the export-time editor cannot bind the project's .kt scripts (see the 'Kanama: Export stopped' message above); log: $EXPORT_LOG" >&2
+  exit 1
+fi
+if [[ "$export_status" -ne 0 ]]; then
+  echo "[android_minified] Godot export failed (exit $export_status); log: $EXPORT_LOG" >&2
   exit 1
 fi
 if grep -qE 'No loader found for resource: res://.*\.kt|ResourceFormatLoader\._load bound kotlinClass= ' "$EXPORT_LOG"; then
   echo "[android_minified] the export-time editor could not bind the project's .kt scripts; scene-stored @Export values would be missing (task 106/116)" >&2
   exit 1
 fi
-if ! "$GODOT_BIN" --headless --path "$DEMO_DIR" --script "$ROOT_DIR/scripts/check_exported_scene_properties.gd"; then
+if ! "$GODOT_BIN" --headless --path "$DEMO_DIR" --script "$ROOT_DIR/scripts/check_exported_scene_properties.gd" -- --require-converted; then
   echo "[android_minified] exported scenes lost script properties (task 112 check); refusing to install." >&2
   exit 1
 fi

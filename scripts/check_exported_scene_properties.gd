@@ -12,11 +12,18 @@ extends SceneTree
 ## drop values equal to the class default.
 ##
 ## Usage (from the project's export environment, so the Kanama addon loads):
-##   godot --headless --path <project> --script <kanama>/scripts/check_exported_scene_properties.gd
+##   godot --headless --path <project> --script <kanama>/scripts/check_exported_scene_properties.gd [-- --require-converted]
 ## Exit 0 = every converted scene keeps its script properties (or nothing was converted);
-## exit 1 = at least one property missing (each named on stderr); exit 2 = a scene failed to load.
+## exit 1 = at least one property missing (each named on stderr), or, with --require-converted, no
+## scene was converted (a caller whose project has scenes passes it: an export that wrote nothing,
+## or wrote its scenes unconverted, must not pass as "nothing to compare"); exit 2 = a scene failed to load.
+## A project that sets editor/export/convert_text_resources_to_binary=false exports its scenes as text,
+## with every value intact: the check passes with a note in both modes and does not compare any old
+## conversion cache. A per-feature override of that setting (`....<feature tag>`, e.g. `.web=true`) can turn
+## conversion back on for an export, so with any override present the check compares as usual.
 
 const TAG := "[check_exported_scenes]"
+const CONVERT_SETTING := "editor/export/convert_text_resources_to_binary"
 
 # ClassDB has no class_has_property(); cache each class's inherited property-name set instead.
 var _native_props := {}
@@ -31,13 +38,26 @@ func _is_native_property(type: String, prop: String) -> bool:
 		_native_props[type] = names
 	return _native_props[type].has(prop)
 
+func _has_feature_override(setting: String) -> bool:
+	for info in ProjectSettings.get_property_list():
+		if String(info["name"]).begins_with(setting + "."):
+			return true
+	return false
+
 func _initialize() -> void:
 	quit(_run())
 
 func _run() -> int:
+	var require_converted := OS.get_cmdline_user_args().has("--require-converted")
+	if not bool(ProjectSettings.get_setting(CONVERT_SETTING, true)) and not _has_feature_override(CONVERT_SETTING):
+		print("%s PASS: conversion disabled by the project (%s=false); text scenes keep their values, nothing to compare" % [TAG, CONVERT_SETTING])
+		return 0
 	var exported_root := "res://.godot/exported"
 	var dir := DirAccess.open(exported_root)
 	if dir == null:
+		if require_converted:
+			printerr("%s FAIL: no %s directory: no scene was converted, and the caller expects converted scenes (--require-converted)" % [TAG, exported_root])
+			return 1
 		print("%s no %s directory: nothing was converted (convert_text_resources_to_binary off?)" % [TAG, exported_root])
 		return 0
 	var checked := 0
@@ -71,6 +91,9 @@ func _run() -> int:
 		return 2
 	if missing > 0:
 		printerr("%s FAIL: %d script propert%s dropped by the export across %d converted scene(s)" % [TAG, missing, "y" if missing == 1 else "ies", checked])
+		return 1
+	if checked == 0 and require_converted:
+		printerr("%s FAIL: 0 converted scenes to compare, and the caller expects converted scenes (--require-converted)" % TAG)
 		return 1
 	print("%s PASS: %d converted scene(s), every script property kept" % [TAG, checked])
 	return 0

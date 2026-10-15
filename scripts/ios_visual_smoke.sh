@@ -2603,13 +2603,25 @@ storyboard/use_custom_bg_color=false
 storyboard/custom_bg_color=Color(0, 0, 0, 1)
 EOF
 
-"$godot_bin" --headless --path "$project_dir" --export-debug iOS "$export_dir/$app_name.ipa"
+export_log="$work_dir/ios_export.log"
+export_status=0
+"$godot_bin" --headless --path "$project_dir" --export-debug iOS "$export_dir/$app_name.ipa" 2>&1 | tee "$export_log" || export_status="${PIPESTATUS[0]}"
+# The Kanama Tools export guard prints this line, and ends the export, when a .kt script the export
+# uses does not bind in the export-time editor (desktop addon missing, or kanama-scripts.jar stale).
+if grep -q 'Kanama: Export stopped' "$export_log"; then
+  echo "[ios_visual_smoke] the Kanama export guard stopped the export: the export-time editor cannot bind the project's .kt scripts (see the 'Kanama: Export stopped' message above); log: $export_log" >&2
+  exit 1
+fi
+if [[ "$export_status" -ne 0 ]]; then
+  echo "[ios_visual_smoke] Godot export failed (exit $export_status); log: $export_log" >&2
+  exit 1
+fi
 
 # Task 112: the export instantiates and re-packs every scene when it converts text resources to
 # binary and keeps only the properties the script instance reports; a project whose desktop
 # kanama-scripts.jar does not match its .kt scripts loses every scene-stored @Export value
 # silently (task 106). Compare each converted scene with its source before building the app.
-if ! "$godot_bin" --headless --path "$project_dir" --script "$ROOT_DIR/scripts/check_exported_scene_properties.gd"; then
+if ! "$godot_bin" --headless --path "$project_dir" --script "$ROOT_DIR/scripts/check_exported_scene_properties.gd" -- --require-converted; then
   echo "[ios_visual_smoke] exported scenes lost script properties (see [check_exported_scenes] lines above)" >&2
   exit 1
 fi
