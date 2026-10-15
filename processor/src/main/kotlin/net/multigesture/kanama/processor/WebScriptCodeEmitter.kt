@@ -2805,18 +2805,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
     // Destruction is PREDELETE only -- the one notification that means the node is really
     // going away. Godot always exits the tree before deleting, so @OnExitTree has already
-    // run by the time we get here.
+    // run by the time we get here. It calls no method of its own: in a RefCounted's PREDELETE
+    // (a scripted Resource) `self` is already a null instance, so such a call fails (a debug build
+    // reports it and aborts the function, a release build skips it). The helpers it needs are
+    // static, and the proxy's callbacks go with its members.
     appendLine("func _notification(what: int) -> void:")
     appendLine("\tif what != NOTIFICATION_PREDELETE:")
     appendLine("\t\treturn")
     appendLine("\tif _kanama_handle == 0:")
-    appendLine("\t\t_kanama_clear_callbacks()")
     appendLine("\t\treturn")
     appendLine("\tvar freed_handle := _kanama_handle")
     appendLine("\t$DROP_ROUTED_AWAITS(freed_handle)")
     appendLine("\t$DROP_ROUTED_GUARDS(freed_handle)")
     appendLine("\t_kanama_bridge.free(_kanama_handle)")
-    appendLine("\t_kanama_clear_callbacks()")
+    appendLine("\t_kanama_bridge.clearProxyCallbacks(_kanama_handle)")
     appendLine("\t_kanama_handle = 0")
     appendLine("\t# The handle dictionary is shared across proxies: erase only this script's")
     appendLine("\t# entry (bridge-side ownership release retires the handles it minted).")
@@ -2824,29 +2826,6 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t_kanama_tween_children.clear()")
     appendLine("\t_kanama_tween_targets.clear()")
     appendLine("\t_kanama_bridge.recordFreed(freed_handle)")
-    appendLine()
-    appendLine("func _kanama_clear_callbacks() -> void:")
-    appendLine("\tif _kanama_bridge == null:")
-    appendLine("\t\treturn")
-    appendLine("\tif _kanama_handle != 0:")
-    appendLine("\t\t_kanama_bridge.clearProxyCallbacks(_kanama_handle)")
-    appendLine("\t_kanama_apply_callback = null")
-    appendLine("\t_kanama_immediate_callback = null")
-    appendLine("\t_kanama_resource_callback = null")
-    appendLine("\t_kanama_signal_callback = null")
-    appendLine("\t_kanama_resource_release_callback = null")
-    appendLine("\t_kanama_construct_callback = null")
-    appendLine("\t_kanama_node_lookup_callback = null")
-    appendLine("\t_kanama_packed_scene_callback = null")
-    appendLine("\t_kanama_noargs_object_callback = null")
-    appendLine("\t_kanama_input_cursor_callback = null")
-    appendLine("\t_kanama_connect_callback = null")
-    appendLine("\t_kanama_object_query_callback = null")
-    appendLine("\t_kanama_noargs_vector2_callback = null")
-    appendLine("\t_kanama_signal_vector2i_callback = null")
-    appendLine("\t_kanama_tween_callback = null")
-    appendLine("\t_kanama_noargs_vector3_callback = null")
-    appendLine("\t_kanama_report_callback = null")
     appendLine()
     appendLine("func _kanama_report_error(args: Array) -> int:")
     appendLine(
@@ -4335,7 +4314,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tKanamaWebHandles.await_watchers[callback_id] = weakref(watcher)")
     appendLine("\treturn OK")
     appendLine()
-    appendLine("func $DROP_AWAIT(callback_id: int) -> void:")
+    appendLine("static func $DROP_AWAIT(callback_id: int) -> void:")
     appendLine(
       "\t# Close an await: mark its watcher done (so it reports nothing) and disconnect it,"
     )
@@ -4353,7 +4332,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif source != null and source.is_connected(watcher.signal_name, callable):")
     appendLine("\t\tsource.disconnect(watcher.signal_name, callable)")
     appendLine()
-    appendLine("func $DROP_ROUTED_AWAITS(router_handle: int) -> void:")
+    appendLine("static func $DROP_ROUTED_AWAITS(router_handle: int) -> void:")
     appendLine(
       "\t# This script is being freed: drop every await it was delivering (review S3), so no"
     )
@@ -4364,7 +4343,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tif watcher == null or watcher.router_handle == router_handle:")
     appendLine("\t\t\t$DROP_AWAIT(callback_id)")
     appendLine()
-    appendLine("func $DROP_ROUTED_GUARDS(router_handle: int) -> void:")
+    appendLine("static func $DROP_ROUTED_GUARDS(router_handle: int) -> void:")
     appendLine(
       "\t# This script is being freed (task 129 E review S1): its lambda connections end with it, as"
     )

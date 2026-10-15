@@ -273,7 +273,12 @@ class WebScriptCodeEmitterTest {
     assertTrue(proxy.source.contains("_kanama_bridge.refreshNode2DSnapshot(int(target_handle),"))
     assertTrue(proxy.source.contains("_kanama_bridge.releaseTweenGraph(tween_handle)"))
     assertTrue(proxy.source.contains("if _kanama_handle == 0:"))
-    assertTrue(proxy.source.contains("_kanama_clear_callbacks()"))
+    // PREDELETE calls no method of the proxy's own (a scripted Resource's `self` is null there):
+    // the bridge drops the callbacks, the drop helpers are static.
+    assertTrue(proxy.source.contains("\t_kanama_bridge.clearProxyCallbacks(_kanama_handle)\n"))
+    assertFalse(proxy.source.contains("_kanama_clear_callbacks"))
+    assertTrue(proxy.source.contains("static func _kanama_drop_routed_awaits(router_handle: int)"))
+    assertTrue(proxy.source.contains("static func _kanama_drop_routed_guards(router_handle: int)"))
     assertTrue(proxy.source.contains("recordImmediateChildCount(result)"))
     assertTrue(proxy.source.contains("func _enter_tree()"))
     assertTrue(proxy.source.contains("_kanama_bridge.enterTree(_kanama_handle)"))
