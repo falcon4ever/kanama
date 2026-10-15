@@ -258,12 +258,14 @@ abstract class TypedSignal internal constructor(
   /** The untyped handle for this signal. */
   fun untyped(): GodotSignal = emitter.signal(name)
 
+  /** [GodotSignal.connectArgs] for the user's [callback] (its build owns the connection). */
   internal fun connectArgs(
     target: GodotObject,
     flags: GodotObject.ConnectFlags,
+    callback: Any,
     dispatch: (SignalArgReader) -> Unit,
   ): SignalConnection =
-    emitter.signal(name).connectArgs(target, argumentCount, flags, null) { args ->
+    emitter.signal(name).connectArgs(target, argumentCount, flags, null, callback) { args ->
       try {
         dispatch(args)
       } catch (e: SignalArgumentException) {
@@ -293,6 +295,9 @@ abstract class TypedSignal internal constructor(
                 )
               }
             },
+            // The runtime owns an await's connection: cancelling the script scope at its free
+            // closes it, so a hot reload has nothing to drop.
+            origin = null,
           ) { args ->
             // A decode failure resumes the awaiting coroutine with it (reported by the script's
             // scope) instead of leaving it suspended.
@@ -343,7 +348,7 @@ class Signal0(emitter: GodotObject, name: String) : TypedSignal(emitter, name, 0
 
   /** Connects [callback], bound to [target], with [flags] (`ConnectFlags.ONE_SHOT`, `DEFERRED`). */
   fun connect(target: GodotObject, flags: GodotObject.ConnectFlags, callback: () -> Unit): SignalConnection =
-    connectArgs(target, flags) { callback() }
+    connectArgs(target, flags, callback) { callback() }
 
   /** Suspends until the signal fires (GDScript `await timer.timeout`). */
   suspend fun await() {
@@ -364,7 +369,7 @@ class Signal1<A>(emitter: GodotObject, name: String, private val a: SignalArgTyp
 
   /** Connects [callback], bound to [target], with [flags]. */
   fun connect(target: GodotObject, flags: GodotObject.ConnectFlags, callback: (A) -> Unit): SignalConnection =
-    connectArgs(target, flags) { args -> callback(a.read(args, 0)) }
+    connectArgs(target, flags, callback) { args -> callback(a.read(args, 0)) }
 
   /** Suspends until the signal fires and returns its argument (GDScript `var body = await area.body_entered`). */
   suspend fun await(): A = awaitArgs { args -> a.read(args, 0) }
@@ -387,7 +392,7 @@ class Signal2<A, B>(
 
   /** Connects [callback], bound to [target], with [flags]. */
   fun connect(target: GodotObject, flags: GodotObject.ConnectFlags, callback: (A, B) -> Unit): SignalConnection =
-    connectArgs(target, flags) { args -> callback(a.read(args, 0), b.read(args, 1)) }
+    connectArgs(target, flags, callback) { args -> callback(a.read(args, 0), b.read(args, 1)) }
 
   /** Suspends until the signal fires: `val (first, second) = signal.await()`. */
   suspend fun await(): SignalArgs2<A, B> = awaitArgs { args -> SignalArgs2(a.read(args, 0), b.read(args, 1)) }
@@ -415,7 +420,7 @@ class Signal3<A, B, C>(
 
   /** Connects [callback], bound to [target], with [flags]. */
   fun connect(target: GodotObject, flags: GodotObject.ConnectFlags, callback: (A, B, C) -> Unit): SignalConnection =
-    connectArgs(target, flags) { args -> callback(a.read(args, 0), b.read(args, 1), c.read(args, 2)) }
+    connectArgs(target, flags, callback) { args -> callback(a.read(args, 0), b.read(args, 1), c.read(args, 2)) }
 
   /** Suspends until the signal fires: `val (x, y, z) = signal.await()`. */
   suspend fun await(): SignalArgs3<A, B, C> =
@@ -450,7 +455,7 @@ class Signal4<A, B, C, D>(
     flags: GodotObject.ConnectFlags,
     callback: (A, B, C, D) -> Unit,
   ): SignalConnection =
-    connectArgs(target, flags) { args ->
+    connectArgs(target, flags, callback) { args ->
       callback(a.read(args, 0), b.read(args, 1), c.read(args, 2), d.read(args, 3))
     }
 
@@ -489,7 +494,7 @@ class Signal5<A, B, C, D, E>(
     flags: GodotObject.ConnectFlags,
     callback: (A, B, C, D, E) -> Unit,
   ): SignalConnection =
-    connectArgs(target, flags) { args ->
+    connectArgs(target, flags, callback) { args ->
       callback(a.read(args, 0), b.read(args, 1), c.read(args, 2), d.read(args, 3), e.read(args, 4))
     }
 

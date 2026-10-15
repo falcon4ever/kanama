@@ -215,11 +215,23 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
 
   @Signal fun smokeChecked(message: String) = Unit
 
+  // A lambda connection whose receiver outlives this script object: the GDScript autoload. The
+  // in-process hot reload smoke rewrites the build letter; after the reload only the new build's
+  // line may print (the old build's connection is dropped once its script objects are gone).
+  private fun connectSurvivingTargetLambda() {
+    if (OS.getEnvironment("KANAMA_IN_PROCESS_HOT_RELOAD_SMOKE") != "1") return
+    val autoload = self.getNodeOrNull("/root/KanamaSmokeAutoload") ?: return
+    autoload.signal("probe").connect(autoload, 0) {
+      System.err.println("[kanama:kt] surviving-target lambda build=A")
+    }
+  }
+
   @OnReady
   fun ready() {
     if (smokeScene == null) {
       smokeScene = PackedScene.create()
     }
+    connectSurvivingTargetLambda()
     GD.print("Hello from Kanama script")
     // task 51 — Resource now extends RefCounted (Godot's real Object > RefCounted > Resource
     // chain, as iOS already did), so GodotObject's surface (setMeta/getMeta/…) is reachable on

@@ -623,6 +623,7 @@ reference other code holds keep working. What survives and what does not:
 | a stored (exported) property whose type did not change: its value is set back | a stored property whose type changed: it takes the new build's default (or the autoload scene's value) |
 | the nodes of the autoload's scene (`.tscn` children) | children created at run time (in `_ready` or later): they are freed |
 | connections other objects made **to** the autoload | lambda connections the autoload made (`signal.connect(self) { ... }`): they are disconnected |
+| | any other lambda connection of the old build, whatever its target: dropped once the old build's last script object is gone, with one warning (see [Signals: hot reload](signals.md#hot-reload)) |
 | | every other Kotlin field: it starts from its initializer |
 
 Then `_ready` runs again on the reset nodes, children before parents as Godot

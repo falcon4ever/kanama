@@ -310,6 +310,8 @@ internal object ScriptOwnerLinks {
             adopt(link, fresh)
             link.makeStrong()
             ScriptOwnerIds.remember(fresh.kotlinObject, link.instanceId)
+            // Built by the current factory: after a hot reload the owner moves to the new build.
+            ScriptBridge.noteScriptObject(link.owner.address(), fresh.kotlinObject)
           }
         }
       }

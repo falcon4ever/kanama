@@ -341,3 +341,32 @@ fun onBodyEntered(body: Node3D) {
     body.hide()
 }
 ```
+
+### Hot reload
+
+On desktop, a hot reload loads the new build of your scripts while the old
+build's script objects keep running until they are freed: the scene reload
+frees the scene's, and Kotlin autoloads are reset in place. A lambda connection
+belongs to the build that made it. Once the old build's last script object is
+gone, every lambda connection it made is disconnected on the next frame, even
+when its target is still alive (the scene tree, a GDScript autoload, a node that
+was kept), and Kanama prints one warning:
+
+```text
+hot-reload: dropped 2 lambda connection(s) of build 1 whose script objects are gone (SceneTree.process_frame x1, Hud.score_changed x1); the new build's _ready connects again
+```
+
+So make lambda connections in `_ready` (or later) and never expect one to
+outlive a hot reload: `_ready` of the new objects connects them again, running
+the new code. While some of the old build's objects are still alive (a scene
+you did not reload), its connections stay and run the old code, as those
+objects do.
+
+| Connection | GDScript after a reload | Kanama after a desktop hot reload |
+|---|---|---|
+| by name: `connect(target, "onHit")`, a scene connection, GDScript's `hit.connect(on_hit)` | survives and calls the new method | survives and calls the new method |
+| a lambda | moved to the new code when the lambda is still in the source; otherwise skipped silently | dropped with its build (one warning); `_ready` connects the new one |
+
+A Kotlin `obj::method` reference is dropped with its build like a lambda. C#
+re-binds a method-reference delegate by instance and method name after a reload;
+Kanama does not, so connect by name when a connection must survive a reload.

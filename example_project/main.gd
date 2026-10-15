@@ -732,7 +732,19 @@ func _process(_delta: float) -> void:
 
 func _kanama_hot_reload_smoke_ready() -> void:
 	_kanama_scene_autoload_probe()
+	_kanama_surviving_target_probe()
 	print("[kanama:gd] in-process hot reload smoke ready")
+
+# A lambda connection whose receiver survives the reload (HelloScript connects one to this GDScript
+# autoload's `probe`): before the reload build A's lambda runs; after it only build B's. The old
+# build's connections are dropped on the frame after its last script object is freed (the scene
+# reload frees it in this frame), so the post-reload emission waits one frame.
+func _kanama_surviving_target_probe() -> void:
+	var stage_file := OS.get_environment("KANAMA_IN_PROCESS_HOT_RELOAD_STAGE")
+	if stage_file != "" and FileAccess.file_exists(stage_file):
+		await get_tree().process_frame
+		print("[kanama:gd] surviving-target probe after reload")
+	KanamaSmokeAutoload.probe.emit()
 
 # task 133 C2 -- the Kotlin scene autoload across an in-process hot reload, read through its
 # GDScript global name (the node, and so the global, must survive the reload). Before the reload

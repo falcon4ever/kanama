@@ -98,13 +98,16 @@ expect class GodotSignal internal constructor(owner: GodotObject, name: String) 
      * [target] whose call hands [dispatch] a reader over the emitted arguments (no list, no
      * argument-count limit) and whose release — Godot dropped the connection — runs [onRelease].
      * An emission with fewer than [argumentCount] arguments is a call error, as for a GDScript
-     * function.
+     * function. [origin] is the user's callback (null for a runtime-owned `await`): on desktop a
+     * hot reload drops the connection with the build that defined it (task 138 item 11); iOS has
+     * no hot reload and ignores it.
      */
     internal fun connectArgs(
         target: GodotObject,
         argumentCount: Int,
         flags: GodotObject.ConnectFlags,
         onRelease: (() -> Unit)?,
+        origin: Any?,
         dispatch: (SignalArgReader) -> Unit,
     ): SignalConnection
 }
