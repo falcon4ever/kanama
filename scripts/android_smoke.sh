@@ -32,6 +32,9 @@ Optional environment:
   KANAMA_ANDROID_LOG=/path/to/logcat.txt
   KANAMA_ANDROID_SCREENSHOT=/path/to/screenshot.png
   KANAMA_ANDROID_LAUNCH_WAIT=30
+  KANAMA_ANDROID_SELFTEST_WAIT=90
+      After the launch wait, wait at most this many more seconds for the ownership self-test's
+      verdict line (it ends as soon as the line is in the log or the app has stopped).
   KANAMA_ANDROID_RENDERER=mobile|gl_compatibility|forward_plus
       Temporarily overrides the demo's rendering_method.mobile project setting
       for this run (restored afterwards) and asserts in logcat that the
@@ -51,6 +54,7 @@ APK_PATH="${4:-/tmp/kanama-android-smoke.apk}"
 LOG_FILE="${KANAMA_ANDROID_LOG:-/tmp/kanama_android_smoke.log}"
 SCREENSHOT="${KANAMA_ANDROID_SCREENSHOT:-/tmp/kanama_android_smoke.png}"
 LAUNCH_WAIT="${KANAMA_ANDROID_LAUNCH_WAIT:-30}"
+SELFTEST_WAIT="${KANAMA_ANDROID_SELFTEST_WAIT:-90}"
 PANAMAPORT_MAVEN_REPO="${KANAMA_PANAMAPORT_MAVEN_REPO:-file://$HOME/.m2/repository}"
 RENDERER_OVERRIDE="${KANAMA_ANDROID_RENDERER:-}"
 PROJECT_GODOT_BACKUP=""
@@ -279,6 +283,18 @@ if (( launch_elapsed < LAUNCH_WAIT )); then
   sleep $((LAUNCH_WAIT - launch_elapsed))
 fi
 adb_retry logcat --pid "$APP_PID" -d >"$LOG_FILE"
+# Task 138 item 6: the ownership self-test (switched on above) runs over many frames, longer on a slow
+# device; wait for its own verdict line, at most SELFTEST_WAIT more seconds, rather than a fixed window.
+# An app that stopped (crashed, or quit on its own) is judged on the log it left.
+selftest_waited=0
+while ! grep -Eq "OWNERSHIP SELFTEST: [0-9]+ passed, [0-9]+ failed" "$LOG_FILE" &&
+  (( selftest_waited < SELFTEST_WAIT )) &&
+  [[ "$(app_pid_once "$ADB_BIN" "$PACKAGE_NAME")" == "$APP_PID" ]]; do
+  sleep 2
+  selftest_waited=$((selftest_waited + 2))
+  adb_retry logcat --pid "$APP_PID" -d >"$LOG_FILE"
+done
+echo "[android_smoke] ownership self-test verdict wait: ${selftest_waited}s after the ${LAUNCH_WAIT}s launch wait"
 
 check_log "Initializing Godot plugin KanamaAndroid"
 check_log "registered KanamaScriptLanguage"
