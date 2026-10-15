@@ -62,6 +62,13 @@ class WebUtilityCallTest {
     // Godot's Variant clamp: `value < min` then `value > max` on the result.
     assertEquals(1.0, GD.clamp(0.0 as Any?, 3.0, 1.0))
     assertEquals(3.0, GD.clampf(0.0, 3.0, 1.0))
+    // The number overloads of `clamp` are the Variant function too; `clampi` keeps the typed
+    // result.
+    assertEquals(1.0, GD.clamp(0.0, 3.0, 1.0))
+    assertEquals(1L, GD.clamp(0L, 3L, 1L))
+    assertEquals(1, GD.clamp(0, 3, 1))
+    assertEquals(3L, GD.clampi(0L, 3L, 1L))
+    assertEquals(0.5, GD.clamp(0.5, 0.0, 1.0))
     assertEquals(2.5, GD.abs(-2.5))
     assertEquals(4L, GD.abs(-4L))
     assertEquals(2.0, GD.snapped(2.2, 0.5))

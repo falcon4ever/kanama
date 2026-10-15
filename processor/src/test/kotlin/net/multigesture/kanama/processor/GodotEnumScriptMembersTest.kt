@@ -277,7 +277,7 @@ class GodotEnumScriptMembersTest {
     // Set wraps the raw slot (no ordinal clamp), get reads `.value`.
     has("kt.mode = v.let { raw -> $modeFq(raw) }")
     has("s.set(JAVA_LONG, 0, kt.mode.value)")
-    has("BuiltinTypes.readVariantLongList(value, a).map { i -> $modeFq(i) }")
+    has("BuiltinTypes.readVariantLongList(vVariant, a).map { i -> $modeFq(i) }")
     has("BuiltinTypes.initVariantFromAny(ret, kt.modes.map { it.value }, a)")
     // Registered function: INT arg wrapped, enum return unwrapped.
     has("val marg0 = $modeFq(marg0Raw)")

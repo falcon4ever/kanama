@@ -68,6 +68,9 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://color_script_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
 # task 133 -- the remaining value types as script types, beside their GDScript twin.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://value_type_script_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
+# task 138 item 26 -- a typed script property offered a value of the wrong type (wrong_type_set_smoke.tscn):
+# the Kotlin script and its GDScript twin are driven the same way.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://wrong_type_set_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
 # task 133 review -- every value type as a @RegisterClass argument and return (call + ptrcall).
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://register_class_value_type_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
 # task 134 B -- every value-type operator and method against GDScript (builtin_parity_ref.gd).
@@ -479,6 +482,34 @@ for vts_step in props set received emitted; do
     smoke_fail "Kotlin/GDScript value-type script type mismatch (${vts_step})" "kotlin: ${vt_kotlin:-<missing>} gdscript: ${vt_gdscript:-<missing>}"
   fi
 done
+# task 138 item 26 -- GDScript refuses a typed property value of the wrong type (the property keeps what
+# it held) and converts only what Variant::construct has (int and float, a String to a number, a
+# Vector2i to a Vector2, ...). Each Kotlin property line must equal the GDScript twin's line from the
+# same run, and every refusal is a script error that names the property, the expected and the actual
+# type, never a zero or empty value.
+for wts_row in flag count ratio label path vec2 vec2i vec3 vec3i tint vec4 area rot xform plane names modes extras scores; do
+  wts_kotlin="$(grep -o "WrongTypeSet kotlin ${wts_row} .*" "$LOG_FILE" | head -n 1 | sed 's/^WrongTypeSet kotlin //')"
+  wts_gdscript="$(grep -o "WrongTypeSet gdscript ${wts_row} .*" "$LOG_FILE" | head -n 1 | sed 's/^WrongTypeSet gdscript //')"
+  if [[ -z "$wts_kotlin" || "$wts_kotlin" != "$wts_gdscript" ]]; then
+    smoke_fail "Kotlin/GDScript wrong-typed property value mismatch (${wts_row})" "kotlin: ${wts_kotlin:-<missing>} gdscript: ${wts_gdscript:-<missing>}"
+  fi
+done
+check "^SCRIPT ERROR: java\\.lang\\.IllegalStateException: Expected Vector3 for property 'vec3' but the Variant holds Vector2$"
+check "^SCRIPT ERROR: java\\.lang\\.IllegalStateException: Expected int for property 'count' but the Variant holds null \\(Nil\\)$"
+check "^SCRIPT ERROR: java\\.lang\\.IllegalStateException: Expected Array for property 'names' but the Variant holds String$"
+check "^SCRIPT ERROR: java\\.lang\\.IllegalStateException: Expected Dictionary for property 'scores' but the Variant holds Array$"
+# The value types that decode through readVariantValue take the same conversions (a Basis for a Quaternion,
+# a Vector3 for a Plane, ...); what they refuse is named by Godot's type name, never the Kotlin class.
+check "^SCRIPT ERROR: java\\.lang\\.IllegalStateException: Expected Quaternion for property 'rot' but the Variant holds Array$"
+check "^SCRIPT ERROR: java\\.lang\\.IllegalStateException: Expected Quaternion for property 'rot' but the Variant holds Object$"
+check "^SCRIPT ERROR: java\\.lang\\.IllegalStateException: Expected Vector3 for property 'vec3' but the Variant holds Array$"
+# A value is converted once, as GDScript does: an unknown colour name is reported once per side (the
+# Kotlin property and its GDScript twin), not twice for the Kotlin one.
+# justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line.
+wts_color_errors="$(grep -c 'Invalid color name: kanama_not_a_color' "$LOG_FILE" || true)"
+if [[ "$wts_color_errors" != "2" ]]; then
+  smoke_fail "invalid colour name errors for the wrong-typed property rows (want 2: one per side)" "$wts_color_errors"
+fi
 # task 133 review -- a @RegisterClass method echoes all sixteen value types over Object.call and a
 # statically typed (ptrcall) call; Kotlin decodes a Transform3D argument's columns and origin.
 check "RegisterClassValueTypes call=16/16 typed=16/16 describe=\\(1\\.0, 2\\.0, 3\\.0\\)\\|\\(4\\.0, 5\\.0, 6\\.0\\)\\|\\(7\\.0, 8\\.0, 9\\.0\\)\\|\\(10\\.0, 11\\.0, 12\\.0\\) bad=\\[\\]"

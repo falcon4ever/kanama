@@ -5303,10 +5303,32 @@ GD_TYPED_OVERLOADS: dict[str, tuple[str, str | None]] = {
 }
 
 
+def _gd_variant_clamp_overloads(kotlin: str) -> list[str]:
+    """The untyped `clamp` on numbers follows GDScript's Variant `clamp`, not the typed `clampf` / `clampi`.
+
+    The Variant function applies `if (x < min) x = min; if (x > max) x = max`, so `clamp(0.0, 3.0, 1.0)` is
+    `1.0` (the typed functions give `3.0`: Godot's `CLAMP` tests `max` only when `x >= min`). Plain Kotlin,
+    no engine call, so every platform answers the same (task 138 item 30).
+    """
+    out = []
+    for kind in ("Double", "Long", "Int"):
+        out.append(
+            f"    fun {kotlin}(value: {kind}, min: {kind}, max: {kind}): {kind} {{\n"
+            "        var result = value\n"
+            "        if (result < min) result = min\n"
+            "        if (result > max) result = max\n"
+            "        return result\n"
+            "    }"
+        )
+    return out
+
+
 def _gd_typed_overloads(name: str, by_name: dict[str, dict]) -> list[str]:
     """`fun max(a: Double, b: Double): Double = maxf(a, b)` and its Long / Int twins."""
     float_form, int_form = GD_TYPED_OVERLOADS[name]
     kotlin = gd_kotlin_name(name)
+    if name == "clamp":
+        return _gd_variant_clamp_overloads(kotlin)
     out = []
     for delegate, kind in ((float_form, "float"), (int_form, "int")):
         if delegate is None:
