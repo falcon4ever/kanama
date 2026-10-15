@@ -282,6 +282,9 @@ internal object ScriptOwnerLinks {
     }
     ObjectRegistry.replace(handle, replacement)
     ScriptBridge.retrackOwner(link.owner, replacement, null)
+    // No live script object until materialize builds one from the current build: uncount the
+    // collected one so a retired build can reach 0 (and stop pinning its loader).
+    ScriptBridge.forgetScriptObject(link.owner.address())
   }
 
   /**

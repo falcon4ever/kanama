@@ -364,7 +364,7 @@ objects do.
 
 | Connection | GDScript after a reload | Kanama after a desktop hot reload |
 |---|---|---|
-| by name: `connect(target, "onHit")`, a scene connection, GDScript's `hit.connect(on_hit)` | survives and calls the new method | survives and calls the new method |
+| by name: `connect(target, "onHit")`, a scene connection, GDScript's `hit.connect(on_hit)` | survives and calls the new method | survives and calls the new method once the target has the new build's object (a node of a scene you did not reload keeps its old object and runs the old method) |
 | a lambda | moved to the new code when the lambda is still in the source; otherwise skipped silently | dropped with its build (one warning); `_ready` connects the new one |
 
 A Kotlin `obj::method` reference is dropped with its build like a lambda. C#
