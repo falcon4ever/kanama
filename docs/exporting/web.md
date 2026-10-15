@@ -89,9 +89,10 @@ throws, the script is not built and not retried: the failure is reported once, a
 script that looks it up gets an error, not a half-built instance.
 
 A **companion-object or top-level property is not a script's property**: Kotlin initializes it on
-first access, inside whichever script's callback touches it first. An engine object it creates is
-billed to that script and released with it, so another script reading the cached value later holds
-a dead handle. Create engine objects in per-instance properties. Engine code that runs with no
+first access, inside whichever script's callback touches it first. A `RefCounted` it keeps (a
+loaded `Resource`, a `create()` result) lives while Kotlin holds it, as on desktop; any other engine
+object it creates is billed to that script and released with it, so another script reading the
+cached value later holds a dead handle. Create those in per-instance properties. Engine code that runs with no
 script running at all (a call outside any callback) fails with "No Kanama Web proxy owns handle=0"
 or "A Kanama Web singleton call was made outside a script callback".
 

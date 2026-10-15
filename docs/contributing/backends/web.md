@@ -502,7 +502,13 @@ runs when no proxy processes, as after a teardown that leaves only scripted reso
 queue: it erases the proxies' dictionary entry through any installed proxy, tells
 Kotlin, and retires the slot, as desktop's `OwnedReleases` drains the GC's cleanups on the next
 frame. `close()` unregisters its wrapper and releases the handle at once when that was the last
-hold (`closeWrapper`), so another wrapper of the same object keeps it. A conversion that builds
+hold (`closeWrapper`), so another wrapper of the same object keeps it. It first applies both
+command queues (`flushWebCommandsBeforeRelease`, the ordering barrier every immediate call makes;
+`ScriptResource.close()` and the generic tier's `WebGenericCallResult.close()` too): a queued setter
+that hands the object to the engine (`ButtonGroup.create().use { button.buttonGroup = it }`) must
+reach it before the release erases the proxies' reference, or it finds no object and sets null
+(`rcCloseAfterQueuedSet`). Deferring the release to the next drain instead would also order it after
+the flush, but `close()` would no longer release at once. A conversion that builds
 the typed wrapper over a temporary one (a typed load over `load()`'s `Resource`, a generic call's
 typed return) ends the temporary's hold (`webRetyped`, bridge `dropWrapper`), so `close()` on the
 wrapper the script got releases at once. Owner teardown re-routes a
@@ -519,7 +525,12 @@ and at once when the page idles, but Firefox collects only under allocation pres
 scene with mouse motion would otherwise pin every event until its nursery fills. A browser whose
 `FinalizationRegistry` refuses a Kotlin/Wasm object (not seen in Chrome or Firefox; Safari is not
 measured) makes `registerWrapper` answer 0 after one console warning: a RefCounted only Kotlin keeps
-then goes with its script, a lent one after its 2 frames (the protocol-36 rule, loud). Every
+then goes with its script, a lent one after its 2 frames (the protocol-36 rule, loud). In that mode
+`holdRefCounted` and `dropWrapper` change nothing: no wrapper is counted, so their -1 would release a
+handle a wrapper still names (`sprite.texture = a; sprite.texture = b` would drop `a`). Registering a
+wrapper of a lent RefCounted again moves it to the young end of the cap's queue, so the cap evicts
+the least recently wrapped lend. `scripts/web/bridge_rc_ownership_selftest.mjs` pins both (no
+browser run is in fallback mode). Every
 driver's performance section reports `maxRcPinned`, `rcReleasedByGc`, `rcReleasedByClose`,
 `rcReleasedByGrace`, `rcReleasedByCap`, `wrapperRegistrations` and `wrapperRegistry` (0 for the
 fallback). Because a freed script's dropped wrappers release its handles only once the browser
@@ -533,7 +544,7 @@ The web3d `LentProbe` rows (`lentStoredArgumentStaysValid`, `lentArgumentIdentit
 `lentKotlinQueueFree`, `lentDispatchCost`, `lentQueueFreedNodeLivesToFrameEnd`,
 `lentLongFreedHandleIsIllegalState`, `lentRefCountedGraceRenewed`, `lentBurstDrains`,
 `lentSweepRunsWhilePaused`) and `OwnProbe` rows (`rcHeldByKotlinOutlives`,
-`rcReleasedWhenCollected`, `rcCloseReleasesNow`, `rcOutlivesItsReceiver`,
+`rcReleasedWhenCollected`, `rcCloseReleasesNow`, `rcCloseAfterQueuedSet`, `rcOutlivesItsReceiver`,
 `rcResultOutlivesItsScript`, `rcDispatchCost`; Chrome runs with `--js-flags=--expose-gc` so the
 collection rows call `gc()`, Firefox allocates 4 MB a frame instead) pin all of it.
 `lentDispatchCost` holds a seen plain Node argument at 0 lending JS calls per dispatch and a Node3D

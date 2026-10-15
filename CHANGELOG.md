@@ -162,6 +162,15 @@ allocation pressure; C# has none): past that the oldest go first. A `Sprite2D`'s
 answering after the code that set it dropped its wrapper. The Web bridge protocol is 37. See
 [Objects you receive](docs/game-dev/godot-api.md#objects-you-receive).
 
+Three Web behaviours change with it. A second `close()` does nothing (on `ConfigFile`,
+`AudioStream`, `PackedScene` and most other classes that had `close()` it threw "Unknown or already
+released"). `close()` ends only that wrapper's reference (`Texture2D.close()` released the texture's
+handle for every wrapper of it, so another script's wrapper went stale), and it applies the engine
+calls made before it first, so `ButtonGroup.create().use { button.buttonGroup = it }` leaves the
+button its group. `ResourceLoader.loadThreadedGet` removes the finished load, as Godot's
+`load_threaded_get` does: a later `loadThreadedGetStatus` for that path answers `INVALID_RESOURCE`,
+where it stayed `LOADED`.
+
 - **Source break:** (Web) `Texture2D` `AudioStream` `PackedScene` `InputEventKey` `InputEventMouseButton` `Mesh` `Material` `ButtonGroup` `ConfigFile` `FastNoiseLite` `MeshLibrary` `KinematicCollision3D` `ScriptResource`:
   no longer declare `close()` and `AutoCloseable` themselves; both come from `RefCounted` now, so
   every call still compiles (`ScriptResource.close()` overrides it). Nothing to migrate.
