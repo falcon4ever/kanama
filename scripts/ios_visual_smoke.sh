@@ -653,9 +653,26 @@ elif [[ "$kanama_script_probe" -eq 1 ]]; then
   scene_header='[gd_scene load_steps=2 format=3]'
   script_resource_line='[ext_resource type="Script" path="res://kanama_ios_probe.kt" id="1_probe"]'
   status_script_line='script = ExtResource("1_probe")'
+  # On iOS the runtime binds this path (res://kanama_ios_probe.kt) to its BUILT-IN Kotlin/Native probe, which is what
+  # this mode tests; no project script is compiled for iOS (see install_ios_addon_args). The export-time editor is a
+  # desktop editor, though, and binds a .kt by its basename to a class in the desktop kanama-scripts.jar: before
+  # kanama#340 this file was a comment, bound to nothing, and the export guard rightly stopped the export ("Export
+  # stopped: ... res://kanama_ios_probe.kt (not in kanama-scripts.jar"). So the file is a real script class too, the
+  # project root is the desktop scripts dir (as in the starter project), and the scene converts like any other.
   cat >"$project_dir/kanama_ios_probe.kt" <<'EOF'
-// Kanama iOS script smoke resource.
-// The experimental iOS backend binds this file to a built-in Kotlin/Native probe.
+// Kanama iOS script smoke resource. On iOS the runtime binds this path to its built-in Kotlin/Native
+// probe; this class is the desktop half that the export-time editor binds (by the file's basename).
+@file:Suppress("ClassName")
+
+package net.multigesture.kanama.iossmoke
+
+import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
+import net.multigesture.kanama.api.KanamaScript
+import net.multigesture.kanama.api.Label
+
+@ScriptClass(attachTo = "Label")
+class kanama_ios_probe(godotObject: GodotHandle) : KanamaScript<Label>(godotObject, ::Label)
 EOF
 elif [[ "$kanama_user_script_probe" -eq 1 ]]; then
   status_text="Waiting for Kanama iOS project script"
@@ -2456,6 +2473,12 @@ if [[ -z "$godot_project_baseline_dir" ]]; then
     install_ios_addon_args+=("-PkanamaIosXcframeworkMode=device")
   else
     install_ios_addon_args+=("-PkanamaIosXcframeworkMode=full")
+  fi
+  if [[ "$kanama_script_probe" -eq 1 ]]; then
+    # The desktop scripts jar compiles the project root (kanama_ios_probe.kt, the probe's desktop class) so the
+    # export-time editor binds it; the iOS runtime gets NO project scripts (an empty list, which the iOS build would
+    # otherwise take from -PkanamaProjectScriptsDir), so on the phone the path stays bound to the built-in probe.
+    install_ios_addon_args+=("-PkanamaProjectScriptsDir=$project_dir" "-PkanamaIosProjectScriptsDirs=")
   fi
   if [[ "$kanama_user_script_probe" -eq 1 ]]; then
     install_ios_addon_args+=("-PkanamaIosProjectScriptsDir=$project_dir/kotlin-src")
