@@ -205,7 +205,7 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
   }
 
   fun getWindow(): Window? =
-    (webGenericCall(this, "get_window", listOf()) as GodotObject?)?.let { Window(it.handle) }
+    (webGenericCall(this, "get_window", listOf()) as GodotObject?)?.let { webRetyped(it, Window(it.handle)) }
 
   /** Signal `ready`; see [TypedSignal]. */
   val ready: Signal0

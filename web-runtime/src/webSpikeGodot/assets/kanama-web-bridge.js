@@ -1643,6 +1643,22 @@
       return 1;
     },
     /**
+     * A temporary wrapper another one replaced (Kotlin's `webRetyped`: a load's `Resource` becoming
+     * a `Texture2D`): its hold ends, never releasing at once; the last hold's end goes to the drain.
+     */
+    dropWrapper(ref, handle) {
+      const slot = this.browserHandleSlot(handle);
+      if (!slot?.refCounted) return 0;
+      if (this.wrapperRegistry?.unregister(ref) && slot.wrappers > 0) {
+        slot.wrappers -= 1;
+        if (slot.wrappers === 0) {
+          slot.collected = true;
+          this.pendingUnheld.add(handle);
+        }
+      }
+      return 1;
+    },
+    /**
      * A hold that is not a wrapper (`delta` +1 / -1): Kotlin's Sprite2D texture snapshot names the
      * texture's handle, so the handle stays while a snapshot names it.
      */
@@ -1699,8 +1715,12 @@
      */
     releaseHeldHandle(handle, slot, freed = false) {
       const owner = this.handleOwners.get(handle);
-      if (slot.kind === "Resource" && this.resourcePathByHandle.get(handle)?.typeHint === "AudioStream") {
-        this.match3AudioResourceReleases += 1;
+      if (slot.kind === "Resource") {
+        // A release by its holders (not a teardown sweep): counted as a resource release.
+        this.resourceReleases += 1;
+        if (this.resourcePathByHandle.get(handle)?.typeHint === "AudioStream") {
+          this.match3AudioResourceReleases += 1;
+        }
       }
       this.forgetHandleKindState(handle, slot, owner, slot.freeQueued === true);
       this.tweenChildren.delete(handle);

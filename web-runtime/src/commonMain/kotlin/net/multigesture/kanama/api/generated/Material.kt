@@ -29,7 +29,7 @@ open class Material(godotObject: GodotHandle) : Resource(godotObject) {
     set(newValue) = setNextPass(newValue)
 
   /** Duplicate this material; the copy lives while you hold it (close() ends that early). */
-  override fun duplicate(deep: Boolean): Material? = super.duplicate(deep)?.let { Material(it.handle) }
+  override fun duplicate(deep: Boolean): Material? = super.duplicate(deep)?.let { webRetyped(it, Material(it.handle)) }
 
   companion object {
     fun fromResource(resource: Resource?): Material? = resource?.let { Material(it.handle) }

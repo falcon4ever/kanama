@@ -23,22 +23,22 @@ object ResourceLoader {
   fun loadTexture2D(
     path: String,
     cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
-  ): Texture2D? = load(path, "Texture2D", cacheMode)?.let { Texture2D(it.handle) }
+  ): Texture2D? = load(path, "Texture2D", cacheMode)?.let { webRetyped(it, Texture2D(it.handle)) }
 
   fun loadPackedScene(
     path: String,
     cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
-  ): PackedScene? = load(path, "PackedScene", cacheMode)?.let { PackedScene(it.handle) }
+  ): PackedScene? = load(path, "PackedScene", cacheMode)?.let { webRetyped(it, PackedScene(it.handle)) }
 
   fun loadAudioStream(
     path: String,
     cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
-  ): AudioStream? = load(path, "AudioStream", cacheMode)?.let { AudioStream(it.handle) }
+  ): AudioStream? = load(path, "AudioStream", cacheMode)?.let { webRetyped(it, AudioStream(it.handle)) }
 
   fun loadLightmapGIData(
     path: String,
     cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
-  ): LightmapGIData? = load(path, "LightmapGIData", cacheMode)?.let { LightmapGIData(it.handle) }
+  ): LightmapGIData? = load(path, "LightmapGIData", cacheMode)?.let { webRetyped(it, LightmapGIData(it.handle)) }
 
   /**
    * Desktop's `ResourceLoader.ThreadLoadProgress`: the status and the 0..1 progress. (Named

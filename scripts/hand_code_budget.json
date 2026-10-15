@@ -227,7 +227,7 @@
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebRefCountedHolds.kt": {
       "category": "runtime-core",
-      "lines": 33,
+      "lines": 46,
       "reason": "Web RefCounted lifetime root: the wrapper-hold seams (protocol 37) and the decode wrap"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebScriptAccess.kt": {
@@ -263,7 +263,7 @@
     },
     "web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/api/WebGodotApi.wasmJs.kt": {
       "category": "seam",
-      "lines": 65,
+      "lines": 73,
       "raises": [
         "62 -> 70: task 134 D1: the webEmitSignalGeneric actual (emit_signal with any arguments as one immediate generic call)",
         "70 -> 77: task 138 item 2: the webGenericCall / webGenericQueue actuals over WebExperimentalGenericCall"

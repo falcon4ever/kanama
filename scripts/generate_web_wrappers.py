@@ -588,7 +588,7 @@ def emit_extras(tree: Tree, call: BackendCallPolicy, policy: dict, primary: Memb
         wrapper = tree.wrapper_for(godot_type)
         params = [Param("path", "String"), Param("cacheMode", "ResourceLoader.CacheMode", "ResourceLoader.CacheMode.REUSE")]
         signature = render_signature(extra, params, f"{wrapper}?")
-        body = signature[:-1] + [f'{signature[-1]} = {primary.name}(path, "{godot_type}", cacheMode)?.let {{ {wrapper}(it.handle) }}']
+        body = signature[:-1] + [f'{signature[-1]} = {primary.name}(path, "{godot_type}", cacheMode)?.let {{ webRetyped(it, {wrapper}(it.handle)) }}']
         extras.append(Member(body, _alias(owner, extra, params, f"{wrapper}?"), extra, params, f"{wrapper}?"))
     return extras
 
@@ -1221,7 +1221,7 @@ val SceneTree.root: Viewport
         "custom": """
   /** Resolve the playback object behind a `parameters/.../playback` property. */
   fun getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback =
-    getObjectProperty(path)?.let { AnimationNodeStateMachinePlayback(it.handle) }
+    getObjectProperty(path)?.let { webRetyped(it, AnimationNodeStateMachinePlayback(it.handle)) }
       ?: error("AnimationMixer parameter '$path' is not an AnimationNodeStateMachinePlayback")
 
   /** Double-valued blend parameter write (the run tilt add_amount). */
@@ -1312,7 +1312,7 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
         "from_resource": True,
         "custom": """
   /** Duplicate this material; the copy lives while you hold it (close() ends that early). */
-  override fun duplicate(deep: Boolean): Material? = super.duplicate(deep)?.let { Material(it.handle) }
+  override fun duplicate(deep: Boolean): Material? = super.duplicate(deep)?.let { webRetyped(it, Material(it.handle)) }
 """,
     },
     "ShaderMaterial": {"from_resource": True},
@@ -1958,7 +1958,7 @@ def emit_generic_methods(api: Api, godot_name: str) -> list[str]:
         if ret_godot in api.classes:
             # An object return: the generic call's handle, wrapped as the declared class.
             ret = f"{kotlin_class_name(ret_godot)}?"
-            wrap = f"(%s as GodotObject?)?.let {{ {kotlin_class_name(ret_godot)}(it.handle) }}"
+            wrap = f"(%s as GodotObject?)?.let {{ webRetyped(it, {kotlin_class_name(ret_godot)}(it.handle)) }}"
         else:
             ret = _GENERIC_TYPES[ret_godot] if ret_godot else "Unit"
         decl = [f"{n}: {t}" for n, t in params] + (["vararg args: Any?"] if method.get("is_vararg") else [])

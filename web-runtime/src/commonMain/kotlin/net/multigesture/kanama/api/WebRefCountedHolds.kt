@@ -17,6 +17,19 @@ internal expect fun webWrapperCreated(wrapper: GodotObject, token: Int)
 /** [RefCounted.close]: [wrapper]'s hold on [token] ends; the last hold's end releases it at once. */
 internal expect fun releaseWebWrapper(wrapper: GodotObject, token: Int)
 
+/** [wrapper]'s hold ends without a release: a temporary another wrapper replaced ([webRetyped]). */
+internal expect fun dropWebWrapperHold(wrapper: GodotObject, token: Int)
+
+/**
+ * [typed], built over the handle of the temporary wrapper [temp] a conversion made (a load's
+ * `Resource`, a generic call's `GodotObject`), takes its place: [temp]'s hold ends, so `close()` on
+ * [typed] releases the handle at once when nothing else holds it.
+ */
+internal fun <T : GodotObject> webRetyped(temp: GodotObject, typed: T): T {
+  dropWebWrapperHold(temp, temp.handle.value)
+  return typed
+}
+
 /** True for a browser handle that names a RefCounted, held by the Kotlin wrappers of it. */
 internal expect fun isRefCountedWebHandle(token: Int): Boolean
 

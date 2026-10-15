@@ -48,7 +48,7 @@ open class AnimationMixer(godotObject: GodotHandle) : Node(godotObject) {
 
   /** Resolve the playback object behind a `parameters/.../playback` property. */
   fun getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback =
-    getObjectProperty(path)?.let { AnimationNodeStateMachinePlayback(it.handle) }
+    getObjectProperty(path)?.let { webRetyped(it, AnimationNodeStateMachinePlayback(it.handle)) }
       ?: error("AnimationMixer parameter '$path' is not an AnimationNodeStateMachinePlayback")
 
   /** Double-valued blend parameter write (the run tilt add_amount). */

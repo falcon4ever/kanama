@@ -21,11 +21,19 @@ internal actual fun releaseWebWrapper(wrapper: GodotObject, token: Int) {
   closeWrapperInterop(wrapper.toJsReference(), token)
 }
 
+internal actual fun dropWebWrapperHold(wrapper: GodotObject, token: Int) {
+  if (!isRefCountedWebHandle(token)) return
+  dropWrapperInterop(wrapper.toJsReference(), token)
+}
+
 internal actual fun isRefCountedWebHandle(token: Int): Boolean =
   (token and BROWSER_HANDLE_BIT) != 0 && isRefCountedBrowserHandle(token)
 
 private fun registerWrapperInterop(ref: JsAny, handle: Int): Int =
   js("globalThis.KanamaWebBridge.registerWrapper(ref, handle)")
+
+private fun dropWrapperInterop(ref: JsAny, handle: Int): Int =
+  js("globalThis.KanamaWebBridge.dropWrapper(ref, handle)")
 
 private fun closeWrapperInterop(ref: JsAny, handle: Int): Int =
   js("globalThis.KanamaWebBridge.closeWrapper(ref, handle)")
