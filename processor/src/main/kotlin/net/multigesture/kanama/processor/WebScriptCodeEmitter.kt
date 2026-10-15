@@ -4562,6 +4562,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tKanamaWebHandles.lent[handle] = true")
     appendLine("\tKanamaWebHandles.lent_ring.append(id)")
     appendLine(
+      "\tif tracked is SceneTree or (tracked is Window and (tracked as Window).get_parent() == null):"
+    )
+    appendLine(
+      "\t\t# The tree and the root Window live as long as the page (the bridge counts them apart)."
+    )
+    appendLine("\t\t_kanama_bridge.markPageHandle(handle)")
+    appendLine(
       "\t# Each new one also checks the one before it and one ring entry: churn stays bounded."
     )
     appendLine("\tKanamaWebHandles.sweep($MINT_SWEEP_BUDGET, true)")

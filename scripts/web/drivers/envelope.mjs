@@ -100,6 +100,9 @@ export async function collectPerformance(evaluate) {
         // how many were minted, released, the most alive at once; the Node / Object handles
         // released because the engine freed the object (swept); and the GDScript->JS calls the
         // lending cost. Reported, not budgeted.
+        // The SceneTree's and root Window's handles: they live as long as the page, apart from the
+        // live handles a teardown returns to zero.
+        pageHandles: bridge.pageHandles ?? 0,
         lentMints: bridge.lentMints ?? 0,
         lentReleases: bridge.lentReleases ?? 0,
         lentSwept: bridge.lentSwept ?? 0,

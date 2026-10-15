@@ -301,6 +301,8 @@
     objectConstructions: 0,
     objectFrees: 0,
     liveBrowserHandleCount: 0,
+    // Handles of the SceneTree and the root Window (markPageHandle), apart from the live count.
+    pageHandles: 0,
     maxLiveBrowserHandles: 0,
     // The handles minted for a dispatch's object arguments (a signal argument, `_input`'s event, a
     // method's object argument; one an earlier lookup or result made is handed over as it is):
@@ -1458,6 +1460,7 @@
       slot.wrappers = 0;
       slot.lendFrame = 0;
       slot.collected = false;
+      slot.page = false;
       const handle = BROWSER_HANDLE_NAMESPACE | (slot.generation << 16) | slotIndex;
       this.freedHandles.delete(handle);
       this.handleOwners.set(handle, owner);
@@ -1802,8 +1805,27 @@
       slot.live = false;
       slot.kind = null;
       this.handleOwners.delete(handle);
-      this.liveBrowserHandleCount -= 1;
+      if (slot.page) {
+        slot.page = false;
+        this.pageHandles -= 1;
+      } else {
+        this.liveBrowserHandleCount -= 1;
+      }
       this.freeBrowserHandleSlots.push(handle & BROWSER_HANDLE_SLOT_MASK);
+    },
+    /**
+     * The proxy tracked the SceneTree or the root Window, which live as long as the page: their one
+     * handle each (the instance-id index answers it to every later ask) is a page handle, counted
+     * in `pageHandles`, not among the live handles a scene's teardown returns to zero. Like every
+     * Node or plain Object handle it stays while any script is left; the last proxy releases it.
+     */
+    markPageHandle(handle) {
+      const slot = this.browserHandleSlot(handle);
+      if (!slot || slot.page) return 0;
+      slot.page = true;
+      this.liveBrowserHandleCount -= 1;
+      this.pageHandles += 1;
+      return 1;
     },
     /**
      * Whether a handle stays when the script routing it goes: every Node or plain Object handle
@@ -3599,6 +3621,7 @@
         objectFrees: this.objectFrees,
         maxLiveBrowserHandles: this.maxLiveBrowserHandles,
         liveBrowserHandles: this.liveBrowserHandleCount,
+        pageHandles: this.pageHandles,
         lentMints: this.lentMints,
         lentReleases: this.lentReleases,
         lentSwept: this.lentSwept,

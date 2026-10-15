@@ -1814,6 +1814,8 @@ class WebScriptCodeEmitterTest {
       proxy,
     )
     assertTrue(proxy.contains("\tKanamaWebHandles.sweep(2, true)\n"), proxy)
+    // The tree and the root Window outlive every scene: counted apart by the bridge.
+    assertTrue(proxy.contains("\t\t_kanama_bridge.markPageHandle(handle)\n"), proxy)
     assertFalse(proxy.contains("retainSharedHandle"), proxy)
     assertFalse(proxy.contains("(flags & 2)"), proxy)
     assertFalse(proxy.contains("sweep_hook"), proxy)

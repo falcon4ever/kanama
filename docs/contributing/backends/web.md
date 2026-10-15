@@ -422,7 +422,10 @@ it is reachable (below); only a tween's or tweener's goes with the script that m
 bridge's `handleOwners` names a handle's routing owner (the proxy whose callbacks run its calls),
 not who keeps it: when that script goes, `releaseBrowserHandlesOwnedBy` re-routes every handle
 `outlivesItsRouter` keeps to another installed proxy, so a value another script stored, or a
-companion holds (`nodeOutlivesItsReceiver`), stays valid; the last proxy releases everything. A
+companion holds (`nodeOutlivesItsReceiver`), stays valid; the last proxy releases everything. The
+SceneTree and the root Window live as long as the page: `_kanama_track` marks their one handle each
+(`markPageHandle`), which the bridge counts in `pageHandles`, apart from the live handles a scene's
+teardown returns to zero (an autoload's proxy keeps routing them after the scene is gone). A
 retired handle's entry in the proxies' shared `_kanama_object_handles` dictionary is erased
 (through any installed proxy's release callback), so a later lookup of the same object mints a fresh
 handle instead of finding a dead one. The calls that answer a live object (a collider, `getParent`,
