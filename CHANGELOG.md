@@ -39,6 +39,19 @@ only `--write`.
 
 ## Unreleased
 
+### Fixed — A failing headless export of a project without `.godot/` exits 1, not 134
+
+`godot --headless --export-release <preset>` on a fresh checkout (no `.godot/` folder) crashed on exit
+with code 134 when the export failed (an unknown preset, an unwritable target folder, an export
+plugin that stops the export), after printing the export error; a GDScript project exits 1. The
+crash is in Godot 4.7.2: on a first scan the Kanama extension loads late, Godot restarts its
+documentation thread, the failing export quits before that thread's queued doc update runs, and
+Godot later runs the update on freed docs, which crashes once an extension class is registered.
+The Kanama Tools editor plugin now waits for that thread when it leaves the editor, so the queued
+update runs while the editor is still up and the export exits 1 with the same error. A project that
+loads only `addons/kanama` without the Kanama Tools plugin enabled can still crash this way;
+`tool_smoke.sh` runs the failing export on a fresh copy of the example project.
+
 ### Fixed — iOS: a value-type script property set to a value of another type follows GDScript
 
 A `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, `Vector4i`, `Rect2`, `Rect2i`, `Plane`,
