@@ -881,51 +881,152 @@ KEEP_REACHABLE_PROBES = (
 # An argument's engine pointer read in a generated body: `x.requireOpenHandle()`, `x?.segment`,
 # `x.target.segment` (Callable), `x.owner.segment` (Signal). The bare receiver read is `segment`.
 _ARG_HANDLE_READ = re.compile(r"\b(\w+)\??\.(?:requireOpenHandle\(\)|segment\b|target\.segment\b|owner\.segment\b)")
-_FUN_HEADER = re.compile(r"^(\s*)(?:[\w@]+(?:\([^)]*\))?\s+)*fun\s.*\{\s*$")
+_RECEIVER_HANDLE_READ = re.compile(r"(?<![\w.?])segment\b")
+_ENGINE_CALL = re.compile(r"\bObjectCalls\.(?!keepReachable\()\w+")
+_FUN_START = re.compile(r"^(\s*)(?:[\w@]+(?:\([^)]*\))?\s+)*fun\s+(?:<[^>]*>\s*)?(?:([\w.]+)\.)?\w+\s*\(")
+_CLASS_HEADER = re.compile(
+    r"^(?:(?:open|abstract|sealed|data|internal|public)\s+)*class\s+(\w+)(?:\s+internal\s+constructor)?\s*\([^)]*\)\s*:\s*(\w+)\(",
+    re.M,
+)
 
 
-def _block_bodies(text: str) -> list[tuple[int, list[str]]]:
-    """(header line number, body lines) of every block-bodied function in a generated source."""
+def _header_end(lines: list[str], start: int) -> tuple[int, int, str] | None:
+    """(line, column, `{` or `=`) that ends the header of the function declared at lines[start].
+
+    Parentheses (parameter lists, default arguments) and string literals are skipped, so a header
+    may span lines and carry default values."""
+    depth = 0
+    for j in range(start, len(lines)):
+        line = lines[j]
+        k = 0
+        while k < len(line):
+            ch = line[k]
+            if ch == '"':
+                k = line.find('"', k + 1)
+                if k < 0:
+                    break
+            elif ch == "(":
+                depth += 1
+            elif ch == ")":
+                depth -= 1
+            elif depth == 0 and ch == "{":
+                return j, k, "{"
+            elif depth == 0 and ch == "=" and line[k - 1 : k] not in ("!", "<", ">", "=") and line[k + 1 : k + 2] != "=":
+                return j, k, "="
+            k += 1
+    return None
+
+
+def _function_bodies(text: str) -> list[tuple[int, str | None, str]]:
+    """(header line number, extension receiver type or None, body text) of every function in a
+    generated source: block bodies (`{ ... }`, also on one line) and expression bodies (`= ...`,
+    continued on deeper-indented lines), with the header on one line or several."""
     lines = text.splitlines()
-    bodies: list[tuple[int, list[str]]] = []
+    bodies: list[tuple[int, str | None, str]] = []
     i = 0
     while i < len(lines):
-        match = _FUN_HEADER.match(lines[i])
-        if not match:
+        match = _FUN_START.match(lines[i])
+        end = _header_end(lines, i) if match else None
+        if not match or end is None:
             i += 1
             continue
-        closer = match.group(1) + "}"
-        j = i + 1
-        while j < len(lines) and lines[j].rstrip() != closer:
-            j += 1
-        bodies.append((i + 1, lines[i + 1 : j]))
-        i = j + 1
+        indent, receiver = match.group(1), match.group(2)
+        j, col, kind = end
+        rest = lines[j][col + 1 :]
+        if kind == "{" and rest.count("{") < rest.count("}"):  # `fun f() { call() }`
+            body, nxt = [rest[: rest.rfind("}")]], j + 1
+        elif kind == "{":
+            closer = indent + "}"
+            nxt = j + 1
+            while nxt < len(lines) and lines[nxt].rstrip() != closer:
+                nxt += 1
+            body, nxt = [rest] + lines[j + 1 : nxt], nxt + 1
+        else:
+            body, nxt = [rest], j + 1
+            while nxt < len(lines) and lines[nxt].strip() and len(lines[nxt]) - len(lines[nxt].lstrip()) > len(indent):
+                body.append(lines[nxt])
+                nxt += 1
+        bodies.append((i + 1, receiver.split("<")[0] if receiver else None, "\n".join(body)))
+        i = nxt
     return bodies
+
+
+def _refcounted_classes(files: dict[str, str]) -> set[str]:
+    """Every class of the tree that is RefCounted or inherits it (the receivers the drain releases)."""
+    parent = {name: base for text in files.values() for name, base in _CLASS_HEADER.findall(text)}
+    found = {"RefCounted"}
+    for name in parent:
+        chain, cls = [], name
+        while cls in parent and cls not in found and cls not in chain:
+            chain.append(cls)
+            cls = parent[cls]
+        if cls in found:
+            found.update(chain)
+    return found
 
 
 def keep_reachable_problems(files: dict[str, str]) -> list[str]:
     """Every generated body that reads an engine pointer fences what it read (task 138 item 6).
 
-    A receiver-guarded body (`checkOpen()`) must call `ObjectCalls.keepReachable(this)` after its last
-    engine call; a body that reads an argument's handle must call `ObjectCalls.keepReachable(arg)`.
+    A body of a RefCounted-derived receiver (its class, or the receiver type of an extension
+    function) that makes an engine call (`ObjectCalls.`) and reads the bare `segment` -- block- or
+    expression-bodied, its header on one line or several -- or that carries the receiver guard
+    (`checkOpen()`) must call `ObjectCalls.keepReachable(this)` after its last engine call; a body
+    that reads an argument's handle must call `ObjectCalls.keepReachable(arg)` there too.
     """
     problems: list[str] = []
+    refcounted = _refcounted_classes(files)
     for rel, text in sorted(files.items()):
         # The hand roots (GodotObject, RefCounted, GodotCallable) carry only a generated enum region;
         # their bodies fence through GodotObject.fenced, audited by hand.
         if not rel.endswith(".kt") or "/api/" not in rel or Path(rel).stem in SHARED_HAND_ROOT_FILES:
             continue
-        for line_no, body in _block_bodies(text):
-            calls = [k for k, line in enumerate(body) if "ObjectCalls." in line and "keepReachable" not in line]
+        owner = Path(rel).name.split(".")[0]
+        for line_no, receiver, body in _function_bodies(text):
+            calls = list(_ENGINE_CALL.finditer(body))
             if not calls:
                 continue
-            fences = {line.strip() for line in body[calls[-1] + 1 :] if "ObjectCalls.keepReachable(" in line}
-            if any(line.strip() == "checkOpen()" for line in body) and "ObjectCalls.keepReachable(this)" not in fences:
-                problems.append(f"{rel}:{line_no}: receiver-guarded body without ObjectCalls.keepReachable(this) after its call")
-            for name in sorted({m.group(1) for k in calls for m in _ARG_HANDLE_READ.finditer(body[k])} - {"this", "handle"}):
-                if f"ObjectCalls.keepReachable({name})" not in fences:
+            last = calls[-1].start()
+            fences = set(re.findall(r"ObjectCalls\.keepReachable\((\w+)\)", body[last:]))
+            guarded = re.search(r"(?m)^\s*checkOpen\(\)\s*$", body) is not None
+            reads_receiver = (receiver or owner) in refcounted and _RECEIVER_HANDLE_READ.search(body) is not None
+            if (guarded or reads_receiver) and "this" not in fences:
+                why = "receiver-guarded" if guarded else "RefCounted receiver"
+                problems.append(f"{rel}:{line_no}: {why} body without ObjectCalls.keepReachable(this) after its last call")
+            for name in sorted({m.group(1) for m in _ARG_HANDLE_READ.finditer(body)} - {"this", "handle"}):
+                if name not in fences:
                     problems.append(f"{rel}:{line_no}: reads {name}'s handle without ObjectCalls.keepReachable({name}) after the call")
     return problems
+
+
+# Shapes the sweep must flag, checked on every run so the detector cannot go blind (P2 review): an
+# expression body, a header on several lines, and a RefCounted body without the receiver guard.
+KEEP_REACHABLE_RED_FIXTURES = (
+    ("expression body", "class Curve(handle: GodotHandle) : Resource(handle) {\n"
+     "    fun getMinValue(): Double = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinValueBind, segment)\n}\n"),
+    ("header on several lines", "class Curve(handle: GodotHandle) : Resource(handle) {\n"
+     "    fun addPoint(\n        position: Vector2,\n        leftTangent: Double = 0.0,\n    ): Long {\n"
+     "        checkOpen()\n        return ObjectCalls.ptrcallWithVector2AndDoubleArgsRetLong(Binds.addPointBind, segment, position, leftTangent)\n"
+     "    }\n}\n"),
+    ("RefCounted body without checkOpen()", "class Curve(handle: GodotHandle) : Resource(handle) {\n"
+     "    fun clearPoints() {\n        ObjectCalls.ptrcallNoArgs(Binds.clearPointsBind, segment)\n    }\n}\n"),
+    ("argument read off the call line", "class MeshInstance3D(handle: GodotHandle) : Node3D(handle) {\n"
+     "    fun setMesh(mesh: Mesh?) {\n        val raw = mesh?.requireOpenHandle()\n"
+     "        ObjectCalls.ptrcallWithObjectArg(Binds.setMeshBind, segment, raw)\n    }\n}\n"),
+)
+
+
+def keep_reachable_detector_blind_spots() -> list[str]:
+    """The red fixtures the sweep does NOT flag (empty when the detector works)."""
+    base = {"src/commonMain/kotlin/net/multigesture/kanama/api/Resource.kt":
+            "open class Resource(handle: GodotHandle) : RefCounted(handle) {\n}\n"}
+    blind = []
+    for name, text in KEEP_REACHABLE_RED_FIXTURES:
+        cls = re.search(r"class (\w+)", text).group(1)
+        files = dict(base, **{f"src/commonMain/kotlin/net/multigesture/kanama/api/{cls}.kt": text})
+        if not keep_reachable_problems(files):
+            blind.append(name)
+    return blind
 
 
 def check_keep_reachable(tree: TreeResult) -> int:
@@ -947,6 +1048,7 @@ def check_keep_reachable(tree: TreeResult) -> int:
                 failures.append(f"probe {cls}.{header.strip()}: `{needle}` missing or out of order")
                 break
             position = found + len(needle)
+    failures += [f"the sweep misses a known-bad shape: {name}" for name in keep_reachable_detector_blind_spots()]
     failures += keep_reachable_problems(tree.files)
     if failures:
         for line in failures[:40]:
@@ -957,7 +1059,7 @@ def check_keep_reachable(tree: TreeResult) -> int:
     fenced = sum(text.count("ObjectCalls.keepReachable(") for text in tree.files.values())
     print(
         f"[wrapper_generator] PASS keep-reachable fences: {len(KEEP_REACHABLE_PROBES)} body-shape probes, "
-        f"{fenced} fence lines, every engine-pointer read fenced"
+        f"{len(KEEP_REACHABLE_RED_FIXTURES)} known-bad shapes flagged, {fenced} fence lines, every engine-pointer read fenced"
     )
     return 0
 
