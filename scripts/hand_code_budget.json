@@ -263,10 +263,11 @@
     },
     "web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/api/WebGodotApi.wasmJs.kt": {
       "category": "seam",
-      "lines": 73,
+      "lines": 76,
       "raises": [
         "62 -> 70: task 134 D1: the webEmitSignalGeneric actual (emit_signal with any arguments as one immediate generic call)",
-        "70 -> 77: task 138 item 2: the webGenericCall / webGenericQueue actuals over WebExperimentalGenericCall"
+        "70 -> 77: task 138 item 2: the webGenericCall / webGenericQueue actuals over WebExperimentalGenericCall",
+        "73 -> 76: Web: close() and the other releases apply the queued commands first (a queued set reaches the engine before the release)"
       ],
       "reason": "Wasm JS bridge entry points"
     }

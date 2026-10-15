@@ -6,6 +6,7 @@ import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsAny
 import kotlin.js.toJsReference
 import net.multigesture.kanama.web.containsWebBrowserHandle
+import net.multigesture.kanama.web.flushWebCommandsBeforeRelease
 import net.multigesture.kanama.web.isRefCountedBrowserHandle
 
 /** Bit 30: a browser handle (a script handle never has it, and is not the bridge's to hold). */
@@ -18,6 +19,7 @@ internal actual fun webWrapperCreated(wrapper: GodotObject, token: Int) {
 
 internal actual fun releaseWebWrapper(wrapper: GodotObject, token: Int) {
   if ((token and BROWSER_HANDLE_BIT) == 0) return
+  if (isRefCountedBrowserHandle(token)) flushWebCommandsBeforeRelease()
   closeWrapperInterop(wrapper.toJsReference(), token)
 }
 
@@ -47,6 +49,7 @@ private fun instantiateWebScriptInterop(className: String): Int =
   js("globalThis.KanamaWebBridge.instantiateScript(className)")
 
 internal actual fun releaseWebScriptResource(handle: Int) {
+  flushWebCommandsBeforeRelease()
   val released = releaseWebScriptResourceInterop(handle)
   check(released == 1) { "Unknown or already released Kanama Web script resource handle=$handle" }
 }

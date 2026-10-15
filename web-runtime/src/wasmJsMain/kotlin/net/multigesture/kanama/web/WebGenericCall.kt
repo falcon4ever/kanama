@@ -213,6 +213,7 @@ class WebGenericCallResult internal constructor(val tag: String, val payload: Li
       "Generic call handle kind '$objectKind' is not owned by this caller (only minted handles close)"
     }
     val handle = asObjectHandle()
+    flushWebCommandsBeforeRelease()
     check(releaseWebHandleNow(handle) == 1) {
       "Unknown or already released Kanama Web handle=$handle"
     }
