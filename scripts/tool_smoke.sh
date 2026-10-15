@@ -127,4 +127,24 @@ if ! grep -Fq "[jdk_test] PASS" "$LOG_FILE.jdk"; then
   smoke_fail "JDK resolution test did not report PASS" "scripts/check_editor_jdk_resolution.gd (log: $LOG_FILE.jdk)"
 fi
 
+# A failing headless export of a project without .godot/ must exit 1 like a GDScript project, not crash
+# on exit (134). The Kanama extension loads during that first scan, which restarts the editor's doc
+# thread right before the export fails; the editor plugin's _exit_tree lets that thread finish
+# (templates/starter/addons/kanama_tools/plugin.gd, _finish_pending_editor_docs).
+EXPORT_PROJECT="$JDK_SCRATCH/fresh_export"
+cp -R "$PROJECT_DIR" "$EXPORT_PROJECT"
+rm -rf "$EXPORT_PROJECT/.godot" "$EXPORT_PROJECT/export_presets.cfg"
+# Run from inside the copy with relative paths, so no path needs a Windows conversion.
+export_rc=0
+(cd "$EXPORT_PROJECT" && "$GODOT_BIN" --headless --path . --export-release Nope build/x) >"$LOG_FILE.export" 2>&1 ||
+  export_rc=$?
+if [[ "$export_rc" -ne 1 ]] || grep -Eq "handle_crash|Program crashed" "$LOG_FILE.export"; then
+  tail -n 40 "$LOG_FILE.export" >&2
+  smoke_fail "failing export of a fresh project exited $export_rc, expected 1 without a crash" "$LOG_FILE.export"
+fi
+if ! grep -Fq "doesn't have an \`export_presets.cfg\` file" "$LOG_FILE.export"; then
+  tail -n 40 "$LOG_FILE.export" >&2
+  smoke_fail "failing export of a fresh project did not print Godot's export error" "$LOG_FILE.export"
+fi
+
 echo "[tool_smoke] PASS"

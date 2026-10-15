@@ -72,6 +72,7 @@ func _enter_tree() -> void:
 
 func _exit_tree() -> void:
     set_process(false)
+    _finish_pending_editor_docs()
     var editor_settings := get_editor_interface().get_editor_settings()
     if editor_settings != null and editor_settings.settings_changed.is_connected(_on_editor_settings_changed):
         editor_settings.settings_changed.disconnect(_on_editor_settings_changed)
@@ -82,6 +83,18 @@ func _exit_tree() -> void:
         _jar_menu_added = false
     _unregister_kotlin_syntax_highlighter()
     _remove_toolbar_buttons()
+
+
+# Godot 4.7.2 crashes (exit 134) when the editor quits while its documentation thread is still
+# loading: the thread queues EditorHelp::_gen_extensions_docs, the editor frees the docs, and
+# Main::cleanup then runs that call on a null DocTools as soon as an extension class (Kanama's) is
+# registered. On a project without .godot/ the Kanama extension loads during the first scan, which
+# restarts that thread just before a failing --export-* quits. Asking for the docs here (the plugin
+# leaves while the editor still runs) waits for the thread, so its queued call runs in this frame.
+func _finish_pending_editor_docs() -> void:
+    var script_editor := get_editor_interface().get_script_editor()
+    if script_editor != null:
+        script_editor.update_docs_from_script(get_script())
 
 
 func _on_build_sync_pressed() -> void:
