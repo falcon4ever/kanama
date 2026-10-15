@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.SignalCallables
 import net.multigesture.kanama.binding.runtime.SignalCallbackRegistry
 import kotlinx.coroutines.CancellationException
@@ -77,6 +78,9 @@ internal actual constructor(
         // closure -- whenever it drops the connection (receiver or emitter freed, one-shot fired,
         // disconnected, failed connect). Task 131; the iOS shim works the same way.
         val error = GodotError(SignalCallables.connect(owner.segment, name, target.instanceId, id, flags.value))
+        // Task 138 item 6: the emitter and the receiver stay reachable through the connect.
+        ObjectCalls.keepReachable(owner)
+        ObjectCalls.keepReachable(target)
         if (error == GodotError.OK) {
             // Task 133 C2 / 138 item 11: a hot reload disconnects the lambdas of a re-created
             // autoload and of a build whose script objects are gone.
@@ -155,5 +159,6 @@ actual class SignalConnection internal constructor(
         SignalCallbackRegistry.unregister(callbackId)
         if (error != GodotError.OK || !live || !owner.isAlive(owner.segment)) return
         SignalCallables.disconnect(owner.segment, signal, receiverInstanceId, callbackId, checkConnected = oneShot)
+        ObjectCalls.keepReachable(owner) // task 138 item 6
     }
 }

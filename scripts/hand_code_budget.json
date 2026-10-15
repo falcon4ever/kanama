@@ -22,10 +22,11 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotObject.kt": {
       "category": "runtime-core",
-      "lines": 518,
+      "lines": 544,
       "raises": [
         "508 -> 513: task 122 item 3 (call() owns RefCounted container elements, documented on GodotObject.call) and task 113 (iOS SignalConnection.close() skips a connection Godot already dropped)",
-        "513 -> 519: task 129 E / 138 items 2, 22: Web compiles the shared GD/Mathf/GodotCallable (GodotObject.isInstanceLive seam, Web Variant call/callv/callDeferred/instanceId for GodotCallable, generic-call seams and GodotSignal queries); the hand Window facade becomes a generated Viewport subclass"
+        "513 -> 519: task 129 E / 138 items 2, 22: Web compiles the shared GD/Mathf/GodotCallable (GodotObject.isInstanceLive seam, Web Variant call/callv/callDeferred/instanceId for GodotCallable, generic-call seams and GodotSignal queries); the hand Window facade becomes a generated Viewport subclass",
+        "518 -> 544: task 138 item 6: reachability fences (ObjectCalls.keepReachable) after the hand-written engine calls"
       ],
       "reason": "lifetime root GodotObject (Object); its enum region is generated"
     },
@@ -71,17 +72,19 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/RefCounted.kt": {
       "category": "runtime-core",
-      "lines": 244,
+      "lines": 257,
       "raises": [
-        "242 -> 244: task 129 D: `owned` is internal (private set) so the generated FileAccess.close() closes the file on a borrowed view without RefCounted's borrowed-close warning"
+        "242 -> 244: task 129 D: `owned` is internal (private set) so the generated FileAccess.close() closes the file on a borrowed view without RefCounted's borrowed-close warning",
+        "244 -> 257: task 138 item 6: reachability fences (ObjectCalls.keepReachable) after the hand-written engine calls"
       ],
       "reason": "lifetime root RefCounted (SHARED_HAND_ROOTS)"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/ScriptAccess.kt": {
       "category": "sugar",
-      "lines": 381,
+      "lines": 385,
       "raises": [
-        "375 -> 381: task 129 D: GodotObject.kotlinScriptInstance<T>() (one line plus KDoc), the common replacement of the desktop ScriptInstances.kt and the iOS IosGodotApi.kt copy"
+        "375 -> 381: task 129 D: GodotObject.kotlinScriptInstance<T>() (one line plus KDoc), the common replacement of the desktop ScriptInstances.kt and the iOS IosGodotApi.kt copy",
+        "381 -> 385: task 138 item 6: reachability fences (ObjectCalls.keepReachable) after the hand-written engine calls"
       ],
       "reason": "checked casts and node lookup by class token (GDScript `as` / `is`), written once"
     },
@@ -100,10 +103,11 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/TypedSignals.kt": {
       "category": "runtime-core",
-      "lines": 535,
+      "lines": 538,
       "raises": [
         "524 -> 530: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes",
-        "530 -> 535: lambda connections carry their callback (origin) so a desktop hot reload drops them with the build that made them"
+        "530 -> 535: lambda connections carry their callback (origin) so a desktop hot reload drops them with the build that made them",
+        "535 -> 538: task 138 item 6: reachability fences (ObjectCalls.keepReachable) after the hand-written engine calls"
       ],
       "reason": "typed signal classes Signal0..Signal5 (task 134 D4)"
     },
@@ -148,10 +152,11 @@
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt": {
       "category": "runtime-core",
-      "lines": 159,
+      "lines": 164,
       "raises": [
         "145 -> 156: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes",
-        "156 -> 159: lambda connections carry their callback (origin) so a desktop hot reload drops them with the build that made them"
+        "156 -> 159: lambda connections carry their callback (origin) so a desktop hot reload drops them with the build that made them",
+        "159 -> 164: task 138 item 6: reachability fences (ObjectCalls.keepReachable) after the hand-written engine calls"
       ],
       "reason": "signal plumbing actual"
     },
@@ -167,9 +172,10 @@
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.kt": {
       "category": "runtime-core",
-      "lines": 37,
+      "lines": 42,
       "raises": [
-        "18 -> 37: task 129 D: the desktop actuals of the two new seam members, mainDispatcher() (the engine main-thread dispatcher) and reportCoroutineFailure() (a script error for an escaped coroutine exception), which the common KanamaScope uses instead of the deleted desktop KanamaCoroutines.kt"
+        "18 -> 37: task 129 D: the desktop actuals of the two new seam members, mainDispatcher() (the engine main-thread dispatcher) and reportCoroutineFailure() (a script error for an escaped coroutine exception), which the common KanamaScope uses instead of the deleted desktop KanamaCoroutines.kt",
+        "37 -> 42: task 138 item 6: reachability fences (ObjectCalls.keepReachable) after the hand-written engine calls"
       ],
       "reason": "script runtime actual"
     },
@@ -271,7 +277,10 @@
       ]
     },
     "generate_api_wrapper.IOS_EXTENSION_SECTIONS[PhysicsDirectSpaceState3D]": {
-      "lines": 16
+      "lines": 17,
+      "raises": [
+        "16 -> 17: task 138 item 6: reachability fences (ObjectCalls.keepReachable) after the hand-written engine calls"
+      ]
     },
     "generate_api_wrapper.METHOD_PRECONDITIONS[Engine.register_singleton]": {
       "lines": 3,

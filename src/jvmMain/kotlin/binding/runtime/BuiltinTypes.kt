@@ -295,6 +295,10 @@ object BuiltinTypes {
         val segment = FreedObjectChecks.valueSegment(value)
         if (segment.address() == 0L) initNilVariant(variantOut)
         else variantFromObjectInto(segment, variantOut, arena)
+        // Task 138 item 6: the one choke point of every Variant encoding of a wrapper (call/callv
+        // lists, Variant arguments, set/setMeta, utility functions): [value] stays reachable until
+        // the Variant holds its own reference (Variant(Object*) refs a RefCounted).
+        ObjectCalls.keepReachable(value)
       }
       else -> error("Unsupported Variant value type: ${value::class.qualifiedName}")
     }
@@ -2158,6 +2162,7 @@ object BuiltinTypes {
           }
         val variant = arena.allocate(VARIANT_SIZE, 8L)
         variantFromObjectInto(objectHandle, variant, arena)
+        ObjectCalls.keepReachable(value) // task 138 item 6, as in initVariantFromAny
         try {
           call(
             type = VariantType.ARRAY,

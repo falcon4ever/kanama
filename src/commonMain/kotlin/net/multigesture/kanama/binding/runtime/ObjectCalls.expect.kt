@@ -154,6 +154,8 @@ expect object ObjectCalls {
 
   fun getSingleton(name: String): RawSegment
 
+  fun keepReachable(value: Any?)
+
   fun ptrcallLoadStatusWithProgress(
     methodBind: RawSegment,
     instance: RawSegment,

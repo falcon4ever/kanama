@@ -857,6 +857,111 @@ def check_typed_signals() -> int:
     return 0
 
 
+# Task 138 item 6 (R6.3): one probe per body shape, each with the fence lines it must render after
+# its engine call (class file, function header, required lines in order).
+KEEP_REACHABLE_PROBES = (
+    # void, receiver-guarded
+    ("Curve", "    fun clearPoints() {", ("checkOpen()", "ObjectCalls.", "ObjectCalls.keepReachable(this)")),
+    # returning, receiver-guarded
+    ("Thread", "    fun getId(): String {", ("val ret = ObjectCalls.", "ObjectCalls.keepReachable(this)", "return ret")),
+    # Callable argument
+    ("Thread", "    fun start(", ("ObjectCalls.keepReachable(this)", "ObjectCalls.keepReachable(callable)", "return ret")),
+    # self-return collapse: fenced before either return
+    ("Tween", "    fun setLoops(", ("val ret = ObjectCalls.", "ObjectCalls.keepReachable(this)", "return this", "return ")),
+    # nullable object argument on a Node receiver (no receiver fence)
+    ("MeshInstance3D", "    fun setMesh(mesh: Mesh?) {", ("ObjectCalls.", "ObjectCalls.keepReachable(mesh)")),
+    # Signal argument
+    ("Tween", "    fun tweenAwait(", ("ObjectCalls.keepReachable(this)", "ObjectCalls.keepReachable(signal)", "return ret")),
+    # varargs: the receiver only (callWithVariantArgs fences the list)
+    ("GDScript", "    fun new(vararg extraArgs: Any?): Any? {", ("val ret = ObjectCalls.callWithVariantArgs(", "ObjectCalls.keepReachable(this)", "return ret")),
+    # from* downcast: the source stays reachable until the +1 is taken
+    ("ArrayMesh", "        fun fromResource(", ("RefCounted.retained(ArrayMesh(value.handle), value)",)),
+)
+
+# An argument's engine pointer read in a generated body: `x.requireOpenHandle()`, `x?.segment`,
+# `x.target.segment` (Callable), `x.owner.segment` (Signal). The bare receiver read is `segment`.
+_ARG_HANDLE_READ = re.compile(r"\b(\w+)\??\.(?:requireOpenHandle\(\)|segment\b|target\.segment\b|owner\.segment\b)")
+_FUN_HEADER = re.compile(r"^(\s*)(?:[\w@]+(?:\([^)]*\))?\s+)*fun\s.*\{\s*$")
+
+
+def _block_bodies(text: str) -> list[tuple[int, list[str]]]:
+    """(header line number, body lines) of every block-bodied function in a generated source."""
+    lines = text.splitlines()
+    bodies: list[tuple[int, list[str]]] = []
+    i = 0
+    while i < len(lines):
+        match = _FUN_HEADER.match(lines[i])
+        if not match:
+            i += 1
+            continue
+        closer = match.group(1) + "}"
+        j = i + 1
+        while j < len(lines) and lines[j].rstrip() != closer:
+            j += 1
+        bodies.append((i + 1, lines[i + 1 : j]))
+        i = j + 1
+    return bodies
+
+
+def keep_reachable_problems(files: dict[str, str]) -> list[str]:
+    """Every generated body that reads an engine pointer fences what it read (task 138 item 6).
+
+    A receiver-guarded body (`checkOpen()`) must call `ObjectCalls.keepReachable(this)` after its last
+    engine call; a body that reads an argument's handle must call `ObjectCalls.keepReachable(arg)`.
+    """
+    problems: list[str] = []
+    for rel, text in sorted(files.items()):
+        # The hand roots (GodotObject, RefCounted, GodotCallable) carry only a generated enum region;
+        # their bodies fence through GodotObject.fenced, audited by hand.
+        if not rel.endswith(".kt") or "/api/" not in rel or Path(rel).stem in SHARED_HAND_ROOT_FILES:
+            continue
+        for line_no, body in _block_bodies(text):
+            calls = [k for k, line in enumerate(body) if "ObjectCalls." in line and "keepReachable" not in line]
+            if not calls:
+                continue
+            fences = {line.strip() for line in body[calls[-1] + 1 :] if "ObjectCalls.keepReachable(" in line}
+            if any(line.strip() == "checkOpen()" for line in body) and "ObjectCalls.keepReachable(this)" not in fences:
+                problems.append(f"{rel}:{line_no}: receiver-guarded body without ObjectCalls.keepReachable(this) after its call")
+            for name in sorted({m.group(1) for k in calls for m in _ARG_HANDLE_READ.finditer(body[k])} - {"this", "handle"}):
+                if f"ObjectCalls.keepReachable({name})" not in fences:
+                    problems.append(f"{rel}:{line_no}: reads {name}'s handle without ObjectCalls.keepReachable({name}) after the call")
+    return problems
+
+
+def check_keep_reachable(tree: TreeResult) -> int:
+    """R6.3: the probes render their fence lines, and no generated body misses one."""
+    failures: list[str] = []
+    for cls, header, required in KEEP_REACHABLE_PROBES:
+        text = tree.files.get(_rel(SHARED_API_DIR / f"{cls}.kt"), "")
+        start = text.find("\n" + header)
+        if start < 0:
+            failures.append(f"probe {cls}: no `{header.strip()}` in the regenerated tree")
+            continue
+        indent = header[: len(header) - len(header.lstrip())]
+        end = text.find("\n" + indent + "}", start + 1)
+        body = text[start : end if header.rstrip().endswith("{") else text.find("\n\n", start + 1)]
+        position = 0
+        for needle in required:
+            found = body.find(needle, position)
+            if found < 0:
+                failures.append(f"probe {cls}.{header.strip()}: `{needle}` missing or out of order")
+                break
+            position = found + len(needle)
+    failures += keep_reachable_problems(tree.files)
+    if failures:
+        for line in failures[:40]:
+            print(f"[wrapper_generator] FAIL keep-reachable fence: {line}", file=sys.stderr)
+        if len(failures) > 40:
+            print(f"[wrapper_generator] ... and {len(failures) - 40} more", file=sys.stderr)
+        return 1
+    fenced = sum(text.count("ObjectCalls.keepReachable(") for text in tree.files.values())
+    print(
+        f"[wrapper_generator] PASS keep-reachable fences: {len(KEEP_REACHABLE_PROBES)} body-shape probes, "
+        f"{fenced} fence lines, every engine-pointer read fenced"
+    )
+    return 0
+
+
 def main() -> int:
     if check_no_shared_api_dir() != 0:
         return 1
@@ -890,6 +995,8 @@ def main() -> int:
     if check_shared_tree_pointer() != 0:
         return 1
     if check_typed_signals() != 0:
+        return 1
+    if check_keep_reachable(tree) != 0:
         return 1
 
     adopted = (

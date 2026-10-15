@@ -214,6 +214,12 @@ actual object ObjectCalls {
     kanama_ios_godot_object_destroy(instance.address())
   }
 
+  // The keep-alive fence the generated tree calls after an engine call (task 138 item 6; desktop:
+  // `Reference.reachabilityFence`). Empty on purpose: Kotlin/Native keeps a reference held in a
+  // local rooted until its frame returns, so a wrapper cannot be collected mid-call. Assumed, not
+  // proven: the iPhone GC-stress row of task 138 item 6 checks it.
+  actual fun keepReachable(value: Any?) {}
+
   // Static-method dispatch (task 117 P2' follow-up). A ZERO instance is the generator's
   // static-method marker: `_null_segment()` in scripts/generate_api_wrapper.py renders
   // `NULL_SEGMENT` as the instance for every `is_static` method, and the shared wrapper tree

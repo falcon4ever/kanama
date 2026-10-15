@@ -10,6 +10,7 @@ import java.lang.foreign.ValueLayout.JAVA_FLOAT
 import java.lang.foreign.ValueLayout.JAVA_INT
 import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodHandle
+import java.lang.ref.Reference
 import net.multigesture.kanama.api.Area2D
 import net.multigesture.kanama.api.Area3D
 import net.multigesture.kanama.api.BaseButton
@@ -255,6 +256,24 @@ actual object ObjectCalls {
     }
     return bind
   }
+
+  /**
+   * Keeps [value] strongly reachable up to this call (task 138 item 6). A wrapper body reads
+   * `segment` and then never touches `this` again, so by JLS §12.6.2 the collector may treat the
+   * wrapper as dead while the engine call that uses its pointer is still running; an owned
+   * `RefCounted`'s fallback release could then destroy the object mid-call. The generated tree
+   * calls this after each call for the receiver and for every object/Callable argument, and the
+   * hand-written Variant and signal paths do the same. `Reference.reachabilityFence` is a HotSpot
+   * intrinsic that emits no code. Android has it from API 28 (the debug floor): below that the
+   * lookup at class init fails and the fence is skipped, which is the behaviour before task 138.
+   */
+  actual fun keepReachable(value: Any?) {
+    if (HAS_REACHABILITY_FENCE) Reference.reachabilityFence(value)
+  }
+
+  // A static final: HotSpot folds the branch away.
+  private val HAS_REACHABILITY_FENCE: Boolean =
+    runCatching { Reference::class.java.getMethod("reachabilityFence", Any::class.java) }.isSuccess
 
   actual fun constructObject(className: String): MemorySegment {
     val instance =
@@ -513,6 +532,9 @@ actual object ObjectCalls {
         if (retInitialized) {
           BuiltinTypes.destroyVariant(retVariant)
         }
+        // Task 138 item 6: the wrappers in [args] (the `Object.call` family, `ClassDB`
+        // static calls, `GodotCallable.call`) stay reachable through the call.
+        keepReachable(args)
       }
     }
   }
