@@ -556,7 +556,7 @@ The web3d `LentProbe` rows (`lentStoredArgumentStaysValid`, `lentArgumentIdentit
 `rcCloseAfterQueuedSet`, `rcOutlivesItsReceiver`, `rcResultOutlivesItsScript`,
 `rcNeverMaterializedIsReleased`, `weakrefDoesNotGrow`, `lookupSurvivesQueueFree`,
 `rayHitColliderIsLent`, `nodeOutlivesItsReceiver`, `constructorRollbackAfterFlush`,
-`rcDispatchCost`; Chrome runs with `--js-flags=--expose-gc` so the collection rows call `gc()`,
+`uint32Masks`, `genericCloseKeepsSharedNode`, `handleRingBounded`, `rcDispatchCost`; Chrome runs with `--js-flags=--expose-gc` so the collection rows call `gc()`,
 Firefox allocates 4 MB a frame instead) pin all of it.
 `lentDispatchCost` holds a seen plain Node argument at 0 lending JS calls per dispatch and a Node3D
 at 1 (the old per-dispatch lend cost 2), `rcDispatchCost` a seen `InputEvent` at 1 (its wrapper's
