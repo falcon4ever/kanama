@@ -1611,6 +1611,8 @@
       this.wrapperRegistryWorks = true;
       slot.wrappers += 1;
       this.wrapperRegistrations += 1;
+      // A lent one Kotlin wraps again is in use: the cap evicts the least recently wrapped first.
+      if (slot.lent && this.lentRefCountedByAge.delete(handle)) this.lentRefCountedByAge.add(handle);
       return 1;
     },
     /**
@@ -1646,8 +1648,11 @@
     /**
      * A temporary wrapper another one replaced (Kotlin's `webRetyped`: a load's `Resource` becoming
      * a `Texture2D`): its hold ends, never releasing at once; the last hold's end goes to the drain.
+     * Without a working registry no wrapper is counted, so `wrappers` says nothing about the ones
+     * Kotlin still uses: nothing to end (the handle goes with its script, the fallback's rule).
      */
     dropWrapper(ref, handle) {
+      if (this.wrapperRegistryWorks === false) return 0;
       const slot = this.browserHandleSlot(handle);
       if (!slot?.refCounted) return 0;
       if (this.wrapperRegistry?.unregister(ref) && slot.wrappers > 0) {
@@ -1661,9 +1666,13 @@
     },
     /**
      * A hold that is not a wrapper (`delta` +1 / -1): Kotlin's Sprite2D texture snapshot names the
-     * texture's handle, so the handle stays while a snapshot names it.
+     * texture's handle, so the handle stays while a snapshot names it. Not without a working
+     * registry: the wrappers Kotlin still uses are not counted there, so the snapshot's -1 would
+     * release a handle a wrapper still names (`sprite.texture = a; sprite.texture = b` would drop
+     * `a`); the handle goes with its script instead (the fallback's rule).
      */
     holdRefCounted(handle, delta) {
+      if (this.wrapperRegistryWorks === false) return 0;
       const slot = this.browserHandleSlot(handle);
       if (!slot?.refCounted) return 0;
       slot.wrappers = Math.max(0, slot.wrappers + delta);

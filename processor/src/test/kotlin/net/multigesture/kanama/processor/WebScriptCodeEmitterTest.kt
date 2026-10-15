@@ -144,6 +144,28 @@ class WebScriptCodeEmitterTest {
   }
 
   @Test
+  fun drainHookLooksTheBridgeUpOnce() {
+    val handles =
+      WebScriptCodeEmitter(listOf(WebScriptInput(model("FirstScript"), "res://FirstScript.kt")))
+        .proxySources()
+        .single { it.fileName == "KanamaWebHandles" }
+        .source
+    // Protocol 37's per-frame drain runs every process frame: the bridge interface is looked up on
+    // the first one and kept, not fetched again each frame.
+    assertTrue(handles.contains("static var drain_bridge = null\n"), handles)
+    assertTrue(
+      handles.contains(
+        "static func drain_frame() -> void:\n" +
+          "\tif drain_bridge == null:\n" +
+          "\t\tdrain_bridge = JavaScriptBridge.get_interface(\"KanamaWebBridge\")\n" +
+          "\tif drain_bridge != null:\n" +
+          "\t\tdrain_bridge.drainUnheldHandles()\n"
+      ),
+      handles,
+    )
+  }
+
+  @Test
   fun emitsProxyWithLifecycleBatchAndImmediatePaths() {
     val emitter =
       WebScriptCodeEmitter(listOf(WebScriptInput(model("FirstScript"), "res://FirstScript.kt")))

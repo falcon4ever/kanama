@@ -952,6 +952,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
               "# class, not to a proxy, so it outlives every script. Made by the first mark."
             )
             appendLine("static var drain_hook: Callable = Callable()")
+            appendLine(
+              "# The bridge the drain calls, looked up once (the page sets it before Godot starts)."
+            )
+            appendLine("static var drain_bridge = null")
             appendLine()
             appendLine("static func hook_drain() -> void:")
             appendLine("\tvar tree := Engine.get_main_loop() as SceneTree")
@@ -962,9 +966,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             appendLine("\t\ttree.process_frame.connect(drain_hook)")
             appendLine()
             appendLine("static func drain_frame() -> void:")
-            appendLine("\tvar bridge = JavaScriptBridge.get_interface(\"KanamaWebBridge\")")
-            appendLine("\tif bridge != null:")
-            appendLine("\t\tbridge.drainUnheldHandles()")
+            appendLine("\tif drain_bridge == null:")
+            appendLine("\t\tdrain_bridge = JavaScriptBridge.get_interface(\"KanamaWebBridge\")")
+            appendLine("\tif drain_bridge != null:")
+            appendLine("\t\tdrain_bridge.drainUnheldHandles()")
             appendLine()
             appendLine("# Task 129 E: one parsed Expression per utility function and arity (see")
             appendLine("# _kanama_web_utility_call), shared by every proxy.")
