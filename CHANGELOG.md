@@ -39,6 +39,30 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — a forgotten `close()` is a late release on every thread
+
+Owned `RefCounted` wrappers made on a worker thread (a `Dispatchers.Default` coroutine, your own
+`Thread`, a `ResourceLoader` load on a worker, a `WorkerThreadPool` task) are now released by the
+garbage collector like the ones made on the main thread; before, they had no fallback and stayed
+alive until you closed them. The release still runs on the main thread, and every engine call keeps
+its wrapper (receiver and object arguments) reachable until it returns, so a release never lands
+inside a call a worker is still making. Desktop, Android 13+ and iOS. Android 8-12 debug installs
+keep `close()` as the only release (no `java.lang.ref.Cleaner`; Android 8 has no reachability fence
+either). `KANAMA_GC_STRESS=1` in the game's environment runs a full collection at the start of every
+frame, for testing (desktop and Android code). The runtime's ownership self-test (project setting
+`kanama/debug/ownership_self_test`, off by default; `KANAMA_OWNERSHIP_SELFTEST=1`) checks both on the
+device and prints a getter microbenchmark; `scripts/android_smoke.sh` switches it on and requires its
+verdict, and the iOS runtime self-test gained the same two rows.
+
+### Fixed — a `@RegisterClass` method returning a `RefCounted` hands Godot its own reference
+
+A `@RegisterClass` method whose return is a `RefCounted` object (declared `GodotObject`) wrote the raw
+pointer into Godot's return slot when GDScript called it with a typed receiver (the ptrcall path), so
+Godot later dropped a reference it never took: a resource the Kotlin object still held was destroyed
+as soon as GDScript let go of the result, and a fresh one died once the collector released the
+Kotlin wrapper. The method now hands Godot a reference of its own, as godot-cpp does; the
+`Object.call` path keeps the result's wrapper reachable until the Variant holds its reference.
+
 ### Fixed — A failing headless export of a project without `.godot/` exits 1, not 134
 
 `godot --headless --export-release <preset>` on a fresh checkout (no `.godot/` folder) crashed on exit

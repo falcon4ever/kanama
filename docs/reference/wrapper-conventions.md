@@ -309,7 +309,8 @@ The full statement is [Resource Ownership](../game-dev/godot-api.md#resource-own
   fallback does not release forgotten wrappers of its owner (until the script is detached or
   shutdown), the lifetime it had before. See
   [A script object keeps its resource alive](../game-dev/godot-api.md#a-script-object-keeps-its-resource-alive).
-- Wrappers made off the engine main thread get no GC fallback (close them).
+- Wrappers made on any thread get the GC fallback; the release runs on the main thread, after the
+  wrapper's last call (`ObjectCalls.keepReachable`).
 
 Kept by: the generator functions above; `refcounted_ownership_problems` in
 `scripts/audit_generator_shape_policy.py`, which checks every wrapper source for the owned/borrowed

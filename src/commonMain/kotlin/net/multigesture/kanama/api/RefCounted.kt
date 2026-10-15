@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.concurrent.Volatile
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.OwnedReleases
@@ -40,13 +41,16 @@ open class RefCounted internal constructor(
     // [retained]); cleared when close() releases it. Tracked whether or not the GC fallback is on,
     // so close() on a borrowed view never releases a reference the view did not take. Internal for
     // FileAccess.close(), which closes the file on a borrowed view without the borrowed-close warning.
+    // Not volatile (task 138 item 6): a stale `false` on another thread only leaves the release to the GC.
     internal var owned = false
         private set
 
     // The fallback release of that +1 (task 132 D2): null for a borrowed view, once close()
-    // released it, while the fallback is off, or for a wrapper built off the main thread.
+    // released it, or while the fallback is off. Set on whichever thread built the wrapper.
     // [releaseRegistration] is the platform's cleaner registration (JVM `Cleaner.Cleanable`,
-    // Kotlin/Native `Cleaner`): it must live as long as this wrapper.
+    // Kotlin/Native `Cleaner`): it must live as long as this wrapper. Volatile and written last (task
+    // 138 item 6): a close() on another thread must not miss the cancel, or the +1 goes twice.
+    @Volatile
     private var pendingRelease: PendingRelease? = null
     private var releaseRegistration: Any? = null
 
@@ -95,16 +99,16 @@ open class RefCounted internal constructor(
 
     /**
      * Marks this wrapper as the owner of the `+1` its handle carries (task 132 D1) and registers
-     * the fallback release (D2) unless the fallback is off or this is not the engine main thread
-     * (a wrapper built on a worker may still be in use there when the main thread would drain its
-     * release). Idempotent.
+     * the fallback release (D2) unless the fallback is off. Any thread (task 138 item 6): every
+     * engine call through a wrapper ends with `ObjectCalls.keepReachable`, so a release drained on
+     * the main thread never lands inside a worker's call. Idempotent.
      */
     internal fun markOwned() {
         owned = true
         if (pendingRelease != null) return
         val release = OwnedReleases.newRelease(this) ?: return
-        pendingRelease = release
         releaseRegistration = OwnedReleases.register(this, release)
+        pendingRelease = release
     }
 
     /** True while this wrapper holds a `+1` of its own (tests, diagnostics). */

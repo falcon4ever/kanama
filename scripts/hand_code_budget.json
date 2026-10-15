@@ -72,10 +72,11 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/RefCounted.kt": {
       "category": "runtime-core",
-      "lines": 257,
+      "lines": 261,
       "raises": [
         "242 -> 244: task 129 D: `owned` is internal (private set) so the generated FileAccess.close() closes the file on a borrowed view without RefCounted's borrowed-close warning",
-        "244 -> 257: task 138 item 6: reachability fences (ObjectCalls.keepReachable) after the hand-written engine calls"
+        "244 -> 257: task 138 item 6: reachability fences (ObjectCalls.keepReachable) after the hand-written engine calls",
+        "257 -> 261: task 138 item 6: pendingRelease is @Volatile and written after the registration, so a close() on another thread never misses the cancel (and the reason owned stays plain)"
       ],
       "reason": "lifetime root RefCounted (SHARED_HAND_ROOTS)"
     },

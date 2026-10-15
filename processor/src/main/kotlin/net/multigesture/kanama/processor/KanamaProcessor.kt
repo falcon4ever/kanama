@@ -3930,9 +3930,11 @@ internal enum class TypeMapping(
       COLOR ->
         "run { val p = rRet.reinterpret($ptrcallSizeBytesExpr); p.set(JAVA_FLOAT, 0, $v.r.toFloat()); p.set(JAVA_FLOAT, 4, $v.g.toFloat()); p.set(JAVA_FLOAT, 8, $v.b.toFloat()); p.set(JAVA_FLOAT, 12, $v.a.toFloat()) }"
       NODE_PATH -> "GodotStrings.initString(rRet, $v.path)"
-      // Task 131 item 2: a freed wrapper returns NULL (nil), never its dangling pointer.
+      // Task 131 item 2: a freed wrapper returns NULL (nil), never its dangling pointer. Task 138
+      // item 6: the slot is a Ref<T> (or a Variant's object pointer) that Godot unreferences
+      // later, so a RefCounted value goes out with a +1 of Godot's own; ours stays the wrapper's.
       OBJECT ->
-        "rRet.reinterpret($ptrcallSizeBytesExpr).set(ADDRESS, 0, net.multigesture.kanama.binding.runtime.BuiltinTypes.objectValueSegment($v))"
+        "rRet.reinterpret($ptrcallSizeBytesExpr).set(ADDRESS, 0, net.multigesture.kanama.binding.runtime.BuiltinTypes.objectReturnSegment($v))"
       in COMPOSITE_VALUE_TYPES ->
         "run { val p = rRet.reinterpret($ptrcallSizeBytesExpr); ${compositeValueWrite(this, "p", v)} }"
       in VARIANT_ONLY_RETURN_SHAPES -> "Unit"
@@ -4524,7 +4526,14 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
         }
       }
       val invocation = invocationExpr(m, argVars)
-      if (m.returnType != null) {
+      if (m.returnType == TypeMapping.OBJECT) {
+        // Task 138 item 6: through the one Variant encoder of a wrapper, which keeps `result`
+        // reachable until the Variant holds its own reference (nil for a freed object, task 131).
+        sb.appendLine("            val result = $invocation")
+        sb.appendLine(
+          "            net.multigesture.kanama.binding.runtime.BuiltinTypes.initObjectValueVariant(rReturn, result)"
+        )
+      } else if (m.returnType != null) {
         sb.appendLine("            val result = $invocation")
         sb.appendLine(
           "            val retScratch = arena.allocate(${m.returnType.scratchAllocationExpr})"
