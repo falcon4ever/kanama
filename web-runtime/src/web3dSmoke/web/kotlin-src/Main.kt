@@ -1522,9 +1522,10 @@ class Main(godotObject: GodotHandle) :
     WebExperimentalGenericCall.callImmediate(lentProbeNode(), method, listOf(value)).asLong()
 
   /**
-   * The RefCounted-ownership rows (see OwnProbe): a RefCounted held only by Kotlin lives while a
-   * wrapper of it is reachable, until `close()`. [ownProbe] arms them; they run over the next frames
-   * (up to ~750), [ownProbeDone] says when, then [ownMask] (1023) and [ownCost] are the results.
+   * The ownership rows (see OwnProbe): a RefCounted held only by Kotlin lives while a wrapper of it
+   * is reachable, until `close()`; a Node lives as long as the node. [ownProbe] arms them; they run
+   * over the next frames (up to ~1700), [ownProbeDone] says when, then [ownMask] (1048575) and
+   * [ownCost] are the results.
    */
   fun ownProbe(value: Long): Long = ownSays("own_arm", 0L)
 

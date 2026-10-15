@@ -4,15 +4,22 @@ import net.multigesture.kanama.annotations.OnInput
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.Button
 import net.multigesture.kanama.api.ButtonGroup
+import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.InputEvent
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
 import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.api.Node3D
+import net.multigesture.kanama.api.PhysicsRayQueryParameters3D
+import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.api.Resource
 import net.multigesture.kanama.api.Signal2
 import net.multigesture.kanama.api.SignalArgType
+import net.multigesture.kanama.api.getWorld3d
+import net.multigesture.kanama.api.newScriptInstance
+import net.multigesture.kanama.types.Vector3
 
 /**
  * Harness-only: the lifetime of a RefCounted a script holds only in Kotlin, against OwnTwin
@@ -21,7 +28,7 @@ import net.multigesture.kanama.api.SignalArgType
  * references holds it, and `close()` ends your reference early. Main's `own_probe` arms [ownArm];
  * the rows run over the following frames and [ownDone] says when they are finished.
  *
- * [mask] (the O rows of the ownership design; 2047 when healthy):
+ * [mask] (the O rows of the ownership design; 1048575 when healthy):
  * - O1 `rcHeldByKotlinOutlives`: a RefCounted only Kotlin keeps answers 2, 30 and 120 frames after
  *   its dispatch, and the object still lives: 1 = the one-object signal arm, 2 = the packed arm,
  *   4 = `_input`'s event.
@@ -40,6 +47,21 @@ import net.multigesture.kanama.api.SignalArgType
  *   after the keeper was freed.
  * - O6 `rcResultOutlivesItsScript`: 256 = a resource a keeper script loaded into its companion, read
  *   10 frames after the keeper was freed; 512 = once dropped and collected, its handle is released.
+ * - O4 `rcNeverMaterializedIsReleased`: 2048 = a RefCounted on the packed arm to a handler that
+ *   never reads it is gone 4 frames later (nothing wrapped it, so its lend's floor ends).
+ * - O7 `weakrefDoesNotGrow`: 4096 = 300 frames of `GD.weakref(node)` nobody keeps leave the live
+ *   handles within 64 of where they were once the browser collected; 8192 = `close()` on one
+ *   releases its handle at once.
+ * - O8 `lookupSurvivesQueueFree`: 16384 = a node looked up and `queueFree()`d still answers a typed
+ *   call in the same frame, and a dispatch of it in that frame hands over the same value; 32768 = a
+ *   use a frame later throws desktop's "previously freed instance", and the live handles are back.
+ * - O9 `rayHitColliderIsLent`: 65536 = a ray that hits a body no script tracks answers
+ *   `collider == getNodeOrNull(...)` of that body.
+ * - O11 `nodeOutlivesItsReceiver`: 131072 = a node a keeper script looked up into its companion,
+ *   read 10 frames after the keeper was freed; 262144 = and one a top-level initializer made while
+ *   the keeper ran.
+ * - `constructorRollbackAfterFlush`: 524288 = a call queued before a constructor that applies the
+ *   queue (a `close()`) and then throws runs once, not again after the failed construction.
  *
  * [cost] (O10 `rcDispatchCost`): the lending's GDScript->JS calls plus the wrapper registrations, and
  * the microseconds, per 1000 dispatches of an already-seen InputEvent (0, 2) and plain Node (1, 3);
@@ -64,6 +86,8 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
   private var gcBase = 0L
   private val o1Handles = mutableListOf<Int>()
   private var loadedHandle = 0
+  private var doomedArg: GodotObject? = null
+  private var weakBase = 0L
 
   @OnInput
   fun onInput(event: InputEvent) {
@@ -111,6 +135,8 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     }
     twin.signal("own_close").connectObject(self) { closeArgs += it }
     twin.signal("own_cost").connectObject(self) { _ -> }
+    twin.signal("own_ignored").connect(self) {}
+    twin.signal("own_doomed").connectObject(self) { doomedArg = it }
 
     // O1: one RefCounted per dispatch path, only Kotlin keeps them.
     recording = true
@@ -121,6 +147,10 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     closeRows()
     queuedSetRow()
     keeperRows()
+    ignoredRow()
+    queueFreeRow()
+    rayRow()
+    rollbackRow()
     MainThread.postAfterFrames(2) { checkHeld(2) }
     MainThread.postAfterFrames(30) { checkHeld(30) }
     MainThread.postAfterFrames(120) {
@@ -197,14 +227,141 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     val loaded = twinLong("keeper_loads") == 1L
     loadedHandle = LentKeeper.ownLoaded?.handle?.value ?: 0
     if (!loaded || LentKeeper.ownKept == null) note("O5/O6 keeper: loaded=$loaded kept=${LentKeeper.ownKept}")
+    LentKeeper.nodeKept = null
+    LentKeeper.madeKept = null
+    if (twinLong("keeper_keeps_nodes") != 1L) note("O11 keeper: lookup found nothing")
     twin.call("free_keeper", 0L)
     MainThread.postAfterFrames(10) {
       if (answers("O6 path") { LentKeeper.ownLoaded?.call("get_path") == LentKeeper.OWN_LOADED_PATH }) {
         mask = mask or 256L
       }
+      if (answers("O11 lookup") { checkNotNull(LentKeeper.nodeKept) { "nothing kept" }.getName() == "OwnKeptNode" }) {
+        mask = mask or 131072L
+      }
+      if (answers("O11 made") { checkNotNull(LentKeeper.madeKept) { "nothing kept" }.getName() == "OwnMadeSprite" }) {
+        mask = mask or 262144L
+      }
     }
     MainThread.postAfterFrames(30) {
       if (resourceAnswers("O5 kept", LentKeeper.ownKept) && alive("o5")) mask = mask or 128L
+    }
+  }
+
+  /** O4: a RefCounted the handler never reads is released once its lend's floor is over. */
+  private fun ignoredRow() {
+    twin().call("emit_ignored", 0L)
+    MainThread.postAfterFrames(4) {
+      if (!alive("o4")) mask = mask or 2048L else note("O4 the ignored argument still lives")
+    }
+  }
+
+  /** O8: a looked-up node lives to the end of the frame its `queueFree()` was queued in. */
+  private fun queueFreeRow() {
+    val twin = twin()
+    twin.call("make_doomed", 0L)
+    val base = counter("liveBrowserHandleCount")
+    val doomed = twin.getNodeOrNull("OwnDoomed")
+    if (doomed == null) {
+      note("O8 lookup found nothing")
+      return
+    }
+    doomed.queueFree()
+    val sameFrame = answers("O8 same frame") { doomed.getName() == "OwnDoomed" }
+    doomedArg = null
+    val dispatched = twinLong("emit_doomed") == 1L
+    val handedOver = answers("O8 dispatch") { doomedArg == doomed && doomedArg?.call("get_name") == "OwnDoomed" }
+    if (sameFrame && dispatched && handedOver) mask = mask or 16384L
+    MainThread.postAfterFrames(1) {
+      val freed = throwsFreed("O8 next frame") { doomed.getName() }
+      MainThread.postAfterFrames(SWEEP_FRAMES) {
+        val live = counter("liveBrowserHandleCount")
+        if (freed && live <= base) mask = mask or 32768L
+        else note("O8 freed=$freed live $base -> $live")
+      }
+    }
+  }
+
+  private fun throwsFreed(label: String, use: () -> Unit): Boolean =
+    try {
+      use()
+      note("$label: did not throw")
+      false
+    } catch (e: IllegalStateException) {
+      (e.message?.contains("previously freed instance") == true).also {
+        if (!it) note("$label: ${e.message?.take(160)}")
+      }
+    }
+
+  /** O9: a ray hitting a body no script tracks answers that body. */
+  private fun rayRow() {
+    val twin = twin()
+    val from = twin.requireAs("OwnRayFrom", ::Node3D)
+    val query = PhysicsRayQueryParameters3D.create(Vector3(500.0, 510.0, 500.0), Vector3(500.0, 490.0, 500.0), 1L)
+    val hit = answers("O9 query") {
+      val result = from.getWorld3d().directSpaceState.intersectRay(checkNotNull(query))
+      val collider = checkNotNull(result) { "the ray missed" }.collider
+      val body = twin.getNodeOrNull("OwnRayBody")
+      (collider != null && collider == body).also { if (!it) note("O9 collider=$collider body=$body") }
+    }
+    if (hit) mask = mask or 65536L
+  }
+
+  /**
+   * The constructor rollback: a group call queued (OwnTwin counts it), then a scripted resource
+   * whose constructor applies the queue and throws. The call ran once, never again from the
+   * restored queue.
+   */
+  private fun rollbackRow() {
+    val before = twinLong("own_bumps")
+    self.getTree().callGroup("own_bump", "own_bump")
+    val failed = runCatching { newScriptInstance<ThrowingCloser>() }.isFailure
+    MainThread.postAfterFrames(2) {
+      val bumps = twinLong("own_bumps") - before
+      if (failed && bumps == 1L) mask = mask or 524288L
+      else note("rollback failed=$failed ran $bumps times")
+    }
+  }
+
+  /**
+   * O7: `GD.weakref` results nobody keeps do not pile up: 300 frames of one each, then the browser
+   * collects; `close()` on one releases its handle at once.
+   */
+  private fun weakrefRows(frame: Int) {
+    if (frame == 0) weakBase = counter("liveBrowserHandleCount")
+    if (frame < WEAKREF_FRAMES) {
+      GD.weakref(twin())
+      MainThread.postAfterFrames(1) { weakrefRows(frame + 1) }
+      return
+    }
+    val closing = GD.weakref(twin()) as? RefCounted
+    val handle = closing?.handle?.value ?: 0
+    closing?.close()
+    if (closing != null && twinLong("handle_live", handle.toLong()) == 0L) mask = mask or 8192L
+    else note("O7 close: closeable=${closing != null} still live")
+    weakSettle(0)
+  }
+
+  private fun weakSettle(frame: Int) {
+    churn()
+    val live = counter("liveBrowserHandleCount")
+    if (live > weakBase + 64 && frame < SETTLE_FRAMES) {
+      MainThread.postAfterFrames(1) { weakSettle(frame + 1) }
+      return
+    }
+    garbage = null
+    if (live <= weakBase + 64) mask = mask or 4096L
+    else note("O7 live $weakBase -> $live after $frame frames")
+    twin().call("publish_notes", notes.joinToString(" | "))
+    done = 1L
+  }
+
+  /** A collection: `gc()` where the page has it (Chrome), else allocation (Firefox). */
+  private fun churn() {
+    if (twinLong("collect") == 0L) {
+      garbage = ByteArray(4 shl 20)
+      var sum = 0
+      repeat(8000) { sum += IntArray(4) { i -> i + it }.sum() }
+      if (sum < 0) note("unreachable")
     }
   }
 
@@ -226,12 +383,7 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
   private var garbage: Any? = null
 
   private fun settle(frame: Int) {
-    if (twinLong("collect") == 0L) {
-      garbage = ByteArray(4 shl 20)
-      var sum = 0
-      repeat(8000) { sum += IntArray(4) { i -> i + it }.sum() }
-      if (sum < 0) note("unreachable")
-    }
+    churn()
     val gone = !alive("o1_one") && !alive("o1_two") && !alive("o1_input")
     val loadedReleased = loadedHandle != 0 && twinLong("handle_live", loadedHandle.toLong()) == 0L
     if ((!gone || !loadedReleased) && frame < SETTLE_FRAMES) {
@@ -252,8 +404,7 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     if (mask and 256L == 256L && loadedReleased) mask = mask or 512L
     else note("O6 released=$loadedReleased after $frame frames")
     costRows()
-    twin().call("publish_notes", notes.joinToString(" | "))
-    done = 1L
+    weakrefRows(0)
   }
 
   private fun costRows() {
@@ -272,5 +423,11 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
   }
 }
 
-/** The frames O2 / O6 wait for the browser to collect (the ownership design's teardown bound). */
+/** The frames O2 / O6 / O7 wait for the browser to collect (the ownership design's teardown bound). */
 private const val SETTLE_FRAMES = 600
+
+/** O7: the frames that each make one `GD.weakref` nobody keeps. */
+private const val WEAKREF_FRAMES = 300
+
+/** O8: frames for the sweep to release a freed node's handle (32 a frame, so a few). */
+private const val SWEEP_FRAMES = 12

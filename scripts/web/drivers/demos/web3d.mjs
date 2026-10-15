@@ -533,13 +533,13 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   for (let index = 0; index < 4; index += 1) lentCost.push(await callMain("lent_cost", index));
   trace(`lent: done=${lentDone} maskA=${lentA} maskB=${lentB} maskC=${lentC} cost=${lentCost.join(",")}`);
   trace(`lent notes: ${await evaluate("String(globalThis.KanamaWebLentNotes ?? '')")}`);
-  // The RefCounted-ownership rows (see OwnProbe): a RefCounted held only by Kotlin lives while a
-  // wrapper of it is reachable, until close(); released once the browser collects the wrappers. The
-  // rows run over up to ~750 frames (O2/O6 wait for a collection: gc() on Chrome, allocation on
-  // Firefox).
+  // The ownership rows (see OwnProbe): a RefCounted held only by Kotlin lives while a wrapper of it
+  // is reachable, until close(); released once the browser collects the wrappers; a Node lives as
+  // long as the node. The rows run over up to ~1700 frames (O2/O6/O7 wait for a collection: gc() on
+  // Chrome, allocation on Firefox).
   await callMain("own_probe");
   let ownDone = await callMain("own_probe_done");
-  const ownDeadline = Math.min(deadline, Date.now() + 60_000);
+  const ownDeadline = Math.min(deadline, Date.now() + 90_000);
   while (ownDone !== 1 && Date.now() < ownDeadline) {
     await delay(150);
     ownDone = await callMain("own_probe_done");
@@ -561,9 +561,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   }
   trace(`leakProbeAfter: ${leakProbeAfter}`);
 
-  // The seven deliberate script errors have landed: three at scene load (constructor, property
-  // setter, _ready), the rest when ErrorProbe's calls run (the process and coroutine ones a frame or
-  // two after the arm); and the frame loop went on past them.
+  // The eight deliberate script errors have landed: three at scene load (constructor, property
+  // setter, _ready), OwnProbe's ThrowingCloser constructor, the rest when ErrorProbe's calls run (the
+  // process and coroutine ones a frame or two after the arm); and the frame loop went on past them.
   // Kind -> the containment site the report's `at:` line names (a Wasm trace has no Kotlin frame).
   const expectedSites = {
     function: "ErrorProbe.error_throw",
@@ -573,6 +573,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     constructor: "ThrowingConstructor.<init>",
     property: "ThrowingProperty.gate",
     ready: "ThrowingReady._ready",
+    closer: "ThrowingCloser.<init>",
   };
   const expectedScriptErrors = Object.keys(expectedSites);
   // ...plus the queued setters on a node the engine freed: FreedHolder.freed_setter (one), the
@@ -800,6 +801,22 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // O6: a resource a script loaded into a companion outlives the script, and is released once
     // dropped and collected.
     rcResultOutlivesItsScript: (ownMask & 768) === 768,
+    // O4: a RefCounted on the packed arm to a handler that never reads it is gone 4 frames later.
+    rcNeverMaterializedIsReleased: (ownMask & 2048) === 2048,
+    // O7: GD.weakref results nobody keeps do not pile up once the browser collects, and close() on
+    // one releases its handle at once.
+    weakrefDoesNotGrow: (ownMask & 12288) === 12288,
+    // O8: a looked-up node queueFree()d still answers (a typed call, a dispatch of it) to the end of
+    // the frame, as on desktop; a frame later its use is the freed-instance error.
+    lookupSurvivesQueueFree: (ownMask & 49152) === 49152,
+    // O9: a ray hitting a body no script tracks answers that body (== its lookup).
+    rayHitColliderIsLent: (ownMask & 65536) === 65536,
+    // O11: a node a script looked up, and one a top-level initializer made while it ran, both kept
+    // in a companion, outlive that script.
+    nodeOutlivesItsReceiver: (ownMask & 393216) === 393216,
+    // A call queued before a constructor that applies the queue and then throws runs once: the
+    // failed construction does not hand it back to the queue.
+    constructorRollbackAfterFlush: (ownMask & 524288) === 524288,
     // O10: handing over an already-seen InputEvent costs at most one JS call (the wrapper's
     // registration); a plain Node still none.
     rcDispatchCost: ownCost[0] >= 0 && ownCost[0] <= 1010 && ownCost[1] >= 0 && ownCost[1] <= 10,

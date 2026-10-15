@@ -9,6 +9,8 @@ signal own_two(obj: Object, round: int)
 signal own_close(obj: Object)
 signal own_keep(obj: Object)
 signal own_cost(obj: Object)
+signal own_ignored(obj: Object, round: int)
+signal own_doomed(obj: Object)
 
 ## Weak references to the objects a row emitted, by row name.
 var weak: Dictionary = {}
@@ -16,15 +18,35 @@ var keeper: Node
 var cost_event: InputEventKey
 var cost_node: Node
 var button: Button
+var doomed: Node
+var bumps := 0
 
 
 func _ready() -> void:
+	add_to_group("own_bump")
 	cost_node = Node.new()
 	cost_node.name = "OwnCostNode"
 	add_child(cost_node)
 	button = Button.new()
 	button.name = "OwnButton"
 	add_child(button)
+	# O11: a node no script looks up before the keeper does.
+	var kept := Node.new()
+	kept.name = "OwnKeptNode"
+	add_child(kept)
+	# O9: a body no script tracks, far from the level, and a Node3D to query the world from.
+	var body := StaticBody3D.new()
+	body.name = "OwnRayBody"
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(2.0, 2.0, 2.0)
+	shape.shape = box
+	body.add_child(shape)
+	add_child(body)
+	body.global_position = Vector3(500.0, 500.0, 500.0)
+	var from := Node3D.new()
+	from.name = "OwnRayFrom"
+	add_child(from)
 
 
 ## Why an OwnProbe row failed, for the driver's trace.
@@ -105,6 +127,12 @@ func keeper_loads(_unused: int) -> int:
 	return int(keeper.call("keep_loaded", 0))
 
 
+## O11: the keeper looks a node up and makes one in a companion initializer, both kept in its
+## companion.
+func keeper_keeps_nodes(_unused: int) -> int:
+	return int(keeper.call("keep_nodes", 0))
+
+
 func free_keeper(_unused: int) -> int:
 	keeper.free()
 	keeper = null
@@ -127,3 +155,34 @@ func measure_cost(kind: int, rounds: int) -> PackedInt64Array:
 	var elapsed := Time.get_ticks_usec() - started
 	var calls := counter("lendBridgeCalls") + counter("wrapperRegistrations") - calls_before
 	return PackedInt64Array([calls * 1000 / rounds, elapsed * 1000 / rounds])
+
+
+## O4: a RefCounted on the packed arm to a handler that never reads it.
+func emit_ignored(_unused: int) -> int:
+	own_ignored.emit(_fresh("o4"), 0)
+	return 1
+
+
+## O8: a fresh node no script tracks, for the probe to look up and queue_free.
+func make_doomed(_unused: int) -> int:
+	doomed = Node.new()
+	doomed.name = "OwnDoomed"
+	add_child(doomed)
+	return 1
+
+
+## O8: the queue_free'd node handed to a handler in the same frame (it lives to the frame's end).
+func emit_doomed(_unused: int) -> int:
+	if not is_instance_valid(doomed):
+		return 0
+	own_doomed.emit(doomed)
+	return 1
+
+
+## The constructor-rollback row: the group call the probe queued; how often it ran.
+func own_bump() -> void:
+	bumps += 1
+
+
+func own_bumps(_unused: int) -> int:
+	return bumps
