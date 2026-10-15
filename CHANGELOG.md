@@ -52,6 +52,20 @@ update runs while the editor is still up and the export exits 1 with the same er
 loads only `addons/kanama` without the Kanama Tools plugin enabled can still crash this way;
 `tool_smoke.sh` runs the failing export on a fresh copy of the example project.
 
+### Added — the editor refuses an export that would ship scenes without their script properties
+
+When the desktop addon or the project's `kanama-scripts.jar` does not know a `.kt` script, Godot's
+export converts every scene that uses it without the script's property values and finishes without an
+error; GDScript projects cannot get into that state. The Kanama Tools editor plugin now checks the
+`.kt` scripts that scenes, resources and autoloads attach before any scene is converted. If one does
+not bind (no `.kt` loader because the addon is not loaded, or the class is not in the jar), the export
+stops with one error that names the scripts and the fix (`installAddonJar`, then restart the editor) and
+the export command exits non-zero; no converted scene is cached. A project whose scripts all bind
+exports with no extra output (the check took about 45 ms for 31 scripts). `.kt` files no scene attaches
+(helper code) are not checked. The setting `kanama/tools/export_guard_enabled` turns the check off.
+The check runs in the editor, so it applies to every platform it exports; it is verified with headless Web
+exports. See `docs/exporting/`.
+
 ### Fixed — iOS: a value-type script property set to a value of another type follows GDScript
 
 A `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, `Vector4i`, `Rect2`, `Rect2i`, `Plane`,

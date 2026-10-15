@@ -822,6 +822,16 @@ case("check_exported_scene_properties_selftest.sh", ["bash", "scripts/check_expo
      [Edit("scripts/check_exported_scene_properties.gd", "lost script property", "lost a thing")],
      "the missing override property was not reported", "the scene check stops saying `lost script property` (its own red run is inside the self-test)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (export guard check)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Create("example_project/export_guard_red.tscn",
+             '[gd_scene load_steps=2 format=3]\n\n[ext_resource type="Script" path="res://ExportGuardRed.kt" id="1"]\n\n[node name="Red" type="Node"]\nscript = ExtResource("1")\n'),
+      Create("example_project/ExportGuardRed.kt", "class ExportGuardRed\n")],
+     "ExportGuardRed.kt (not in kanama-scripts.jar)", "a scene attaches a .kt script that kanama-scripts.jar does not contain: the editor export guard's check must name it",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("export_guard_selftest.sh", ["bash", "scripts/export_guard_selftest.sh", GODOT],
+     [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", "    if problems.is_empty():\n        return\n    var message", "    if true:\n        return\n    var message")],
+     "the stale export exited 0", "the export guard stops finding problems: a stale-jar export must still exit non-zero with the message (its own green and red exports are inside the self-test)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("check_jdk_lookup_parity.sh", ["bash", "scripts/check_jdk_lookup_parity.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/plugin.gd", '["all", "~/.jdks", "", ""]', '["all", "~/.jdkz", "", ""]')],
      "FAIL table_home_dot_jdks", "the editor plugin's JDK location table drifts from bootstrap.c's (a `~/.jdks` row renamed)",

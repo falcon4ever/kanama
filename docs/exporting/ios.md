@@ -131,8 +131,13 @@ gets its registrars, and the same sources are compiled into the desktop
 `kanama-scripts.jar` the export-time editor loads. The editor needs that jar to
 know the scripts' `@Export` names — Godot's export instantiates and
 re-packs every scene when it converts text resources to binary and keeps only
-the properties the script instance reports, so an unknown script loses every
-scene-stored value without any error. `-PkanamaProjectScriptsDir` may still be
+the properties the script instance reports, so an unknown script would lose every
+scene-stored value without any error. The Kanama Tools editor plugin checks, before
+any scene is converted, that every `.kt` script the project attaches binds in the
+export-time editor; when one does not, the export stops with an error that names the
+scripts and the fix (`installIosAddon` with the script-dir properties below), and the
+export command exits non-zero. The plugin must be enabled (the starter projects do);
+`kanama/tools/export_guard_enabled` switches the check off. `-PkanamaProjectScriptsDir` may still be
 passed explicitly (for example with a different desktop source set); it wins
 when both are given. If the export log prints
 `[kanama:kt] WARNING: no Kotlin class bound for res://…`, the jar in

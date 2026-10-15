@@ -82,8 +82,13 @@ Requirements:
 - **The desktop Kanama addon installed in the project** (`addons/kanama/kanama.jar`,
   the project's `kanama-scripts.jar`, the bootstrap library): the export runs in
   the desktop editor, which needs them to load the project's `.kt` scripts. Without
-  them the editor logs `No loader found for resource: res://….kt` and Godot's
-  export re-packs every scene with **no script properties**, silently. Install with
+  them the editor logs `No loader found for resource: res://….kt`, and with a
+  `kanama-scripts.jar` that predates a script Godot's export re-packs the scenes that
+  use it with **no script properties**, silently. The Kanama Tools editor plugin
+  therefore checks every `.kt` script the project attaches before it converts any
+  scene, and when one does not bind the export stops with an error that names the
+  scripts and the fix (the export command exits non-zero). The install step below
+  stays necessary; the check only makes forgetting it loud. Install with
   `./gradlew installAddonJar -PkanamaProjectDir=<project> -PkanamaProjectScriptsDir=<project>/kotlin-src`
   after the AAR (so the Android `.gdextension` entries are preserved), and verify an
   export with `scripts/check_exported_scene_properties.gd` (see the iOS guide).
@@ -161,8 +166,8 @@ scripts/android_smoke.sh \
 The smoke script builds scripts, installs the Kanama Android AAR **and the
 desktop addon** (the export runs in the desktop editor, which needs
 `kanama.jar` plus the project's `kanama-scripts.jar` to load the `.kt` scripts;
-without them the export ships every scene with no script properties, see the
-iOS guide's note on the export cache), installs the Android build template
+without them the export stops with the Kanama Tools error described under
+Godot Export Requirements), installs the Android build template
 (by hand from the export templates when Godot's `--install-android-build-template
 --quit` leaves nothing, as it does on 4.7.2), clears `.godot/exported/`, exports
 a debug APK and fails if the export log shows an unbound `.kt` script, runs

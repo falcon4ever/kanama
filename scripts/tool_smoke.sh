@@ -12,12 +12,14 @@ fi
 
 GODOT_BIN="$1"
 PROJECT_DIR_FOR_GODOT="$PROJECT_DIR"
+GUARD_CHECK_FOR_GODOT="$ROOT_DIR/scripts/check_export_guard.gd"
 
 case "$(uname -s)" in
   MINGW*|MSYS*|CYGWIN*)
     if command -v cygpath >/dev/null 2>&1; then
       GODOT_BIN="$(cygpath -u "$GODOT_BIN")"
       PROJECT_DIR_FOR_GODOT="$(cygpath -m "$PROJECT_DIR")"
+      GUARD_CHECK_FOR_GODOT="$(cygpath -m "$GUARD_CHECK_FOR_GODOT")"
     fi
     ;;
 esac
@@ -100,10 +102,12 @@ check_absent "\[kanama:adapter\] downcall .* phase=post-boundary"
 # then JAVA_HOME, then the install locations, and fail with one clear message instead of running a
 # build that dies in the native bootstrap's compile. The editor plugin lives twice
 # (the starter template and the example project) and the two must not drift.
-if ! cmp -s "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd" \
-  "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd"; then
-  smoke_fail "plugin copies differ" "templates/starter/addons/kanama_tools/plugin.gd vs example_project/addons/kanama_tools/plugin.gd"
-fi
+for plugin_file in plugin.gd kanama_export_guard.gd; do
+  if ! cmp -s "$ROOT_DIR/templates/starter/addons/kanama_tools/$plugin_file" \
+    "$ROOT_DIR/example_project/addons/kanama_tools/$plugin_file"; then
+    smoke_fail "plugin copies differ" "templates/starter/addons/kanama_tools/$plugin_file vs example_project/addons/kanama_tools/$plugin_file"
+  fi
+done
 JDK_SCRATCH="$(mktemp -d "${TMPDIR:-/tmp}/kanama_jdk_resolution_gd.XXXXXX")"
 trap 'rm -rf "$JDK_SCRATCH"' EXIT
 mkdir -p "$JDK_SCRATCH/project/addons" "$JDK_SCRATCH/jdks"
@@ -145,6 +149,18 @@ fi
 if ! grep -Fq "doesn't have an \`export_presets.cfg\` file" "$LOG_FILE.export"; then
   tail -n 40 "$LOG_FILE.export" >&2
   smoke_fail "failing export of a fresh project did not print Godot's export error" "$LOG_FILE.export"
+fi
+
+# The editor export guard (kanama_export_guard.gd) refuses an export whose scripts do not bind. Its check runs here
+# on the example project, whose scenes attach real scripts from the freshly synced jar: all must bind. The exports
+# that prove the refusal itself are scripts/export_guard_selftest.sh.
+if ! "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --script "$GUARD_CHECK_FOR_GODOT" >"$LOG_FILE.guard" 2>&1; then
+  cat "$LOG_FILE.guard" >&2
+  smoke_fail "export guard check failed" "scripts/check_export_guard.gd (log: $LOG_FILE.guard)"
+fi
+if ! grep -Fq "[export_guard] PASS" "$LOG_FILE.guard"; then
+  cat "$LOG_FILE.guard" >&2
+  smoke_fail "export guard check did not report PASS" "scripts/check_export_guard.gd (log: $LOG_FILE.guard)"
 fi
 
 echo "[tool_smoke] PASS"

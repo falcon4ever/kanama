@@ -11,6 +11,7 @@ const SETTING_AUTO_BUILD_DEBOUNCE_MS := "kanama/tools/auto_build_debounce_ms"
 const SETTING_RELOAD_SCENE_AFTER_SYNC := "kanama/tools/reload_scene_after_sync"
 const SETTING_DEVELOPER_MODE := "kanama/tools/developer_mode"
 const SETTING_JAVA_PREFLIGHT_ENABLED := "kanama/tools/java_preflight_enabled"
+const SETTING_EXPORT_GUARD_ENABLED := "kanama/tools/export_guard_enabled"
 const SETTING_BUILD_JDK_PATH := "kanama/build/jdk_path"
 const MIN_JDK_MAJOR := 25
 const JDK_HINT_FILE := "kanama_jdk_home"
@@ -35,12 +36,14 @@ const JAR_BUTTON_IDLE_TEXT := "Build Runtime"
 const JAR_BUTTON_BUSY_TEXT := "Building..."
 const KT_SCAN_INTERVAL_SEC := 0.6
 const KotlinSyntaxHighlighter := preload("res://addons/kanama_tools/kotlin_syntax_highlighter.gd")
+const KanamaExportGuard := preload("res://addons/kanama_tools/kanama_export_guard.gd")
 
 var _toolbar_container: HBoxContainer
 var _sync_button: Button
 var _sources_button: Button
 var _jar_button: Button
 var _kotlin_syntax_highlighter: EditorSyntaxHighlighter
+var _export_guard: EditorExportPlugin
 var _scan_accum_sec := 0.0
 var _known_kt_mtimes: Dictionary = {}
 var _pending_auto_sync := false
@@ -65,6 +68,8 @@ func _enter_tree() -> void:
         add_tool_menu_item(MENU_BUILD_JAR, _on_build_jar_pressed)
         _jar_menu_added = true
     call_deferred("_register_kotlin_syntax_highlighter")
+    _export_guard = KanamaExportGuard.new()
+    add_export_plugin(_export_guard)
     _install_toolbar_buttons()
     _known_kt_mtimes = _collect_kt_mtimes()
     set_process(true)
@@ -82,6 +87,9 @@ func _exit_tree() -> void:
         remove_tool_menu_item(MENU_BUILD_JAR)
         _jar_menu_added = false
     _unregister_kotlin_syntax_highlighter()
+    if _export_guard != null:
+        remove_export_plugin(_export_guard)
+        _export_guard = null
     _remove_toolbar_buttons()
 
 
@@ -296,6 +304,8 @@ func _ensure_project_settings() -> void:
         ProjectSettings.set_setting(SETTING_DEVELOPER_MODE, false)
     if not ProjectSettings.has_setting(SETTING_JAVA_PREFLIGHT_ENABLED):
         ProjectSettings.set_setting(SETTING_JAVA_PREFLIGHT_ENABLED, true)
+    if not ProjectSettings.has_setting(SETTING_EXPORT_GUARD_ENABLED):
+        ProjectSettings.set_setting(SETTING_EXPORT_GUARD_ENABLED, true)
     if not ProjectSettings.has_setting(SETTING_JDWP_ENABLED):
         ProjectSettings.set_setting(SETTING_JDWP_ENABLED, false)
     if not ProjectSettings.has_setting(SETTING_JDWP_PORT):
@@ -342,6 +352,10 @@ func _ensure_project_settings() -> void:
     })
     ProjectSettings.add_property_info({
         "name": SETTING_JAVA_PREFLIGHT_ENABLED,
+        "type": TYPE_BOOL,
+    })
+    ProjectSettings.add_property_info({
+        "name": SETTING_EXPORT_GUARD_ENABLED,
         "type": TYPE_BOOL,
     })
     ProjectSettings.add_property_info({
