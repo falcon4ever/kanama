@@ -101,7 +101,58 @@ object ScriptBridge {
   fun trackKotlinObject(ownerObject: MemorySegment, kotlinObject: Any) {
     if (ownerObject.address() != 0L) {
       kotlinObjectByOwnerAddress[ownerObject.address()] = kotlinObject
+      noteScriptObject(
+        ownerObject.address(),
+        if (kotlinObject is ScriptOwnerLink) kotlinObject.instance()?.kotlinObject else kotlinObject,
+      )
     }
+  }
+
+  // ---- Live script objects per script build (task 138 item 11) ----
+
+  // The build (hot-reload script class loader) of each owner's script object, and how many owners
+  // each build has. A lambda connection belongs to its build; once a retired build has none left,
+  // KanamaHotReload drops its connections. The maps let go of a build at count 0, so they never
+  // pin a retired loader. Guarded by liveByBuild: instances are created and freed on any thread.
+  private val buildByOwnerAddress = HashMap<Long, ClassLoader>()
+  private val liveByBuild = HashMap<ClassLoader, Int>()
+
+  /**
+   * Counts [kotlinObject] as [ownerAddress]'s live script object for its build: the one tracking
+   * site, from [trackKotlinObject] (a new instance) and `ScriptOwnerLinks.materialize` (an owner
+   * link's rebuilt instance, which comes from the current build). An owner already counted under
+   * another build moves; one whose object is not a script build's (a placeholder) is left as is.
+   */
+  internal fun noteScriptObject(ownerAddress: Long, kotlinObject: Any?) {
+    val build = kotlinObject?.javaClass?.classLoader as? ChildFirstClassLoader ?: return
+    if (ownerAddress == 0L) return
+    synchronized(liveByBuild) {
+      val previous = buildByOwnerAddress.put(ownerAddress, build)
+      if (previous === build) return
+      if (previous != null) dropLive(previous)
+      liveByBuild[build] = (liveByBuild[build] ?: 0) + 1
+    }
+  }
+
+  /** [ownerAddress]'s script object is gone (`siFree`): uncounts it from its build. */
+  internal fun forgetScriptObject(ownerAddress: Long) {
+    synchronized(liveByBuild) { buildByOwnerAddress.remove(ownerAddress)?.let { dropLive(it) } }
+  }
+
+  /** How many owners have a live script object of [build]. */
+  internal fun liveScriptObjects(build: ClassLoader): Int =
+    synchronized(liveByBuild) { liveByBuild[build] ?: 0 }
+
+  // Under the liveByBuild lock. The last object of a retired build: sweep its connections next
+  // frame (a free may run inside an emission, so never here).
+  private fun dropLive(build: ClassLoader) {
+    val left = (liveByBuild[build] ?: 0) - 1
+    if (left > 0) {
+      liveByBuild[build] = left
+      return
+    }
+    liveByBuild.remove(build)
+    if ((build as? ChildFirstClassLoader)?.closed == true) KanamaHotReload.requestSweep()
   }
 
   fun noteSetScript(ownerObject: MemorySegment, scriptObject: MemorySegment) {
@@ -954,6 +1005,7 @@ object ScriptBridge {
     val ownerAddress = scriptInstance?.ownerObject?.address() ?: link?.owner?.address()
     if (ownerAddress != null) {
       (scriptInstance?.script ?: link?.script)?.untrackOwnerObject(ownerAddress)
+      forgetScriptObject(ownerAddress)
       kotlinObjectByOwnerAddress.remove(ownerAddress)
       scriptInstanceByOwnerAddress.remove(ownerAddress)
       pendingKanamaScriptOwnerAddresses.remove(ownerAddress)

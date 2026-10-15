@@ -82,6 +82,21 @@ sets the value to `min` if it is less, then to `max` if it is greater; the three
 same, in Kotlin on every platform (no engine call). `clampf` and `clampi` keep Godot's typed result.
 Both are pinned against GDScript in the runtime smoke's parity rows.
 
+### Fixed — desktop hot reload: an old build's lambda connections stop with its last script object
+
+After a desktop hot reload, a lambda connection whose target outlived the script object that made it
+(`self.tree.processFrame.connect(self.tree) { }`, a lambda bound to a GDScript autoload, the scene root or
+a node that was kept) kept running the old build's code on every emission and kept the old build's
+classes loaded, so `retired-loader-check` reported `alive=1` for good. A lambda connection now
+belongs to the build that made it: once that build's last script object is freed, every lambda
+connection it made is disconnected on the next frame, with one warning (`hot-reload: dropped N lambda
+connection(s) of build B whose script objects are gone (Emitter.signal xN, ...); the new build's
+_ready connects again`), and the old classes can be collected. Make lambda connections in `_ready`:
+the new build's objects connect them again with the new code. By-name connections are Godot's and
+survive a reload, as in GDScript. A build whose objects are still alive (a scene that was not
+reloaded) keeps its connections. `retired-loader-check` lines gain `swept=N`. See
+[Signals: hot reload](docs/game-dev/signals.md#hot-reload).
+
 ### Changed — tooling: script portability gate, module-class KDoc, three gate fixes (task 138 items 15, 25, 28, 34)
 
 Tooling and documentation only; no change to the API a script sees beyond IDE docs. The wrapper KDoc now

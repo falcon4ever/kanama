@@ -58,7 +58,7 @@ internal actual constructor(
         callback: (List<Any?>) -> Unit,
     ): SignalConnection {
         require(argumentCount >= 0) { "argumentCount must not be negative" }
-        return connectArgs(target, argumentCount, flags, null) { args ->
+        return connectArgs(target, argumentCount, flags, null, callback) { args ->
             callback(if (argumentCount == 0) emptyList() else List(argumentCount) { args.value(it) })
         }
     }
@@ -68,6 +68,8 @@ internal actual constructor(
         argumentCount: Int,
         flags: GodotObject.ConnectFlags,
         onRelease: (() -> Unit)?,
+        // No hot reload on iOS, so no build to tag the connection with (the desktop actual's use).
+        @Suppress("UNUSED_PARAMETER") origin: Any?,
         dispatch: (SignalArgReader) -> Unit,
     ): SignalConnection {
         val callbackId = IosCallableRegistry.register(argumentCount, onRelease, dispatch)
