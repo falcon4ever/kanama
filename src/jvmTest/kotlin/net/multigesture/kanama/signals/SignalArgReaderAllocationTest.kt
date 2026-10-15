@@ -31,7 +31,7 @@ class SignalArgReaderAllocationTest {
     val threads = ManagementFactory.getThreadMXBean() as com.sun.management.ThreadMXBean
     var sum = 0L
     val id =
-      SignalCallbackRegistry.register(3, {}) { reader ->
+      SignalCallbackRegistry.register(3, {}, null) { reader ->
           val jvm = reader as JvmSignalArgReader
           sum += jvm.variant(0) + jvm.variant(1) + jvm.variant(2)
         }

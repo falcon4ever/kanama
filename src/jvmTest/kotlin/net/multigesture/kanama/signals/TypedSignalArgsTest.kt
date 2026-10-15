@@ -114,11 +114,13 @@ class TypedSignalArgsTest {
   @Test
   fun freeFuncRunsTheReleaseHookAndCloseDoesNot() {
     var released = 0
-    val freed = SignalCallbackRegistry.register(0, { released++ }) {}.also { registered += it }
+    val freed =
+      SignalCallbackRegistry.register(0, { released++ }, null) {}.also { registered += it }
     SignalCallables.free(MemorySegment.ofAddress(freed)) // Godot dropped the Callable
     assertEquals(1, released)
 
-    val closed = SignalCallbackRegistry.register(0, { released++ }) {}.also { registered += it }
+    val closed =
+      SignalCallbackRegistry.register(0, { released++ }, null) {}.also { registered += it }
     SignalCallbackRegistry.unregister(closed) // SignalConnection.close()
     SignalCallables.free(MemorySegment.ofAddress(closed)) // the disconnect's own free_func
     assertEquals(1, released)

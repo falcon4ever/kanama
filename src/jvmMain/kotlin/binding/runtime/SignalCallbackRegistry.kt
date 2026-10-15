@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 import net.multigesture.kanama.api.ListSignalArgReader
 import net.multigesture.kanama.api.SignalArgReader
+import net.multigesture.kanama.binding.ChildFirstClassLoader
 
 /**
  * The Kotlin closures behind lambda signal connections on desktop/Android (`GodotSignal.connect`
@@ -19,11 +20,22 @@ import net.multigesture.kanama.api.SignalArgReader
  * Since task 134 D4 an entry dispatches a [SignalArgReader] over Godot's argument array instead of
  * a decoded `List<Any?>`: the typed connections read each argument as its declared type, and
  * nothing is allocated per emission beyond the decoded values.
+ *
+ * A lambda connection is owned by the script build that made it (task 138 item 11): each entry
+ * records the class loader of the user's callback when that is a hot-reload script loader
+ * ([Entry.build]; null for runtime code). Godot's keys above never notice a reload, so a lambda
+ * whose receiver outlives its maker (the scene tree, a GDScript autoload, a kept node) would keep
+ * running the old build's code and pin its class loader. Once a retired build has no live script
+ * object left, `KanamaHotReload.sweepRetiredConnections` takes that build's entries
+ * ([connectionsOf]), unregisters them without their release hook and disconnects them in Godot,
+ * with one warning; the new build's `_ready` makes them again.
  */
 object SignalCallbackRegistry {
   internal class Entry(
     val argumentCount: Int,
     val onRelease: (() -> Unit)?,
+    /** The hot-reload script build that made this connection ([buildOf]); null for runtime code. */
+    val build: ClassLoader?,
     val dispatch: (SignalArgReader) -> Unit,
   ) {
     /**
@@ -44,20 +56,33 @@ object SignalCallbackRegistry {
   private val nextId = AtomicLong(1)
   private val callbacks = ConcurrentHashMap<Long, Entry>()
 
-  /** Registers [dispatch], which reads the signal's arguments (at least [argumentCount]). */
+  /**
+   * Registers [dispatch], which reads the signal's arguments (at least [argumentCount]). [origin]
+   * is the user's callback the connection was made with ([buildOf] tags the entry with its build),
+   * or null when the runtime owns the connection (an `await`).
+   */
   internal fun register(
     argumentCount: Int,
     onRelease: (() -> Unit)?,
+    origin: Any?,
     dispatch: (SignalArgReader) -> Unit,
   ): Long {
     val id = nextId.getAndIncrement()
-    callbacks[id] = Entry(argumentCount, onRelease, dispatch)
+    callbacks[id] = Entry(argumentCount, onRelease, buildOf(origin), dispatch)
     return id
   }
 
   /** Registers [callback], which receives the signal's first [argumentCount] arguments decoded. */
   fun register(argumentCount: Int, callback: (List<Any?>) -> Unit): Long =
-    register(argumentCount, null, listDispatch(argumentCount, callback))
+    register(argumentCount, null, callback, listDispatch(argumentCount, callback))
+
+  /**
+   * The script build [origin] belongs to: the class loader that defined its class when that is a
+   * hot-reload script loader, else null. A lambda or a `::method` reference written in a script is
+   * defined by the script jar's loader (an `invokedynamic` lambda's hidden class takes its host's).
+   */
+  internal fun buildOf(origin: Any?): ClassLoader? =
+    origin?.javaClass?.classLoader?.takeIf { it is ChildFirstClassLoader }
 
   /** Records where [id]'s connection lives (see [Entry.connection]). */
   fun noteConnection(id: Long, connection: Connection) {
@@ -72,7 +97,15 @@ object SignalCallbackRegistry {
       }
       .toMap()
 
-  /** Drops [id] without running its release hook (`SignalConnection.close()`). */
+  /** The connected entries [build] made ([Entry.build]), by id: the hot-reload sweep's input. */
+  internal fun connectionsOf(build: ClassLoader): Map<Long, Connection> =
+    callbacks.entries
+      .mapNotNull { (id, entry) ->
+        if (entry.build !== build) null else entry.connection?.let { id to it }
+      }
+      .toMap()
+
+  /** Drops [id] without running its release hook (`SignalConnection.close()`, the reload sweep). */
   fun unregister(id: Long) {
     callbacks.remove(id)
   }

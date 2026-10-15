@@ -36,6 +36,50 @@ Kanama supports reload for attachable script classes:
    `KanamaHotReload.frameTick()`, which checks the script jar mtime and reloads
    changed templates.
 
+## Connections Across A Reload
+
+A lambda signal connection is owned by the build (the script jar's class loader
+generation) that made it. Godot keys a connection's custom Callable to its
+receiver and emitter only, so without a build key a lambda whose receiver
+outlives its maker (the `SceneTree`, a GDScript autoload, a kept node) keeps
+running the old build's code and pins the retired loader. The pieces:
+
+1. **Build tag.** `GodotSignal.connectArgs` takes the user's callback as
+   `origin` (the typed `Signal0`…`Signal5` connections and the `KanamaScript`
+   member forms pass the callback; `await` passes null: its connection is closed
+   when the script scope is cancelled at the free). `SignalCallbackRegistry`
+   records `Entry.build`, the defining class loader of `origin` when it is a
+   `ChildFirstClassLoader`, else null (runtime code). A script lambda or
+   `::method` reference compiled with `invokedynamic` is a hidden class of its
+   host, so it reports the script jar's loader. iOS has no hot reload: its
+   `connectArgs` ignores `origin`.
+2. **Live count.** `ScriptBridge` counts live script objects per build at one
+   tracking site, `noteScriptObject`: from `trackKotlinObject` (a new instance)
+   and `ScriptOwnerLinks.materialize` (an owner link's rebuilt instance, which
+   moves the owner to the current build). `siFree` uncounts. When a retired
+   (closed) build's count reaches 0, `KanamaHotReload.requestSweep()` sets a
+   flag; the free itself may run inside an emission, so nothing is disconnected
+   there.
+3. **Sweep.** `KanamaHotReload.sweepRetiredConnections()`, on the main thread,
+   runs right after `AutoloadReload.recreate` in `reloadScripts`, at the next
+   `frameTick` after the flag is set, and before each retired-loader check (a
+   backstop). For each retired build with no live script object it takes
+   `SignalCallbackRegistry.connectionsOf(build)`, unregisters each entry (its
+   release hook does not run) and then disconnects it through
+   `SignalCallables.disconnect` while the emitter exists, and prints one
+   `push_warning` per sweep:
+   `hot-reload: dropped N lambda connection(s) of build B whose script objects are gone (Emitter.signal xN, ...); the new build's _ready connects again`.
+   The emitter is named by its node name (an autoload reads as its global) or
+   its class. A build that still has live objects keeps its connections.
+4. **Logs.** `retired-loader-check collected=C alive=A alive_ids=… swept=N`
+   reports the connections the sweeps dropped since the previous check; with
+   nothing left to pin it, the retired loader is collected (`alive=0`).
+
+`AutoloadReload` still disconnects the lambdas bound to a reset autoload node
+at once (receiver-keyed); the build sweep covers every other target. An
+emission in the same frame as the build's last free still reaches the old
+lambda: the sweep runs on the next frame tick.
+
 ## Editor Workflow
 
 The optional `res://addons/kanama_tools` plugin provides `Build Scripts`,
@@ -76,7 +120,10 @@ and rebuilds `kanama-scripts.jar`, waits for the runtime hot-reload loop to
 rebind scripts, reloads the current scene, and verifies the updated script
 marker without restarting Godot. It also checks retired script classloaders via
 weak references and asserts that the old loader is collected after the old
-script instance is freed.
+script instance is freed. A lambda `HelloScript` connects to the GDScript
+autoload (a target that survives the reload) must run once per build, never
+for build A after the reload, with the `hot-reload: dropped 1 lambda
+connection(s)` warning.
 
 ## Current Behavior
 
@@ -86,3 +133,7 @@ script instance is freed.
 - Live in-place replacement of already-instanced nodes is partial; scene
   reload remains the reliable editor workflow.
 - The child-first package list is fixed in `KanamaHotReload`.
+- A lambda connection dies with the build that made it: once the old build's
+  last script object is gone, its lambda connections are disconnected with one
+  warning, whatever their target. Make connections in `_ready`; by-name
+  connections are Godot's and survive, as in GDScript.

@@ -282,6 +282,9 @@ internal object ScriptOwnerLinks {
     }
     ObjectRegistry.replace(handle, replacement)
     ScriptBridge.retrackOwner(link.owner, replacement, null)
+    // No live script object until materialize builds one from the current build: uncount the
+    // collected one so a retired build can reach 0 (and stop pinning its loader).
+    ScriptBridge.forgetScriptObject(link.owner.address())
   }
 
   /**
@@ -310,6 +313,8 @@ internal object ScriptOwnerLinks {
             adopt(link, fresh)
             link.makeStrong()
             ScriptOwnerIds.remember(fresh.kotlinObject, link.instanceId)
+            // Built by the current factory: after a hot reload the owner moves to the new build.
+            ScriptBridge.noteScriptObject(link.owner.address(), fresh.kotlinObject)
           }
         }
       }

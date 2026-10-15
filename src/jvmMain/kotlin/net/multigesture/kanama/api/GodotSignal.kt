@@ -59,7 +59,7 @@ internal actual constructor(
         callback: (List<Any?>) -> Unit,
     ): SignalConnection {
         require(argumentCount >= 0) { "argumentCount must not be negative" }
-        return connectArgs(target, argumentCount, flags, null, SignalCallbackRegistry.listDispatch(argumentCount, callback))
+        return connectArgs(target, argumentCount, flags, null, callback, SignalCallbackRegistry.listDispatch(argumentCount, callback))
     }
 
     internal actual fun connectArgs(
@@ -67,16 +67,19 @@ internal actual constructor(
         argumentCount: Int,
         flags: GodotObject.ConnectFlags,
         onRelease: (() -> Unit)?,
+        origin: Any?,
         dispatch: (SignalArgReader) -> Unit,
     ): SignalConnection {
         val oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags
-        val id = SignalCallbackRegistry.register(argumentCount, onRelease, dispatch)
+        // Task 138 item 11: the entry is tagged with the script build that defined [origin].
+        val id = SignalCallbackRegistry.register(argumentCount, onRelease, origin, dispatch)
         // A custom Callable bound to the receiver: Godot calls its free_func -- releasing the
         // closure -- whenever it drops the connection (receiver or emitter freed, one-shot fired,
         // disconnected, failed connect). Task 131; the iOS shim works the same way.
         val error = GodotError(SignalCallables.connect(owner.segment, name, target.instanceId, id, flags.value))
         if (error == GodotError.OK) {
-            // Task 133 C2: a hot reload disconnects the lambdas a re-created autoload made.
+            // Task 133 C2 / 138 item 11: a hot reload disconnects the lambdas of a re-created
+            // autoload and of a build whose script objects are gone.
             SignalCallbackRegistry.noteConnection(
                 id,
                 SignalCallbackRegistry.Connection(owner.segment.address(), owner.instanceId, name, target.instanceId),
@@ -100,8 +103,8 @@ internal actual constructor(
         flags: GodotObject.ConnectFlags,
         callback: (GodotObject) -> Unit,
     ): SignalConnection =
-        connect(target, argumentCount = 1, flags = flags) { args ->
-            (args.firstOrNull() as? GodotObject)?.let(callback)
+        connectArgs(target, 1, flags, null, callback) { args ->
+            (args.value(0) as? GodotObject)?.let(callback)
         }
 
     actual suspend fun await(target: GodotObject): List<Any?> = await(target, argumentCount = 0)

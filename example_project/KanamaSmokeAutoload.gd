@@ -1,5 +1,8 @@
 extends Node
 
+# Emitted by main.gd around the in-process hot reload; HelloScript connects a lambda to it.
+signal probe
+
 var calls := 0
 
 func describe(prefix: String, count: int, enabled: bool, scale: float) -> String:

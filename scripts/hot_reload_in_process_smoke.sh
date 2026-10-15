@@ -58,6 +58,7 @@ trap restore EXIT
 set_marker() {
   local marker="$1"
   perl -0pi -e "s/HelloScript\\(file\\)\\._ready(?:\\[[^\\]]*\\])?/HelloScript(file)._ready[$marker]/g" "$SCRIPT_FILE"
+  perl -0pi -e "s/surviving-target lambda build=[A-Z]/surviving-target lambda build=$marker/g" "$SCRIPT_FILE"
 }
 
 # See runtime_smoke.sh: the reason is restated after the log tail so it is the last thing
@@ -158,6 +159,25 @@ for build in A B; do
     smoke_fail "the build-$build handler ran $handler_rows time(s), not once (an old lambda survived the reload?)" "scene autoload handler build=$build"
   fi
 done
+# A lambda connection whose receiver survives the reload (HelloScript -> the GDScript autoload's
+# `probe`): build A's lambda runs before the reload, build B's after it, never build A's again; the
+# old build's connection is dropped with one summary warning once its last script object is gone.
+for build in A B; do
+  # justified: grep -c exits 1 when it counts 0 rows; the count below is the verdict.
+  lambda_rows="$(grep -c "surviving-target lambda build=$build" "$LOG_FILE" || true)"
+  if [[ "$lambda_rows" -ne 1 ]]; then
+    smoke_fail "the build-$build surviving-target lambda ran $lambda_rows time(s), not once (an old lambda survived the reload?)" "surviving-target lambda build=$build"
+  fi
+done
+after_reload="$(sed -n '/surviving-target probe after reload/,$p' "$LOG_FILE")"
+if [[ -z "$after_reload" ]]; then
+  smoke_fail "the post-reload probe never ran" "surviving-target probe after reload"
+fi
+if printf '%s\n' "$after_reload" | grep -q "surviving-target lambda build=A"; then
+  smoke_fail "the build-A lambda ran after the reload" "surviving-target lambda build=A"
+fi
+check "hot-reload: dropped 1 lambda connection\\(s\\) of build 1 whose script objects are gone \\(KanamaSmokeAutoload\\.probe x1\\)"
+check "hot-reload: retired-loader-check collected=1 alive=0 alive_ids= swept=[0-9]+"
 check_absent "Leaked instance"
 check_absent "instances leaked at exit"
 check_absent "hot-reload: failed"

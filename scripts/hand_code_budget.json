@@ -31,10 +31,11 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotSignal.expect.kt": {
       "category": "runtime-core",
-      "lines": 122,
+      "lines": 125,
       "raises": [
         "98 -> 101: GodotSignal.owner joins the expect so the generated wrappers pass a Signal argument on every platform (task 129 A, Tween.tweenAwait)",
-        "101 -> 122: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes"
+        "101 -> 122: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes",
+        "122 -> 125: lambda connections carry their callback (origin) so a desktop hot reload drops them with the build that made them"
       ],
       "reason": "signal plumbing expect"
     },
@@ -99,18 +100,20 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/TypedSignals.kt": {
       "category": "runtime-core",
-      "lines": 530,
+      "lines": 535,
       "raises": [
-        "524 -> 530: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes"
+        "524 -> 530: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes",
+        "530 -> 535: lambda connections carry their callback (origin) so a desktop hot reload drops them with the build that made them"
       ],
       "reason": "typed signal classes Signal0..Signal5 (task 134 D4)"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt": {
       "category": "runtime-core",
-      "lines": 151,
+      "lines": 153,
       "raises": [
         "137 -> 148: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes",
-        "148 -> 151: task 113 (iOS SignalConnection.close() skips a connection Godot already dropped)"
+        "148 -> 151: task 113 (iOS SignalConnection.close() skips a connection Godot already dropped)",
+        "151 -> 153: lambda connections carry their callback (origin) so a desktop hot reload drops them with the build that made them"
       ],
       "reason": "signal plumbing actual"
     },
@@ -145,9 +148,10 @@
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt": {
       "category": "runtime-core",
-      "lines": 156,
+      "lines": 159,
       "raises": [
-        "145 -> 156: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes"
+        "145 -> 156: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes",
+        "156 -> 159: lambda connections carry their callback (origin) so a desktop hot reload drops them with the build that made them"
       ],
       "reason": "signal plumbing actual"
     },
