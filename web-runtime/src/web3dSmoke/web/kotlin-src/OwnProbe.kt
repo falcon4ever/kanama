@@ -15,11 +15,15 @@ import net.multigesture.kanama.api.Node3D
 import net.multigesture.kanama.api.PhysicsRayQueryParameters3D
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.api.Resource
+import net.multigesture.kanama.api.MeshInstance3D
 import net.multigesture.kanama.api.Signal2
 import net.multigesture.kanama.api.SignalArgType
+import net.multigesture.kanama.api.StaticBody3D
 import net.multigesture.kanama.api.getWorld3d
 import net.multigesture.kanama.api.newScriptInstance
 import net.multigesture.kanama.types.Vector3
+import net.multigesture.kanama.web.WebExperimentalGenericCall
+import net.multigesture.kanama.web.WebGenericCallResult
 
 /**
  * Harness-only: the lifetime of a RefCounted a script holds only in Kotlin, against OwnTwin
@@ -28,7 +32,7 @@ import net.multigesture.kanama.types.Vector3
  * references holds it, and `close()` ends your reference early. Main's `own_probe` arms [ownArm];
  * the rows run over the following frames and [ownDone] says when they are finished.
  *
- * [mask] (the O rows of the ownership design; 1048575 when healthy):
+ * [mask] (the O rows of the ownership design; 16777215 when healthy):
  * - O1 `rcHeldByKotlinOutlives`: a RefCounted only Kotlin keeps answers 2, 30 and 120 frames after
  *   its dispatch, and the object still lives: 1 = the one-object signal arm, 2 = the packed arm,
  *   4 = `_input`'s event.
@@ -62,6 +66,14 @@ import net.multigesture.kanama.types.Vector3
  *   the keeper ran.
  * - `constructorRollbackAfterFlush`: 524288 = a call queued before a constructor that applies the
  *   queue (a `close()`) and then throws runs once, not again after the failed construction.
+ * - `uint32Masks`: 1048576 = `PhysicsRayQueryParameters3D.create(from, to)` (the default mask
+ *   0xffffffff) hits; 2097152 = `collisionLayer` / `collisionMask = 0xffffffff` and a render
+ *   `layers` with bit 31 set reach the engine whole.
+ * - `genericCloseKeepsSharedNode`: 4194304 = a script closes a generic call's minted result for a
+ *   node another script also holds: that script's handle still answers (a node's handle lives as
+ *   long as the node), after its own script is freed too.
+ * - `handleRingBounded`: 8388608 = 300 frames of a generic call for one node, closed when minted,
+ *   leave the sweep's ring within 64 entries of where it was.
  *
  * [cost] (O10 `rcDispatchCost`): the lending's GDScript->JS calls plus the wrapper registrations, and
  * the microseconds, per 1000 dispatches of an already-seen InputEvent (0, 2) and plain Node (1, 3);
@@ -88,6 +100,8 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
   private var loadedHandle = 0
   private var doomedArg: GodotObject? = null
   private var weakBase = 0L
+  private var ringBase = 0L
+  private var ringHeld: WebGenericCallResult? = null
 
   @OnInput
   fun onInput(event: InputEvent) {
@@ -128,6 +142,7 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     val twin = twin()
     // O9 first: the body it hands over stays lent (it lives), so O2's baseline comes after it.
     rayRow()
+    uint32Rows()
     lentBase = counter("liveLent")
     pinnedBase = counter("rcPinned")
     gcBase = counter("rcReleasedByGc")
@@ -152,6 +167,7 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     ignoredRow()
     queueFreeRow()
     rollbackRow()
+    ringRows(0)
     MainThread.postAfterFrames(2) { checkHeld(2) }
     MainThread.postAfterFrames(30) { checkHeld(30) }
     MainThread.postAfterFrames(120) {
@@ -231,6 +247,7 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     LentKeeper.nodeKept = null
     LentKeeper.madeKept = null
     if (twinLong("keeper_keeps_nodes") != 1L) note("O11 keeper: lookup found nothing")
+    val shared = sharedRow()
     twin.call("free_keeper", 0L)
     MainThread.postAfterFrames(10) {
       if (answers("O6 path") { LentKeeper.ownLoaded?.call("get_path") == LentKeeper.OWN_LOADED_PATH }) {
@@ -242,9 +259,77 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
       if (answers("O11 made") { checkNotNull(LentKeeper.madeKept) { "nothing kept" }.getName() == "OwnMadeSprite" }) {
         mask = mask or 262144L
       }
+      if (shared && answers("shared +10") { LentKeeper.sharedKept?.getName() == "OwnSharedNode" }) {
+        mask = mask or 4194304L
+      }
     }
     MainThread.postAfterFrames(30) {
       if (resourceAnswers("O5 kept", LentKeeper.ownKept) && alive("o5")) mask = mask or 128L
+    }
+  }
+
+  /**
+   * `genericCloseKeepsSharedNode`: this script mints a generic call's handle for a node, the keeper
+   * (another script) looks the same node up (the same handle), and this script closes its result.
+   * True when the keeper's handle still answers.
+   */
+  private fun sharedRow(): Boolean {
+    val minted = WebExperimentalGenericCall.callImmediate(twin(), "get_node", listOf("OwnSharedNode"))
+    if (!minted.isMintedHandle) {
+      note("shared: the generic result was ${minted.objectKind}, not minted")
+      return false
+    }
+    LentKeeper.sharedKept = null
+    if (twinLong("keeper_keeps_shared") != 1L) note("shared: the keeper's lookup found nothing")
+    val same = LentKeeper.sharedKept?.handle?.value == minted.asObjectHandle()
+    if (!same) note("shared: the keeper's handle is not the minted one")
+    val closed = answers("shared close") { minted.close().let { true } }
+    return same && closed && answers("shared after close") { LentKeeper.sharedKept?.getName() == "OwnSharedNode" }
+  }
+
+  /**
+   * `handleRingBounded`: a frame's generic call for one node, its result kept to the next frame and
+   * closed there (when it was minted) before the next call; the sweep's ring stays bounded.
+   */
+  private fun ringRows(frame: Int) {
+    if (frame == 0) ringBase = twinLong("ring_size")
+    runCatching {
+      ringHeld?.let { if (it.isMintedHandle) it.close() }
+      ringHeld = null
+      if (frame < WEAKREF_FRAMES) {
+        ringHeld = WebExperimentalGenericCall.callImmediate(twin(), "get_node", listOf("OwnRingNode"))
+      }
+    }.onFailure { note("ring +$frame: ${it::class.simpleName}: ${it.message?.take(120)}") }
+    if (frame < WEAKREF_FRAMES) {
+      MainThread.postAfterFrames(1) { ringRows(frame + 1) }
+      return
+    }
+    val ring = twinLong("ring_size")
+    if (ring <= ringBase + 64) mask = mask or 8388608L else note("ring $ringBase -> $ring")
+  }
+
+  /**
+   * `uint32Masks`: a ray query with the default mask (0xffffffff) hits, and uint32 layer / mask
+   * writes with the top bit set reach the engine unchanged (OwnTwin reads them back).
+   */
+  private fun uint32Rows() {
+    val twin = twin()
+    val from = twin.requireAs("OwnRayFrom", ::Node3D)
+    val hit = answers("u32 default mask") {
+      val query = checkNotNull(PhysicsRayQueryParameters3D.create(Vector3(500.0, 510.0, 500.0), Vector3(500.0, 490.0, 500.0)))
+      from.getWorld3d().directSpaceState.intersectRay(query) != null
+    }
+    if (hit) mask = mask or 1048576L
+    val written = answers("u32 writes") {
+      val body = twin.requireAs("OwnMaskBody", ::StaticBody3D)
+      body.collisionLayer = 0xffffffffL
+      body.collisionMask = 0xffffffffL
+      twin.requireAs("OwnLayered", ::MeshInstance3D).layers = 0x80000001L
+      true
+    }
+    MainThread.postAfterFrames(1) {
+      if (written && twinLong("uint32_masks") == 1L) mask = mask or 2097152L
+      else note("u32 written=$written read back ${twinLong("uint32_masks")}")
     }
   }
 

@@ -819,6 +819,13 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // A call queued before a constructor that applies the queue and then throws runs once: the
     // failed construction does not hand it back to the queue.
     constructorRollbackAfterFlush: (ownMask & 524288) === 524288,
+    // A ray query with the default mask (0xffffffff) hits; collisionLayer / collisionMask =
+    // 0xffffffff and a render layers value with bit 31 reach the engine whole (uint32, as desktop).
+    uint32Masks: (ownMask & 3145728) === 3145728,
+    // A script closing a generic result for a node leaves another script's handle to it working.
+    genericCloseKeepsSharedNode: (ownMask & 4194304) === 4194304,
+    // 300 frames of a generic call for one node, closed when minted: the sweep's ring stays bounded.
+    handleRingBounded: (ownMask & 8388608) === 8388608,
     // O10: handing over an already-seen InputEvent costs at most one JS call (the wrapper's
     // registration); a plain Node still none.
     rcDispatchCost: ownCost[0] >= 0 && ownCost[0] <= 1010 && ownCost[1] >= 0 && ownCost[1] <= 10,
@@ -918,10 +925,11 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
       generic.childKind === "tracked" &&
       generic.childHandle > 0 &&
       generic.childHandle === generic.spinnerHandle,
-    // Minting policy: an untracked engine Node (get_window) mints a NODE-kind handle —
-    // deliberately left unclosed, so fullTeardownToZero below proves owner teardown
-    // drains minted handles.
+    // Minting policy: an untracked engine Node (get_window) mints a NODE-kind handle; close() on
+    // it is a no-op (a node's handle lives as long as the node), so the next ask answers the same
+    // handle, tracked.
     genericMintsNodeHandle: generic.windowKind === "node" && generic.windowHandle > 0,
+    genericCloseOfNodeKeepsHandle: generic.windowKeptAfterClose === true,
     // An untracked RefCounted non-Resource (get_multiplayer) mints a plain OBJECT-kind
     // handle, closed through the OBJECT release lane.
     genericMintsObjectHandleAndCloses:

@@ -47,6 +47,22 @@ func _ready() -> void:
 	var from := Node3D.new()
 	from.name = "OwnRayFrom"
 	add_child(from)
+	# uint32Masks: a body and a visual instance OwnProbe writes uint32 masks to (no shape: it
+	# collides with nothing).
+	var mask_body := StaticBody3D.new()
+	mask_body.name = "OwnMaskBody"
+	add_child(mask_body)
+	var layered := MeshInstance3D.new()
+	layered.name = "OwnLayered"
+	add_child(layered)
+	# genericCloseKeepsSharedNode / handleRingBounded: nodes no script looks up before OwnProbe's
+	# generic calls do.
+	var shared := Node.new()
+	shared.name = "OwnSharedNode"
+	add_child(shared)
+	var ringed := Node.new()
+	ringed.name = "OwnRingNode"
+	add_child(ringed)
 
 
 ## Why an OwnProbe row failed, for the driver's trace.
@@ -131,6 +147,24 @@ func keeper_loads(_unused: int) -> int:
 ## companion.
 func keeper_keeps_nodes(_unused: int) -> int:
 	return int(keeper.call("keep_nodes", 0))
+
+
+## OwnProbe's shared row: the keeper looks up the node OwnProbe's generic call minted a handle for.
+func keeper_keeps_shared(_unused: int) -> int:
+	return int(keeper.call("keep_shared", 0))
+
+
+## uint32Masks: 1 when OwnProbe's uint32 writes reached the engine whole.
+func uint32_masks(_unused: int) -> int:
+	var body := get_node("OwnMaskBody") as StaticBody3D
+	var layered := get_node("OwnLayered") as MeshInstance3D
+	var whole := body.collision_layer == 0xffffffff and body.collision_mask == 0xffffffff
+	return 1 if whole and layered.layers == 0x80000001 else 0
+
+
+## handleRingBounded: the sweep ring's length.
+func ring_size(_unused: int) -> int:
+	return KanamaWebHandles.lent_ring.size()
 
 
 func free_keeper(_unused: int) -> int:

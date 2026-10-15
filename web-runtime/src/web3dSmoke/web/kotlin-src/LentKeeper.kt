@@ -50,6 +50,12 @@ class LentKeeper(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::N
     return if (nodeKept != null) 1L else 0L
   }
 
+  /** OwnProbe's shared row: the node OwnProbe's generic call minted a handle for, looked up here. */
+  fun keepShared(value: Long): Long {
+    sharedKept = self.getNodeOrNull("../OwnTwin/OwnSharedNode")
+    return if (sharedKept != null) 1L else 0L
+  }
+
   companion object {
     /** The argument this script's handler stored. */
     var kept: GodotObject? = null
@@ -65,6 +71,9 @@ class LentKeeper(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::N
 
     /** O11: the node [OwnMade]'s initializer made while a run-time keeper ran. */
     var madeKept: Sprite2D? = null
+
+    /** OwnProbe's shared row: the node a run-time keeper looked up after a generic call minted it. */
+    var sharedKept: Node? = null
 
     const val OWN_LOADED_PATH = "res://assets/beep.wav"
   }
