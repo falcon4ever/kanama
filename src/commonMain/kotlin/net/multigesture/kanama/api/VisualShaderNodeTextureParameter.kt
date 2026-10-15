@@ -51,6 +51,7 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
     fun setTextureType(type: VisualShaderNodeTextureParameter.TextureType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextureTypeBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -60,7 +61,9 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
      */
     fun getTextureType(): VisualShaderNodeTextureParameter.TextureType {
         checkOpen()
-        return VisualShaderNodeTextureParameter.TextureType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureTypeBind, segment))
+        val ret = VisualShaderNodeTextureParameter.TextureType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -71,6 +74,7 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
     fun setColorDefault(color: VisualShaderNodeTextureParameter.ColorDefault) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setColorDefaultBind, segment, color.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -80,7 +84,9 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
      */
     fun getColorDefault(): VisualShaderNodeTextureParameter.ColorDefault {
         checkOpen()
-        return VisualShaderNodeTextureParameter.ColorDefault(ObjectCalls.ptrcallNoArgsRetLong(Binds.getColorDefaultBind, segment))
+        val ret = VisualShaderNodeTextureParameter.ColorDefault(ObjectCalls.ptrcallNoArgsRetLong(Binds.getColorDefaultBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -91,6 +97,7 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
     fun setTextureFilter(filter: VisualShaderNodeTextureParameter.TextureFilter) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextureFilterBind, segment, filter.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -100,7 +107,9 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
      */
     fun getTextureFilter(): VisualShaderNodeTextureParameter.TextureFilter {
         checkOpen()
-        return VisualShaderNodeTextureParameter.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureFilterBind, segment))
+        val ret = VisualShaderNodeTextureParameter.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureFilterBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -111,6 +120,7 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
     fun setTextureRepeat(repeat: VisualShaderNodeTextureParameter.TextureRepeat) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextureRepeatBind, segment, repeat.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -120,7 +130,9 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
      */
     fun getTextureRepeat(): VisualShaderNodeTextureParameter.TextureRepeat {
         checkOpen()
-        return VisualShaderNodeTextureParameter.TextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureRepeatBind, segment))
+        val ret = VisualShaderNodeTextureParameter.TextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureRepeatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -132,6 +144,7 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
     fun setTextureSource(source: VisualShaderNodeTextureParameter.TextureSource) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextureSourceBind, segment, source.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -142,7 +155,9 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
      */
     fun getTextureSource(): VisualShaderNodeTextureParameter.TextureSource {
         checkOpen()
-        return VisualShaderNodeTextureParameter.TextureSource(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureSourceBind, segment))
+        val ret = VisualShaderNodeTextureParameter.TextureSource(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureSourceBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

@@ -79,6 +79,7 @@ class OptionButton(handle: GodotHandle) : Button(handle) {
      */
     fun addIconItem(texture: Texture2D?, label: String, id: Int = -1) {
         ObjectCalls.ptrcallWithObjectStringAndIntArgs(Binds.addIconItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -97,6 +98,7 @@ class OptionButton(handle: GodotHandle) : Button(handle) {
      */
     fun setItemIcon(idx: Int, texture: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemIconBind, segment, idx, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**

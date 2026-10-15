@@ -36,7 +36,9 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
      */
     fun getTrackerProfile(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTrackerProfileBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getTrackerProfileBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -48,6 +50,7 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
     fun setTrackerProfile(profile: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setTrackerProfileBind, segment, profile)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -57,7 +60,9 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
      */
     fun getTrackerHand(): XRPositionalTracker.TrackerHand {
         checkOpen()
-        return XRPositionalTracker.TrackerHand(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTrackerHandBind, segment))
+        val ret = XRPositionalTracker.TrackerHand(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTrackerHandBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -68,6 +73,7 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
     fun setTrackerHand(hand: XRPositionalTracker.TrackerHand) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTrackerHandBind, segment, hand.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -77,7 +83,9 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
      */
     fun hasPose(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasPoseBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasPoseBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -87,7 +95,9 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
      */
     fun getPose(name: String): XRPose? {
         checkOpen()
-        return XRPose.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getPoseBind, segment, name))
+        val ret = XRPose.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getPoseBind, segment, name))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -99,6 +109,7 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
     fun invalidatePose(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.invalidatePoseBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -110,6 +121,7 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
     fun setPose(name: String, transform: Transform3D, linearVelocity: Vector3, angularVelocity: Vector3, trackingConfidence: XRPose.TrackingConfidence) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameTransform3DTwoVector3LongArgs(Binds.setPoseBind, segment, name, transform, linearVelocity, angularVelocity, trackingConfidence.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -120,7 +132,9 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
      */
     fun getInput(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getInputBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getInputBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -132,6 +146,7 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
     fun setInput(name: String, value: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setInputBind, segment, name, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /** Signal `pose_changed(pose: XRPose)`; see [TypedSignal]. */

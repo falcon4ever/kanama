@@ -1012,6 +1012,7 @@ class CodeEdit(handle: GodotHandle) : TextEdit(handle) {
      */
     fun addCodeCompletionOption(type: CodeEdit.CodeCompletionKind, displayText: String, insertText: String, textColor: Color, icon: Resource?, value: Any? = null, location: Int = 1024) {
         ObjectCalls.ptrcallWithLongTwoStringColorObjectVariantIntArgs(Binds.addCodeCompletionOptionBind, segment, type.value, displayText, insertText, textColor, icon?.requireOpenHandle() ?: NULL_SEGMENT, value, location)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**

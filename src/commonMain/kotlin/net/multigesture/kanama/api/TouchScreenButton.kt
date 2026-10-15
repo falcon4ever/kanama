@@ -75,6 +75,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      */
     fun setTextureNormal(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureNormalBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -93,6 +94,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      */
     fun setTexturePressed(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTexturePressedBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -111,6 +113,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      */
     fun setBitmask(bitmask: BitMap?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setBitmaskBind, segment, listOf(bitmask?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(bitmask)
     }
 
     /**
@@ -129,6 +132,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      */
     fun setShape(shape: Shape2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(shape)
     }
 
     /**

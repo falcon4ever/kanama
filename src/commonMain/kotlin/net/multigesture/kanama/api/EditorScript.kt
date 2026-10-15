@@ -20,6 +20,8 @@ class EditorScript(handle: GodotHandle) : RefCounted(handle) {
     fun addRootNode(node: Node) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.addRootNodeBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -30,7 +32,9 @@ class EditorScript(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getScene(): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSceneBind, segment))
+        val ret = Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSceneBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,7 +44,9 @@ class EditorScript(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEditorInterface(): EditorInterface? {
         checkOpen()
-        return EditorInterface.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditorInterfaceBind, segment))
+        val ret = EditorInterface.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditorInterfaceBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -22,7 +22,9 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun getFormat(): Image.Format {
         checkOpen()
-        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        val ret = Image.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -32,7 +34,9 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun getMipmapCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMipmapCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMipmapCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -42,7 +46,9 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun getWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWidthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getWidthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -52,7 +58,9 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,7 +70,9 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -72,7 +82,9 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun hasAlpha(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasAlphaBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasAlphaBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -82,7 +94,9 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun hasMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMipmapsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMipmapsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,6 +108,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
     fun draw(canvasItem: RID, position: Vector2, modulate: Color, transpose: Boolean = false) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2ColorBoolArgs(Binds.drawBind, segment, canvasItem, position, modulate, transpose)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -104,6 +119,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
     fun drawRect(canvasItem: RID, rect: Rect2, tile: Boolean, modulate: Color, transpose: Boolean = false) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDRect2BoolColorBoolArgs(Binds.drawRectBind, segment, canvasItem, rect, tile, modulate, transpose)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -114,6 +130,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
     fun drawRectRegion(canvasItem: RID, rect: Rect2, srcRect: Rect2, modulate: Color, transpose: Boolean = false, clipUv: Boolean = true) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDTwoRect2ColorTwoBoolArgs(Binds.drawRectRegionBind, segment, canvasItem, rect, srcRect, modulate, transpose, clipUv)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -127,7 +144,9 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun getImage(): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getImageBind, segment))
+        val ret = Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getImageBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -138,6 +157,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
     fun createPlaceholder(): Resource? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.createPlaceholderBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this

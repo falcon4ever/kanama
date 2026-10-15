@@ -40,6 +40,7 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setSource(value: VisualShaderNodeTexture.Source) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSourceBind, segment, value.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -49,7 +50,9 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getSource(): VisualShaderNodeTexture.Source {
         checkOpen()
-        return VisualShaderNodeTexture.Source(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceBind, segment))
+        val ret = VisualShaderNodeTexture.Source(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -60,6 +63,8 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setTexture(value: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(value?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(value)
     }
 
     /**
@@ -69,7 +74,9 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,6 +87,7 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setTextureType(value: VisualShaderNodeTexture.TextureType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextureTypeBind, segment, value.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -89,7 +97,9 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getTextureType(): VisualShaderNodeTexture.TextureType {
         checkOpen()
-        return VisualShaderNodeTexture.TextureType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureTypeBind, segment))
+        val ret = VisualShaderNodeTexture.TextureType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

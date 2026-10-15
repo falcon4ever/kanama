@@ -85,6 +85,7 @@ object CameraServer {
     @JvmStatic
     fun addFeed(feed: CameraFeed?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addFeedBind, singleton, listOf(feed?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(feed)
     }
 
     /**
@@ -95,6 +96,7 @@ object CameraServer {
     @JvmStatic
     fun removeFeed(feed: CameraFeed?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeFeedBind, singleton, listOf(feed?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(feed)
     }
 
     /** Signal `camera_feed_added(id: int)`; see [TypedSignal]. */

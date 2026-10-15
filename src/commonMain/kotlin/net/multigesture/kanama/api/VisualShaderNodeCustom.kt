@@ -19,7 +19,9 @@ class VisualShaderNodeCustom(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getOptionIndex(option: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getOptionIndexBind, segment, option)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getOptionIndexBind, segment, option)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -23,6 +23,8 @@ object NavigationMeshGenerator {
     @JvmStatic
     fun bake(navigationMesh: NavigationMesh?, rootNode: Node) {
         ObjectCalls.ptrcallWithTwoObjectArgs(Binds.bakeBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, rootNode.segment)
+        ObjectCalls.keepReachable(navigationMesh)
+        ObjectCalls.keepReachable(rootNode)
     }
 
     /**
@@ -33,6 +35,7 @@ object NavigationMeshGenerator {
     @JvmStatic
     fun clear(navigationMesh: NavigationMesh?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.clearBind, singleton, listOf(navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(navigationMesh)
     }
 
     /**
@@ -51,6 +54,10 @@ object NavigationMeshGenerator {
     @JvmStatic
     fun parseSourceGeometryData(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, rootNode: Node, callback: GodotCallable) {
         ObjectCalls.ptrcallWithThreeObjectCallableArgs(Binds.parseSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, rootNode.segment, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(navigationMesh)
+        ObjectCalls.keepReachable(sourceGeometryData)
+        ObjectCalls.keepReachable(rootNode)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -62,6 +69,9 @@ object NavigationMeshGenerator {
     @JvmStatic
     fun bakeFromSourceGeometryData(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, callback: GodotCallable) {
         ObjectCalls.ptrcallWithTwoObjectCallableArgs(Binds.bakeFromSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(navigationMesh)
+        ObjectCalls.keepReachable(sourceGeometryData)
+        ObjectCalls.keepReachable(callback)
     }
 
     @JvmStatic

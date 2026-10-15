@@ -38,6 +38,8 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun createFromImage(image: Image?, compressionMode: PortableCompressedTexture2D.CompressionMode, normalMap: Boolean = false, lossyQuality: Double = 0.8) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectLongBoolDoubleArgs(Binds.createFromImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, compressionMode.value, normalMap, lossyQuality)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(image)
     }
 
     /**
@@ -47,7 +49,9 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCompressionMode(): PortableCompressedTexture2D.CompressionMode {
         checkOpen()
-        return PortableCompressedTexture2D.CompressionMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCompressionModeBind, segment))
+        val ret = PortableCompressedTexture2D.CompressionMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCompressionModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -58,6 +62,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setSizeOverride(size: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setSizeOverrideBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -67,7 +72,9 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSizeOverride(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeOverrideBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeOverrideBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -81,6 +88,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setKeepCompressedBuffer(keep: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setKeepCompressedBufferBind, segment, keep)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -93,7 +101,9 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun isKeepingCompressedBuffer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isKeepingCompressedBufferBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isKeepingCompressedBufferBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -106,6 +116,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setBasisuCompressorParams(uastcLevel: Int, rdoQualityLoss: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setBasisuCompressorParamsBind, segment, uastcLevel, rdoQualityLoss)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

@@ -27,6 +27,7 @@ class VisualShaderNodeTransformConstant(handle: GodotHandle) : VisualShaderNodeC
     fun setConstant(constant: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(Binds.setConstantBind, segment, constant)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeTransformConstant(handle: GodotHandle) : VisualShaderNodeC
      */
     fun getConstant(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getConstantBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getConstantBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

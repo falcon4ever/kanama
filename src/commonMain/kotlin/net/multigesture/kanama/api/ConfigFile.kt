@@ -21,6 +21,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
     fun setValue(section: String, key: String, value: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringAndVariantArg(Binds.setValueBind, segment, section, key, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -32,7 +33,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getValue(section: String, key: String, default: Any? = null): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(Binds.getValueBind, segment, section, key, default)
+        val ret = ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(Binds.getValueBind, segment, section, key, default)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -42,7 +45,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasSection(section: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasSectionBind, segment, section)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasSectionBind, segment, section)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -52,7 +57,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasSectionKey(section: String, key: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetBool(Binds.hasSectionKeyBind, segment, section, key)
+        val ret = ObjectCalls.ptrcallWithTwoStringArgsRetBool(Binds.hasSectionKeyBind, segment, section, key)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,7 +69,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSections(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSectionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSectionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -73,7 +82,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSectionKeys(section: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getSectionKeysBind, segment, section)
+        val ret = ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getSectionKeysBind, segment, section)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -85,6 +96,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
     fun eraseSection(section: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.eraseSectionBind, segment, section)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -96,6 +108,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
     fun eraseSectionKey(section: String, key: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringArgs(Binds.eraseSectionKeyBind, segment, section, key)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -107,7 +120,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun load(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -119,7 +134,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun parse(data: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.parseBind, segment, data))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.parseBind, segment, data))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -131,7 +148,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun save(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -141,7 +160,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun encodeToText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.encodeToTextBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.encodeToTextBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -154,7 +175,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun loadEncrypted(path: String, key: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(Binds.loadEncryptedBind, segment, path, key))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(Binds.loadEncryptedBind, segment, path, key))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -167,7 +190,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun loadEncryptedPass(path: String, password: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.loadEncryptedPassBind, segment, path, password))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.loadEncryptedPassBind, segment, path, password))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -179,7 +204,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun saveEncrypted(path: String, key: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(Binds.saveEncryptedBind, segment, path, key))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(Binds.saveEncryptedBind, segment, path, key))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -192,7 +219,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun saveEncryptedPass(path: String, password: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.saveEncryptedPassBind, segment, path, password))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.saveEncryptedPassBind, segment, path, password))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -203,6 +232,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

@@ -27,6 +27,7 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
     fun setStreamCount(streamCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setStreamCountBind, segment, streamCount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getStreamCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStreamCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getStreamCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -47,6 +50,8 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
     fun setSyncStream(streamIndex: Int, audioStream: AudioStream?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setSyncStreamBind, segment, streamIndex, audioStream?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(audioStream)
     }
 
     /**
@@ -57,6 +62,7 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
     fun getSyncStream(streamIndex: Int): AudioStream? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSyncStreamBind, segment, streamIndex)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -72,6 +78,7 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
     fun setSyncStreamVolume(streamIndex: Int, volumeDb: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setSyncStreamVolumeBind, segment, streamIndex, volumeDb)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -81,7 +88,9 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getSyncStreamVolume(streamIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getSyncStreamVolumeBind, segment, streamIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getSyncStreamVolumeBind, segment, streamIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -25,7 +25,10 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
      */
     fun playStream(stream: AudioStream?, fromOffset: Double = 0.0, volumeDb: Double = 0.0, pitchScale: Double = 1.0, playbackType: AudioServer.PlaybackType = AudioServer.PlaybackType.DEFAULT, bus: String = "Master"): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(Binds.playStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, fromOffset, volumeDb, pitchScale, playbackType.value, bus)
+        val ret = ObjectCalls.ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(Binds.playStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, fromOffset, volumeDb, pitchScale, playbackType.value, bus)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(stream)
+        return ret
     }
 
     /**
@@ -37,6 +40,7 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
     fun setStreamVolume(stream: Long, volumeDb: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setStreamVolumeBind, segment, stream, volumeDb)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -47,6 +51,7 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
     fun setStreamPitchScale(stream: Long, pitchScale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setStreamPitchScaleBind, segment, stream, pitchScale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -57,7 +62,9 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
      */
     fun isStreamPlaying(stream: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isStreamPlayingBind, segment, stream)
+        val ret = ObjectCalls.ptrcallWithLongArgRetBool(Binds.isStreamPlayingBind, segment, stream)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -69,6 +76,7 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
     fun stopStream(stream: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.stopStreamBind, segment, stream)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

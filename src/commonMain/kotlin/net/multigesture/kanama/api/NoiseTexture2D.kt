@@ -81,6 +81,7 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setWidth(width: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setWidthBind, segment, width)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -91,6 +92,7 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setHeight(height: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setHeightBind, segment, height)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -104,6 +106,7 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setGenerateMipmaps(generate: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setGenerateMipmapsBind, segment, generate)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -116,7 +119,9 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun isGeneratingMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isGeneratingMipmapsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isGeneratingMipmapsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -127,6 +132,8 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setNoise(noise: Noise?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setNoiseBind, segment, listOf(noise?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(noise)
     }
 
     /**
@@ -136,7 +143,9 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getNoise(): Noise? {
         checkOpen()
-        return Noise.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNoiseBind, segment))
+        val ret = Noise.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNoiseBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -147,6 +156,8 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setColorRamp(gradient: Gradient?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setColorRampBind, segment, listOf(gradient?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(gradient)
     }
 
     /**
@@ -156,7 +167,9 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getColorRamp(): Gradient? {
         checkOpen()
-        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColorRampBind, segment))
+        val ret = Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColorRampBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -173,6 +186,7 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setSeamless(seamless: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setSeamlessBind, segment, seamless)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -188,7 +202,9 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSeamless(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSeamlessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getSeamlessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -199,6 +215,7 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setInvert(invert: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setInvertBind, segment, invert)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -208,7 +225,9 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getInvert(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getInvertBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getInvertBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -219,6 +238,7 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setIn3dSpace(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setIn3dSpaceBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -228,7 +248,9 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun isIn3dSpace(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isIn3dSpaceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isIn3dSpaceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -240,6 +262,7 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setAsNormalMap(asNormalMap: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAsNormalMapBind, segment, asNormalMap)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -250,7 +273,9 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun isNormalMap(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNormalMapBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isNormalMapBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -263,6 +288,7 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setNormalize(normalize: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setNormalizeBind, segment, normalize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -274,7 +300,9 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun isNormalized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNormalizedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isNormalizedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -289,6 +317,7 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setSeamlessBlendSkirt(seamlessBlendSkirt: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSeamlessBlendSkirtBind, segment, seamlessBlendSkirt)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -302,7 +331,9 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSeamlessBlendSkirt(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSeamlessBlendSkirtBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSeamlessBlendSkirtBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -314,6 +345,7 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setBumpStrength(bumpStrength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBumpStrengthBind, segment, bumpStrength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -324,7 +356,9 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getBumpStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBumpStrengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBumpStrengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {
@@ -341,12 +375,12 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
         // Downcast a GodotObject to NoiseTexture2D (null if not).
         @JvmStatic
         fun fromObject(value: GodotObject): NoiseTexture2D? =
-            if (value.isClass("NoiseTexture2D")) RefCounted.retained(NoiseTexture2D(value.handle)) else null
+            if (value.isClass("NoiseTexture2D")) RefCounted.retained(NoiseTexture2D(value.handle), value) else null
 
         // Downcast a Resource to NoiseTexture2D (null if not).
         @JvmStatic
         fun fromResource(value: Resource): NoiseTexture2D? =
-            if (value.isClass("NoiseTexture2D")) RefCounted.retained(NoiseTexture2D(value.handle)) else null
+            if (value.isClass("NoiseTexture2D")) RefCounted.retained(NoiseTexture2D(value.handle), value) else null
     }
 
     private object Binds {

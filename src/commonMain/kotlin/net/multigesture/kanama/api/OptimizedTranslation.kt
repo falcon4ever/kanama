@@ -22,7 +22,10 @@ class OptimizedTranslation(handle: GodotHandle) : Translation(handle) {
      */
     fun generate(from: Translation?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.generateBind, segment, from?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.generateBind, segment, from?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(from)
+        return ret
     }
 
     companion object {

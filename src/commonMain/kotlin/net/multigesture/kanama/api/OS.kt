@@ -1192,6 +1192,7 @@ object OS {
     @JvmStatic
     fun addLogger(logger: Logger) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addLoggerBind, singleton, listOf(logger.requireOpenHandle()))
+        ObjectCalls.keepReachable(logger)
     }
 
     /**
@@ -1202,6 +1203,7 @@ object OS {
     @JvmStatic
     fun removeLogger(logger: Logger) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeLoggerBind, singleton, listOf(logger.requireOpenHandle()))
+        ObjectCalls.keepReachable(logger)
     }
 
     /**

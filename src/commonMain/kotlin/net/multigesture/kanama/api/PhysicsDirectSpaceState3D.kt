@@ -23,7 +23,9 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
      * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_point
      */
     fun intersectPoint(parameters: PhysicsPointQueryParameters3D, maxResults: Int = 32): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(Binds.intersectPointBind, segment, parameters.requireOpenHandle(), maxResults)
+        val ret = ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(Binds.intersectPointBind, segment, parameters.requireOpenHandle(), maxResults)
+        ObjectCalls.keepReachable(parameters)
+        return ret
     }
 
     /**
@@ -40,7 +42,9 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
      * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_ray
      */
     fun intersectRay(parameters: PhysicsRayQueryParameters3D): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithObjectArgRetDictionary(Binds.intersectRayBind, segment, parameters.requireOpenHandle())
+        val ret = ObjectCalls.ptrcallWithObjectArgRetDictionary(Binds.intersectRayBind, segment, parameters.requireOpenHandle())
+        ObjectCalls.keepReachable(parameters)
+        return ret
     }
 
     /**
@@ -55,7 +59,9 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
      * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_shape
      */
     fun intersectShape(parameters: PhysicsShapeQueryParameters3D, maxResults: Int = 32): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(Binds.intersectShapeBind, segment, parameters.requireOpenHandle(), maxResults)
+        val ret = ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(Binds.intersectShapeBind, segment, parameters.requireOpenHandle(), maxResults)
+        ObjectCalls.keepReachable(parameters)
+        return ret
     }
 
     /**
@@ -71,7 +77,9 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
      * Generated from Godot docs: PhysicsDirectSpaceState3D.cast_motion
      */
     fun castMotion(parameters: PhysicsShapeQueryParameters3D): List<Float> {
-        return ObjectCalls.ptrcallWithObjectArgRetPackedFloat32List(Binds.castMotionBind, segment, parameters.requireOpenHandle())
+        val ret = ObjectCalls.ptrcallWithObjectArgRetPackedFloat32List(Binds.castMotionBind, segment, parameters.requireOpenHandle())
+        ObjectCalls.keepReachable(parameters)
+        return ret
     }
 
     /**
@@ -86,7 +94,9 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
      * Generated from Godot docs: PhysicsDirectSpaceState3D.collide_shape
      */
     fun collideShape(parameters: PhysicsShapeQueryParameters3D, maxResults: Int = 32): List<Vector3> {
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetVector3List(Binds.collideShapeBind, segment, parameters.requireOpenHandle(), maxResults)
+        val ret = ObjectCalls.ptrcallWithObjectAndIntArgRetVector3List(Binds.collideShapeBind, segment, parameters.requireOpenHandle(), maxResults)
+        ObjectCalls.keepReachable(parameters)
+        return ret
     }
 
     /**
@@ -103,7 +113,9 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
      * Generated from Godot docs: PhysicsDirectSpaceState3D.get_rest_info
      */
     fun getRestInfo(parameters: PhysicsShapeQueryParameters3D): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithObjectArgRetDictionary(Binds.getRestInfoBind, segment, parameters.requireOpenHandle())
+        val ret = ObjectCalls.ptrcallWithObjectArgRetDictionary(Binds.getRestInfoBind, segment, parameters.requireOpenHandle())
+        ObjectCalls.keepReachable(parameters)
+        return ret
     }
 
     companion object {

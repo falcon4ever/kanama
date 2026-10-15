@@ -28,6 +28,8 @@ class VisualShaderNodeTexture2DArray(handle: GodotHandle) : VisualShaderNodeSamp
     fun setTextureArray(value: TextureLayered?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureArrayBind, segment, listOf(value?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(value)
     }
 
     /**
@@ -38,7 +40,9 @@ class VisualShaderNodeTexture2DArray(handle: GodotHandle) : VisualShaderNodeSamp
      */
     fun getTextureArray(): TextureLayered? {
         checkOpen()
-        return TextureLayered.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureArrayBind, segment))
+        val ret = TextureLayered.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureArrayBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -26,6 +26,7 @@ class Path2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setCurve(curve: Curve2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(curve)
     }
 
     /**

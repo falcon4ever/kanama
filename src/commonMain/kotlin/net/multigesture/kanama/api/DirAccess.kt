@@ -37,7 +37,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun listDirBegin(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.listDirBeginBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.listDirBeginBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -50,7 +52,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNext(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getNextBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getNextBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,7 +65,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun currentIsDir(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.currentIsDirBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.currentIsDirBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -73,6 +79,7 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
     fun listDirEnd() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.listDirEndBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -89,7 +96,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFiles(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFilesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFilesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -102,7 +111,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDirectories(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getDirectoriesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getDirectoriesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -113,7 +124,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCurrentDrive(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentDriveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentDriveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -128,7 +141,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun changeDir(toDir: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.changeDirBind, segment, toDir))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.changeDirBind, segment, toDir))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -139,7 +154,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCurrentDir(includeDrive: Boolean = true): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetString(Binds.getCurrentDirBind, segment, includeDrive)
+        val ret = ObjectCalls.ptrcallWithBoolArgRetString(Binds.getCurrentDirBind, segment, includeDrive)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -152,7 +169,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun makeDir(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.makeDirBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.makeDirBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,7 +183,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun makeDirRecursive(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.makeDirRecursiveBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.makeDirRecursiveBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -178,7 +199,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fileExists(path: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.fileExistsBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.fileExistsBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -191,7 +214,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun dirExists(path: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.dirExistsBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.dirExistsBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -202,7 +227,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSpaceLeft(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSpaceLeftBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getSpaceLeftBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -216,7 +243,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun copy(from: String, to: String, chmodFlags: Int = -1): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringAndIntArgsRetLong(Binds.copyBind, segment, from, to, chmodFlags))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringAndIntArgsRetLong(Binds.copyBind, segment, from, to, chmodFlags))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -229,7 +258,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun rename(from: String, to: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.renameBind, segment, from, to))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.renameBind, segment, from, to))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -242,7 +273,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun remove(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.removeBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.removeBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -253,7 +286,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isLink(path: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isLinkBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.isLinkBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -264,7 +299,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun readLink(path: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(Binds.readLinkBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithStringArgRetString(Binds.readLinkBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -276,7 +313,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createLink(source: String, target: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.createLinkBind, segment, source, target))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.createLinkBind, segment, source, target))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -286,7 +325,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isBundle(path: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isBundleBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.isBundleBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -298,6 +339,7 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
     fun setIncludeNavigational(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setIncludeNavigationalBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -308,7 +350,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIncludeNavigational(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIncludeNavigationalBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getIncludeNavigationalBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -320,6 +364,7 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
     fun setIncludeHidden(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setIncludeHiddenBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -330,7 +375,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIncludeHidden(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIncludeHiddenBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getIncludeHiddenBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -342,7 +389,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFilesystemType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getFilesystemTypeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getFilesystemTypeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -354,7 +403,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isCaseSensitive(path: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isCaseSensitiveBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.isCaseSensitiveBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -366,7 +417,9 @@ class DirAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isEquivalent(pathA: String, pathB: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetBool(Binds.isEquivalentBind, segment, pathA, pathB)
+        val ret = ObjectCalls.ptrcallWithTwoStringArgsRetBool(Binds.isEquivalentBind, segment, pathA, pathB)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

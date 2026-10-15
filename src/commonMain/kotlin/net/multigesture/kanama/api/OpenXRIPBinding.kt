@@ -45,6 +45,8 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
     fun setAction(action: OpenXRAction?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setActionBind, segment, listOf(action?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(action)
     }
 
     /**
@@ -54,7 +56,9 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
      */
     fun getAction(): OpenXRAction? {
         checkOpen()
-        return OpenXRAction.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getActionBind, segment))
+        val ret = OpenXRAction.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getActionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -67,6 +71,7 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
     fun setBindingPath(bindingPath: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setBindingPathBind, segment, bindingPath)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -78,7 +83,9 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
      */
     fun getBindingPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getBindingPathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getBindingPathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -88,7 +95,9 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
      */
     fun getBindingModifierCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingModifierCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingModifierCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -98,7 +107,9 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
      */
     fun getBindingModifier(index: Int): OpenXRActionBindingModifier? {
         checkOpen()
-        return OpenXRActionBindingModifier.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBindingModifierBind, segment, index))
+        val ret = OpenXRActionBindingModifier.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBindingModifierBind, segment, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -109,6 +120,7 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
     fun setBindingModifiers(bindingModifiers: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setBindingModifiersBind, segment, bindingModifiers)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -118,7 +130,9 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
      */
     fun getBindingModifiers(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getBindingModifiersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getBindingModifiersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -129,6 +143,7 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
     fun setPaths(paths: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setPathsBind, segment, paths)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -138,7 +153,9 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
      */
     fun getPaths(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getPathsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getPathsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -148,7 +165,9 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
      */
     fun getPathCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPathCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPathCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -158,7 +177,9 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
      */
     fun hasPath(path: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasPathBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasPathBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -169,6 +190,7 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
     fun addPath(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addPathBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -179,6 +201,7 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
     fun removePath(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.removePathBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

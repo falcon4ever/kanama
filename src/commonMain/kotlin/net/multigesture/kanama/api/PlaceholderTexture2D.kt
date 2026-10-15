@@ -20,6 +20,7 @@ class PlaceholderTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setSize(size: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

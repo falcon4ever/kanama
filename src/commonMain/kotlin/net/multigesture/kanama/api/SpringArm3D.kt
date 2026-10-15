@@ -79,6 +79,7 @@ class SpringArm3D(handle: GodotHandle) : Node3D(handle) {
      */
     fun setShape(shape: Shape3D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(shape)
     }
 
     /**

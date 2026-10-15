@@ -297,6 +297,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      */
     fun setDampingCurve(index: Int, curve: Curve?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**

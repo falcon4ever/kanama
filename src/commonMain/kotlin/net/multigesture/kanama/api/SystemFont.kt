@@ -111,6 +111,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setAntialiasing(antialiasing: TextServer.FontAntialiasing) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAntialiasingBind, segment, antialiasing.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -120,7 +121,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getAntialiasing(): TextServer.FontAntialiasing {
         checkOpen()
-        return TextServer.FontAntialiasing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAntialiasingBind, segment))
+        val ret = TextServer.FontAntialiasing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAntialiasingBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -132,6 +135,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setDisableEmbeddedBitmaps(disableEmbeddedBitmaps: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDisableEmbeddedBitmapsBind, segment, disableEmbeddedBitmaps)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -142,7 +146,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getDisableEmbeddedBitmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDisableEmbeddedBitmapsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getDisableEmbeddedBitmapsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -153,6 +159,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setGenerateMipmaps(generateMipmaps: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setGenerateMipmapsBind, segment, generateMipmaps)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -162,7 +169,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getGenerateMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getGenerateMipmapsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getGenerateMipmapsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -173,6 +182,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setAllowSystemFallback(allowSystemFallback: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAllowSystemFallbackBind, segment, allowSystemFallback)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -182,7 +192,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun isAllowSystemFallback(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowSystemFallbackBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowSystemFallbackBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -193,6 +205,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setForceAutohinter(forceAutohinter: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setForceAutohinterBind, segment, forceAutohinter)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -202,7 +215,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun isForceAutohinter(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isForceAutohinterBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isForceAutohinterBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -214,6 +229,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setModulateColorGlyphs(modulate: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setModulateColorGlyphsBind, segment, modulate)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -224,7 +240,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun isModulateColorGlyphs(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isModulateColorGlyphsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isModulateColorGlyphsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -235,6 +253,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setHinting(hinting: TextServer.Hinting) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setHintingBind, segment, hinting.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -244,7 +263,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getHinting(): TextServer.Hinting {
         checkOpen()
-        return TextServer.Hinting(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintingBind, segment))
+        val ret = TextServer.Hinting(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintingBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -257,6 +278,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setSubpixelPositioning(subpixelPositioning: TextServer.SubpixelPositioning) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSubpixelPositioningBind, segment, subpixelPositioning.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -268,7 +290,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getSubpixelPositioning(): TextServer.SubpixelPositioning {
         checkOpen()
-        return TextServer.SubpixelPositioning(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSubpixelPositioningBind, segment))
+        val ret = TextServer.SubpixelPositioning(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSubpixelPositioningBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -281,6 +305,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setKeepRoundingRemainders(keepRoundingRemainders: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setKeepRoundingRemaindersBind, segment, keepRoundingRemainders)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -292,7 +317,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getKeepRoundingRemainders(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getKeepRoundingRemaindersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getKeepRoundingRemaindersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -304,6 +331,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setMultichannelSignedDistanceField(msdf: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setMultichannelSignedDistanceFieldBind, segment, msdf)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -314,7 +342,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun isMultichannelSignedDistanceField(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMultichannelSignedDistanceFieldBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isMultichannelSignedDistanceFieldBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -328,6 +358,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setMsdfPixelRange(msdfPixelRange: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMsdfPixelRangeBind, segment, msdfPixelRange)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -340,7 +371,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getMsdfPixelRange(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMsdfPixelRangeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMsdfPixelRangeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -353,6 +386,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setMsdfSize(msdfSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMsdfSizeBind, segment, msdfSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -364,7 +398,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getMsdfSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMsdfSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMsdfSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -377,6 +413,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setOversampling(oversampling: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setOversamplingBind, segment, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -388,7 +425,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getOversampling(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOversamplingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOversamplingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -398,7 +437,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getFontNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFontNamesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFontNamesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -409,6 +450,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setFontNames(names: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setFontNamesBind, segment, names)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -418,7 +460,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getFontItalic(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFontItalicBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getFontItalicBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -429,6 +473,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setFontItalic(italic: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setFontItalicBind, segment, italic)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -440,6 +485,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setFontWeight(weight: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setFontWeightBind, segment, weight)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -451,6 +497,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     fun setFontStretch(stretch: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setFontStretchBind, segment, stretch)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

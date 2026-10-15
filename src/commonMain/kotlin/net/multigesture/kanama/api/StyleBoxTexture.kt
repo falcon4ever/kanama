@@ -108,6 +108,8 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
     fun setTexture(texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -117,7 +119,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -130,6 +134,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
     fun setTextureMargin(margin: Side, size: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setTextureMarginBind, segment, margin.value, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -140,6 +145,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
     fun setTextureMarginAll(size: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTextureMarginAllBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -151,7 +157,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getTextureMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getTextureMarginBind, segment, margin.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getTextureMarginBind, segment, margin.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -163,6 +171,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
     fun setExpandMargin(margin: Side, size: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setExpandMarginBind, segment, margin.value, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -173,6 +182,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
     fun setExpandMarginAll(size: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setExpandMarginAllBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -183,7 +193,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getExpandMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getExpandMarginBind, segment, margin.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getExpandMarginBind, segment, margin.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -196,6 +208,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
     fun setRegionRect(region: Rect2) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2Arg(Binds.setRegionRectBind, segment, region)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -207,7 +220,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getRegionRect(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRegionRectBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRegionRectBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -218,6 +233,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
     fun setDrawCenter(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDrawCenterBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -227,7 +243,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun isDrawCenterEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawCenterEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawCenterEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -238,6 +256,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
     fun setModulate(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setModulateBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -247,7 +266,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getModulate(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getModulateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getModulateBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -258,6 +279,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
     fun setHAxisStretchMode(mode: StyleBoxTexture.AxisStretchMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setHAxisStretchModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -267,7 +289,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getHAxisStretchMode(): StyleBoxTexture.AxisStretchMode {
         checkOpen()
-        return StyleBoxTexture.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHAxisStretchModeBind, segment))
+        val ret = StyleBoxTexture.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHAxisStretchModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -278,6 +302,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
     fun setVAxisStretchMode(mode: StyleBoxTexture.AxisStretchMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setVAxisStretchModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -287,7 +312,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getVAxisStretchMode(): StyleBoxTexture.AxisStretchMode {
         checkOpen()
-        return StyleBoxTexture.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVAxisStretchModeBind, segment))
+        val ret = StyleBoxTexture.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVAxisStretchModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

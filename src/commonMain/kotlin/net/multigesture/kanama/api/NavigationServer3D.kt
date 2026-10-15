@@ -395,6 +395,9 @@ object NavigationServer3D {
     @JvmStatic
     fun queryPath(parameters: NavigationPathQueryParameters3D?, result: NavigationPathQueryResult3D?, callback: GodotCallable) {
         ObjectCalls.ptrcallWithTwoObjectCallableArgs(Binds.queryPathBind, singleton, parameters?.requireOpenHandle() ?: NULL_SEGMENT, result?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(parameters)
+        ObjectCalls.keepReachable(result)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -631,6 +634,7 @@ object NavigationServer3D {
     @JvmStatic
     fun regionSetNavigationMesh(region: RID, navigationMesh: NavigationMesh?) {
         ObjectCalls.ptrcallWithRIDAndObjectArg(Binds.regionSetNavigationMeshBind, singleton, region, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(navigationMesh)
     }
 
     /**
@@ -641,6 +645,8 @@ object NavigationServer3D {
     @JvmStatic
     fun regionBakeNavigationMesh(navigationMesh: NavigationMesh?, rootNode: Node) {
         ObjectCalls.ptrcallWithTwoObjectArgs(Binds.regionBakeNavigationMeshBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, rootNode.segment)
+        ObjectCalls.keepReachable(navigationMesh)
+        ObjectCalls.keepReachable(rootNode)
     }
 
     /**
@@ -1270,6 +1276,7 @@ object NavigationServer3D {
     @JvmStatic
     fun agentSetAvoidanceCallback(agent: RID, callback: GodotCallable) {
         ObjectCalls.ptrcallWithRIDCallableArgs(Binds.agentSetAvoidanceCallbackBind, singleton, agent, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1577,6 +1584,10 @@ object NavigationServer3D {
     @JvmStatic
     fun parseSourceGeometryData(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, rootNode: Node, callback: GodotCallable) {
         ObjectCalls.ptrcallWithThreeObjectCallableArgs(Binds.parseSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, rootNode.segment, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(navigationMesh)
+        ObjectCalls.keepReachable(sourceGeometryData)
+        ObjectCalls.keepReachable(rootNode)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1588,6 +1599,9 @@ object NavigationServer3D {
     @JvmStatic
     fun bakeFromSourceGeometryData(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, callback: GodotCallable) {
         ObjectCalls.ptrcallWithTwoObjectCallableArgs(Binds.bakeFromSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(navigationMesh)
+        ObjectCalls.keepReachable(sourceGeometryData)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1600,6 +1614,9 @@ object NavigationServer3D {
     @JvmStatic
     fun bakeFromSourceGeometryDataAsync(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, callback: GodotCallable) {
         ObjectCalls.ptrcallWithTwoObjectCallableArgs(Binds.bakeFromSourceGeometryDataAsyncBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(navigationMesh)
+        ObjectCalls.keepReachable(sourceGeometryData)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1609,7 +1626,9 @@ object NavigationServer3D {
      */
     @JvmStatic
     fun isBakingNavigationMesh(navigationMesh: NavigationMesh?): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isBakingNavigationMeshBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isBakingNavigationMeshBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(navigationMesh)
+        return ret
     }
 
     /**
@@ -1636,6 +1655,7 @@ object NavigationServer3D {
     @JvmStatic
     fun sourceGeometryParserSetCallback(parser: RID, callback: GodotCallable) {
         ObjectCalls.ptrcallWithRIDCallableArgs(Binds.sourceGeometryParserSetCallbackBind, singleton, parser, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**

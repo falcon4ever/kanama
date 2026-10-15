@@ -50,6 +50,7 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
     fun setMixRate(hz: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMixRateBind, segment, hz)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -70,7 +71,9 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getMixRate(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMixRateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMixRateBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -82,6 +85,7 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
     fun setMixRateMode(mode: AudioStreamGenerator.AudioStreamGeneratorMixRate) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setMixRateModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -92,7 +96,9 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getMixRateMode(): AudioStreamGenerator.AudioStreamGeneratorMixRate {
         checkOpen()
-        return AudioStreamGenerator.AudioStreamGeneratorMixRate(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMixRateModeBind, segment))
+        val ret = AudioStreamGenerator.AudioStreamGeneratorMixRate(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMixRateModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -105,6 +111,7 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
     fun setBufferLength(seconds: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBufferLengthBind, segment, seconds)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -116,7 +123,9 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getBufferLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBufferLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBufferLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

@@ -57,6 +57,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
     fun setBlendMode(blendMode: CanvasItemMaterial.BlendMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBlendModeBind, segment, blendMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -66,7 +67,9 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getBlendMode(): CanvasItemMaterial.BlendMode {
         checkOpen()
-        return CanvasItemMaterial.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendModeBind, segment))
+        val ret = CanvasItemMaterial.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -77,6 +80,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
     fun setLightMode(lightMode: CanvasItemMaterial.LightMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setLightModeBind, segment, lightMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -86,7 +90,9 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getLightMode(): CanvasItemMaterial.LightMode {
         checkOpen()
-        return CanvasItemMaterial.LightMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLightModeBind, segment))
+        val ret = CanvasItemMaterial.LightMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLightModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -101,6 +107,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
     fun setParticlesAnimation(particlesAnim: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setParticlesAnimationBind, segment, particlesAnim)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -114,7 +121,9 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimation(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getParticlesAnimationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getParticlesAnimationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -127,6 +136,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
     fun setParticlesAnimHFrames(frames: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setParticlesAnimHFramesBind, segment, frames)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -138,7 +148,9 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimHFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getParticlesAnimHFramesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getParticlesAnimHFramesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -151,6 +163,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
     fun setParticlesAnimVFrames(frames: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setParticlesAnimVFramesBind, segment, frames)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -162,7 +175,9 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimVFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getParticlesAnimVFramesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getParticlesAnimVFramesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -174,6 +189,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
     fun setParticlesAnimLoop(loop: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setParticlesAnimLoopBind, segment, loop)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -184,7 +200,9 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getParticlesAnimLoopBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getParticlesAnimLoopBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

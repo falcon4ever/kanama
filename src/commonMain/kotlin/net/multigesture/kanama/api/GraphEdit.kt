@@ -873,6 +873,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      */
     fun setSelected(node: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSelectedBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /** Signal `connection_request(from_node: StringName, from_port: int, to_node: StringName, to_port: int)`; see [TypedSignal]. */

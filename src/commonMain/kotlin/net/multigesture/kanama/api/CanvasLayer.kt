@@ -265,6 +265,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      */
     fun setCustomViewport(viewport: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCustomViewportBind, segment, listOf(viewport.segment))
+        ObjectCalls.keepReachable(viewport)
     }
 
     /**

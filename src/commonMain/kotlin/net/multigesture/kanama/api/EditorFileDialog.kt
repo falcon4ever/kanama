@@ -26,6 +26,7 @@ class EditorFileDialog(handle: GodotHandle) : FileDialog(handle) {
      */
     fun addSideMenu(menu: Control, title: String = "") {
         ObjectCalls.ptrcallWithObjectAndStringArg(Binds.addSideMenuBind, segment, menu.segment, title)
+        ObjectCalls.keepReachable(menu)
     }
 
     /**

@@ -87,6 +87,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     fun setEnableDepthClamp(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnableDepthClampBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -97,7 +98,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableDepthClamp(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableDepthClampBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableDepthClampBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -108,6 +111,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     fun setDiscardPrimitives(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDiscardPrimitivesBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -117,7 +121,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDiscardPrimitives(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDiscardPrimitivesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getDiscardPrimitivesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -128,6 +134,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     fun setWireframe(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setWireframeBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -137,7 +144,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getWireframe(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getWireframeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getWireframeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -149,6 +158,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     fun setCullMode(pMember: RenderingDevice.PolygonCullMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setCullModeBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -159,7 +169,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCullMode(): RenderingDevice.PolygonCullMode {
         checkOpen()
-        return RenderingDevice.PolygonCullMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCullModeBind, segment))
+        val ret = RenderingDevice.PolygonCullMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCullModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -170,6 +182,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     fun setFrontFace(pMember: RenderingDevice.PolygonFrontFace) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFrontFaceBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -179,7 +192,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrontFace(): RenderingDevice.PolygonFrontFace {
         checkOpen()
-        return RenderingDevice.PolygonFrontFace(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrontFaceBind, segment))
+        val ret = RenderingDevice.PolygonFrontFace(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrontFaceBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -192,6 +207,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     fun setDepthBiasEnabled(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDepthBiasEnabledBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -203,7 +219,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepthBiasEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDepthBiasEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getDepthBiasEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -214,6 +232,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     fun setDepthBiasConstantFactor(pMember: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthBiasConstantFactorBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -223,7 +242,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepthBiasConstantFactor(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBiasConstantFactorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBiasConstantFactorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -235,6 +256,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     fun setDepthBiasClamp(pMember: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthBiasClampBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -245,7 +267,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepthBiasClamp(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBiasClampBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBiasClampBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -257,6 +281,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     fun setDepthBiasSlopeFactor(pMember: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthBiasSlopeFactorBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -267,7 +292,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepthBiasSlopeFactor(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBiasSlopeFactorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBiasSlopeFactorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -279,6 +306,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     fun setLineWidth(pMember: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLineWidthBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -289,7 +317,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineWidthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineWidthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -301,6 +331,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     fun setPatchControlPoints(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setPatchControlPointsBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -311,7 +342,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPatchControlPoints(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getPatchControlPointsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getPatchControlPointsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

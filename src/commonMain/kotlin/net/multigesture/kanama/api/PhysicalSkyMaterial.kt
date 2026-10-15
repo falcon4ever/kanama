@@ -90,6 +90,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setRayleighCoefficient(rayleigh: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRayleighCoefficientBind, segment, rayleigh)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -101,7 +102,9 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRayleighCoefficient(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRayleighCoefficientBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRayleighCoefficientBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,6 +118,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setRayleighColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setRayleighColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -127,7 +131,9 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRayleighColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getRayleighColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getRayleighColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -140,6 +146,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setMieCoefficient(mie: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMieCoefficientBind, segment, mie)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -151,7 +158,9 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getMieCoefficient(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMieCoefficientBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMieCoefficientBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,6 +173,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setMieEccentricity(eccentricity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMieEccentricityBind, segment, eccentricity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -175,7 +185,9 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getMieEccentricity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMieEccentricityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMieEccentricityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -187,6 +199,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setMieColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setMieColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -197,7 +210,9 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getMieColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getMieColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getMieColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -209,6 +224,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setTurbidity(turbidity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTurbidityBind, segment, turbidity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -219,7 +235,9 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getTurbidity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTurbidityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTurbidityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -230,6 +248,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setSunDiskScale(scale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSunDiskScaleBind, segment, scale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -239,7 +258,9 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSunDiskScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSunDiskScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSunDiskScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -250,6 +271,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setGroundColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setGroundColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -259,7 +281,9 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getGroundColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getGroundColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getGroundColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -270,6 +294,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setEnergyMultiplier(multiplier: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEnergyMultiplierBind, segment, multiplier)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -279,7 +304,9 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnergyMultiplierBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnergyMultiplierBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -291,6 +318,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setUseDebanding(useDebanding: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseDebandingBind, segment, useDebanding)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -301,7 +329,9 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getUseDebanding(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseDebandingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseDebandingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -313,6 +343,8 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setNightSky(nightSky: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setNightSkyBind, segment, listOf(nightSky?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(nightSky)
     }
 
     /**
@@ -323,7 +355,9 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getNightSky(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNightSkyBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNightSkyBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

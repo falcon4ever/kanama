@@ -33,6 +33,7 @@ class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) 
     fun setBillboardType(billboardType: VisualShaderNodeBillboard.BillboardType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBillboardTypeBind, segment, billboardType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -42,7 +43,9 @@ class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) 
      */
     fun getBillboardType(): VisualShaderNodeBillboard.BillboardType {
         checkOpen()
-        return VisualShaderNodeBillboard.BillboardType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBillboardTypeBind, segment))
+        val ret = VisualShaderNodeBillboard.BillboardType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBillboardTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -54,6 +57,7 @@ class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) 
     fun setKeepScaleEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setKeepScaleEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -64,7 +68,9 @@ class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) 
      */
     fun isKeepScaleEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isKeepScaleEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isKeepScaleEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

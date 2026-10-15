@@ -27,6 +27,7 @@ class VisualShaderNodeParticleAccelerator(handle: GodotHandle) : VisualShaderNod
     fun setMode(mode: VisualShaderNodeParticleAccelerator.Mode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeParticleAccelerator(handle: GodotHandle) : VisualShaderNod
      */
     fun getMode(): VisualShaderNodeParticleAccelerator.Mode {
         checkOpen()
-        return VisualShaderNodeParticleAccelerator.Mode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModeBind, segment))
+        val ret = VisualShaderNodeParticleAccelerator.Mode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

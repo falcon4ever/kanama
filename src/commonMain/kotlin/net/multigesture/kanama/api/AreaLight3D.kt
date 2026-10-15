@@ -58,6 +58,7 @@ class AreaLight3D(handle: GodotHandle) : Light3D(handle) {
      */
     fun setAreaTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setAreaTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**

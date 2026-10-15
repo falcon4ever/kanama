@@ -136,6 +136,7 @@ open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
      */
     fun setLayerViewport(viewport: SubViewport) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setLayerViewportBind, segment, listOf(viewport.segment))
+        ObjectCalls.keepReachable(viewport)
     }
 
     /**

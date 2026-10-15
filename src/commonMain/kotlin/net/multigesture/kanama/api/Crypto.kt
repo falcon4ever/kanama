@@ -19,7 +19,9 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun generateRandomBytes(size: Int): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetByteArray(Binds.generateRandomBytesBind, segment, size)
+        val ret = ObjectCalls.ptrcallWithIntArgRetByteArray(Binds.generateRandomBytesBind, segment, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun generateRsa(size: Int): CryptoKey? {
         checkOpen()
-        return CryptoKey.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.generateRsaBind, segment, size))
+        val ret = CryptoKey.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.generateRsaBind, segment, size))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -45,7 +49,10 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun generateSelfSignedCertificate(key: CryptoKey?, issuerName: String = "CN=myserver,O=myorganisation,C=IT", notBefore: String = "20140101000000", notAfter: String = "20340101000000"): X509Certificate? {
         checkOpen()
-        return X509Certificate.wrapOwned(ObjectCalls.ptrcallWithObjectThreeStringArgsRetObject(Binds.generateSelfSignedCertificateBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, issuerName, notBefore, notAfter))
+        val ret = X509Certificate.wrapOwned(ObjectCalls.ptrcallWithObjectThreeStringArgsRetObject(Binds.generateSelfSignedCertificateBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, issuerName, notBefore, notAfter))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(key)
+        return ret
     }
 
     /**
@@ -55,7 +62,10 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun sign(hashType: HashingContext.HashType, hash: ByteArray, key: CryptoKey?): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongByteArrayObjectArgsRetByteArray(Binds.signBind, segment, hashType.value, hash, key?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithLongByteArrayObjectArgsRetByteArray(Binds.signBind, segment, hashType.value, hash, key?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(key)
+        return ret
     }
 
     /**
@@ -66,7 +76,10 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun verify(hashType: HashingContext.HashType, hash: ByteArray, signature: ByteArray, key: CryptoKey?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongTwoByteArrayObjectArgsRetBool(Binds.verifyBind, segment, hashType.value, hash, signature, key?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithLongTwoByteArrayObjectArgsRetBool(Binds.verifyBind, segment, hashType.value, hash, signature, key?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(key)
+        return ret
     }
 
     /**
@@ -77,7 +90,10 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun encrypt(key: CryptoKey?, plaintext: ByteArray): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(Binds.encryptBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, plaintext)
+        val ret = ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(Binds.encryptBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, plaintext)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(key)
+        return ret
     }
 
     /**
@@ -88,7 +104,10 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun decrypt(key: CryptoKey?, ciphertext: ByteArray): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(Binds.decryptBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, ciphertext)
+        val ret = ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(Binds.decryptBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, ciphertext)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(key)
+        return ret
     }
 
     /**
@@ -101,7 +120,9 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hmacDigest(hashType: HashingContext.HashType, key: ByteArray, msg: ByteArray): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetByteArray(Binds.hmacDigestBind, segment, hashType.value, key, msg)
+        val ret = ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetByteArray(Binds.hmacDigestBind, segment, hashType.value, key, msg)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -114,7 +135,9 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun constantTimeCompare(trusted: ByteArray, received: ByteArray): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoByteArrayArgsRetBool(Binds.constantTimeCompareBind, segment, trusted, received)
+        val ret = ObjectCalls.ptrcallWithTwoByteArrayArgsRetBool(Binds.constantTimeCompareBind, segment, trusted, received)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

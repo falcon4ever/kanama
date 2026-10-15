@@ -19,7 +19,9 @@ open class Occluder3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getVertices(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getVerticesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getVerticesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -29,7 +31,9 @@ open class Occluder3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getIndices(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getIndicesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getIndicesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

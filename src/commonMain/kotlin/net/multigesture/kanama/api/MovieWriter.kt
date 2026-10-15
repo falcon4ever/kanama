@@ -24,6 +24,7 @@ class MovieWriter(handle: GodotHandle) : GodotObject(handle) {
          */
         fun addWriter(writer: MovieWriter) {
             ObjectCalls.ptrcallWithObjectArgs(Binds.addWriterBind, NULL_SEGMENT, listOf(writer.segment))
+            ObjectCalls.keepReachable(writer)
         }
 
         @JvmStatic

@@ -111,7 +111,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -122,7 +124,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getBufferView(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferViewBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferViewBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -134,6 +138,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setBufferView(bufferView: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBufferViewBind, segment, bufferView)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -143,7 +148,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getByteOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -154,6 +161,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setByteOffset(byteOffset: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setByteOffsetBind, segment, byteOffset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -165,7 +173,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getComponentType(): GLTFAccessor.GLTFComponentType {
         checkOpen()
-        return GLTFAccessor.GLTFComponentType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getComponentTypeBind, segment))
+        val ret = GLTFAccessor.GLTFComponentType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getComponentTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -178,6 +188,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setComponentType(componentType: GLTFAccessor.GLTFComponentType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setComponentTypeBind, segment, componentType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -187,7 +198,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getNormalized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getNormalizedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getNormalizedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -198,6 +211,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setNormalized(normalized: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setNormalizedBind, segment, normalized)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -207,7 +221,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -218,6 +234,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setCount(count: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setCountBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -227,7 +244,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getAccessorType(): GLTFAccessor.GLTFAccessorType {
         checkOpen()
-        return GLTFAccessor.GLTFAccessorType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAccessorTypeBind, segment))
+        val ret = GLTFAccessor.GLTFAccessorType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAccessorTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -238,6 +257,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setAccessorType(accessorType: GLTFAccessor.GLTFAccessorType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAccessorTypeBind, segment, accessorType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -248,7 +268,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getType(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTypeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getTypeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -260,6 +282,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setType(type: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setTypeBind, segment, type)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -269,7 +292,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getMin(): List<Double> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(Binds.getMinBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedFloat64List(Binds.getMinBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -280,6 +305,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setMin(min: List<Double>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat64ListArg(Binds.setMinBind, segment, min)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -289,7 +315,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getMax(): List<Double> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(Binds.getMaxBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedFloat64List(Binds.getMaxBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -300,6 +328,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setMax(max: List<Double>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat64ListArg(Binds.setMaxBind, segment, max)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -309,7 +338,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getSparseCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -320,6 +351,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setSparseCount(sparseCount: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSparseCountBind, segment, sparseCount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -331,7 +363,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getSparseIndicesBufferView(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSparseIndicesBufferViewBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSparseIndicesBufferViewBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -344,6 +378,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setSparseIndicesBufferView(sparseIndicesBufferView: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSparseIndicesBufferViewBind, segment, sparseIndicesBufferView)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -353,7 +388,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getSparseIndicesByteOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseIndicesByteOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseIndicesByteOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -364,6 +401,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setSparseIndicesByteOffset(sparseIndicesByteOffset: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSparseIndicesByteOffsetBind, segment, sparseIndicesByteOffset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -374,7 +412,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getSparseIndicesComponentType(): GLTFAccessor.GLTFComponentType {
         checkOpen()
-        return GLTFAccessor.GLTFComponentType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseIndicesComponentTypeBind, segment))
+        val ret = GLTFAccessor.GLTFComponentType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseIndicesComponentTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -386,6 +426,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setSparseIndicesComponentType(sparseIndicesComponentType: GLTFAccessor.GLTFComponentType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSparseIndicesComponentTypeBind, segment, sparseIndicesComponentType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -396,7 +437,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getSparseValuesBufferView(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSparseValuesBufferViewBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSparseValuesBufferViewBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -408,6 +451,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setSparseValuesBufferView(sparseValuesBufferView: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSparseValuesBufferViewBind, segment, sparseValuesBufferView)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -417,7 +461,9 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
      */
     fun getSparseValuesByteOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseValuesByteOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseValuesByteOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -428,6 +474,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     fun setSparseValuesByteOffset(sparseValuesByteOffset: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSparseValuesByteOffsetBind, segment, sparseValuesByteOffset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

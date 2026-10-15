@@ -19,7 +19,9 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun pckStart(pckPath: String, alignment: Int = 32, key: String = "0000000000000000000000000000000000000000000000000000000000000000", encryptDirectory: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringIntStringBoolArgsRetLong(Binds.pckStartBind, segment, pckPath, alignment, key, encryptDirectory))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringIntStringBoolArgsRetLong(Binds.pckStartBind, segment, pckPath, alignment, key, encryptDirectory))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -31,7 +33,9 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addFile(targetPath: String, sourcePath: String, encrypt: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(Binds.addFileBind, segment, targetPath, sourcePath, encrypt))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(Binds.addFileBind, segment, targetPath, sourcePath, encrypt))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -43,7 +47,9 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addFileFromBuffer(targetPath: String, data: ByteArray, encrypt: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringByteArrayAndBoolArgRetLong(Binds.addFileFromBufferBind, segment, targetPath, data, encrypt))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringByteArrayAndBoolArgRetLong(Binds.addFileFromBufferBind, segment, targetPath, data, encrypt))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -55,7 +61,9 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addFileRemoval(targetPath: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.addFileRemovalBind, segment, targetPath))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.addFileRemovalBind, segment, targetPath))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -69,7 +77,9 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun flush(verbose: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(Binds.flushBind, segment, verbose))
+        val ret = GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(Binds.flushBind, segment, verbose))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

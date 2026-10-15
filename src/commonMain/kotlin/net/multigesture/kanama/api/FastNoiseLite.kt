@@ -148,6 +148,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setNoiseType(type: FastNoiseLite.NoiseType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setNoiseTypeBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -157,7 +158,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getNoiseType(): FastNoiseLite.NoiseType {
         checkOpen()
-        return FastNoiseLite.NoiseType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getNoiseTypeBind, segment))
+        val ret = FastNoiseLite.NoiseType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getNoiseTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -168,6 +171,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setSeed(seed: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSeedBind, segment, seed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -177,7 +181,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getSeed(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSeedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSeedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -189,6 +195,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setFrequency(freq: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFrequencyBind, segment, freq)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -199,7 +206,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getFrequency(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrequencyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrequencyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -210,6 +219,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setOffset(offset: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setOffsetBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -219,7 +229,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getOffset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -230,6 +242,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setFractalType(type: FastNoiseLite.FractalType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFractalTypeBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -239,7 +252,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getFractalType(): FastNoiseLite.FractalType {
         checkOpen()
-        return FastNoiseLite.FractalType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFractalTypeBind, segment))
+        val ret = FastNoiseLite.FractalType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFractalTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -250,6 +265,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setFractalOctaves(octaveCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setFractalOctavesBind, segment, octaveCount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -259,7 +275,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getFractalOctaves(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFractalOctavesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFractalOctavesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -271,6 +289,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setFractalLacunarity(lacunarity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFractalLacunarityBind, segment, lacunarity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -281,7 +300,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getFractalLacunarity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalLacunarityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalLacunarityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -294,6 +315,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setFractalGain(gain: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFractalGainBind, segment, gain)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -305,7 +327,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getFractalGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalGainBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalGainBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -316,6 +340,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setFractalWeightedStrength(weightedStrength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFractalWeightedStrengthBind, segment, weightedStrength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -325,7 +350,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getFractalWeightedStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalWeightedStrengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalWeightedStrengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -336,6 +363,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setFractalPingPongStrength(pingPongStrength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFractalPingPongStrengthBind, segment, pingPongStrength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -345,7 +373,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getFractalPingPongStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalPingPongStrengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalPingPongStrengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -356,6 +386,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setCellularDistanceFunction(func: FastNoiseLite.CellularDistanceFunction) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setCellularDistanceFunctionBind, segment, func.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -365,7 +396,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getCellularDistanceFunction(): FastNoiseLite.CellularDistanceFunction {
         checkOpen()
-        return FastNoiseLite.CellularDistanceFunction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCellularDistanceFunctionBind, segment))
+        val ret = FastNoiseLite.CellularDistanceFunction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCellularDistanceFunctionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -376,6 +409,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setCellularJitter(jitter: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCellularJitterBind, segment, jitter)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -385,7 +419,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getCellularJitter(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellularJitterBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellularJitterBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -396,6 +432,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setCellularReturnType(ret: FastNoiseLite.CellularReturnType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setCellularReturnTypeBind, segment, ret.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -405,7 +442,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getCellularReturnType(): FastNoiseLite.CellularReturnType {
         checkOpen()
-        return FastNoiseLite.CellularReturnType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCellularReturnTypeBind, segment))
+        val ret = FastNoiseLite.CellularReturnType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCellularReturnTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -417,6 +456,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setDomainWarpEnabled(domainWarpEnabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDomainWarpEnabledBind, segment, domainWarpEnabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -427,7 +467,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun isDomainWarpEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDomainWarpEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDomainWarpEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -438,6 +480,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setDomainWarpType(domainWarpType: FastNoiseLite.DomainWarpType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDomainWarpTypeBind, segment, domainWarpType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -447,7 +490,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getDomainWarpType(): FastNoiseLite.DomainWarpType {
         checkOpen()
-        return FastNoiseLite.DomainWarpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDomainWarpTypeBind, segment))
+        val ret = FastNoiseLite.DomainWarpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDomainWarpTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -458,6 +503,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setDomainWarpAmplitude(domainWarpAmplitude: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDomainWarpAmplitudeBind, segment, domainWarpAmplitude)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -467,7 +513,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getDomainWarpAmplitude(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpAmplitudeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpAmplitudeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -479,6 +527,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setDomainWarpFrequency(domainWarpFrequency: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDomainWarpFrequencyBind, segment, domainWarpFrequency)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -489,7 +538,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getDomainWarpFrequency(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpFrequencyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpFrequencyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -500,6 +551,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setDomainWarpFractalType(domainWarpFractalType: FastNoiseLite.DomainWarpFractalType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDomainWarpFractalTypeBind, segment, domainWarpFractalType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -509,7 +561,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getDomainWarpFractalType(): FastNoiseLite.DomainWarpFractalType {
         checkOpen()
-        return FastNoiseLite.DomainWarpFractalType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDomainWarpFractalTypeBind, segment))
+        val ret = FastNoiseLite.DomainWarpFractalType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDomainWarpFractalTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -521,6 +575,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setDomainWarpFractalOctaves(domainWarpOctaveCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setDomainWarpFractalOctavesBind, segment, domainWarpOctaveCount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -531,7 +586,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getDomainWarpFractalOctaves(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDomainWarpFractalOctavesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getDomainWarpFractalOctavesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -544,6 +601,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setDomainWarpFractalLacunarity(domainWarpLacunarity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDomainWarpFractalLacunarityBind, segment, domainWarpLacunarity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -555,7 +613,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getDomainWarpFractalLacunarity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpFractalLacunarityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpFractalLacunarityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -568,6 +628,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     fun setDomainWarpFractalGain(domainWarpGain: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDomainWarpFractalGainBind, segment, domainWarpGain)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -579,7 +640,9 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
      */
     fun getDomainWarpFractalGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpFractalGainBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpFractalGainBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -849,7 +912,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         // Downcast a Resource to FastNoiseLite (null if not).
         @JvmStatic
         fun fromResource(value: Resource): FastNoiseLite? =
-            if (value.isClass("FastNoiseLite")) RefCounted.retained(FastNoiseLite(value.handle)) else null
+            if (value.isClass("FastNoiseLite")) RefCounted.retained(FastNoiseLite(value.handle), value) else null
     }
 
     private object Binds {

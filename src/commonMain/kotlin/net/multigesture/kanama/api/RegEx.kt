@@ -21,6 +21,7 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -32,7 +33,9 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
      */
     fun compile(pattern: String, showError: Boolean = true): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.compileBind, segment, pattern, showError))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.compileBind, segment, pattern, showError))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -47,7 +50,9 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
      */
     fun search(subject: String, offset: Int = 0, end: Int = -1): RegExMatch? {
         checkOpen()
-        return RegExMatch.wrapOwned(ObjectCalls.ptrcallWithStringAndTwoIntArgsRetObject(Binds.searchBind, segment, subject, offset, end))
+        val ret = RegExMatch.wrapOwned(ObjectCalls.ptrcallWithStringAndTwoIntArgsRetObject(Binds.searchBind, segment, subject, offset, end))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -63,7 +68,9 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
      */
     fun searchAll(subject: String, offset: Int = 0, end: Int = -1): List<RegExMatch> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringTwoIntArgsRetTypedObjectList(Binds.searchAllBind, segment, subject, offset, end, RegExMatch::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallWithStringTwoIntArgsRetTypedObjectList(Binds.searchAllBind, segment, subject, offset, end, RegExMatch::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,7 +87,9 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
      */
     fun sub(subject: String, replacement: String, all: Boolean = false, offset: Int = 0, end: Int = -1): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringBoolTwoIntArgsRetString(Binds.subBind, segment, subject, replacement, all, offset, end)
+        val ret = ObjectCalls.ptrcallWithTwoStringBoolTwoIntArgsRetString(Binds.subBind, segment, subject, replacement, all, offset, end)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -90,7 +99,9 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isValid(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isValidBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isValidBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -100,7 +111,9 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPattern(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPatternBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getPatternBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -110,7 +123,9 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGroupCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getGroupCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getGroupCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -121,7 +136,9 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getNamesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getNamesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

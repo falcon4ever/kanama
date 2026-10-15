@@ -26,6 +26,7 @@ class SceneTreeTimer(handle: GodotHandle) : RefCounted(handle) {
     fun setTimeLeft(time: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTimeLeftBind, segment, time)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -35,7 +36,9 @@ class SceneTreeTimer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTimeLeft(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimeLeftBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimeLeftBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `timeout()`; see [TypedSignal]. */

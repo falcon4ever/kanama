@@ -48,6 +48,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun setTransferChannel(channel: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setTransferChannelBind, segment, channel)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -66,7 +67,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getTransferChannel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTransferChannelBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getTransferChannelBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -77,6 +80,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun setTransferMode(mode: MultiplayerPeer.TransferMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTransferModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -86,7 +90,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getTransferMode(): MultiplayerPeer.TransferMode {
         checkOpen()
-        return MultiplayerPeer.TransferMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTransferModeBind, segment))
+        val ret = MultiplayerPeer.TransferMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTransferModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -100,6 +106,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun setTargetPeer(id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setTargetPeerBind, segment, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -110,7 +117,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getPacketPeer(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPacketPeerBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPacketPeerBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -121,7 +130,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getPacketChannel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPacketChannelBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPacketChannelBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -132,7 +143,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getPacketMode(): MultiplayerPeer.TransferMode {
         checkOpen()
-        return MultiplayerPeer.TransferMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPacketModeBind, segment))
+        val ret = MultiplayerPeer.TransferMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPacketModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -143,6 +156,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun poll() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.pollBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -154,6 +168,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun closeConnection() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.closeConnectionBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -165,6 +180,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun disconnectPeer(peer: Int, force: Boolean = false) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.disconnectPeerBind, segment, peer, force)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -174,7 +190,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getConnectionStatus(): MultiplayerPeer.ConnectionStatus {
         checkOpen()
-        return MultiplayerPeer.ConnectionStatus(ObjectCalls.ptrcallNoArgsRetLong(Binds.getConnectionStatusBind, segment))
+        val ret = MultiplayerPeer.ConnectionStatus(ObjectCalls.ptrcallNoArgsRetLong(Binds.getConnectionStatusBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -184,7 +202,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getUniqueId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getUniqueIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getUniqueIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -194,7 +214,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun generateUniqueId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.generateUniqueIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.generateUniqueIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -205,6 +227,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun setRefuseNewConnections(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setRefuseNewConnectionsBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -214,7 +237,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun isRefusingNewConnections(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRefusingNewConnectionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isRefusingNewConnectionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -226,7 +251,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun isServerRelaySupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isServerRelaySupportedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isServerRelaySupportedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `peer_connected(id: int)`; see [TypedSignal]. */

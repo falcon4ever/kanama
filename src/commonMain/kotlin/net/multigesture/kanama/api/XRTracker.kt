@@ -37,7 +37,9 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTrackerType(): XRServer.TrackerType {
         checkOpen()
-        return XRServer.TrackerType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTrackerTypeBind, segment))
+        val ret = XRServer.TrackerType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTrackerTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -48,6 +50,7 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
     fun setTrackerType(type: XRServer.TrackerType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTrackerTypeBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -65,7 +68,9 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTrackerName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getTrackerNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getTrackerNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -84,6 +89,7 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
     fun setTrackerName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.setTrackerNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -93,7 +99,9 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTrackerDesc(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTrackerDescBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getTrackerDescBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -104,6 +112,7 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
     fun setTrackerDesc(description: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setTrackerDescBind, segment, description)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

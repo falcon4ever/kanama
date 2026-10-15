@@ -596,6 +596,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      */
     fun addGizmo(gizmo: Node3DGizmo?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addGizmoBind, segment, listOf(gizmo?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(gizmo)
     }
 
     /**
@@ -625,6 +626,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      */
     fun setSubgizmoSelection(gizmo: Node3DGizmo?, id: Int, transform: Transform3D) {
         ObjectCalls.ptrcallWithObjectIntTransform3DArgs(Binds.setSubgizmoSelectionBind, segment, gizmo?.requireOpenHandle() ?: NULL_SEGMENT, id, transform)
+        ObjectCalls.keepReachable(gizmo)
     }
 
     /**

@@ -1561,6 +1561,7 @@ IOS_EXTENSION_SECTIONS: dict[str, tuple[tuple[str, ...], str]] = {
 fun PhysicsDirectSpaceState3D.intersectRay(parameters: PhysicsRayQueryParameters3D?): Map<String, Any?> {
     val query = parameters ?: return emptyMap()
     val raw = ObjectCalls.ptrcallIntersectRay(intersectRayBind, segment, query.segment)
+    ObjectCalls.keepReachable(query)
     if (raw.isEmpty()) return emptyMap()
     val result = raw.toMutableMap()
     (raw["collider"] as? MemorySegment)?.let { result["collider"] = GodotObject(GodotHandle(it)) }
@@ -1812,6 +1813,38 @@ def emits_receiver_guard(class_name: str, method: ApiMethod, singleton: bool, ap
     if singleton or method.is_static:
         return False
     return class_name == "RefCounted" or "RefCounted" in ancestors(class_name, api_classes)
+
+
+# Task 138 item 6: the keep-alive fence. A body reads `segment` (and each object argument's handle)
+# and then never touches the wrapper again, so by JLS §12.6.2 the collector may treat it as dead
+# while the engine call still runs; an owned RefCounted's fallback release could then destroy the
+# object mid-call. `ObjectCalls.keepReachable(x)` after the call keeps `x` reachable through it
+# (desktop/Android: `Reference.reachabilityFence`, free on HotSpot; iOS: empty). Emitted for the
+# receiver of every body that carries the receiver guard (a Node receiver is never released by the
+# drain) and for every Object / Callable / Signal argument (D2: an argument can be an owned
+# RefCounted whatever the receiver; a Callable's target and a Signal's owner are read the same way).
+# A varargs body fences only its receiver: its arguments travel in the list that
+# `callWithVariantArgs` fences itself.
+KEEP_REACHABLE = "ObjectCalls.keepReachable"
+FENCED_ARG_KINDS = frozenset({"Object", "Callable", "Signal"})
+
+
+def keep_reachable_lines(
+    receiver_guarded: bool, method: ApiMethod, object_types: set[str], names: list[str]
+) -> list[str]:
+    """The fence statements that follow a method's engine call, at method-body indent."""
+    targets = ["this"] if receiver_guarded else []
+    targets += [
+        name
+        for name, kind in zip(names, method.logical_arg_kinds(object_types), strict=True)
+        if kind in FENCED_ARG_KINDS
+    ]
+    return [f"{METHOD_BODY_INDENT}{KEEP_REACHABLE}({target})" for target in targets]
+
+
+def result_name(param_names: list[str]) -> str:
+    """`ret`, the local that holds a fenced body's result, unless a parameter already took it."""
+    return "ret" if "ret" not in param_names else "result"
 
 
 def is_resource_like(type_name: str, api_classes: dict[str, ApiClass]) -> bool:
@@ -2829,8 +2862,10 @@ def render_method(
     collapse_wrapper = self_return_collapse_wrapper(
         class_name, method, object_types, wrapper_classes, api_classes, singleton,
     )
-    guard_lines = [f"{METHOD_BODY_INDENT}checkOpen()"] if emits_receiver_guard(class_name, method, singleton, api_classes) else []
+    receiver_guarded = emits_receiver_guard(class_name, method, singleton, api_classes)
+    guard_lines = [f"{METHOD_BODY_INDENT}checkOpen()"] if receiver_guarded else []
     guard_lines += precondition_lines(class_name, method.name)
+    fence_lines = keep_reachable_lines(receiver_guarded, method, object_types, param_names)
     visibility = METHOD_VISIBILITY_OVERRIDES.get((class_name, method.name), "")
     lines = []
     if singleton:
@@ -2842,6 +2877,7 @@ def render_method(
                 f"    {visibility}fun {function_name}({params}){return_type_text} {{",
                 *guard_lines,
                 f"        val ret = {call}",
+                *fence_lines,
                 "        if (ret.address() == segment.address()) {",
                 "            RefCounted.releaseHandle(ret)",
                 "            return this",
@@ -2856,11 +2892,18 @@ def render_method(
             ],
         )
     else:
+        if return_type_text == "":
+            body = [f"        {call}", *fence_lines]
+        elif fence_lines:
+            result = result_name(param_names)
+            body = [f"        val {result} = {return_expression}", *fence_lines, f"        return {result}"]
+        else:
+            body = [f"        return {return_expression}"]
         lines.extend(
             [
                 f"    {visibility}fun {function_name}({params}){return_type_text} {{",
                 *guard_lines,
-                f"        {call}" if return_type_text == "" else f"        return {return_expression}",
+                *body,
                 "    }",
             ],
         )
@@ -2921,8 +2964,11 @@ def render_vararg_method(
     helper = override.function if override is not None else "callWithVariantArgs"
     call = f"ObjectCalls.{helper}({bind_name}, {receiver}, {call_args})"
     return_kind = method.logical_return_kind(object_types)
-    guard_lines = [f"{METHOD_BODY_INDENT}checkOpen()"] if emits_receiver_guard(class_name, method, singleton, api_classes) else []
+    receiver_guarded = emits_receiver_guard(class_name, method, singleton, api_classes)
+    guard_lines = [f"{METHOD_BODY_INDENT}checkOpen()"] if receiver_guarded else []
     guard_lines += precondition_lines(class_name, method.name)
+    # The fixed and extra arguments travel in the list callWithVariantArgs fences (task 138 item 6).
+    fence_lines = [f"{METHOD_BODY_INDENT}{KEEP_REACHABLE}(this)"] if receiver_guarded else []
     if return_kind == "void":
         lines = []
         if singleton:
@@ -2933,6 +2979,7 @@ def render_vararg_method(
                 f"    fun {function_name}({params}) {{",
                 *guard_lines,
                 f"        {call}",
+                *fence_lines,
                 "    }",
             ],
         )
@@ -2949,11 +2996,16 @@ def render_vararg_method(
     if singleton:
         if _jvm_static():
             lines.append("    @JvmStatic")
+    if fence_lines:
+        result = result_name(param_names)
+        body = [f"        val {result} = {return_expression}", *fence_lines, f"        return {result}"]
+    else:
+        body = [f"        return {return_expression}"]
     lines.extend(
         [
             f"    fun {function_name}({params}): {return_type_text} {{",
             *guard_lines,
-            f"        return {return_expression}",
+            *body,
             "    }",
         ],
     )
@@ -3646,16 +3698,21 @@ def render_factory_helpers(class_name: str, refcounted: bool = False) -> str | N
         param = downcast.param_name
         # A RefCounted downcast takes a +1 of its own (task 132): a view kept in a field keeps the
         # object alive like any other wrapper you can reach, whatever happens to the source wrapper.
-        view = (lambda h: f"RefCounted.retained({class_name}({h}))") if refcounted else (lambda h: f"{class_name}({h})")
+        # The source stays reachable until that +1 is taken (task 138 item 6: `retained(view, source)`).
+        view = (
+            (lambda source: f"RefCounted.retained({class_name}({source}.handle), {source})")
+            if refcounted
+            else (lambda source: f"{class_name}({source}.handle)")
+        )
         if downcast.nullable:
             body = [
                 f"        fun {downcast.name}({param}: {downcast.param_type}?): {class_name}? =",
-                f'            {param}?.takeIf {{ it.isClass("{class_name}") }}?.let {{ {view("it.handle")} }}',
+                f'            {param}?.takeIf {{ it.isClass("{class_name}") }}?.let {{ {view("it")} }}',
             ]
         else:
             body = [
                 f"        fun {downcast.name}({param}: {downcast.param_type}): {class_name}? =",
-                f'            if ({param}.isClass("{class_name}")) {view(f"{param}.handle")} else null',
+                f'            if ({param}.isClass("{class_name}")) {view(param)} else null',
             ]
         blocks.append(
             "\n".join(

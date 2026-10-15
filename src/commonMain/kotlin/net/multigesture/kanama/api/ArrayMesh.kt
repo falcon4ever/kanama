@@ -42,6 +42,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun addBlendShape(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.addBlendShapeBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -51,7 +52,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getBlendShapeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBlendShapeCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBlendShapeCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,7 +64,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getBlendShapeName(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBlendShapeNameBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBlendShapeNameBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -72,6 +77,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun setBlendShapeName(index: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setBlendShapeNameBind, segment, index, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -82,6 +88,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun clearBlendShapes() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBlendShapesBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -92,6 +99,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun setBlendShapeMode(mode: Mesh.BlendShapeMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBlendShapeModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -101,7 +109,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getBlendShapeMode(): Mesh.BlendShapeMode {
         checkOpen()
-        return Mesh.BlendShapeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendShapeModeBind, segment))
+        val ret = Mesh.BlendShapeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendShapeModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -135,6 +145,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun addSurfaceFromArrays(primitive: Mesh.PrimitiveType, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), flags: Mesh.ArrayFormat = Mesh.ArrayFormat(0L)) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs(Binds.addSurfaceFromArraysBind, segment, primitive.value, arrays, blendShapes, lods, flags.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -145,6 +156,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun clearSurfaces() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearSurfacesBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -156,6 +168,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceRemove(surfIdx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.surfaceRemoveBind, segment, surfIdx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -172,6 +185,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceUpdateVertexRegion(surfIdx: Int, offset: Int, data: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(Binds.surfaceUpdateVertexRegionBind, segment, surfIdx, offset, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -189,6 +203,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceUpdateAttributeRegion(surfIdx: Int, offset: Int, data: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(Binds.surfaceUpdateAttributeRegionBind, segment, surfIdx, offset, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -205,6 +220,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceUpdateSkinRegion(surfIdx: Int, offset: Int, data: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(Binds.surfaceUpdateSkinRegionBind, segment, surfIdx, offset, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -215,7 +231,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceGetArrayLen(surfIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.surfaceGetArrayLenBind, segment, surfIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.surfaceGetArrayLenBind, segment, surfIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -226,7 +244,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceGetArrayIndexLen(surfIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.surfaceGetArrayIndexLenBind, segment, surfIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.surfaceGetArrayIndexLenBind, segment, surfIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -236,7 +256,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceGetFormat(surfIdx: Int): Mesh.ArrayFormat {
         checkOpen()
-        return Mesh.ArrayFormat(ObjectCalls.ptrcallWithIntArgRetLong(Binds.surfaceGetFormatBind, segment, surfIdx))
+        val ret = Mesh.ArrayFormat(ObjectCalls.ptrcallWithIntArgRetLong(Binds.surfaceGetFormatBind, segment, surfIdx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -246,7 +268,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceGetPrimitiveType(surfIdx: Int): Mesh.PrimitiveType {
         checkOpen()
-        return Mesh.PrimitiveType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.surfaceGetPrimitiveTypeBind, segment, surfIdx))
+        val ret = Mesh.PrimitiveType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.surfaceGetPrimitiveTypeBind, segment, surfIdx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -257,7 +281,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceFindByName(name: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetInt(Binds.surfaceFindByNameBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetInt(Binds.surfaceFindByNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -268,6 +294,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceSetName(surfIdx: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(Binds.surfaceSetNameBind, segment, surfIdx, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -277,7 +304,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceGetName(surfIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.surfaceGetNameBind, segment, surfIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.surfaceGetNameBind, segment, surfIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -288,6 +317,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun regenNormalMaps() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.regenNormalMapsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -297,7 +327,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun lightmapUnwrap(transform: Transform3D, texelSize: Double): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTransform3DAndDoubleArgRetLong(Binds.lightmapUnwrapBind, segment, transform, texelSize))
+        val ret = GodotError(ObjectCalls.ptrcallWithTransform3DAndDoubleArgRetLong(Binds.lightmapUnwrapBind, segment, transform, texelSize))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -309,6 +341,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun setCustomAabb(aabb: AABB) {
         checkOpen()
         ObjectCalls.ptrcallWithAABBArg(Binds.setCustomAabbBind, segment, aabb)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -319,7 +352,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getCustomAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getCustomAabbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetAABB(Binds.getCustomAabbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -334,6 +369,8 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun setShadowMesh(mesh: ArrayMesh?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setShadowMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(mesh)
     }
 
     /**
@@ -348,6 +385,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     fun getShadowMesh(): ArrayMesh? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getShadowMeshBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -369,7 +407,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
         // Downcast a Resource to ArrayMesh (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ArrayMesh? =
-            if (value.isClass("ArrayMesh")) RefCounted.retained(ArrayMesh(value.handle)) else null
+            if (value.isClass("ArrayMesh")) RefCounted.retained(ArrayMesh(value.handle), value) else null
     }
 
     private object Binds {

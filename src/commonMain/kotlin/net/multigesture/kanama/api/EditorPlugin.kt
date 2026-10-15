@@ -22,6 +22,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addDock(dock: EditorDock) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addDockBind, segment, listOf(dock.segment))
+        ObjectCalls.keepReachable(dock)
     }
 
     /**
@@ -31,6 +32,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeDock(dock: EditorDock) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeDockBind, segment, listOf(dock.segment))
+        ObjectCalls.keepReachable(dock)
     }
 
     /**
@@ -43,6 +45,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addControlToContainer(container: EditorPlugin.CustomControlContainer, control: Control) {
         ObjectCalls.ptrcallWithLongAndObjectArg(Binds.addControlToContainerBind, segment, container.value, control.segment)
+        ObjectCalls.keepReachable(control)
     }
 
     /**
@@ -53,6 +56,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeControlFromContainer(container: EditorPlugin.CustomControlContainer, control: Control) {
         ObjectCalls.ptrcallWithLongAndObjectArg(Binds.removeControlFromContainerBind, segment, container.value, control.segment)
+        ObjectCalls.keepReachable(control)
     }
 
     /**
@@ -63,6 +67,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addToolMenuItem(name: String, callable: GodotCallable) {
         ObjectCalls.ptrcallWithStringCallableArgs(Binds.addToolMenuItemBind, segment, name, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**
@@ -73,6 +78,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addToolSubmenuItem(name: String, submenu: PopupMenu) {
         ObjectCalls.ptrcallWithStringAndObjectArg(Binds.addToolSubmenuItemBind, segment, name, submenu.segment)
+        ObjectCalls.keepReachable(submenu)
     }
 
     /**
@@ -107,6 +113,8 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addCustomType(type: String, base: String, script: Script?, icon: Texture2D?) {
         ObjectCalls.ptrcallWithTwoStringTwoObjectArgs(Binds.addCustomTypeBind, segment, type, base, script?.requireOpenHandle() ?: NULL_SEGMENT, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(script)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -129,6 +137,8 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addControlToDock(slot: EditorPlugin.DockSlot, control: Control, shortcut: Shortcut?) {
         ObjectCalls.ptrcallWithLongAndTwoObjectArgs(Binds.addControlToDockBind, segment, slot.value, control.segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(control)
+        ObjectCalls.keepReachable(shortcut)
     }
 
     /**
@@ -138,6 +148,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeControlFromDocks(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeControlFromDocksBind, segment, listOf(control.segment))
+        ObjectCalls.keepReachable(control)
     }
 
     /**
@@ -147,6 +158,8 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun setDockTabIcon(control: Control, icon: Texture2D?) {
         ObjectCalls.ptrcallWithTwoObjectArgs(Binds.setDockTabIconBind, segment, control.segment, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(control)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -161,7 +174,10 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_control_to_bottom_panel
      */
     fun addControlToBottomPanel(control: Control, title: String, shortcut: Shortcut?): Button? {
-        return Button.wrap(ObjectCalls.ptrcallWithObjectStringObjectArgsRetObject(Binds.addControlToBottomPanelBind, segment, control.segment, title, shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = Button.wrap(ObjectCalls.ptrcallWithObjectStringObjectArgsRetObject(Binds.addControlToBottomPanelBind, segment, control.segment, title, shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(control)
+        ObjectCalls.keepReachable(shortcut)
+        return ret
     }
 
     /**
@@ -171,6 +187,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeControlFromBottomPanel(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeControlFromBottomPanelBind, segment, listOf(control.segment))
+        ObjectCalls.keepReachable(control)
     }
 
     /**
@@ -209,6 +226,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun makeBottomPanelItemVisible(item: Control) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.makeBottomPanelItemVisibleBind, segment, listOf(item.segment))
+        ObjectCalls.keepReachable(item)
     }
 
     /**
@@ -242,6 +260,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addUndoRedoInspectorHookCallback(callable: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(Binds.addUndoRedoInspectorHookCallbackBind, segment, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**
@@ -251,6 +270,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeUndoRedoInspectorHookCallback(callable: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(Binds.removeUndoRedoInspectorHookCallbackBind, segment, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**
@@ -270,6 +290,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addTranslationParserPlugin(parser: EditorTranslationParserPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addTranslationParserPluginBind, segment, listOf(parser?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(parser)
     }
 
     /**
@@ -279,6 +300,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeTranslationParserPlugin(parser: EditorTranslationParserPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeTranslationParserPluginBind, segment, listOf(parser?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(parser)
     }
 
     /**
@@ -292,6 +314,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addImportPlugin(importer: EditorImportPlugin?, firstPriority: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addImportPluginBind, segment, importer?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
+        ObjectCalls.keepReachable(importer)
     }
 
     /**
@@ -301,6 +324,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeImportPlugin(importer: EditorImportPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeImportPluginBind, segment, listOf(importer?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(importer)
     }
 
     /**
@@ -312,6 +336,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addSceneFormatImporterPlugin(sceneFormatImporter: EditorSceneFormatImporter?, firstPriority: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addSceneFormatImporterPluginBind, segment, sceneFormatImporter?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
+        ObjectCalls.keepReachable(sceneFormatImporter)
     }
 
     /**
@@ -321,6 +346,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeSceneFormatImporterPlugin(sceneFormatImporter: EditorSceneFormatImporter?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeSceneFormatImporterPluginBind, segment, listOf(sceneFormatImporter?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(sceneFormatImporter)
     }
 
     /**
@@ -332,6 +358,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addScenePostImportPlugin(sceneImportPlugin: EditorScenePostImportPlugin?, firstPriority: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addScenePostImportPluginBind, segment, sceneImportPlugin?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
+        ObjectCalls.keepReachable(sceneImportPlugin)
     }
 
     /**
@@ -341,6 +368,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeScenePostImportPlugin(sceneImportPlugin: EditorScenePostImportPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeScenePostImportPluginBind, segment, listOf(sceneImportPlugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(sceneImportPlugin)
     }
 
     /**
@@ -351,6 +379,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addExportPlugin(plugin: EditorExportPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addExportPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(plugin)
     }
 
     /**
@@ -360,6 +389,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeExportPlugin(plugin: EditorExportPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeExportPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(plugin)
     }
 
     /**
@@ -370,6 +400,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addExportPlatform(platform: EditorExportPlatform?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addExportPlatformBind, segment, listOf(platform?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(platform)
     }
 
     /**
@@ -379,6 +410,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeExportPlatform(platform: EditorExportPlatform?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeExportPlatformBind, segment, listOf(platform?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(platform)
     }
 
     /**
@@ -390,6 +422,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addNode3dGizmoPlugin(plugin: EditorNode3DGizmoPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(plugin)
     }
 
     /**
@@ -399,6 +432,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeNode3dGizmoPlugin(plugin: EditorNode3DGizmoPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(plugin)
     }
 
     /**
@@ -411,6 +445,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addInspectorPlugin(plugin: EditorInspectorPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addInspectorPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(plugin)
     }
 
     /**
@@ -420,6 +455,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeInspectorPlugin(plugin: EditorInspectorPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeInspectorPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(plugin)
     }
 
     /**
@@ -431,6 +467,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addResourceConversionPlugin(plugin: EditorResourceConversionPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addResourceConversionPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(plugin)
     }
 
     /**
@@ -440,6 +477,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeResourceConversionPlugin(plugin: EditorResourceConversionPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeResourceConversionPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(plugin)
     }
 
     /**
@@ -472,6 +510,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addContextMenuPlugin(slot: EditorContextMenuPlugin.ContextMenuSlot, plugin: EditorContextMenuPlugin?) {
         ObjectCalls.ptrcallWithLongAndObjectArg(Binds.addContextMenuPluginBind, segment, slot.value, plugin?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(plugin)
     }
 
     /**
@@ -481,6 +520,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeContextMenuPlugin(plugin: EditorContextMenuPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeContextMenuPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(plugin)
     }
 
     /**
@@ -511,6 +551,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun addDebuggerPlugin(script: EditorDebuggerPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addDebuggerPluginBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(script)
     }
 
     /**
@@ -520,6 +561,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      */
     fun removeDebuggerPlugin(script: EditorDebuggerPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeDebuggerPluginBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(script)
     }
 
     /**

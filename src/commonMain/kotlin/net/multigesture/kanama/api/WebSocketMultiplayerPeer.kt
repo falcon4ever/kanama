@@ -61,7 +61,10 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun createClient(url: String, tlsClientOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(Binds.createClientBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(Binds.createClientBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(tlsClientOptions)
+        return ret
     }
 
     /**
@@ -72,7 +75,10 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun createServer(port: Int, bindAddress: String = "*", tlsServerOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntStringObjectArgsRetLong(Binds.createServerBind, segment, port, bindAddress, tlsServerOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithIntStringObjectArgsRetLong(Binds.createServerBind, segment, port, bindAddress, tlsServerOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(tlsServerOptions)
+        return ret
     }
 
     /**
@@ -82,7 +88,9 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun getPeer(peerId: Int): WebSocketPeer? {
         checkOpen()
-        return WebSocketPeer.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getPeerBind, segment, peerId))
+        val ret = WebSocketPeer.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getPeerBind, segment, peerId))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,7 +100,9 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun getPeerAddress(id: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getPeerAddressBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getPeerAddressBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -102,7 +112,9 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun getPeerPort(id: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getPeerPortBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getPeerPortBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -112,7 +124,9 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun getSupportedProtocols(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSupportedProtocolsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSupportedProtocolsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -123,6 +137,7 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     fun setSupportedProtocols(protocols: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setSupportedProtocolsBind, segment, protocols)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -133,7 +148,9 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun getHandshakeHeaders(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getHandshakeHeadersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getHandshakeHeadersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -145,6 +162,7 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     fun setHandshakeHeaders(protocols: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setHandshakeHeadersBind, segment, protocols)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -155,7 +173,9 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun getInboundBufferSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInboundBufferSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getInboundBufferSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -167,6 +187,7 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     fun setInboundBufferSize(bufferSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setInboundBufferSizeBind, segment, bufferSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -177,7 +198,9 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun getOutboundBufferSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutboundBufferSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutboundBufferSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -189,6 +212,7 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     fun setOutboundBufferSize(bufferSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setOutboundBufferSizeBind, segment, bufferSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -198,7 +222,9 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun getHandshakeTimeout(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHandshakeTimeoutBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHandshakeTimeoutBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -209,6 +235,7 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     fun setHandshakeTimeout(timeout: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setHandshakeTimeoutBind, segment, timeout)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -220,6 +247,7 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     fun setMaxQueuedPackets(maxQueuedPackets: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMaxQueuedPacketsBind, segment, maxQueuedPackets)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -230,7 +258,9 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun getMaxQueuedPackets(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxQueuedPacketsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxQueuedPacketsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

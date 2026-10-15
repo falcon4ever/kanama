@@ -20,7 +20,9 @@ class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialCompo
      */
     fun getMarkerType(index: Long): OpenXRSpatialComponentMarkerList.MarkerType {
         checkOpen()
-        return OpenXRSpatialComponentMarkerList.MarkerType(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getMarkerTypeBind, segment, index))
+        val ret = OpenXRSpatialComponentMarkerList.MarkerType(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getMarkerTypeBind, segment, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -31,7 +33,9 @@ class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialCompo
      */
     fun getMarkerId(index: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetUInt32(Binds.getMarkerIdBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithLongArgRetUInt32(Binds.getMarkerIdBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -42,7 +46,9 @@ class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialCompo
      */
     fun getMarkerData(snapshot: RID, index: Long): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.getMarkerDataBind, segment, snapshot, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.getMarkerDataBind, segment, snapshot, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

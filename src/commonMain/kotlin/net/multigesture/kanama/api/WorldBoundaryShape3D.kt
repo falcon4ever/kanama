@@ -27,6 +27,7 @@ class WorldBoundaryShape3D(handle: GodotHandle) : Shape3D(handle) {
     fun setPlane(plane: Plane) {
         checkOpen()
         ObjectCalls.ptrcallWithPlaneArg(Binds.setPlaneBind, segment, plane)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class WorldBoundaryShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getPlane(): Plane {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPlane(Binds.getPlaneBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPlane(Binds.getPlaneBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

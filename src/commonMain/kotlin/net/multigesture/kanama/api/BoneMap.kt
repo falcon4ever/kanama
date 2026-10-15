@@ -27,7 +27,9 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
      */
     fun getProfile(): SkeletonProfile? {
         checkOpen()
-        return SkeletonProfile.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getProfileBind, segment))
+        val ret = SkeletonProfile.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getProfileBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -38,6 +40,8 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
     fun setProfile(profile: SkeletonProfile?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setProfileBind, segment, listOf(profile?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(profile)
     }
 
     /**
@@ -48,7 +52,9 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
      */
     fun getSkeletonBoneName(profileBoneName: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetStringName(Binds.getSkeletonBoneNameBind, segment, profileBoneName)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetStringName(Binds.getSkeletonBoneNameBind, segment, profileBoneName)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -60,6 +66,7 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
     fun setSkeletonBoneName(profileBoneName: String, skeletonBoneName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.setSkeletonBoneNameBind, segment, profileBoneName, skeletonBoneName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -71,7 +78,9 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
      */
     fun findProfileBoneName(skeletonBoneName: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetStringName(Binds.findProfileBoneNameBind, segment, skeletonBoneName)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetStringName(Binds.findProfileBoneNameBind, segment, skeletonBoneName)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `bone_map_updated()`; see [TypedSignal]. */

@@ -459,6 +459,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setFont(font: Font?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(font)
     }
 
     /**

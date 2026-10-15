@@ -27,6 +27,7 @@ class VisualShaderNodeSwitch(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setOpType(type: VisualShaderNodeSwitch.OpType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeSwitch(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getOpType(): VisualShaderNodeSwitch.OpType {
         checkOpen()
-        return VisualShaderNodeSwitch.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        val ret = VisualShaderNodeSwitch.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

@@ -69,6 +69,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setNavigationPolygon(navigationPolygon: NavigationPolygon?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setNavigationPolygonBind, segment, listOf(navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(navigationPolygon)
     }
 
     /**

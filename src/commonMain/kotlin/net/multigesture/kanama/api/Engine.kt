@@ -480,6 +480,7 @@ object Engine {
             "Engine.registerSingleton does not accept RefCounted instances; use an Object-derived singleton"
         }
         ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.registerSingletonBind, singleton, name, instance.segment)
+        ObjectCalls.keepReachable(instance)
     }
 
     /**
@@ -513,7 +514,9 @@ object Engine {
      */
     @JvmStatic
     fun registerScriptLanguage(language: ScriptLanguage): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.registerScriptLanguageBind, singleton, language.segment))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.registerScriptLanguageBind, singleton, language.segment))
+        ObjectCalls.keepReachable(language)
+        return ret
     }
 
     /**
@@ -524,7 +527,9 @@ object Engine {
      */
     @JvmStatic
     fun unregisterScriptLanguage(language: ScriptLanguage): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.unregisterScriptLanguageBind, singleton, language.segment))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.unregisterScriptLanguageBind, singleton, language.segment))
+        ObjectCalls.keepReachable(language)
+        return ret
     }
 
     /**

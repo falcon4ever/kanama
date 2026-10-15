@@ -53,6 +53,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
     fun setSource(source: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setSourceBind, segment, source)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,7 +63,9 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSource(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSourceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getSourceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -75,6 +78,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
     fun setFixAlphaBorder(fixAlphaBorder: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setFixAlphaBorderBind, segment, fixAlphaBorder)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -86,7 +90,9 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getFixAlphaBorder(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFixAlphaBorderBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getFixAlphaBorderBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -104,6 +110,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
     fun setPremultAlpha(premultAlpha: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPremultAlphaBind, segment, premultAlpha)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -120,7 +127,9 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getPremultAlpha(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPremultAlphaBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getPremultAlphaBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -131,6 +140,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
     fun setBaseScale(baseScale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBaseScaleBind, segment, baseScale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -140,7 +150,9 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getBaseScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBaseScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBaseScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -151,6 +163,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
     fun setSaturation(saturation: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSaturationBind, segment, saturation)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -160,7 +173,9 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSaturation(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSaturationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSaturationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -171,6 +186,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
     fun setColorMap(colorMap: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setColorMapBind, segment, colorMap)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -180,7 +196,9 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getColorMap(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getColorMapBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getColorMapBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -191,6 +209,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
     fun setSizeOverride(size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setSizeOverrideBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -201,7 +220,9 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getScaledRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getScaledRidBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getScaledRidBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -75,6 +75,8 @@ internal class SignalEmitFrame private constructor() : SignalArgWriter {
       scratch.set(JAVA_LONG, 0, address)
       Native.FROM_OBJECT.invoke(target, scratchAddress)
       owned = owned or (1 shl (index + 1))
+      // Task 138 item 6: [value] stays reachable until the Variant holds its own reference.
+      ObjectCalls.keepReachable(value)
     }
   }
 

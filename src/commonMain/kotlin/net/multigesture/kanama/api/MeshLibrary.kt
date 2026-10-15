@@ -22,6 +22,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun createItem(id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.createItemBind, segment, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -33,6 +34,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun setItemName(id: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(Binds.setItemNameBind, segment, id, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -43,6 +45,8 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun setItemMesh(id: Int, mesh: Mesh?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemMeshBind, segment, id, mesh?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(mesh)
     }
 
     /**
@@ -53,6 +57,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun setItemMeshTransform(id: Int, meshTransform: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.setItemMeshTransformBind, segment, id, meshTransform)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -63,6 +68,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun setItemMeshCastShadow(id: Int, shadowCastingSetting: RenderingServer.ShadowCastingSetting) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setItemMeshCastShadowBind, segment, id, shadowCastingSetting.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -73,6 +79,8 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun setItemNavigationMesh(id: Int, navigationMesh: NavigationMesh?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemNavigationMeshBind, segment, id, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(navigationMesh)
     }
 
     /**
@@ -83,6 +91,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun setItemNavigationMeshTransform(id: Int, navigationMesh: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.setItemNavigationMeshTransformBind, segment, id, navigationMesh)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -93,6 +102,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun setItemNavigationLayers(id: Int, navigationLayers: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndUInt32Args(Binds.setItemNavigationLayersBind, segment, id, navigationLayers)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -105,6 +115,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun setItemShapes(id: Int, shapes: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndArrayArg(Binds.setItemShapesBind, segment, id, shapes)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -115,6 +126,8 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun setItemPreview(id: Int, texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemPreviewBind, segment, id, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -124,7 +137,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemName(id: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getItemNameBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getItemNameBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -134,7 +149,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemMesh(id: Int): Mesh? {
         checkOpen()
-        return Mesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemMeshBind, segment, id))
+        val ret = Mesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemMeshBind, segment, id))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -144,7 +161,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemMeshTransform(id: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getItemMeshTransformBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getItemMeshTransformBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -154,7 +173,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemMeshCastShadow(id: Int): RenderingServer.ShadowCastingSetting {
         checkOpen()
-        return RenderingServer.ShadowCastingSetting(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getItemMeshCastShadowBind, segment, id))
+        val ret = RenderingServer.ShadowCastingSetting(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getItemMeshCastShadowBind, segment, id))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,7 +185,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemNavigationMesh(id: Int): NavigationMesh? {
         checkOpen()
-        return NavigationMesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemNavigationMeshBind, segment, id))
+        val ret = NavigationMesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemNavigationMeshBind, segment, id))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -174,7 +197,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemNavigationMeshTransform(id: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getItemNavigationMeshTransformBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getItemNavigationMeshTransformBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -184,7 +209,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemNavigationLayers(id: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(Binds.getItemNavigationLayersBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithIntArgRetUInt32(Binds.getItemNavigationLayersBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -195,7 +222,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemShapes(id: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getItemShapesBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithIntArgRetArray(Binds.getItemShapesBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -208,7 +237,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemPreview(id: Int): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemPreviewBind, segment, id))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemPreviewBind, segment, id))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -219,6 +250,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun removeItem(id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeItemBind, segment, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -228,7 +260,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun findItemByName(name: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetInt(Binds.findItemByNameBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetInt(Binds.findItemByNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -239,6 +273,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -248,7 +283,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemList(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getItemListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getItemListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -258,7 +295,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getItemCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getItemCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -268,7 +307,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getLastUnusedItemId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLastUnusedItemIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getLastUnusedItemIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

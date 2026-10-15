@@ -20,7 +20,9 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTravel(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getTravelBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getTravelBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRemainder(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getRemainderBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getRemainderBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,7 +44,9 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionPoint(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getCollisionPointBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getCollisionPointBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -50,7 +56,9 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionNormal(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getCollisionNormalBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getCollisionNormalBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -60,7 +68,9 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderVelocity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getColliderVelocityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getColliderVelocityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -71,7 +81,9 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getColliderIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getColliderIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -81,7 +93,9 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getColliderRidBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getColliderRidBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -91,7 +105,9 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollider(): GodotObject? {
         checkOpen()
-        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColliderBind, segment))
+        val ret = GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColliderBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -101,7 +117,9 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderShape(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getColliderShapeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getColliderShapeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -111,7 +129,9 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionLocalShape(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCollisionLocalShapeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCollisionLocalShapeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -121,7 +141,9 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionDepth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionDepthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionDepthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -132,7 +154,9 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionSafeFraction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionSafeFractionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionSafeFractionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -143,7 +167,9 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionUnsafeFraction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionUnsafeFractionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionUnsafeFractionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

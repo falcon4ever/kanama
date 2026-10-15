@@ -67,7 +67,11 @@ class OpenXRSpatialMarkerTrackingCapability(handle: GodotHandle) : OpenXRExtensi
      * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability.start_entity_discovery
      */
     fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(Binds.startEntityDiscoveryBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: NULL_SEGMENT, nextSnapshotQuery?.requireOpenHandle() ?: NULL_SEGMENT, userCallback.target.segment, userCallback.method))
+        val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(Binds.startEntityDiscoveryBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: NULL_SEGMENT, nextSnapshotQuery?.requireOpenHandle() ?: NULL_SEGMENT, userCallback.target.segment, userCallback.method))
+        ObjectCalls.keepReachable(nextSnapshotCreate)
+        ObjectCalls.keepReachable(nextSnapshotQuery)
+        ObjectCalls.keepReachable(userCallback)
+        return ret
     }
 
     /**
@@ -82,6 +86,8 @@ class OpenXRSpatialMarkerTrackingCapability(handle: GodotHandle) : OpenXRExtensi
      */
     fun doEntityUpdate(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?) {
         ObjectCalls.ptrcallWithRIDObjectListTwoObjectArgs(Binds.doEntityUpdateBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: NULL_SEGMENT, nextSnapshotQuery?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(nextSnapshotCreate)
+        ObjectCalls.keepReachable(nextSnapshotQuery)
     }
 
     companion object {

@@ -38,6 +38,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
     fun setVoiceCount(voices: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setVoiceCountBind, segment, voices)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -47,7 +48,9 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoiceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVoiceCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getVoiceCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -58,6 +61,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
     fun setVoiceDelayMs(voiceIdx: Int, delayMs: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setVoiceDelayMsBind, segment, voiceIdx, delayMs)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -67,7 +71,9 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoiceDelayMs(voiceIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceDelayMsBind, segment, voiceIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceDelayMsBind, segment, voiceIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -78,6 +84,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
     fun setVoiceRateHz(voiceIdx: Int, rateHz: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setVoiceRateHzBind, segment, voiceIdx, rateHz)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -87,7 +94,9 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoiceRateHz(voiceIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceRateHzBind, segment, voiceIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceRateHzBind, segment, voiceIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -98,6 +107,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
     fun setVoiceDepthMs(voiceIdx: Int, depthMs: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setVoiceDepthMsBind, segment, voiceIdx, depthMs)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -107,7 +117,9 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoiceDepthMs(voiceIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceDepthMsBind, segment, voiceIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceDepthMsBind, segment, voiceIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -118,6 +130,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
     fun setVoiceLevelDb(voiceIdx: Int, levelDb: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setVoiceLevelDbBind, segment, voiceIdx, levelDb)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -127,7 +140,9 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoiceLevelDb(voiceIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceLevelDbBind, segment, voiceIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceLevelDbBind, segment, voiceIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -138,6 +153,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
     fun setVoiceCutoffHz(voiceIdx: Int, cutoffHz: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setVoiceCutoffHzBind, segment, voiceIdx, cutoffHz)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -147,7 +163,9 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoiceCutoffHz(voiceIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceCutoffHzBind, segment, voiceIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceCutoffHzBind, segment, voiceIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -158,6 +176,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
     fun setVoicePan(voiceIdx: Int, pan: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setVoicePanBind, segment, voiceIdx, pan)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -167,7 +186,9 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoicePan(voiceIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoicePanBind, segment, voiceIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoicePanBind, segment, voiceIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -178,6 +199,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
     fun setWet(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setWetBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -187,7 +209,9 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getWet(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -198,6 +222,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
     fun setDry(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDryBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -207,7 +232,9 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDry(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDryBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDryBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

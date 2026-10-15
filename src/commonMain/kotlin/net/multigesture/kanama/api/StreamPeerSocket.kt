@@ -19,7 +19,9 @@ open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun poll(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -29,7 +31,9 @@ open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun getStatus(): StreamPeerSocket.Status {
         checkOpen()
-        return StreamPeerSocket.Status(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
+        val ret = StreamPeerSocket.Status(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,6 +44,7 @@ open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
     fun disconnectFromHost() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.disconnectFromHostBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

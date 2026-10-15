@@ -63,6 +63,7 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
     fun setHint(hint: VisualShaderNodeIntParameter.Hint) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setHintBind, segment, hint.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -72,7 +73,9 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
      */
     fun getHint(): VisualShaderNodeIntParameter.Hint {
         checkOpen()
-        return VisualShaderNodeIntParameter.Hint(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintBind, segment))
+        val ret = VisualShaderNodeIntParameter.Hint(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -84,6 +87,7 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
     fun setMin(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMinBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -94,7 +98,9 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
      */
     fun getMin(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -106,6 +112,7 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
     fun setMax(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMaxBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -116,7 +123,9 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
      */
     fun getMax(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -128,6 +137,7 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
     fun setStep(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setStepBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -138,7 +148,9 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
      */
     fun getStep(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStepBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getStepBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -150,6 +162,7 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
     fun setEnumNames(names: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setEnumNamesBind, segment, names)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -160,7 +173,9 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
      */
     fun getEnumNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getEnumNamesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getEnumNamesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -171,6 +186,7 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -180,7 +196,9 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
      */
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -192,6 +210,7 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
     fun setDefaultValue(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setDefaultValueBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -202,7 +221,9 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
      */
     fun getDefaultValue(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDefaultValueBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getDefaultValueBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

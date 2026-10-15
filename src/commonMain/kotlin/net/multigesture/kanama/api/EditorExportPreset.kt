@@ -19,7 +19,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun has(property: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasBind, segment, property)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasBind, segment, property)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -29,7 +31,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFilesToExport(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFilesToExportBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFilesToExportBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -41,7 +45,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCustomizedFiles(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getCustomizedFilesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getCustomizedFilesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -51,7 +57,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCustomizedFilesCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCustomizedFilesCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCustomizedFilesCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,7 +69,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasExportFile(path: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasExportFileBind, segment, path)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasExportFileBind, segment, path)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -71,7 +81,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFileExportMode(path: String, default: EditorExportPreset.FileExportMode = EditorExportPreset.FileExportMode.NOT_CUSTOMIZED): EditorExportPreset.FileExportMode {
         checkOpen()
-        return EditorExportPreset.FileExportMode(ObjectCalls.ptrcallWithStringAndLongArgRetLong(Binds.getFileExportModeBind, segment, path, default.value))
+        val ret = EditorExportPreset.FileExportMode(ObjectCalls.ptrcallWithStringAndLongArgRetLong(Binds.getFileExportModeBind, segment, path, default.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -82,7 +94,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getProjectSetting(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getProjectSettingBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getProjectSettingBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,7 +106,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPresetName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPresetNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getPresetNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -102,7 +118,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isRunnable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRunnableBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isRunnableBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -112,7 +130,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun areAdvancedOptionsEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.areAdvancedOptionsEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.areAdvancedOptionsEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -122,7 +142,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isDedicatedServer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDedicatedServerBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDedicatedServerBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -132,7 +154,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExportFilter(): EditorExportPreset.ExportFilter {
         checkOpen()
-        return EditorExportPreset.ExportFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getExportFilterBind, segment))
+        val ret = EditorExportPreset.ExportFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getExportFilterBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -142,7 +166,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIncludeFilter(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getIncludeFilterBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getIncludeFilterBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -152,7 +178,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExcludeFilter(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getExcludeFilterBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getExcludeFilterBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -163,7 +191,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCustomFeatures(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCustomFeaturesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getCustomFeaturesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -173,7 +203,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPatches(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getPatchesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getPatchesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -183,7 +215,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExportPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getExportPathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getExportPathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -193,7 +227,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEncryptionInFilter(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEncryptionInFilterBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getEncryptionInFilterBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -203,7 +239,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEncryptionExFilter(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEncryptionExFilterBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getEncryptionExFilterBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -213,7 +251,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEncryptPck(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEncryptPckBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEncryptPckBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -223,7 +263,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEncryptDirectory(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEncryptDirectoryBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEncryptDirectoryBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -233,7 +275,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEncryptionKey(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEncryptionKeyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getEncryptionKeyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -244,7 +288,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getScriptExportMode(): EditorExportPreset.ScriptExportMode {
         checkOpen()
-        return EditorExportPreset.ScriptExportMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScriptExportModeBind, segment))
+        val ret = EditorExportPreset.ScriptExportMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScriptExportModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -254,7 +300,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOrEnv(name: String, envVar: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndStringArgRetVariantScalar(Binds.getOrEnvBind, segment, name, envVar)
+        val ret = ObjectCalls.ptrcallWithStringNameAndStringArgRetVariantScalar(Binds.getOrEnvBind, segment, name, envVar)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -267,7 +315,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVersion(name: String, windowsVersion: Boolean): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetString(Binds.getVersionBind, segment, name, windowsVersion)
+        val ret = ObjectCalls.ptrcallWithStringNameAndBoolArgRetString(Binds.getVersionBind, segment, name, windowsVersion)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

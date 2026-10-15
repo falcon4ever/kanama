@@ -32,7 +32,9 @@ class GLTFTexture(handle: GodotHandle) : Resource(handle) {
      */
     fun getSrcImage(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSrcImageBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSrcImageBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -44,6 +46,7 @@ class GLTFTexture(handle: GodotHandle) : Resource(handle) {
     fun setSrcImage(srcImage: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSrcImageBind, segment, srcImage)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -54,7 +57,9 @@ class GLTFTexture(handle: GodotHandle) : Resource(handle) {
      */
     fun getSampler(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSamplerBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSamplerBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -66,6 +71,7 @@ class GLTFTexture(handle: GodotHandle) : Resource(handle) {
     fun setSampler(sampler: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSamplerBind, segment, sampler)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

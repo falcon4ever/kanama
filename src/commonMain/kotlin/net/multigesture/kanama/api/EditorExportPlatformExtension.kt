@@ -21,6 +21,7 @@ class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(
     fun setConfigError(errorText: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setConfigErrorBind, segment, errorText)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -32,7 +33,9 @@ class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(
      */
     fun getConfigError(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getConfigErrorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getConfigErrorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -45,6 +48,7 @@ class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(
     fun setConfigMissingTemplates(missingTemplates: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setConfigMissingTemplatesBind, segment, missingTemplates)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -56,7 +60,9 @@ class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(
      */
     fun getConfigMissingTemplates(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getConfigMissingTemplatesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getConfigMissingTemplatesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

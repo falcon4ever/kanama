@@ -21,6 +21,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     fun addAnimation(anim: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.addAnimationBind, segment, anim)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -30,7 +31,9 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun hasAnimation(anim: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasAnimationBind, segment, anim)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasAnimationBind, segment, anim)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -42,6 +45,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     fun duplicateAnimation(animFrom: String, animTo: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.duplicateAnimationBind, segment, animFrom, animTo)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -52,6 +56,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     fun removeAnimation(anim: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.removeAnimationBind, segment, anim)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,6 +67,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     fun renameAnimation(anim: String, newname: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.renameAnimationBind, segment, anim, newname)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -72,7 +78,9 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getAnimationNamesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getAnimationNamesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -83,6 +91,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     fun setAnimationSpeed(anim: String, fps: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndDoubleArg(Binds.setAnimationSpeedBind, segment, anim, fps)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -92,7 +101,9 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationSpeed(anim: String): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetDouble(Binds.getAnimationSpeedBind, segment, anim)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetDouble(Binds.getAnimationSpeedBind, segment, anim)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -104,6 +115,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     fun setAnimationLoop(anim: String, loop: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(Binds.setAnimationLoopBind, segment, anim, loop)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -113,7 +125,9 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationLoop(anim: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.getAnimationLoopBind, segment, anim)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.getAnimationLoopBind, segment, anim)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -124,6 +138,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     fun setAnimationLoopMode(anim: String, loopMode: SpriteFrames.LoopMode) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndLongArg(Binds.setAnimationLoopModeBind, segment, anim, loopMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -133,7 +148,9 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationLoopMode(anim: String): SpriteFrames.LoopMode {
         checkOpen()
-        return SpriteFrames.LoopMode(ObjectCalls.ptrcallWithStringNameArgRetLong(Binds.getAnimationLoopModeBind, segment, anim))
+        val ret = SpriteFrames.LoopMode(ObjectCalls.ptrcallWithStringNameArgRetLong(Binds.getAnimationLoopModeBind, segment, anim))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -146,6 +163,8 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     fun addFrame(anim: String, texture: Texture2D?, duration: Double = 1.0, atPosition: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameObjectDoubleIntArgs(Binds.addFrameBind, segment, anim, texture?.requireOpenHandle() ?: NULL_SEGMENT, duration, atPosition)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -157,6 +176,8 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     fun setFrame(anim: String, idx: Int, texture: Texture2D?, duration: Double = 1.0) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameIntObjectDoubleArgs(Binds.setFrameBind, segment, anim, idx, texture?.requireOpenHandle() ?: NULL_SEGMENT, duration)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -167,6 +188,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     fun removeFrame(anim: String, idx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndIntArg(Binds.removeFrameBind, segment, anim, idx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -176,7 +198,9 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getFrameCount(anim: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetInt(Binds.getFrameCountBind, segment, anim)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetInt(Binds.getFrameCountBind, segment, anim)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -186,7 +210,9 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getFrameTexture(anim: String, idx: Int): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(Binds.getFrameTextureBind, segment, anim, idx))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(Binds.getFrameTextureBind, segment, anim, idx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -198,7 +224,9 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getFrameDuration(anim: String, idx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndIntArgRetDouble(Binds.getFrameDurationBind, segment, anim, idx)
+        val ret = ObjectCalls.ptrcallWithStringNameAndIntArgRetDouble(Binds.getFrameDurationBind, segment, anim, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -209,6 +237,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     fun clear(anim: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.clearBind, segment, anim)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -219,6 +248,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     fun clearAll() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearAllBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

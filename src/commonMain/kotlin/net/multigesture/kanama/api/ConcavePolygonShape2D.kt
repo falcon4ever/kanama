@@ -29,6 +29,7 @@ class ConcavePolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
     fun setSegments(segments: List<Vector2>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setSegmentsBind, segment, segments)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -40,7 +41,9 @@ class ConcavePolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun getSegments(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getSegmentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getSegmentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

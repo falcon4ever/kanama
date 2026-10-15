@@ -4,6 +4,7 @@ import kotlin.coroutines.resume
 import kotlin.reflect.KClass
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.ObjectRuntime
 
 /**
@@ -333,6 +334,8 @@ abstract class TypedSignal internal constructor(
       send = true
     } finally {
       ObjectRuntime.finishEmit(writer, send)
+      // Task 138 item 6: the emitter stays reachable until the emission (in finishEmit) returned.
+      ObjectCalls.keepReachable(emitter)
     }
   }
 

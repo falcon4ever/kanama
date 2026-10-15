@@ -70,6 +70,7 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     fun setRootPath(path: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(Binds.setRootPathBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -82,7 +83,9 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
      */
     fun getRootPath(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getRootPathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getRootPathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,6 +97,7 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -105,6 +109,7 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     fun disconnectPeer(id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.disconnectPeerBind, segment, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -114,7 +119,9 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
      */
     fun getAuthenticatingPeers(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getAuthenticatingPeersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getAuthenticatingPeersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -127,7 +134,9 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
      */
     fun sendAuth(id: Int, data: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntAndByteArrayArgRetLong(Binds.sendAuthBind, segment, id, data))
+        val ret = GodotError(ObjectCalls.ptrcallWithIntAndByteArrayArgRetLong(Binds.sendAuthBind, segment, id, data))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -143,7 +152,9 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
      */
     fun completeAuth(id: Int): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntArgRetLong(Binds.completeAuthBind, segment, id))
+        val ret = GodotError(ObjectCalls.ptrcallWithIntArgRetLong(Binds.completeAuthBind, segment, id))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -155,6 +166,8 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     fun setAuthCallback(callback: GodotCallable) {
         checkOpen()
         ObjectCalls.ptrcallWithCallableArg(Binds.setAuthCallbackBind, segment, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -165,7 +178,9 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
      */
     fun getAuthCallback(): GodotCallable? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetCallable(Binds.getAuthCallbackBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetCallable(Binds.getAuthCallbackBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -178,6 +193,7 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     fun setAuthTimeout(timeout: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAuthTimeoutBind, segment, timeout)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -189,7 +205,9 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
      */
     fun getAuthTimeout(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAuthTimeoutBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAuthTimeoutBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -201,6 +219,7 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     fun setRefuseNewConnections(refuse: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setRefuseNewConnectionsBind, segment, refuse)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -211,7 +230,9 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
      */
     fun isRefusingNewConnections(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRefusingNewConnectionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isRefusingNewConnectionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -225,6 +246,7 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     fun setAllowObjectDecoding(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAllowObjectDecodingBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -237,7 +259,9 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
      */
     fun isObjectDecodingAllowed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isObjectDecodingAllowedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isObjectDecodingAllowedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -253,6 +277,7 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     fun setServerRelayEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setServerRelayEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -267,7 +292,9 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
      */
     fun isServerRelayEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isServerRelayEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isServerRelayEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -278,7 +305,9 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
      */
     fun sendBytes(bytes: ByteArray, id: Int = 0, mode: MultiplayerPeer.TransferMode = MultiplayerPeer.TransferMode.RELIABLE, channel: Int = 0): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayIntLongIntArgsRetLong(Binds.sendBytesBind, segment, bytes, id, mode.value, channel))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayIntLongIntArgsRetLong(Binds.sendBytesBind, segment, bytes, id, mode.value, channel))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -289,7 +318,9 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
      */
     fun getMaxSyncPacketSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxSyncPacketSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxSyncPacketSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -301,6 +332,7 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     fun setMaxSyncPacketSize(size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMaxSyncPacketSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -312,7 +344,9 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
      */
     fun getMaxDeltaPacketSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxDeltaPacketSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxDeltaPacketSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -325,6 +359,7 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     fun setMaxDeltaPacketSize(size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMaxDeltaPacketSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /** Signal `peer_authenticating(id: int)`; see [TypedSignal]. */
@@ -362,7 +397,7 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
         // Downcast a MultiplayerAPI to SceneMultiplayer (null if not).
         @JvmStatic
         fun fromApi(api: MultiplayerAPI?): SceneMultiplayer? =
-            api?.takeIf { it.isClass("SceneMultiplayer") }?.let { RefCounted.retained(SceneMultiplayer(it.handle)) }
+            api?.takeIf { it.isClass("SceneMultiplayer") }?.let { RefCounted.retained(SceneMultiplayer(it.handle), it) }
     }
 
     private object Binds {

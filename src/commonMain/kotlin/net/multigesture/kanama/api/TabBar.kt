@@ -250,6 +250,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      */
     fun setTabIcon(tabIdx: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setTabIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -290,6 +291,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      */
     fun setTabButtonIcon(tabIdx: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setTabButtonIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -374,6 +376,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      */
     fun addTab(title: String = "", icon: Texture2D?) {
         ObjectCalls.ptrcallWithStringAndObjectArg(Binds.addTabBind, segment, title, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**

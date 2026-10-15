@@ -85,6 +85,7 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
      */
     fun setTileset(tileset: TileSet?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTilesetBind, segment, listOf(tileset?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(tileset)
     }
 
     /**
@@ -544,7 +545,9 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMap.map_pattern
      */
     fun mapPattern(positionInTilemap: Vector2i, coordsInPattern: Vector2i, pattern: TileMapPattern?): Vector2i {
-        return ObjectCalls.ptrcallWithTwoVector2iAndObjectArgRetVector2i(Binds.mapPatternBind, segment, positionInTilemap, coordsInPattern, pattern?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithTwoVector2iAndObjectArgRetVector2i(Binds.mapPatternBind, segment, positionInTilemap, coordsInPattern, pattern?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(pattern)
+        return ret
     }
 
     /**
@@ -555,6 +558,7 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
      */
     fun setPattern(layer: Int, position: Vector2i, pattern: TileMapPattern?) {
         ObjectCalls.ptrcallWithIntVector2iAndObjectArg(Binds.setPatternBind, segment, layer, position, pattern?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(pattern)
     }
 
     /**

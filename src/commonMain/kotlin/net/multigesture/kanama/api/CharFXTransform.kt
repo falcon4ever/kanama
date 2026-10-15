@@ -104,7 +104,9 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTransform(): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getTransformBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getTransformBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -117,6 +119,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     fun setTransform(transform: Transform2D) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform2DArg(Binds.setTransformBind, segment, transform)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -127,7 +130,9 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRange(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getRangeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getRangeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -139,6 +144,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     fun setRange(range: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setRangeBind, segment, range)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -150,7 +156,9 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getElapsedTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getElapsedTimeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getElapsedTimeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -163,6 +171,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     fun setElapsedTime(time: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setElapsedTimeBind, segment, time)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -174,7 +183,9 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isVisible(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVisibleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isVisibleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -187,6 +198,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     fun setVisibility(visibility: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setVisibilityBind, segment, visibility)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -197,7 +209,9 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isOutline(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOutlineBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isOutlineBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -209,6 +223,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     fun setOutline(outline: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setOutlineBind, segment, outline)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -218,7 +233,9 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -229,6 +246,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     fun setOffset(offset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -238,7 +256,9 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -249,6 +269,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     fun setColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -262,7 +283,9 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnvironment(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getEnvironmentBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getEnvironmentBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -277,6 +300,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     fun setEnvironment(environment: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setEnvironmentBind, segment, environment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -287,7 +311,9 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGlyphIndex(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getGlyphIndexBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getGlyphIndexBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -299,6 +325,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     fun setGlyphIndex(glyphIndex: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setGlyphIndexBind, segment, glyphIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -309,7 +336,9 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRelativeIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRelativeIndexBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getRelativeIndexBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -321,6 +350,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     fun setRelativeIndex(relativeIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setRelativeIndexBind, segment, relativeIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -331,7 +361,9 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGlyphCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getGlyphCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getGlyphCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -343,6 +375,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     fun setGlyphCount(glyphCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setGlyphCountBind, segment, glyphCount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -353,7 +386,9 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGlyphFlags(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getGlyphFlagsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getGlyphFlagsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -365,6 +400,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     fun setGlyphFlags(glyphFlags: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setGlyphFlagsBind, segment, glyphFlags)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -376,7 +412,9 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFont(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getFontBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getFontBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -389,6 +427,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     fun setFont(font: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setFontBind, segment, font)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

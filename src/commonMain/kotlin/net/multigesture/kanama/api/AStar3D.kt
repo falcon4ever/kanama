@@ -27,7 +27,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAvailablePointId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getAvailablePointIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getAvailablePointIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -42,6 +44,7 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
     fun addPoint(id: Long, position: Vector3, weightScale: Double = 1.0) {
         checkOpen()
         ObjectCalls.ptrcallWithLongVector3AndDoubleArgs(Binds.addPointBind, segment, id, position, weightScale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -51,7 +54,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointPosition(id: Long): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector3(Binds.getPointPositionBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithLongArgRetVector3(Binds.getPointPositionBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,6 +67,7 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
     fun setPointPosition(id: Long, position: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndVector3Arg(Binds.setPointPositionBind, segment, id, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -71,7 +77,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointWeightScale(id: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getPointWeightScaleBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getPointWeightScaleBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -84,6 +92,7 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
     fun setPointWeightScale(id: Long, weightScale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setPointWeightScaleBind, segment, id, weightScale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -94,6 +103,7 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
     fun removePoint(id: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.removePointBind, segment, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -103,7 +113,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasPoint(id: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.hasPointBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithLongArgRetBool(Binds.hasPointBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -113,7 +125,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointConnections(id: Long): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedInt64List(Binds.getPointConnectionsBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithLongArgRetPackedInt64List(Binds.getPointConnectionsBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -123,7 +137,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointIds(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getPointIdsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getPointIdsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -134,6 +150,7 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
     fun setPointDisabled(id: Long, disabled: Boolean = true) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setPointDisabledBind, segment, id, disabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -143,7 +160,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPointDisabled(id: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isPointDisabledBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithLongArgRetBool(Binds.isPointDisabledBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -154,6 +173,7 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
     fun setNeighborFilterEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setNeighborFilterEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -163,7 +183,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isNeighborFilterEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNeighborFilterEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isNeighborFilterEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -175,6 +197,7 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
     fun connectPoints(id: Long, toId: Long, bidirectional: Boolean = true) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoLongAndBoolArgs(Binds.connectPointsBind, segment, id, toId, bidirectional)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -186,6 +209,7 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
     fun disconnectPoints(id: Long, toId: Long, bidirectional: Boolean = true) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoLongAndBoolArgs(Binds.disconnectPointsBind, segment, id, toId, bidirectional)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -196,7 +220,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun arePointsConnected(id: Long, toId: Long, bidirectional: Boolean = true): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetBool(Binds.arePointsConnectedBind, segment, id, toId, bidirectional)
+        val ret = ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetBool(Binds.arePointsConnectedBind, segment, id, toId, bidirectional)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -206,7 +232,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPointCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getPointCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -217,7 +245,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointCapacity(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPointCapacityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getPointCapacityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -229,6 +259,7 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
     fun reserveSpace(numNodes: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.reserveSpaceBind, segment, numNodes)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -239,6 +270,7 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -251,7 +283,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getClosestPoint(toPosition: Vector3, includeDisabled: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector3AndBoolArgRetLong(Binds.getClosestPointBind, segment, toPosition, includeDisabled)
+        val ret = ObjectCalls.ptrcallWithVector3AndBoolArgRetLong(Binds.getClosestPointBind, segment, toPosition, includeDisabled)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -262,7 +296,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getClosestPositionInSegment(toPosition: Vector3): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector3ArgRetVector3(Binds.getClosestPositionInSegmentBind, segment, toPosition)
+        val ret = ObjectCalls.ptrcallWithVector3ArgRetVector3(Binds.getClosestPositionInSegmentBind, segment, toPosition)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -280,7 +316,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointPath(fromId: Long, toId: Long, allowPartialPath: Boolean = false): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedVector3List(Binds.getPointPathBind, segment, fromId, toId, allowPartialPath)
+        val ret = ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedVector3List(Binds.getPointPathBind, segment, fromId, toId, allowPartialPath)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -296,7 +334,9 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIdPath(fromId: Long, toId: Long, allowPartialPath: Boolean = false): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedInt64List(Binds.getIdPathBind, segment, fromId, toId, allowPartialPath)
+        val ret = ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedInt64List(Binds.getIdPathBind, segment, fromId, toId, allowPartialPath)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

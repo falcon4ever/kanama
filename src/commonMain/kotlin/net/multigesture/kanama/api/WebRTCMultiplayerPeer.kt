@@ -24,7 +24,9 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun createServer(channelsConfig: List<Any?> = emptyList()): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithArrayArgRetLong(Binds.createServerBind, segment, channelsConfig))
+        val ret = GodotError(ObjectCalls.ptrcallWithArrayArgRetLong(Binds.createServerBind, segment, channelsConfig))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -39,7 +41,9 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun createClient(peerId: Int, channelsConfig: List<Any?> = emptyList()): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntAndArrayArgRetLong(Binds.createClientBind, segment, peerId, channelsConfig))
+        val ret = GodotError(ObjectCalls.ptrcallWithIntAndArrayArgRetLong(Binds.createClientBind, segment, peerId, channelsConfig))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -50,7 +54,9 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun createMesh(peerId: Int, channelsConfig: List<Any?> = emptyList()): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntAndArrayArgRetLong(Binds.createMeshBind, segment, peerId, channelsConfig))
+        val ret = GodotError(ObjectCalls.ptrcallWithIntAndArrayArgRetLong(Binds.createMeshBind, segment, peerId, channelsConfig))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -64,7 +70,10 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun addPeer(peer: WebRTCPeerConnection?, peerId: Int, unreliableLifetime: Int = 1): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectTwoIntArgsRetLong(Binds.addPeerBind, segment, peer?.requireOpenHandle() ?: NULL_SEGMENT, peerId, unreliableLifetime))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectTwoIntArgsRetLong(Binds.addPeerBind, segment, peer?.requireOpenHandle() ?: NULL_SEGMENT, peerId, unreliableLifetime))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(peer)
+        return ret
     }
 
     /**
@@ -77,6 +86,7 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     fun removePeer(peerId: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removePeerBind, segment, peerId)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -86,7 +96,9 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun hasPeer(peerId: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasPeerBind, segment, peerId)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasPeerBind, segment, peerId)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -99,7 +111,9 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun getPeer(peerId: Int): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDictionary(Binds.getPeerBind, segment, peerId)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDictionary(Binds.getPeerBind, segment, peerId)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -110,7 +124,9 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun getPeers(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getPeersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getPeersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

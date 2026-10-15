@@ -20,7 +20,9 @@ class EditorScenePostImportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOptionValue(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getOptionValueBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getOptionValueBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -32,6 +34,7 @@ class EditorScenePostImportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addImportOption(name: String, value: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndVariantArg(Binds.addImportOptionBind, segment, name, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -43,6 +46,7 @@ class EditorScenePostImportPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addImportOptionAdvanced(type: VariantType, name: String, defaultValue: Any?, hint: GodotPropertyHint = GodotPropertyHint.NONE, hintString: String = "", usageFlags: Int = 6) {
         checkOpen()
         ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(Binds.addImportOptionAdvancedBind, segment, type.value, name, defaultValue, hint.value, hintString, usageFlags)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

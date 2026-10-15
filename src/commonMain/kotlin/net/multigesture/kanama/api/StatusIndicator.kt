@@ -66,6 +66,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
      */
     fun setIcon(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setIconBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**

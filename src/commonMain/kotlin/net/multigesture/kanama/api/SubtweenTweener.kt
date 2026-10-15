@@ -21,6 +21,7 @@ class SubtweenTweener(handle: GodotHandle) : Tweener(handle) {
     fun setDelay(delay: Double): SubtweenTweener {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.setDelayBind, segment, delay)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this

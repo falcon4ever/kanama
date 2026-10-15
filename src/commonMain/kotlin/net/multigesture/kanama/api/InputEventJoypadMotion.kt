@@ -32,6 +32,7 @@ class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
     fun setAxis(axis: JoyAxis) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAxisBind, segment, axis.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -41,7 +42,9 @@ class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getAxis(): JoyAxis {
         checkOpen()
-        return JoyAxis(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAxisBind, segment))
+        val ret = JoyAxis(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAxisBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +56,7 @@ class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
     fun setAxisValue(axisValue: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAxisValueBind, segment, axisValue)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -63,7 +67,9 @@ class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getAxisValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAxisValueBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAxisValueBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

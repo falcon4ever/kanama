@@ -20,6 +20,7 @@ class ExternalTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setSize(size: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -30,7 +31,9 @@ class ExternalTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getExternalTextureId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getExternalTextureIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getExternalTextureIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -42,6 +45,7 @@ class ExternalTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setExternalBufferId(externalBufferId: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setExternalBufferIdBind, segment, externalBufferId)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

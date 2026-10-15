@@ -21,6 +21,7 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
     fun setInputs(inputs: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setInputsBind, segment, inputs)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -31,7 +32,9 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
      */
     fun getInputs(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getInputsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getInputsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -43,6 +46,7 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
     fun setOutputs(outputs: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setOutputsBind, segment, outputs)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -53,7 +57,9 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
      */
     fun getOutputs(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOutputsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getOutputsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -64,7 +70,9 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
      */
     fun isValidPortName(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isValidPortNameBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.isValidPortNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -75,6 +83,7 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
     fun addInputPort(id: Int, type: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndStringArgs(Binds.addInputPortBind, segment, id, type, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -85,6 +94,7 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
     fun removeInputPort(id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeInputPortBind, segment, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -94,7 +104,9 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
      */
     fun getInputPortCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInputPortCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getInputPortCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -104,7 +116,9 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
      */
     fun hasInputPort(id: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasInputPortBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasInputPortBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,6 +129,7 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
     fun clearInputPorts() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearInputPortsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -125,6 +140,7 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
     fun addOutputPort(id: Int, type: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndStringArgs(Binds.addOutputPortBind, segment, id, type, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -135,6 +151,7 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
     fun removeOutputPort(id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeOutputPortBind, segment, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -144,7 +161,9 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
      */
     fun getOutputPortCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutputPortCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutputPortCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -154,7 +173,9 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
      */
     fun hasOutputPort(id: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasOutputPortBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasOutputPortBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -165,6 +186,7 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
     fun clearOutputPorts() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearOutputPortsBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -175,6 +197,7 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
     fun setInputPortName(id: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(Binds.setInputPortNameBind, segment, id, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -185,6 +208,7 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
     fun setInputPortType(id: Int, type: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setInputPortTypeBind, segment, id, type)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -195,6 +219,7 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
     fun setOutputPortName(id: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(Binds.setOutputPortNameBind, segment, id, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -205,6 +230,7 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
     fun setOutputPortType(id: Int, type: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setOutputPortTypeBind, segment, id, type)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -214,7 +240,9 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
      */
     fun getFreeInputPortId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFreeInputPortIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFreeInputPortIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -224,7 +252,9 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
      */
     fun getFreeOutputPortId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFreeOutputPortIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFreeOutputPortIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

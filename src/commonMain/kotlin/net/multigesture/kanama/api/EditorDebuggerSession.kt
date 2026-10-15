@@ -21,6 +21,7 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
     fun sendMessage(message: String, data: List<Any?> = emptyList()) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndArrayArg(Binds.sendMessageBind, segment, message, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -32,6 +33,7 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
     fun toggleProfiler(profiler: String, enable: Boolean, data: List<Any?> = emptyList()) {
         checkOpen()
         ObjectCalls.ptrcallWithStringBoolArrayArgs(Binds.toggleProfilerBind, segment, profiler, enable, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -41,7 +43,9 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isBreaked(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBreakedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isBreakedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -51,7 +55,9 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isDebuggable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDebuggableBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDebuggableBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,7 +67,9 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -73,6 +81,8 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
     fun addSessionTab(control: Control) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.addSessionTabBind, segment, listOf(control.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(control)
     }
 
     /**
@@ -83,6 +93,8 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
     fun removeSessionTab(control: Control) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeSessionTabBind, segment, listOf(control.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(control)
     }
 
     /**
@@ -94,6 +106,7 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
     fun setBreakpoint(path: String, line: Int, enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithStringIntAndBoolArgs(Binds.setBreakpointBind, segment, path, line, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /** Signal `started()`; see [TypedSignal]. */

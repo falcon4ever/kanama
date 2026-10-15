@@ -44,6 +44,7 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
     fun setCeilingDb(ceiling: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCeilingDbBind, segment, ceiling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -53,7 +54,9 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getCeilingDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCeilingDbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCeilingDbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -65,6 +68,7 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
     fun setThresholdDb(threshold: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setThresholdDbBind, segment, threshold)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -75,7 +79,9 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getThresholdDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThresholdDbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThresholdDbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -86,6 +92,7 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
     fun setSoftClipDb(softClip: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSoftClipDbBind, segment, softClip)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -95,7 +102,9 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getSoftClipDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSoftClipDbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSoftClipDbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -107,6 +116,7 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
     fun setSoftClipRatio(softClip: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSoftClipRatioBind, segment, softClip)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -117,7 +127,9 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getSoftClipRatio(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSoftClipRatioBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSoftClipRatioBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

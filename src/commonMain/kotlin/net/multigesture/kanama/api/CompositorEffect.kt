@@ -63,6 +63,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
     fun setEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -72,7 +73,9 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -84,6 +87,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
     fun setEffectCallbackType(effectCallbackType: CompositorEffect.EffectCallbackType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setEffectCallbackTypeBind, segment, effectCallbackType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -94,7 +98,9 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getEffectCallbackType(): CompositorEffect.EffectCallbackType {
         checkOpen()
-        return CompositorEffect.EffectCallbackType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEffectCallbackTypeBind, segment))
+        val ret = CompositorEffect.EffectCallbackType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEffectCallbackTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -106,6 +112,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
     fun setAccessResolvedColor(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAccessResolvedColorBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -116,7 +123,9 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getAccessResolvedColor(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAccessResolvedColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getAccessResolvedColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -128,6 +137,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
     fun setAccessResolvedDepth(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAccessResolvedDepthBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -138,7 +148,9 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getAccessResolvedDepth(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAccessResolvedDepthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getAccessResolvedDepthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -149,6 +161,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
     fun setNeedsMotionVectors(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setNeedsMotionVectorsBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -158,7 +171,9 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getNeedsMotionVectors(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getNeedsMotionVectorsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getNeedsMotionVectorsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -170,6 +185,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
     fun setNeedsNormalRoughness(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setNeedsNormalRoughnessBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -180,7 +196,9 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getNeedsNormalRoughness(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getNeedsNormalRoughnessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getNeedsNormalRoughnessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -192,6 +210,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
     fun setNeedsSeparateSpecular(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setNeedsSeparateSpecularBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -202,7 +221,9 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getNeedsSeparateSpecular(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getNeedsSeparateSpecularBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getNeedsSeparateSpecularBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

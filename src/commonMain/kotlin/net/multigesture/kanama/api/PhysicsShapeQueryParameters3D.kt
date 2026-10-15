@@ -80,6 +80,8 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setShape(shape: Resource?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(shape)
     }
 
     /**
@@ -91,7 +93,9 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getShape(): Resource? {
         checkOpen()
-        return Resource.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getShapeBind, segment))
+        val ret = Resource.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getShapeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -102,6 +106,7 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setShapeRid(shape: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setShapeRidBind, segment, shape)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -111,7 +116,9 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getShapeRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getShapeRidBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getShapeRidBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -122,6 +129,7 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setTransform(transform: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(Binds.setTransformBind, segment, transform)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -131,7 +139,9 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTransform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getTransformBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getTransformBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -142,6 +152,7 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setMotion(motion: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setMotionBind, segment, motion)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -151,7 +162,9 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMotion(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getMotionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getMotionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -162,6 +175,7 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setMargin(margin: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMarginBind, segment, margin)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -171,7 +185,9 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMargin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMarginBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMarginBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -185,6 +201,7 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setCollisionMask(collisionMask: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setCollisionMaskBind, segment, collisionMask)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -197,7 +214,9 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionMaskBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionMaskBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -211,6 +230,7 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setExclude(exclude: List<RID>) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(Binds.setExcludeBind, segment, exclude)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -223,7 +243,9 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExclude(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getExcludeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getExcludeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -234,6 +256,7 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setCollideWithBodies(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCollideWithBodiesBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -243,7 +266,9 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isCollideWithBodiesEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollideWithBodiesEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollideWithBodiesEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -254,6 +279,7 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     fun setCollideWithAreas(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCollideWithAreasBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -263,7 +289,9 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isCollideWithAreasEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollideWithAreasEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollideWithAreasEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

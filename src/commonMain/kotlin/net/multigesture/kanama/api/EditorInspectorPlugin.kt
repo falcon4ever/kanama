@@ -19,6 +19,8 @@ class EditorInspectorPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addCustomControl(control: Control) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.addCustomControlBind, segment, listOf(control.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(control)
     }
 
     /**
@@ -35,6 +37,8 @@ class EditorInspectorPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addPropertyEditor(property: String, editor: Control, addToEnd: Boolean = false, label: String = "") {
         checkOpen()
         ObjectCalls.ptrcallWithStringObjectBoolStringArgs(Binds.addPropertyEditorBind, segment, property, editor.segment, addToEnd, label)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(editor)
     }
 
     /**
@@ -46,6 +50,8 @@ class EditorInspectorPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun addPropertyEditorForMultipleProperties(label: String, properties: List<String>, editor: Control) {
         checkOpen()
         ObjectCalls.ptrcallWithStringPackedStringListAndObjectArgs(Binds.addPropertyEditorForMultiplePropertiesBind, segment, label, properties, editor.segment)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(editor)
     }
 
     companion object {

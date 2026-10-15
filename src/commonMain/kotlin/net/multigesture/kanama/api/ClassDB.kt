@@ -169,7 +169,9 @@ object ClassDB {
      */
     @JvmStatic
     fun classGetProperty(objectValue: GodotObject, property: String): Any? {
-        return ObjectCalls.ptrcallWithObjectStringNameArgRetVariantScalar(Binds.classGetPropertyBind, singleton, objectValue.segment, property)
+        val ret = ObjectCalls.ptrcallWithObjectStringNameArgRetVariantScalar(Binds.classGetPropertyBind, singleton, objectValue.segment, property)
+        ObjectCalls.keepReachable(objectValue)
+        return ret
     }
 
     /**
@@ -179,7 +181,9 @@ object ClassDB {
      */
     @JvmStatic
     fun classSetProperty(objectValue: GodotObject, property: String, value: Any?): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithObjectStringNameAndVariantArgRetLong(Binds.classSetPropertyBind, singleton, objectValue.segment, property, value))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectStringNameAndVariantArgRetLong(Binds.classSetPropertyBind, singleton, objectValue.segment, property, value))
+        ObjectCalls.keepReachable(objectValue)
+        return ret
     }
 
     /**

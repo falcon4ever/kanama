@@ -24,6 +24,8 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
     fun addLines(lines: List<Vector3>, material: Material?, billboard: Boolean = false, modulate: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListObjectBoolColorArgs(Binds.addLinesBind, segment, lines, material?.requireOpenHandle() ?: NULL_SEGMENT, billboard, modulate)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -35,6 +37,10 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
     fun addMesh(mesh: Mesh?, material: Material?, transform: Transform3D, skeleton: SkinReference?) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoObjectTransform3DObjectArgs(Binds.addMeshBind, segment, mesh?.requireOpenHandle() ?: NULL_SEGMENT, material?.requireOpenHandle() ?: NULL_SEGMENT, transform, skeleton?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(mesh)
+        ObjectCalls.keepReachable(material)
+        ObjectCalls.keepReachable(skeleton)
     }
 
     /**
@@ -46,6 +52,7 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
     fun addCollisionSegments(segments: List<Vector3>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListArg(Binds.addCollisionSegmentsBind, segment, segments)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -57,6 +64,8 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
     fun addCollisionTriangles(triangles: TriangleMesh?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.addCollisionTrianglesBind, segment, listOf(triangles?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(triangles)
     }
 
     /**
@@ -67,6 +76,8 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
     fun addUnscaledBillboard(material: Material?, defaultScale: Double = 1.0, modulate: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectDoubleColorArgs(Binds.addUnscaledBillboardBind, segment, material?.requireOpenHandle() ?: NULL_SEGMENT, defaultScale, modulate)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -85,6 +96,8 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
     fun addHandles(handles: List<Vector3>, material: Material?, ids: List<Int>, billboard: Boolean = false, secondary: Boolean = false) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListObjectPackedInt32ListTwoBoolArgs(Binds.addHandlesBind, segment, handles, material?.requireOpenHandle() ?: NULL_SEGMENT, ids, billboard, secondary)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -95,6 +108,8 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
     fun setNode3d(node: Node) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setNode3dBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -104,7 +119,9 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
      */
     fun getNode3d(): Node3D? {
         checkOpen()
-        return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNode3dBind, segment))
+        val ret = Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNode3dBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,7 +132,9 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
      */
     fun getPlugin(): EditorNode3DGizmoPlugin? {
         checkOpen()
-        return EditorNode3DGizmoPlugin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPluginBind, segment))
+        val ret = EditorNode3DGizmoPlugin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPluginBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -126,6 +145,7 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -137,6 +157,7 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
     fun setHidden(hidden: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setHiddenBind, segment, hidden)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -147,7 +168,9 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
      */
     fun isSubgizmoSelected(id: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isSubgizmoSelectedBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.isSubgizmoSelectedBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -158,7 +181,9 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
      */
     fun getSubgizmoSelection(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getSubgizmoSelectionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getSubgizmoSelectionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

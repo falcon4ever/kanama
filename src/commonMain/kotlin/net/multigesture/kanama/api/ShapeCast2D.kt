@@ -98,6 +98,7 @@ class ShapeCast2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setShape(shape: Shape2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(shape)
     }
 
     /**
@@ -283,6 +284,7 @@ class ShapeCast2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun addException(node: CollisionObject2D) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addExceptionBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -301,6 +303,7 @@ class ShapeCast2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun removeException(node: CollisionObject2D) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeExceptionBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**

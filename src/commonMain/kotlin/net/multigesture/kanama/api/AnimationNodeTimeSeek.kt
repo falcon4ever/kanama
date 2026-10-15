@@ -27,6 +27,7 @@ class AnimationNodeTimeSeek(handle: GodotHandle) : AnimationNode(handle) {
     fun setExplicitElapse(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setExplicitElapseBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ class AnimationNodeTimeSeek(handle: GodotHandle) : AnimationNode(handle) {
      */
     fun isExplicitElapse(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isExplicitElapseBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isExplicitElapseBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

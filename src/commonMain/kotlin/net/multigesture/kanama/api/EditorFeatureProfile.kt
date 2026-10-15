@@ -21,6 +21,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
     fun setDisableClass(className: String, disable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(Binds.setDisableClassBind, segment, className, disable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -31,7 +32,9 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isClassDisabled(className: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.isClassDisabledBind, segment, className)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.isClassDisabledBind, segment, className)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -44,6 +47,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
     fun setDisableClassEditor(className: String, disable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(Binds.setDisableClassEditorBind, segment, className, disable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -55,7 +59,9 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isClassEditorDisabled(className: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.isClassEditorDisabledBind, segment, className)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.isClassEditorDisabledBind, segment, className)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -68,6 +74,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
     fun setDisableClassProperty(className: String, property: String, disable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndBoolArgs(Binds.setDisableClassPropertyBind, segment, className, property, disable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -79,7 +86,9 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isClassPropertyDisabled(className: String, property: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.isClassPropertyDisabledBind, segment, className, property)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.isClassPropertyDisabledBind, segment, className, property)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -91,6 +100,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
     fun setDisableFeature(feature: EditorFeatureProfile.Feature, disable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setDisableFeatureBind, segment, feature.value, disable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -101,7 +111,9 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isFeatureDisabled(feature: EditorFeatureProfile.Feature): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isFeatureDisabledBind, segment, feature.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetBool(Binds.isFeatureDisabledBind, segment, feature.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -111,7 +123,9 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFeatureName(feature: EditorFeatureProfile.Feature): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getFeatureNameBind, segment, feature.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetString(Binds.getFeatureNameBind, segment, feature.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -125,7 +139,9 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun saveToFile(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveToFileBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveToFileBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -139,7 +155,9 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun loadFromFile(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadFromFileBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadFromFileBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

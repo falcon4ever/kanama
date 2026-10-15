@@ -21,7 +21,9 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
      */
     fun pushFrame(frame: Vector2): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetBool(Binds.pushFrameBind, segment, frame)
+        val ret = ObjectCalls.ptrcallWithVector2ArgRetBool(Binds.pushFrameBind, segment, frame)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -32,7 +34,9 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
      */
     fun canPushBuffer(amount: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.canPushBufferBind, segment, amount)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.canPushBufferBind, segment, amount)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -44,7 +48,9 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
      */
     fun pushBuffer(frames: List<Vector2>): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithPackedVector2ListArgRetBool(Binds.pushBufferBind, segment, frames)
+        val ret = ObjectCalls.ptrcallWithPackedVector2ListArgRetBool(Binds.pushBufferBind, segment, frames)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -55,7 +61,9 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
      */
     fun getFramesAvailable(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFramesAvailableBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFramesAvailableBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -66,7 +74,9 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
      */
     fun getSkips(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSkipsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSkipsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -77,6 +87,7 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
     fun clearBuffer() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBufferBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

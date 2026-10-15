@@ -19,7 +19,9 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun startCompression(useDeflate: Boolean = false, bufferSize: Int = 65535): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(Binds.startCompressionBind, segment, useDeflate, bufferSize))
+        val ret = GodotError(ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(Binds.startCompressionBind, segment, useDeflate, bufferSize))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun startDecompression(useDeflate: Boolean = false, bufferSize: Int = 65535): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(Binds.startDecompressionBind, segment, useDeflate, bufferSize))
+        val ret = GodotError(ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(Binds.startDecompressionBind, segment, useDeflate, bufferSize))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -41,7 +45,9 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun finish(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.finishBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.finishBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -52,6 +58,7 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

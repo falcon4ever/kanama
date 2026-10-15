@@ -27,6 +27,7 @@ class InputEventPanGesture(handle: GodotHandle) : InputEventGesture(handle) {
     fun setDelta(delta: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setDeltaBind, segment, delta)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class InputEventPanGesture(handle: GodotHandle) : InputEventGesture(handle) {
      */
     fun getDelta(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getDeltaBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getDeltaBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

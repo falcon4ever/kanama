@@ -1025,6 +1025,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      */
     fun setTheme(theme: Theme?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setThemeBind, segment, listOf(theme?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(theme)
     }
 
     /**
@@ -1086,6 +1087,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      */
     fun addThemeIconOverride(name: String, texture: Texture2D?) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeIconOverrideBind, segment, name, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -1098,6 +1100,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      */
     fun addThemeStyleboxOverride(name: String, stylebox: StyleBox?) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeStyleboxOverrideBind, segment, name, stylebox?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(stylebox)
     }
 
     /**
@@ -1109,6 +1112,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      */
     fun addThemeFontOverride(name: String, font: Font?) {
         ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeFontOverrideBind, segment, name, font?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -1596,6 +1600,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      */
     fun popupExclusive(fromNode: Node, rect: Rect2i) {
         ObjectCalls.ptrcallWithObjectAndRect2iArg(Binds.popupExclusiveBind, segment, fromNode.segment, rect)
+        ObjectCalls.keepReachable(fromNode)
     }
 
     /**
@@ -1607,6 +1612,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      */
     fun popupExclusiveOnParent(fromNode: Node, parentRect: Rect2i) {
         ObjectCalls.ptrcallWithObjectAndRect2iArg(Binds.popupExclusiveOnParentBind, segment, fromNode.segment, parentRect)
+        ObjectCalls.keepReachable(fromNode)
     }
 
     /**
@@ -1618,6 +1624,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      */
     fun popupExclusiveCentered(fromNode: Node, minsize: Vector2i) {
         ObjectCalls.ptrcallWithObjectAndVector2iArg(Binds.popupExclusiveCenteredBind, segment, fromNode.segment, minsize)
+        ObjectCalls.keepReachable(fromNode)
     }
 
     /**
@@ -1629,6 +1636,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      */
     fun popupExclusiveCenteredRatio(fromNode: Node, ratio: Double = 0.8) {
         ObjectCalls.ptrcallWithObjectAndDoubleArg(Binds.popupExclusiveCenteredRatioBind, segment, fromNode.segment, ratio)
+        ObjectCalls.keepReachable(fromNode)
     }
 
     /**
@@ -1640,6 +1648,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      */
     fun popupExclusiveCenteredClamped(fromNode: Node, minsize: Vector2i, fallbackRatio: Double = 0.75) {
         ObjectCalls.ptrcallWithObjectVector2iAndDoubleArg(Binds.popupExclusiveCenteredClampedBind, segment, fromNode.segment, minsize, fallbackRatio)
+        ObjectCalls.keepReachable(fromNode)
     }
 
     /** Signal `window_input(event: InputEvent)`; see [TypedSignal]. */

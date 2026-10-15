@@ -27,6 +27,7 @@ class VisualShaderNodeComment(handle: GodotHandle) : VisualShaderNodeFrame(handl
     fun setDescription(description: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setDescriptionBind, segment, description)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ class VisualShaderNodeComment(handle: GodotHandle) : VisualShaderNodeFrame(handl
      */
     fun getDescription(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDescriptionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getDescriptionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

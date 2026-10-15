@@ -230,6 +230,7 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
      */
     fun setPhysicsMaterial(material: PhysicsMaterial?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setPhysicsMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -292,6 +293,7 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
      */
     fun setMeshLibrary(meshLibrary: MeshLibrary?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshLibraryBind, segment, listOf(meshLibrary?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(meshLibrary)
     }
 
     /**
@@ -451,6 +453,7 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
      */
     fun resourceChanged(resource: Resource?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(resource)
     }
 
     /**

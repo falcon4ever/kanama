@@ -27,6 +27,7 @@ class VisualShaderNodeColorConstant(handle: GodotHandle) : VisualShaderNodeConst
     fun setConstant(constant: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setConstantBind, segment, constant)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeColorConstant(handle: GodotHandle) : VisualShaderNodeConst
      */
     fun getConstant(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getConstantBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getConstantBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

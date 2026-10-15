@@ -214,6 +214,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      */
     fun setButtonIcon(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setButtonIconBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**

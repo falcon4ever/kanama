@@ -59,6 +59,8 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setGradient(gradient: Gradient?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setGradientBind, segment, listOf(gradient?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(gradient)
     }
 
     /**
@@ -68,7 +70,9 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getGradient(): Gradient? {
         checkOpen()
-        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGradientBind, segment))
+        val ret = Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGradientBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,6 +84,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setWidth(width: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setWidthBind, segment, width)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -91,6 +96,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setHeight(height: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setHeightBind, segment, height)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -104,6 +110,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setUseHdr(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseHdrBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -116,7 +123,9 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun isUsingHdr(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingHdrBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingHdrBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -127,6 +136,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setFill(fill: GradientTexture2D.Fill) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFillBind, segment, fill.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -136,7 +146,9 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getFill(): GradientTexture2D.Fill {
         checkOpen()
-        return GradientTexture2D.Fill(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFillBind, segment))
+        val ret = GradientTexture2D.Fill(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFillBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -147,6 +159,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setFillFrom(fillFrom: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setFillFromBind, segment, fillFrom)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -156,7 +169,9 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getFillFrom(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getFillFromBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getFillFromBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -167,6 +182,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setFillTo(fillTo: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setFillToBind, segment, fillTo)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -176,7 +192,9 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getFillTo(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getFillToBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getFillToBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -187,6 +205,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     fun setRepeat(repeat: GradientTexture2D.Repeat) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setRepeatBind, segment, repeat.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -196,7 +215,9 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getRepeat(): GradientTexture2D.Repeat {
         checkOpen()
-        return GradientTexture2D.Repeat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRepeatBind, segment))
+        val ret = GradientTexture2D.Repeat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRepeatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

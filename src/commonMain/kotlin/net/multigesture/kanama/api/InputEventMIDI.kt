@@ -69,6 +69,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     fun setChannel(channel: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setChannelBind, segment, channel)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -79,7 +80,9 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getChannel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getChannelBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getChannelBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,6 +95,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     fun setMessage(message: MIDIMessage) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setMessageBind, segment, message.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -103,7 +107,9 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getMessage(): MIDIMessage {
         checkOpen()
-        return MIDIMessage(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMessageBind, segment))
+        val ret = MIDIMessage(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMessageBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -117,6 +123,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     fun setPitch(pitch: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setPitchBind, segment, pitch)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -129,7 +136,9 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getPitch(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPitchBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPitchBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -143,6 +152,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     fun setVelocity(velocity: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setVelocityBind, segment, velocity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -155,7 +165,9 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getVelocity(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVelocityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getVelocityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -170,6 +182,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     fun setInstrument(instrument: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setInstrumentBind, segment, instrument)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -183,7 +196,9 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getInstrument(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInstrumentBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getInstrumentBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -196,6 +211,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     fun setPressure(pressure: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setPressureBind, segment, pressure)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -207,7 +223,9 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getPressure(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPressureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPressureBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -221,6 +239,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     fun setControllerNumber(controllerNumber: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setControllerNumberBind, segment, controllerNumber)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -233,7 +252,9 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getControllerNumber(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getControllerNumberBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getControllerNumberBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -245,6 +266,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     fun setControllerValue(controllerValue: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setControllerValueBind, segment, controllerValue)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -255,7 +277,9 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getControllerValue(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getControllerValueBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getControllerValueBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

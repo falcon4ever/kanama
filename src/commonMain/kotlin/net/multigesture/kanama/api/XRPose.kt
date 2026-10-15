@@ -60,6 +60,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
     fun setHasTrackingData(hasTrackingData: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setHasTrackingDataBind, segment, hasTrackingData)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -70,7 +71,9 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getHasTrackingData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getHasTrackingDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getHasTrackingDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -87,6 +90,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
     fun setName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.setNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -102,7 +106,9 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -113,6 +119,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
     fun setTransform(transform: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(Binds.setTransformBind, segment, transform)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -122,7 +129,9 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTransform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getTransformBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getTransformBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -133,7 +142,9 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAdjustedTransform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getAdjustedTransformBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getAdjustedTransformBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -144,6 +155,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
     fun setLinearVelocity(velocity: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setLinearVelocityBind, segment, velocity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -153,7 +165,9 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLinearVelocity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getLinearVelocityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getLinearVelocityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,6 +178,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
     fun setAngularVelocity(velocity: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setAngularVelocityBind, segment, velocity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -173,7 +188,9 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAngularVelocity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getAngularVelocityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getAngularVelocityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -185,6 +202,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
     fun setTrackingConfidence(trackingConfidence: XRPose.TrackingConfidence) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTrackingConfidenceBind, segment, trackingConfidence.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -195,7 +213,9 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTrackingConfidence(): XRPose.TrackingConfidence {
         checkOpen()
-        return XRPose.TrackingConfidence(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTrackingConfidenceBind, segment))
+        val ret = XRPose.TrackingConfidence(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTrackingConfidenceBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

@@ -18,7 +18,9 @@ class JavaClass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getJavaClassName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getJavaClassNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getJavaClassNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -29,7 +31,9 @@ class JavaClass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getJavaMethodList(): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getJavaMethodListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getJavaMethodListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,6 +44,7 @@ class JavaClass(handle: GodotHandle) : RefCounted(handle) {
     fun getJavaParentClass(): JavaClass? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getJavaParentClassBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -54,7 +59,9 @@ class JavaClass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasJavaMethod(method: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasJavaMethodBind, segment, method)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasJavaMethodBind, segment, method)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -25,7 +25,9 @@ class OpenXRAnchorTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
      */
     fun hasUuid(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasUuidBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasUuidBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -36,6 +38,7 @@ class OpenXRAnchorTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
     fun setUuid(uuid: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setUuidBind, segment, uuid)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -45,7 +48,9 @@ class OpenXRAnchorTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
      */
     fun getUuid(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getUuidBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getUuidBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `uuid_changed()`; see [TypedSignal]. */

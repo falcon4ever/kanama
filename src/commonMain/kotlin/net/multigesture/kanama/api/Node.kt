@@ -113,6 +113,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addSibling(sibling: Node, forceReadableName: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addSiblingBind, segment, sibling.segment, forceReadableName)
+        ObjectCalls.keepReachable(sibling)
     }
 
     /**
@@ -160,6 +161,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addChild(node: Node, forceReadableName: Boolean = false, internalValue: Node.InternalMode = Node.InternalMode.DISABLED) {
         ObjectCalls.ptrcallWithObjectBoolLongArgs(Binds.addChildBind, segment, node.segment, forceReadableName, internalValue.value)
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -172,6 +174,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      */
     fun removeChild(node: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeChildBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -188,6 +191,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      */
     fun reparent(newParent: Node, keepGlobalTransform: Boolean = true) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.reparentBind, segment, newParent.segment, keepGlobalTransform)
+        ObjectCalls.keepReachable(newParent)
     }
 
     /**
@@ -364,7 +368,9 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_ancestor_of
      */
     fun isAncestorOf(node: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isAncestorOfBind, segment, node.segment)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isAncestorOfBind, segment, node.segment)
+        ObjectCalls.keepReachable(node)
+        return ret
     }
 
     /**
@@ -374,7 +380,9 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_greater_than
      */
     fun isGreaterThan(node: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isGreaterThanBind, segment, node.segment)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isGreaterThanBind, segment, node.segment)
+        ObjectCalls.keepReachable(node)
+        return ret
     }
 
     /**
@@ -398,7 +406,9 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_path_to
      */
     fun getPathTo(node: Node, useUniquePath: Boolean = false): NodePath {
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetNodePath(Binds.getPathToBind, segment, node.segment, useUniquePath)
+        val ret = ObjectCalls.ptrcallWithObjectAndBoolArgRetNodePath(Binds.getPathToBind, segment, node.segment, useUniquePath)
+        ObjectCalls.keepReachable(node)
+        return ret
     }
 
     /**
@@ -447,6 +457,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      */
     fun moveChild(childNode: Node, toIndex: Int) {
         ObjectCalls.ptrcallWithObjectAndIntArg(Binds.moveChildBind, segment, childNode.segment, toIndex)
+        ObjectCalls.keepReachable(childNode)
     }
 
     /**
@@ -475,6 +486,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setOwner(owner: Node?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setOwnerBind, segment, listOf(owner?.segment ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(owner)
     }
 
     /**
@@ -1192,6 +1204,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      */
     fun replaceBy(node: Node, keepGroups: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.replaceByBind, segment, node.segment, keepGroups)
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -1223,6 +1236,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setEditableInstance(node: Node, isEditable: Boolean) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.setEditableInstanceBind, segment, node.segment, isEditable)
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -1232,7 +1246,9 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_editable_instance
      */
     fun isEditableInstance(node: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isEditableInstanceBind, segment, node.segment)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isEditableInstanceBind, segment, node.segment)
+        ObjectCalls.keepReachable(node)
+        return ret
     }
 
     /**

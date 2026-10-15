@@ -29,6 +29,8 @@ class OpenXRBindingModifierEditor(handle: GodotHandle) : PanelContainer(handle) 
      */
     fun setup(actionMap: OpenXRActionMap?, bindingModifier: OpenXRBindingModifier?) {
         ObjectCalls.ptrcallWithTwoObjectArgs(Binds.setupBind, segment, actionMap?.requireOpenHandle() ?: NULL_SEGMENT, bindingModifier?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(actionMap)
+        ObjectCalls.keepReachable(bindingModifier)
     }
 
     /** Signal `binding_modifier_removed(binding_modifier_editor: Object)`; see [TypedSignal]. */

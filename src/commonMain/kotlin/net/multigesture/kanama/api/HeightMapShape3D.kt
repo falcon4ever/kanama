@@ -39,6 +39,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
     fun setMapWidth(width: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMapWidthBind, segment, width)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -48,7 +49,9 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getMapWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMapWidthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMapWidthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +62,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
     fun setMapDepth(height: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMapDepthBind, segment, height)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +72,9 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getMapDepth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMapDepthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMapDepthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -79,6 +85,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
     fun setMapData(data: List<Float>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setMapDataBind, segment, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -88,7 +95,9 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getMapData(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getMapDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getMapDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -99,7 +108,9 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getMinHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -109,7 +120,9 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getMaxHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -127,6 +140,8 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
     fun updateMapDataFromImage(image: Image?, heightMin: Double, heightMax: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectTwoDoubleArgs(Binds.updateMapDataFromImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, heightMin, heightMax)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(image)
     }
 
     companion object {

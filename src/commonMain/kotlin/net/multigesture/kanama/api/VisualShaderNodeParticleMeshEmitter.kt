@@ -39,6 +39,8 @@ class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNod
     fun setMesh(mesh: Mesh?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(mesh)
     }
 
     /**
@@ -48,7 +50,9 @@ class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNod
      */
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
+        val ret = Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +63,7 @@ class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNod
     fun setUseAllSurfaces(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseAllSurfacesBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +73,9 @@ class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNod
      */
     fun isUseAllSurfaces(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUseAllSurfacesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUseAllSurfacesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,6 +87,7 @@ class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNod
     fun setSurfaceIndex(surfaceIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSurfaceIndexBind, segment, surfaceIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -90,7 +98,9 @@ class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNod
      */
     fun getSurfaceIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSurfaceIndexBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSurfaceIndexBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

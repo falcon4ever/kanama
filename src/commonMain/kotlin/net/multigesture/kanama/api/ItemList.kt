@@ -134,7 +134,9 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.add_item
      */
     fun addItem(text: String, icon: Texture2D?, selectable: Boolean = true): Int {
-        return ObjectCalls.ptrcallWithStringObjectBoolArgsRetInt(Binds.addItemBind, segment, text, icon?.requireOpenHandle() ?: NULL_SEGMENT, selectable)
+        val ret = ObjectCalls.ptrcallWithStringObjectBoolArgsRetInt(Binds.addItemBind, segment, text, icon?.requireOpenHandle() ?: NULL_SEGMENT, selectable)
+        ObjectCalls.keepReachable(icon)
+        return ret
     }
 
     /**
@@ -143,7 +145,9 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.add_icon_item
      */
     fun addIconItem(icon: Texture2D?, selectable: Boolean = true): Int {
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetInt(Binds.addIconItemBind, segment, icon?.requireOpenHandle() ?: NULL_SEGMENT, selectable)
+        val ret = ObjectCalls.ptrcallWithObjectAndBoolArgRetInt(Binds.addIconItemBind, segment, icon?.requireOpenHandle() ?: NULL_SEGMENT, selectable)
+        ObjectCalls.keepReachable(icon)
+        return ret
     }
 
     /**
@@ -171,6 +175,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      */
     fun setItemIcon(idx: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemIconBind, segment, idx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**

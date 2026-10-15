@@ -53,6 +53,8 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     fun addStream(index: Int, stream: AudioStream?, weight: Double = 1.0) {
         checkOpen()
         ObjectCalls.ptrcallWithIntObjectDoubleArgs(Binds.addStreamBind, segment, index, stream?.requireOpenHandle() ?: NULL_SEGMENT, weight)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(stream)
     }
 
     /**
@@ -63,6 +65,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     fun moveStream(indexFrom: Int, indexTo: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveStreamBind, segment, indexFrom, indexTo)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -73,6 +76,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     fun removeStream(index: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeStreamBind, segment, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -83,6 +87,8 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     fun setStream(index: Int, stream: AudioStream?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setStreamBind, segment, index, stream?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(stream)
     }
 
     /**
@@ -93,6 +99,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     fun getStream(index: Int): AudioStream? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getStreamBind, segment, index)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -109,6 +116,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     fun setStreamProbabilityWeight(index: Int, weight: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setStreamProbabilityWeightBind, segment, index, weight)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -118,7 +126,9 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getStreamProbabilityWeight(index: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getStreamProbabilityWeightBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getStreamProbabilityWeightBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -129,6 +139,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     fun setStreamsCount(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setStreamsCountBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -138,7 +149,9 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getStreamsCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStreamsCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getStreamsCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -152,6 +165,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     fun setRandomPitch(scale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRandomPitchBind, segment, scale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -164,7 +178,9 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getRandomPitch(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRandomPitchBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRandomPitchBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -176,6 +192,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     fun setRandomPitchSemitones(semitones: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRandomPitchSemitonesBind, segment, semitones)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -186,7 +203,9 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getRandomPitchSemitones(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRandomPitchSemitonesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRandomPitchSemitonesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -199,6 +218,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     fun setRandomVolumeOffsetDb(dbOffset: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRandomVolumeOffsetDbBind, segment, dbOffset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -210,7 +230,9 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getRandomVolumeOffsetDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRandomVolumeOffsetDbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRandomVolumeOffsetDbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -221,6 +243,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     fun setPlaybackMode(mode: AudioStreamRandomizer.PlaybackMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setPlaybackModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -230,7 +253,9 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getPlaybackMode(): AudioStreamRandomizer.PlaybackMode {
         checkOpen()
-        return AudioStreamRandomizer.PlaybackMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlaybackModeBind, segment))
+        val ret = AudioStreamRandomizer.PlaybackMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlaybackModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

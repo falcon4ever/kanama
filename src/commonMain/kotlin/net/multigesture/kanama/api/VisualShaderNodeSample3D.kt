@@ -27,6 +27,7 @@ open class VisualShaderNodeSample3D(handle: GodotHandle) : VisualShaderNode(hand
     fun setSource(value: VisualShaderNodeSample3D.Source) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSourceBind, segment, value.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ open class VisualShaderNodeSample3D(handle: GodotHandle) : VisualShaderNode(hand
      */
     fun getSource(): VisualShaderNodeSample3D.Source {
         checkOpen()
-        return VisualShaderNodeSample3D.Source(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceBind, segment))
+        val ret = VisualShaderNodeSample3D.Source(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

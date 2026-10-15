@@ -28,6 +28,7 @@ open class InputEventGesture(handle: GodotHandle) : InputEventWithModifiers(hand
     fun setPosition(position: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setPositionBind, segment, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -38,7 +39,9 @@ open class InputEventGesture(handle: GodotHandle) : InputEventWithModifiers(hand
      */
     fun getPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -27,6 +27,7 @@ class VisualShaderNodeVec2Constant(handle: GodotHandle) : VisualShaderNodeConsta
     fun setConstant(constant: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setConstantBind, segment, constant)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeVec2Constant(handle: GodotHandle) : VisualShaderNodeConsta
      */
     fun getConstant(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getConstantBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getConstantBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

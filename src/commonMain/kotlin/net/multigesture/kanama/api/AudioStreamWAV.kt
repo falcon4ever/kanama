@@ -73,6 +73,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
     fun setData(data: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithByteArrayArg(Binds.setDataBind, segment, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -85,7 +86,9 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -96,6 +99,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
     fun setFormat(format: AudioStreamWAV.Format) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFormatBind, segment, format.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -105,7 +109,9 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getFormat(): AudioStreamWAV.Format {
         checkOpen()
-        return AudioStreamWAV.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        val ret = AudioStreamWAV.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -116,6 +122,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
     fun setLoopMode(loopMode: AudioStreamWAV.LoopMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setLoopModeBind, segment, loopMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -125,7 +132,9 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getLoopMode(): AudioStreamWAV.LoopMode {
         checkOpen()
-        return AudioStreamWAV.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLoopModeBind, segment))
+        val ret = AudioStreamWAV.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLoopModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -136,6 +145,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
     fun setLoopBegin(loopBegin: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setLoopBeginBind, segment, loopBegin)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -145,7 +155,9 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getLoopBegin(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLoopBeginBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getLoopBeginBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -156,6 +168,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
     fun setLoopEnd(loopEnd: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setLoopEndBind, segment, loopEnd)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -165,7 +178,9 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getLoopEnd(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLoopEndBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getLoopEndBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -182,6 +197,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
     fun setMixRate(mixRate: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMixRateBind, segment, mixRate)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -197,7 +213,9 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getMixRate(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMixRateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMixRateBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -208,6 +226,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
     fun setStereo(stereo: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setStereoBind, segment, stereo)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -217,7 +236,9 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun isStereo(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isStereoBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isStereoBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -232,6 +253,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
     fun setTags(tags: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setTagsBind, segment, tags)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -245,7 +267,9 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getTags(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getTagsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getTagsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -257,7 +281,9 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun saveToWav(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveToWavBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveToWavBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

@@ -48,7 +48,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun addTrack(type: Animation.TrackType, atPosition: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetInt(Binds.addTrackBind, segment, type.value, atPosition)
+        val ret = ObjectCalls.ptrcallWithLongAndIntArgsRetInt(Binds.addTrackBind, segment, type.value, atPosition)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +61,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun removeTrack(trackIdx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeTrackBind, segment, trackIdx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +71,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getTrackCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTrackCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getTrackCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -78,7 +83,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetType(trackIdx: Int): Animation.TrackType {
         checkOpen()
-        return Animation.TrackType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.trackGetTypeBind, segment, trackIdx))
+        val ret = Animation.TrackType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.trackGetTypeBind, segment, trackIdx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -88,7 +95,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetPath(trackIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.trackGetPathBind, segment, trackIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.trackGetPathBind, segment, trackIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -102,6 +111,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackSetPath(trackIdx: Int, path: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndNodePathArg(Binds.trackSetPathBind, segment, trackIdx, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -111,7 +121,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun findTrack(path: NodePath, type: Animation.TrackType): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathAndLongArgRetInt(Binds.findTrackBind, segment, path, type.value)
+        val ret = ObjectCalls.ptrcallWithNodePathAndLongArgRetInt(Binds.findTrackBind, segment, path, type.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -122,6 +134,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackMoveUp(trackIdx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.trackMoveUpBind, segment, trackIdx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -132,6 +145,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackMoveDown(trackIdx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.trackMoveDownBind, segment, trackIdx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -142,6 +156,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackMoveTo(trackIdx: Int, toIdx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.trackMoveToBind, segment, trackIdx, toIdx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -152,6 +167,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackSwap(trackIdx: Int, withIdx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.trackSwapBind, segment, trackIdx, withIdx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -162,6 +178,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackSetImported(trackIdx: Int, imported: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.trackSetImportedBind, segment, trackIdx, imported)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -171,7 +188,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackIsImported(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.trackIsImportedBind, segment, trackIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.trackIsImportedBind, segment, trackIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -182,6 +201,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackSetEnabled(trackIdx: Int, enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.trackSetEnabledBind, segment, trackIdx, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -191,7 +211,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackIsEnabled(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.trackIsEnabledBind, segment, trackIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.trackIsEnabledBind, segment, trackIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -201,7 +223,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun positionTrackInsertKey(trackIdx: Int, time: Double, position: Vector3): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(Binds.positionTrackInsertKeyBind, segment, trackIdx, time, position)
+        val ret = ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(Binds.positionTrackInsertKeyBind, segment, trackIdx, time, position)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -211,7 +235,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun rotationTrackInsertKey(trackIdx: Int, time: Double, rotation: Quaternion): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleQuaternionArgsRetInt(Binds.rotationTrackInsertKeyBind, segment, trackIdx, time, rotation)
+        val ret = ObjectCalls.ptrcallWithIntDoubleQuaternionArgsRetInt(Binds.rotationTrackInsertKeyBind, segment, trackIdx, time, rotation)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -221,7 +247,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun scaleTrackInsertKey(trackIdx: Int, time: Double, scale: Vector3): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(Binds.scaleTrackInsertKeyBind, segment, trackIdx, time, scale)
+        val ret = ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(Binds.scaleTrackInsertKeyBind, segment, trackIdx, time, scale)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -231,7 +259,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun blendShapeTrackInsertKey(trackIdx: Int, time: Double, amount: Double): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndTwoDoubleArgsRetInt(Binds.blendShapeTrackInsertKeyBind, segment, trackIdx, time, amount)
+        val ret = ObjectCalls.ptrcallWithIntAndTwoDoubleArgsRetInt(Binds.blendShapeTrackInsertKeyBind, segment, trackIdx, time, amount)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -242,7 +272,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun positionTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(Binds.positionTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        val ret = ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(Binds.positionTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -253,7 +285,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun rotationTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Quaternion {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetQuaternion(Binds.rotationTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        val ret = ObjectCalls.ptrcallWithIntDoubleBoolArgsRetQuaternion(Binds.rotationTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -264,7 +298,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun scaleTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(Binds.scaleTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        val ret = ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(Binds.scaleTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -275,7 +311,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun blendShapeTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetDouble(Binds.blendShapeTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        val ret = ObjectCalls.ptrcallWithIntDoubleBoolArgsRetDouble(Binds.blendShapeTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -285,7 +323,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackInsertKey(trackIdx: Int, time: Double, key: Any?, transition: Double = 1.0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleVariantDoubleArgsRetInt(Binds.trackInsertKeyBind, segment, trackIdx, time, key, transition)
+        val ret = ObjectCalls.ptrcallWithIntDoubleVariantDoubleArgsRetInt(Binds.trackInsertKeyBind, segment, trackIdx, time, key, transition)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -296,6 +336,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackRemoveKey(trackIdx: Int, keyIdx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.trackRemoveKeyBind, segment, trackIdx, keyIdx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -306,6 +347,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackRemoveKeyAtTime(trackIdx: Int, time: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.trackRemoveKeyAtTimeBind, segment, trackIdx, time)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -316,6 +358,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackSetKeyValue(trackIdx: Int, key: Int, value: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndVariantArg(Binds.trackSetKeyValueBind, segment, trackIdx, key, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -327,6 +370,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackSetKeyTransition(trackIdx: Int, keyIdx: Int, transition: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.trackSetKeyTransitionBind, segment, trackIdx, keyIdx, transition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -337,6 +381,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackSetKeyTime(trackIdx: Int, keyIdx: Int, time: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.trackSetKeyTimeBind, segment, trackIdx, keyIdx, time)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -347,7 +392,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetKeyTransition(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.trackGetKeyTransitionBind, segment, trackIdx, keyIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.trackGetKeyTransitionBind, segment, trackIdx, keyIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -357,7 +404,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetKeyCount(trackIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.trackGetKeyCountBind, segment, trackIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.trackGetKeyCountBind, segment, trackIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -367,7 +416,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetKeyValue(trackIdx: Int, keyIdx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(Binds.trackGetKeyValueBind, segment, trackIdx, keyIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(Binds.trackGetKeyValueBind, segment, trackIdx, keyIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -377,7 +428,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetKeyTime(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.trackGetKeyTimeBind, segment, trackIdx, keyIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.trackGetKeyTimeBind, segment, trackIdx, keyIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -392,7 +445,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackFindKey(trackIdx: Int, time: Double, findMode: Animation.FindMode = Animation.FindMode.NEAREST, limit: Boolean = false, backward: Boolean = false): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleLongTwoBoolArgsRetInt(Binds.trackFindKeyBind, segment, trackIdx, time, findMode.value, limit, backward)
+        val ret = ObjectCalls.ptrcallWithIntDoubleLongTwoBoolArgsRetInt(Binds.trackFindKeyBind, segment, trackIdx, time, findMode.value, limit, backward)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -403,6 +458,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackSetInterpolationType(trackIdx: Int, interpolation: Animation.InterpolationType) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(Binds.trackSetInterpolationTypeBind, segment, trackIdx, interpolation.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -412,7 +468,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetInterpolationType(trackIdx: Int): Animation.InterpolationType {
         checkOpen()
-        return Animation.InterpolationType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.trackGetInterpolationTypeBind, segment, trackIdx))
+        val ret = Animation.InterpolationType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.trackGetInterpolationTypeBind, segment, trackIdx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -423,6 +481,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun trackSetInterpolationLoopWrap(trackIdx: Int, interpolation: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.trackSetInterpolationLoopWrapBind, segment, trackIdx, interpolation)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -433,7 +492,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetInterpolationLoopWrap(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.trackGetInterpolationLoopWrapBind, segment, trackIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.trackGetInterpolationLoopWrapBind, segment, trackIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -443,7 +504,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackIsCompressed(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.trackIsCompressedBind, segment, trackIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.trackIsCompressedBind, segment, trackIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -454,6 +517,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun valueTrackSetUpdateMode(trackIdx: Int, mode: Animation.UpdateMode) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(Binds.valueTrackSetUpdateModeBind, segment, trackIdx, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -463,7 +527,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun valueTrackGetUpdateMode(trackIdx: Int): Animation.UpdateMode {
         checkOpen()
-        return Animation.UpdateMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.valueTrackGetUpdateModeBind, segment, trackIdx))
+        val ret = Animation.UpdateMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.valueTrackGetUpdateModeBind, segment, trackIdx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -477,7 +543,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun valueTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVariantScalar(Binds.valueTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        val ret = ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVariantScalar(Binds.valueTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -487,7 +555,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun methodTrackGetName(trackIdx: Int, keyIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(Binds.methodTrackGetNameBind, segment, trackIdx, keyIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetStringName(Binds.methodTrackGetNameBind, segment, trackIdx, keyIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -497,7 +567,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun methodTrackGetParams(trackIdx: Int, keyIdx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetArray(Binds.methodTrackGetParamsBind, segment, trackIdx, keyIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetArray(Binds.methodTrackGetParamsBind, segment, trackIdx, keyIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -509,7 +581,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun bezierTrackInsertKey(trackIdx: Int, time: Double, value: Double, inHandle: Vector2 = Vector2(0.0, 0.0), outHandle: Vector2 = Vector2(0.0, 0.0)): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntTwoDoubleTwoVector2ArgsRetInt(Binds.bezierTrackInsertKeyBind, segment, trackIdx, time, value, inHandle, outHandle)
+        val ret = ObjectCalls.ptrcallWithIntTwoDoubleTwoVector2ArgsRetInt(Binds.bezierTrackInsertKeyBind, segment, trackIdx, time, value, inHandle, outHandle)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -521,6 +595,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun bezierTrackSetKeyValue(trackIdx: Int, keyIdx: Int, value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.bezierTrackSetKeyValueBind, segment, trackIdx, keyIdx, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -532,6 +607,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun bezierTrackSetKeyInHandle(trackIdx: Int, keyIdx: Int, inHandle: Vector2, balancedValueTimeRatio: Double = 1.0) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(Binds.bezierTrackSetKeyInHandleBind, segment, trackIdx, keyIdx, inHandle, balancedValueTimeRatio)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -543,6 +619,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun bezierTrackSetKeyOutHandle(trackIdx: Int, keyIdx: Int, outHandle: Vector2, balancedValueTimeRatio: Double = 1.0) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(Binds.bezierTrackSetKeyOutHandleBind, segment, trackIdx, keyIdx, outHandle, balancedValueTimeRatio)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -553,7 +630,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun bezierTrackGetKeyValue(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.bezierTrackGetKeyValueBind, segment, trackIdx, keyIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.bezierTrackGetKeyValueBind, segment, trackIdx, keyIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -564,7 +643,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun bezierTrackGetKeyInHandle(trackIdx: Int, keyIdx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(Binds.bezierTrackGetKeyInHandleBind, segment, trackIdx, keyIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetVector2(Binds.bezierTrackGetKeyInHandleBind, segment, trackIdx, keyIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -575,7 +656,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun bezierTrackGetKeyOutHandle(trackIdx: Int, keyIdx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(Binds.bezierTrackGetKeyOutHandleBind, segment, trackIdx, keyIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetVector2(Binds.bezierTrackGetKeyOutHandleBind, segment, trackIdx, keyIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -586,7 +669,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun bezierTrackInterpolate(trackIdx: Int, time: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetDouble(Binds.bezierTrackInterpolateBind, segment, trackIdx, time)
+        val ret = ObjectCalls.ptrcallWithIntAndDoubleArgRetDouble(Binds.bezierTrackInterpolateBind, segment, trackIdx, time)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -598,7 +683,10 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackInsertKey(trackIdx: Int, time: Double, stream: Resource?, startOffset: Double = 0.0, endOffset: Double = 0.0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleObjectTwoDoubleArgsRetInt(Binds.audioTrackInsertKeyBind, segment, trackIdx, time, stream?.requireOpenHandle() ?: NULL_SEGMENT, startOffset, endOffset)
+        val ret = ObjectCalls.ptrcallWithIntDoubleObjectTwoDoubleArgsRetInt(Binds.audioTrackInsertKeyBind, segment, trackIdx, time, stream?.requireOpenHandle() ?: NULL_SEGMENT, startOffset, endOffset)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(stream)
+        return ret
     }
 
     /**
@@ -610,6 +698,8 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun audioTrackSetKeyStream(trackIdx: Int, keyIdx: Int, stream: Resource?) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndObjectArg(Binds.audioTrackSetKeyStreamBind, segment, trackIdx, keyIdx, stream?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(stream)
     }
 
     /**
@@ -621,6 +711,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun audioTrackSetKeyStartOffset(trackIdx: Int, keyIdx: Int, offset: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.audioTrackSetKeyStartOffsetBind, segment, trackIdx, keyIdx, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -632,6 +723,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun audioTrackSetKeyEndOffset(trackIdx: Int, keyIdx: Int, offset: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.audioTrackSetKeyEndOffsetBind, segment, trackIdx, keyIdx, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -643,6 +735,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun audioTrackGetKeyStream(trackIdx: Int, keyIdx: Int): Resource? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithTwoIntArgsRetObject(Binds.audioTrackGetKeyStreamBind, segment, trackIdx, keyIdx)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -659,7 +752,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackGetKeyStartOffset(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.audioTrackGetKeyStartOffsetBind, segment, trackIdx, keyIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.audioTrackGetKeyStartOffsetBind, segment, trackIdx, keyIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -670,7 +765,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackGetKeyEndOffset(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.audioTrackGetKeyEndOffsetBind, segment, trackIdx, keyIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.audioTrackGetKeyEndOffsetBind, segment, trackIdx, keyIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -682,6 +779,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun audioTrackSetUseBlend(trackIdx: Int, enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.audioTrackSetUseBlendBind, segment, trackIdx, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -691,7 +789,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackIsUseBlend(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.audioTrackIsUseBlendBind, segment, trackIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.audioTrackIsUseBlendBind, segment, trackIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -702,7 +802,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun animationTrackInsertKey(trackIdx: Int, time: Double, animation: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleStringNameArgsRetInt(Binds.animationTrackInsertKeyBind, segment, trackIdx, time, animation)
+        val ret = ObjectCalls.ptrcallWithIntDoubleStringNameArgsRetInt(Binds.animationTrackInsertKeyBind, segment, trackIdx, time, animation)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -714,6 +816,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun animationTrackSetKeyAnimation(trackIdx: Int, keyIdx: Int, animation: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndStringNameArg(Binds.animationTrackSetKeyAnimationBind, segment, trackIdx, keyIdx, animation)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -724,7 +827,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun animationTrackGetKeyAnimation(trackIdx: Int, keyIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(Binds.animationTrackGetKeyAnimationBind, segment, trackIdx, keyIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetStringName(Binds.animationTrackGetKeyAnimationBind, segment, trackIdx, keyIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -735,6 +840,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun addMarker(name: String, time: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndDoubleArg(Binds.addMarkerBind, segment, name, time)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -745,6 +851,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun removeMarker(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.removeMarkerBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -754,7 +861,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun hasMarker(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasMarkerBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasMarkerBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -764,7 +873,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMarkerAtTime(time: Double): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetStringName(Binds.getMarkerAtTimeBind, segment, time)
+        val ret = ObjectCalls.ptrcallWithFloatArgRetStringName(Binds.getMarkerAtTimeBind, segment, time)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -775,7 +886,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getNextMarker(time: Double): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetStringName(Binds.getNextMarkerBind, segment, time)
+        val ret = ObjectCalls.ptrcallWithFloatArgRetStringName(Binds.getNextMarkerBind, segment, time)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -786,7 +899,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getPrevMarker(time: Double): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetStringName(Binds.getPrevMarkerBind, segment, time)
+        val ret = ObjectCalls.ptrcallWithFloatArgRetStringName(Binds.getPrevMarkerBind, segment, time)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -796,7 +911,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMarkerTime(name: String): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetDouble(Binds.getMarkerTimeBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetDouble(Binds.getMarkerTimeBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -806,7 +923,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMarkerNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getMarkerNamesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getMarkerNamesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -816,7 +935,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMarkerColor(name: String): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetColor(Binds.getMarkerColorBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetColor(Binds.getMarkerColorBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -827,6 +948,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun setMarkerColor(name: String, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndColorArg(Binds.setMarkerColorBind, segment, name, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -838,6 +960,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun setLength(timeSec: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLengthBind, segment, timeSec)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -848,7 +971,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -861,6 +986,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun setLoopMode(loopMode: Animation.LoopMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setLoopModeBind, segment, loopMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -872,7 +998,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getLoopMode(): Animation.LoopMode {
         checkOpen()
-        return Animation.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLoopModeBind, segment))
+        val ret = Animation.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLoopModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -883,6 +1011,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun setStep(sizeSec: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setStepBind, segment, sizeSec)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -892,7 +1021,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getStep(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStepBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStepBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -903,6 +1034,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -913,6 +1045,8 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun copyTrack(trackIdx: Int, toAnimation: Animation?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.copyTrackBind, segment, trackIdx, toAnimation?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(toAnimation)
     }
 
     /**
@@ -924,6 +1058,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun optimize(allowedVelocityErr: Double = 0.01, allowedAngularErr: Double = 0.01, precision: Int = 3) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoDoubleAndIntArgs(Binds.optimizeBind, segment, allowedVelocityErr, allowedAngularErr, precision)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -939,6 +1074,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     fun compress(pageSize: Long = 8192L, fps: Long = 120L, splitTolerance: Double = 4.0) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoUInt32AndDoubleArg(Binds.compressBind, segment, pageSize, fps, splitTolerance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -949,7 +1085,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun isCaptureIncluded(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCaptureIncludedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCaptureIncludedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

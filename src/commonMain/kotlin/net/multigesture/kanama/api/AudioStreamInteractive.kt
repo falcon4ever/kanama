@@ -34,6 +34,7 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     fun setClipCount(clipCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setClipCountBind, segment, clipCount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -43,7 +44,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getClipCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getClipCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getClipCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -54,6 +57,7 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     fun setInitialClip(clipIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setInitialClipBind, segment, clipIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -63,7 +67,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getInitialClip(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInitialClipBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getInitialClipBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -74,6 +80,7 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     fun setClipName(clipIndex: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setClipNameBind, segment, clipIndex, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -83,7 +90,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getClipName(clipIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getClipNameBind, segment, clipIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getClipNameBind, segment, clipIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,6 +103,8 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     fun setClipStream(clipIndex: Int, stream: AudioStream?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setClipStreamBind, segment, clipIndex, stream?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(stream)
     }
 
     /**
@@ -104,6 +115,7 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     fun getClipStream(clipIndex: Int): AudioStream? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getClipStreamBind, segment, clipIndex)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -119,6 +131,7 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     fun setClipAutoAdvance(clipIndex: Int, mode: AudioStreamInteractive.AutoAdvanceMode) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setClipAutoAdvanceBind, segment, clipIndex, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -128,7 +141,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getClipAutoAdvance(clipIndex: Int): AudioStreamInteractive.AutoAdvanceMode {
         checkOpen()
-        return AudioStreamInteractive.AutoAdvanceMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getClipAutoAdvanceBind, segment, clipIndex))
+        val ret = AudioStreamInteractive.AutoAdvanceMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getClipAutoAdvanceBind, segment, clipIndex))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -140,6 +155,7 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     fun setClipAutoAdvanceNextClip(clipIndex: Int, autoAdvanceNextClip: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setClipAutoAdvanceNextClipBind, segment, clipIndex, autoAdvanceNextClip)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -149,7 +165,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getClipAutoAdvanceNextClip(clipIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getClipAutoAdvanceNextClipBind, segment, clipIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getClipAutoAdvanceNextClipBind, segment, clipIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -170,6 +188,7 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     fun addTransition(fromClip: Int, toClip: Int, fromTime: AudioStreamInteractive.TransitionFromTime, toTime: AudioStreamInteractive.TransitionToTime, fadeMode: AudioStreamInteractive.FadeMode, fadeBeats: Double, useFillerClip: Boolean = false, fillerClip: Int = -1, holdPrevious: Boolean = false) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntThreeLongDoubleBoolIntBoolArgs(Binds.addTransitionBind, segment, fromClip, toClip, fromTime.value, toTime.value, fadeMode.value, fadeBeats, useFillerClip, fillerClip, holdPrevious)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -179,7 +198,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun hasTransition(fromClip: Int, toClip: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.hasTransitionBind, segment, fromClip, toClip)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.hasTransitionBind, segment, fromClip, toClip)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -191,6 +212,7 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     fun eraseTransition(fromClip: Int, toClip: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.eraseTransitionBind, segment, fromClip, toClip)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -200,7 +222,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getTransitionList(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getTransitionListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getTransitionListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -210,7 +234,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getTransitionFromTime(fromClip: Int, toClip: Int): AudioStreamInteractive.TransitionFromTime {
         checkOpen()
-        return AudioStreamInteractive.TransitionFromTime(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getTransitionFromTimeBind, segment, fromClip, toClip))
+        val ret = AudioStreamInteractive.TransitionFromTime(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getTransitionFromTimeBind, segment, fromClip, toClip))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -220,7 +246,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getTransitionToTime(fromClip: Int, toClip: Int): AudioStreamInteractive.TransitionToTime {
         checkOpen()
-        return AudioStreamInteractive.TransitionToTime(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getTransitionToTimeBind, segment, fromClip, toClip))
+        val ret = AudioStreamInteractive.TransitionToTime(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getTransitionToTimeBind, segment, fromClip, toClip))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -230,7 +258,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getTransitionFadeMode(fromClip: Int, toClip: Int): AudioStreamInteractive.FadeMode {
         checkOpen()
-        return AudioStreamInteractive.FadeMode(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getTransitionFadeModeBind, segment, fromClip, toClip))
+        val ret = AudioStreamInteractive.FadeMode(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getTransitionFadeModeBind, segment, fromClip, toClip))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -240,7 +270,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getTransitionFadeBeats(fromClip: Int, toClip: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getTransitionFadeBeatsBind, segment, fromClip, toClip)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getTransitionFadeBeatsBind, segment, fromClip, toClip)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -250,7 +282,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun isTransitionUsingFillerClip(fromClip: Int, toClip: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isTransitionUsingFillerClipBind, segment, fromClip, toClip)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isTransitionUsingFillerClipBind, segment, fromClip, toClip)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -260,7 +294,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getTransitionFillerClip(fromClip: Int, toClip: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getTransitionFillerClipBind, segment, fromClip, toClip)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getTransitionFillerClipBind, segment, fromClip, toClip)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -270,7 +306,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
      */
     fun isTransitionHoldingPrevious(fromClip: Int, toClip: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isTransitionHoldingPreviousBind, segment, fromClip, toClip)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isTransitionHoldingPreviousBind, segment, fromClip, toClip)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

@@ -26,7 +26,9 @@ open class OpenXRStructureBase(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getStructureType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getStructureTypeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getStructureTypeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -39,6 +41,8 @@ open class OpenXRStructureBase(handle: GodotHandle) : RefCounted(handle) {
     fun setNext(entity: OpenXRStructureBase?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setNextBind, segment, listOf(entity?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(entity)
     }
 
     /**
@@ -51,6 +55,7 @@ open class OpenXRStructureBase(handle: GodotHandle) : RefCounted(handle) {
     fun getNext(): OpenXRStructureBase? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getNextBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this

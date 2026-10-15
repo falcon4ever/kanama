@@ -1070,6 +1070,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      */
     fun setRightIcon(icon: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setRightIconBind, segment, listOf(icon?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(icon)
     }
 
     /**

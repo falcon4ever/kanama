@@ -27,7 +27,9 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpa
      */
     fun getEnabledComponents(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -39,6 +41,7 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpa
     fun setArucoDict(arucoDict: OpenXRSpatialCapabilityConfigurationAruco.ArucoDict) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setArucoDictBind, segment, arucoDict.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -49,7 +52,9 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpa
      */
     fun getArucoDict(): OpenXRSpatialCapabilityConfigurationAruco.ArucoDict {
         checkOpen()
-        return OpenXRSpatialCapabilityConfigurationAruco.ArucoDict(ObjectCalls.ptrcallNoArgsRetLong(Binds.getArucoDictBind, segment))
+        val ret = OpenXRSpatialCapabilityConfigurationAruco.ArucoDict(ObjectCalls.ptrcallNoArgsRetLong(Binds.getArucoDictBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

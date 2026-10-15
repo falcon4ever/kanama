@@ -27,6 +27,7 @@ class VisualShaderNodeParticleRandomness(handle: GodotHandle) : VisualShaderNode
     fun setOpType(type: VisualShaderNodeParticleRandomness.OpType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeParticleRandomness(handle: GodotHandle) : VisualShaderNode
      */
     fun getOpType(): VisualShaderNodeParticleRandomness.OpType {
         checkOpen()
-        return VisualShaderNodeParticleRandomness.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        val ret = VisualShaderNodeParticleRandomness.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

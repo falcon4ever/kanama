@@ -27,6 +27,7 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
     fun setRecordingActive(record: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setRecordingActiveBind, segment, record)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun isRecordingActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRecordingActiveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isRecordingActiveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -47,6 +50,7 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
     fun setFormat(format: AudioStreamWAV.Format) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFormatBind, segment, format.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -56,7 +60,9 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getFormat(): AudioStreamWAV.Format {
         checkOpen()
-        return AudioStreamWAV.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        val ret = AudioStreamWAV.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -66,7 +72,9 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRecording(): AudioStreamWAV? {
         checkOpen()
-        return AudioStreamWAV.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRecordingBind, segment))
+        val ret = AudioStreamWAV.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRecordingBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

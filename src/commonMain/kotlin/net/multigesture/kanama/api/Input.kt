@@ -198,7 +198,9 @@ object Input {
      */
     @JvmStatic
     fun isActionJustPressedByEvent(action: String, event: InputEvent, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(Binds.isActionJustPressedByEventBind, singleton, action, event.requireOpenHandle(), exactMatch)
+        val ret = ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(Binds.isActionJustPressedByEventBind, singleton, action, event.requireOpenHandle(), exactMatch)
+        ObjectCalls.keepReachable(event)
+        return ret
     }
 
     /**
@@ -215,7 +217,9 @@ object Input {
      */
     @JvmStatic
     fun isActionJustReleasedByEvent(action: String, event: InputEvent, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(Binds.isActionJustReleasedByEventBind, singleton, action, event.requireOpenHandle(), exactMatch)
+        val ret = ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(Binds.isActionJustReleasedByEventBind, singleton, action, event.requireOpenHandle(), exactMatch)
+        ObjectCalls.keepReachable(event)
+        return ret
     }
 
     /**
@@ -979,6 +983,7 @@ object Input {
     @JvmStatic
     fun setCustomMouseCursor(image: Resource?, shape: Input.CursorShape = Input.CursorShape.ARROW, hotspot: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithObjectLongAndVector2Arg(Binds.setCustomMouseCursorBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, shape.value, hotspot)
+        ObjectCalls.keepReachable(image)
     }
 
     /**
@@ -990,6 +995,7 @@ object Input {
     @JvmStatic
     fun parseInputEvent(event: InputEvent) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.parseInputEventBind, singleton, listOf(event.requireOpenHandle()))
+        ObjectCalls.keepReachable(event)
     }
 
     /**

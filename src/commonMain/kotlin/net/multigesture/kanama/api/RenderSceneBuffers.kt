@@ -21,6 +21,8 @@ open class RenderSceneBuffers(handle: GodotHandle) : RefCounted(handle) {
     fun configure(config: RenderSceneBuffersConfiguration?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.configureBind, segment, listOf(config?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(config)
     }
 
     companion object {

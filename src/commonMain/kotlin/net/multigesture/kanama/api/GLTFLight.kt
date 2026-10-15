@@ -57,7 +57,9 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
      */
     fun toNode(): Light3D? {
         checkOpen()
-        return Light3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.toNodeBind, segment))
+        val ret = Light3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.toNodeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -67,7 +69,9 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
      */
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,7 +84,9 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
      */
     fun getColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,6 +100,7 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
     fun setColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -105,7 +112,9 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
      */
     fun getIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getIntensityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getIntensityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -118,6 +127,7 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
     fun setIntensity(intensity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setIntensityBind, segment, intensity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -128,7 +138,9 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
      */
     fun getLightType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLightTypeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getLightTypeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -140,6 +152,7 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
     fun setLightType(lightType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setLightTypeBind, segment, lightType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -151,7 +164,9 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
      */
     fun getRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRangeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRangeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,6 +179,7 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
     fun setRange(range: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRangeBind, segment, range)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -177,7 +193,9 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
      */
     fun getInnerConeAngle(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInnerConeAngleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInnerConeAngleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -192,6 +210,7 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
     fun setInnerConeAngle(innerConeAngle: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setInnerConeAngleBind, segment, innerConeAngle)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -205,7 +224,9 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
      */
     fun getOuterConeAngle(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOuterConeAngleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOuterConeAngleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -220,16 +241,20 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
     fun setOuterConeAngle(outerConeAngle: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setOuterConeAngleBind, segment, outerConeAngle)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setAdditionalDataBind, segment, extensionName, additionalData)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {
@@ -239,7 +264,9 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: GLTFLight.from_node
          */
         fun fromNode(lightNode: Light3D): GLTFLight? {
-            return GLTFLight.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, lightNode.segment))
+            val ret = GLTFLight.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, lightNode.segment))
+            ObjectCalls.keepReachable(lightNode)
+            return ret
         }
 
         /**

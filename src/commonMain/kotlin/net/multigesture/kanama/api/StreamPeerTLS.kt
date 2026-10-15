@@ -22,6 +22,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
     fun poll() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.pollBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -31,7 +32,11 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun acceptStream(stream: StreamPeer?, serverOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoObjectArgsRetLong(Binds.acceptStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoObjectArgsRetLong(Binds.acceptStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(stream)
+        ObjectCalls.keepReachable(serverOptions)
+        return ret
     }
 
     /**
@@ -44,7 +49,11 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun connectToStream(stream: StreamPeer?, commonName: String, clientOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(Binds.connectToStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, commonName, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(Binds.connectToStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, commonName, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(stream)
+        ObjectCalls.keepReachable(clientOptions)
+        return ret
     }
 
     /**
@@ -54,7 +63,9 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun getStatus(): StreamPeerTLS.Status {
         checkOpen()
-        return StreamPeerTLS.Status(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
+        val ret = StreamPeerTLS.Status(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -65,6 +76,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
     fun getStream(): StreamPeer? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getStreamBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -80,6 +92,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
     fun disconnectFromStream() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.disconnectFromStreamBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

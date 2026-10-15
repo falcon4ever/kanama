@@ -75,6 +75,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
     fun setAperture(aperture: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setApertureBind, segment, aperture)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -91,7 +92,9 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getAperture(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getApertureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getApertureBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -105,6 +108,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
     fun setShutterSpeed(shutterSpeed: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setShutterSpeedBind, segment, shutterSpeed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -117,7 +121,9 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getShutterSpeed(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getShutterSpeedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getShutterSpeedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -133,6 +139,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
     fun setFocalLength(focalLength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFocalLengthBind, segment, focalLength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -147,7 +154,9 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getFocalLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFocalLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFocalLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -159,6 +168,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
     fun setFocusDistance(focusDistance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFocusDistanceBind, segment, focusDistance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -169,7 +179,9 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getFocusDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFocusDistanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFocusDistanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -182,6 +194,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
     fun setNear(near: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setNearBind, segment, near)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -193,7 +206,9 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getNear(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNearBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNearBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -206,6 +221,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
     fun setFar(far: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFarBind, segment, far)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -217,7 +233,9 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getFar(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFarBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFarBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -228,7 +246,9 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getFov(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFovBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFovBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -242,6 +262,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
     fun setAutoExposureMaxExposureValue(exposureValueMax: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAutoExposureMaxExposureValueBind, segment, exposureValueMax)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -254,7 +275,9 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getAutoExposureMaxExposureValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureMaxExposureValueBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureMaxExposureValueBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -268,6 +291,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
     fun setAutoExposureMinExposureValue(exposureValueMin: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAutoExposureMinExposureValueBind, segment, exposureValueMin)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -280,7 +304,9 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getAutoExposureMinExposureValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureMinExposureValueBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureMinExposureValueBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

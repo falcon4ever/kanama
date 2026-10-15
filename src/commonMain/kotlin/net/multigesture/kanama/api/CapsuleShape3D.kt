@@ -40,6 +40,7 @@ class CapsuleShape3D(handle: GodotHandle) : Shape3D(handle) {
     fun setRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -51,7 +52,9 @@ class CapsuleShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -64,6 +67,7 @@ class CapsuleShape3D(handle: GodotHandle) : Shape3D(handle) {
     fun setHeight(height: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightBind, segment, height)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -75,7 +79,9 @@ class CapsuleShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -88,6 +94,7 @@ class CapsuleShape3D(handle: GodotHandle) : Shape3D(handle) {
     fun setMidHeight(midHeight: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMidHeightBind, segment, midHeight)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -99,7 +106,9 @@ class CapsuleShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getMidHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMidHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMidHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

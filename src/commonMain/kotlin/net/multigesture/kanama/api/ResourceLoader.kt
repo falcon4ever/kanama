@@ -100,6 +100,7 @@ object ResourceLoader {
     @JvmStatic
     fun addResourceFormatLoader(formatLoader: ResourceFormatLoader, atFront: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addResourceFormatLoaderBind, singleton, formatLoader.requireOpenHandle(), atFront)
+        ObjectCalls.keepReachable(formatLoader)
     }
 
     /**
@@ -110,6 +111,7 @@ object ResourceLoader {
     @JvmStatic
     fun removeResourceFormatLoader(formatLoader: ResourceFormatLoader) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeResourceFormatLoaderBind, singleton, listOf(formatLoader.requireOpenHandle()))
+        ObjectCalls.keepReachable(formatLoader)
     }
 
     /**

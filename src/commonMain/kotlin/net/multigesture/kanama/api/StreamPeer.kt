@@ -26,7 +26,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putData(data: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.putDataBind, segment, data))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.putDataBind, segment, data))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -38,7 +40,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putPartialData(data: ByteArray): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetArray(Binds.putPartialDataBind, segment, data)
+        val ret = ObjectCalls.ptrcallWithByteArrayArgRetArray(Binds.putPartialDataBind, segment, data)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -50,7 +54,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getData(bytes: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getDataBind, segment, bytes)
+        val ret = ObjectCalls.ptrcallWithIntArgRetArray(Binds.getDataBind, segment, bytes)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,7 +68,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPartialData(bytes: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getPartialDataBind, segment, bytes)
+        val ret = ObjectCalls.ptrcallWithIntArgRetArray(Binds.getPartialDataBind, segment, bytes)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -72,7 +80,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAvailableBytes(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getAvailableBytesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getAvailableBytesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -83,6 +93,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun setBigEndian(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setBigEndianBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -92,7 +103,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isBigEndianEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBigEndianEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isBigEndianEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -103,6 +116,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun put8(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.put8Bind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -113,6 +127,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun putU8(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.putU8Bind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -123,6 +138,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun put16(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.put16Bind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -133,6 +149,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun putU16(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.putU16Bind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -143,6 +160,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun put32(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.put32Bind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -153,6 +171,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun putU32(value: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.putU32Bind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -163,6 +182,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun put64(value: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.put64Bind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -173,6 +193,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun putU64(value: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.putU64Bind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -183,6 +204,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun putHalf(value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.putHalfBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -193,6 +215,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun putFloat(value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.putFloatBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -203,6 +226,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun putDouble(value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.putDoubleBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -214,6 +238,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun putString(value: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.putStringBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -225,6 +250,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun putUtf8String(value: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.putUtf8StringBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -237,6 +263,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     fun putVar(value: Any?, fullObjects: Boolean = false) {
         checkOpen()
         ObjectCalls.ptrcallWithVariantAndBoolArg(Binds.putVarBind, segment, value, fullObjects)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -246,7 +273,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun get8(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.get8Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.get8Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -256,7 +285,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getU8(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getU8Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getU8Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -266,7 +297,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun get16(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.get16Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.get16Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -276,7 +309,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getU16(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getU16Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getU16Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -286,7 +321,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun get32(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.get32Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.get32Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -296,7 +333,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getU32(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getU32Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getU32Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -306,7 +345,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun get64(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.get64Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.get64Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -316,7 +357,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getU64(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getU64Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getU64Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -326,7 +369,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getHalf(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHalfBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHalfBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -336,7 +381,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFloat(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFloatBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFloatBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -346,7 +393,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDouble(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDoubleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDoubleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -357,7 +406,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getString(bytes: Int = -1): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getStringBind, segment, bytes)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getStringBind, segment, bytes)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -369,7 +420,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUtf8String(bytes: Int = -1): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getUtf8StringBind, segment, bytes)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getUtf8StringBind, segment, bytes)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -383,7 +436,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVar(allowObjects: Boolean = false): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(Binds.getVarBind, segment, allowObjects)
+        val ret = ObjectCalls.ptrcallWithBoolArgRetVariantScalar(Binds.getVarBind, segment, allowObjects)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

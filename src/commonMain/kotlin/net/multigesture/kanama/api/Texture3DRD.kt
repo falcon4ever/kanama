@@ -27,6 +27,7 @@ class Texture3DRD(handle: GodotHandle) : Texture3D(handle) {
     fun setTextureRdRid(textureRdRid: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setTextureRdRidBind, segment, textureRdRid)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class Texture3DRD(handle: GodotHandle) : Texture3D(handle) {
      */
     fun getTextureRdRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getTextureRdRidBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getTextureRdRidBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

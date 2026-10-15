@@ -138,6 +138,7 @@ class MultiplayerSpawner(handle: GodotHandle) : Node(handle) {
      */
     fun setSpawnFunction(spawnFunction: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(Binds.setSpawnFunctionBind, segment, spawnFunction.target.segment, spawnFunction.method)
+        ObjectCalls.keepReachable(spawnFunction)
     }
 
     /** Signal `despawned(node: Node)`; see [TypedSignal]. */

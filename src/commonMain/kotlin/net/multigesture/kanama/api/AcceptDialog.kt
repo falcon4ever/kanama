@@ -147,6 +147,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      */
     fun removeButton(button: Button) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeButtonBind, segment, listOf(button.segment))
+        ObjectCalls.keepReachable(button)
     }
 
     /**
@@ -157,6 +158,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      */
     fun registerTextEnter(lineEdit: LineEdit) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.registerTextEnterBind, segment, listOf(lineEdit.segment))
+        ObjectCalls.keepReachable(lineEdit)
     }
 
     /**

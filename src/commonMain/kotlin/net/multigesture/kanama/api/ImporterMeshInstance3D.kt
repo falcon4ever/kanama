@@ -74,6 +74,7 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
 
     fun setMesh(mesh: ImporterMesh?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(mesh)
     }
 
     fun getMesh(): ImporterMesh? {
@@ -82,6 +83,7 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
 
     fun setSkin(skin: Skin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(skin)
     }
 
     fun getSkin(): Skin? {

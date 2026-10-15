@@ -20,7 +20,9 @@ class StreamPeerUDS(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun bind(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.bindBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.bindBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class StreamPeerUDS(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun connectToHost(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.connectToHostBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.connectToHostBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,7 +44,9 @@ class StreamPeerUDS(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun getConnectedPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getConnectedPathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getConnectedPathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

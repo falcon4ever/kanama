@@ -42,6 +42,8 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun setIcon(name: String, themeType: String, texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(Binds.setIconBind, segment, name, themeType, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -53,7 +55,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getIcon(name: String, themeType: String): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getIconBind, segment, name, themeType))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getIconBind, segment, name, themeType))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -64,7 +68,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasIcon(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasIconBind, segment, name, themeType)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasIconBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -77,6 +83,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun renameIcon(oldName: String, name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.renameIconBind, segment, oldName, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -88,6 +95,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun clearIcon(name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.clearIconBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -98,7 +106,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getIconList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getIconListBind, segment, themeType)
+        val ret = ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getIconListBind, segment, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -109,7 +119,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getIconTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getIconTypeListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getIconTypeListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -121,6 +133,8 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun setStylebox(name: String, themeType: String, texture: StyleBox?) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(Binds.setStyleboxBind, segment, name, themeType, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -132,7 +146,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getStylebox(name: String, themeType: String): StyleBox? {
         checkOpen()
-        return StyleBox.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getStyleboxBind, segment, name, themeType))
+        val ret = StyleBox.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getStyleboxBind, segment, name, themeType))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -143,7 +159,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasStylebox(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasStyleboxBind, segment, name, themeType)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasStyleboxBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -156,6 +174,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun renameStylebox(oldName: String, name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.renameStyleboxBind, segment, oldName, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -167,6 +186,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun clearStylebox(name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.clearStyleboxBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -177,7 +197,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getStyleboxList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getStyleboxListBind, segment, themeType)
+        val ret = ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getStyleboxListBind, segment, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -188,7 +210,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getStyleboxTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getStyleboxTypeListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getStyleboxTypeListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -200,6 +224,8 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun setFont(name: String, themeType: String, font: Font?) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(Binds.setFontBind, segment, name, themeType, font?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -213,7 +239,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getFont(name: String, themeType: String): Font? {
         checkOpen()
-        return Font.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getFontBind, segment, name, themeType))
+        val ret = Font.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getFontBind, segment, name, themeType))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -225,7 +253,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasFont(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasFontBind, segment, name, themeType)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasFontBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -238,6 +268,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun renameFont(oldName: String, name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.renameFontBind, segment, oldName, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -249,6 +280,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun clearFont(name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.clearFontBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -259,7 +291,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getFontListBind, segment, themeType)
+        val ret = ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getFontListBind, segment, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -270,7 +304,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFontTypeListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFontTypeListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -282,6 +318,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun setFontSize(name: String, themeType: String, fontSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndIntArg(Binds.setFontSizeBind, segment, name, themeType, fontSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -295,7 +332,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontSize(name: String, themeType: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(Binds.getFontSizeBind, segment, name, themeType)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(Binds.getFontSizeBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -307,7 +346,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasFontSize(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasFontSizeBind, segment, name, themeType)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasFontSizeBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -320,6 +361,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun renameFontSize(oldName: String, name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.renameFontSizeBind, segment, oldName, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -331,6 +373,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun clearFontSize(name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.clearFontSizeBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -341,7 +384,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontSizeList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getFontSizeListBind, segment, themeType)
+        val ret = ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getFontSizeListBind, segment, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -352,7 +397,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontSizeTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFontSizeTypeListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFontSizeTypeListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -364,6 +411,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun setColor(name: String, themeType: String, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndColorArg(Binds.setColorBind, segment, name, themeType, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -374,7 +422,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getColor(name: String, themeType: String): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(Binds.getColorBind, segment, name, themeType)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(Binds.getColorBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -385,7 +435,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasColor(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasColorBind, segment, name, themeType)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasColorBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -398,6 +450,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun renameColor(oldName: String, name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.renameColorBind, segment, oldName, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -409,6 +462,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun clearColor(name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.clearColorBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -419,7 +473,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getColorList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getColorListBind, segment, themeType)
+        val ret = ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getColorListBind, segment, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -430,7 +486,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getColorTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getColorTypeListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getColorTypeListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -442,6 +500,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun setConstant(name: String, themeType: String, constant: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndIntArg(Binds.setConstantBind, segment, name, themeType, constant)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -452,7 +511,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getConstant(name: String, themeType: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(Binds.getConstantBind, segment, name, themeType)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(Binds.getConstantBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -463,7 +524,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasConstant(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasConstantBind, segment, name, themeType)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasConstantBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -476,6 +539,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun renameConstant(oldName: String, name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.renameConstantBind, segment, oldName, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -487,6 +551,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun clearConstant(name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.clearConstantBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -497,7 +562,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getConstantList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getConstantListBind, segment, themeType)
+        val ret = ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getConstantListBind, segment, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -508,7 +575,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getConstantTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getConstantTypeListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getConstantTypeListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -522,6 +591,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun setDefaultBaseScale(baseScale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDefaultBaseScaleBind, segment, baseScale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -534,7 +604,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getDefaultBaseScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDefaultBaseScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDefaultBaseScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -545,7 +617,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasDefaultBaseScale(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDefaultBaseScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDefaultBaseScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -559,6 +633,8 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun setDefaultFont(font: Font?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setDefaultFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -571,7 +647,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getDefaultFont(): Font? {
         checkOpen()
-        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDefaultFontBind, segment))
+        val ret = Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDefaultFontBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -581,7 +659,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasDefaultFont(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDefaultFontBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDefaultFontBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -596,6 +676,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun setDefaultFontSize(fontSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setDefaultFontSizeBind, segment, fontSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -609,7 +690,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getDefaultFontSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDefaultFontSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getDefaultFontSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -620,7 +703,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasDefaultFontSize(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDefaultFontSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDefaultFontSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -634,6 +719,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun setThemeItem(dataType: Theme.DataType, name: String, themeType: String, value: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndTwoStringNameAndVariantArg(Binds.setThemeItemBind, segment, dataType.value, name, themeType, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -646,7 +732,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getThemeItem(dataType: Theme.DataType, name: String, themeType: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetVariantScalar(Binds.getThemeItemBind, segment, dataType.value, name, themeType)
+        val ret = ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetVariantScalar(Binds.getThemeItemBind, segment, dataType.value, name, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -659,7 +747,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasThemeItem(dataType: Theme.DataType, name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetBool(Binds.hasThemeItemBind, segment, dataType.value, name, themeType)
+        val ret = ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetBool(Binds.hasThemeItemBind, segment, dataType.value, name, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -674,6 +764,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun renameThemeItem(dataType: Theme.DataType, oldName: String, name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndThreeStringNameArgs(Binds.renameThemeItemBind, segment, dataType.value, oldName, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -687,6 +778,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun clearThemeItem(dataType: Theme.DataType, name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndTwoStringNameArgs(Binds.clearThemeItemBind, segment, dataType.value, name, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -699,7 +791,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getThemeItemList(dataType: Theme.DataType, themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndStringArgRetPackedStringList(Binds.getThemeItemListBind, segment, dataType.value, themeType)
+        val ret = ObjectCalls.ptrcallWithLongAndStringArgRetPackedStringList(Binds.getThemeItemListBind, segment, dataType.value, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -711,7 +805,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getThemeItemTypeList(dataType: Theme.DataType): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(Binds.getThemeItemTypeListBind, segment, dataType.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetPackedStringList(Binds.getThemeItemTypeListBind, segment, dataType.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -727,6 +823,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun setTypeVariation(themeType: String, baseType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.setTypeVariationBind, segment, themeType, baseType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -736,7 +833,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun isTypeVariation(themeType: String, baseType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.isTypeVariationBind, segment, themeType, baseType)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.isTypeVariationBind, segment, themeType, baseType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -747,6 +846,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun clearTypeVariation(themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.clearTypeVariationBind, segment, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -757,7 +857,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getTypeVariationBase(themeType: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetStringName(Binds.getTypeVariationBaseBind, segment, themeType)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetStringName(Binds.getTypeVariationBaseBind, segment, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -767,7 +869,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getTypeVariationList(baseType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(Binds.getTypeVariationListBind, segment, baseType)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(Binds.getTypeVariationListBind, segment, baseType)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -780,6 +884,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun addType(themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.addTypeBind, segment, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -792,6 +897,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun removeType(themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.removeTypeBind, segment, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -805,6 +911,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun renameType(oldThemeType: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.renameTypeBind, segment, oldThemeType, themeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -815,7 +922,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getTypeListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getTypeListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -829,6 +938,8 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun mergeWith(other: Theme?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.mergeWithBind, segment, listOf(other?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(other)
     }
 
     /**
@@ -839,6 +950,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

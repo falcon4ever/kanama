@@ -64,6 +64,8 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setDiffuseTexture(texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setDiffuseTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -74,6 +76,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun getDiffuseTexture(): Texture2D? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getDiffuseTextureBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -92,6 +95,8 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setNormalTexture(texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setNormalTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -105,6 +110,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun getNormalTexture(): Texture2D? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getNormalTextureBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -123,6 +129,8 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setSpecularTexture(texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSpecularTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -136,6 +144,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun getSpecularTexture(): Texture2D? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getSpecularTextureBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -153,6 +162,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setSpecularColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setSpecularColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -164,7 +174,9 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSpecularColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getSpecularColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getSpecularColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -178,6 +190,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setSpecularShininess(shininess: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSpecularShininessBind, segment, shininess)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -190,7 +203,9 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSpecularShininess(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpecularShininessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpecularShininessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -201,6 +216,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setTextureFilter(filter: CanvasItem.TextureFilter) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextureFilterBind, segment, filter.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -210,7 +226,9 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getTextureFilter(): CanvasItem.TextureFilter {
         checkOpen()
-        return CanvasItem.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureFilterBind, segment))
+        val ret = CanvasItem.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureFilterBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -221,6 +239,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setTextureRepeat(repeat: CanvasItem.TextureRepeat) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextureRepeatBind, segment, repeat.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -230,7 +249,9 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getTextureRepeat(): CanvasItem.TextureRepeat {
         checkOpen()
-        return CanvasItem.TextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureRepeatBind, segment))
+        val ret = CanvasItem.TextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureRepeatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

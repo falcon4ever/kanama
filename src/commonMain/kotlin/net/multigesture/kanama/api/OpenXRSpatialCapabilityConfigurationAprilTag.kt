@@ -27,7 +27,9 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXR
      */
     fun getEnabledComponents(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -39,6 +41,7 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXR
     fun setAprilDict(aprilDict: OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAprilDictBind, segment, aprilDict.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -49,7 +52,9 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXR
      */
     fun getAprilDict(): OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict {
         checkOpen()
-        return OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAprilDictBind, segment))
+        val ret = OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAprilDictBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

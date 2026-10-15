@@ -53,6 +53,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSize(size: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,7 +63,9 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -73,6 +76,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSubdivideWidth(subdivide: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideWidthBind, segment, subdivide)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -82,7 +86,9 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSubdivideWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideWidthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideWidthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -93,6 +99,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setSubdivideDepth(subdivide: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideDepthBind, segment, subdivide)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -102,7 +109,9 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSubdivideDepth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideDepthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideDepthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -113,6 +122,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setCenterOffset(offset: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setCenterOffsetBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -122,7 +132,9 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getCenterOffset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getCenterOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getCenterOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -133,6 +145,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setOrientation(orientation: PlaneMesh.Orientation) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOrientationBind, segment, orientation.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -142,7 +155,9 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getOrientation(): PlaneMesh.Orientation {
         checkOpen()
-        return PlaneMesh.Orientation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOrientationBind, segment))
+        val ret = PlaneMesh.Orientation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOrientationBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -191,7 +206,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         // Downcast a Resource to PlaneMesh (null if not).
         @JvmStatic
         fun fromResource(value: Resource): PlaneMesh? =
-            if (value.isClass("PlaneMesh")) RefCounted.retained(PlaneMesh(value.handle)) else null
+            if (value.isClass("PlaneMesh")) RefCounted.retained(PlaneMesh(value.handle), value) else null
     }
 
     private object Binds {

@@ -20,6 +20,7 @@ open class JSONRPC(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setMethod(name: String, callback: GodotCallable) {
         ObjectCalls.ptrcallWithStringCallableArgs(Binds.setMethodBind, segment, name, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**

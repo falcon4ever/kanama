@@ -27,6 +27,7 @@ class InputEventMagnifyGesture(handle: GodotHandle) : InputEventGesture(handle) 
     fun setFactor(factor: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFactorBind, segment, factor)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ class InputEventMagnifyGesture(handle: GodotHandle) : InputEventGesture(handle) 
      */
     fun getFactor(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFactorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFactorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

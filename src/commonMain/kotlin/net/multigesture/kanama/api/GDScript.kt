@@ -18,7 +18,9 @@ class GDScript(handle: GodotHandle) : Script(handle) {
      */
     fun new(vararg extraArgs: Any?): Any? {
         checkOpen()
-        return ObjectCalls.callWithVariantArgs(Binds.newBind, segment, listOf(*extraArgs))
+        val ret = ObjectCalls.callWithVariantArgs(Binds.newBind, segment, listOf(*extraArgs))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

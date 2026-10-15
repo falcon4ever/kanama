@@ -29,6 +29,7 @@ class EditorSelection(handle: GodotHandle) : GodotObject(handle) {
      */
     fun addNode(node: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addNodeBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -38,6 +39,7 @@ class EditorSelection(handle: GodotHandle) : GodotObject(handle) {
      */
     fun removeNode(node: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeNodeBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**

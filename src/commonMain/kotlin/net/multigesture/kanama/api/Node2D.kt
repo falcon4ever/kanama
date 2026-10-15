@@ -405,7 +405,9 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_relative_transform_to_parent
      */
     fun getRelativeTransformToParent(parent: Node): Transform2D {
-        return ObjectCalls.ptrcallWithObjectArgRetTransform2D(Binds.getRelativeTransformToParentBind, segment, parent.segment)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetTransform2D(Binds.getRelativeTransformToParentBind, segment, parent.segment)
+        ObjectCalls.keepReachable(parent)
+        return ret
     }
 
     companion object {

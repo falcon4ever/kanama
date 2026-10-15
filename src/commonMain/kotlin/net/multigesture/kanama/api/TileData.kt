@@ -146,6 +146,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -275,6 +276,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setOccluderPolygon(layerId: Int, polygonIndex: Int, polygon: OccluderPolygon2D?) {
         ObjectCalls.ptrcallWithTwoIntAndObjectArg(Binds.setOccluderPolygonBind, segment, layerId, polygonIndex, polygon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(polygon)
     }
 
     /**
@@ -295,6 +297,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setOccluder(layerId: Int, occluderPolygon: OccluderPolygon2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setOccluderBind, segment, layerId, occluderPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(occluderPolygon)
     }
 
     /**
@@ -513,6 +516,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      */
     fun setNavigationPolygon(layerId: Int, navigationPolygon: NavigationPolygon?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setNavigationPolygonBind, segment, layerId, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(navigationPolygon)
     }
 
     /**

@@ -14,96 +14,128 @@ class GDScriptTextDocument(handle: GodotHandle) : RefCounted(handle) {
     fun showNativeSymbolInEditor(symbolId: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.showNativeSymbolInEditorBind, segment, symbolId)
+        ObjectCalls.keepReachable(this)
     }
 
     fun didOpen(params: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithVariantArg(Binds.didOpenBind, segment, params)
+        ObjectCalls.keepReachable(this)
     }
 
     fun didClose(params: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithVariantArg(Binds.didCloseBind, segment, params)
+        ObjectCalls.keepReachable(this)
     }
 
     fun didChange(params: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithVariantArg(Binds.didChangeBind, segment, params)
+        ObjectCalls.keepReachable(this)
     }
 
     fun willSaveWaitUntil(params: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithVariantArg(Binds.willSaveWaitUntilBind, segment, params)
+        ObjectCalls.keepReachable(this)
     }
 
     fun didSave(params: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithVariantArg(Binds.didSaveBind, segment, params)
+        ObjectCalls.keepReachable(this)
     }
 
     fun nativeSymbol(params: Map<String, Any?>): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(Binds.nativeSymbolBind, segment, params)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(Binds.nativeSymbolBind, segment, params)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun documentSymbol(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.documentSymbolBind, segment, params)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.documentSymbolBind, segment, params)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun completion(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.completionBind, segment, params)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.completionBind, segment, params)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun prepareRename(params: Map<String, Any?>): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(Binds.prepareRenameBind, segment, params)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(Binds.prepareRenameBind, segment, params)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun references(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.referencesBind, segment, params)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.referencesBind, segment, params)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun foldingRange(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.foldingRangeBind, segment, params)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.foldingRangeBind, segment, params)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun codeLens(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.codeLensBind, segment, params)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.codeLensBind, segment, params)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun documentLink(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.documentLinkBind, segment, params)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.documentLinkBind, segment, params)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun colorPresentation(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.colorPresentationBind, segment, params)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.colorPresentationBind, segment, params)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun hover(params: Map<String, Any?>): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(Binds.hoverBind, segment, params)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(Binds.hoverBind, segment, params)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun definition(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.definitionBind, segment, params)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.definitionBind, segment, params)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun declaration(params: Map<String, Any?>): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(Binds.declarationBind, segment, params)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(Binds.declarationBind, segment, params)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun signatureHelp(params: Map<String, Any?>): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(Binds.signatureHelpBind, segment, params)
+        val ret = ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(Binds.signatureHelpBind, segment, params)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

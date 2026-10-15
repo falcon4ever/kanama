@@ -18,7 +18,9 @@ class JavaObject(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getJavaClass(): JavaClass? {
         checkOpen()
-        return JavaClass.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getJavaClassBind, segment))
+        val ret = JavaClass.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getJavaClassBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -28,7 +30,9 @@ class JavaObject(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasJavaMethod(method: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasJavaMethodBind, segment, method)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasJavaMethodBind, segment, method)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

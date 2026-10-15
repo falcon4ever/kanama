@@ -50,6 +50,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
     fun setExposureMultiplier(multiplier: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setExposureMultiplierBind, segment, multiplier)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -59,7 +60,9 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun getExposureMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getExposureMultiplierBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getExposureMultiplierBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -74,6 +77,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
     fun setExposureSensitivity(sensitivity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setExposureSensitivityBind, segment, sensitivity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -87,7 +91,9 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun getExposureSensitivity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getExposureSensitivityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getExposureSensitivityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -101,6 +107,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
     fun setAutoExposureEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAutoExposureEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -113,7 +120,9 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun isAutoExposureEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutoExposureEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutoExposureEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -125,6 +134,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
     fun setAutoExposureSpeed(exposureSpeed: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAutoExposureSpeedBind, segment, exposureSpeed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -135,7 +145,9 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun getAutoExposureSpeed(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureSpeedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureSpeedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -146,6 +158,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
     fun setAutoExposureScale(exposureGrey: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAutoExposureScaleBind, segment, exposureGrey)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -155,7 +168,9 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun getAutoExposureScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

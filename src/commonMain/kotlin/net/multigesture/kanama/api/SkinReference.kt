@@ -19,7 +19,9 @@ class SkinReference(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSkeleton(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getSkeletonBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getSkeletonBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -32,7 +34,9 @@ class SkinReference(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSkin(): Skin? {
         checkOpen()
-        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkinBind, segment))
+        val ret = Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkinBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

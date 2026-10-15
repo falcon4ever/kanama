@@ -27,6 +27,7 @@ class VisualShaderNodeTransformFunc(handle: GodotHandle) : VisualShaderNode(hand
     fun setFunction(func: VisualShaderNodeTransformFunc.Function) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFunctionBind, segment, func.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeTransformFunc(handle: GodotHandle) : VisualShaderNode(hand
      */
     fun getFunction(): VisualShaderNodeTransformFunc.Function {
         checkOpen()
-        return VisualShaderNodeTransformFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
+        val ret = VisualShaderNodeTransformFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

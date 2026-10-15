@@ -25,6 +25,7 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
      */
     fun queueResourcePreview(path: String, receiver: GodotObject, receiverFunc: String, userdata: Any?) {
         ObjectCalls.ptrcallWithStringObjectStringNameVariantArgs(Binds.queueResourcePreviewBind, segment, path, receiver.segment, receiverFunc, userdata)
+        ObjectCalls.keepReachable(receiver)
     }
 
     /**
@@ -39,6 +40,8 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
      */
     fun queueEditedResourcePreview(resource: Resource?, receiver: GodotObject, receiverFunc: String, userdata: Any?) {
         ObjectCalls.ptrcallWithTwoObjectStringNameVariantArgs(Binds.queueEditedResourcePreviewBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT, receiver.segment, receiverFunc, userdata)
+        ObjectCalls.keepReachable(resource)
+        ObjectCalls.keepReachable(receiver)
     }
 
     /**
@@ -48,6 +51,7 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
      */
     fun addPreviewGenerator(generator: EditorResourcePreviewGenerator?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addPreviewGeneratorBind, segment, listOf(generator?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(generator)
     }
 
     /**
@@ -57,6 +61,7 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
      */
     fun removePreviewGenerator(generator: EditorResourcePreviewGenerator?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removePreviewGeneratorBind, segment, listOf(generator?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(generator)
     }
 
     /**

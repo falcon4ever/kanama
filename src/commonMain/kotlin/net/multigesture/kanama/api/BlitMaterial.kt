@@ -27,6 +27,7 @@ class BlitMaterial(handle: GodotHandle) : Material(handle) {
     fun setBlendMode(blendMode: BlitMaterial.BlendMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBlendModeBind, segment, blendMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class BlitMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getBlendMode(): BlitMaterial.BlendMode {
         checkOpen()
-        return BlitMaterial.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendModeBind, segment))
+        val ret = BlitMaterial.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

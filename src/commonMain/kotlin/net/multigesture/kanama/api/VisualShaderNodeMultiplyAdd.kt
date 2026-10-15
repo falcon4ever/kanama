@@ -27,6 +27,7 @@ class VisualShaderNodeMultiplyAdd(handle: GodotHandle) : VisualShaderNode(handle
     fun setOpType(type: VisualShaderNodeMultiplyAdd.OpType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeMultiplyAdd(handle: GodotHandle) : VisualShaderNode(handle
      */
     fun getOpType(): VisualShaderNodeMultiplyAdd.OpType {
         checkOpen()
-        return VisualShaderNodeMultiplyAdd.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        val ret = VisualShaderNodeMultiplyAdd.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

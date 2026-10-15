@@ -39,6 +39,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      */
     fun setEnvironment(env: Environment?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(env)
     }
 
     /**
@@ -57,6 +58,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      */
     fun setCameraAttributes(cameraAttributes: CameraAttributes?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCameraAttributesBind, segment, listOf(cameraAttributes?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(cameraAttributes)
     }
 
     /**
@@ -75,6 +77,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      */
     fun setCompositor(compositor: Compositor?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCompositorBind, segment, listOf(compositor?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(compositor)
     }
 
     /**

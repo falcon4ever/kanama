@@ -84,6 +84,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setFadeinTime(time: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFadeinTimeBind, segment, time)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -95,7 +96,9 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getFadeinTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadeinTimeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadeinTimeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -107,6 +110,8 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setFadeinCurve(curve: Curve?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setFadeinCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -117,7 +122,9 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getFadeinCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFadeinCurveBind, segment))
+        val ret = Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFadeinCurveBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -130,6 +137,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setFadeoutTime(time: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFadeoutTimeBind, segment, time)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -141,7 +149,9 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getFadeoutTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadeoutTimeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadeoutTimeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -153,6 +163,8 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setFadeoutCurve(curve: Curve?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setFadeoutCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -163,7 +175,9 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getFadeoutCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFadeoutCurveBind, segment))
+        val ret = Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFadeoutCurveBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -175,6 +189,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setBreakLoopAtEnd(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setBreakLoopAtEndBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -185,7 +200,9 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun isLoopBrokenAtEnd(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLoopBrokenAtEndBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isLoopBrokenAtEndBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -196,6 +213,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setAbortOnReset(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAbortOnResetBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -205,7 +223,9 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun isAbortedOnReset(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAbortedOnResetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAbortedOnResetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -219,6 +239,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setAutorestart(active: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAutorestartBind, segment, active)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -231,7 +252,9 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun hasAutorestart(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasAutorestartBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasAutorestartBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -242,6 +265,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setAutorestartDelay(time: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAutorestartDelayBind, segment, time)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -251,7 +275,9 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getAutorestartDelay(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutorestartDelayBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutorestartDelayBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -263,6 +289,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setAutorestartRandomDelay(time: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAutorestartRandomDelayBind, segment, time)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -273,7 +300,9 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getAutorestartRandomDelay(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutorestartRandomDelayBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutorestartRandomDelayBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -284,6 +313,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     fun setMixMode(mode: AnimationNodeOneShot.MixMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setMixModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -293,7 +323,9 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getMixMode(): AnimationNodeOneShot.MixMode {
         checkOpen()
-        return AnimationNodeOneShot.MixMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMixModeBind, segment))
+        val ret = AnimationNodeOneShot.MixMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMixModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

@@ -281,6 +281,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      */
     fun setShortcut(shortcut: Shortcut?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(shortcut)
     }
 
     /**
@@ -300,6 +301,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      */
     fun setButtonGroup(buttonGroup: ButtonGroup?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setButtonGroupBind, segment, listOf(buttonGroup?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(buttonGroup)
     }
 
     /**

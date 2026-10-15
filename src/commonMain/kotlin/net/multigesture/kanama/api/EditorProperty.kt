@@ -288,6 +288,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      */
     fun addFocusable(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addFocusableBind, segment, listOf(control.segment))
+        ObjectCalls.keepReachable(control)
     }
 
     /**
@@ -298,6 +299,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      */
     fun setBottomEditor(editor: Control) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setBottomEditorBind, segment, listOf(editor.segment))
+        ObjectCalls.keepReachable(editor)
     }
 
     /**
@@ -388,6 +390,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      */
     fun setObjectAndProperty(objectValue: GodotObject, property: String) {
         ObjectCalls.ptrcallWithObjectAndStringNameArg(Binds.setObjectAndPropertyBind, segment, objectValue.segment, property)
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**
@@ -398,6 +401,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      */
     fun setLabelReference(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setLabelReferenceBind, segment, listOf(control.segment))
+        ObjectCalls.keepReachable(control)
     }
 
     /**

@@ -31,7 +31,10 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create
      */
     fun textureCreate(format: RDTextureFormat?, view: RDTextureView?, data: List<ByteArray>): RID {
-        return ObjectCalls.ptrcallWithTwoObjectByteArrayListArgsRetRID(Binds.textureCreateBind, segment, format?.requireOpenHandle() ?: NULL_SEGMENT, view?.requireOpenHandle() ?: NULL_SEGMENT, data)
+        val ret = ObjectCalls.ptrcallWithTwoObjectByteArrayListArgsRetRID(Binds.textureCreateBind, segment, format?.requireOpenHandle() ?: NULL_SEGMENT, view?.requireOpenHandle() ?: NULL_SEGMENT, data)
+        ObjectCalls.keepReachable(format)
+        ObjectCalls.keepReachable(view)
+        return ret
     }
 
     /**
@@ -41,7 +44,9 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create_shared
      */
     fun textureCreateShared(view: RDTextureView?, withTexture: RID): RID {
-        return ObjectCalls.ptrcallWithObjectRIDArgsRetRID(Binds.textureCreateSharedBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture)
+        val ret = ObjectCalls.ptrcallWithObjectRIDArgsRetRID(Binds.textureCreateSharedBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture)
+        ObjectCalls.keepReachable(view)
+        return ret
     }
 
     /**
@@ -56,7 +61,9 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create_shared_from_slice
      */
     fun textureCreateSharedFromSlice(view: RDTextureView?, withTexture: RID, layer: Long, mipmap: Long, mipmaps: Long = 1L, sliceType: RenderingDevice.TextureSliceType = RenderingDevice.TextureSliceType.SLICE_2D): RID {
-        return ObjectCalls.ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(Binds.textureCreateSharedFromSliceBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture, layer, mipmap, mipmaps, sliceType.value)
+        val ret = ObjectCalls.ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(Binds.textureCreateSharedFromSliceBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture, layer, mipmap, mipmaps, sliceType.value)
+        ObjectCalls.keepReachable(view)
+        return ret
     }
 
     /**
@@ -119,7 +126,9 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_get_data_async
      */
     fun textureGetDataAsync(texture: RID, layer: Long, callback: GodotCallable): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithRIDUInt32CallableArgsRetLong(Binds.textureGetDataAsyncBind, segment, texture, layer, callback.target.segment, callback.method))
+        val ret = GodotError(ObjectCalls.ptrcallWithRIDUInt32CallableArgsRetLong(Binds.textureGetDataAsyncBind, segment, texture, layer, callback.target.segment, callback.method))
+        ObjectCalls.keepReachable(callback)
+        return ret
     }
 
     /**
@@ -356,7 +365,9 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.sampler_create
      */
     fun samplerCreate(state: RDSamplerState?): RID {
-        return ObjectCalls.ptrcallWithObjectArgRetRID(Binds.samplerCreateBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetRID(Binds.samplerCreateBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(state)
+        return ret
     }
 
     /**
@@ -434,7 +445,9 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_compile_spirv_from_source
      */
     fun shaderCompileSpirvFromSource(shaderSource: RDShaderSource?, allowCache: Boolean = true): RDShaderSPIRV? {
-        return RDShaderSPIRV.wrapOwned(ObjectCalls.ptrcallWithObjectAndBoolArgRetObject(Binds.shaderCompileSpirvFromSourceBind, segment, shaderSource?.requireOpenHandle() ?: NULL_SEGMENT, allowCache))
+        val ret = RDShaderSPIRV.wrapOwned(ObjectCalls.ptrcallWithObjectAndBoolArgRetObject(Binds.shaderCompileSpirvFromSourceBind, segment, shaderSource?.requireOpenHandle() ?: NULL_SEGMENT, allowCache))
+        ObjectCalls.keepReachable(shaderSource)
+        return ret
     }
 
     /**
@@ -447,7 +460,9 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_compile_binary_from_spirv
      */
     fun shaderCompileBinaryFromSpirv(spirvData: RDShaderSPIRV?, name: String = ""): ByteArray {
-        return ObjectCalls.ptrcallWithObjectAndStringArgRetByteArray(Binds.shaderCompileBinaryFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: NULL_SEGMENT, name)
+        val ret = ObjectCalls.ptrcallWithObjectAndStringArgRetByteArray(Binds.shaderCompileBinaryFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: NULL_SEGMENT, name)
+        ObjectCalls.keepReachable(spirvData)
+        return ret
     }
 
     /**
@@ -459,7 +474,9 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_create_from_spirv
      */
     fun shaderCreateFromSpirv(spirvData: RDShaderSPIRV?, name: String = ""): RID {
-        return ObjectCalls.ptrcallWithObjectStringArgsRetRID(Binds.shaderCreateFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: NULL_SEGMENT, name)
+        val ret = ObjectCalls.ptrcallWithObjectStringArgsRetRID(Binds.shaderCreateFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: NULL_SEGMENT, name)
+        ObjectCalls.keepReachable(spirvData)
+        return ret
     }
 
     /**
@@ -608,7 +625,9 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.buffer_get_data_async
      */
     fun bufferGetDataAsync(buffer: RID, callback: GodotCallable, offsetBytes: Long = 0L, sizeBytes: Long = 0L): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithRIDCallableTwoUInt32ArgsRetLong(Binds.bufferGetDataAsyncBind, segment, buffer, callback.target.segment, callback.method, offsetBytes, sizeBytes))
+        val ret = GodotError(ObjectCalls.ptrcallWithRIDCallableTwoUInt32ArgsRetLong(Binds.bufferGetDataAsyncBind, segment, buffer, callback.target.segment, callback.method, offsetBytes, sizeBytes))
+        ObjectCalls.keepReachable(callback)
+        return ret
     }
 
     /**
@@ -631,7 +650,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.render_pipeline_create
      */
     fun renderPipelineCreate(shader: RID, framebufferFormat: Long, vertexFormat: Long, primitive: RenderingDevice.RenderPrimitive, rasterizationState: RDPipelineRasterizationState?, multisampleState: RDPipelineMultisampleState?, stencilState: RDPipelineDepthStencilState?, colorBlendState: RDPipelineColorBlendState?, dynamicStateFlags: RenderingDevice.PipelineDynamicStateFlags = RenderingDevice.PipelineDynamicStateFlags(0L), forRenderPass: Long = 0L, specializationConstants: List<RDPipelineSpecializationConstant>): RID {
-        return ObjectCalls.ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(Binds.renderPipelineCreateBind, segment, shader, framebufferFormat, vertexFormat, primitive.value, rasterizationState?.requireOpenHandle() ?: NULL_SEGMENT, multisampleState?.requireOpenHandle() ?: NULL_SEGMENT, stencilState?.requireOpenHandle() ?: NULL_SEGMENT, colorBlendState?.requireOpenHandle() ?: NULL_SEGMENT, dynamicStateFlags.value, forRenderPass, specializationConstants)
+        val ret = ObjectCalls.ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(Binds.renderPipelineCreateBind, segment, shader, framebufferFormat, vertexFormat, primitive.value, rasterizationState?.requireOpenHandle() ?: NULL_SEGMENT, multisampleState?.requireOpenHandle() ?: NULL_SEGMENT, stencilState?.requireOpenHandle() ?: NULL_SEGMENT, colorBlendState?.requireOpenHandle() ?: NULL_SEGMENT, dynamicStateFlags.value, forRenderPass, specializationConstants)
+        ObjectCalls.keepReachable(rasterizationState)
+        ObjectCalls.keepReachable(multisampleState)
+        ObjectCalls.keepReachable(stencilState)
+        ObjectCalls.keepReachable(colorBlendState)
+        return ret
     }
 
     /**

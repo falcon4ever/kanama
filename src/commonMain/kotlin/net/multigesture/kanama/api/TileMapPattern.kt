@@ -20,6 +20,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
     fun setCell(coords: Vector2i, sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iIntVector2iIntArgs(Binds.setCellBind, segment, coords, sourceId, atlasCoords, alternativeTile)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -29,7 +30,9 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun hasCell(coords: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.hasCellBind, segment, coords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.hasCellBind, segment, coords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,6 +43,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
     fun removeCell(coords: Vector2i, updateSize: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iAndBoolArg(Binds.removeCellBind, segment, coords, updateSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -49,7 +53,9 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun getCellSourceId(coords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getCellSourceIdBind, segment, coords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getCellSourceIdBind, segment, coords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,7 +65,9 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun getCellAtlasCoords(coords: Vector2i): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(Binds.getCellAtlasCoordsBind, segment, coords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetVector2i(Binds.getCellAtlasCoordsBind, segment, coords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -69,7 +77,9 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun getCellAlternativeTile(coords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getCellAlternativeTileBind, segment, coords)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getCellAlternativeTileBind, segment, coords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -79,7 +89,9 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun getUsedCells(): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2iList(Binds.getUsedCellsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2iList(Binds.getUsedCellsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -89,7 +101,9 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -100,6 +114,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
     fun setSize(size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -109,7 +124,9 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun isEmpty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmptyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmptyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

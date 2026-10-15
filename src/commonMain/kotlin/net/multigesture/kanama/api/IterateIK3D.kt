@@ -199,6 +199,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      */
     fun setJointLimitation(index: Int, joint: Int, limitation: JointLimitation3D?) {
         ObjectCalls.ptrcallWithTwoIntAndObjectArg(Binds.setJointLimitationBind, segment, index, joint, limitation?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(limitation)
     }
 
     /**

@@ -3,12 +3,17 @@ package net.multigesture.kanama.api
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineDispatcher
 import net.multigesture.kanama.binding.ScriptBridge
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.ScriptErrors
 
 /** Desktop/Android actual of the script-authoring seam (`ScriptRuntime.expect.kt`, task 133). */
 internal actual object ScriptRuntime {
-  actual fun scriptInstanceOf(owner: GodotObject): Any? =
-    ScriptBridge.kotlinObjectForOwner(owner.handle.segment)
+  actual fun scriptInstanceOf(owner: GodotObject): Any? {
+    val instance = ScriptBridge.kotlinObjectForOwner(owner.handle.segment)
+    // Task 138 item 6: an owner-link rebuild (ScriptOwnerLinks.materialize) reads the owner.
+    ObjectCalls.keepReachable(owner)
+    return instance
+  }
 
   actual fun loadResource(path: String): Resource? = ResourceLoader.load(path)
 

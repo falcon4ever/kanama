@@ -81,6 +81,7 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setEyeHeight(eyeHeight: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEyeHeightBind, segment, eyeHeight)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -90,7 +91,9 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getEyeHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEyeHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEyeHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -102,6 +105,7 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setIod(iod: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setIodBind, segment, iod)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -112,7 +116,9 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getIod(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getIodBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getIodBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -123,6 +129,7 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setDisplayWidth(displayWidth: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDisplayWidthBind, segment, displayWidth)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -132,7 +139,9 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getDisplayWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDisplayWidthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDisplayWidthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -143,6 +152,7 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setDisplayToLens(displayToLens: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDisplayToLensBind, segment, displayToLens)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -152,7 +162,9 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getDisplayToLens(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDisplayToLensBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDisplayToLensBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,6 +176,7 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setOffsetRect(offsetRect: Rect2) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2Arg(Binds.setOffsetRectBind, segment, offsetRect)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -174,7 +187,9 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getOffsetRect(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getOffsetRectBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRect2(Binds.getOffsetRectBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -187,6 +202,7 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setOversample(oversample: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setOversampleBind, segment, oversample)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -198,7 +214,9 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getOversample(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOversampleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOversampleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -210,6 +228,7 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setK1(k: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setK1Bind, segment, k)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -220,7 +239,9 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getK1(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getK1Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getK1Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -231,6 +252,7 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setK2(k: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setK2Bind, segment, k)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -240,7 +262,9 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getK2(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getK2Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getK2Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -252,7 +276,9 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getVrsMinRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsMinRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsMinRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -265,6 +291,7 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setVrsMinRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVrsMinRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -276,7 +303,9 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getVrsStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsStrengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsStrengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -289,6 +318,7 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setVrsStrength(strength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVrsStrengthBind, segment, strength)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

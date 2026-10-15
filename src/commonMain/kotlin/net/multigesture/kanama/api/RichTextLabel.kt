@@ -258,6 +258,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      */
     fun addImage(image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: InlineAlignment = InlineAlignment.CENTER, region: Rect2, key: Any? = null, pad: Boolean = false, tooltip: String = "", widthUnit: RichTextLabel.ImageUnit = RichTextLabel.ImageUnit.PIXEL, heightUnit: RichTextLabel.ImageUnit = RichTextLabel.ImageUnit.PIXEL, altText: String = "") {
         ObjectCalls.ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs(Binds.addImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, width, height, color, inlineAlign.value, region, key, pad, tooltip, widthUnit.value, heightUnit.value, altText)
+        ObjectCalls.keepReachable(image)
     }
 
     /**
@@ -268,6 +269,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      */
     fun updateImage(key: Any?, mask: RichTextLabel.ImageUpdateMask, image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: InlineAlignment = InlineAlignment.CENTER, region: Rect2, pad: Boolean = false, tooltip: String = "", widthUnit: RichTextLabel.ImageUnit = RichTextLabel.ImageUnit.PIXEL, heightUnit: RichTextLabel.ImageUnit = RichTextLabel.ImageUnit.PIXEL) {
         ObjectCalls.ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(Binds.updateImageBind, segment, key, mask.value, image?.requireOpenHandle() ?: NULL_SEGMENT, width, height, color, inlineAlign.value, region, pad, tooltip, widthUnit.value, heightUnit.value)
+        ObjectCalls.keepReachable(image)
     }
 
     /**
@@ -310,6 +312,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      */
     fun pushFont(font: Font?, fontSize: Int = 0) {
         ObjectCalls.ptrcallWithObjectAndIntArg(Binds.pushFontBind, segment, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -495,6 +498,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      */
     fun pushDropcap(string: String, font: Font?, size: Int, dropcapMargins: Rect2, color: Color, outlineSize: Int = 0, outlineColor: Color) {
         ObjectCalls.ptrcallWithStringObjectIntRect2ColorIntColorArgs(Binds.pushDropcapBind, segment, string, font?.requireOpenHandle() ?: NULL_SEGMENT, size, dropcapMargins, color, outlineSize, outlineColor)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -598,6 +602,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      */
     fun pushCustomfx(effect: RichTextEffect?, env: Map<String, Any?>) {
         ObjectCalls.ptrcallWithObjectAndDictionaryArg(Binds.pushCustomfxBind, segment, effect?.requireOpenHandle() ?: NULL_SEGMENT, env)
+        ObjectCalls.keepReachable(effect)
     }
 
     /**

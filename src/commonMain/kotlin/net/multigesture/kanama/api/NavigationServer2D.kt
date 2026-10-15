@@ -331,6 +331,9 @@ object NavigationServer2D {
     @JvmStatic
     fun queryPath(parameters: NavigationPathQueryParameters2D?, result: NavigationPathQueryResult2D?, callback: GodotCallable) {
         ObjectCalls.ptrcallWithTwoObjectCallableArgs(Binds.queryPathBind, singleton, parameters?.requireOpenHandle() ?: NULL_SEGMENT, result?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(parameters)
+        ObjectCalls.keepReachable(result)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -567,6 +570,7 @@ object NavigationServer2D {
     @JvmStatic
     fun regionSetNavigationPolygon(region: RID, navigationPolygon: NavigationPolygon?) {
         ObjectCalls.ptrcallWithRIDAndObjectArg(Binds.regionSetNavigationPolygonBind, singleton, region, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(navigationPolygon)
     }
 
     /**
@@ -1122,6 +1126,7 @@ object NavigationServer2D {
     @JvmStatic
     fun agentSetAvoidanceCallback(agent: RID, callback: GodotCallable) {
         ObjectCalls.ptrcallWithRIDCallableArgs(Binds.agentSetAvoidanceCallbackBind, singleton, agent, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1387,6 +1392,10 @@ object NavigationServer2D {
     @JvmStatic
     fun parseSourceGeometryData(navigationPolygon: NavigationPolygon?, sourceGeometryData: NavigationMeshSourceGeometryData2D?, rootNode: Node, callback: GodotCallable) {
         ObjectCalls.ptrcallWithThreeObjectCallableArgs(Binds.parseSourceGeometryDataBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, rootNode.segment, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(navigationPolygon)
+        ObjectCalls.keepReachable(sourceGeometryData)
+        ObjectCalls.keepReachable(rootNode)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1398,6 +1407,9 @@ object NavigationServer2D {
     @JvmStatic
     fun bakeFromSourceGeometryData(navigationPolygon: NavigationPolygon?, sourceGeometryData: NavigationMeshSourceGeometryData2D?, callback: GodotCallable) {
         ObjectCalls.ptrcallWithTwoObjectCallableArgs(Binds.bakeFromSourceGeometryDataBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(navigationPolygon)
+        ObjectCalls.keepReachable(sourceGeometryData)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1410,6 +1422,9 @@ object NavigationServer2D {
     @JvmStatic
     fun bakeFromSourceGeometryDataAsync(navigationPolygon: NavigationPolygon?, sourceGeometryData: NavigationMeshSourceGeometryData2D?, callback: GodotCallable) {
         ObjectCalls.ptrcallWithTwoObjectCallableArgs(Binds.bakeFromSourceGeometryDataAsyncBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(navigationPolygon)
+        ObjectCalls.keepReachable(sourceGeometryData)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1419,7 +1434,9 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun isBakingNavigationPolygon(navigationPolygon: NavigationPolygon?): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isBakingNavigationPolygonBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isBakingNavigationPolygonBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(navigationPolygon)
+        return ret
     }
 
     /**
@@ -1446,6 +1463,7 @@ object NavigationServer2D {
     @JvmStatic
     fun sourceGeometryParserSetCallback(parser: RID, callback: GodotCallable) {
         ObjectCalls.ptrcallWithRIDCallableArgs(Binds.sourceGeometryParserSetCallbackBind, singleton, parser, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**

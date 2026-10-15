@@ -55,6 +55,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
     fun setPath(path: List<Vector3>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListArg(Binds.setPathBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -66,7 +67,9 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPath(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getPathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getPathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -77,6 +80,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
     fun setPathTypes(pathTypes: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setPathTypesBind, segment, pathTypes)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -86,7 +90,9 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPathTypes(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getPathTypesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getPathTypesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -97,6 +103,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
     fun setPathRids(pathRids: List<RID>) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(Binds.setPathRidsBind, segment, pathRids)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -106,7 +113,9 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPathRids(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getPathRidsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getPathRidsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -118,6 +127,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
     fun setPathOwnerIds(pathOwnerIds: List<Long>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt64ListArg(Binds.setPathOwnerIdsBind, segment, pathOwnerIds)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -128,7 +138,9 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPathOwnerIds(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getPathOwnerIdsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getPathOwnerIdsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -139,6 +151,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
     fun setPathLength(length: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPathLengthBind, segment, length)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -148,7 +161,9 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPathLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -160,6 +175,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
     fun reset() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.resetBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

@@ -71,6 +71,8 @@ object DisplayServer {
     @JvmStatic
     fun helpSetSearchCallbacks(searchCallback: GodotCallable, actionCallback: GodotCallable) {
         ObjectCalls.ptrcallWithTwoCallableArgs(Binds.helpSetSearchCallbacksBind, singleton, searchCallback.target.segment, searchCallback.method, actionCallback.target.segment, actionCallback.method)
+        ObjectCalls.keepReachable(searchCallback)
+        ObjectCalls.keepReachable(actionCallback)
     }
 
     /**
@@ -82,6 +84,8 @@ object DisplayServer {
     @JvmStatic
     fun globalMenuSetPopupCallbacks(menuRoot: String, openCallback: GodotCallable, closeCallback: GodotCallable) {
         ObjectCalls.ptrcallWithStringTwoCallableArgs(Binds.globalMenuSetPopupCallbacksBind, singleton, menuRoot, openCallback.target.segment, openCallback.method, closeCallback.target.segment, closeCallback.method)
+        ObjectCalls.keepReachable(openCallback)
+        ObjectCalls.keepReachable(closeCallback)
     }
 
     /**
@@ -111,7 +115,10 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        val ret = ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        ObjectCalls.keepReachable(callback)
+        ObjectCalls.keepReachable(keyCallback)
+        return ret
     }
 
     /**
@@ -128,7 +135,10 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddCheckItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddCheckItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        val ret = ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddCheckItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        ObjectCalls.keepReachable(callback)
+        ObjectCalls.keepReachable(keyCallback)
+        return ret
     }
 
     /**
@@ -145,7 +155,11 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddIconItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddIconItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        val ret = ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddIconItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        ObjectCalls.keepReachable(icon)
+        ObjectCalls.keepReachable(callback)
+        ObjectCalls.keepReachable(keyCallback)
+        return ret
     }
 
     /**
@@ -162,7 +176,11 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddIconCheckItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddIconCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        val ret = ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddIconCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        ObjectCalls.keepReachable(icon)
+        ObjectCalls.keepReachable(callback)
+        ObjectCalls.keepReachable(keyCallback)
+        return ret
     }
 
     /**
@@ -181,7 +199,10 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddRadioCheckItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddRadioCheckItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        val ret = ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddRadioCheckItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        ObjectCalls.keepReachable(callback)
+        ObjectCalls.keepReachable(keyCallback)
+        return ret
     }
 
     /**
@@ -200,7 +221,11 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddIconRadioCheckItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddIconRadioCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        val ret = ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddIconRadioCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        ObjectCalls.keepReachable(icon)
+        ObjectCalls.keepReachable(callback)
+        ObjectCalls.keepReachable(keyCallback)
+        return ret
     }
 
     /**
@@ -220,7 +245,10 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddMultistateItem(menuRoot: String, label: String, maxStates: Int, defaultState: Int, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoStringTwoIntTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddMultistateItemBind, singleton, menuRoot, label, maxStates, defaultState, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        val ret = ObjectCalls.ptrcallWithTwoStringTwoIntTwoCallableVariantLongIntArgsRetInt(Binds.globalMenuAddMultistateItemBind, singleton, menuRoot, label, maxStates, defaultState, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        ObjectCalls.keepReachable(callback)
+        ObjectCalls.keepReachable(keyCallback)
+        return ret
     }
 
     /**
@@ -481,6 +509,7 @@ object DisplayServer {
     @JvmStatic
     fun globalMenuSetItemCallback(menuRoot: String, idx: Int, callback: GodotCallable) {
         ObjectCalls.ptrcallWithStringIntCallableArgs(Binds.globalMenuSetItemCallbackBind, singleton, menuRoot, idx, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -494,6 +523,7 @@ object DisplayServer {
     @JvmStatic
     fun globalMenuSetItemHoverCallbacks(menuRoot: String, idx: Int, callback: GodotCallable) {
         ObjectCalls.ptrcallWithStringIntCallableArgs(Binds.globalMenuSetItemHoverCallbacksBind, singleton, menuRoot, idx, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -507,6 +537,7 @@ object DisplayServer {
     @JvmStatic
     fun globalMenuSetItemKeyCallback(menuRoot: String, idx: Int, keyCallback: GodotCallable) {
         ObjectCalls.ptrcallWithStringIntCallableArgs(Binds.globalMenuSetItemKeyCallbackBind, singleton, menuRoot, idx, keyCallback.target.segment, keyCallback.method)
+        ObjectCalls.keepReachable(keyCallback)
     }
 
     /**
@@ -618,6 +649,7 @@ object DisplayServer {
     @JvmStatic
     fun globalMenuSetItemIcon(menuRoot: String, idx: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithStringIntAndObjectArgs(Binds.globalMenuSetItemIconBind, singleton, menuRoot, idx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -793,6 +825,7 @@ object DisplayServer {
     @JvmStatic
     fun ttsSetUtteranceCallback(event: DisplayServer.TTSUtteranceEvent, callable: GodotCallable) {
         ObjectCalls.ptrcallWithLongCallableArgs(Binds.ttsSetUtteranceCallbackBind, singleton, event.value, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**
@@ -849,6 +882,7 @@ object DisplayServer {
     @JvmStatic
     fun setSystemThemeChangeCallback(callable: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(Binds.setSystemThemeChangeCallbackBind, singleton, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**
@@ -1456,6 +1490,7 @@ object DisplayServer {
     @JvmStatic
     fun windowSetRectChangedCallback(callback: GodotCallable, windowId: Int = 0) {
         ObjectCalls.ptrcallWithCallableIntArgs(Binds.windowSetRectChangedCallbackBind, singleton, callback.target.segment, callback.method, windowId)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1468,6 +1503,7 @@ object DisplayServer {
     @JvmStatic
     fun windowSetWindowEventCallback(callback: GodotCallable, windowId: Int = 0) {
         ObjectCalls.ptrcallWithCallableIntArgs(Binds.windowSetWindowEventCallbackBind, singleton, callback.target.segment, callback.method, windowId)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1480,6 +1516,7 @@ object DisplayServer {
     @JvmStatic
     fun windowSetInputEventCallback(callback: GodotCallable, windowId: Int = 0) {
         ObjectCalls.ptrcallWithCallableIntArgs(Binds.windowSetInputEventCallbackBind, singleton, callback.target.segment, callback.method, windowId)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1492,6 +1529,7 @@ object DisplayServer {
     @JvmStatic
     fun windowSetInputTextCallback(callback: GodotCallable, windowId: Int = 0) {
         ObjectCalls.ptrcallWithCallableIntArgs(Binds.windowSetInputTextCallbackBind, singleton, callback.target.segment, callback.method, windowId)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1507,6 +1545,7 @@ object DisplayServer {
     @JvmStatic
     fun windowSetDropFilesCallback(callback: GodotCallable, windowId: Int = 0) {
         ObjectCalls.ptrcallWithCallableIntArgs(Binds.windowSetDropFilesCallbackBind, singleton, callback.target.segment, callback.method, windowId)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1632,6 +1671,7 @@ object DisplayServer {
     @JvmStatic
     fun windowSetIcon(icon: Image?, windowId: Int = 0) {
         ObjectCalls.ptrcallWithObjectAndIntArg(Binds.windowSetIconBind, singleton, icon?.requireOpenHandle() ?: NULL_SEGMENT, windowId)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -2436,6 +2476,7 @@ object DisplayServer {
     @JvmStatic
     fun accessibilityUpdateAddAction(id: RID, action: DisplayServer.AccessibilityAction, callable: GodotCallable) {
         ObjectCalls.ptrcallWithRIDLongCallableArgs(Binds.accessibilityUpdateAddActionBind, singleton, id, action.value, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**
@@ -2906,6 +2947,7 @@ object DisplayServer {
     @JvmStatic
     fun setHardwareKeyboardConnectionChangeCallback(callable: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(Binds.setHardwareKeyboardConnectionChangeCallbackBind, singleton, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**
@@ -2944,6 +2986,7 @@ object DisplayServer {
     @JvmStatic
     fun cursorSetCustomImage(cursor: Resource?, shape: DisplayServer.CursorShape = DisplayServer.CursorShape.ARROW, hotspot: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithObjectLongAndVector2Arg(Binds.cursorSetCustomImageBind, singleton, cursor?.requireOpenHandle() ?: NULL_SEGMENT, shape.value, hotspot)
+        ObjectCalls.keepReachable(cursor)
     }
 
     /**
@@ -2981,7 +3024,9 @@ object DisplayServer {
      */
     @JvmStatic
     fun dialogShow(title: String, description: String, buttons: List<String>, callback: GodotCallable): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithTwoStringPackedStringListCallableArgsRetLong(Binds.dialogShowBind, singleton, title, description, buttons, callback.target.segment, callback.method))
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoStringPackedStringListCallableArgsRetLong(Binds.dialogShowBind, singleton, title, description, buttons, callback.target.segment, callback.method))
+        ObjectCalls.keepReachable(callback)
+        return ret
     }
 
     /**
@@ -2994,7 +3039,9 @@ object DisplayServer {
      */
     @JvmStatic
     fun dialogInputText(title: String, description: String, existingText: String, callback: GodotCallable): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithThreeStringCallableArgsRetLong(Binds.dialogInputTextBind, singleton, title, description, existingText, callback.target.segment, callback.method))
+        val ret = GodotError(ObjectCalls.ptrcallWithThreeStringCallableArgsRetLong(Binds.dialogInputTextBind, singleton, title, description, existingText, callback.target.segment, callback.method))
+        ObjectCalls.keepReachable(callback)
+        return ret
     }
 
     /**
@@ -3022,7 +3069,9 @@ object DisplayServer {
      */
     @JvmStatic
     fun fileDialogShow(title: String, currentDirectory: String, filename: String, showHidden: Boolean, mode: DisplayServer.FileDialogMode, filters: List<String>, callback: GodotCallable, parentWindowId: Int = 0): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong(Binds.fileDialogShowBind, singleton, title, currentDirectory, filename, showHidden, mode.value, filters, callback.target.segment, callback.method, parentWindowId))
+        val ret = GodotError(ObjectCalls.ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong(Binds.fileDialogShowBind, singleton, title, currentDirectory, filename, showHidden, mode.value, filters, callback.target.segment, callback.method, parentWindowId))
+        ObjectCalls.keepReachable(callback)
+        return ret
     }
 
     /**
@@ -3048,7 +3097,9 @@ object DisplayServer {
      */
     @JvmStatic
     fun fileDialogWithOptionsShow(title: String, currentDirectory: String, root: String, filename: String, showHidden: Boolean, mode: DisplayServer.FileDialogMode, filters: List<String>, options: List<Map<String, Any?>>, callback: GodotCallable, parentWindowId: Int = 0): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong(Binds.fileDialogWithOptionsShowBind, singleton, title, currentDirectory, root, filename, showHidden, mode.value, filters, options, callback.target.segment, callback.method, parentWindowId))
+        val ret = GodotError(ObjectCalls.ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong(Binds.fileDialogWithOptionsShowBind, singleton, title, currentDirectory, root, filename, showHidden, mode.value, filters, options, callback.target.segment, callback.method, parentWindowId))
+        ObjectCalls.keepReachable(callback)
+        return ret
     }
 
     /**
@@ -3161,7 +3212,9 @@ object DisplayServer {
      */
     @JvmStatic
     fun colorPicker(callback: GodotCallable): Boolean {
-        return ObjectCalls.ptrcallWithCallableArgRetBool(Binds.colorPickerBind, singleton, callback.target.segment, callback.method)
+        val ret = ObjectCalls.ptrcallWithCallableArgRetBool(Binds.colorPickerBind, singleton, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
+        return ret
     }
 
     /**
@@ -3212,6 +3265,7 @@ object DisplayServer {
     @JvmStatic
     fun setIcon(image: Image?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setIconBind, singleton, listOf(image?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(image)
     }
 
     /**
@@ -3223,7 +3277,10 @@ object DisplayServer {
      */
     @JvmStatic
     fun createStatusIndicator(icon: Texture2D?, tooltip: String, callback: GodotCallable): Int {
-        return ObjectCalls.ptrcallWithObjectStringCallableArgsRetInt(Binds.createStatusIndicatorBind, singleton, icon?.requireOpenHandle() ?: NULL_SEGMENT, tooltip, callback.target.segment, callback.method)
+        val ret = ObjectCalls.ptrcallWithObjectStringCallableArgsRetInt(Binds.createStatusIndicatorBind, singleton, icon?.requireOpenHandle() ?: NULL_SEGMENT, tooltip, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(icon)
+        ObjectCalls.keepReachable(callback)
+        return ret
     }
 
     /**
@@ -3235,6 +3292,7 @@ object DisplayServer {
     @JvmStatic
     fun statusIndicatorSetIcon(id: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.statusIndicatorSetIconBind, singleton, id, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -3273,6 +3331,7 @@ object DisplayServer {
     @JvmStatic
     fun statusIndicatorSetCallback(id: Int, callback: GodotCallable) {
         ObjectCalls.ptrcallWithIntCallableArgs(Binds.statusIndicatorSetCallbackBind, singleton, id, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -3364,6 +3423,7 @@ object DisplayServer {
     @JvmStatic
     fun registerAdditionalOutput(objectValue: GodotObject) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.registerAdditionalOutputBind, singleton, listOf(objectValue.segment))
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**
@@ -3375,6 +3435,7 @@ object DisplayServer {
     @JvmStatic
     fun unregisterAdditionalOutput(objectValue: GodotObject) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.unregisterAdditionalOutputBind, singleton, listOf(objectValue.segment))
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**

@@ -23,6 +23,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
     fun addBlendShape(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addBlendShapeBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -32,7 +33,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getBlendShapeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBlendShapeCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBlendShapeCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -42,7 +45,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getBlendShapeName(blendShapeIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getBlendShapeNameBind, segment, blendShapeIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getBlendShapeNameBind, segment, blendShapeIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +58,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
     fun setBlendShapeMode(mode: Mesh.BlendShapeMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBlendShapeModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,7 +68,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getBlendShapeMode(): Mesh.BlendShapeMode {
         checkOpen()
-        return Mesh.BlendShapeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendShapeModeBind, segment))
+        val ret = Mesh.BlendShapeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendShapeModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -96,6 +104,8 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
     fun addSurface(primitive: Mesh.PrimitiveType, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), material: Material?, name: String = "", flags: Long = 0L) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(Binds.addSurfaceBind, segment, primitive.value, arrays, blendShapes, lods, material?.requireOpenHandle() ?: NULL_SEGMENT, name, flags)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -105,7 +115,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSurfaceCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSurfaceCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,7 +127,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfacePrimitiveType(surfaceIdx: Int): Mesh.PrimitiveType {
         checkOpen()
-        return Mesh.PrimitiveType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getSurfacePrimitiveTypeBind, segment, surfaceIdx))
+        val ret = Mesh.PrimitiveType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getSurfacePrimitiveTypeBind, segment, surfaceIdx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -125,7 +139,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceName(surfaceIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getSurfaceNameBind, segment, surfaceIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getSurfaceNameBind, segment, surfaceIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -136,7 +152,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceArrays(surfaceIdx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getSurfaceArraysBind, segment, surfaceIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetArray(Binds.getSurfaceArraysBind, segment, surfaceIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -146,7 +164,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceBlendShapeArrays(surfaceIdx: Int, blendShapeIdx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetArray(Binds.getSurfaceBlendShapeArraysBind, segment, surfaceIdx, blendShapeIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetArray(Binds.getSurfaceBlendShapeArraysBind, segment, surfaceIdx, blendShapeIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -156,7 +176,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceLodCount(surfaceIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSurfaceLodCountBind, segment, surfaceIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSurfaceLodCountBind, segment, surfaceIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -166,7 +188,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceLodSize(surfaceIdx: Int, lodIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getSurfaceLodSizeBind, segment, surfaceIdx, lodIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getSurfaceLodSizeBind, segment, surfaceIdx, lodIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -176,7 +200,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceLodIndices(surfaceIdx: Int, lodIdx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetPackedInt32List(Binds.getSurfaceLodIndicesBind, segment, surfaceIdx, lodIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetPackedInt32List(Binds.getSurfaceLodIndicesBind, segment, surfaceIdx, lodIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -186,7 +212,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceMaterial(surfaceIdx: Int): Material? {
         checkOpen()
-        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSurfaceMaterialBind, segment, surfaceIdx))
+        val ret = Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSurfaceMaterialBind, segment, surfaceIdx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -196,7 +224,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceFormat(surfaceIdx: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(Binds.getSurfaceFormatBind, segment, surfaceIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetLong(Binds.getSurfaceFormatBind, segment, surfaceIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -207,6 +237,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
     fun setSurfaceName(surfaceIdx: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(Binds.setSurfaceNameBind, segment, surfaceIdx, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -217,6 +248,8 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
     fun setSurfaceMaterial(surfaceIdx: Int, material: Material?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setSurfaceMaterialBind, segment, surfaceIdx, material?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -234,6 +267,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
     fun generateLods(normalMergeAngle: Double, normalSplitAngle: Double, boneTransformArray: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoDoubleArrayArgs(Binds.generateLodsBind, segment, normalMergeAngle, normalSplitAngle, boneTransformArray)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -245,7 +279,10 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getMesh(baseMesh: ArrayMesh?): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.getMeshBind, segment, baseMesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.getMeshBind, segment, baseMesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(baseMesh)
+        return ret
     }
 
     /**
@@ -256,6 +293,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -266,6 +304,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
     fun setLightmapSizeHint(size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setLightmapSizeHintBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -275,7 +314,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getLightmapSizeHint(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getLightmapSizeHintBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getLightmapSizeHintBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {
@@ -305,7 +346,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: ImporterMesh.from_mesh
          */
         fun fromMesh(mesh: Mesh?): ImporterMesh? {
-            return ImporterMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromMeshBind, NULL_SEGMENT, mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+            val ret = ImporterMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromMeshBind, NULL_SEGMENT, mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+            ObjectCalls.keepReachable(mesh)
+            return ret
         }
 
         @JvmStatic

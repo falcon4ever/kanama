@@ -132,6 +132,7 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      */
     fun setOccluder(occluder: Occluder3D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setOccluderBind, segment, listOf(occluder?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(occluder)
     }
 
     /**

@@ -106,6 +106,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setSkyTopColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setSkyTopColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -115,7 +116,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSkyTopColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getSkyTopColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getSkyTopColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -126,6 +129,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setSkyHorizonColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setSkyHorizonColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -135,7 +139,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSkyHorizonColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getSkyHorizonColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getSkyHorizonColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -146,6 +152,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setSkyCurve(curve: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSkyCurveBind, segment, curve)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -155,7 +162,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSkyCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSkyCurveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSkyCurveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -166,6 +175,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setSkyEnergyMultiplier(multiplier: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSkyEnergyMultiplierBind, segment, multiplier)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -175,7 +185,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSkyEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSkyEnergyMultiplierBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSkyEnergyMultiplierBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -190,6 +202,8 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setSkyCover(skyCover: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSkyCoverBind, segment, listOf(skyCover?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(skyCover)
     }
 
     /**
@@ -203,7 +217,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSkyCover(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkyCoverBind, segment))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkyCoverBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -216,6 +232,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setSkyCoverModulate(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setSkyCoverModulateBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -227,7 +244,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSkyCoverModulate(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getSkyCoverModulateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getSkyCoverModulateBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -238,6 +257,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setGroundBottomColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setGroundBottomColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -247,7 +267,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getGroundBottomColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getGroundBottomColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getGroundBottomColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -258,6 +280,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setGroundHorizonColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setGroundHorizonColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -267,7 +290,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getGroundHorizonColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getGroundHorizonColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getGroundHorizonColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -278,6 +303,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setGroundCurve(curve: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGroundCurveBind, segment, curve)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -287,7 +313,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getGroundCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGroundCurveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGroundCurveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -298,6 +326,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setGroundEnergyMultiplier(energy: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGroundEnergyMultiplierBind, segment, energy)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -307,7 +336,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getGroundEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGroundEnergyMultiplierBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGroundEnergyMultiplierBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -318,6 +349,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setSunAngleMax(degrees: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSunAngleMaxBind, segment, degrees)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -327,7 +359,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSunAngleMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSunAngleMaxBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSunAngleMaxBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -338,6 +372,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setSunCurve(curve: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSunCurveBind, segment, curve)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -347,7 +382,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSunCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSunCurveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSunCurveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -359,6 +396,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setUseDebanding(useDebanding: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseDebandingBind, segment, useDebanding)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -369,7 +407,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getUseDebanding(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseDebandingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseDebandingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -380,6 +420,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     fun setEnergyMultiplier(multiplier: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEnergyMultiplierBind, segment, multiplier)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -389,7 +430,9 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnergyMultiplierBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnergyMultiplierBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {
@@ -406,7 +449,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
         // Downcast a Resource to ProceduralSkyMaterial (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ProceduralSkyMaterial? =
-            if (value.isClass("ProceduralSkyMaterial")) RefCounted.retained(ProceduralSkyMaterial(value.handle)) else null
+            if (value.isClass("ProceduralSkyMaterial")) RefCounted.retained(ProceduralSkyMaterial(value.handle), value) else null
     }
 
     private object Binds {

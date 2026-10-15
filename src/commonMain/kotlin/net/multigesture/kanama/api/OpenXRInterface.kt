@@ -64,7 +64,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getSessionState(): OpenXRInterface.SessionState {
         checkOpen()
-        return OpenXRInterface.SessionState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSessionStateBind, segment))
+        val ret = OpenXRInterface.SessionState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSessionStateBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -75,7 +77,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun isUserPresenceSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUserPresenceSupportedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUserPresenceSupportedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -85,7 +89,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun isUserPresent(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUserPresentBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUserPresentBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -96,7 +102,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getDisplayRefreshRate(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDisplayRefreshRateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDisplayRefreshRateBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -108,6 +116,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setDisplayRefreshRate(refreshRate: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDisplayRefreshRateBind, segment, refreshRate)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -118,7 +127,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getRenderTargetSizeMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRenderTargetSizeMultiplierBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRenderTargetSizeMultiplierBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -130,6 +141,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setRenderTargetSizeMultiplier(multiplier: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRenderTargetSizeMultiplierBind, segment, multiplier)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -141,7 +153,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun isFoveationSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFoveationSupportedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isFoveationSupportedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -152,7 +166,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getFoveationLevel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFoveationLevelBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFoveationLevelBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,6 +180,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setFoveationLevel(foveationLevel: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setFoveationLevelBind, segment, foveationLevel)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -175,7 +192,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getFoveationDynamic(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFoveationDynamicBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getFoveationDynamicBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -188,6 +207,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setFoveationDynamic(foveationDynamic: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setFoveationDynamicBind, segment, foveationDynamic)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -198,7 +218,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getFoveationWithSubsampledImages(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFoveationWithSubsampledImagesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getFoveationWithSubsampledImagesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -210,6 +232,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setFoveationWithSubsampledImages(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setFoveationWithSubsampledImagesBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -219,7 +242,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun isActionSetActive(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isActionSetActiveBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.isActionSetActiveBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -230,6 +255,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setActionSetActive(name: String, active: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndBoolArg(Binds.setActionSetActiveBind, segment, name, active)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -239,7 +265,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getActionSets(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getActionSetsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getActionSetsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -250,7 +278,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getAvailableDisplayRefreshRates(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getAvailableDisplayRefreshRatesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getAvailableDisplayRefreshRatesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -262,6 +292,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setMotionRange(hand: OpenXRInterface.Hand, motionRange: OpenXRInterface.HandMotionRange) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoLongArgs(Binds.setMotionRangeBind, segment, hand.value, motionRange.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -272,7 +303,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getMotionRange(hand: OpenXRInterface.Hand): OpenXRInterface.HandMotionRange {
         checkOpen()
-        return OpenXRInterface.HandMotionRange(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getMotionRangeBind, segment, hand.value))
+        val ret = OpenXRInterface.HandMotionRange(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getMotionRangeBind, segment, hand.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -283,7 +316,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getHandTrackingSource(hand: OpenXRInterface.Hand): OpenXRInterface.HandTrackedSource {
         checkOpen()
-        return OpenXRInterface.HandTrackedSource(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getHandTrackingSourceBind, segment, hand.value))
+        val ret = OpenXRInterface.HandTrackedSource(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getHandTrackingSourceBind, segment, hand.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -293,7 +328,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getHandJointFlags(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): OpenXRInterface.HandJointFlags {
         checkOpen()
-        return OpenXRInterface.HandJointFlags(ObjectCalls.ptrcallWithTwoLongArgsRetLong(Binds.getHandJointFlagsBind, segment, hand.value, joint.value))
+        val ret = OpenXRInterface.HandJointFlags(ObjectCalls.ptrcallWithTwoLongArgsRetLong(Binds.getHandJointFlagsBind, segment, hand.value, joint.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -304,7 +341,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getHandJointRotation(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Quaternion {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetQuaternion(Binds.getHandJointRotationBind, segment, hand.value, joint.value)
+        val ret = ObjectCalls.ptrcallWithTwoLongArgsRetQuaternion(Binds.getHandJointRotationBind, segment, hand.value, joint.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -315,7 +354,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getHandJointPosition(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(Binds.getHandJointPositionBind, segment, hand.value, joint.value)
+        val ret = ObjectCalls.ptrcallWithTwoLongArgsRetVector3(Binds.getHandJointPositionBind, segment, hand.value, joint.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -326,7 +367,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getHandJointRadius(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetDouble(Binds.getHandJointRadiusBind, segment, hand.value, joint.value)
+        val ret = ObjectCalls.ptrcallWithTwoLongArgsRetDouble(Binds.getHandJointRadiusBind, segment, hand.value, joint.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -337,7 +380,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getHandJointLinearVelocity(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(Binds.getHandJointLinearVelocityBind, segment, hand.value, joint.value)
+        val ret = ObjectCalls.ptrcallWithTwoLongArgsRetVector3(Binds.getHandJointLinearVelocityBind, segment, hand.value, joint.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -348,7 +393,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getHandJointAngularVelocity(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(Binds.getHandJointAngularVelocityBind, segment, hand.value, joint.value)
+        val ret = ObjectCalls.ptrcallWithTwoLongArgsRetVector3(Binds.getHandJointAngularVelocityBind, segment, hand.value, joint.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -359,7 +406,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun isHandTrackingSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHandTrackingSupportedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isHandTrackingSupportedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -370,7 +419,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun isHandInteractionSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHandInteractionSupportedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isHandInteractionSupportedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -381,7 +432,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun isEyeGazeInteractionSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEyeGazeInteractionSupportedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isEyeGazeInteractionSupportedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -393,7 +446,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getVrsMinRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsMinRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsMinRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -406,6 +461,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setVrsMinRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVrsMinRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -417,7 +473,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getVrsStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsStrengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsStrengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -430,6 +488,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setVrsStrength(strength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVrsStrengthBind, segment, strength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -440,6 +499,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setCpuLevel(level: OpenXRInterface.PerfSettingsLevel) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setCpuLevelBind, segment, level.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -450,6 +510,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun setGpuLevel(level: OpenXRInterface.PerfSettingsLevel) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setGpuLevelBind, segment, level.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /** Signal `session_begun()`; see [TypedSignal]. */

@@ -22,11 +22,14 @@ class VisualShaderNodeRemap(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setOpType(opType: VisualShaderNodeRemap.OpType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, opType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getOpType(): VisualShaderNodeRemap.OpType {
         checkOpen()
-        return VisualShaderNodeRemap.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        val ret = VisualShaderNodeRemap.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

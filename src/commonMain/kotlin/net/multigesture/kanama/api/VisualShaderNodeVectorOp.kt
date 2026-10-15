@@ -27,6 +27,7 @@ class VisualShaderNodeVectorOp(handle: GodotHandle) : VisualShaderNodeVectorBase
     fun setOperator(op: VisualShaderNodeVectorOp.Operator) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOperatorBind, segment, op.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeVectorOp(handle: GodotHandle) : VisualShaderNodeVectorBase
      */
     fun getOperator(): VisualShaderNodeVectorOp.Operator {
         checkOpen()
-        return VisualShaderNodeVectorOp.Operator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOperatorBind, segment))
+        val ret = VisualShaderNodeVectorOp.Operator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOperatorBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

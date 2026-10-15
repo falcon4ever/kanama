@@ -33,6 +33,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
     fun setEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -43,7 +44,9 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -54,7 +57,9 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getModificationStack(): SkeletonModificationStack2D? {
         checkOpen()
-        return SkeletonModificationStack2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getModificationStackBind, segment))
+        val ret = SkeletonModificationStack2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getModificationStackBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -67,6 +72,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
     fun setIsSetup(isSetup: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setIsSetupBind, segment, isSetup)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -76,7 +82,9 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getIsSetup(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsSetupBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsSetupBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -89,6 +97,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
     fun setExecutionMode(executionMode: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setExecutionModeBind, segment, executionMode)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -100,7 +109,9 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getExecutionMode(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getExecutionModeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getExecutionModeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -111,7 +122,9 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun clampAngle(angle: Double, min: Double, max: Double, invert: Boolean): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeDoubleBoolArgsRetDouble(Binds.clampAngleBind, segment, angle, min, max, invert)
+        val ret = ObjectCalls.ptrcallWithThreeDoubleBoolArgsRetDouble(Binds.clampAngleBind, segment, angle, min, max, invert)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -123,6 +136,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
     fun setEditorDrawGizmo(drawGizmo: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEditorDrawGizmoBind, segment, drawGizmo)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -133,7 +147,9 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getEditorDrawGizmo(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEditorDrawGizmoBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEditorDrawGizmoBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

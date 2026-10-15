@@ -19,6 +19,7 @@ class Semaphore(handle: GodotHandle) : RefCounted(handle) {
     fun waitBlocking() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.waitBlockingBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -29,7 +30,9 @@ class Semaphore(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tryWait(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.tryWaitBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.tryWaitBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,6 +43,7 @@ class Semaphore(handle: GodotHandle) : RefCounted(handle) {
     fun post(count: Int = 1) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.postBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

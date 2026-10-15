@@ -27,6 +27,7 @@ class ShaderInclude(handle: GodotHandle) : Resource(handle) {
     fun setCode(code: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setCodeBind, segment, code)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ class ShaderInclude(handle: GodotHandle) : Resource(handle) {
      */
     fun getCode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getCodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

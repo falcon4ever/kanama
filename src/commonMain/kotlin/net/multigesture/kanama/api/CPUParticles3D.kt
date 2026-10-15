@@ -768,6 +768,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setMesh(mesh: Mesh?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(mesh)
     }
 
     /**
@@ -951,6 +952,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setParamCurve(param: CPUParticles3D.Parameter, curve: Curve?) {
         ObjectCalls.ptrcallWithLongAndObjectArg(Binds.setParamCurveBind, segment, param.value, curve?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -997,6 +999,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setColorRamp(ramp: Gradient?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(ramp)
     }
 
     /**
@@ -1023,6 +1026,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setColorInitialRamp(ramp: Gradient?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(ramp)
     }
 
     /**
@@ -1326,6 +1330,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setScaleCurveX(scaleCurve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setScaleCurveXBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(scaleCurve)
     }
 
     /**
@@ -1344,6 +1349,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setScaleCurveY(scaleCurve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setScaleCurveYBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(scaleCurve)
     }
 
     /**
@@ -1362,6 +1368,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setScaleCurveZ(scaleCurve: Curve?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setScaleCurveZBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(scaleCurve)
     }
 
     /**
@@ -1372,6 +1379,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun convertFromParticles(particles: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.convertFromParticlesBind, segment, listOf(particles.segment))
+        ObjectCalls.keepReachable(particles)
     }
 
     /** Signal `finished()`; see [TypedSignal]. */
