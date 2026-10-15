@@ -420,6 +420,34 @@ case("ios_visual_smoke.sh --check-selftest-log (no frame 1)", IOS_SELFTEST_CHECK
 case("ios_visual_smoke.sh --check-selftest-log (1 failed)", IOS_SELFTEST_CHECK,
      [Edit(IOS_SELFTEST_LOG, "(frame 1): 25 passed, 0 failed", "(frame 1): 24 passed, 1 failed")],
      "runtime self-test reported failures", "a summary reports `N passed, 1 failed` with no FAIL line")
+# The iOS device scripts' identity and row-count checks (task 138 item 10), proven red without a device: the bundle id
+# is read out of a fixture .app's Info.plist by the same assert_built_bundle_id a device run applies before it
+# installs, and the gate's verdict runs over a fixture results.tsv (a clean fresh + nine-demo matrix).
+IOS_FIXTURE_APP = "scripts/fixtures/ios_built_app/Fixture.app"
+IOS_BUNDLE_CHECK = ["bash", "scripts/ios_visual_smoke.sh", "--check-built-bundle-id", IOS_FIXTURE_APP, "net.multigesture.kanama.iosvisualsmoke"]
+case("ios_visual_smoke.sh --check-built-bundle-id (other id)", IOS_BUNDLE_CHECK,
+     [Edit(f"{IOS_FIXTURE_APP}/Info.plist", "<string>net.multigesture.kanama.iosvisualsmoke</string>", "<string>net.multigesture.kanama.thirdperson</string>")],
+     "refusing to install a different app than the one it would launch", "the built .app carries another bundle id than the one the run launches (a stale preset)")
+case("ios_visual_smoke.sh --check-built-bundle-id (no Info.plist)", IOS_BUNDLE_CHECK,
+     [Delete(f"{IOS_FIXTURE_APP}/Info.plist")],
+     "cannot read CFBundleIdentifier", "the built .app has no readable Info.plist: the check fails instead of passing on an empty id")
+IOS_RESULTS_CHECK = ["bash", "scripts/ios_device_gate.sh", "--check-results", "scripts/fixtures/ios_gate_results.tsv"]
+case("ios_device_gate.sh --check-results (row missing)", IOS_RESULTS_CHECK,
+     [Edit("scripts/fixtures/ios_gate_results.tsv", "Starter-Kit-Racing\tPASS\t120\tStarter-Kit-Racing.log\n", "")],
+     "a step did not run", "a planned demo step left no result row: no FAIL row, yet the matrix is incomplete")
+case("ios_device_gate.sh --check-results (FAIL row)", IOS_RESULTS_CHECK,
+     [Edit("scripts/fixtures/ios_gate_results.tsv", "Bunnymark\tPASS", "Bunnymark\tFAIL")],
+     "one or more gate steps failed", "a step recorded FAIL")
+# A --start-at run writes a SKIP row for every demo before the start demo (the fixture holds the rows such a run writes:
+# seven SKIP rows, then FPS and the last demo); the verdict holds each planned step to exactly one row of its kind.
+IOS_RESULTS_START_AT = "scripts/fixtures/ios_gate_results_start_at.tsv"
+IOS_RESULTS_START_AT_CHECK = ["bash", "scripts/ios_device_gate.sh", "--demos-only", "--start-at", "Starter-Kit-FPS", "--check-results", IOS_RESULTS_START_AT]
+case("ios_device_gate.sh --check-results (--start-at plan, row missing)", IOS_RESULTS_START_AT_CHECK,
+     [Edit(IOS_RESULTS_START_AT, "godot-4-3d-third-person-controller\tPASS\t120\tgodot-4-3d-third-person-controller.log\n", "")],
+     "no result row for the planned step 'godot-4-3d-third-person-controller'", "a --start-at run left no row for a demo it planned, while the SKIP rows keep the row total at the full matrix")
+case("ios_device_gate.sh --check-results (--start-at plan, skipped demo not SKIP)", IOS_RESULTS_START_AT_CHECK,
+     [Edit(IOS_RESULTS_START_AT, "Starter-Kit-Racing\tSKIP", "Starter-Kit-Racing\tPASS")],
+     "comes before --start-at Starter-Kit-FPS but its row is PASS, not SKIP", "a demo before the --start-at demo has a PASS row: the rows are not the ones this plan writes")
 case("check_jdk_locations_parity.py", py("check_jdk_locations_parity.py"),
      [Edit("bootstrap/bootstrap.c", '{"linux", "/usr/lib64/jvm", "", ""},', '{"linux", "/usr/lib65/jvm", "", ""},')],
      "differs from bootstrap/bootstrap.c", "one JDK location row differs between bootstrap.c and the plugins")

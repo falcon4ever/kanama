@@ -130,9 +130,39 @@ if [[ "${1:-}" == "--check-selftest-log" ]]; then
   exit 1
 fi
 
+# Task 118: the artifact this gate launches must be the one it built. The export preset writes the expected
+# bundle id, but a stale preset or a changed template would build a different id, and `launch <id>` would then
+# start whatever older build sits under it (the iOS launch mismatch of task 115). Read the id out of the built
+# .app itself before installing it. python3 plistlib reads the .app's Info.plist (binary or XML), so the check
+# needs no PlistBuddy and has an off-device red run (`--check-built-bundle-id`, task 138 item 10).
+assert_built_bundle_id() {
+  local app="$1" expected="$2" actual
+  actual="$(python3 -c 'import plistlib, sys
+with open(sys.argv[1], "rb") as handle:
+    print(plistlib.load(handle)["CFBundleIdentifier"])' "$app/Info.plist" 2>&1 | tail -n 1)" || {
+    echo "[ios_visual_smoke] cannot read CFBundleIdentifier from $app/Info.plist: $actual" >&2
+    return 1
+  }
+  if [[ "$actual" != "$expected" ]]; then
+    echo "[ios_visual_smoke] the built app's bundle id is '$actual' but this run launches '$expected'; refusing to install a different app than the one it would launch." >&2
+    return 1
+  fi
+  echo "[ios_visual_smoke] built app bundle id verified: $actual"
+}
+
+# `--check-built-bundle-id APP BUNDLE_ID` runs only that check on a built (or fake) .app; its red runs need no device.
+if [[ "${1:-}" == "--check-built-bundle-id" ]]; then
+  if [[ ! -d "${2:-}" || -z "${3:-}" ]]; then
+    echo "usage: scripts/ios_visual_smoke.sh --check-built-bundle-id APP_DIR EXPECTED_BUNDLE_ID" >&2
+    exit 2
+  fi
+  assert_built_bundle_id "$2" "$3" && exit 0
+  exit 1
+fi
+
 # portability: device-only below -- everything past this line drives a Mac, Xcode and a simulator or an
-# iPhone (xcrun, xcodebuild, PlistBuddy); CI never gets here (its only mode, --check-selftest-log, exited
-# above). scripts/check_script_portability.py holds the lines above this one to the portable vocabulary.
+# iPhone (xcrun, xcodebuild); CI never gets here (its only modes, --check-selftest-log and
+# --check-built-bundle-id, exited above). scripts/check_script_portability.py holds the lines above this one to the portable vocabulary.
 
 godot_bin="${KANAMA_GODOT_BIN:-/Applications/Godot.app/Contents/MacOS/Godot}"
 xcode_developer_dir="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
@@ -431,22 +461,28 @@ export_dir="$work_dir/export"
 derived_dir="$work_dir/derived"
 app_name="KanamaIosVisualSmoke"
 bundle_id="net.multigesture.kanama.iosvisualsmoke"
+# --kanama-script-probe's proof that the runtime bound res://kanama_ios_probe.kt to its built-in probe and ran its
+# _ready (KanamaIosRuntime logs it after a successful call). This used to wait for "script instance ready", a line no
+# runtime version ever printed, so the mode failed every launch on the simulator and the device alike.
+script_probe_ready_pattern='built-in probe method call handle=[0-9]+ path=res://kanama_ios_probe\.kt method=_ready'
 
-# Task 118: the artifact this gate launches must be the one it built. The export preset below writes
-# $bundle_id, but a stale preset or a changed template would build a different id, and `launch
-# "$bundle_id"` would then start whatever older build sits under it (the iOS launch mismatch of task
-# 115). Read the id out of the built .app itself before installing it.
-assert_built_bundle_id() {
-  local app="$1" actual
-  actual="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist" 2>&1)" || {
-    echo "[ios_visual_smoke] cannot read CFBundleIdentifier from $app/Info.plist: $actual" >&2
-    return 1
-  }
-  if [[ "$actual" != "$bundle_id" ]]; then
-    echo "[ios_visual_smoke] the built app's bundle id is '$actual' but this run launches '$bundle_id'; refusing to install a different app than the one it would launch." >&2
-    return 1
-  fi
-  echo "[ios_visual_smoke] built app bundle id verified: $actual"
+
+# Poll the launch logs for PATTERN (grep -E) until it appears or TIMEOUT seconds pass; leaves the seconds spent in
+# `waited` and returns 1 on a timeout. The launch waits below use it instead of a fixed sleep (task 138 item 16: the
+# simulator `--kanama-script-probe` run closed its 3 s window before its ready line streamed and failed a healthy
+# app). A timeout is not itself the verdict: the assertions after the capture window decide pass/fail.
+wait_for_log_line() {
+  local pattern="$1" timeout="$2"
+  waited=0
+  while [[ "$waited" -lt "$timeout" ]]; do
+    # justified: a poll loop; the logs may not exist yet. A timeout returns 1 below.
+    if grep -Eq "$pattern" "$stderr_log" "$stdout_log" 2>/dev/null; then
+      return 0
+    fi
+    sleep 2
+    waited=$((waited + 2))
+  done
+  return 1
 }
 screenshot_path="$work_dir/kanama-ios-visual-smoke.png"
 stdout_log="$work_dir/launch.stdout.log"
@@ -621,9 +657,26 @@ elif [[ "$kanama_script_probe" -eq 1 ]]; then
   scene_header='[gd_scene load_steps=2 format=3]'
   script_resource_line='[ext_resource type="Script" path="res://kanama_ios_probe.kt" id="1_probe"]'
   status_script_line='script = ExtResource("1_probe")'
+  # On iOS the runtime binds this path (res://kanama_ios_probe.kt) to its BUILT-IN Kotlin/Native probe, which is what
+  # this mode tests; no project script is compiled for iOS (see install_ios_addon_args). The export-time editor is a
+  # desktop editor, though, and binds a .kt by its basename to a class in the desktop kanama-scripts.jar: before
+  # kanama#340 this file was a comment, bound to nothing, and the export guard rightly stopped the export ("Export
+  # stopped: ... res://kanama_ios_probe.kt (not in kanama-scripts.jar"). So the file is a real script class too, the
+  # project root is the desktop scripts dir (as in the starter project), and the scene converts like any other.
   cat >"$project_dir/kanama_ios_probe.kt" <<'EOF'
-// Kanama iOS script smoke resource.
-// The experimental iOS backend binds this file to a built-in Kotlin/Native probe.
+// Kanama iOS script smoke resource. On iOS the runtime binds this path to its built-in Kotlin/Native
+// probe; this class is the desktop half that the export-time editor binds (by the file's basename).
+@file:Suppress("ClassName")
+
+package net.multigesture.kanama.iossmoke
+
+import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
+import net.multigesture.kanama.api.KanamaScript
+import net.multigesture.kanama.api.Label
+
+@ScriptClass(attachTo = "Label")
+class kanama_ios_probe(godotObject: GodotHandle) : KanamaScript<Label>(godotObject, ::Label)
 EOF
 elif [[ "$kanama_user_script_probe" -eq 1 ]]; then
   status_text="Waiting for Kanama iOS project script"
@@ -2425,6 +2478,12 @@ if [[ -z "$godot_project_baseline_dir" ]]; then
   else
     install_ios_addon_args+=("-PkanamaIosXcframeworkMode=full")
   fi
+  if [[ "$kanama_script_probe" -eq 1 ]]; then
+    # The desktop scripts jar compiles the project root (kanama_ios_probe.kt, the probe's desktop class) so the
+    # export-time editor binds it; the iOS runtime gets NO project scripts (an empty list, which the iOS build would
+    # otherwise take from -PkanamaProjectScriptsDir), so on the phone the path stays bound to the built-in probe.
+    install_ios_addon_args+=("-PkanamaProjectScriptsDir=$project_dir" "-PkanamaIosProjectScriptsDirs=")
+  fi
   if [[ "$kanama_user_script_probe" -eq 1 ]]; then
     install_ios_addon_args+=("-PkanamaIosProjectScriptsDir=$project_dir/kotlin-src")
     # Also compile the probe into the DESKTOP scripts jar so the export-time editor knows its
@@ -2671,7 +2730,7 @@ if [[ "$physical_device" -eq 1 ]]; then
     echo "[ios_visual_smoke] PASS"
     exit 0
   fi
-  assert_built_bundle_id "$app_path" || exit 1
+  assert_built_bundle_id "$app_path" "$bundle_id" || exit 1
   DEVELOPER_DIR="$xcode_developer_dir" xcrun devicectl device install app \
     --device "$device_udid" \
     "$app_path"
@@ -2699,15 +2758,8 @@ if [[ "$physical_device" -eq 1 ]]; then
   # probe lines that follow it land. A device that never reaches scene-init still fails the loader
   # / ready assertions below, just later.
   launch_timeout="${KANAMA_IOS_LAUNCH_TIMEOUT:-120}"
-  waited=0
-  while [[ "$waited" -lt "$launch_timeout" ]]; do
-    # justified: a poll loop; the logs may not exist yet. The loader/self-test assertions after the loop decide.
-    if grep -Eq 'OBJECTCALLS SELFTEST:' "$stderr_log" "$stdout_log" 2>/dev/null; then
-      break
-    fi
-    sleep 2
-    waited=$((waited + 2))
-  done
+  # justified: a timeout is not the verdict; the loader/self-test assertions after the capture window decide.
+  wait_for_log_line 'OBJECTCALLS SELFTEST:' "$launch_timeout" || true
   post_wait=$((launch_sleep + 5))
   echo "[ios_visual_smoke] scene-init reached after ${waited}s (timeout ${launch_timeout}s); capturing ${post_wait}s more"
   sleep "$post_wait"
@@ -2733,7 +2785,7 @@ else
     echo "[ios_visual_smoke] PASS"
     exit 0
   fi
-  assert_built_bundle_id "$app_path" || exit 1
+  assert_built_bundle_id "$app_path" "$bundle_id" || exit 1
   DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl install "$device_udid" "$app_path"
 
   if [[ -n "$godot_project_baseline_dir" ]]; then
@@ -2757,6 +2809,23 @@ else
     printf '%s\n' "$launch_pid" >"$launch_pid_file"
   fi
 
+  # Log-driven, like the physical branch: wait for the line the mode's assertion below needs (bounded by
+  # KANAMA_IOS_LAUNCH_TIMEOUT, default 60 s), then keep `launch_sleep` for the rest of the lines and the screenshot.
+  # Modes without a single expected line keep the fixed window.
+  sim_ready_pattern=""
+  if [[ "$kanama_probe" -eq 1 ]]; then
+    sim_ready_pattern='updated grouped probe label'
+  elif [[ "$kanama_script_probe" -eq 1 ]]; then
+    sim_ready_pattern="$script_probe_ready_pattern"
+  fi
+  if [[ -n "$sim_ready_pattern" && -n "$launch_pid" ]]; then
+    sim_launch_timeout="${KANAMA_IOS_LAUNCH_TIMEOUT:-60}"
+    if wait_for_log_line "$sim_ready_pattern" "$sim_launch_timeout"; then
+      echo "[ios_visual_smoke] expected log line /$sim_ready_pattern/ seen after ${waited}s"
+    else
+      echo "[ios_visual_smoke] expected log line /$sim_ready_pattern/ not seen within ${sim_launch_timeout}s" >&2
+    fi
+  fi
   sleep "$launch_sleep"
   DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl io "$device_udid" screenshot "$screenshot_path"
 
@@ -2821,10 +2890,10 @@ if [[ "$kanama_probe" -eq 1 ]]; then
 fi
 
 if [[ "$kanama_script_probe" -eq 1 ]]; then
-  if grep -Eq 'script instance ready' "$stderr_log" "$stdout_log"; then
-    echo "[ios_visual_smoke] script instance ready log detected"
+  if grep -Eq "$script_probe_ready_pattern" "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] built-in probe _ready log detected"
   else
-    echo "[ios_visual_smoke] script instance ready log missing" >&2
+    echo "[ios_visual_smoke] built-in probe _ready log missing: no /$script_probe_ready_pattern/ line" >&2
     exit 1
   fi
 fi

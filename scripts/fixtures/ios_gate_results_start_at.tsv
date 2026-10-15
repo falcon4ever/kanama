@@ -1,0 +1,10 @@
+name	status	elapsed_seconds	log
+Bunnymark	SKIP	0	resumed after this demo
+Starter-Kit-Match3	SKIP	0	resumed after this demo
+Starter-Kit-3D-Platformer	SKIP	0	resumed after this demo
+godot-demo-2d-dodge-the-creeps	SKIP	0	resumed after this demo
+godot-demo-3d-squash-the-creeps	SKIP	0	resumed after this demo
+godot-4-3d-character-controller	SKIP	0	resumed after this demo
+Starter-Kit-Racing	SKIP	0	resumed after this demo
+Starter-Kit-FPS	PASS	120	Starter-Kit-FPS.log
+godot-4-3d-third-person-controller	PASS	120	godot-4-3d-third-person-controller.log
