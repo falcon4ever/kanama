@@ -135,6 +135,23 @@ env -u KANAMA_SIGNAL_SELFTEST "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_G
 rm -f "$SIGNAL_SETTING_OVERRIDE"
 env -u KANAMA_SIGNAL_SELFTEST "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit >"$SIGNAL_SETTING_OFF_LOG" 2>&1
 
+# task 138 item 6 -- owned wrappers made on a worker thread are released like any other (R6.2) and a
+# worker calling through fresh owned wrappers while every frame starts with a collection never has
+# one released under it (R6.4): the runtime's ownership self-test (OwnershipSelfTest.kt, the same
+# code the Android smoke switches on), opted in through its project setting, as a device build is.
+# Own log; the scene quits once the self-test is done.
+OWNERSHIP_LOG="${LOG_FILE}.ownership_self_test"
+OWNERSHIP_OVERRIDE="$PROJECT_DIR/override.cfg"
+trap 'rm -f "$OWNED_RELEASE_OVERRIDE" "$SIGNAL_SETTING_OVERRIDE" "$OWNERSHIP_OVERRIDE"' EXIT
+printf '[kanama]\n\ndebug/ownership_self_test=true\n' >"$OWNERSHIP_OVERRIDE"
+"$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://ownership_self_test.tscn --verbose >"$OWNERSHIP_LOG" 2>&1
+rm -f "$OWNERSHIP_OVERRIDE"
+# task 138 item 6 -- a @RegisterClass method returning a fresh owned Resource, called typed from the
+# main thread and from a GDScript Thread, and through Object.call, with a collection every frame
+# (KANAMA_GC_STRESS=1): Godot gets a reference of its own, so the wrapper's release never frees what
+# GDScript holds.
+KANAMA_GC_STRESS=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://register_class_object_return_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
+
 # Report a failed assertion. The log tail is verbose Godot output, so the reason is
 # restated *after* it -- otherwise the one line that matters ends up ~120 lines above the
 # end of the output and reads as a silent non-zero exit.
@@ -434,6 +451,26 @@ if ! grep -Eq "OwnedReleaseSmoke baseline=[0-9]+ after_drop=[0-9]+ after_gc=[0-9
   grep -E "OwnedReleaseSmoke|owned-reference GC releases" "$OWNED_RELEASE_RED_LOG" >&2 || tail -n 40 "$OWNED_RELEASE_RED_LOG" >&2
   exit 1
 fi
+# task 138 item 6 -- the ownership self-test (R6.2 worker releases, R6.4 GC stress, the getter
+# microbench the device runs repeat), from its own log.
+for pattern in \
+  "\[kanama\] OWNERSHIP SELFTEST worker-owned GC releases: created=10000 released=10000 leaked=0 " \
+  "\[kanama\] OWNERSHIP SELFTEST worker GC stress: seconds=5 calls=[1-9][0-9]* faults=0$" \
+  "\[kanama\] OWNERSHIP SELFTEST getter microbench ns/call: fence_off=[0-9.]+ fence_on=[0-9.]+ getter=[0-9.]+ owned_get_close=[0-9.]+ " \
+  "\[kanama\] OWNERSHIP SELFTEST: 3 passed, 0 failed in [0-9]+ ms"; do
+  if ! grep -Eq "$pattern" "$OWNERSHIP_LOG"; then
+    grep -E "OWNERSHIP SELFTEST|owned-reference GC releases" "$OWNERSHIP_LOG" >&2 || tail -n 40 "$OWNERSHIP_LOG" >&2
+    echo "[runtime_smoke] FAIL -- ownership self-test line missing: $pattern (log: $OWNERSHIP_LOG)" >&2
+    exit 1
+  fi
+done
+if grep -Eq "OWNERSHIP SELFTEST FAIL|Leaked instance|ObjectDB instances leaked|previously freed|SIGSEGV|crashed" "$OWNERSHIP_LOG"; then
+  grep -E "OWNERSHIP SELFTEST FAIL|Leaked instance|leaked|previously freed|SIGSEGV|crashed" "$OWNERSHIP_LOG" >&2
+  echo "[runtime_smoke] FAIL -- the ownership self-test reported a failure, a leak or a fault (log: $OWNERSHIP_LOG)" >&2
+  exit 1
+fi
+check "\[kanama:kt\] GC stress: a full collection every frame \(KANAMA_GC_STRESS=1\)"
+check "RegisterClassObjectReturn returned=300 worker=100 valid=300 gdscript_only=300 kept_refcount=1$"
 # Holding a freed wrapper is silent, as in GDScript: two exported-property reads and a script
 # method return of it give Godot null (no error; counted below).
 # task 134 A2 -- a position written and read back is `==` (its x is not `== 0.1`, as in GDScript),

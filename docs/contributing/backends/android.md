@@ -154,6 +154,30 @@ line with a non-zero pass count and `0 failed`, or with any
 `SIGNAL SELFTEST FAIL: <row> got <values>` line. The `<ms>` is the cost of the test on the device. A
 new signal path that only the device can break belongs here as another row.
 
+The smokes switch on a second hook the same way, `OwnershipSelfTest`
+(`src/jvmMain/kotlin/binding/runtime/OwnershipSelfTest.kt`, task 138 item 6): project setting
+`kanama/debug/ownership_self_test`, `KANAMA_OWNERSHIP_SELFTEST=1` / `0` on the desktop. Over a few
+seconds of frames from the first one, a worker thread drops 10,000 owned `Resource`s, which the
+collector and the main-thread drain must release; then for 5 s a worker calls `getRid()` on fresh owned
+`Resource`s while every frame starts with a full collection (what `KANAMA_GC_STRESS=1` does for a whole
+run); then it times a getter on the main thread, the same raw ptrcall without and with
+`ObjectCalls.keepReachable` after it, and the fence alone against the same empty loop (the fence's
+cost on ART). A clean run logs
+
+```text
+[kanama] OWNERSHIP SELFTEST worker-owned GC releases: created=10000 released=10000 leaked=0 waited_ms=<ms> frames=<n> drained=<n> backlog=<n>
+[kanama] OWNERSHIP SELFTEST worker GC stress: seconds=5 calls=<n> faults=0
+[kanama] OWNERSHIP SELFTEST getter microbench ns/call: fence_off=<a> fence_on=<b> getter=<c> owned_get_close=<d> fence_alone=<e> loop_alone=<f> (best of 5 rounds of 20 ms per loop)
+[kanama] OWNERSHIP SELFTEST: 3 passed, 0 failed in <ms> ms
+```
+
+Every frame does a bounded step (a slice of the id checks, one microbench round), because an FFI
+call costs several times more on ART than on HotSpot; the whole test takes about 15 s on a Pixel 7.
+On Android 8-12 (no `java.lang.ref.Cleaner`, so no fallback) the worker rows print `skipped`.
+`scripts/android_smoke.sh` waits for the verdict line after the launch wait (at most
+`KANAMA_ANDROID_SELFTEST_WAIT` more seconds, default 90) and fails on a missing verdict, a `failed`
+count above zero or an `OWNERSHIP SELFTEST FAIL` line.
+
 ## Implementation Shape
 
 The current Android implementation lives under `android/godot-plugin`, split

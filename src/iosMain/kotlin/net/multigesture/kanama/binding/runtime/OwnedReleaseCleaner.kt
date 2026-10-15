@@ -8,7 +8,6 @@ import kotlin.native.ref.Cleaner
 import kotlin.native.ref.createCleaner
 import kotlin.native.runtime.GC
 import kotlin.native.runtime.NativeRuntimeApi
-import platform.Foundation.NSThread
 import platform.posix.usleep
 
 /**
@@ -21,6 +20,8 @@ import platform.posix.usleep
  * [PendingRelease], never the wrapper. Kotlin/Native cannot cancel a cleaner, so `close()` only
  * disarms the release and the action later runs as a no-op. The queue is a Treiber stack over an
  * atomic reference: lock-free pushes from the cleaner thread, one swap-and-walk on the main thread.
+ * [register] runs on any thread (task 138 item 6): Kotlin/Native keeps a wrapper rooted while the
+ * frame that calls through it is live, so a worker's call cannot outlive its wrapper.
  */
 @OptIn(ExperimentalAtomicApi::class, ExperimentalNativeApi::class)
 internal actual object OwnedReleaseCleaner {
@@ -105,11 +106,6 @@ internal actual object OwnedReleaseCleaner {
   actual fun warn(message: String) {
     IosGodotOutput.warn(message)
   }
-
-  // Kotlin/Native scripts run on the app's main thread, which is Godot's main thread on iOS.
-  actual fun noteMainThread() {}
-
-  actual fun isMainThread(): Boolean = NSThread.isMainThread
 
   actual fun ownerHasPlainScript(address: Long): Boolean =
     net.multigesture.kanama.ios.KanamaIosRuntime.ownerHasPlainScript(address)

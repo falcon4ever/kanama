@@ -264,8 +264,9 @@ actual object ObjectCalls {
    * `RefCounted`'s fallback release could then destroy the object mid-call. The generated tree
    * calls this after each call for the receiver and for every object/Callable argument, and the
    * hand-written Variant and signal paths do the same. `Reference.reachabilityFence` is a HotSpot
-   * intrinsic that emits no code. Android has it from API 28 (the debug floor): below that the
-   * lookup at class init fails and the fence is skipped, which is the behaviour before task 138.
+   * intrinsic that emits no code. Android has it from API 28: below that (minSdk is 26) the lookup
+   * at class init fails and the fence is skipped, and `OwnedReleaseCleaner.available` is false
+   * there, so no wrapper registers a release the missing fence would have to protect.
    */
   actual fun keepReachable(value: Any?) {
     if (HAS_REACHABILITY_FENCE) Reference.reachabilityFence(value)
@@ -274,6 +275,13 @@ actual object ObjectCalls {
   // A static final: HotSpot folds the branch away.
   private val HAS_REACHABILITY_FENCE: Boolean =
     runCatching { Reference::class.java.getMethod("reachabilityFence", Any::class.java) }.isSuccess
+
+  /**
+   * Whether [keepReachable] fences: `OwnedReleaseCleaner.available` requires it, because wrappers
+   * built on a worker register a release (task 138 item 6).
+   */
+  internal val hasReachabilityFence: Boolean
+    get() = HAS_REACHABILITY_FENCE
 
   actual fun constructObject(className: String): MemorySegment {
     val instance =

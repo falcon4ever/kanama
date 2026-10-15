@@ -1469,6 +1469,24 @@ object BuiltinTypes {
     if (value == null) MemorySegment.NULL else FreedObjectChecks.valueSegment(value)
 
   /**
+   * The pointer a KSP-generated ptrcall upcall writes into Godot's return slot (task 138 item 6).
+   * That slot is a `Ref<T>`, or the object pointer of the Variant a validated call returns, and
+   * Godot unreferences it when it is done (`gdextension.cpp` `validated_call`; godot-cpp hands the
+   * same `+1` through `ref_set_object`). So a RefCounted [value] (bit 63 of its instance id) goes
+   * out with a reference taken for Godot, while [value] is still reachable: the `+1` the wrapper
+   * may own stays the wrapper's, released by its `close()` or the GC fallback on any thread, and
+   * can no longer destroy the object Godot is returning. NULL (nil) for null or a freed object.
+   * Public because the generated registrars live in the game's module; game code does not call it.
+   */
+  @JvmStatic
+  fun objectReturnSegment(value: GodotObject?): MemorySegment {
+    val segment = objectValueSegment(value)
+    if (segment.address() != 0L && value!!.instanceId < 0L) RefCounted.retainHandle(segment)
+    ObjectCalls.keepReachable(value)
+    return segment
+  }
+
+  /**
    * The Godot object a custom-script-typed value ([script], whose owner is [owner]) stands for when
    * KSP-generated glue hands it to Godot (a `@Export` of a script type, or a `List`/`Map` of them):
    * a `KanamaScript`'s captured `self` wrapper, else a wrapper of [owner]. Null -- nil -- when the

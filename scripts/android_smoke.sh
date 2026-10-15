@@ -32,6 +32,9 @@ Optional environment:
   KANAMA_ANDROID_LOG=/path/to/logcat.txt
   KANAMA_ANDROID_SCREENSHOT=/path/to/screenshot.png
   KANAMA_ANDROID_LAUNCH_WAIT=30
+  KANAMA_ANDROID_SELFTEST_WAIT=90
+      After the launch wait, wait at most this many more seconds for the ownership self-test's
+      verdict line (it ends as soon as the line is in the log or the app has stopped).
   KANAMA_ANDROID_RENDERER=mobile|gl_compatibility|forward_plus
       Temporarily overrides the demo's rendering_method.mobile project setting
       for this run (restored afterwards) and asserts in logcat that the
@@ -51,6 +54,7 @@ APK_PATH="${4:-/tmp/kanama-android-smoke.apk}"
 LOG_FILE="${KANAMA_ANDROID_LOG:-/tmp/kanama_android_smoke.log}"
 SCREENSHOT="${KANAMA_ANDROID_SCREENSHOT:-/tmp/kanama_android_smoke.png}"
 LAUNCH_WAIT="${KANAMA_ANDROID_LAUNCH_WAIT:-30}"
+SELFTEST_WAIT="${KANAMA_ANDROID_SELFTEST_WAIT:-90}"
 PANAMAPORT_MAVEN_REPO="${KANAMA_PANAMAPORT_MAVEN_REPO:-file://$HOME/.m2/repository}"
 RENDERER_OVERRIDE="${KANAMA_ANDROID_RENDERER:-}"
 PROJECT_GODOT_BACKUP=""
@@ -130,30 +134,33 @@ PROJECT_GODOT_BACKUP="$(mktemp "${TMPDIR:-/tmp}/kanama_project_godot.XXXXXX")"
 cp "$PROJECT_GODOT" "$PROJECT_GODOT_BACKUP"
 
 # Task 138 item 23: opt the demo's debug build into the typed-signal self-test (SignalSelfTest.kt;
-# off for users). The setting sits under [kanama]; an existing key is replaced, a missing section added.
+# off for users), and task 138 item 6: into the ownership self-test (OwnershipSelfTest.kt). The
+# settings sit under [kanama]; an existing key is replaced, a missing section added.
 python3 - "$PROJECT_GODOT" <<'PY'
 import re
 import sys
 
 path = sys.argv[1]
-key = "debug/signal_self_test"
-line = key + "=true"
 with open(path, encoding="utf-8") as fh:
     text = fh.read()
-if re.search(r"^" + re.escape(key) + r"=.*$", text, re.M):
-    text = re.sub(r"^" + re.escape(key) + r"=.*$", line, text, flags=re.M)
-elif re.search(r"^\[kanama\]\s*$", text, re.M):
-    text = re.sub(r"^(\[kanama\]\s*)$", lambda m: m.group(1) + "\n" + line + "\n", text, count=1, flags=re.M)
-else:
-    text = text.rstrip("\n") + "\n\n[kanama]\n\n" + line + "\n"
+for key in ("debug/signal_self_test", "debug/ownership_self_test"):
+    line = key + "=true"
+    if re.search(r"^" + re.escape(key) + r"=.*$", text, re.M):
+        text = re.sub(r"^" + re.escape(key) + r"=.*$", line, text, flags=re.M)
+    elif re.search(r"^\[kanama\]\s*$", text, re.M):
+        text = re.sub(r"^(\[kanama\]\s*)$", lambda m: m.group(1) + "\n" + line + "\n", text, count=1, flags=re.M)
+    else:
+        text = text.rstrip("\n") + "\n\n[kanama]\n\n" + line + "\n"
 with open(path, "w", encoding="utf-8") as fh:
     fh.write(text)
 PY
-grep -q '^debug/signal_self_test=true$' "$PROJECT_GODOT" || {
-  echo "[android_smoke] could not write kanama/debug/signal_self_test into $PROJECT_GODOT" >&2
-  exit 1
-}
-echo "[android_smoke] typed-signal self-test enabled for this run (kanama/debug/signal_self_test=true)"
+for key in signal_self_test ownership_self_test; do
+  grep -q "^debug/${key}=true\$" "$PROJECT_GODOT" || {
+    echo "[android_smoke] could not write kanama/debug/${key} into $PROJECT_GODOT" >&2
+    exit 1
+  }
+done
+echo "[android_smoke] typed-signal and ownership self-tests enabled for this run (kanama/debug/signal_self_test, kanama/debug/ownership_self_test)"
 
 if [[ -n "$RENDERER_OVERRIDE" ]]; then
   if ! grep -q '^renderer/rendering_method.mobile=' "$PROJECT_GODOT"; then
@@ -276,6 +283,18 @@ if (( launch_elapsed < LAUNCH_WAIT )); then
   sleep $((LAUNCH_WAIT - launch_elapsed))
 fi
 adb_retry logcat --pid "$APP_PID" -d >"$LOG_FILE"
+# Task 138 item 6: the ownership self-test (switched on above) runs over many frames, longer on a slow
+# device; wait for its own verdict line, at most SELFTEST_WAIT more seconds, rather than a fixed window.
+# An app that stopped (crashed, or quit on its own) is judged on the log it left.
+selftest_waited=0
+while ! grep -Eq "OWNERSHIP SELFTEST: [0-9]+ passed, [0-9]+ failed" "$LOG_FILE" &&
+  (( selftest_waited < SELFTEST_WAIT )) &&
+  [[ "$(app_pid_once "$ADB_BIN" "$PACKAGE_NAME")" == "$APP_PID" ]]; do
+  sleep 2
+  selftest_waited=$((selftest_waited + 2))
+  adb_retry logcat --pid "$APP_PID" -d >"$LOG_FILE"
+done
+echo "[android_smoke] ownership self-test verdict wait: ${selftest_waited}s after the ${LAUNCH_WAIT}s launch wait"
 
 check_log "Initializing Godot plugin KanamaAndroid"
 check_log "registered KanamaScriptLanguage"
@@ -296,6 +315,23 @@ check_log "OnGodotMainLoopStarted"
 check_log "\\[kanama\\] SIGNAL SELFTEST: [1-9][0-9]* passed, 0 failed"
 check_log_absent "SIGNAL SELFTEST FAIL"
 check_log_absent "SIGNAL SELFTEST: [0-9]+ passed, [1-9][0-9]* failed"
+# task 138 item 6 -- the ownership self-test (OwnershipSelfTest.kt, shared desktop/Android code), switched
+# on above: owned wrappers a worker thread drops are released (or the row says the fallback is off, as on
+# Android 8-12, which has no java.lang.ref.Cleaner), 5 s of worker calls through fresh owned wrappers
+# while every frame collects end without a fault, and the getter microbench line (the fence's cost on ART).
+# The GC fallback exists from Android 13 (API 33, java.lang.ref.Cleaner): there the row must release every
+# wrapper and the stress row must run; "skipped" is accepted only below API 33.
+device_sdk="$(adb_retry shell getprop ro.build.version.sdk | tr -d '\r[:space:]')"
+if [[ "$device_sdk" =~ ^[0-9]+$ ]] && (( device_sdk >= 33 )); then
+  check_log "\\[kanama\\] OWNERSHIP SELFTEST worker-owned GC releases: created=10000 released=10000 leaked=0 "
+  check_log "\\[kanama\\] OWNERSHIP SELFTEST worker GC stress: seconds=[0-9]+ calls=[1-9][0-9]* faults=0"
+else
+  check_log "\\[kanama\\] OWNERSHIP SELFTEST worker-owned GC releases: (created=10000 released=10000 leaked=0 |skipped )"
+fi
+check_log "\\[kanama\\] OWNERSHIP SELFTEST getter microbench ns/call: fence_off=[0-9.]+ fence_on=[0-9.]+ "
+check_log "\\[kanama\\] OWNERSHIP SELFTEST: [1-9][0-9]* passed, 0 failed"
+check_log_absent "OWNERSHIP SELFTEST FAIL"
+check_log_absent "OWNERSHIP SELFTEST: [0-9]+ passed, [1-9][0-9]* failed"
 
 # Renderer assertion: the override must have actually initialized on device.
 # Godot logs the active driver + method at startup (e.g. "Vulkan 1.x - Forward

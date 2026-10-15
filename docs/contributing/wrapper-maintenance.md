@@ -519,8 +519,11 @@ The wrapper convention on desktop/Android:
   (instance id no longer resolves) is skipped. `retainForKotlinWrapper()` makes
   a borrowed wrapper owned, fallback included. `close()` disarms atomically
   (`PendingRelease.tryDisarm`): if the cleanup won the race, close() leaves the
-  release to the drain. A wrapper built off the engine main thread is owned but
-  registers no fallback. `close()` on a wrapper that holds no reference of its
+  release to the drain. A wrapper built on any thread registers (task 138 item
+  6): every engine call ends with `ObjectCalls.keepReachable` on the receiver
+  and each object argument, so the main-thread drain never releases a wrapper a
+  worker is still calling through; a runtime without that fence reports the
+  cleaner unavailable. `close()` on a wrapper that holds no reference of its
   own (a borrowed view) releases nothing and warns in debug builds; the `from*`
   downcasts take their own `+1` (`RefCounted.retained`).
 - **A script object keeps its RefCounted owner alive** (task 132 blocker 1,

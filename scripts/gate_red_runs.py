@@ -571,6 +571,9 @@ case("check_wrapper_generator.py (iOS region body)", py("check_wrapper_generator
      [Edit(f"{IOS}/binding/runtime/ObjectCalls.kt", "      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_RID, ret.ptr)\n      RID(ret.value)",
            "      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_INT, ret.ptr)\n      RID(ret.value)")],
      "single-tree drift-gate", "a generated iOS ObjectCalls helper keeps its name and parameters but its body (here a PT_* tag) changes: the region is compared by content, not by member names (task 119 finding 4)")
+case("check_wrapper_generator.py (keep-reachable sweep)", py("check_wrapper_generator.py"),
+     [Edit("scripts/check_wrapper_generator.py", "reads_receiver = (receiver or owner) in refcounted and", "reads_receiver = False and")],
+     "the sweep misses a known-bad shape", "the keep-reachable sweep stops seeing a RefCounted body that reads `segment` without its fence (expression body, header on several lines, no checkOpen(); task 138 item 6)")
 case("check_wrapper_generator.py (expect ObjectCalls)", py("check_wrapper_generator.py"),
      [Append(f"{COMMON}/binding/runtime/ObjectCalls.expect.kt", "\nval redRunHandEdit = 1\n")],
      "ObjectCalls.expect.kt", "the generated `expect object ObjectCalls` file is hand-edited (it is in the drift compare since task 119 finding 25)")

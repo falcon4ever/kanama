@@ -515,11 +515,11 @@ a forgotten getter result from staying alive until shutdown.
 - **Only owned wrappers** are released this way. A borrowed view
   (`fromHandle`, a wrapper constructor, values read through `call`/`get`/`getMeta`)
   is never released, because its reference was never yours.
-- **Only wrappers made on the engine main thread.** A wrapper you get on a worker
-  thread (a `Dispatchers.Default` coroutine, your own `Thread`) is still owned,
-  but nothing releases it for you: the worker may still be in a call through it
-  when the main thread would release it. Close those (`use { }`), or hand the
-  result back to the main thread first ([Threads](scripts.md#threads)).
+- **On any thread.** A wrapper you get on a worker thread (a `Dispatchers.Default`
+  coroutine, your own `Thread`, a threaded load) is released the same way. The
+  wrapper stays reachable through its last call, so the release, which runs on
+  the main thread, never lands inside a call a worker is still making
+  ([Threads](scripts.md#threads)).
 - **Never twice.** `close()` cancels the fallback, so a wrapper you closed is not
   released again when it is collected.
 - **On the main thread.** The collector only queues the release; Godot is called
@@ -549,14 +549,15 @@ a forgotten getter result from staying alive until shutdown.
   `use { }`.
 
 Desktop, Android 13+ and iOS run the same mechanism; the desktop runtime smoke
-checks it on every run, while the Android and iOS device runs are still to be
-recorded. Android 8-12 debug installs have no `java.lang.ref.Cleaner`, so there
+checks it on every run, and the Android and iOS device self-tests check it on
+the phones. Android 8-12 debug installs have no `java.lang.ref.Cleaner`, so there
 `close()` stays the only release (Kanama's Android release builds need
-Android 13 anyway). Web releases a dropped wrapper's reference through the
-browser's collector the same way, and every `RefCounted` is `AutoCloseable`
-there too (see [Objects you receive](#objects-you-receive)).
-`KANAMA_GC_RELEASES=0` in the game's environment turns the fallback off, for
-measurements.
+Android 13 anyway); Android 8 also lacks the reachability fence that keeps a
+wrapper alive through its last call, and the fallback stays off without it. Web
+releases a dropped wrapper's reference through the browser's collector the same
+way, and every `RefCounted` is `AutoCloseable` there too (see
+[Objects you receive](#objects-you-receive)). `KANAMA_GC_RELEASES=0` in the
+game's environment turns the fallback off, for measurements.
 
 ### A script object keeps its resource alive
 

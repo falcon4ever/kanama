@@ -2,6 +2,7 @@ package net.multigesture.kanama.binding.runtime
 
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.AtomicLong
+import kotlin.concurrent.atomics.AtomicReference
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.concurrent.atomics.decrementAndFetch
 import kotlin.concurrent.atomics.incrementAndFetch
@@ -20,9 +21,11 @@ import net.multigesture.kanama.api.RefCounted
  * - D1: only a wrapper that owns a `+1` ([RefCounted.markOwned], reached through `wrapOwned`,
  *   `create()`, the `from*` downcasts and `retainForKotlinWrapper`) registers one. A borrowed view
  *   (`fromHandle`, a wrapper constructor, Variant decoding) registers nothing: releasing it would
- *   drop a reference nobody took, and its close() is a no-op. A wrapper built off the engine main
- *   thread registers nothing either (it stays owned; close() releases it): the worker may still be
- *   inside a call through it when the main thread would drain its release.
+ *   drop a reference nobody took, and its close() is a no-op. The thread does not matter (task 138
+ *   item 6): a wrapper built on a worker (a `Thread`, a coroutine, a threaded load) registers too.
+ *   That is safe because every engine call through a wrapper ends with `ObjectCalls.keepReachable`
+ *   on it (receiver and arguments): the collector cannot see it as unreachable, so its release
+ *   cannot be drained, while a worker is still inside a call through it.
  * - D2: the registration is a platform cleanup ([OwnedReleaseCleaner]: `java.lang.ref.Cleaner` on
  *   desktop/Android, `kotlin.native.ref.createCleaner` on iOS) whose action holds a
  *   [PendingRelease] -- the raw handle, never the wrapper. When the wrapper becomes unreachable the
@@ -40,7 +43,8 @@ import net.multigesture.kanama.api.RefCounted
  *   once the script object is unreachable; see `ScriptOwnerLinks` on each backend.
  *
  * Main-thread state ([drain], [configure], [shutdown], the logged-site set) is touched only by the
- * engine main thread; only [PendingRelease.fire] runs elsewhere.
+ * engine main thread; [newRelease] and [register] run on whichever thread builds the wrapper, and
+ * [PendingRelease.fire] on the cleaner's thread.
  */
 @OptIn(ExperimentalAtomicApi::class)
 internal object OwnedReleases {
@@ -118,7 +122,6 @@ internal object OwnedReleases {
    * through `ProjectSettings.get_setting`. Never throws.
    */
   fun configureFromEngine(): String {
-    OwnedReleaseCleaner.noteMainThread()
     debugBuild = runCatching { OS.isDebugBuild() }.getOrDefault(false)
     val environment = runCatching { OS.getEnvironment(ENVIRONMENT_VARIABLE) }.getOrDefault("")
     val logSetting = runCatching { boolSetting(LOG_SETTING) }.getOrDefault(false)
@@ -145,17 +148,16 @@ internal object OwnedReleases {
   internal var registrationCap: Long = REGISTRATION_CAP
 
   private const val REGISTRATION_CAP = 100_000L
-  private var warnedCap = false
+  private val warnedCap = AtomicInt(0)
 
   /**
-   * The release record for [wrapper], or null when the fallback is off, this is not the engine main
-   * thread (one thread compare; see the class comment) or [registrationCap] is reached.
+   * The release record for [wrapper], or null when the fallback is off or [registrationCap] is
+   * reached. Any thread (see the class comment).
    */
   fun newRelease(wrapper: RefCounted): PendingRelease? {
-    if (!enabled || !OwnedReleaseCleaner.isMainThread()) return null
+    if (!enabled) return null
     if (liveRegistrations.load() >= registrationCap) {
-      if (!warnedCap) {
-        warnedCap = true
+      if (warnedCap.compareAndSet(0, 1)) {
         warn(
           "More than $registrationCap owned RefCounted wrappers are waiting for the garbage " +
             "collector to release them; new ones are no longer registered and stay alive until " +
@@ -186,7 +188,9 @@ internal object OwnedReleases {
     OwnedReleaseCleaner.cancel(registration)
   }
 
-  private val warnedBorrowedCloses = HashSet<String>()
+  // close() runs on any thread: the warned set is replaced by compare-and-set, never mutated in
+  // place.
+  private val warnedBorrowedCloses = AtomicReference(emptySet<String>())
 
   /**
    * close() on a wrapper that holds no reference of its own (a borrowed view): nothing to release.
@@ -196,7 +200,11 @@ internal object OwnedReleases {
   fun warnBorrowedClose(wrapper: RefCounted) {
     if (!debugBuild) return
     val name = wrapper::class.simpleName ?: "RefCounted"
-    if (!warnedBorrowedCloses.add(name)) return
+    while (true) {
+      val warned = warnedBorrowedCloses.load()
+      if (name in warned) return
+      if (warnedBorrowedCloses.compareAndSet(warned, warned + name)) break
+    }
     warn(
       "close() on a borrowed $name view (fromHandle or a wrapper constructor) releases nothing: " +
         "the view took no reference. Close the wrapper you got from the API instead."

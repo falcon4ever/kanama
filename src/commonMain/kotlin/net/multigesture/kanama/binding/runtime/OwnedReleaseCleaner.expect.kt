@@ -9,6 +9,11 @@ package net.multigesture.kanama.binding.runtime
  *   is off there ([available] false) and `close()` stays the only release;
  * - iOS: `kotlin.native.ref.createCleaner` and a Treiber stack over an atomic reference.
  *
+ * [register] runs on whichever thread builds the owned wrapper (task 138 item 6); [poll] only on
+ * the engine main thread. A runtime that cannot keep a wrapper reachable through an engine call
+ * (`ObjectCalls.keepReachable` is a no-op there) must report [available] false: a worker's wrapper
+ * could otherwise be released while the worker is still inside a call through it.
+ *
  * Files named `*.expect.kt` hold `expect` declarations only (the Android remap skips them), and no
  * member has a default argument.
  */
@@ -52,12 +57,6 @@ internal expect object OwnedReleaseCleaner {
 
   /** Reports [message] as a Godot warning (`push_warning`). */
   fun warn(message: String)
-
-  /** Records the calling thread as the engine main thread (called at SCENE initialization). */
-  fun noteMainThread()
-
-  /** Whether the calling thread is the engine main thread; true before [noteMainThread] ran. */
-  fun isMainThread(): Boolean
 
   /**
    * Whether the object at [address] carries a script instance whose Kotlin object is a plain class

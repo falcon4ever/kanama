@@ -173,6 +173,25 @@ private fun ownerLinkKeepOnlyScriptObject(script: Long): Pair<Long, Long> {
 private fun dropOwnedResources(count: Int): LongArray =
   LongArray(count) { net.multigesture.kanama.api.Resource.create().instanceId }
 
+// Task 138 item 6 (R6.6): [body] on a new thread (an NSThread, what a Godot `Thread` is on iOS),
+// polled by the calling thread every millisecond through [whileWaiting]; returns once [body] ended.
+@OptIn(kotlin.concurrent.atomics.ExperimentalAtomicApi::class)
+private fun onWorkerThread(body: () -> Unit, whileWaiting: () -> Unit = {}) {
+  val done = kotlin.concurrent.atomics.AtomicInt(0)
+  platform.Foundation.NSThread {
+      try {
+        body()
+      } finally {
+        done.store(1)
+      }
+    }
+    .start()
+  while (done.load() == 0) {
+    whileWaiting()
+    platform.posix.usleep(1_000u)
+  }
+}
+
 // A second owned +1 on [kept], closed: refcount back to 1, its cleanup cancelled.
 private fun closeSecondOwnedReference(kept: RefCounted) {
   RefCounted.fromHandle(kept.handle)!!.apply { retainForKotlinWrapper() }.close()
@@ -2898,6 +2917,77 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         refsBefore == 2 && refsAfter == 1,
       )
       kept.close()
+    } finally {
+      OwnedReleases.enabled = enabledBefore
+    }
+  }
+
+  // Task 138 item 6 (R6.6): owned wrappers made OFF the main thread register their release too.
+  // A worker thread drops 10,000 owned Resources; the GC + main-thread drain releases them all
+  // (before task 138 a worker's wrapper registered nothing: released=0). Then, for 3 seconds, a
+  // worker calls getRid() on fresh owned Resources -- the call is each wrapper's last use -- while
+  // this thread collects and drains every 16 ms: no fault, no release inside a call (Kotlin/Native
+  // keeps a local rooted while its frame is live, which is why the iOS keepReachable is empty).
+  run {
+    val enabledBefore = OwnedReleases.enabled
+    OwnedReleases.enabled = true
+    try {
+      var ids = LongArray(0)
+      onWorkerThread({ ids = dropOwnedResources(10_000) })
+      var released = 0
+      repeat(8) {
+        released = ids.count { !IosGodot.isInstanceIdValid(it) }
+        if (released == ids.size) return@repeat
+        OwnedReleaseCleaner.collectGarbage(1_000)
+        while (OwnedReleases.drain() > 0) {}
+      }
+      released = ids.count { !IosGodot.isInstanceIdValid(it) }
+      println(
+        "[kanama][ios][kn] OBJECTCALLS SELFTEST worker-owned GC releases: created=${ids.size} " +
+          "released=$released leaked=${ids.size - released}"
+      )
+      check(
+        "worker-owned(10000 Resources dropped on a worker released by the GC fallback)",
+        ids.size == 10_000 && released == ids.size,
+      )
+
+      var calls = 0L
+      var faults = 0
+      val faultsBefore = ObjectCalls.faultCount()
+      val deadline = kotlin.time.TimeSource.Monotonic.markNow() + kotlin.time.Duration.parse("3s")
+      var sink = 0L
+      var lastCollect = kotlin.time.TimeSource.Monotonic.markNow()
+      onWorkerThread(
+        {
+          while (deadline.hasNotPassedNow()) {
+            repeat(100) {
+              try {
+                sink += net.multigesture.kanama.api.Resource.create().getRid().value
+                calls++
+              } catch (t: Throwable) {
+                faults++
+              }
+            }
+            platform.posix.usleep(1_000u)
+          }
+        },
+        whileWaiting = {
+          if (lastCollect.elapsedNow().inWholeMilliseconds >= 16) {
+            @OptIn(kotlin.native.runtime.NativeRuntimeApi::class) kotlin.native.runtime.GC.collect()
+            OwnedReleases.drain()
+            lastCollect = kotlin.time.TimeSource.Monotonic.markNow()
+          }
+        },
+      )
+      val newFaults = ObjectCalls.faultCount() - faultsBefore
+      println(
+        "[kanama][ios][kn] OBJECTCALLS SELFTEST worker GC stress: seconds=3 calls=$calls " +
+          "faults=${faults + newFaults}${if (sink == Long.MIN_VALUE) " sink" else ""}"
+      )
+      check(
+        "worker-gc-stress(3 s of calls through fresh owned wrappers while collecting: no fault)",
+        calls > 0 && faults == 0 && newFaults == 0,
+      )
     } finally {
       OwnedReleases.enabled = enabledBefore
     }
