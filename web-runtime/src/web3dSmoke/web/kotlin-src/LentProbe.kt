@@ -75,16 +75,14 @@ import net.multigesture.kanama.types.Vector3
  *   released within 6 frames, and a RefCounted Kotlin keeps stays.
  * - L16: 32 = a Sprite2D this script created, moved by the twin and handed over: the argument is
  *   the created value and its `position` reads the moved one (the dispatch refreshes the snapshot
- *   of a handle it takes over, whatever its bridge kind).
+ *   of the handle the object already has, whatever its bridge kind).
  * - L17: 64 = an AudioStreamPlayer this script created, handed over, then freed by the engine:
  *   the release drops the bridge's audio state for it, and a use throws the freed-instance error.
- * - L18: 128 = the sweep's connection to the frame signal is gone and a short-lived proxy (a
- *   LentKeeper made at run time) is the first to lend, so it makes the connection, and is freed. A
- *   lent node is freed later with no lend in between: its handle is released within K + 3 frames
- *   (a processing proxy connects the sweep again).
- * - L19: 256 = the sweep's connection is gone and the tree is paused (no proxy processes); a handle
- *   this script created is taken over by a dispatch (not a mint), the node freed: the takeover
- *   made the connection, so the handle is released while paused.
+ * - L18: 128 = a short-lived proxy (a LentKeeper made at run time) lends a node and is freed. The
+ *   node is freed later with no lend in between: its handle is released within K + 3 frames (the
+ *   sweep is the shared class's frame hook, no proxy's).
+ * - L19: 256 = the tree is paused (no proxy processes); a handle this script created (it lives as
+ *   long as the node) is handed over, the node freed: the handle is released while paused.
  *
  * [lentCost] (L10): the lending's GDScript->JS calls and the microseconds per 1000 dispatches of
  * an already-seen plain Node and Node3D.
@@ -425,12 +423,12 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
     twin.call("churn_rounds", 500L)
     val maxLent = twin.call("churn_max", 0L) as Long
     if (maxLent - lentBase <= 34L) maskB = maskB or 16L else note("L6 lent $lentBase -> max $maxLent")
-    // One handle for the node however often it is handed over: minted (or taken over from the
-    // get_children result of L2) once, not once per dispatch.
-    val handlesBefore = counter("lentMints") + counter("lentAdopts")
+    // One handle for the node however often it is handed over (the one the get_children result of
+    // L2 made), not one per dispatch.
+    val handlesBefore = counter("liveBrowserHandleCount")
     twin.call("churn_same", 1000L)
-    val handles = counter("lentMints") + counter("lentAdopts") - handlesBefore
-    if (handles == 1L) maskB = maskB or 64L else note("L6 one node, 1000 dispatches: $handles handles")
+    val handles = counter("liveBrowserHandleCount") - handlesBefore
+    if (handles <= 1L) maskB = maskB or 64L else note("L6 one node, 1000 dispatches: $handles handles")
     MainThread.postAfterFrames(4) {
       if (rcArgs.size == 3) {
         val heldAlive = twinLong("held_alive") == 1L
@@ -536,7 +534,7 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
     }
   }
 
-  /** L16 / L17: handles this script created, taken over by a dispatch. */
+  /** L16 / L17: handles this script created, handed over by a dispatch. */
   private fun adoptedRows() {
     val twin = twin()
     val statesBefore = counter("audioPlayerStates.size")
@@ -582,7 +580,7 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
     }
   }
 
-  /** L19: a takeover makes the sweep's connection when nothing else does. */
+  /** L19: a created handle is released while the tree is paused. */
   private fun pausedAdoptRows() {
     val twin = twin()
     val sprite = Sprite2D.create()
@@ -594,7 +592,7 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
       if (result == 1L && pausedAdoptArgs.size == 1) {
         maskC = maskC or 256L
       } else {
-        note("L19 paused takeover: result=$result lent ${twinLong("paused_adopt_state", 1L)} -> ${twinLong("paused_adopt_state", 2L)} -> ${twinLong("paused_adopt_state", 3L)}")
+        note("L19 paused: result=$result handle=${twinLong("paused_adopt_state", 1L)}")
       }
       // Why a row failed: the driver traces it.
       twin.call("publish_notes", notes.joinToString(" | "))

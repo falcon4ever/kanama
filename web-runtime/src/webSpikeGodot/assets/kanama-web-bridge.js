@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 37;
+  const KANAMA_WEB_PROTOCOL_VERSION = 38;
   // Prefix of a contained script error's message (Main.kt WEB_SCRIPT_ERROR_MARKER).
   const SCRIPT_ERROR_MARKER = "Kanama Web script error (contained):";
   // Added after the marker when Godot's error log could not be reached (Main.kt
@@ -31,6 +31,10 @@
   // releases the oldest lends first. Kanama's own bound (C# has none): Firefox collects only under
   // allocation pressure, so a quiet scene with mouse motion would otherwise pin every event.
   const RC_LENT_CAP = 4096;
+  // The bridge kinds of the handles that go with the script that made them (a tween runs its
+  // callbacks through that script's proxy); every other non-RefCounted handle lives as long as its
+  // object.
+  const OWNER_BOUND_KINDS = new Set(["Tween", "PropertyTweener"]);
   // Task 134 D1: the proxy's object-query arm that runs one builtin (value-type) method.
   const KANAMA_WEB_OPCODE_BUILTIN_CALL = 1003;
 
@@ -261,19 +265,10 @@
     reportCallbacks: new Map(),
     signalVector2iCallbacks: new Map(),
     tweenCallbacks: new Map(),
+    // handle -> the proxy whose callbacks run the handle's calls (its ROUTING owner). Not who keeps
+    // it alive: a Node or plain Object handle lives as long as its object, a RefCounted one while
+    // Kotlin wraps it; a handle whose routing owner goes is re-routed to another proxy.
     handleOwners: new Map(),
-    browserNodeHandlesByScript: new Map(),
-    // Owner counting for a browser handle several scripts obtained (the GDScript arm answers a
-    // lookup of an already-tracked object with the EXISTING handle). handle -> the set of scripts
-    // holding it (the first holder included once a second one joins), and the reverse index
-    // script -> its shared handles. A handle is released only with its last holder; handleOwners
-    // stays the ROUTING owner (the script whose callbacks run the handle's calls), which is the
-    // holder, or the instantiator a spawned scripted child routes through. firstHolderByHandle
-    // names the holder of a handle looked up by a routed script (holder != routing owner) until
-    // a second holder joins.
-    sharedHandleOwners: new Map(),
-    sharedHandlesByOwner: new Map(),
-    firstHolderByHandle: new Map(),
     tweenChildren: new Map(),
     sceneTreeHandlesByOwner: new Map(),
     viewportHandlesByOwner: new Map(),
@@ -307,14 +302,13 @@
     objectFrees: 0,
     liveBrowserHandleCount: 0,
     maxLiveBrowserHandles: 0,
-    // The handles lent to Kotlin for a dispatch's object arguments (a signal argument, `_input`'s
-    // event, a method's object argument), held for the object's lifetime (task 138 item 32; a
-    // RefCounted one while Kotlin wraps it): minted, taken over from a lookup, released (all),
-    // released because the engine freed the object (swept), live now and at most, and the
-    // GDScript->JS calls the lending made (the dispatch-cost measure; the dispatch itself is not
-    // counted). Every driver's performance section reports them.
+    // The handles minted for a dispatch's object arguments (a signal argument, `_input`'s event, a
+    // method's object argument; one an earlier lookup or result made is handed over as it is):
+    // minted, released (all), live now and at most; every Node or plain Object handle released
+    // because the engine freed its object (swept, a lent one or not); and the GDScript->JS calls the
+    // lending made (the dispatch-cost measure; the dispatch itself is not counted). Every driver's
+    // performance section reports them.
     lentMints: 0,
-    lentAdopts: 0,
     lentReleases: 0,
     lentSwept: 0,
     liveLent: 0,
@@ -1279,29 +1273,12 @@
     },
     /**
      * Everything the bridge holds on behalf of one script handle, released in the order a finished
-     * script's `free` needs: shared-handle ownership first (a handle another script still holds
-     * survives), then its node handles, then the match3 and census bookkeeping, then the browser
-     * handles it owns. A script whose constructor failed runs the same teardown: it may already
-     * have resolved node handles in its initializers. The proxy clears its callbacks AFTER this
-     * (the release path needs them).
+     * script's `free` needs: the match3 and census bookkeeping, then the browser handles it routes
+     * (releaseBrowserHandlesOwnedBy: an object-lifetime one is re-routed). A script whose
+     * constructor failed runs the same teardown. The proxy clears its callbacks AFTER this (the
+     * release path needs them).
      */
     teardownScriptHandles(handle, scriptName) {
-      // Shared handles first: this script stops holding every one it shared; those another
-      // script still holds survive (re-routed to that script when this one was their router).
-      const stillHeld = this.releaseSharedHandleOwnership(handle);
-      const childNodeHandles = this.browserNodeHandlesByScript.get(handle);
-      if (childNodeHandles) {
-        for (const childHandle of childNodeHandles) {
-          const childSlot = this.browserHandleSlot(childHandle);
-          // A lent handle lives with its object, not with the script that looked it up.
-          if (childSlot?.kind !== "Node" || childSlot.lent) continue;
-          if (stillHeld.has(childHandle)) continue;
-          this.eraseObjectHandleEntry(childHandle, handle);
-          this.api.kanamaWebDiscardNodeHandle(childHandle);
-          this.releaseBrowserHandle(childHandle, "Node");
-        }
-        this.browserNodeHandlesByScript.delete(handle);
-      }
       if (scriptName?.endsWith(".Tile")) {
         const spriteHandle = this.match3TileSpriteByRoot.get(handle);
         if (spriteHandle !== undefined) {
@@ -1474,7 +1451,8 @@
       slot.kind = kind;
       slot.live = true;
       slot.lent = false;
-      slot.snapshots = false;
+      // Whether Kotlin knows it as a NODE (a lend refreshes its transform snapshot): asked once.
+      slot.snapshots = null;
       slot.freeQueued = false;
       slot.refCounted = false;
       slot.wrappers = 0;
@@ -1489,14 +1467,12 @@
     },
     /**
      * Task 138 item 32: a dispatch hands Kotlin an object argument (`_kanama_lend` in the proxy).
-     * One call per lend at most: `handle` 0 mints a slot for the object's lifetime (flags 1: a Node,
-     * adopted as NODE so its snapshot and `queueFree` work, otherwise OBJECT; flags 16: a
-     * RefCounted, held by Kotlin wrappers from now on and released LENT_GRACE_FRAMES after the
-     * lend if none was made); flags 2 takes over a handle a lookup or a result already tracks (its
-     * holders no longer matter); flags 4 / 8 refresh a Node2D-or-Control / Node3D snapshot from
-     * the nine values. A lent Node or Object handle is released when the engine frees its object
-     * (releaseFreedHandles), never when the dispatch returns; its owner is only the proxy its calls
-     * route through (releaseBrowserHandlesOwnedBy re-routes it).
+     * One call per lend at most: `handle` 0 mints a slot (flags 1: a Node, adopted as NODE so its
+     * snapshot and `queueFree` work, otherwise OBJECT; flags 16: a RefCounted, held by Kotlin
+     * wrappers from now on and released LENT_GRACE_FRAMES after the lend if none was made); flags
+     * 4 / 8 refresh a Node2D-or-Control / Node3D snapshot from the nine values, of the new handle
+     * or of the one the object already has. Like every Node or plain Object handle, a lent one lives
+     * as long as its object (releaseFreedHandles), never ending when the dispatch returns.
      */
     lendHandle(owner, handle, flags, a0, a1, a2, a3, a4, a5, a6, a7, a8) {
       this.lendBridgeCalls += 1;
@@ -1516,39 +1492,33 @@
           this.lentRefCountedByAge.add(handle);
         }
         this.lentMints += 1;
-      } else if ((flags & 2) !== 0) {
-        const slot = this.browserHandleSlot(handle);
-        if (slot && !slot.lent) {
-          this.forgetSharedHandle(handle);
-          this.countLent(handle, slot);
-          this.lentAdopts += 1;
-        }
       }
       // A snapshot needs a handle Kotlin knows as a NODE (whatever the bridge's own kind label: a
       // lookup's "Node", a constructed "Sprite2D" or "MeshInstance3D"); any other keeps none.
-      if ((flags & 12) !== 0 && this.browserHandleSlot(handle)?.snapshots) {
+      if ((flags & 12) !== 0 && this.takesSnapshots(handle)) {
         if ((flags & 8) !== 0) this.refreshNode3DSnapshot(handle, a0, a1, a2, a3, a4, a5, a6, a7, a8);
         else this.refreshNode2DSnapshot(handle, a0, a1, a2, a3, a4, a5, a6, a7, a8);
       }
       return handle;
     },
-    /**
-     * A slot now holds a lent handle: counted until it is retired, however it is retired. Kotlin
-     * marks it too (its `queueFree()` then keeps the handle until the engine frees the node) and
-     * says whether it is a NODE, the handles whose transform snapshot a lend refreshes.
-     */
+    /** A slot now holds a lent handle: counted until it is retired, however it is retired. */
     countLent(handle, slot) {
       slot.lent = true;
-      slot.snapshots = this.api.kanamaWebSetLentHandle(handle, 1) === 1;
       this.liveLent += 1;
       this.maxLiveLent = Math.max(this.maxLiveLent, this.liveLent);
     },
     uncountLent(handle, slot) {
       if (!slot.lent) return;
       slot.lent = false;
-      this.api.kanamaWebSetLentHandle(handle, 0);
       this.lentReleases += 1;
       this.liveLent -= 1;
+    },
+    /** Whether Kotlin knows `handle` as a NODE, whose transform snapshot a dispatch refreshes. */
+    takesSnapshots(handle) {
+      const slot = this.browserHandleSlot(handle);
+      if (!slot) return false;
+      if (slot.snapshots === null) slot.snapshots = this.api.kanamaWebIsNodeHandle(handle) === 1;
+      return slot.snapshots;
     },
     /**
      * A browser handle names a RefCounted (the proxy's `_kanama_track` says so, or a lend's flag
@@ -1561,7 +1531,6 @@
       if (!slot || slot.refCounted) return 0;
       slot.refCounted = true;
       slot.wrappers = 0;
-      this.forgetSharedHandle(handle);
       this.rcPinned += 1;
       this.maxRcPinned = Math.max(this.maxRcPinned, this.rcPinned);
       this.api.kanamaWebMarkRefCountedHandle(handle);
@@ -1833,85 +1802,18 @@
       slot.live = false;
       slot.kind = null;
       this.handleOwners.delete(handle);
-      this.forgetSharedHandle(handle);
       this.liveBrowserHandleCount -= 1;
       this.freeBrowserHandleSlots.push(handle & BROWSER_HANDLE_SLOT_MASK);
     },
-    retainSharedHandle(handle, holder) {
-      // A lookup answered with an EXISTING tracked handle instead of its proposed one: `holder`
-      // now holds it too. A script handle (not a browser handle) has its own lifetime, and so has
-      // a lent one (its object's: task 138 item 32) and a RefCounted one (its wrappers' holds).
-      const slot = this.browserHandleSlot(handle);
-      if (!holder || !slot || slot.lent || slot.refCounted) return;
-      let holders = this.sharedHandleOwners.get(handle);
-      if (!holders) {
-        const first = this.firstHolderByHandle.get(handle) ?? this.handleOwners.get(handle);
-        if (first === undefined || first === holder) return;
-        holders = new Set([first]);
-        this.sharedHandleOwners.set(handle, holders);
-        this.sharedHandlesOf(first).add(handle);
-      }
-      if (holders.has(holder)) return;
-      holders.add(holder);
-      this.sharedHandlesOf(holder).add(handle);
-    },
-    sharedHandlesOf(owner) {
-      let handles = this.sharedHandlesByOwner.get(owner);
-      if (!handles) {
-        handles = new Set();
-        this.sharedHandlesByOwner.set(owner, handles);
-      }
-      return handles;
-    },
-    forgetSharedHandle(handle) {
-      this.firstHolderByHandle.delete(handle);
-      const holders = this.sharedHandleOwners.get(handle);
-      if (!holders) return;
-      this.sharedHandleOwners.delete(handle);
-      for (const holder of holders) {
-        const handles = this.sharedHandlesByOwner.get(holder);
-        if (!handles) continue;
-        handles.delete(handle);
-        if (handles.size === 0) this.sharedHandlesByOwner.delete(holder);
-      }
-    },
-    releaseSharedHandleOwnership(leaving) {
-      // `leaving` (a script being freed) stops holding every handle it shared. Returns the
-      // handles another script still holds; one that was routed through `leaving` is re-routed
-      // to a remaining holder so its calls keep a live owner.
-      const stillHeld = new Set();
-      const handles = this.sharedHandlesByOwner.get(leaving);
-      if (!handles) return stillHeld;
-      this.sharedHandlesByOwner.delete(leaving);
-      for (const handle of handles) {
-        const holders = this.sharedHandleOwners.get(handle);
-        if (!holders) continue;
-        holders.delete(leaving);
-        if (holders.size === 0) {
-          this.sharedHandleOwners.delete(handle);
-          continue;
-        }
-        stillHeld.add(handle);
-        if (this.handleOwners.get(handle) === leaving) {
-          if (this.sceneTreeHandlesByOwner.get(leaving) === handle) {
-            this.sceneTreeHandlesByOwner.delete(leaving);
-          }
-          this.handleOwners.set(handle, holders.values().next().value);
-        }
-      }
-      return stillHeld;
-    },
-    rerouteSharedHandle(handle, router) {
-      // `router` (a script being freed) is only the ROUTING owner of `handle`, not a holder:
-      // when a holder remains, the handle moves to it instead of dying with the router.
-      const holders = this.sharedHandleOwners.get(handle);
-      if (!holders) return false;
-      for (const holder of holders) {
-        if (holder === router) continue;
-        this.handleOwners.set(handle, holder);
-        return true;
-      }
-      return false;
+    /**
+     * Whether a handle stays when the script routing it goes: every Node or plain Object handle
+     * (it lives as long as its object; the sweep releases it once the engine freed the object), a
+     * RefCounted one while a Kotlin wrapper holds it; never a tween or tweener, which goes with the
+     * script that made it (its proxy runs the tween's callbacks).
+     */
+    outlivesItsRouter(slot) {
+      if (slot.refCounted) return slot.wrappers > 0;
+      return !OWNER_BOUND_KINDS.has(slot.kind);
     },
     eraseObjectHandleEntry(handle, viaOwner) {
       // The proxies share one handle -> object dictionary. Retiring a handle without erasing its
@@ -1933,11 +1835,11 @@
         if (handleOwner !== owner || (handle & BROWSER_HANDLE_NAMESPACE) === 0) continue;
         const slot = this.browserHandleSlot(handle);
         if (!slot) continue;
-        if (this.rerouteSharedHandle(handle, owner)) continue;
-        if (slot.refCounted ? slot.wrappers > 0 : slot.lent) {
-          // Task 138 item 32: a lent handle lives with its object, and a RefCounted one with its
-          // Kotlin wrappers, so a copy another script stored stays valid: its calls route through
-          // another proxy. The last proxy releases it. A RefCounted nobody wraps goes now.
+        if (this.outlivesItsRouter(slot)) {
+          // A Node or plain Object handle lives as long as its object, and a RefCounted one while
+          // Kotlin wraps it, whichever script obtained it, so a copy another script stored (or a
+          // companion holds) stays valid: its calls route through another proxy. The last proxy
+          // releases it. A RefCounted nobody wraps, and a tween, go now.
           const route = this.lentRouteOtherThan(owner);
           if (route !== 0) {
             this.handleOwners.set(handle, route);
@@ -2123,11 +2025,10 @@
     mintGenericHandle(ownerHandle, kindTag) {
       // Task 76: an immediate generic call returned an engine object that is neither
       // script-backed nor already tracked. Mint a tracked browser handle of the kind the
-      // GDScript arm classified (node / resource / object), OWNED by the calling script
-      // per the task-61 "close what you create" contract: released explicitly through
-      // `WebGenericCallResult.close` (releaseHandleNow), by its Kotlin wrappers' end for a
-      // RefCounted (the proxy marks it), or by releaseBrowserHandlesOwnedBy at the owner
-      // script's teardown.
+      // GDScript arm classified (node / resource / tween / object), routed through the calling
+      // script: released explicitly through `WebGenericCallResult.close` (releaseHandleNow), by
+      // its Kotlin wrappers' end for a RefCounted (the proxy marks it), when the engine frees a
+      // Node or plain Object, or with the calling script for a tween.
       if (kindTag === "node") {
         const handle = this.allocateBrowserHandle("Node", ownerHandle);
         this.api.kanamaWebAdoptNodeHandle(handle);
@@ -2138,7 +2039,8 @@
         this.api.kanamaWebAdoptResourceHandle(handle);
         return handle;
       }
-      const handle = this.allocateBrowserHandle("Object", ownerHandle);
+      // A tween goes with the calling script (OWNER_BOUND_KINDS); Kotlin knows it as an OBJECT.
+      const handle = this.allocateBrowserHandle(kindTag === "tween" ? "Tween" : "Object", ownerHandle);
       this.api.kanamaWebAdoptObjectHandle(handle);
       return handle;
     },
@@ -2273,17 +2175,11 @@
       if (!Number.isInteger(result)) {
         throw this.unpublishedResult(handle, "Godot property object query callback did not publish a result");
       }
-      if (result !== resultHandle) {
-        this.releaseBrowserHandle(resultHandle, "Object");
-        this.retainSharedHandle(result, owner);
-      }
+      if (result !== resultHandle) this.releaseBrowserHandle(resultHandle, "Object");
       return result;
     },
     immediateNodeLookup(handle, path) {
       const owner = this.ownerForHandle(handle);
-      // The holder is the script that asked; the routing owner is the instantiator for a spawned
-      // scripted child, which is not the one that must keep the handle alive.
-      const lookupHolder = this.api.kanamaWebIsLive(handle) === 1 ? handle : owner;
       const callback = this.callbackFor(this.nodeLookupCallbacks, handle, "Godot node lookup");
       const resultHandle = this.allocateBrowserHandle("Node", owner);
       this.api.kanamaWebAdoptNodeHandle(resultHandle);
@@ -2304,10 +2200,9 @@
         if (!scriptHandle && this.isBrowserHandleLive(result) !== 1) {
           throw new Error("Godot node lookup callback returned neither its proposed nor a live object handle");
         }
+        // The node is already tracked: its one handle answers (it lives as long as the node).
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, "Node");
-        // The node is already tracked: the script that looked it up holds the handle too.
-        this.retainSharedHandle(result, lookupHolder);
         if (this.mode === "match3") {
           if (scriptHandle) this.match3ScriptNodeLookups += 1;
           else this.match3ReusedNodeLookups += 1;
@@ -2316,17 +2211,6 @@
       if (result === 0) {
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, "Node");
-      }
-      if (
-        this.api.kanamaWebIsLive(handle) === 1 &&
-        this.browserHandleSlot(result)?.kind === "Node"
-      ) {
-        const childHandles = this.browserNodeHandlesByScript.get(handle) ?? new Set();
-        childHandles.add(result);
-        this.browserNodeHandlesByScript.set(handle, childHandles);
-        if (result === resultHandle && lookupHolder !== owner) {
-          this.firstHolderByHandle.set(result, lookupHolder);
-        }
       }
       if (this.mode === "match3" && path === "Sprite2D" && result !== 0) {
         const previousSprite = this.match3TileSpriteByRoot.get(handle);
@@ -2429,12 +2313,21 @@
       // Node — same handle-kind rule as SpriteFrames (adopt as Object, or Kotlin's OBJECT use
       // trips a NODE-vs-OBJECT conflict).
       const isEnvironment = opcode === 81;
-      // opcode 112 = KinematicCollision3D.get_collider returns a live scene node that is
-      // usually already tracked (a scripted Mob resolves to its script handle; a looked-up
-      // Ground reuses its browser handle) — tolerate an existing live handle like a node
-      // lookup instead of requiring the proposed one. opcode 114 = Node.duplicate adopts a
-      // genuinely new node through the proposed handle.
-      const isCollider = opcode === 112 || opcode === 122;
+      // A result that names a live object (a collider, the parent, the viewport, the camera, the
+      // tree, the root) answers the handle it already has (a scripted Mob resolves to its script
+      // handle; a looked-up Ground reuses its browser handle), like a node lookup, instead of a
+      // second one: a Node or plain Object handle lives as long as its object, so one per call
+      // would pile up. opcode 114 = Node.duplicate and opcode 36 = create_tween adopt a genuinely
+      // new object through the proposed handle; the Resource results get one each (Kotlin's
+      // wrappers hold them).
+      const answersTracked =
+        opcode === 112 ||
+        opcode === 122 ||
+        isViewport ||
+        isSceneTree ||
+        isRoot ||
+        opcode === 73 ||
+        opcode === 194;
       // opcode 212 = PackedScene.get_state returns a SceneState, opcode 225 =
       // MeshInstance3D.get_mesh returns a Mesh Resource — neither is a Node, so both
       // follow the SpriteFrames/Environment handle-kind rule.
@@ -2484,12 +2377,12 @@
       );
       if (result !== 0 && result !== resultHandle) {
         const liveScript = this.api.kanamaWebIsLive(result) === 1;
-        if (!isCollider || (!liveScript && this.isBrowserHandleLive(result) !== 1)) {
+        if (!answersTracked || (!liveScript && this.isBrowserHandleLive(result) !== 1)) {
           throw new Error("Godot no-args object callback published an invalid handle");
         }
-        this.api.kanamaWebDiscardNodeHandle(resultHandle);
+        if (isObjectResult) this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+        else this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, kind);
-        this.retainSharedHandle(result, owner);
       }
       if (result === 0) {
         if (isObjectResult) this.api.kanamaWebDiscardBrowserHandle(resultHandle);
@@ -2499,12 +2392,12 @@
         this.tweenChildren.set(resultHandle, new Set());
         if (this.mode === "match3") this.match3TweensCreated += 1;
       } else if (isSceneTree) {
-        this.sceneTreeHandlesByOwner.set(owner, resultHandle);
-        this.match3SceneTreeHandlesCreated += 1;
-      } else if (isViewport && result === resultHandle) {
-        this.viewportHandlesByOwner.set(owner, resultHandle);
-      } else if (isRoot && result === resultHandle) {
-        this.rootHandlesByOwner.set(owner, resultHandle);
+        this.sceneTreeHandlesByOwner.set(owner, result);
+        if (result === resultHandle) this.match3SceneTreeHandlesCreated += 1;
+      } else if (isViewport) {
+        this.viewportHandlesByOwner.set(owner, result);
+      } else if (isRoot) {
+        this.rootHandlesByOwner.set(owner, result);
       }
       return result;
     },
@@ -2603,12 +2496,6 @@
       callback(opcode, handle, value);
       if (typeof this.immediateStringResult !== "string") {
         throw this.unpublishedResult(handle, "Godot string query callback did not publish a string result");
-      }
-      // A generic call's object return that resolved to an already-tracked handle ("o", id,
-      // "tracked"): the calling script holds that handle too.
-      if (this.immediateStringResult.startsWith("o\u001f")) {
-        const tracked = /^o\u001f(-?\d+)\u001ftracked$/.exec(this.immediateStringResult);
-        if (tracked) this.retainSharedHandle(Number(tracked[1]), this.ownerForHandle(handle));
       }
       return this.immediateStringResult;
     },
@@ -2711,7 +2598,6 @@
         }
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, "Node");
-        this.retainSharedHandle(result, owner);
       }
       if (result === 0) {
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
@@ -2771,7 +2657,6 @@
         }
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, "Node");
-        this.retainSharedHandle(result, owner);
       }
       if (result === 0) {
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
@@ -3360,15 +3245,11 @@
             this.audioPlayerStates.delete(this.lastFreedObjectHandle);
             this.match3AudioPlayerFrees += 1;
           }
-          if (slot?.lent) {
-            // Task 138 item 32: a lent node lives with its object. The node stays callable to the
-            // end of the frame (a second dispatch of it this frame reads it, as on desktop), so its
-            // slot -- and Kotlin's registration -- stay until the engine frees it and the sweep
-            // releases the handle as freed (a later use: "previously freed instance").
-            slot.freeQueued = true;
-          } else if (slot) {
-            this.releaseBrowserHandle(this.lastFreedObjectHandle, slot.kind);
-          }
+          // A node's handle lives with the node, which stays callable to the end of the frame (a
+          // second dispatch of it this frame reads it, as on desktop), so its slot -- and Kotlin's
+          // registration -- stay until the engine frees it and the sweep releases the handle as
+          // freed (a later use: "previously freed instance").
+          if (slot) slot.freeQueued = true;
           this.objectFrees += 1;
         }
         wordOffset += commandWordCount(opcode);
@@ -3719,7 +3600,6 @@
         maxLiveBrowserHandles: this.maxLiveBrowserHandles,
         liveBrowserHandles: this.liveBrowserHandleCount,
         lentMints: this.lentMints,
-        lentAdopts: this.lentAdopts,
         lentReleases: this.lentReleases,
         lentSwept: this.lentSwept,
         liveLent: this.liveLent,

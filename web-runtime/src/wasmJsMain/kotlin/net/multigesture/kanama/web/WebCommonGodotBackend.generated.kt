@@ -266,7 +266,6 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       when (descriptor.executionMode) {
         GodotExecutionMode.QUEUED_MUTATION -> {
           commands.appendNoArgsMutation(descriptor.opcode, objectId)
-          if (descriptor.opcode == 15) onWebQueueFree(objectId)
         }
         GodotExecutionMode.IMMEDIATE_RESULT -> {
           commands.flush()

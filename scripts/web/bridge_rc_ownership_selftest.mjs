@@ -61,7 +61,7 @@ async function loadBridge() {
     kanamaWebProtocolVersion: () => protocolVersion,
     kanamaWebMarkRefCountedHandle: () => 1,
     kanamaWebAdoptObjectHandle: () => 1,
-    kanamaWebSetLentHandle: () => 0,
+    kanamaWebIsNodeHandle: () => 0,
     kanamaWebDiscardBrowserHandle: () => 1,
     kanamaWebDiscardFreedHandle: () => 1,
   };

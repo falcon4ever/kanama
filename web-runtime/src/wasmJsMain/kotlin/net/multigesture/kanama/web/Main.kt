@@ -36,7 +36,6 @@ private var activeWebScriptHandle = 0
 private var group6ProbeMask = 0
 private var group6ProbeScope: KanamaScope? = null
 private var group6ProbeOwnerHandle = 0
-private var group7AudioFreedPlayerHandle = 0
 private var group8SceneTreeHandle = 0
 
 internal fun requireActiveWebScriptHandle(): Int =
@@ -275,13 +274,10 @@ fun kanamaWebDiscardNodeHandle(objectHandle: Int): Int {
 fun kanamaWebDiscardBrowserHandle(objectHandle: Int): Int =
   if (discardWebBrowserHandle(objectHandle)) 1 else 0
 
-/**
- * Task 138 item 32: [lent] 1 marks a browser handle lent for its object's lifetime, 0 unmarks it. 1
- * when the handle is a NODE (its transform snapshot can load).
- */
+/** 1 when Kotlin knows a browser handle as a NODE (a dispatch refreshes its transform snapshot). */
 @JsExport
-fun kanamaWebSetLentHandle(objectHandle: Int, lent: Int): Int =
-  if (setWebLentHandle(objectHandle, lent == 1)) 1 else 0
+fun kanamaWebIsNodeHandle(objectHandle: Int): Int =
+  if (isWebNodeBrowserHandle(objectHandle)) 1 else 0
 
 /**
  * Protocol 37: the bridge marked a browser handle RefCounted (the proxy tracked a RefCounted, or a
@@ -1107,27 +1103,6 @@ fun kanamaWebMatch3Group7AudioMissingPathProbe(
   }
 
 @JsExport
-fun kanamaWebMatch3Group7AudioTeardownProbe(audioObjectId: Int): Int =
-  webCallbackBoundary(audioObjectId, "group7_audio_teardown_probe") {
-    commands.clear()
-    val owner = Node(WebObjectId(audioObjectId))
-    val player = AudioStreamPlayer.create()
-    group7AudioFreedPlayerHandle = player.handle.value
-    owner.addChild(player)
-    var result = if (commands.flush() == 1) 1 else 0
-    player.queueFree()
-    if (commands.flush() == 1) result = result or 2
-    if (
-      runCatching { AudioStreamPlayer(WebObjectId(group7AudioFreedPlayerHandle)).play() }.isFailure
-    ) {
-      result = result or 4
-    }
-    result
-  }
-
-@JsExport fun kanamaWebMatch3Group7AudioFreedPlayerHandle(): Int = group7AudioFreedPlayerHandle
-
-@JsExport
 fun kanamaWebMatch3Group8SceneTreeProbe(objectId: Int): Int =
   webCallbackBoundary(objectId, "group8_scene_tree_probe") {
     commands.clear()
@@ -1151,10 +1126,15 @@ fun kanamaWebMatch3Group8SceneTreeQuitProbe(objectId: Int, exitCode: Int): Int =
     commands.flush()
   }
 
+/**
+ * 1 when the SceneTree handle Main got still answers after Main was freed: a SceneTree (a plain
+ * Object) handle lives as long as the tree, whichever script obtained it, as a desktop wrapper
+ * does.
+ */
 @JsExport
 @OptIn(InternalKanamaBackendApi::class)
-fun kanamaWebMatch3Group8SceneTreeStaleProbe(sceneTreeObjectId: Int): Int =
-  if (runCatching { SceneTree(WebObjectId(sceneTreeObjectId)).quit() }.isFailure) {
+fun kanamaWebMatch3Group8SceneTreeKeptProbe(sceneTreeObjectId: Int): Int =
+  if (runCatching { SceneTree(WebObjectId(sceneTreeObjectId)).isPaused() }.getOrNull() == false) {
     1
   } else {
     0
@@ -1177,10 +1157,6 @@ fun kanamaWebMatch3Group7AudioOwnerTeardownProbe(audioObjectId: Int): Int =
   }
 
 @JsExport
-fun kanamaWebMatch3Group7AudioStaleProbe(playerObjectId: Int): Int =
-  if (runCatching { AudioStreamPlayer(WebObjectId(playerObjectId)).play() }.isFailure) 1 else 0
-
-@JsExport
 fun kanamaWebMatch3Group7ParticleProbe(particleObjectId: Int): Int {
   val particle = GPUParticles2D(WebObjectId(particleObjectId))
   var result = 0
@@ -1193,10 +1169,6 @@ fun kanamaWebMatch3Group7ParticleProbe(particleObjectId: Int): Int {
   if (kotlin.math.abs(particle.lifetime - 1.0) <= 0.000_001) result = result or 16
   return result
 }
-
-@JsExport
-fun kanamaWebMatch3Group7ParticleStaleProbe(particleObjectId: Int): Int =
-  if (runCatching { GPUParticles2D(WebObjectId(particleObjectId)).emitting }.isFailure) 1 else 0
 
 @JsExport
 fun kanamaWebMatch3Group3Probe(tileObjectId: Int): Int {

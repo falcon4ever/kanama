@@ -260,13 +260,10 @@ internal object WebValueTypes {
       "\t# lent like a direct one (task 138 item 32, _kanama_lend); a call's result (task 129 E"
     )
     appendLine(
-      "\t# review B2) is held by this script too, or gets a handle of its kind owned by this"
+      "\t# review B2) gets a handle of its kind, as a generic call's object return does: a Node or"
     )
     appendLine(
-      "\t# script, as a generic call's object return does. A result naming a lent object keeps it"
-    )
-    appendLine(
-      "\t# lent; a RefCounted one is held by the Kotlin wrappers of it (the bridge decides)."
+      "\t# plain Object one lives as long as the object, a RefCounted one while Kotlin wraps it."
     )
     appendLine("\tif value == null:")
     appendLine("\t\treturn 0")
@@ -278,14 +275,14 @@ internal object WebValueTypes {
     appendLine("\t\treturn _kanama_web_pack_object(value)")
     appendLine("\tvar existing := _kanama_tracked_handle(value)")
     appendLine("\tif existing != 0:")
-    appendLine("\t\tif not KanamaWebHandles.lent.has(existing):")
-    appendLine("\t\t\t_kanama_bridge.retainSharedHandle(existing, _kanama_handle)")
     appendLine("\t\treturn existing")
     appendLine("\tvar kind := \"object\"")
     appendLine("\tif value is Node:")
     appendLine("\t\tkind = \"node\"")
     appendLine("\telif value is Resource:")
     appendLine("\t\tkind = \"resource\"")
+    appendLine("\telif value is Tween or value is Tweener:")
+    appendLine("\t\tkind = \"tween\"")
     appendLine("\tvar minted := int(_kanama_bridge.mintGenericHandle(_kanama_handle, kind))")
     appendLine(
       "\t# A lambda connection's guard (getConnections) is held by its connection alone: a weak"

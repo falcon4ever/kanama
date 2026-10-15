@@ -53,9 +53,9 @@ class RayHit internal constructor(val position: Vector3, val collider: GodotObje
  */
 class PhysicsDirectSpaceState3D internal constructor(private val owner: Node3D) {
   /**
-   * Returns null when the ray misses. The collider resolves to an already-tracked handle (script
-   * or browser); untracked engine geometry reports no collider, which is all the demo needs — it
-   * only ever compares the collider against a node it already holds.
+   * Returns null when the ray misses. The collider is the body's one handle (its script's, the
+   * one a lookup made, or one made for it that lives as long as the body), so it `==` any other
+   * reference to the same body, as desktop's dictionary holds the body itself.
    */
   fun intersectRay(query: PhysicsRayQueryParameters3D): RayHit? {
     val packed =

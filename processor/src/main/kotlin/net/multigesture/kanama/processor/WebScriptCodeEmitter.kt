@@ -169,9 +169,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * 37 (closes #332): a RefCounted handle lives while a Kotlin wrapper of it is reachable, or
      * until its `close()` (`markRefCounted`, `registerWrapper`, `closeWrapper`, `holdRefCounted`,
      * `kanamaWebMarkRefCountedHandle`; `lendHandle` flag 16); `ownLentHandle` and the proxies'
-     * 2-frame grace with its weak demotion are gone.
+     * 2-frame grace with its weak demotion are gone. 38: every Node or plain Object handle lives as
+     * long as its object, whichever script obtained it (the proxies' `_kanama_track` puts it in the
+     * sweep's ring; `lendHandle` no longer takes a handle over, `kanamaWebIsNodeHandle` replaces
+     * `kanamaWebSetLentHandle`, `mintGenericHandle` takes `tween`); the shared-holder counting is
+     * gone.
      */
-    const val PROTOCOL_VERSION = 37
+    const val PROTOCOL_VERSION = 38
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -468,15 +472,19 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * The one way an object entry enters the shared handle dictionary (and its instance-id index).
      */
     internal const val TRACK = "_kanama_track"
-    /** The one way an entry leaves the shared handle dictionary, the index and the lent set. */
-    internal const val UNTRACK = "_kanama_untrack"
+    /**
+     * The one way an entry leaves the shared handle dictionary, the index and the sweep's set (a
+     * static of the shared class, so the sweep, which runs with no proxy, uses it too).
+     */
+    internal const val UNTRACK = "KanamaWebHandles.untrack"
     /** The handle already tracking an object, through the instance-id index (no scan). */
     internal const val TRACKED_HANDLE = "_kanama_tracked_handle"
-    /** Releases lent handles whose object the engine freed. */
-    internal const val SWEEP = "_kanama_sweep"
     /** Bit 30: a browser handle (never a script handle), the only kind the index tracks. */
     private const val BROWSER_HANDLE_BIT = "0x40000000"
-    /** Lent handles the per-frame sweep checks, and each new lend checks (the churn bound). */
+    /**
+     * Node / plain Object handles the per-frame sweep checks, and each new one checks (the churn
+     * bound).
+     */
     internal const val FRAME_SWEEP_BUDGET = 32
     internal const val MINT_SWEEP_BUDGET = 2
     /** The proxy-local packed parts being assembled. */
@@ -924,33 +932,30 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             )
             appendLine("static var later_by_id: Dictionary = {}")
             appendLine(
-              "# The handles lent for their object's lifetime (handle -> true), the ring of their"
+              "# Every Node or plain Object handle, which lives as long as its object (handle -> true,"
             )
             appendLine(
-              "# instance ids the sweep walks, its cursor and the process frame it last ran in. A"
+              "# lent by a dispatch or not), the ring of their instance ids the sweep walks, its"
             )
             appendLine(
-              "# lent RefCounted is none of these: the bridge holds it while Kotlin wraps it."
+              "# cursor and the process frame it last ran in. A RefCounted is none of these: the"
             )
+            appendLine("# bridge holds it while Kotlin wraps it.")
             appendLine("static var lent: Dictionary = {}")
             appendLine("static var lent_ring: Array[int] = []")
             appendLine("static var ring_cursor: int = 0")
             appendLine("static var sweep_frame: int = -1")
-            appendLine(
-              "# The sweep's connection to SceneTree.process_frame (see _kanama_hook_sweep): invalid"
-            )
-            appendLine("# until a proxy lends, and again once that proxy is freed.")
-            appendLine("static var sweep_hook: Callable = Callable()")
             appendLine()
             appendLine(
-              "# Protocol 37: the bridge's drain of RefCounted handles no Kotlin wrapper holds any"
+              "# Once per process frame whatever runs (no proxy has to process): the bridge's drain of"
             )
             appendLine(
-              "# more, once per process frame whatever runs (no proxy has to process): bound to this"
+              "# RefCounted handles no Kotlin wrapper holds any more, and the sweep of handles whose"
             )
             appendLine(
-              "# class, not to a proxy, so it outlives every script. Made by the first mark."
+              "# object the engine freed. Bound to this class, not to a proxy, so it outlives every"
             )
+            appendLine("# script. Made by the first track.")
             appendLine("static var drain_hook: Callable = Callable()")
             appendLine(
               "# The bridge the drain calls, looked up once (the page sets it before Godot starts)."
@@ -968,8 +973,83 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             appendLine("static func drain_frame() -> void:")
             appendLine("\tif drain_bridge == null:")
             appendLine("\t\tdrain_bridge = JavaScriptBridge.get_interface(\"KanamaWebBridge\")")
-            appendLine("\tif drain_bridge != null:")
-            appendLine("\t\tdrain_bridge.drainUnheldHandles()")
+            appendLine("\tif drain_bridge == null:")
+            appendLine("\t\treturn")
+            appendLine("\tdrain_bridge.drainUnheldHandles()")
+            appendLine("\tvar frame := Engine.get_process_frames()")
+            appendLine("\tif lent_ring.size() > 0 and sweep_frame != frame:")
+            appendLine("\t\tsweep_frame = frame")
+            appendLine("\t\tsweep($FRAME_SWEEP_BUDGET)")
+            appendLine()
+            appendLine("static func untrack(handle: int) -> void:")
+            appendLine(
+              "\t# The one way an entry leaves the shared dictionary (and the index, and the sweep's set)."
+            )
+            appendLine("\thandles.erase(handle)")
+            appendLine("\tvar id: Variant = id_of.get(handle)")
+            appendLine("\tif id == null:")
+            appendLine("\t\treturn")
+            appendLine("\tid_of.erase(handle)")
+            appendLine("\tvar later: Array = later_by_id.get(id, [])")
+            appendLine("\tif int(by_id.get(id, 0)) == handle:")
+            appendLine("\t\tif later.is_empty():")
+            appendLine("\t\t\tby_id.erase(id)")
+            appendLine("\t\telse:")
+            appendLine("\t\t\tby_id[id] = later.pop_front()")
+            appendLine("\telse:")
+            appendLine("\t\tlater.erase(handle)")
+            appendLine("\tif later.is_empty():")
+            appendLine("\t\tlater_by_id.erase(id)")
+            appendLine("\tlent.erase(handle)")
+            appendLine()
+            appendLine("static func sweep(budget: int, recent := false) -> void:")
+            appendLine(
+              "\t# Checks up to `budget` ring handles, from the cursor (and first, when `recent`, the one"
+            )
+            appendLine(
+              "\t# tracked just before the newest: under churn the one most likely gone). A handle whose"
+            )
+            appendLine(
+              "\t# object the engine freed is released (one JS call for the whole slice), and a handle"
+            )
+            appendLine("\t# no longer in the set (released) leaves the ring.")
+            appendLine("\tvar freed: Array = []")
+            appendLine("\tif recent and lent_ring.size() >= 2:")
+            appendLine("\t\tbudget -= 1")
+            appendLine("\t\tsweep_entry(lent_ring.size() - 2, freed)")
+            appendLine("\twhile budget > 0 and lent_ring.size() > 0:")
+            appendLine("\t\tbudget -= 1")
+            appendLine("\t\tif ring_cursor >= lent_ring.size():")
+            appendLine("\t\t\tring_cursor = 0")
+            appendLine("\t\tif not sweep_entry(ring_cursor, freed):")
+            appendLine("\t\t\tring_cursor += 1")
+            appendLine("\tif freed.is_empty():")
+            appendLine("\t\treturn")
+            appendLine("\tif drain_bridge == null:")
+            appendLine("\t\tdrain_bridge = JavaScriptBridge.get_interface(\"KanamaWebBridge\")")
+            appendLine("\tdrain_bridge.releaseFreedHandles(\",\".join(PackedStringArray(freed)))")
+            appendLine()
+            appendLine("static func sweep_entry(at: int, freed: Array) -> bool:")
+            appendLine(
+              "\t# One ring entry; true when it left the ring (swapped with the last one)."
+            )
+            appendLine("\tvar id: int = lent_ring[at]")
+            appendLine("\tvar handle := int(by_id.get(id, 0))")
+            appendLine("\tvar dead := false")
+            appendLine("\tif handle != 0 and lent.has(handle):")
+            appendLine("\t\tvar held: Variant = handles.get(handle)")
+            appendLine("\t\tif held is Array:")
+            appendLine("\t\t\tdead = held[0].get_ref() == null")
+            appendLine("\t\telse:")
+            appendLine("\t\t\tdead = not is_instance_id_valid(id)")
+            appendLine("\t\tif not dead:")
+            appendLine("\t\t\treturn false")
+            appendLine("\tlent_ring[at] = lent_ring[lent_ring.size() - 1]")
+            appendLine("\tlent_ring.pop_back()")
+            appendLine("\tif dead:")
+            appendLine("\t\tuntrack(handle)")
+            appendLine("\t\tfreed.append(str(handle))")
+            appendLine("\treturn true")
             appendLine()
             appendLine("# Task 129 E: one parsed Expression per utility function and arity (see")
             appendLine("# _kanama_web_utility_call), shared by every proxy.")
@@ -2647,13 +2727,6 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
     appendLine("func _process(delta: float) -> void:")
     appendLine("\tif _kanama_handle != 0:")
-    // Task 138 item 32: the sweep runs from SceneTree.process_frame; a processing proxy only
-    // reconnects it when the proxy that connected it is gone (one size check while nothing is
-    // lent).
-    appendLine(
-      "\t\tif KanamaWebHandles.lent_ring.size() > 0 and not KanamaWebHandles.sweep_hook.is_valid():"
-    )
-    appendLine("\t\t\t_kanama_hook_sweep()")
     appendLine("\t\t_kanama_refresh_self_snapshots()")
     if (particlesAttachment) {
       appendLine("\t\t_kanama_bridge.refreshParticlesSnapshot(_kanama_handle, emitting, lifetime)")
@@ -3887,9 +3960,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif value == null:")
     appendLine("\t\t_kanama_bridge.recordImmediateObjectHandle(0)")
     appendLine("\t\treturn 0")
-    appendLine("\t# get_collider returns a live scene node: resolve to its existing script or")
-    appendLine("\t# browser handle (node-lookup rule) instead of registering a duplicate.")
-    appendLine("\tif opcode == 112 or opcode == 122:")
+    appendLine(
+      "\t# A collider, the parent, the viewport, the camera, the tree or the root is a live object:"
+    )
+    appendLine(
+      "\t# resolve to its existing script or browser handle (node-lookup rule). A Node or plain"
+    )
+    appendLine(
+      "\t# Object handle lives as long as its object, so a second one per call would pile up."
+    )
+    appendLine(
+      "\tif opcode == 112 or opcode == 122 or opcode == 19 or opcode == 51 or opcode == 73 or opcode == 194 or opcode == 250:"
+    )
     appendLine("\t\tif value.has_method(\"_kanama_ensure_created\"):")
     appendLine("\t\t\tvar collider_script_handle := int(value.call(\"_kanama_ensure_created\"))")
     appendLine("\t\t\tif collider_script_handle != 0:")
@@ -4450,16 +4532,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t# argument list. Same escaping as the generic-call transport: % first.")
     appendLine("\treturn value.replace(\"%\", \"%25\").replace(\"\\u001f\", \"%1F\")")
     appendLine()
-    // Task 138 item 32: ONE handle per object, found through an instance-id index. Every browser
-    // handle of an object goes through _kanama_track / _kanama_untrack, so a lookup, a call's
-    // result
-    // and a dispatch's argument name the same object with the same handle (token equality is object
-    // identity on Web). A dispatch LENDS its object arguments for the object's lifetime: the handle
-    // is
-    // released when the engine frees the object (the sweep) or the last Kanama script goes away,
-    // never
-    // when the handler returns, so a stored argument stays valid. A RefCounted handle (lent or
-    // not) is the bridge's: it lives while a Kotlin wrapper of it is reachable, or until close().
+    // ONE handle per object, found through an instance-id index. Every browser handle of an object
+    // goes through _kanama_track / KanamaWebHandles.untrack, so a lookup, a call's result and a
+    // dispatch's argument name the same object with the same handle (token equality is object
+    // identity on Web). A Node or plain Object handle lives as long as its object, whichever script
+    // obtained it: released when the engine frees the object (the sweep) or the last Kanama script
+    // goes away, never with the script that looked it up. A RefCounted handle is the bridge's: it
+    // lives while a Kotlin wrapper of it is reachable, or until close().
     appendLine("func $TRACK(handle: int, value: Variant, mark := true) -> void:")
     appendLine(
       "\t# The one way an object entry enters the shared dictionary: a browser handle (bit 30;"
@@ -4470,7 +4549,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t# RefCounted's is marked for the bridge (Kotlin wrappers hold it; a tween keeps its own"
     )
-    appendLine("\t# lifetime, to its end), unless the caller marked it already (`mark` false).")
+    appendLine(
+      "\t# lifetime, to its end), unless the caller marked it already (`mark` false). A Node's or"
+    )
+    appendLine("\t# plain Object's joins the sweep's ring: it lives as long as the object.")
     appendLine("\t_kanama_object_handles[handle] = value")
     appendLine("\tif (handle & $BROWSER_HANDLE_BIT) == 0:")
     appendLine("\t\treturn")
@@ -4492,33 +4574,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvar later: Array = KanamaWebHandles.later_by_id.get(id, [])")
     appendLine("\t\tlater.append(handle)")
     appendLine("\t\tKanamaWebHandles.later_by_id[id] = later")
-    appendLine(
-      "\tif mark and tracked is RefCounted and not (tracked is Tween or tracked is Tweener):"
-    )
-    appendLine("\t\t_kanama_bridge.markRefCounted(handle)")
-    appendLine("\t\tif not KanamaWebHandles.drain_hook.is_valid():")
-    appendLine("\t\t\tKanamaWebHandles.hook_drain()")
-    appendLine()
-    appendLine("func $UNTRACK(handle: int) -> void:")
-    appendLine(
-      "\t# The one way an entry leaves the shared dictionary (and the index, and the lent set)."
-    )
-    appendLine("\t_kanama_object_handles.erase(handle)")
-    appendLine("\tvar id: Variant = KanamaWebHandles.id_of.get(handle)")
-    appendLine("\tif id == null:")
+    appendLine("\tif tracked is RefCounted:")
+    appendLine("\t\tif mark and not (tracked is Tween or tracked is Tweener):")
+    appendLine("\t\t\t_kanama_bridge.markRefCounted(handle)")
+    appendLine("\t\t\tif not KanamaWebHandles.drain_hook.is_valid():")
+    appendLine("\t\t\t\tKanamaWebHandles.hook_drain()")
     appendLine("\t\treturn")
-    appendLine("\tKanamaWebHandles.id_of.erase(handle)")
-    appendLine("\tvar later: Array = KanamaWebHandles.later_by_id.get(id, [])")
-    appendLine("\tif int(KanamaWebHandles.by_id.get(id, 0)) == handle:")
-    appendLine("\t\tif later.is_empty():")
-    appendLine("\t\t\tKanamaWebHandles.by_id.erase(id)")
-    appendLine("\t\telse:")
-    appendLine("\t\t\tKanamaWebHandles.by_id[id] = later.pop_front()")
-    appendLine("\telse:")
-    appendLine("\t\tlater.erase(handle)")
-    appendLine("\tif later.is_empty():")
-    appendLine("\t\tKanamaWebHandles.later_by_id.erase(id)")
-    appendLine("\tKanamaWebHandles.lent.erase(handle)")
+    appendLine("\tKanamaWebHandles.lent[handle] = true")
+    appendLine("\tKanamaWebHandles.lent_ring.append(id)")
+    appendLine(
+      "\t# Each new one also checks the one before it and one ring entry: churn stays bounded."
+    )
+    appendLine("\tKanamaWebHandles.sweep($MINT_SWEEP_BUDGET, true)")
+    appendLine("\tif not KanamaWebHandles.drain_hook.is_valid():")
+    appendLine("\t\tKanamaWebHandles.hook_drain()")
     appendLine()
     appendLine("func $TRACKED_HANDLE(value: Object) -> int:")
     appendLine(
@@ -4541,13 +4610,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t# A dispatch's object argument as THE handle of that object: the tracked one (a lookup's,"
     )
     appendLine(
-      "\t# a result's, an earlier argument's), else one minted for the object's lifetime. A Node2D,"
+      "\t# a result's, an earlier argument's), else one minted (tracked: it lives as long as the"
     )
     appendLine(
-      "\t# Node3D or Control carries its transform snapshot, refreshed on every dispatch; that"
+      "\t# object). A Node2D, Node3D or Control carries its transform snapshot, refreshed on every"
     )
     appendLine(
-      "\t# refresh, a mint or a hand-over is the one JS call, any other seen object costs none. A"
+      "\t# dispatch; that refresh or a mint is the one JS call, any other seen object costs none. A"
     )
     appendLine(
       "\t# RefCounted is the bridge's (flag 16): Kotlin's wrappers hold its handle, which is"
@@ -4568,16 +4637,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tif not KanamaWebHandles.drain_hook.is_valid():")
     appendLine("\t\t\t\tKanamaWebHandles.hook_drain()")
     appendLine("\t\treturn handle")
-    appendLine("\tvar flags := 0")
-    appendLine("\tif handle != 0:")
-    appendLine("\t\tif not KanamaWebHandles.lent.has(handle):")
-    appendLine("\t\t\tflags = 2")
-    appendLine(
-      "\t\tif flags == 0 and not (object is Node2D or object is Node3D or object is Control):"
-    )
-    appendLine("\t\t\treturn handle")
-    appendLine("\telif object is Node:")
-    appendLine("\t\tflags = 1")
+    appendLine("\tvar minted := handle == 0")
+    appendLine("\tvar flags := 1 if minted and object is Node else 0")
     appendLine("\tif object is Node3D:")
     appendLine("\t\tvar node_3d := object as Node3D")
     appendLine(
@@ -4593,109 +4654,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t\thandle = int(_kanama_bridge.lendHandle(_kanama_handle, handle, flags | 4, control.position.x, control.position.y, control.scale.x, control.scale.y, control.modulate.r, control.modulate.g, control.modulate.b, control.modulate.a, control.rotation))"
     )
-    appendLine("\telse:")
+    appendLine("\telif minted:")
     appendLine(
-      "\t\thandle = int(_kanama_bridge.lendHandle(_kanama_handle, handle, flags, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0))"
+      "\t\thandle = int(_kanama_bridge.lendHandle(_kanama_handle, 0, flags, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0))"
     )
-    appendLine("\tif (flags & 2) != 0:")
-    appendLine("\t\tKanamaWebHandles.lent[handle] = true")
-    appendLine("\t\tKanamaWebHandles.lent_ring.append(object.get_instance_id())")
-    appendLine("\t\tif not KanamaWebHandles.sweep_hook.is_valid():")
-    appendLine("\t\t\t_kanama_hook_sweep()")
-    appendLine("\telif not KanamaWebHandles.lent.has(handle):")
+    appendLine("\tif minted:")
     appendLine("\t\t$TRACK(handle, object)")
-    appendLine("\t\tKanamaWebHandles.lent[handle] = true")
-    appendLine("\t\tKanamaWebHandles.lent_ring.append(object.get_instance_id())")
-    appendLine(
-      "\t\t# Each mint also checks the lend before it and one ring entry: churn stays bounded."
-    )
-    appendLine("\t\t$SWEEP($MINT_SWEEP_BUDGET, true)")
-    appendLine("\t\tif not KanamaWebHandles.sweep_hook.is_valid():")
-    appendLine("\t\t\t_kanama_hook_sweep()")
     appendLine("\treturn handle")
-    appendLine()
-    appendLine("func $SWEEP(budget: int, recent := false) -> void:")
-    appendLine(
-      "\t# Checks up to `budget` lent handles, from the ring cursor (and first, when `recent`, the"
-    )
-    appendLine(
-      "\t# one lent just before the newest: under churn the one most likely gone). A handle whose"
-    )
-    appendLine(
-      "\t# object the engine freed is released (one JS call for the whole slice), and a handle no"
-    )
-    appendLine("\t# longer lent (released) leaves the ring.")
-    appendLine("\tvar ring := KanamaWebHandles.lent_ring")
-    appendLine("\tvar freed: Array = []")
-    appendLine("\tif recent and ring.size() >= 2:")
-    appendLine("\t\tbudget -= 1")
-    appendLine("\t\t_kanama_sweep_entry(ring.size() - 2, freed)")
-    appendLine("\twhile budget > 0 and ring.size() > 0:")
-    appendLine("\t\tbudget -= 1")
-    appendLine("\t\tif KanamaWebHandles.ring_cursor >= ring.size():")
-    appendLine("\t\t\tKanamaWebHandles.ring_cursor = 0")
-    appendLine("\t\tif not _kanama_sweep_entry(KanamaWebHandles.ring_cursor, freed):")
-    appendLine("\t\t\tKanamaWebHandles.ring_cursor += 1")
-    appendLine("\tif not freed.is_empty():")
-    appendLine("\t\t_kanama_bridge.releaseFreedHandles(\",\".join(PackedStringArray(freed)))")
-    appendLine()
-    appendLine("func _kanama_sweep_entry(at: int, freed: Array) -> bool:")
-    appendLine("\t# One ring entry; true when it left the ring (swapped with the last one).")
-    appendLine("\tvar ring := KanamaWebHandles.lent_ring")
-    appendLine("\tvar id: int = ring[at]")
-    appendLine("\tvar handle := int(KanamaWebHandles.by_id.get(id, 0))")
-    appendLine("\tvar dead := false")
-    appendLine("\tif handle != 0 and KanamaWebHandles.lent.has(handle):")
-    appendLine("\t\tvar held: Variant = _kanama_object_handles.get(handle)")
-    appendLine("\t\tif held is Array:")
-    appendLine("\t\t\tdead = held[0].get_ref() == null")
-    appendLine("\t\telse:")
-    appendLine("\t\t\tdead = not is_instance_id_valid(id)")
-    appendLine("\t\tif not dead:")
-    appendLine("\t\t\treturn false")
-    appendLine("\tring[at] = ring[ring.size() - 1]")
-    appendLine("\tring.pop_back()")
-    appendLine("\tif dead:")
-    appendLine("\t\t$UNTRACK(handle)")
-    appendLine("\t\tfreed.append(str(handle))")
-    appendLine("\treturn true")
-    appendLine()
-    appendLine("func _kanama_hook_sweep() -> void:")
-    appendLine(
-      "\t# The sweep rides SceneTree.process_frame, which fires every frame even while the tree is"
-    )
-    appendLine(
-      "\t# paused or no script processes: freed objects are released regardless. One connection,"
-    )
-    appendLine("\t# made by a proxy that lends; Godot drops it with that proxy,")
-    appendLine("\t# and the next lend or any processing proxy makes it again.")
-    appendLine("\tvar tree := Engine.get_main_loop() as SceneTree")
-    appendLine("\tif tree == null or _kanama_handle == 0:")
-    appendLine("\t\treturn")
-    appendLine("\tKanamaWebHandles.sweep_hook = Callable(self, \"_kanama_sweep_frame\")")
-    appendLine("\ttree.process_frame.connect(KanamaWebHandles.sweep_hook)")
-    appendLine()
-    appendLine("func _kanama_sweep_frame() -> void:")
-    appendLine(
-      "\t# Once per process frame (process_frame, see above), and one size check while nothing is lent."
-    )
-    appendLine("\tif KanamaWebHandles.lent_ring.size() == 0:")
-    appendLine("\t\treturn")
-    appendLine("\tif _kanama_handle == 0:")
-    appendLine(
-      "\t\t# This proxy is going away: hand the sweep to the next lend or processing proxy."
-    )
-    appendLine("\t\tvar tree := Engine.get_main_loop() as SceneTree")
-    appendLine(
-      "\t\tif tree != null and tree.process_frame.is_connected(KanamaWebHandles.sweep_hook):"
-    )
-    appendLine("\t\t\ttree.process_frame.disconnect(KanamaWebHandles.sweep_hook)")
-    appendLine("\t\tKanamaWebHandles.sweep_hook = Callable()")
-    appendLine("\t\treturn")
-    appendLine("\tvar frame := Engine.get_process_frames()")
-    appendLine("\tif KanamaWebHandles.sweep_frame != frame:")
-    appendLine("\t\tKanamaWebHandles.sweep_frame = frame")
-    appendLine("\t\t$SWEEP($FRAME_SWEEP_BUDGET)")
     appendLine()
     appendLine("func $PACKED_ARG_PACK_OBJECT(value: Object) -> int:")
     appendLine("\t# Task 80 slice 3: one object argument as a bridge handle id. A Kanama-scripted")
@@ -5309,10 +5274,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\telse:")
     appendLine("\t\t\t\tvar ray_point: Vector3 = ray_hit[\"position\"]")
     appendLine(
-      "\t\t\t\t# The collider only ever gets compared against an already-tracked handle, so an"
+      "\t\t\t\t# The collider is the body's one handle (its script's, else the tracked one, else one"
     )
     appendLine(
-      "\t\t\t\t# untracked engine body (level geometry) reports 0 rather than minting a handle."
+      "\t\t\t\t# minted for the body's lifetime), as desktop's dictionary holds the body itself."
     )
     appendLine("\t\t\t\tvar ray_collider_handle := 0")
     appendLine("\t\t\t\tvar ray_collider: Object = ray_hit.get(\"collider\")")
@@ -5323,6 +5288,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\t\t\t\tif ray_collider_handle == 0:")
     appendLine("\t\t\t\t\t\tray_collider_handle = $TRACKED_HANDLE(ray_collider)")
+    appendLine("\t\t\t\t\tif ray_collider_handle == 0:")
+    appendLine("\t\t\t\t\t\tray_collider_handle = $LEND_HANDLE(ray_collider)")
     appendLine("\t\t\t\tray_result.append(\"1\")")
     appendLine("\t\t\t\tray_result.append(str(ray_point.x))")
     appendLine("\t\t\t\tray_result.append(str(ray_point.y))")
@@ -5629,7 +5596,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\telif generic_object is Resource:")
     appendLine("\t\t\tgeneric_kind = \"resource\"")
     appendLine(
-      "\t\tvar generic_minted := int(_kanama_bridge.mintGenericHandle(_kanama_handle, generic_kind))"
+      "\t\t# A tween goes with the script that made it (the bridge's kind); Kotlin sees an object."
+    )
+    appendLine(
+      "\t\tvar generic_mint_kind := \"tween\" if generic_object is Tween or generic_object is Tweener else generic_kind"
+    )
+    appendLine(
+      "\t\tvar generic_minted := int(_kanama_bridge.mintGenericHandle(_kanama_handle, generic_mint_kind))"
     )
     appendLine("\t\t$TRACK(generic_minted, generic_object)")
     appendLine("\t\treturn \"o\\u001f%d\\u001f%s\" % [generic_minted, generic_kind]")

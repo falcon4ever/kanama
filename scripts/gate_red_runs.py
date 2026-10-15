@@ -311,7 +311,7 @@ case("check_android_remap_sources.py (address space, NULL_SEGMENT)", py("check_a
              "package net.multigesture.kanama\nval zz = NULL_SEGMENT.reinterpret(Long.MAX_VALUE)\n")],
      "ZzRedRun.kt:2: whole-address-space segment", "Kanama's `NULL_SEGMENT` reinterpreted as the whole address space")
 case("check_doc_claims.py", py("check_doc_claims.py"),
-     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 37)", "versioned JavaScript bridge (protocol 21)")],
+     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 38)", "versioned JavaScript bridge (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
 case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
      [Create(f"{COMMON}/api/ZzRedRun.expect.kt", "package net.multigesture.kanama.api\n\nexpect fun redRun(a: Int = 1)\n")],
@@ -463,7 +463,7 @@ case("check_property_coverage.py", py("check_property_coverage.py"),
      [Edit(f"{COMMON}/api/CanvasItem.kt", "    var visible: Boolean", "    var visibleRedRun: Boolean")],
      "silently dropped", "a generated wrapper property disappears")
 case("check_protocol_pins.py", py("check_protocol_pins.py"),
-     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 37", "KANAMA_WEB_PROTOCOL_VERSION = 36")],
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 38", "KANAMA_WEB_PROTOCOL_VERSION = 37")],
      "protocol version disagrees", "the bridge pins protocol 35 while the emitter says 36")
 case("check_protocol_pins.py (sentinel)", py("check_protocol_pins.py"),
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", 'scriptErrorResult: "\\u001fkanama-script-error\\u001f",', 'scriptErrorResult: "\\u001fkanama-script-errorX\\u001f",')],

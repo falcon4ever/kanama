@@ -126,6 +126,8 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
   /** Starts the rows (driver: Main.own_probe). */
   fun ownArm(value: Long): Long {
     val twin = twin()
+    // O9 first: the body it hands over stays lent (it lives), so O2's baseline comes after it.
+    rayRow()
     lentBase = counter("liveLent")
     pinnedBase = counter("rcPinned")
     gcBase = counter("rcReleasedByGc")
@@ -149,7 +151,6 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     keeperRows()
     ignoredRow()
     queueFreeRow()
-    rayRow()
     rollbackRow()
     MainThread.postAfterFrames(2) { checkHeld(2) }
     MainThread.postAfterFrames(30) { checkHeld(30) }

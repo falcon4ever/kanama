@@ -467,7 +467,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     freedProbeAfter = await readFreedAfter();
   }
   trace(`freedProbeAfter: ${freedProbeAfter}`);
-  // Batch of two (Main.freed_batch_probe): a setter on the freed node, then a command on a live one,
+  // Batch of two (Main.freed_batch_probe): a setter on a node the engine freed that frame, then a
+  // command on a live one,
   // in one batch. The freed one is skipped and reported; the live command must still apply, and a
   // live `queueFree` after the skip must release its bridge slot (live handles back to where they
   // were; the RefCounted ones are left out, a collection of their wrappers may release some meanwhile).
@@ -576,12 +577,13 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     closer: "ThrowingCloser.<init>",
   };
   const expectedScriptErrors = Object.keys(expectedSites);
-  // ...plus the queued setters on a node the engine freed: FreedHolder.freed_setter (one), the
-  // two batches of FreedHolder.freed_batch (one each) and FreedHolder.freed_script_late's setter on
-  // a script-backed node freed in the same batch (one), and LentProbe's setter on a lent node the
-  // engine freed in the same frame (one, L5). Each is reported once as a script error naming the
-  // freed instance, and none is counted among the deliberate throws.
-  const freedSetterReports = 5;
+  // ...plus the queued setters on a node the engine freed before the sweep saw it: the two batches
+  // of FreedHolder.freed_batch (one each), FreedHolder.freed_script_late's setter on a script-backed
+  // node freed in the same batch (one), and LentProbe's setter on a lent node the engine freed in the
+  // same frame (one, L5). Each is reported once as a script error naming the freed instance, and
+  // none is counted among the deliberate throws. (FreedHolder.freed_setter's node was swept, so its
+  // setter throws at the call, as on desktop: freedProbeAfter bit 256.)
+  const freedSetterReports = 4;
   const expectedReportTotal = expectedScriptErrors.length + freedSetterReports;
   let errorSnap = null;
   const errorDeadline = Math.min(deadline, Date.now() + 10_000);
@@ -778,12 +780,12 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // L17: once the engine frees a taken-over AudioStreamPlayer, its release drops the bridge's
     // audio state, and a use throws the freed-instance error.
     lentAdoptedReleaseDropsKindState: (lentC & 64) === 64,
-    // L18: the proxy that made the sweep's connection (the first to lend) is freed; a node lent
-    // before is freed later and its handle is still released (a processing proxy connects again).
-    lentSweepSurvivesItsHookHolder: (lentC & 128) === 128,
-    // L19: a takeover (not a mint) of a handle a script created connects the sweep when nothing
-    // else does: the tree is paused, and the freed node's handle is released while paused.
-    lentTakeoverConnectsSweep: (lentC & 256) === 256,
+    // L18: the proxy that lent a node is freed; the node is freed later and its handle is still
+    // released (the sweep is the shared class's frame hook, no proxy's).
+    lentSweepOutlivesItsMinter: (lentC & 128) === 128,
+    // L19: a handle a script created lives as long as its node: the tree is paused (no proxy
+    // processes), the node freed, and its handle is released while paused.
+    createdHandleSweptWhilePaused: (lentC & 256) === 256,
     // O1: a RefCounted only Kotlin keeps (a signal argument on either arm, an input event) still
     // answers 2, 30 and 120 frames after its dispatch, and the object lives.
     rcHeldByKotlinOutlives: ownDone === 1 && (ownMask & 7) === 7,

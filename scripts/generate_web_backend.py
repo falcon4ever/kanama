@@ -57,7 +57,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     12: {},
     13: {},
     14: {},
-    15: {"on_queue_free": True},
+    15: {},
     16: {},
     17: {},
     18: {"ret": "node"},
@@ -929,17 +929,14 @@ def body_NOARGS_RET_RECT2(calls):
 
 
 def body_NOARGS_VOID(calls):
-    free_op = next((c.opcode for c in calls if WEB_POLICY[c.opcode].get("on_queue_free")), None)
     immediate = [c for c in calls if c.execution_mode.value == "IMMEDIATE_RESULT"]
     lines = [
         "val objectId = receiver.webId()",
         "when (descriptor.executionMode) {",
         f"{_QUEUED} -> {{",
         "commands.appendNoArgsMutation(descriptor.opcode, objectId)",
+        "}",
     ]
-    if free_op is not None:
-        lines.append(f"if (descriptor.opcode == {free_op}) onWebQueueFree(objectId)")
-    lines.append("}")
     lines += [f"{_IMMEDIATE} -> {{", "commands.flush()", "when (descriptor.opcode) {"]
     for c in immediate:
         if c.opcode == 37:

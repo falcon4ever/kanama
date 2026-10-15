@@ -1393,8 +1393,8 @@ class Main(godotObject: GodotHandle) :
    *   child throw the same error, not a bridge failure and not a silent null;
    * - 64, 128: `emitSignal` on the freed node and a `Control.position` read on a freed Control (the
    *   shapes that used to answer a default) throw it too;
-   * - 256: a setter on the freed node came back (it is a queued command; the driver checks that the
-   *   freed-instance error was REPORTED as a script error and no other fault appeared);
+   * - 256: a setter on the freed node (a queued command) throws the same error at the call, as on
+   *   desktop: the sweep released the node's handle as freed;
    * - 512: frames kept running after the setter.
    * A healthy run returns 1023 from [freedProbeAfter].
    */
@@ -1415,7 +1415,7 @@ class Main(godotObject: GodotHandle) :
       if (says("freed_get_child") == 2L) freedMask = freedMask or 32L
       if (says("freed_emit_signal") == 2L) freedMask = freedMask or 64L
       if (says("freed_control_position") == 2L) freedMask = freedMask or 128L
-      if (says("freed_setter") == 1L) freedMask = freedMask or 256L
+      if (says("freed_setter") == 2L) freedMask = freedMask or 256L
       MainThread.postAfterFrames(3) { freedMask = freedMask or 512L }
     }
     return 0L

@@ -68,30 +68,30 @@ class FreedHolder(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
   fun freedControlPosition(value: Long): Long = freedKind { heldControl?.position }
 
   /**
-   * A setter on the freed node (a queued command). It does not throw at the call on Web; the
-   * freed-instance error is reported as a script error when the queue is applied and the page
-   * carries on. 1 when the call came back.
+   * A setter on the freed node (a queued command): the sweep released the node's handle as freed,
+   * so the call throws desktop's freed-instance IllegalStateException at once (2), as desktop's
+   * setter does.
    */
-  fun freedSetter(value: Long): Long {
-    held?.setProcessMode(Node.ProcessMode.DISABLED)
-    return 1L
-  }
+  fun freedSetter(value: Long): Long = freedKind { held?.setProcessMode(Node.ProcessMode.DISABLED) }
 
   private var batchLive: Camera3D? = null
 
   /**
-   * A batch of two commands per flush, the first on the freed node: the freed one is skipped and
-   * reported, the live one after it must still be applied. First batch: a setter on the freed node
-   * then a setter on a live node, read back (the read flushes). Second batch: a setter on the freed
-   * node then `queueFree` on the live node, which must release the live node's bridge slot. 1 when
-   * the first batch's live setter took effect.
+   * Batches with a command on a node the engine freed this frame (Kotlin learns it at the next
+   * sweep, so the setters queue): the freed one is skipped and reported, the live one after it must
+   * still be applied. First batch: the node's `free` (a queued generic call), a setter on it, then a
+   * setter on a live node, read back (the read flushes). Second batch: a setter on the freed node
+   * then `queueFree` on the live node, which must release the live node's bridge slot. 1 when the
+   * first batch's live setter took effect.
    */
   fun freedBatch(value: Long): Long {
+    val doomed = Camera3D.create()
     val live = Camera3D.create()
-    held?.setProcessMode(Node.ProcessMode.DISABLED)
+    WebExperimentalGenericCall.queueVoidCall(doomed, "free")
+    doomed.setProcessMode(Node.ProcessMode.DISABLED)
     live.setProcessMode(Node.ProcessMode.DISABLED)
     val applied = if (live.getProcessMode() == Node.ProcessMode.DISABLED) 1L else 0L
-    held?.setProcessMode(Node.ProcessMode.DISABLED)
+    doomed.setProcessMode(Node.ProcessMode.DISABLED)
     live.queueFree()
     batchLive = live
     return applied

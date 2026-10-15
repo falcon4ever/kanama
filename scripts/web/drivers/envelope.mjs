@@ -96,12 +96,11 @@ export async function collectPerformance(evaluate) {
         // crossing each; the per-tick ones run in Kotlin). Reported, not budgeted yet.
         builtinCalls: bridge.builtinCalls ?? 0,
         builtinCallsPerTick: ticks > 0 ? Math.round(((bridge.builtinCalls ?? 0) / ticks) * 100) / 100 : 0,
-        // The handles lent to Kotlin for dispatch arguments (signal / input / method object
-        // arguments): how many were minted, taken over from a lookup, released (swept: the engine
-        // freed the object), the most alive at once, and the GDScript->JS calls the lending cost.
-        // Reported, not budgeted.
+        // The handles minted for dispatch arguments (signal / input / method object arguments):
+        // how many were minted, released, the most alive at once; the Node / Object handles
+        // released because the engine freed the object (swept); and the GDScript->JS calls the
+        // lending cost. Reported, not budgeted.
         lentMints: bridge.lentMints ?? 0,
-        lentAdopts: bridge.lentAdopts ?? 0,
         lentReleases: bridge.lentReleases ?? 0,
         lentSwept: bridge.lentSwept ?? 0,
         maxLiveLent: bridge.maxLiveLent ?? 0,

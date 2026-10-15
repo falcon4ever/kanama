@@ -39,7 +39,7 @@ private val renderingMethodSnapshots = mutableMapOf<Int, String>()
 private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
 
 /**
- * Task 138 item 32: the handles whose object the engine freed (lent handles the proxy's sweep
+ * Task 138 item 32: the handles whose object the engine freed (the Node or Object handles the sweep
  * released), most recent last. A later use of one reads like desktop's freed instance instead of a
  * stale handle. A handle carries its slot's generation, so a reused slot's new handle never
  * matches. Capped like the bridge's copy (FREED_HANDLES_REMEMBERED): the oldest goes first.
@@ -47,13 +47,6 @@ private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
 private val freedBrowserHandles = LinkedHashSet<Int>()
 
 private const val FREED_HANDLES_REMEMBERED = 4096
-
-/**
- * Task 138 item 32: the browser handles lent for their object's lifetime (the bridge marks them,
- * [setWebLentHandle]). Kotlin's `queueFree()` on one keeps it registered: the node lives to the end
- * of the frame, and the proxy's sweep releases the handle as freed once the engine freed it.
- */
-private val lentBrowserHandles = mutableSetOf<Int>()
 
 /**
  * The browser handles that name a RefCounted (the bridge marks them when the proxy tracks one,
@@ -260,12 +253,7 @@ internal fun registerWebBrowserHandle(handle: Int, kind: WebBrowserHandleKind) {
   check(handle > 0) { "Kanama Web browser handle must be positive" }
   freedBrowserHandles.remove(handle)
   val previous = browserHandles[handle]
-  if (previous == null) {
-    // A fresh registration is not lent; a repeat one (the bridge re-announcing a handle Kotlin
-    // knows) keeps the mark the lend set.
-    lentBrowserHandles.remove(handle)
-    browserHandles[handle] = kind
-  }
+  if (previous == null) browserHandles[handle] = kind
   check(previous == null || previous == kind) {
     "Kanama Web browser handle=$handle already has kind=$previous, requested=$kind"
   }
@@ -275,7 +263,6 @@ internal fun unregisterWebBrowserHandle(handle: Int, expectedKind: WebBrowserHan
   // Every release of a handle token (queue_free, resource / collision / constructed / tracked
   // object release) drops what the wrappers kept per token, which may later name another object.
   WebHandleCache.forget(handle)
-  lentBrowserHandles.remove(handle)
   refCountedBrowserHandles.remove(handle)
   val actual = browserHandles.remove(handle)
   check(actual == expectedKind) {
@@ -300,45 +287,22 @@ internal fun containsWebBrowserHandle(handle: Int): Boolean = browserHandles.con
 /**
  * The liveness check a call on [token] makes before it crosses (the generated backend's
  * `requireLive`, and [WebExperimentalGenericCall.callImmediate]): a freed script-backed object, or
- * a lent browser handle whose object the engine freed, reads like desktop's freed instance; any
- * other handle Kotlin no longer registers is a stale one. All are script errors.
+ * a browser handle whose object the engine freed, reads like desktop's freed instance; any other
+ * handle Kotlin no longer registers is a stale one. All are script errors.
  */
 internal fun requireLiveWebHandle(token: Int) {
   if (!instances.isLiveOrConstructing(token)) {
     // Task 138 item 22: a freed script-backed object reads like desktop's freed instance.
     check(!instances.wasFreed(token)) { webFreedScriptMessage(token) }
-    // Task 138 item 32: so does a lent browser handle whose object the engine freed.
+    // Task 138 item 32: so does a browser handle whose object the engine freed.
     check(!wasFreedWebBrowserHandle(token)) { webFreedHandleMessage(token) }
     check(containsWebBrowserHandle(token)) { "Stale Kanama Web browser handle=$token" }
   }
 }
 
-/**
- * Node.queue_free bookkeeping: release a browser NODE handle and its mirrored snapshots.
- *
- * A live script instance keeps its snapshots: Godot frees the node at end of frame, so its
- * _physics_process/_process can still run (and read mirrored properties) between queue_free and the
- * actual free — kanamaWebFree clears them when the node really exits the tree (squash: a dying
- * Player queue_frees itself from body_entered, then ticks once more).
- */
-internal fun onWebQueueFree(objectId: Int) {
-  // A lent handle (task 138 item 32) stays registered: the node lives to the end of the frame, as
-  // on desktop, and the sweep releases the handle as freed once the engine freed it.
-  if (!instances.isLiveOrConstructing(objectId) && objectId !in lentBrowserHandles) {
-    clearWebPositionSnapshot(objectId)
-    unregisterWebBrowserHandle(objectId, WebBrowserHandleKind.NODE)
-  }
-}
-
-/**
- * Marks ([lent]) or unmarks a browser handle lent for its object's lifetime (the bridge, when a
- * lend mints or takes over a handle, and when the handle is retired or becomes a script's owned
- * result). True when Kotlin knows it as a NODE, whose transform snapshot a lend refreshes.
- */
-internal fun setWebLentHandle(handle: Int, lent: Boolean): Boolean {
-  if (lent) lentBrowserHandles.add(handle) else lentBrowserHandles.remove(handle)
-  return browserHandles[handle] == WebBrowserHandleKind.NODE
-}
+/** Whether Kotlin knows [handle] as a NODE browser handle (a dispatch refreshes its snapshot). */
+internal fun isWebNodeBrowserHandle(handle: Int): Boolean =
+  browserHandles[handle] == WebBrowserHandleKind.NODE
 
 /**
  * Drops a released browser handle. [freed]: the engine freed its object (task 138 item 32), so a
@@ -347,7 +311,6 @@ internal fun setWebLentHandle(handle: Int, lent: Boolean): Boolean {
 internal fun discardWebBrowserHandle(handle: Int, freed: Boolean = false): Boolean {
   clearWebPositionSnapshot(handle)
   WebHandleCache.forget(handle)
-  lentBrowserHandles.remove(handle)
   refCountedBrowserHandles.remove(handle)
   if (
     freed && freedBrowserHandles.add(handle) && freedBrowserHandles.size > FREED_HANDLES_REMEMBERED
