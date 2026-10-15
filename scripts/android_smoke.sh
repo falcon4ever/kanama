@@ -201,11 +201,19 @@ rm -rf "$DEMO_DIR/.godot/exported"
 
 EXPORT_LOG="${KANAMA_ANDROID_EXPORT_LOG:-${APK_PATH%.apk}.export.log}"
 echo "[android_smoke] export: $APK_PATH (log: $EXPORT_LOG)"
-# `if !` keeps errexit from aborting the pipeline before the status is read (pipefail is on).
-if ! "$GODOT_BIN" --headless \
+# `|| export_status=` keeps errexit from aborting the pipeline before the status is read (pipefail is on).
+export_status=0
+"$GODOT_BIN" --headless \
   --path "$DEMO_DIR" \
-  --export-debug Android "$APK_PATH" 2>&1 | tee "$EXPORT_LOG"; then
-  echo "[android_smoke] Godot export failed (exit ${PIPESTATUS[0]}); log: $EXPORT_LOG" >&2
+  --export-debug Android "$APK_PATH" 2>&1 | tee "$EXPORT_LOG" || export_status="${PIPESTATUS[0]}"
+# The Kanama Tools export guard prints this line, and ends the export, when a .kt script the export
+# uses does not bind in the export-time editor (desktop addon missing, or kanama-scripts.jar stale).
+if grep -q 'Kanama: Export stopped' "$EXPORT_LOG"; then
+  echo "[android_smoke] the Kanama export guard stopped the export: the export-time editor cannot bind the project's .kt scripts (see the 'Kanama: Export stopped' message above); log: $EXPORT_LOG" >&2
+  exit 1
+fi
+if [[ "$export_status" -ne 0 ]]; then
+  echo "[android_smoke] Godot export failed (exit $export_status); log: $EXPORT_LOG" >&2
   exit 1
 fi
 # The desktop runtime logs every .kt it loads with the class it bound; an empty class or a missing
@@ -219,7 +227,7 @@ if grep -qE 'No loader found for resource: res://.*\.kt|ResourceFormatLoader\._l
 fi
 # Task 112: every converted scene keeps its script-declared properties.
 SCENE_PARITY_CHECK="$ROOT_DIR/scripts/check_exported_scene_properties.gd"
-if ! "$GODOT_BIN" --headless --path "$DEMO_DIR" --script "$SCENE_PARITY_CHECK"; then
+if ! "$GODOT_BIN" --headless --path "$DEMO_DIR" --script "$SCENE_PARITY_CHECK" -- --require-converted; then
   echo "[android_smoke] exported scenes lost script properties (see [check_exported_scenes] lines above); refusing to install." >&2
   exit 1
 fi

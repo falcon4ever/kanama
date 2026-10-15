@@ -1,0 +1,20 @@
+; Fixture for scripts/export_guard_selftest.sh: one scene that attaches a Kotlin script, the
+; kanama_tools editor plugin (copied in by the self-test) and Web, Android (APK) and macOS presets.
+config_version=5
+
+[application]
+config/name="ExportGuardFixture"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.7")
+
+[editor]
+export/convert_text_resources_to_binary=true
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/kanama_tools/plugin.cfg")
+
+[rendering]
+
+; The Android preset refuses to export without ETC2/ASTC imports.
+textures/vram_compression/import_etc2_astc=true
