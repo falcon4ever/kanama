@@ -70,7 +70,7 @@ internal class WebSignalArgs(packed: String) {
 
   /** Any argument as Kotlin (`GodotObject` for an object, see [WebPackedValues.decodeVariant]). */
   fun value(index: Int): Any? =
-    if (type(index) == WebPackedValues.TYPE_OBJECT) objectHandle(index)?.let { GodotObject(it) }
+    if (type(index) == WebPackedValues.TYPE_OBJECT) objectHandle(index)?.let { webWrap(it) }
     else WebPackedValues.decodeVariant(part(index))
 
   /** A value-type (or RID / NodePath) argument of [type]. */

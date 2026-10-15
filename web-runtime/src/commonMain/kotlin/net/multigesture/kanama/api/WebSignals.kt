@@ -380,7 +380,7 @@ class GodotSignal internal constructor(private val owner: GodotObject, internal 
         owner.handle.value,
         oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags,
       ) { argHandle ->
-        callback(GodotObject(WebObjectId(argHandle)))
+        callback(webWrap(WebObjectId(argHandle)))
       }
     val result =
       owner.connectBound(

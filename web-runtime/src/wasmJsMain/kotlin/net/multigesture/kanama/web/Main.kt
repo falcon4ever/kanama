@@ -284,6 +284,16 @@ fun kanamaWebSetLentHandle(objectHandle: Int, lent: Int): Int =
   if (setWebLentHandle(objectHandle, lent == 1)) 1 else 0
 
 /**
+ * Protocol 37: the bridge marked a browser handle RefCounted (the proxy tracked a RefCounted, or a
+ * lend minted one): its Kotlin wrappers hold it from now on.
+ */
+@JsExport
+fun kanamaWebMarkRefCountedHandle(objectHandle: Int): Int {
+  markWebRefCountedHandle(objectHandle)
+  return 1
+}
+
+/**
  * Task 138 item 32: a lent handle the proxy's sweep released because the engine freed its object; a
  * later use throws desktop's freed-instance error.
  */

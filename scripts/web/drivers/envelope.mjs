@@ -70,14 +70,26 @@ export async function collectPerformance(evaluate) {
         builtinCallsPerTick: ticks > 0 ? Math.round(((bridge.builtinCalls ?? 0) / ticks) * 100) / 100 : 0,
         // The handles lent to Kotlin for dispatch arguments (signal / input / method object
         // arguments): how many were minted, taken over from a lookup, released (swept: the engine
-        // freed the object; owned: a call's result made a script own it), the most alive at once,
-        // and the GDScript->JS calls the lending cost. Reported, not budgeted.
+        // freed the object), the most alive at once, and the GDScript->JS calls the lending cost.
+        // Reported, not budgeted.
         lentMints: bridge.lentMints ?? 0,
         lentAdopts: bridge.lentAdopts ?? 0,
         lentReleases: bridge.lentReleases ?? 0,
         lentSwept: bridge.lentSwept ?? 0,
-        lentOwned: bridge.lentOwned ?? 0,
         maxLiveLent: bridge.maxLiveLent ?? 0,
+        // RefCounted handles held by Kotlin wrappers (protocol 37): the most pinned at once, how
+        // many the browser's collection of their last wrapper released (and close(), the 2-frame
+        // floor for a lent one nobody wrapped, the lent cap), and the wrapper registrations.
+        // Reported, not budgeted.
+        maxRcPinned: bridge.maxRcPinned ?? 0,
+        rcReleasedByGc: bridge.rcReleasedByGc ?? 0,
+        rcReleasedByClose: bridge.rcReleasedByClose ?? 0,
+        rcReleasedByGrace: bridge.rcReleasedByGrace ?? 0,
+        rcReleasedByCap: bridge.rcReleasedByCap ?? 0,
+        wrapperRegistrations: bridge.wrapperRegistrations ?? 0,
+        // 0 when this browser's FinalizationRegistry refused a Kotlin/Wasm wrapper (the fallback:
+        // a RefCounted only Kotlin keeps then goes with its script, a lent one after 2 frames).
+        wrapperRegistry: bridge.wrapperRegistryWorks === false ? 0 : 1,
         maxLiveBrowserHandles: bridge.maxLiveBrowserHandles ?? 0,
         lendBridgeCalls: bridge.lendBridgeCalls ?? 0,
         lendBridgeCallsPerTick:

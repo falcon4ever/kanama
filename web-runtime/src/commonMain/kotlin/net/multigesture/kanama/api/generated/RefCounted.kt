@@ -6,6 +6,25 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-open class RefCounted(godotObject: GodotHandle) : GodotObject(godotObject) {
+open class RefCounted(godotObject: GodotHandle) : GodotObject(godotObject), AutoCloseable {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  private var closed = false
+
+  /** The live backend handle; a closed wrapper fails loud, as desktop's does. */
+  internal override fun requireOpenHandle(): BackendGodotHandle {
+    check(!closed) { "RefCounted handle is closed" }
+    return backendHandle
+  }
+
+  /**
+   * Releases this wrapper's reference to the object: its handle goes at once when no other Kotlin
+   * wrapper of it remains (the object itself lives on while Godot holds it). A second close is a
+   * no-op; any later call through this wrapper fails loud. Without close() the reference ends
+   * when the browser collects the wrapper.
+   */
+  override fun close() {
+    if (closed) return
+    closed = true
+    releaseWebWrapper(this, backendHandle.backendToken().toInt())
+  }
 }

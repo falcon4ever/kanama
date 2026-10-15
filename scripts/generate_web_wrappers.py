@@ -1112,9 +1112,6 @@ fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) = rotateObjectLocal(a
     },
     "Sprite2D": {"instantiable": True},
     "Resource": {"from_handle": True, "from_object": True},
-    "Texture2D": {"release": "resource", "guard": True},
-    "AudioStream": {"release": "resource"},
-    "PackedScene": {"release": "resource"},
     "Tween": {
         "custom": """
   /**
@@ -1302,31 +1299,28 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
     "Camera3D": {"instantiable": True},
     "InputEventKey": {
         "instantiable": True,
-        "release": "constructed",
         "from_class_check": True,
     },
     # Task 128 C: constructed like InputEventKey, so a shared script registers a mouse-button input
     # action portably (`InputEventMouseButton.create()` + `buttonIndex`, opcode 333).
-    "InputEventMouseButton": {"instantiable": True, "release": "constructed", "from_class_check": True},
+    "InputEventMouseButton": {"instantiable": True, "from_class_check": True},
     "InputEventMouseMotion": {"from_class_check": True},
-    # Task 64 parcel 8: MeshInstance3D.get_mesh hands back a tracked browser handle; tps-demo's
-    # shared Part reads it once and closes it (`mesh.use { }`), so the wrapper owns a close().
-    "Mesh": {"from_object_checked": True, "release": "tracked"},
+    # Task 64 parcel 8: MeshInstance3D.get_mesh hands back a browser handle; tps-demo's shared Part
+    # reads it once and closes it (`mesh.use { }`): RefCounted's close().
+    "Mesh": {"from_object_checked": True},
     "Material": {
         "from_resource": True,
-        "release": "tracked",
         "custom": """
-  /** Duplicate this material; the copy is owned (close it, or release it at teardown). */
+  /** Duplicate this material; the copy lives while you hold it (close() ends that early). */
   override fun duplicate(deep: Boolean): Material? = super.duplicate(deep)?.let { Material(it.handle) }
 """,
     },
     "ShaderMaterial": {"from_resource": True},
     "LightmapGI": {"instantiable": True},
-    "ButtonGroup": {"instantiable": True, "release": "constructed"},
-    "ConfigFile": {"instantiable": True, "release": "constructed"},
-    "FastNoiseLite": {"instantiable": True, "release": "constructed"},
-    "MeshLibrary": {"instantiable": True, "release": "constructed"},
-    "KinematicCollision3D": {"release": "collision", "guard": True},
+    "ButtonGroup": {"instantiable": True},
+    "ConfigFile": {"instantiable": True},
+    "FastNoiseLite": {"instantiable": True},
+    "MeshLibrary": {"instantiable": True},
     "Light3D": {
         "custom": """
   /** Write-only on Web: light_energy is Light3D.set_param(PARAM_ENERGY, value). */
@@ -1886,48 +1880,42 @@ def emit_companion(godot_name: str, class_policy: dict, constants: list[str]) ->
     return ["  companion object {", *lines, "  }"]
 
 
-RELEASE_CALLS = {
-    "resource": "releaseWebResource",
-    "constructed": "releaseWebConstructedObject",
-    "tracked": "releaseWebTrackedObject",
-    "collision": "releaseWebCollision",
-}
+# Every RefCounted wrapper has the one close() (protocol 37, closes #332): it ends that wrapper's
+# hold on its handle, and the bridge releases the handle once no wrapper holds it (desktop's rule:
+# without close() the hold ends when the browser collects the wrapper). `use { }` resolves on every
+# RefCounted, as on desktop and iOS.
+REFCOUNTED_BODY = [
+    "  private var closed = false",
+    "",
+    "  /** The live backend handle; a closed wrapper fails loud, as desktop's does. */",
+    "  internal override fun requireOpenHandle(): BackendGodotHandle {",
+    '    check(!closed) { "RefCounted handle is closed" }',
+    "    return backendHandle",
+    "  }",
+    "",
+    "  /**",
+    "   * Releases this wrapper's reference to the object: its handle goes at once when no other Kotlin",
+    "   * wrapper of it remains (the object itself lives on while Godot holds it). A second close is a",
+    "   * no-op; any later call through this wrapper fails loud. Without close() the reference ends",
+    "   * when the browser collects the wrapper.",
+    "   */",
+    "  override fun close() {",
+    "    if (closed) return",
+    "    closed = true",
+    "    releaseWebWrapper(this, backendHandle.backendToken().toInt())",
+    "  }",
+]
 
-
-def emit_release(godot_name: str, class_policy: dict) -> list[str]:
-    """`close()` for owning wrappers; `guard` adds the closed flag + receiver guard (use-after-close).
-
-    Owning wrappers declare `AutoCloseable` (see `render_class`), so the stdlib `use { }` resolves on
-    them without an import -- the shared demo sources spell `resource.use { }` on both backends
-    (task 64 parcel 8; the `MultiplayerPeer` facade set the precedent in parcel 7).
-    """
-    kind = class_policy.get("release")
-    if not kind:
-        return []
-    name = kotlin_class_name(godot_name)
-    release = RELEASE_CALLS[kind]
-    if class_policy.get("guard"):
-        return [
-            "  private var closed = false",
-            "",
-            "  override fun requireOpenHandle(): BackendGodotHandle {",
-            f'    check(!closed) {{ "{name} is closed" }}',
-            "    return backendHandle",
-            "  }",
-            "",
-            "  /** Releases the owned handle; a second close is a no-op, any later call fails loud. */",
-            "  override fun close() {",
-            "    if (closed) return",
-            "    closed = true",
-            f"    {release}(handle.value)",
-            "  }",
-        ]
-    return [
-        "  /** Releases the owned handle (already-released is an error). */",
-        "  override fun close() {",
-        f"    {release}(handle.value)",
-        "  }",
-    ]
+# Bit 30 of a token: a browser handle, the only kind whose wrappers the bridge counts.
+OBJECT_ROOT_INIT = [
+    "",
+    "  init {",
+    "    // A wrapper of a RefCounted browser handle holds it (protocol 37): the bridge keeps the handle",
+    "    // while this wrapper is reachable. A Node or plain-Object wrapper, or a script's, costs nothing.",
+    "    val token = backendHandle.backendToken().toInt()",
+    "    if ((token and 0x40000000) != 0) webWrapperCreated(this, token)",
+    "  }",
+]
 
 
 # Object methods Web runs as one generic Variant call (task 129 E review S7), rendered from
@@ -2046,17 +2034,18 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
             lines.append("  /** Backend-handle form for the generated proxies and the wrappers' own returns. */")
             lines.append("  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())")
             lines.append("")
-            lines.append("  /** The live backend handle; guarded wrappers (closeable resources) override this. */")
+            lines.append("  /** The live backend handle; RefCounted overrides this (a closed wrapper fails loud). */")
             lines.append("  internal open fun requireOpenHandle(): BackendGodotHandle = backendHandle")
+            lines += OBJECT_ROOT_INIT
         else:
-            closeable = ", AutoCloseable" if class_policy.get("release") else ""
+            closeable = ", AutoCloseable" if godot_name == "RefCounted" else ""
             lines.append(f"{open_}class {name}(godotObject: GodotHandle) : {kotlin_class_name(parent)}(godotObject){closeable} {{")
             lines.append("  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())")
     sections: list[list[str]] = [m.body for m in members]
     if class_policy.get("custom"):
         sections.append(class_policy["custom"].strip("\n").split("\n"))
     sections.append(emit_generic_methods(api, godot_name))
-    sections.append(emit_release(godot_name, class_policy))
+    sections.append(REFCOUNTED_BODY if godot_name == "RefCounted" else [])
     sections.append(emit_signals(api, godot_name, set(tree.classes)))
     sections.append(emit_class_enums(api, godot_name) if godot_name in api.classes else [])
     constants = emit_constants(api, godot_name, class_policy)

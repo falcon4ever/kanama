@@ -24,7 +24,7 @@ import net.multigesture.kanama.api.SignalArgType
  *   its dispatch, and the object still lives: 1 = the one-object signal arm, 2 = the packed arm,
  *   4 = `_input`'s event.
  * - O2 `rcReleasedWhenCollected`: 8 = once Kotlin drops them and the browser collects (Chrome:
- *   `gc()`; Firefox: allocation), the three objects are gone within 300 frames, their handles are
+ *   `gc()`; Firefox: allocation), the three objects are gone within 600 frames, their handles are
  *   released, the live lent handles and pinned RefCounted are back to the baseline and
  *   `rcReleasedByGc` counted them.
  * - O3 `rcCloseReleasesNow`: 16 = a RefCounted argument is `AutoCloseable` and `close()` on its one
@@ -37,13 +37,14 @@ import net.multigesture.kanama.api.SignalArgType
  *   10 frames after the keeper was freed; 512 = once dropped and collected, its handle is released.
  *
  * [cost] (O10 `rcDispatchCost`): the lending's GDScript->JS calls plus the wrapper registrations, and
- * the microseconds, per 1000 dispatches of an already-seen InputEvent (0, 2) and plain Node (1, 3).
+ * the microseconds, per 1000 dispatches of an already-seen InputEvent (0, 2) and plain Node (1, 3);
+ * (4) the frames O2 / O6 waited for the collection.
  */
 @ScriptClass(attachTo = "Node")
 class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
   private var mask = 0L
   private var done = 0L
-  private val cost = LongArray(4)
+  private val cost = LongArray(5)
   private val notes = mutableListOf<String>()
 
   private var recording = false
@@ -193,7 +194,7 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
 
   /**
    * O2 / O6: Kotlin drops everything it kept; the browser collects (Chrome: `gc()` every frame;
-   * Firefox, which has none, runs only when allocation fills its young generation: 1 MB a frame).
+   * Firefox, which has none, collects only under allocation pressure: 4 MB a frame).
    */
   private fun collectRows() {
     oneArg = null
@@ -210,9 +211,9 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
 
   private fun settle(frame: Int) {
     if (twinLong("collect") == 0L) {
-      garbage = ByteArray(1 shl 20)
+      garbage = ByteArray(4 shl 20)
       var sum = 0
-      repeat(2000) { sum += IntArray(4) { i -> i + it }.sum() }
+      repeat(8000) { sum += IntArray(4) { i -> i + it }.sum() }
       if (sum < 0) note("unreachable")
     }
     val gone = !alive("o1_one") && !alive("o1_two") && !alive("o1_input")
@@ -222,6 +223,7 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
       return
     }
     garbage = null
+    cost[4] = frame.toLong()
     val handlesReleased = o1Handles.size == 3 && o1Handles.all { twinLong("handle_live", it.toLong()) == 0L }
     val lent = counter("liveLent")
     val pinned = counter("rcPinned")
@@ -254,5 +256,5 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
   }
 }
 
-/** The frames O2 / O6 wait for the browser to collect (the ownership design's Firefox bound). */
-private const val SETTLE_FRAMES = 300
+/** The frames O2 / O6 wait for the browser to collect (the ownership design's teardown bound). */
+private const val SETTLE_FRAMES = 600

@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 36"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 37"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -830,7 +830,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 36"))
+    assertTrue(protocol.contains("\"protocolVersion\": 37"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -841,7 +841,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=36\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=37\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -1736,12 +1736,37 @@ class WebScriptCodeEmitterTest {
       ),
       proxy,
     )
-    // A lent RefCounted is held strongly for 2 frames after its dispatch, then weakly.
+    // Protocol 37 (closes #332): a RefCounted argument is the bridge's, held by Kotlin's wrappers
+    // of it: minted with flag 16 (marked there, so its track does not mark again), a seen one
+    // returned with no JS call. Nothing on the proxy side counts frames or demotes it to a weak
+    // entry any more, and no call result takes a lent RefCounted over.
     assertTrue(
-      proxy.contains("\t\tKanamaWebHandles.grace[handle] = Engine.get_process_frames() + 2"),
+      proxy.contains(
+        "\tif object is RefCounted:\n" +
+          "\t\tif handle == 0:\n" +
+          "\t\t\thandle = int(_kanama_bridge.lendHandle(_kanama_handle, 0, 16, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0))\n" +
+          "\t\t\t_kanama_track(handle, object, false)\n" +
+          "\t\treturn handle\n"
+      ),
       proxy,
     )
-    assertTrue(proxy.contains("\t\t\t\t_kanama_object_handles[handle] = [weakref(held)]"), proxy)
+    assertFalse(proxy.contains("KanamaWebHandles.grace"), proxy)
+    assertFalse(proxy.contains("[weakref(held)]"), proxy)
+    assertFalse(proxy.contains("_kanama_own_lent"), proxy)
+    assertFalse(proxy.contains("ownLentHandle"), proxy)
+    // Every RefCounted entering the shared dictionary is marked for the bridge once (a tween keeps
+    // its own lifetime, to its end).
+    assertTrue(
+      proxy.contains("func _kanama_track(handle: int, value: Variant, mark := true) -> void:"),
+      proxy,
+    )
+    assertTrue(
+      proxy.contains(
+        "\tif mark and tracked is RefCounted and not (tracked is Tween or tracked is Tweener):\n" +
+          "\t\t_kanama_bridge.markRefCounted(handle)\n"
+      ),
+      proxy,
+    )
     // Every frame (once across the proxies) the sweep walks the lent handles: it rides
     // SceneTree.process_frame, so it runs while the tree is paused or no script processes; a
     // processing proxy only reconnects it, and costs one size check while nothing is lent.
@@ -2005,7 +2030,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 36"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 37"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(

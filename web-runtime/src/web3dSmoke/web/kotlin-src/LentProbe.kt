@@ -25,8 +25,8 @@ import net.multigesture.kanama.types.Vector3
  * engine objects no Kanama script tracks. Main's `lent_probe` arms [lentArm]; the rows run over
  * the following frames and [lentDone] says when they are finished. The rule they hold Web to is
  * desktop's: a Node or plain Object argument is one value per object, valid until the engine frees
- * it; a RefCounted one while Godot holds it (and, on Web, for the dispatch plus 2 frames when only
- * Kotlin keeps it).
+ * it; a RefCounted one while Godot or a Kotlin reference holds it (protocol 37; OwnProbe has the
+ * rows for its release).
  *
  * [maskA] (L1-L4, 65535 when healthy):
  * - L1 a stored argument still answers 2 frames later: 1 = the one-object signal arm, 2 = the
@@ -49,10 +49,11 @@ import net.multigesture.kanama.types.Vector3
  * - L6 bounded: 16 = 500 rounds of create / hand over / free keep at most 34 lent handles alive
  *   above the baseline, 32 = back to the baseline after, 64 = 1000 dispatches of one node take one
  *   handle.
- * - L7 RefCounted: 128 = one nobody keeps answers during the dispatch and on the next 2 frames,
- *   256 = after that the engine freed it and a use throws the freed-instance error; 512 = one the
- *   twin keeps still answers after the grace, 1024 = once the twin drops it, a use throws it; 32768
- *   = one nobody keeps but the handler resolved (`GD.instanceFromId`) still answers after the grace.
+ * - L7 RefCounted: 128 = one only Kotlin keeps answers during the dispatch and on the next 2
+ *   frames, 256 = and still lives after them (no frame count expires it), until `close()` on its
+ *   wrapper: a frame later the object is gone; 512 = one the twin keeps too still answers after
+ *   2 frames, 1024 = once the twin drops it, Kotlin's reference keeps it alive and answering; 32768
+ *   = one the handler also resolved (`GD.instanceFromId`) still answers after 2 frames.
  * - L8 snapshot: 2048 = `position` of a Node3D argument reads the node's value, 4096 = after the
  *   twin moved it, the next argument reads the new one.
  * - L9: 8192 = `queueFree()` on a method's object argument works (no throw, the node is gone),
@@ -64,13 +65,14 @@ import net.multigesture.kanama.types.Vector3
  *   a use after the frame throws the freed-instance error.
  * - L12: 2 = a stored argument freed before 4200 more freed lent handles (more than the bridge and
  *   Kotlin remember) still throws an IllegalStateException, typed and through `call`.
- * - L13: 4 = a RefCounted only Kotlin keeps, handed over again 2 frames later: the second dispatch
- *   renews its 2 frames (alive 4 frames after the first), then it is freed and a use throws.
+ * - L13: 4 = a RefCounted only Kotlin keeps, handed over again 2 frames later: the same value, still
+ *   alive 4 and 8 frames after the first dispatch (no frame count expires it); `close()` on both
+ *   wrappers releases it.
  * - L14: 8 = 256 nodes handed over and kept, then freed at once: the lent handles are back to the
  *   baseline within K + 3 frames (the sweep checks 32 a frame: K = ceil(lent handles / 32), 9 for
  *   the ~263 this row holds, so 12 frames).
- * - L15: 16 = while the tree is paused (no Kanama script processes) a freed node's handle and a
- *   RefCounted only Kotlin keeps are still released within 6 frames.
+ * - L15: 16 = while the tree is paused (no Kanama script processes) a freed node's handle is still
+ *   released within 6 frames, and a RefCounted Kotlin keeps stays.
  * - L16: 32 = a Sprite2D this script created, moved by the twin and handed over: the argument is
  *   the created value and its `position` reads the moved one (the dispatch refreshes the snapshot
  *   of a handle it takes over, whatever its bridge kind).
@@ -357,10 +359,16 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
     // L7.
     if (rcWithinGrace && graceFramesChecked == 2L && rcArgs.size == 3) maskB = maskB or 128L
     else note("L7 grace: checked to +$graceFramesChecked, answered=$rcWithinGrace")
+    var unkeptClosed = false
     if (rcArgs.size == 3) {
-      val unkeptGone = twinLong("unkept_alive") == 0L
-      if (!unkeptGone) note("L7 unkept: still alive")
-      if (unkeptGone && throwsFreed("L7 unkept use") { rcArgs[0].call("get_class") }) maskB = maskB or 256L
+      // Kotlin keeps it, so it outlives the 2 frames; close() on its one wrapper ends it.
+      val unkeptAlive = twinLong("unkept_alive") == 1L
+      if (!unkeptAlive) note("L7 unkept: gone while Kotlin keeps it")
+      if (unkeptAlive && rcAnswers("L7 unkept after 2 frames", rcArgs[0])) {
+        val closeable = rcArgs[0] as? AutoCloseable
+        if (closeable == null) note("L7 unkept: not AutoCloseable") else closeable.close()
+        unkeptClosed = closeable != null
+      }
       if (rcAnswers("L7 held", rcArgs[1])) maskB = maskB or 512L
       // The documented way to keep one: resolve an owned reference inside the handler.
       val resolved = rcResolved
@@ -390,6 +398,8 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
     // `free()` is immediate: the first stored node is gone now (this call applies the setter first).
     val freedAtOnce = doomedArgs.size == 2 && throwsFreed("L5 free") { doomedArgs[0].call("get_name") }
     MainThread.postAfterFrames(4) {
+      if (unkeptClosed && twinLong("unkept_alive") == 0L) maskB = maskB or 256L
+      else if (unkeptClosed) note("L7 unkept: still alive after close()")
       if (freedAtOnce && throwsFreed("L5 free, released") { Node(doomedArgs[0].handle).getName() }) {
         maskB = maskB or 1L
       }
@@ -423,9 +433,9 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
     if (handles == 1L) maskB = maskB or 64L else note("L6 one node, 1000 dispatches: $handles handles")
     MainThread.postAfterFrames(4) {
       if (rcArgs.size == 3) {
-        val heldGone = twinLong("held_alive") == 0L
-        if (!heldGone) note("L7 held: still alive after the twin dropped it")
-        if (heldGone && throwsFreed("L7 dropped use") { rcArgs[1].call("get_class") }) maskB = maskB or 1024L
+        val heldAlive = twinLong("held_alive") == 1L
+        if (!heldAlive) note("L7 held: gone after the twin dropped it, while Kotlin keeps it")
+        if (heldAlive && rcAnswers("L7 dropped by the twin", rcArgs[1])) maskB = maskB or 1024L
       }
       val lentAfter = counter("liveLent")
       val liveAfter = counter("liveBrowserHandleCount")
@@ -473,21 +483,20 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
     MainThread.postAfterFrames(2) { renewRows() }
   }
 
-  /** L13: a second dispatch renews a RefCounted's 2 frames. */
+  /** L13: a RefCounted Kotlin keeps, handed over twice, lives until its wrappers are closed. */
   private fun renewRows() {
     twin().call("emit_renew", 0L)
     MainThread.postAfterFrames(10) {
-      val twin = twin()
       val alive = twinLong("renew_state", 0L)
       val gone = twinLong("renew_state", 1L)
-      if (alive == 1L && gone == 1L && renewArgs.size == 2 && renewArgs[0] == renewArgs[1] &&
-        throwsFreed("L13 after") { renewArgs[0].call("get_class") }
-      ) {
-        maskC = maskC or 4L
-      } else {
-        note("L13 alive at +4=$alive gone by +8=$gone dispatches=${renewArgs.size}")
+      val kept = alive == 1L && gone == 0L && renewArgs.size == 2 && renewArgs[0] == renewArgs[1]
+      if (!kept) note("L13 alive at +4=$alive gone by +8=$gone dispatches=${renewArgs.size}")
+      if (kept) renewArgs.forEach { (it as? AutoCloseable)?.close() }
+      MainThread.postAfterFrames(1) {
+        if (kept && twinLong("renew_state", 2L) == 0L) maskC = maskC or 4L
+        else if (kept) note("L13: still alive after close() on both wrappers")
+        burstRows()
       }
-      burstRows()
     }
   }
 

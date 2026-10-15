@@ -55,6 +55,14 @@ private const val FREED_HANDLES_REMEMBERED = 4096
  */
 private val lentBrowserHandles = mutableSetOf<Int>()
 
+/**
+ * The browser handles that name a RefCounted (the bridge marks them when the proxy tracks one,
+ * [markWebRefCountedHandle]): the bridge keeps such a handle while a Kotlin wrapper of it is
+ * reachable, or until its `close()` (protocol 37, closes #332), so every wrapper of one registers
+ * ([net.multigesture.kanama.api.webWrapperCreated]) and a decode wraps it as a `RefCounted`.
+ */
+private val refCountedBrowserHandles = mutableSetOf<Int>()
+
 internal enum class WebBrowserHandleKind {
   RESOURCE,
   NODE,
@@ -158,8 +166,22 @@ internal fun webWriteEmittingSnapshot(objectId: Int, value: Boolean) {
   particlesEmittingSnapshots[objectId] = value
 }
 
+/**
+ * The texture a Sprite2D's snapshot names is held while the snapshot names it (a hold that is not a
+ * wrapper): `sprite.texture` answers from the snapshot after the Kotlin code that set it dropped
+ * its wrapper, as the engine still holds the texture.
+ */
 internal fun webWriteTextureSnapshot(objectId: Int, textureId: Int) {
-  textureSnapshots[objectId] = textureId
+  val previous = textureSnapshots.put(objectId, textureId)
+  if (previous == textureId) return
+  if (textureId > 0 && textureId in refCountedBrowserHandles) jsHoldRefCounted(textureId, 1)
+  releaseTextureHold(previous)
+}
+
+private fun releaseTextureHold(textureId: Int?) {
+  if (textureId != null && textureId > 0 && textureId in refCountedBrowserHandles) {
+    jsHoldRefCounted(textureId, -1)
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -254,6 +276,7 @@ internal fun unregisterWebBrowserHandle(handle: Int, expectedKind: WebBrowserHan
   // object release) drops what the wrappers kept per token, which may later name another object.
   WebHandleCache.forget(handle)
   lentBrowserHandles.remove(handle)
+  refCountedBrowserHandles.remove(handle)
   val actual = browserHandles.remove(handle)
   check(actual == expectedKind) {
     "Kanama Web browser handle=$handle has kind=$actual, expected=$expectedKind"
@@ -325,6 +348,7 @@ internal fun discardWebBrowserHandle(handle: Int, freed: Boolean = false): Boole
   clearWebPositionSnapshot(handle)
   WebHandleCache.forget(handle)
   lentBrowserHandles.remove(handle)
+  refCountedBrowserHandles.remove(handle)
   if (
     freed && freedBrowserHandles.add(handle) && freedBrowserHandles.size > FREED_HANDLES_REMEMBERED
   ) {
@@ -332,6 +356,14 @@ internal fun discardWebBrowserHandle(handle: Int, freed: Boolean = false): Boole
   }
   return browserHandles.remove(handle) != null
 }
+
+/** The bridge marked [handle] RefCounted: its wrappers hold it from now on. */
+internal fun markWebRefCountedHandle(handle: Int) {
+  refCountedBrowserHandles.add(handle)
+}
+
+/** True for a browser handle the bridge marked RefCounted ([markWebRefCountedHandle]). */
+internal fun isRefCountedBrowserHandle(handle: Int): Boolean = handle in refCountedBrowserHandles
 
 /** True for a browser handle released because the engine freed its object (see above). */
 internal fun wasFreedWebBrowserHandle(handle: Int): Boolean = handle in freedBrowserHandles
@@ -454,7 +486,7 @@ internal fun clearWebPositionSnapshot(objectId: Int) {
   positionSnapshots.remove(objectId)
   scaleSnapshots.remove(objectId)
   modulateSnapshots.remove(objectId)
-  textureSnapshots.remove(objectId)
+  releaseTextureHold(textureSnapshots.remove(objectId))
   viewportRectSnapshots.remove(objectId)
   particlesEmittingSnapshots.remove(objectId)
   particlesLifetimeSnapshots.remove(objectId)

@@ -9,7 +9,7 @@ import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class FastNoiseLite(godotObject: GodotHandle) : Noise(godotObject), AutoCloseable {
+class FastNoiseLite(godotObject: GodotHandle) : Noise(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun setSeed(seed: Int) {
     GodotBackendCalls.invokeLongArg(D.FASTNOISELITE_SET_SEED, requireOpenHandle(), seed.toLong())
@@ -42,11 +42,6 @@ class FastNoiseLite(godotObject: GodotHandle) : Noise(godotObject), AutoCloseabl
   var fractalLacunarity: Double
     get() = unsupportedWebGameplayFamily("FastNoiseLite.get_fractal_lacunarity")
     set(newValue) = setFractalLacunarity(newValue)
-
-  /** Releases the owned handle (already-released is an error). */
-  override fun close() {
-    releaseWebConstructedObject(handle.value)
-  }
 
   value class NoiseType(override val value: Long) : GodotEnumValue {
     companion object {

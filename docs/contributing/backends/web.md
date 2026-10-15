@@ -72,7 +72,7 @@ see the Backend-dispatch codegen section below.
 
 `web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js` is the seam between
 the Kanama Wasm module and Godot's Web export. It carries a
-`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 36); startup rejects a mismatch <!-- kanama-claim: protocol -->
+`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 37); startup rejects a mismatch <!-- kanama-claim: protocol -->
 between the bridge constant and the value the Wasm backend reports, so a bridge
 and a backend built from different revisions fail loudly instead of drifting.
 
@@ -224,8 +224,10 @@ and the property table:
 - **Hand-shaped content is explicit.** `CLASS_POLICY[...]["custom"]` in the
   generator carries the members the contract cannot express (Variant-style
   `emitSignal`/`tweenProperty` dispatchers over the typed arms, Node3D's
-  composed `basis`/`transform`, `getChildren`, `setStreamFromPath`, factories,
-  `close()` lifetimes), so a regen is lossless. `WEB_HANDSHAPED` names the two
+  composed `basis`/`transform`, `getChildren`, `setStreamFromPath`, factories),
+  so a regen is lossless. Every `RefCounted` gets the one `close()` and
+  `AutoCloseable` from the generated `RefCounted` itself (see "RefCounted
+  handles" below), so no class carries a release policy of its own. `WEB_HANDSHAPED` names the two
   facades that stay hand-written under `api/` and dispatch opcodes directly:
   the handle-less `Window` mirror (`Node.getWindow()`) and the owner-bound
   `PhysicsDirectSpaceState3D` ray query. Everything else under `api/`
@@ -323,12 +325,11 @@ simulated second (`maxBuiltinCallsPerSimSecond`) and not against the per-tick de
 **Objects in results keep their handles** (review B2). An object inside a builtin, utility or
 generic-call result (`GD.instanceFromId`, an Array of nodes, a Callable's target) resolves like a
 generic call's object return: its script handle, else the handle already tracking it (retained for
-the calling script, `retainSharedHandle`), else a handle of its kind minted for the calling script
-and released with it. A repeated query reuses one handle and keeps identity
-(`call("get_children")[i] == getChild(i)`). A lambda connection's guard is held weakly, so a
-`getConnections()` answer does not keep it (or its Kotlin callback) alive. A fresh RefCounted
-result (`GD.weakref`) is a new object each call and keeps its handle until the calling script is
-freed.
+the calling script, `retainSharedHandle`; a RefCounted's is held by its Kotlin wrappers instead),
+else a handle of its kind minted for the calling script and released with it (a RefCounted's when
+its wrappers go, see "RefCounted handles" below). A repeated query reuses one handle and keeps
+identity (`call("get_children")[i] == getChild(i)`). A lambda connection's guard is held weakly, so
+a `getConnections()` answer does not keep it (or its Kotlin callback) alive.
 
 **One Variant text format.** `<Variant.Type>:<payload>` (`WebPackedValues.encodeVariant` /
 `decodeVariant`, the proxy's `_kanama_web_pack_variant` / `_kanama_web_unpack_variant`): bool
@@ -415,7 +416,8 @@ gameplay and full scene teardown; stale handle use after teardown fails.
 `requireAs`, `getChild`, an indexed hit, a property object read, a generic call's object return)
 finds the object already tracked, the GDScript arm answers with the *existing* handle, and the
 bridge records the asking script as one more holder (`retainSharedHandle`; per handle a set of
-holders, so a script holds it once however often it looks it up). The asking script is the holder,
+holders, so a script holds it once however often it looks it up; a RefCounted handle has none, its
+Kotlin wrappers hold it). The asking script is the holder,
 not the instantiator a spawned scripted child routes through (`handleOwners` names that routing
 owner). The handle is released with its last holder; freeing the script that routed it re-routes it
 to a remaining holder, so the others keep calling it. Retiring a handle also erases its entry in the
@@ -441,7 +443,7 @@ arms), `_input` / `_unhandled_input`'s event and a registered method's object ar
 `_kanama_lend(value)`: the handle already tracking the object, else one `bridge.lendHandle` mints
 (NODE kind for a Node, so its snapshot and `queueFree` work; OBJECT otherwise). The handle is not
 released when the handler returns, and lending adds no holder: it lives until the engine frees the
-object, or the last Kanama script goes away. A lookup's handle a dispatch lends is taken over the
+object, or the last Kanama script goes away (a RefCounted's while Kotlin wraps it, below). A lookup's handle a dispatch lends is taken over the
 same way (`flags 2`: its holders no longer matter). Its owner is only the proxy its calls route
 through: `releaseBrowserHandlesOwnedBy` re-routes a lent handle to another installed proxy, so a
 copy another script stored outlives the script that received it; the last proxy releases it. A
@@ -480,24 +482,55 @@ lent handle stays: the bridge keeps its slot (marked `freeQueued`) and Kotlin it
 the node in the same frame reads it; once the engine freed it the sweep releases the handle as freed
 and a use is the freed-instance error (`lentKotlinQueueFree`, `lentQueueFreedNodeLivesToFrameEnd`).
 
-*RefCounted arguments: 2 frames, then weak.* A lent `RefCounted` (an `InputEvent`, a `Resource`) is
-held strongly for its dispatch and the next 2 process frames (`KanamaWebHandles.grace`; a new
-dispatch of it renews them), then the sweep demotes its entry to a `[WeakRef]`: it lives while Godot
-holds it anywhere, and a use after it was freed is the freed-instance error (`lentRefCountedGraceRenewed`
-pins the renewal). Holding it strongly for
-good would pin one `InputEvent` per input event; desktop instead keeps it until the Kotlin wrapper is
-closed or collected, which Web cannot observe yet (releasing through the browser's garbage collector
-is tracked in [#332](https://github.com/falcon4ever/kanama/issues/332)). A call's result naming a lent `RefCounted`
-(`GD.instanceFromId(event.instanceId)`) makes it owned by the calling script (`ownLentHandle`), like
-any object result. A `RefCounted` a script already owns keeps its owner when it is lent, so a copy
-another script stored is valid only while that owner holds it (released with the owner, a later use
-is the stale-handle error). The web3d `LentProbe` rows (`lentStoredArgumentStaysValid`,
-`lentArgumentIdentity`, `lentNestedDispatchIdentity`, `lentArgumentOutlivesItsReceiver`,
-`lentEngineFreeIsFreedInstance`, `lentHandlesBounded`, `lentRefCountedGracePeriod`,
-`lentRefCountedExpiry`, `lentNodeSnapshotReads`, `lentKotlinQueueFree`, `lentDispatchCost`,
-`lentQueueFreedNodeLivesToFrameEnd`, `lentLongFreedHandleIsIllegalState`,
-`lentRefCountedGraceRenewed`, `lentBurstDrains`, `lentSweepRunsWhilePaused`) pin all of it; `lentDispatchCost` holds a seen plain Node
-argument at 0 lending JS calls per dispatch and a Node3D at 1 (the old per-dispatch lend cost 2).
+*RefCounted handles: held by Kotlin wrappers* (protocol 37, closes
+[#332](https://github.com/falcon4ever/kanama/issues/332)). A browser handle that names a
+`RefCounted` (an `InputEvent` argument, a load, a `create()`, a call's result) lives while a Kotlin
+wrapper of it can still be reached, or until that wrapper's `close()`, as desktop's owned wrappers
+do, not with the script that made it. The proxy marks such a handle when it tracks the object
+(`_kanama_track` calls `markRefCounted`; a lend passes flag 16 instead; a `Tween` or `Tweener`
+keeps its own lifetime, to its end), and Kotlin keeps the same mark
+(`kanamaWebMarkRefCountedHandle`). Every wrapper is constructed fresh at its decode, and the
+generated `GodotObject` root's `init` registers a wrapper of a marked handle with the bridge's one
+`FinalizationRegistry` (`registerWrapper`, with the wrapper's `toJsReference()` as target and
+unregister token; a Node or plain-Object wrapper costs a set lookup and no crossing), so each
+wrapper is one hold and the slot counts them (`wrappers`). A decoded RefCounted handle is wrapped as
+a `RefCounted` (`webWrap`), so `as? AutoCloseable` and `use { }` work on a Variant result. When the
+browser collects the last wrapper, the registry's callback (between tasks: bookkeeping only) queues
+the handle, and the frame scheduler's pump (inside a proxy's `_process`, once per engine frame)
+drains the queue: it erases the proxies' dictionary entry through any installed proxy, tells
+Kotlin, and retires the slot, as desktop's `OwnedReleases` drains the GC's cleanups on the next
+frame. `close()` unregisters its wrapper and releases the handle at once when that was the last
+hold (`closeWrapper`), so another wrapper of the same object keeps it. Owner teardown re-routes a
+RefCounted handle that still has wrappers to another proxy, like a lent one; the last proxy
+releases everything, so full teardown stays deterministic. A Sprite2D texture snapshot is a hold
+too (`holdRefCounted`): `sprite.texture` answers after the code that set it dropped its wrapper.
+
+A lent RefCounted the handler never wrapped (a packed argument nobody read) has no hold from its
+lend, so the drain releases it after its dispatch and the next 2 engine frames (`LENT_GRACE_FRAMES`
+in the bridge). Above `RC_LENT_CAP` (4096) lent RefCounted handles pinned past that floor, the drain
+releases the oldest lends first; a use of one Kotlin still holds is the freed-instance error. The
+cap is Kanama's own (C#'s binding has none): Chrome collects within about a second under game load
+and at once when the page idles, but Firefox collects only under allocation pressure, so a quiet
+scene with mouse motion would otherwise pin every event until its nursery fills. A browser whose
+`FinalizationRegistry` refuses a Kotlin/Wasm object (not seen in Chrome or Firefox; Safari is not
+measured) makes `registerWrapper` answer 0 after one console warning: a RefCounted only Kotlin keeps
+then goes with its script, a lent one after its 2 frames (the protocol-36 rule, loud). Every
+driver's performance section reports `maxRcPinned`, `rcReleasedByGc`, `rcReleasedByClose`,
+`rcReleasedByGrace`, `rcReleasedByCap`, `wrapperRegistrations` and `wrapperRegistry` (0 for the
+fallback).
+
+The web3d `LentProbe` rows (`lentStoredArgumentStaysValid`, `lentArgumentIdentity`,
+`lentNestedDispatchIdentity`, `lentArgumentOutlivesItsReceiver`, `lentEngineFreeIsFreedInstance`,
+`lentHandlesBounded`, `lentRefCountedGracePeriod`, `lentRefCountedExpiry`, `lentNodeSnapshotReads`,
+`lentKotlinQueueFree`, `lentDispatchCost`, `lentQueueFreedNodeLivesToFrameEnd`,
+`lentLongFreedHandleIsIllegalState`, `lentRefCountedGraceRenewed`, `lentBurstDrains`,
+`lentSweepRunsWhilePaused`) and `OwnProbe` rows (`rcHeldByKotlinOutlives`,
+`rcReleasedWhenCollected`, `rcCloseReleasesNow`, `rcOutlivesItsReceiver`,
+`rcResultOutlivesItsScript`, `rcDispatchCost`; Chrome runs with `--js-flags=--expose-gc` so the
+collection rows call `gc()`, Firefox allocates 4 MB a frame instead) pin all of it.
+`lentDispatchCost` holds a seen plain Node argument at 0 lending JS calls per dispatch and a Node3D
+at 1 (the old per-dispatch lend cost 2), `rcDispatchCost` a seen `InputEvent` at 1 (its wrapper's
+registration).
 The web3d smoke's `sharedNodeHandleSurvivesFirstFree` check (`Main.share_probe`) pins the rule.
 
 **A lambda connection's Kotlin callback goes with whatever held it.** `connect { }`, `connectLong`,
@@ -605,14 +638,16 @@ FFI-backend bug and its fix does not apply here):
   `RefCounted.unreference()` to drop the caller's reference.
 - **Web holds no pointers and makes no `ptrcall`.** The real Godot object lives
   engine-side and **GDScript refcounts it**; the bridge only carries an opaque
-  handle ID interned in the owning script's object table. So the Web model is
-  **"drop the handle = release the reference"**: `close()` (e.g.
-  `Texture2D.close()` → `releaseWebResource`) emits a release-handle bridge command
-  that runs the generated GDScript `_kanama_resource_release`, which *erases the
-  handle from that script's `_kanama_object_handles`* — dropping GDScript's
-  reference. If nothing else holds the object, its engine-side refcount reaches
-  zero and Godot frees it; if the caller already handed it to a node/resource, the
-  engine's own reference keeps it alive.
+  handle ID interned in the proxies' shared object table. So the Web model is
+  **"drop the handle = release the reference"**: once no Kotlin wrapper holds the
+  handle (the last one was `close()`d, or collected by the browser; see
+  "RefCounted handles" above), the bridge runs the generated GDScript
+  `_kanama_resource_release`, which *erases the handle from
+  `_kanama_object_handles`* — dropping GDScript's reference. If nothing else holds
+  the object, its engine-side refcount reaches zero and Godot frees it; if the
+  caller already handed it to a node/resource, the engine's own reference keeps it
+  alive. `close()` is per wrapper, as on desktop: it ends that wrapper's hold, and
+  another wrapper of the same object keeps the handle.
 
 **There is no `init_ref` claim to get wrong** (the #91 root cause) because the
 bridge never constructs the native object itself — it asks GDScript to, and
@@ -621,18 +656,17 @@ created-then-handed-off-then-closed case survives** for the same reason it must 
 the pointer backends: the handoff (e.g. `AudioStreamPlayer.setStream`) is applied
 **before** the temporary handle is released, so the engine takes its reference
 first. `AudioStreamPlayer.setStreamFromPath` is the canonical example —
-`load → setStream(player) → finally { releaseWebResource(temp) }` — and it is
+`load → setStream(player) → finally { stream.close() }` — and it is
 covered by an explicit **bridge-level ownership assertion** in the Match3 export
 smoke (`scripts/web/drivers/demos/match3.mjs`): the stream resources are loaded
 and handed off with zero failures, they play (survived their temp release), and
 every resource handle returns to baseline at teardown (no leak).
 
-Practical consequence for generated wrappers: a Web `X.create()` proxy returns an
-**owning** handle and `close()` is a real "release this reference" command — the
-bridge does **not** silently GC handles behind your back, so *the same
-`use { }`/`close()` discipline the docs teach applies on Web*, and forgetting it
-leaks the same way (until the owning script tears down and its whole object table
-is released).
+Practical consequence for generated wrappers: a Web `X.create()` returns an
+**owning** wrapper and `close()` (from `RefCounted`, on every RefCounted class) is
+a real "release this reference" command, so *the same `use { }`/`close()`
+discipline the docs teach applies on Web*; a forgotten `close()` is a late
+release, when the browser collects the wrapper, as on desktop.
 
 ### Declared dispatch degradations (the protocol manifest)
 

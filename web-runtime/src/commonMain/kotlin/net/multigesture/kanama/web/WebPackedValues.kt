@@ -4,6 +4,8 @@ import kotlin.reflect.KClass
 import net.multigesture.kanama.api.GodotCallable
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.GodotSignal
+import net.multigesture.kanama.api.openToken
+import net.multigesture.kanama.api.webWrap
 import net.multigesture.kanama.binding.runtime.BuiltinFrame
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
@@ -258,7 +260,7 @@ internal object WebPackedValues {
       is net.multigesture.kanama.api.GodotEnumValue -> "2:${value.value}"
       // Task 134 D2: a PackedByteArray as lowercase hex (the proxy's `hex_decode`).
       is ByteArray -> "29:${hexEncode(value)}"
-      is GodotObject -> "24:${value.handle.value}"
+      is GodotObject -> "24:${value.openToken()}"
       is GodotCallable -> "25:${value.target.handle.value},${nest(value.method)}"
       is List<*> ->
         buildString {
@@ -308,20 +310,20 @@ internal object WebPackedValues {
       TYPE_PACKED_BYTE_ARRAY -> hexDecode(payload)
       // Task 138 item 2: objects, Callables, Signals, Arrays and Dictionaries (in a builtin or
       // utility result, a generic call's result, or nested in one of those).
-      TYPE_OBJECT -> payload.toInt().takeIf { it != 0 }?.let { GodotObject(WebObjectId(it)) }
+      TYPE_OBJECT -> payload.toInt().takeIf { it != 0 }?.let { webWrap(WebObjectId(it)) }
       TYPE_CALLABLE -> {
         val parts = payload.split(',')
         parts[0]
           .toInt()
           .takeIf { it != 0 }
-          ?.let { GodotCallable(GodotObject(WebObjectId(it)), unnest(parts[1])) }
+          ?.let { GodotCallable(webWrap(WebObjectId(it)), unnest(parts[1])) }
       }
       TYPE_SIGNAL -> {
         val parts = payload.split(',')
         parts[0]
           .toInt()
           .takeIf { it != 0 }
-          ?.let { GodotSignal(GodotObject(WebObjectId(it)), unnest(parts[1])) }
+          ?.let { GodotSignal(webWrap(WebObjectId(it)), unnest(parts[1])) }
       }
       TYPE_ARRAY -> {
         val parts = payload.split(',')

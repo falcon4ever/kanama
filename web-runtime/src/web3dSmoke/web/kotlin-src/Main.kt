@@ -1524,7 +1524,7 @@ class Main(godotObject: GodotHandle) :
   /**
    * The RefCounted-ownership rows (see OwnProbe): a RefCounted held only by Kotlin lives while a
    * wrapper of it is reachable, until `close()`. [ownProbe] arms them; they run over the next frames
-   * (up to ~450), [ownProbeDone] says when, then [ownMask] (1023) and [ownCost] are the results.
+   * (up to ~750), [ownProbeDone] says when, then [ownMask] (1023) and [ownCost] are the results.
    */
   fun ownProbe(value: Long): Long = ownSays("own_arm", 0L)
 
@@ -1532,7 +1532,10 @@ class Main(godotObject: GodotHandle) :
 
   fun ownMask(value: Long): Long = ownSays("own_mask", 0L)
 
-  /** 0/1: lend calls + wrapper registrations per 1000 dispatches of a seen InputEvent / Node. */
+  /**
+   * 0/1: lend calls + wrapper registrations per 1000 dispatches of a seen InputEvent / Node; 2/3:
+   * microseconds per 1000; 4: the frames the collection rows waited.
+   */
   fun ownCost(value: Long): Long = ownSays("own_cost", value)
 
   private fun ownSays(method: String, value: Long): Long =

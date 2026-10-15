@@ -8,7 +8,7 @@ import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class PackedScene(godotObject: GodotHandle) : Resource(godotObject), AutoCloseable {
+class PackedScene(godotObject: GodotHandle) : Resource(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun instantiate(editState: PackedScene.GenEditState = PackedScene.GenEditState.DISABLED): Node? =
     GodotBackendCalls.invokeLongRetHandle(
@@ -22,11 +22,6 @@ class PackedScene(godotObject: GodotHandle) : Resource(godotObject), AutoCloseab
       D.PACKEDSCENE_GET_STATE,
       requireOpenHandle(),
     )?.let { SceneState(it.toWebId()) }
-
-  /** Releases the owned handle (already-released is an error). */
-  override fun close() {
-    releaseWebResource(handle.value)
-  }
 
   value class GenEditState(override val value: Long) : GodotEnumValue {
     companion object {

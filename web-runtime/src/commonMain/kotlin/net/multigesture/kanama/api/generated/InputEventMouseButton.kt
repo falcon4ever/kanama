@@ -8,7 +8,7 @@ import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class InputEventMouseButton(godotObject: GodotHandle) : InputEventMouse(godotObject), AutoCloseable {
+class InputEventMouseButton(godotObject: GodotHandle) : InputEventMouse(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun getButtonIndex(): MouseButton =
     GodotBackendCalls.invokeNoArgsRetLong(
@@ -27,11 +27,6 @@ class InputEventMouseButton(godotObject: GodotHandle) : InputEventMouse(godotObj
   var buttonIndex: MouseButton
     get() = getButtonIndex()
     set(newValue) = setButtonIndex(newValue)
-
-  /** Releases the owned handle (already-released is an error). */
-  override fun close() {
-    releaseWebConstructedObject(handle.value)
-  }
 
   companion object {
     /** Constructs a new InputEventMouseButton engine-side; the wrapper owns the handle (close what you create). */

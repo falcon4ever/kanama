@@ -6,13 +6,8 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class ButtonGroup(godotObject: GodotHandle) : Resource(godotObject), AutoCloseable {
+class ButtonGroup(godotObject: GodotHandle) : Resource(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
-  /** Releases the owned handle (already-released is an error). */
-  override fun close() {
-    releaseWebConstructedObject(handle.value)
-  }
-
   /** Signal `pressed`; see [TypedSignal]. */
   val pressed: Signal1<BaseButton>
     get() = Signal1(this, "pressed", SignalArgType.objectOf("BaseButton") { BaseButton(it) })
