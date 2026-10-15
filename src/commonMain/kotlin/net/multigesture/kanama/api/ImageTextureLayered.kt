@@ -23,7 +23,9 @@ open class ImageTextureLayered(handle: GodotHandle) : TextureLayered(handle) {
      */
     fun createFromImages(images: List<Image>): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectListArgRetLong(Binds.createFromImagesBind, segment, images))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectListArgRetLong(Binds.createFromImagesBind, segment, images))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -37,6 +39,8 @@ open class ImageTextureLayered(handle: GodotHandle) : TextureLayered(handle) {
     fun updateLayer(image: Image?, layer: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectAndIntArg(Binds.updateLayerBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, layer)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(image)
     }
 
     companion object {

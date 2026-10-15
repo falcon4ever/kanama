@@ -34,7 +34,9 @@ class ENetMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun createServer(port: Int, maxClients: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithFiveIntArgsRetLong(Binds.createServerBind, segment, port, maxClients, maxChannels, inBandwidth, outBandwidth))
+        val ret = GodotError(ObjectCalls.ptrcallWithFiveIntArgsRetLong(Binds.createServerBind, segment, port, maxClients, maxChannels, inBandwidth, outBandwidth))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -57,7 +59,9 @@ class ENetMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun createClient(address: String, port: Int, channelCount: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0, localPort: Int = 0): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(Binds.createClientBind, segment, address, port, channelCount, inBandwidth, outBandwidth, localPort))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(Binds.createClientBind, segment, address, port, channelCount, inBandwidth, outBandwidth, localPort))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -72,7 +76,9 @@ class ENetMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun createMesh(uniqueId: Int): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntArgRetLong(Binds.createMeshBind, segment, uniqueId))
+        val ret = GodotError(ObjectCalls.ptrcallWithIntArgRetLong(Binds.createMeshBind, segment, uniqueId))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -83,7 +89,10 @@ class ENetMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun addMeshPeer(peerId: Int, host: ENetConnection?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntAndObjectArgRetLong(Binds.addMeshPeerBind, segment, peerId, host?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithIntAndObjectArgRetLong(Binds.addMeshPeerBind, segment, peerId, host?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(host)
+        return ret
     }
 
     /**
@@ -96,6 +105,7 @@ class ENetMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     fun setBindIp(ip: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setBindIpBind, segment, ip)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -105,7 +115,9 @@ class ENetMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun getHost(): ENetConnection? {
         checkOpen()
-        return ENetConnection.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getHostBind, segment))
+        val ret = ENetConnection.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getHostBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,7 +127,9 @@ class ENetMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      */
     fun getPeer(id: Int): ENetPacketPeer? {
         checkOpen()
-        return ENetPacketPeer.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getPeerBind, segment, id))
+        val ret = ENetPacketPeer.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getPeerBind, segment, id))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

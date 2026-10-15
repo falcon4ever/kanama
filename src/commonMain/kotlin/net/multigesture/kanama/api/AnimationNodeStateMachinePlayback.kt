@@ -23,6 +23,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
     fun travel(toNode: String, resetOnTeleport: Boolean = true) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(Binds.travelBind, segment, toNode, resetOnTeleport)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -34,6 +35,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
     fun start(node: String, reset: Boolean = true) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(Binds.startBind, segment, node, reset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -45,6 +47,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
     fun next() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.nextBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -55,6 +58,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
     fun stop() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -64,7 +68,9 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun isPlaying(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPlayingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isPlayingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -75,7 +81,9 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getCurrentNode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getCurrentNodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getCurrentNodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -85,7 +93,9 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getCurrentPlayPosition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCurrentPlayPositionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCurrentPlayPositionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -98,7 +108,9 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getCurrentLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCurrentLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCurrentLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -108,7 +120,9 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getFadingFromNode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getFadingFromNodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getFadingFromNodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -119,7 +133,9 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getFadingFromPlayPosition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadingFromPlayPositionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadingFromPlayPositionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -130,7 +146,9 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getFadingFromLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadingFromLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadingFromLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -141,7 +159,9 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getFadingPosition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadingPositionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadingPositionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -151,7 +171,9 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getFadingLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadingLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadingLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -161,7 +183,9 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getTravelPath(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getTravelPathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getTravelPathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `state_started(state: StringName)`; see [TypedSignal]. */

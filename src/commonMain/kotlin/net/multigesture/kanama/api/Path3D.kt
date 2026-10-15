@@ -33,6 +33,7 @@ class Path3D(handle: GodotHandle) : Node3D(handle) {
      */
     fun setCurve(curve: Curve3D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(curve)
     }
 
     /**

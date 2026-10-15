@@ -27,7 +27,9 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun open(path: String, append: ZIPPacker.ZipAppend = ZIPPacker.ZipAppend.CREATE): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndLongArgRetLong(Binds.openBind, segment, path, append.value))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndLongArgRetLong(Binds.openBind, segment, path, append.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -39,6 +41,7 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
     fun setCompressionLevel(compressionLevel: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setCompressionLevelBind, segment, compressionLevel)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -49,7 +52,9 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCompressionLevel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCompressionLevelBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCompressionLevelBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,7 +66,9 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addDirectory(path: String, permissions: FileAccess.UnixPermissionFlags = FileAccess.UnixPermissionFlags(493L), modifiedTime: Long = 0L): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(Binds.addDirectoryBind, segment, path, permissions.value, modifiedTime))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(Binds.addDirectoryBind, segment, path, permissions.value, modifiedTime))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -72,7 +79,9 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun startFile(path: String, permissions: FileAccess.UnixPermissionFlags = FileAccess.UnixPermissionFlags(420L), modifiedTime: Long = 0L): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(Binds.startFileBind, segment, path, permissions.value, modifiedTime))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(Binds.startFileBind, segment, path, permissions.value, modifiedTime))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -82,7 +91,9 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun writeFile(data: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.writeFileBind, segment, data))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.writeFileBind, segment, data))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,7 +103,9 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun closeFile(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.closeFileBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.closeFileBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -102,7 +115,9 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun closeArchive(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.closeArchiveBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.closeArchiveBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

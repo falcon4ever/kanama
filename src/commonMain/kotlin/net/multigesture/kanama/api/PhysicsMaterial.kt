@@ -44,6 +44,7 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
     fun setFriction(friction: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFrictionBind, segment, friction)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -53,7 +54,9 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
      */
     fun getFriction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrictionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrictionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -67,6 +70,7 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
     fun setRough(rough: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setRoughBind, segment, rough)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -79,7 +83,9 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
      */
     fun isRough(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRoughBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isRoughBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,6 +100,7 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
     fun setBounce(bounce: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBounceBind, segment, bounce)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -107,7 +114,9 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
      */
     fun getBounce(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBounceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBounceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -118,6 +127,7 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
     fun setAbsorbent(absorbent: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAbsorbentBind, segment, absorbent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -127,7 +137,9 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
      */
     fun isAbsorbent(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAbsorbentBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAbsorbentBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

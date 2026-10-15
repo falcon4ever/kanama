@@ -39,6 +39,7 @@ open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(han
     fun setParameterName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setParameterNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -48,7 +49,9 @@ open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(han
      */
     fun getParameterName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getParameterNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getParameterNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +62,7 @@ open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(han
     fun setQualifier(qualifier: VisualShaderNodeParameter.Qualifier) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setQualifierBind, segment, qualifier.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +72,9 @@ open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(han
      */
     fun getQualifier(): VisualShaderNodeParameter.Qualifier {
         checkOpen()
-        return VisualShaderNodeParameter.Qualifier(ObjectCalls.ptrcallNoArgsRetLong(Binds.getQualifierBind, segment))
+        val ret = VisualShaderNodeParameter.Qualifier(ObjectCalls.ptrcallNoArgsRetLong(Binds.getQualifierBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,6 +86,7 @@ open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(han
     fun setInstanceIndex(instanceIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setInstanceIndexBind, segment, instanceIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -90,7 +97,9 @@ open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(han
      */
     fun getInstanceIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInstanceIndexBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getInstanceIndexBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

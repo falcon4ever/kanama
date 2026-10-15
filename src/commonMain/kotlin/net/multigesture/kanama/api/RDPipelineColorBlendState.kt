@@ -45,6 +45,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
     fun setEnableLogicOp(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnableLogicOpBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -54,7 +55,9 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableLogicOp(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableLogicOpBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableLogicOpBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -65,6 +68,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
     fun setLogicOp(pMember: RenderingDevice.LogicOperation) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setLogicOpBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -74,7 +78,9 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLogicOp(): RenderingDevice.LogicOperation {
         checkOpen()
-        return RenderingDevice.LogicOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLogicOpBind, segment))
+        val ret = RenderingDevice.LogicOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLogicOpBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -85,6 +91,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
     fun setBlendConstant(pMember: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setBlendConstantBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -94,7 +101,9 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBlendConstant(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getBlendConstantBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getBlendConstantBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -105,6 +114,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
     fun setAttachments(attachments: List<RDPipelineColorBlendStateAttachment>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setAttachmentsBind, segment, attachments)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -114,7 +124,9 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAttachments(): List<RDPipelineColorBlendStateAttachment> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getAttachmentsBind, segment, RDPipelineColorBlendStateAttachment::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getAttachmentsBind, segment, RDPipelineColorBlendStateAttachment::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

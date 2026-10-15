@@ -553,6 +553,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setCustomViewport(viewport: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCustomViewportBind, segment, listOf(viewport.segment))
+        ObjectCalls.keepReachable(viewport)
     }
 
     /**

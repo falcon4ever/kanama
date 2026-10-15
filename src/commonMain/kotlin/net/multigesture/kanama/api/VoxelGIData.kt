@@ -67,6 +67,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
     fun allocate(toCellXform: Transform3D, aabb: AABB, octreeSize: Vector3, octreeCells: ByteArray, dataCells: ByteArray, distanceField: ByteArray, levelCounts: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform3DAABBVector3ThreeByteArrayPackedInt32ListArgs(Binds.allocateBind, segment, toCellXform, aabb, octreeSize, octreeCells, dataCells, distanceField, levelCounts)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -79,7 +80,9 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getBounds(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getBoundsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetAABB(Binds.getBoundsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,7 +95,9 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getOctreeSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getOctreeSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getOctreeSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -102,7 +107,9 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getToCellXform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getToCellXformBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getToCellXformBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -112,7 +119,9 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getOctreeCells(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getOctreeCellsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getOctreeCellsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -122,7 +131,9 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getDataCells(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataCellsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataCellsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -132,7 +143,9 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getLevelCounts(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getLevelCountsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getLevelCountsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -146,6 +159,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
     fun setDynamicRange(dynamicRange: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDynamicRangeBind, segment, dynamicRange)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -158,7 +172,9 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getDynamicRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDynamicRangeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDynamicRangeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -172,6 +188,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
     fun setEnergy(energy: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEnergyBind, segment, energy)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -184,7 +201,9 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnergyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnergyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -198,6 +217,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
     fun setBias(bias: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBiasBind, segment, bias)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -210,7 +230,9 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBiasBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBiasBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -224,6 +246,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
     fun setNormalBias(bias: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setNormalBiasBind, segment, bias)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -236,7 +259,9 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getNormalBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNormalBiasBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNormalBiasBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -250,6 +275,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
     fun setPropagation(propagation: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPropagationBind, segment, propagation)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -262,7 +288,9 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getPropagation(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPropagationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPropagationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -275,6 +303,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
     fun setInterior(interior: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setInteriorBind, segment, interior)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -286,7 +315,9 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun isInterior(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInteriorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isInteriorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -300,6 +331,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
     fun setUseTwoBounces(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseTwoBouncesBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -312,7 +344,9 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun isUsingTwoBounces(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingTwoBouncesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingTwoBouncesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -101,6 +101,7 @@ object ThemeDB {
     @JvmStatic
     fun setFallbackFont(font: Font?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setFallbackFontBind, singleton, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -145,6 +146,7 @@ object ThemeDB {
     @JvmStatic
     fun setFallbackIcon(icon: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setFallbackIconBind, singleton, listOf(icon?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -167,6 +169,7 @@ object ThemeDB {
     @JvmStatic
     fun setFallbackStylebox(stylebox: StyleBox?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setFallbackStyleboxBind, singleton, listOf(stylebox?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(stylebox)
     }
 
     /**

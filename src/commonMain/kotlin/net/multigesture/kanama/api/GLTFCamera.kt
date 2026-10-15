@@ -50,7 +50,9 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
      */
     fun toNode(): Camera3D? {
         checkOpen()
-        return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.toNodeBind, segment))
+        val ret = Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.toNodeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -60,7 +62,9 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
      */
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -72,7 +76,9 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
      */
     fun getPerspective(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPerspectiveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getPerspectiveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -85,6 +91,7 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
     fun setPerspective(perspective: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPerspectiveBind, segment, perspective)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -96,7 +103,9 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
      */
     fun getFov(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFovBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFovBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -109,6 +118,7 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
     fun setFov(fov: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFovBind, segment, fov)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -120,7 +130,9 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
      */
     fun getSizeMag(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSizeMagBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSizeMagBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -133,6 +145,7 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
     fun setSizeMag(sizeMag: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSizeMagBind, segment, sizeMag)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -143,7 +156,9 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
      */
     fun getDepthFar(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthFarBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthFarBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -155,6 +170,7 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
     fun setDepthFar(zdepthFar: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthFarBind, segment, zdepthFar)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -165,7 +181,9 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
      */
     fun getDepthNear(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthNearBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthNearBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -177,6 +195,7 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
     fun setDepthNear(zdepthNear: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthNearBind, segment, zdepthNear)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {
@@ -186,7 +205,9 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: GLTFCamera.from_node
          */
         fun fromNode(cameraNode: Camera3D): GLTFCamera? {
-            return GLTFCamera.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, cameraNode.segment))
+            val ret = GLTFCamera.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, cameraNode.segment))
+            ObjectCalls.keepReachable(cameraNode)
+            return ret
         }
 
         /**

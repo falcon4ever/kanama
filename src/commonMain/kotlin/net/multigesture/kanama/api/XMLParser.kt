@@ -19,7 +19,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun read(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.readBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.readBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -29,7 +31,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeType(): XMLParser.NodeType {
         checkOpen()
-        return XMLParser.NodeType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getNodeTypeBind, segment))
+        val ret = XMLParser.NodeType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getNodeTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -41,7 +45,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getNodeNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getNodeNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -52,7 +58,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeData(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getNodeDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getNodeDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -63,7 +71,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getNodeOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getNodeOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -75,7 +85,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAttributeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getAttributeCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getAttributeCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -85,7 +97,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAttributeName(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getAttributeNameBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getAttributeNameBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -95,7 +109,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAttributeValue(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getAttributeValueBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getAttributeValueBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -105,7 +121,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasAttribute(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasAttributeBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasAttributeBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -116,7 +134,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNamedAttributeValue(name: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(Binds.getNamedAttributeValueBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetString(Binds.getNamedAttributeValueBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -127,7 +147,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNamedAttributeValueSafe(name: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(Binds.getNamedAttributeValueSafeBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetString(Binds.getNamedAttributeValueSafeBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -137,7 +159,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isEmpty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmptyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmptyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -147,7 +171,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCurrentLine(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentLineBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentLineBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -159,6 +185,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
     fun skipSection() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.skipSectionBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -169,7 +196,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun seek(position: Long): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongArgRetLong(Binds.seekBind, segment, position))
+        val ret = GodotError(ObjectCalls.ptrcallWithLongArgRetLong(Binds.seekBind, segment, position))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -179,7 +208,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun open(file: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.openBind, segment, file))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.openBind, segment, file))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -189,7 +220,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun openBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.openBufferBind, segment, buffer))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.openBufferBind, segment, buffer))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

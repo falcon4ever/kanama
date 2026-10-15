@@ -32,6 +32,7 @@ class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
     fun setButtonIndex(buttonIndex: JoyButton) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setButtonIndexBind, segment, buttonIndex.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -41,17 +42,22 @@ class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getButtonIndex(): JoyButton {
         checkOpen()
-        return JoyButton(ObjectCalls.ptrcallNoArgsRetLong(Binds.getButtonIndexBind, segment))
+        val ret = JoyButton(ObjectCalls.ptrcallNoArgsRetLong(Binds.getButtonIndexBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setPressure(pressure: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPressureBind, segment, pressure)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getPressure(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPressureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPressureBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,6 +68,7 @@ class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
     fun setPressed(pressed: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPressedBind, segment, pressed)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

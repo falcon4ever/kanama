@@ -211,6 +211,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun addUsedExtension(extensionName: String, required: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndBoolArg(Binds.addUsedExtensionBind, segment, extensionName, required)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -222,7 +223,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun appendDataToBuffers(data: ByteArray, deduplication: Boolean): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayAndBoolArgRetInt(Binds.appendDataToBuffersBind, segment, data, deduplication)
+        val ret = ObjectCalls.ptrcallWithByteArrayAndBoolArgRetInt(Binds.appendDataToBuffersBind, segment, data, deduplication)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -242,7 +245,11 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun appendGltfNode(gltfNode: GLTFNode?, godotSceneNode: Node, parentNodeIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoObjectIntArgsRetInt(Binds.appendGltfNodeBind, segment, gltfNode?.requireOpenHandle() ?: NULL_SEGMENT, godotSceneNode.segment, parentNodeIndex)
+        val ret = ObjectCalls.ptrcallWithTwoObjectIntArgsRetInt(Binds.appendGltfNodeBind, segment, gltfNode?.requireOpenHandle() ?: NULL_SEGMENT, godotSceneNode.segment, parentNodeIndex)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(gltfNode)
+        ObjectCalls.keepReachable(godotSceneNode)
+        return ret
     }
 
     /**
@@ -252,7 +259,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getJson(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getJsonBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getJsonBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -263,26 +272,33 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setJson(json: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setJsonBind, segment, json)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getMajorVersion(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMajorVersionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMajorVersionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setMajorVersion(majorVersion: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMajorVersionBind, segment, majorVersion)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getMinorVersion(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinorVersionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinorVersionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setMinorVersion(minorVersion: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMinorVersionBind, segment, minorVersion)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -293,7 +309,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getCopyright(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCopyrightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getCopyrightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -305,6 +323,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setCopyright(copyright: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setCopyrightBind, segment, copyright)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -314,7 +333,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlbData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getGlbDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getGlbDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -325,16 +346,20 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setGlbData(glbData: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithByteArrayArg(Binds.setGlbDataBind, segment, glbData)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getUseNamedSkinBinds(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseNamedSkinBindsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseNamedSkinBindsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setUseNamedSkinBinds(useNamedSkinBinds: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseNamedSkinBindsBind, segment, useNamedSkinBinds)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -346,7 +371,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getNodes(): List<GLTFNode> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getNodesBind, segment, GLTFNode::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getNodesBind, segment, GLTFNode::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -359,36 +386,46 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setNodes(nodes: List<GLTFNode>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setNodesBind, segment, nodes)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getBuffers(): List<ByteArray> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArrayList(Binds.getBuffersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArrayList(Binds.getBuffersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setBuffers(buffers: List<ByteArray>) {
         checkOpen()
         ObjectCalls.ptrcallWithByteArrayListArg(Binds.setBuffersBind, segment, buffers)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getBufferViews(): List<GLTFBufferView> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getBufferViewsBind, segment, GLTFBufferView::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getBufferViewsBind, segment, GLTFBufferView::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setBufferViews(bufferViews: List<GLTFBufferView>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setBufferViewsBind, segment, bufferViews)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getAccessors(): List<GLTFAccessor> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getAccessorsBind, segment, GLTFAccessor::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getAccessorsBind, segment, GLTFAccessor::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setAccessors(accessors: List<GLTFAccessor>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setAccessorsBind, segment, accessors)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -399,7 +436,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getMeshes(): List<GLTFMesh> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getMeshesBind, segment, GLTFMesh::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getMeshesBind, segment, GLTFMesh::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -411,6 +450,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setMeshes(meshes: List<GLTFMesh>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setMeshesBind, segment, meshes)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -421,7 +461,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationPlayersCount(animPlayerIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getAnimationPlayersCountBind, segment, animPlayerIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getAnimationPlayersCountBind, segment, animPlayerIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -432,17 +474,22 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationPlayer(animPlayerIndex: Int): AnimationPlayer? {
         checkOpen()
-        return AnimationPlayer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getAnimationPlayerBind, segment, animPlayerIndex))
+        val ret = AnimationPlayer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getAnimationPlayerBind, segment, animPlayerIndex))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun getMaterials(): List<Material> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getMaterialsBind, segment, Material::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getMaterialsBind, segment, Material::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setMaterials(materials: List<Material>) {
         checkOpen()
         ObjectCalls.ptrcallWithTypedMaterialListArg(Binds.setMaterialsBind, segment, materials)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -453,7 +500,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getSceneName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSceneNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getSceneNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -465,6 +514,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setSceneName(sceneName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setSceneNameBind, segment, sceneName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -476,7 +526,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getBasePath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getBasePathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getBasePathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -489,6 +541,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setBasePath(basePath: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setBasePathBind, segment, basePath)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -501,7 +554,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getFilename(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getFilenameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getFilenameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -515,6 +570,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setFilename(filename: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setFilenameBind, segment, filename)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -527,7 +583,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getRootNodes(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getRootNodesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getRootNodesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -541,16 +599,20 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setRootNodes(rootNodes: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setRootNodesBind, segment, rootNodes)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getTextures(): List<GLTFTexture> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getTexturesBind, segment, GLTFTexture::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getTexturesBind, segment, GLTFTexture::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setTextures(textures: List<GLTFTexture>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setTexturesBind, segment, textures)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -560,7 +622,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getTextureSamplers(): List<GLTFTextureSampler> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getTextureSamplersBind, segment, GLTFTextureSampler::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getTextureSamplersBind, segment, GLTFTextureSampler::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -571,6 +635,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setTextureSamplers(textureSamplers: List<GLTFTextureSampler>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setTextureSamplersBind, segment, textureSamplers)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -581,7 +646,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getImages(): List<Texture2D> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getImagesBind, segment, Texture2D::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getImagesBind, segment, Texture2D::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -593,6 +660,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setImages(images: List<Texture2D>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setImagesBind, segment, images)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -603,7 +671,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getSkins(): List<GLTFSkin> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getSkinsBind, segment, GLTFSkin::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getSkinsBind, segment, GLTFSkin::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -614,6 +684,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setSkins(skins: List<GLTFSkin>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setSkinsBind, segment, skins)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -624,7 +695,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getCameras(): List<GLTFCamera> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getCamerasBind, segment, GLTFCamera::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getCamerasBind, segment, GLTFCamera::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -636,6 +709,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setCameras(cameras: List<GLTFCamera>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setCamerasBind, segment, cameras)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -646,7 +720,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getLights(): List<GLTFLight> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getLightsBind, segment, GLTFLight::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getLightsBind, segment, GLTFLight::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -658,6 +734,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setLights(lights: List<GLTFLight>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setLightsBind, segment, lights)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -668,7 +745,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getUniqueNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedStringList(Binds.getUniqueNamesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedStringList(Binds.getUniqueNamesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -680,6 +759,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setUniqueNames(uniqueNames: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithTypedStringListArg(Binds.setUniqueNamesBind, segment, uniqueNames)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -689,7 +769,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getUniqueAnimationNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedStringList(Binds.getUniqueAnimationNamesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedStringList(Binds.getUniqueAnimationNamesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -700,6 +782,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setUniqueAnimationNames(uniqueAnimationNames: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithTypedStringListArg(Binds.setUniqueAnimationNamesBind, segment, uniqueAnimationNames)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -710,7 +793,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getSkeletons(): List<GLTFSkeleton> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getSkeletonsBind, segment, GLTFSkeleton::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getSkeletonsBind, segment, GLTFSkeleton::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -722,16 +807,20 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setSkeletons(skeletons: List<GLTFSkeleton>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setSkeletonsBind, segment, skeletons)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getCreateAnimations(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getCreateAnimationsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getCreateAnimationsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setCreateAnimations(createAnimations: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCreateAnimationsBind, segment, createAnimations)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -741,7 +830,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getImportAsSkeletonBones(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getImportAsSkeletonBonesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getImportAsSkeletonBonesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -752,6 +843,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setImportAsSkeletonBones(importAsSkeletonBones: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setImportAsSkeletonBonesBind, segment, importAsSkeletonBones)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -763,7 +855,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimations(): List<GLTFAnimation> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getAnimationsBind, segment, GLTFAnimation::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getAnimationsBind, segment, GLTFAnimation::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -776,6 +870,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setAnimations(animations: List<GLTFAnimation>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setAnimationsBind, segment, animations)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -789,7 +884,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getSceneNode(gltfNodeIndex: Int): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSceneNodeBind, segment, gltfNodeIndex))
+        val ret = Node.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSceneNodeBind, segment, gltfNodeIndex))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -802,7 +899,10 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getNodeIndex(sceneNode: Node): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetInt(Binds.getNodeIndexBind, segment, sceneNode.segment)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetInt(Binds.getNodeIndexBind, segment, sceneNode.segment)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(sceneNode)
+        return ret
     }
 
     /**
@@ -816,7 +916,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -830,6 +932,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setAdditionalDataBind, segment, extensionName, additionalData)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -845,7 +948,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getHandleBinaryImageMode(): GLTFState.HandleBinaryImageMode {
         checkOpen()
-        return GLTFState.HandleBinaryImageMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHandleBinaryImageModeBind, segment))
+        val ret = GLTFState.HandleBinaryImageMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHandleBinaryImageModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -862,6 +967,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setHandleBinaryImageMode(method: GLTFState.HandleBinaryImageMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setHandleBinaryImageModeBind, segment, method.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -872,6 +978,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setBakeFps(value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBakeFpsBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -881,7 +988,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakeFps(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakeFpsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakeFpsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -893,7 +1002,9 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
      */
     fun getHandleBinaryImage(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHandleBinaryImageBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getHandleBinaryImageBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -906,6 +1017,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     fun setHandleBinaryImage(method: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setHandleBinaryImageBind, segment, method)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

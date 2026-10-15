@@ -19,7 +19,9 @@ class OpenXRSpatialComponentParentList(handle: GodotHandle) : OpenXRSpatialCompo
      */
     fun getParent(index: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetRID(Binds.getParentBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithLongArgRetRID(Binds.getParentBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

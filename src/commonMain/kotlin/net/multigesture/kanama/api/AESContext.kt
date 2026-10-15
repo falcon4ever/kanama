@@ -21,7 +21,9 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun start(mode: AESContext.Mode, key: ByteArray, iv: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetLong(Binds.startBind, segment, mode.value, key, iv))
+        val ret = GodotError(ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetLong(Binds.startBind, segment, mode.value, key, iv))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -33,7 +35,9 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun update(src: ByteArray): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetByteArray(Binds.updateBind, segment, src)
+        val ret = ObjectCalls.ptrcallWithByteArrayArgRetByteArray(Binds.updateBind, segment, src)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -45,7 +49,9 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIvState(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getIvStateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getIvStateBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -56,6 +62,7 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
     fun finish() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.finishBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

@@ -317,6 +317,7 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setProcessMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setProcessMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -575,6 +576,7 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -743,6 +745,7 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun convertFromParticles(particles: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.convertFromParticlesBind, segment, listOf(particles.segment))
+        ObjectCalls.keepReachable(particles)
     }
 
     /**

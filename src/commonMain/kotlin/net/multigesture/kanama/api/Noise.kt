@@ -20,7 +20,9 @@ open class Noise(handle: GodotHandle) : Resource(handle) {
      */
     fun getNoise1d(x: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetFloat(Binds.getNoise1dBind, segment, x)
+        val ret = ObjectCalls.ptrcallWithFloatArgRetFloat(Binds.getNoise1dBind, segment, x)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ open class Noise(handle: GodotHandle) : Resource(handle) {
      */
     fun getNoise2d(x: Double, y: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(Binds.getNoise2dBind, segment, x, y)
+        val ret = ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(Binds.getNoise2dBind, segment, x, y)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,7 +44,9 @@ open class Noise(handle: GodotHandle) : Resource(handle) {
      */
     fun getNoise2dv(v: Vector2): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetDouble(Binds.getNoise2dvBind, segment, v)
+        val ret = ObjectCalls.ptrcallWithVector2ArgRetDouble(Binds.getNoise2dvBind, segment, v)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -50,7 +56,9 @@ open class Noise(handle: GodotHandle) : Resource(handle) {
      */
     fun getNoise3d(x: Double, y: Double, z: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeDoubleArgsRetDouble(Binds.getNoise3dBind, segment, x, y, z)
+        val ret = ObjectCalls.ptrcallWithThreeDoubleArgsRetDouble(Binds.getNoise3dBind, segment, x, y, z)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -60,7 +68,9 @@ open class Noise(handle: GodotHandle) : Resource(handle) {
      */
     fun getNoise3dv(v: Vector3): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector3ArgRetDouble(Binds.getNoise3dvBind, segment, v)
+        val ret = ObjectCalls.ptrcallWithVector3ArgRetDouble(Binds.getNoise3dvBind, segment, v)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -72,7 +82,9 @@ open class Noise(handle: GodotHandle) : Resource(handle) {
      */
     fun getImage(width: Int, height: Int, invert: Boolean = false, in3dSpace: Boolean = false, normalize: Boolean = true): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(Binds.getImageBind, segment, width, height, invert, in3dSpace, normalize))
+        val ret = Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(Binds.getImageBind, segment, width, height, invert, in3dSpace, normalize))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -84,7 +96,9 @@ open class Noise(handle: GodotHandle) : Resource(handle) {
      */
     fun getSeamlessImage(width: Int, height: Int, invert: Boolean = false, in3dSpace: Boolean = false, skirt: Double = 0.1, normalize: Boolean = true): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject(Binds.getSeamlessImageBind, segment, width, height, invert, in3dSpace, skirt, normalize))
+        val ret = Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject(Binds.getSeamlessImageBind, segment, width, height, invert, in3dSpace, skirt, normalize))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -96,7 +110,9 @@ open class Noise(handle: GodotHandle) : Resource(handle) {
      */
     fun getImage3d(width: Int, height: Int, depth: Int, invert: Boolean = false, normalize: Boolean = true): List<Image> {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(Binds.getImage3dBind, segment, width, height, depth, invert, normalize, Image::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(Binds.getImage3dBind, segment, width, height, depth, invert, normalize, Image::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -108,7 +124,9 @@ open class Noise(handle: GodotHandle) : Resource(handle) {
      */
     fun getSeamlessImage3d(width: Int, height: Int, depth: Int, invert: Boolean = false, skirt: Double = 0.1, normalize: Boolean = true): List<Image> {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(Binds.getSeamlessImage3dBind, segment, width, height, depth, invert, skirt, normalize, Image::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(Binds.getSeamlessImage3dBind, segment, width, height, depth, invert, skirt, normalize, Image::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

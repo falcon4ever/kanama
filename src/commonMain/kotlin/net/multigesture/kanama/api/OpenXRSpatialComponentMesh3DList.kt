@@ -19,7 +19,9 @@ class OpenXRSpatialComponentMesh3DList(handle: GodotHandle) : OpenXRSpatialCompo
      */
     fun getTransform(index: Long): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getTransformBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getTransformBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -29,7 +31,9 @@ class OpenXRSpatialComponentMesh3DList(handle: GodotHandle) : OpenXRSpatialCompo
      */
     fun getMesh(index: Long): Mesh? {
         checkOpen()
-        return Mesh.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(Binds.getMeshBind, segment, index))
+        val ret = Mesh.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(Binds.getMeshBind, segment, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

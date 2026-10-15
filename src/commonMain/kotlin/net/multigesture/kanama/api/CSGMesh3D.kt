@@ -41,6 +41,7 @@ class CSGMesh3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
      */
     fun setMesh(mesh: Mesh?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(mesh)
     }
 
     /**
@@ -68,6 +69,7 @@ class CSGMesh3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
      */
     fun setMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(material)
     }
 
     /**

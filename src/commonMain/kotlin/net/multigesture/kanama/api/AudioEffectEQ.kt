@@ -21,6 +21,7 @@ open class AudioEffectEQ(handle: GodotHandle) : AudioEffect(handle) {
     fun setBandGainDb(bandIdx: Int, volumeDb: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setBandGainDbBind, segment, bandIdx, volumeDb)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -30,7 +31,9 @@ open class AudioEffectEQ(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getBandGainDb(bandIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getBandGainDbBind, segment, bandIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getBandGainDbBind, segment, bandIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,7 +43,9 @@ open class AudioEffectEQ(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getBandCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBandCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBandCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

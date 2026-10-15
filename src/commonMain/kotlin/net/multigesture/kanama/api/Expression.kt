@@ -20,7 +20,9 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
      */
     fun parse(expression: String, inputNames: List<String>): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(Binds.parseBind, segment, expression, inputNames))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(Binds.parseBind, segment, expression, inputNames))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -33,7 +35,10 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
      */
     fun execute(inputs: List<Any?> = emptyList(), baseInstance: GodotObject, showError: Boolean = true, constCallsOnly: Boolean = false): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(Binds.executeBind, segment, inputs, baseInstance.segment, showError, constCallsOnly)
+        val ret = ObjectCalls.ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(Binds.executeBind, segment, inputs, baseInstance.segment, showError, constCallsOnly)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(baseInstance)
+        return ret
     }
 
     /**
@@ -43,7 +48,9 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasExecuteFailed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasExecuteFailedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasExecuteFailedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,7 +60,9 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getErrorText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getErrorTextBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getErrorTextBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

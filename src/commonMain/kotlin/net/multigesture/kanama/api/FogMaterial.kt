@@ -62,6 +62,7 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
     fun setDensity(density: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDensityBind, segment, density)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -75,7 +76,9 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getDensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDensityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDensityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -88,6 +91,7 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
     fun setAlbedo(albedo: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setAlbedoBind, segment, albedo)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -99,7 +103,9 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getAlbedo(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getAlbedoBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getAlbedoBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -112,6 +118,7 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
     fun setEmission(emission: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setEmissionBind, segment, emission)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -123,7 +130,9 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmission(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getEmissionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getEmissionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -137,6 +146,7 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
     fun setHeightFalloff(heightFalloff: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightFalloffBind, segment, heightFalloff)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -149,7 +159,9 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getHeightFalloff(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightFalloffBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightFalloffBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -161,6 +173,7 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
     fun setEdgeFade(edgeFade: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEdgeFadeBind, segment, edgeFade)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -171,7 +184,9 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEdgeFade(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEdgeFadeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEdgeFadeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -185,6 +200,8 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
     fun setDensityTexture(densityTexture: Texture3D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setDensityTextureBind, segment, listOf(densityTexture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(densityTexture)
     }
 
     /**
@@ -197,7 +214,9 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getDensityTexture(): Texture3D? {
         checkOpen()
-        return Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDensityTextureBind, segment))
+        val ret = Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDensityTextureBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -58,6 +58,7 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
     fun setHint(hint: VisualShaderNodeFloatParameter.Hint) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setHintBind, segment, hint.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +69,9 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
      */
     fun getHint(): VisualShaderNodeFloatParameter.Hint {
         checkOpen()
-        return VisualShaderNodeFloatParameter.Hint(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintBind, segment))
+        val ret = VisualShaderNodeFloatParameter.Hint(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -79,6 +82,7 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
     fun setMin(value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMinBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -88,7 +92,9 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
      */
     fun getMin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -99,6 +105,7 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
     fun setMax(value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -108,7 +115,9 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
      */
     fun getMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -119,6 +128,7 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
     fun setStep(value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setStepBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -128,7 +138,9 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
      */
     fun getStep(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStepBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStepBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -139,6 +151,7 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -148,7 +161,9 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
      */
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -159,6 +174,7 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
     fun setDefaultValue(value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDefaultValueBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -168,7 +184,9 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
      */
     fun getDefaultValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDefaultValueBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDefaultValueBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

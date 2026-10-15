@@ -40,6 +40,8 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setMesh(mesh: Mesh?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(mesh)
     }
 
     /**
@@ -49,7 +51,9 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
+        val ret = Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -60,6 +64,7 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setImageSize(size: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setImageSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -69,7 +74,9 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getImageSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getImageSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getImageSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,6 +87,8 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setBaseTexture(texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setBaseTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -90,6 +99,7 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
     fun getBaseTexture(): Texture2D? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getBaseTextureBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this

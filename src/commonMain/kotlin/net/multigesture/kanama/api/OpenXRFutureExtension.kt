@@ -30,7 +30,9 @@ class OpenXRFutureExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle
      * Generated from Godot docs: OpenXRFutureExtension.register_future
      */
     fun registerFuture(future: Long, onSuccess: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithLongCallableArgsRetObject(Binds.registerFutureBind, segment, future, onSuccess.target.segment, onSuccess.method))
+        val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithLongCallableArgsRetObject(Binds.registerFutureBind, segment, future, onSuccess.target.segment, onSuccess.method))
+        ObjectCalls.keepReachable(onSuccess)
+        return ret
     }
 
     /**

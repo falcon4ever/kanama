@@ -26,7 +26,9 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun canGetBuffer(frames: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.canGetBufferBind, segment, frames)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.canGetBufferBind, segment, frames)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,7 +42,9 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getBuffer(frames: Int): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(Binds.getBufferBind, segment, frames)
+        val ret = ObjectCalls.ptrcallWithIntArgRetPackedVector2List(Binds.getBufferBind, segment, frames)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -52,6 +56,7 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
     fun clearBuffer() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBufferBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -64,6 +69,7 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
     fun setBufferLength(bufferLengthSeconds: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBufferLengthBind, segment, bufferLengthSeconds)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -75,7 +81,9 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getBufferLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBufferLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBufferLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -85,7 +93,9 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getFramesAvailable(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFramesAvailableBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFramesAvailableBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -95,7 +105,9 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDiscardedFrames(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getDiscardedFramesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getDiscardedFramesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -105,7 +117,9 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getBufferLengthFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferLengthFramesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferLengthFramesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,7 +129,9 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPushedFrames(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPushedFramesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getPushedFramesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

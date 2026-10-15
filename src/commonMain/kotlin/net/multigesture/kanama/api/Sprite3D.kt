@@ -65,6 +65,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      */
     fun setTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**

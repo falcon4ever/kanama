@@ -24,6 +24,8 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceBegin(primitive: Mesh.PrimitiveType, material: Material?) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndObjectArg(Binds.surfaceBeginBind, segment, primitive.value, material?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -34,6 +36,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceSetColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.surfaceSetColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -44,6 +47,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceSetNormal(normal: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.surfaceSetNormalBind, segment, normal)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -57,6 +61,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceSetTangent(tangent: Plane) {
         checkOpen()
         ObjectCalls.ptrcallWithPlaneArg(Binds.surfaceSetTangentBind, segment, tangent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -67,6 +72,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceSetUv(uv: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.surfaceSetUvBind, segment, uv)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -77,6 +83,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceSetUv2(uv2: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.surfaceSetUv2Bind, segment, uv2)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -87,6 +94,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceAddVertex(vertex: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.surfaceAddVertexBind, segment, vertex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -97,6 +105,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceAddVertex2d(vertex: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.surfaceAddVertex2dBind, segment, vertex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -108,6 +117,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
     fun surfaceEnd() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.surfaceEndBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -118,6 +128,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
     fun clearSurfaces() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearSurfacesBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

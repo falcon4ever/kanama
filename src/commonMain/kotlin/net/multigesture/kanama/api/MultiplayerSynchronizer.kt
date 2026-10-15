@@ -124,6 +124,7 @@ class MultiplayerSynchronizer(handle: GodotHandle) : Node(handle) {
      */
     fun setReplicationConfig(config: SceneReplicationConfig?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setReplicationConfigBind, segment, listOf(config?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(config)
     }
 
     /**
@@ -191,6 +192,7 @@ class MultiplayerSynchronizer(handle: GodotHandle) : Node(handle) {
      */
     fun addVisibilityFilter(filter: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(Binds.addVisibilityFilterBind, segment, filter.target.segment, filter.method)
+        ObjectCalls.keepReachable(filter)
     }
 
     /**
@@ -200,6 +202,7 @@ class MultiplayerSynchronizer(handle: GodotHandle) : Node(handle) {
      */
     fun removeVisibilityFilter(filter: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(Binds.removeVisibilityFilterBind, segment, filter.target.segment, filter.method)
+        ObjectCalls.keepReachable(filter)
     }
 
     /**

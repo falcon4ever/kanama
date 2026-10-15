@@ -20,6 +20,7 @@ class CallbackTweener(handle: GodotHandle) : Tweener(handle) {
     fun setDelay(delay: Double): CallbackTweener {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.setDelayBind, segment, delay)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this

@@ -39,6 +39,8 @@ class PacketPeerStream(handle: GodotHandle) : PacketPeer(handle) {
     fun setStreamPeer(peer: StreamPeer?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setStreamPeerBind, segment, listOf(peer?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(peer)
     }
 
     /**
@@ -48,27 +50,35 @@ class PacketPeerStream(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getStreamPeer(): StreamPeer? {
         checkOpen()
-        return StreamPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getStreamPeerBind, segment))
+        val ret = StreamPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getStreamPeerBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setInputBufferMaxSize(maxSizeBytes: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setInputBufferMaxSizeBind, segment, maxSizeBytes)
+        ObjectCalls.keepReachable(this)
     }
 
     fun setOutputBufferMaxSize(maxSizeBytes: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setOutputBufferMaxSizeBind, segment, maxSizeBytes)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getInputBufferMaxSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInputBufferMaxSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getInputBufferMaxSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun getOutputBufferMaxSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutputBufferMaxSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutputBufferMaxSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -75,6 +75,8 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
     fun setActionSet(actionSet: OpenXRActionSet?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(actionSet)
     }
 
     /**
@@ -84,7 +86,9 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
      */
     fun getActionSet(): OpenXRActionSet? {
         checkOpen()
-        return OpenXRActionSet.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getActionSetBind, segment))
+        val ret = OpenXRActionSet.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getActionSetBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -95,6 +99,7 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
     fun setInputPath(inputPath: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setInputPathBind, segment, inputPath)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -104,7 +109,9 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
      */
     fun getInputPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getInputPathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getInputPathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -116,6 +123,7 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
     fun setThreshold(threshold: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setThresholdBind, segment, threshold)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -126,7 +134,9 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
      */
     fun getThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThresholdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThresholdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -137,6 +147,7 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
     fun setThresholdReleased(thresholdReleased: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setThresholdReleasedBind, segment, thresholdReleased)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -146,7 +157,9 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
      */
     fun getThresholdReleased(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThresholdReleasedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThresholdReleasedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -157,6 +170,7 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
     fun setCenterRegion(centerRegion: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCenterRegionBind, segment, centerRegion)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -166,7 +180,9 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
      */
     fun getCenterRegion(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCenterRegionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCenterRegionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -177,6 +193,7 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
     fun setWedgeAngle(wedgeAngle: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setWedgeAngleBind, segment, wedgeAngle)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -186,7 +203,9 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
      */
     fun getWedgeAngle(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWedgeAngleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWedgeAngleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -198,6 +217,7 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
     fun setIsSticky(isSticky: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setIsStickyBind, segment, isSticky)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -208,7 +228,9 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
      */
     fun getIsSticky(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsStickyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsStickyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -219,6 +241,8 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
     fun setOnHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setOnHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(haptic)
     }
 
     /**
@@ -228,7 +252,9 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
      */
     fun getOnHaptic(): OpenXRHapticBase? {
         checkOpen()
-        return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOnHapticBind, segment))
+        val ret = OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOnHapticBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -239,6 +265,8 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
     fun setOffHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setOffHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(haptic)
     }
 
     /**
@@ -248,7 +276,9 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
      */
     fun getOffHaptic(): OpenXRHapticBase? {
         checkOpen()
-        return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOffHapticBind, segment))
+        val ret = OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOffHapticBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

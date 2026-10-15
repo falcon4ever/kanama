@@ -32,6 +32,7 @@ class VisualShaderNodeUIntParameter(handle: GodotHandle) : VisualShaderNodeParam
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -41,7 +42,9 @@ class VisualShaderNodeUIntParameter(handle: GodotHandle) : VisualShaderNodeParam
      */
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +56,7 @@ class VisualShaderNodeUIntParameter(handle: GodotHandle) : VisualShaderNodeParam
     fun setDefaultValue(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setDefaultValueBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -63,7 +67,9 @@ class VisualShaderNodeUIntParameter(handle: GodotHandle) : VisualShaderNodeParam
      */
     fun getDefaultValue(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDefaultValueBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getDefaultValueBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

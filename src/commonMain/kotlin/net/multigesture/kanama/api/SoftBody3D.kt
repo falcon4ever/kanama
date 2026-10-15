@@ -241,6 +241,7 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
      */
     fun addCollisionExceptionWith(body: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addCollisionExceptionWithBind, segment, listOf(body.segment))
+        ObjectCalls.keepReachable(body)
     }
 
     /**
@@ -250,6 +251,7 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
      */
     fun removeCollisionExceptionWith(body: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeCollisionExceptionWithBind, segment, listOf(body.segment))
+        ObjectCalls.keepReachable(body)
     }
 
     /**

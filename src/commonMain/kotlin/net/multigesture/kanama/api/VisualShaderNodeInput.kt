@@ -27,6 +27,7 @@ class VisualShaderNodeInput(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setInputName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setInputNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ class VisualShaderNodeInput(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getInputName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getInputNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getInputNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -48,7 +51,9 @@ class VisualShaderNodeInput(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getInputRealName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getInputRealNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getInputRealNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `input_type_changed()`; see [TypedSignal]. */

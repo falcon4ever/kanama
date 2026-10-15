@@ -37,6 +37,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
     fun setSeed(seed: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSeedBind, segment, seed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -51,7 +52,9 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSeed(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSeedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getSeedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,6 +65,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
     fun setState(state: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setStateBind, segment, state)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -71,7 +75,9 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getState(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getStateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getStateBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -81,7 +87,9 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun randi(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.randiBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.randiBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -91,7 +99,9 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun randf(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.randfBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.randfBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -104,7 +114,9 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun randfn(mean: Double = 0.0, deviation: Double = 1.0): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(Binds.randfnBind, segment, mean, deviation)
+        val ret = ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(Binds.randfnBind, segment, mean, deviation)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -114,7 +126,9 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun randfRange(from: Double, to: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(Binds.randfRangeBind, segment, from, to)
+        val ret = ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(Binds.randfRangeBind, segment, from, to)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -124,7 +138,9 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun randiRange(from: Int, to: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.randiRangeBind, segment, from, to)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.randiRangeBind, segment, from, to)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -141,7 +157,9 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun randWeighted(weights: List<Float>): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithPackedFloat32ListArgRetLong(Binds.randWeightedBind, segment, weights)
+        val ret = ObjectCalls.ptrcallWithPackedFloat32ListArgRetLong(Binds.randWeightedBind, segment, weights)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -154,6 +172,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
     fun randomize() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.randomizeBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

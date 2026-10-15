@@ -20,7 +20,10 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun addAnimation(name: String, animation: Animation?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(Binds.addAnimationBind, segment, name, animation?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(Binds.addAnimationBind, segment, name, animation?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(animation)
+        return ret
     }
 
     /**
@@ -31,6 +34,7 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
     fun removeAnimation(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.removeAnimationBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -41,6 +45,7 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
     fun renameAnimation(name: String, newname: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.renameAnimationBind, segment, name, newname)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -50,7 +55,9 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun hasAnimation(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasAnimationBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasAnimationBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,7 +68,9 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimation(name: String): Animation? {
         checkOpen()
-        return Animation.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getAnimationBind, segment, name))
+        val ret = Animation.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getAnimationBind, segment, name))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -71,7 +80,9 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getAnimationListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getAnimationListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -81,7 +92,9 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationListSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getAnimationListSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getAnimationListSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `animation_added(anim_name: StringName)`; see [TypedSignal]. */

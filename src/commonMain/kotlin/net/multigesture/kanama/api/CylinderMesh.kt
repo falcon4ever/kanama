@@ -63,6 +63,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setTopRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTopRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -73,7 +74,9 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getTopRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTopRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTopRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -85,6 +88,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setBottomRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBottomRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -95,7 +99,9 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getBottomRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBottomRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBottomRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -106,6 +112,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setHeight(height: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightBind, segment, height)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -115,7 +122,9 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -127,6 +136,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setRadialSegments(segments: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setRadialSegmentsBind, segment, segments)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -137,7 +147,9 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRadialSegments(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRadialSegmentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getRadialSegmentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -152,6 +164,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setRings(rings: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setRingsBind, segment, rings)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -165,7 +178,9 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRings(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -178,6 +193,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setCapTop(capTop: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCapTopBind, segment, capTop)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -189,7 +205,9 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun isCapTop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCapTopBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCapTopBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -203,6 +221,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setCapBottom(capBottom: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCapBottomBind, segment, capBottom)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -215,7 +234,9 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun isCapBottom(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCapBottomBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCapBottomBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

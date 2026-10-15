@@ -39,6 +39,8 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
     fun setClosestHitShader(pMember: RDPipelineShader?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setClosestHitShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(pMember)
     }
 
     /**
@@ -48,7 +50,9 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getClosestHitShader(): RDPipelineShader? {
         checkOpen()
-        return RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getClosestHitShaderBind, segment))
+        val ret = RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getClosestHitShaderBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +63,8 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
     fun setAnyHitShader(pMember: RDPipelineShader?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setAnyHitShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(pMember)
     }
 
     /**
@@ -68,7 +74,9 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAnyHitShader(): RDPipelineShader? {
         checkOpen()
-        return RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getAnyHitShaderBind, segment))
+        val ret = RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getAnyHitShaderBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,6 +88,8 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
     fun setIntersectionShader(pMember: RDPipelineShader?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setIntersectionShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(pMember)
     }
 
     /**
@@ -90,7 +100,9 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIntersectionShader(): RDPipelineShader? {
         checkOpen()
-        return RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getIntersectionShaderBind, segment))
+        val ret = RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getIntersectionShaderBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

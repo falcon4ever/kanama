@@ -57,6 +57,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
     fun setSampleCount(pMember: RenderingDevice.TextureSamples) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSampleCountBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -67,7 +68,9 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSampleCount(): RenderingDevice.TextureSamples {
         checkOpen()
-        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSampleCountBind, segment))
+        val ret = RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSampleCountBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -82,6 +85,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
     fun setEnableSampleShading(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnableSampleShadingBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -95,7 +99,9 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableSampleShading(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableSampleShadingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableSampleShadingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -110,6 +116,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
     fun setMinSampleShading(pMember: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMinSampleShadingBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -123,7 +130,9 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMinSampleShading(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinSampleShadingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinSampleShadingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -136,6 +145,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
     fun setEnableAlphaToCoverage(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnableAlphaToCoverageBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -147,7 +157,9 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableAlphaToCoverage(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableAlphaToCoverageBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableAlphaToCoverageBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -159,6 +171,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
     fun setEnableAlphaToOne(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnableAlphaToOneBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -169,7 +182,9 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableAlphaToOne(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableAlphaToOneBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableAlphaToOneBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -182,6 +197,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
     fun setSampleMasks(masks: List<Long>) {
         checkOpen()
         ObjectCalls.ptrcallWithTypedIntListArg(Binds.setSampleMasksBind, segment, masks)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -193,7 +209,9 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSampleMasks(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLongList(Binds.getSampleMasksBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLongList(Binds.getSampleMasksBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

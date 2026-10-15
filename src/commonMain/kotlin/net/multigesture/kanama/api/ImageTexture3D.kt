@@ -19,7 +19,9 @@ class ImageTexture3D(handle: GodotHandle) : Texture3D(handle) {
      */
     fun create(format: Image.Format, width: Int, height: Int, depth: Int, useMipmaps: Boolean, data: List<Image>): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetLong(Binds.createBind, segment, format.value, width, height, depth, useMipmaps, data))
+        val ret = GodotError(ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetLong(Binds.createBind, segment, format.value, width, height, depth, useMipmaps, data))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -32,6 +34,7 @@ class ImageTexture3D(handle: GodotHandle) : Texture3D(handle) {
     fun update(data: List<Image>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.updateBind, segment, data)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

@@ -18,7 +18,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLanguageName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLanguageNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getLanguageNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -28,7 +30,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isEmpty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmptyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmptyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -38,7 +42,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrameCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFrameCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFrameCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -48,7 +54,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrameFunction(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getFrameFunctionBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getFrameFunctionBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -58,7 +66,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrameFile(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getFrameFileBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getFrameFileBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -68,7 +78,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrameLine(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getFrameLineBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getFrameLineBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,7 +92,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGlobalVariableCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getGlobalVariableCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getGlobalVariableCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -90,7 +104,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGlobalVariableName(variableIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getGlobalVariableNameBind, segment, variableIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getGlobalVariableNameBind, segment, variableIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -103,7 +119,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGlobalVariableValue(variableIndex: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getGlobalVariableValueBind, segment, variableIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getGlobalVariableValueBind, segment, variableIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,7 +133,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocalVariableCount(frameIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getLocalVariableCountBind, segment, frameIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getLocalVariableCountBind, segment, frameIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -126,7 +146,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocalVariableName(frameIndex: Int, variableIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.getLocalVariableNameBind, segment, frameIndex, variableIndex)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.getLocalVariableNameBind, segment, frameIndex, variableIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -140,7 +162,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocalVariableValue(frameIndex: Int, variableIndex: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(Binds.getLocalVariableValueBind, segment, frameIndex, variableIndex)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(Binds.getLocalVariableValueBind, segment, frameIndex, variableIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -152,7 +176,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMemberVariableCount(frameIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getMemberVariableCountBind, segment, frameIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getMemberVariableCountBind, segment, frameIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -163,7 +189,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMemberVariableName(frameIndex: Int, variableIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.getMemberVariableNameBind, segment, frameIndex, variableIndex)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.getMemberVariableNameBind, segment, frameIndex, variableIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -177,7 +205,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMemberVariableValue(frameIndex: Int, variableIndex: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(Binds.getMemberVariableValueBind, segment, frameIndex, variableIndex)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(Binds.getMemberVariableValueBind, segment, frameIndex, variableIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -190,7 +220,9 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun format(indentAll: Int = 0, indentFrames: Int = 4): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.formatBind, segment, indentAll, indentFrames)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.formatBind, segment, indentAll, indentFrames)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

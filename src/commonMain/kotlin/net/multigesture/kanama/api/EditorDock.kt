@@ -246,6 +246,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      */
     fun setDockIcon(icon: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setDockIconBind, segment, listOf(icon?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -304,6 +305,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      */
     fun setDockShortcut(shortcut: Shortcut?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setDockShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(shortcut)
     }
 
     /**

@@ -75,6 +75,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
     fun setFlags(pMember: RenderingDevice.AccelerationStructureGeometryFlagBits) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFlagsBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -84,7 +85,9 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getFlags(): RenderingDevice.AccelerationStructureGeometryFlagBits {
         checkOpen()
-        return RenderingDevice.AccelerationStructureGeometryFlagBits(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFlagsBind, segment))
+        val ret = RenderingDevice.AccelerationStructureGeometryFlagBits(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFlagsBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -95,6 +98,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
     fun setVertexBuffer(pMember: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setVertexBufferBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -104,7 +108,9 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getVertexBuffer(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getVertexBufferBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getVertexBufferBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,6 +121,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
     fun setVertexOffset(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setVertexOffsetBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -124,7 +131,9 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getVertexOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getVertexOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getVertexOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -135,6 +144,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
     fun setVertexStride(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setVertexStrideBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -144,7 +154,9 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getVertexStride(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getVertexStrideBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getVertexStrideBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -155,6 +167,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
     fun setVertexCount(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setVertexCountBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -164,7 +177,9 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getVertexCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getVertexCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getVertexCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -175,6 +190,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
     fun setVertexFormat(pMember: RenderingDevice.DataFormat) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setVertexFormatBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -184,7 +200,9 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getVertexFormat(): RenderingDevice.DataFormat {
         checkOpen()
-        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVertexFormatBind, segment))
+        val ret = RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVertexFormatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -195,6 +213,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
     fun setIndexBuffer(pMember: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setIndexBufferBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -204,7 +223,9 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getIndexBuffer(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getIndexBufferBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getIndexBufferBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -215,6 +236,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
     fun setIndexOffset(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setIndexOffsetBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -224,7 +246,9 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getIndexOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getIndexOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getIndexOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -235,6 +259,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
     fun setIndexCount(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setIndexCountBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -244,7 +269,9 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getIndexCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getIndexCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getIndexCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

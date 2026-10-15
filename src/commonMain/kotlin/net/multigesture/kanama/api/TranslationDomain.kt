@@ -81,7 +81,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTranslationObject(locale: String): Translation? {
         checkOpen()
-        return Translation.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.getTranslationObjectBind, segment, locale))
+        val ret = Translation.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.getTranslationObjectBind, segment, locale))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,6 +94,8 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun addTranslation(translation: Translation?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.addTranslationBind, segment, listOf(translation?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(translation)
     }
 
     /**
@@ -102,6 +106,8 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun removeTranslation(translation: Translation?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeTranslationBind, segment, listOf(translation?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(translation)
     }
 
     /**
@@ -112,6 +118,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -121,7 +128,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTranslations(): List<Translation> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getTranslationsBind, segment, Translation::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getTranslationsBind, segment, Translation::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -133,7 +142,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasTranslationForLocale(locale: String, exact: Boolean): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(Binds.hasTranslationForLocaleBind, segment, locale, exact)
+        val ret = ObjectCalls.ptrcallWithStringAndBoolArgRetBool(Binds.hasTranslationForLocaleBind, segment, locale, exact)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -143,7 +154,10 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasTranslation(translation: Translation?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.hasTranslationBind, segment, translation?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.hasTranslationBind, segment, translation?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(translation)
+        return ret
     }
 
     /**
@@ -155,7 +169,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun findTranslations(locale: String, exact: Boolean): List<Translation> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(Binds.findTranslationsBind, segment, locale, exact, Translation::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(Binds.findTranslationsBind, segment, locale, exact, Translation::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -165,7 +181,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun translate(message: String, context: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(Binds.translateBind, segment, message, context)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(Binds.translateBind, segment, message, context)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -177,7 +195,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun translatePlural(message: String, messagePlural: String, n: Int, context: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(Binds.translatePluralBind, segment, message, messagePlural, n, context)
+        val ret = ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(Binds.translatePluralBind, segment, message, messagePlural, n, context)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -188,7 +208,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocaleOverride(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLocaleOverrideBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getLocaleOverrideBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -202,6 +224,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun setLocaleOverride(locale: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setLocaleOverrideBind, segment, locale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -212,7 +235,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -224,6 +249,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun setEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -237,7 +263,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPseudolocalizationEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -252,6 +280,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun setPseudolocalizationEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPseudolocalizationEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -264,7 +293,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPseudolocalizationAccentsEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationAccentsEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationAccentsEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -278,6 +309,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun setPseudolocalizationAccentsEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPseudolocalizationAccentsEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -290,7 +322,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPseudolocalizationDoubleVowelsEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationDoubleVowelsEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationDoubleVowelsEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -304,6 +338,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun setPseudolocalizationDoubleVowelsEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPseudolocalizationDoubleVowelsEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -318,7 +353,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPseudolocalizationFakeBidiEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationFakeBidiEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationFakeBidiEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -334,6 +371,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun setPseudolocalizationFakeBidiEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPseudolocalizationFakeBidiEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -346,7 +384,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPseudolocalizationOverrideEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationOverrideEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationOverrideEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -360,6 +400,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun setPseudolocalizationOverrideEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPseudolocalizationOverrideEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -373,7 +414,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPseudolocalizationSkipPlaceholdersEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationSkipPlaceholdersEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationSkipPlaceholdersEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -388,6 +431,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun setPseudolocalizationSkipPlaceholdersEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPseudolocalizationSkipPlaceholdersEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -401,7 +445,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPseudolocalizationExpansionRatio(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPseudolocalizationExpansionRatioBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPseudolocalizationExpansionRatioBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -416,6 +462,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun setPseudolocalizationExpansionRatio(ratio: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPseudolocalizationExpansionRatioBind, segment, ratio)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -428,7 +475,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPseudolocalizationPrefix(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPseudolocalizationPrefixBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getPseudolocalizationPrefixBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -442,6 +491,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun setPseudolocalizationPrefix(prefix: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setPseudolocalizationPrefixBind, segment, prefix)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -454,7 +504,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPseudolocalizationSuffix(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPseudolocalizationSuffixBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getPseudolocalizationSuffixBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -468,6 +520,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     fun setPseudolocalizationSuffix(suffix: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setPseudolocalizationSuffixBind, segment, suffix)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -477,7 +530,9 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun pseudolocalize(message: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetStringName(Binds.pseudolocalizeBind, segment, message)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetStringName(Binds.pseudolocalizeBind, segment, message)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

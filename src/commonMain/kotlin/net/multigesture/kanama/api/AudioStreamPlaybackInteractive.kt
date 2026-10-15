@@ -19,6 +19,7 @@ class AudioStreamPlaybackInteractive(handle: GodotHandle) : AudioStreamPlayback(
     fun switchToClipByName(clipName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.switchToClipByNameBind, segment, clipName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -29,6 +30,7 @@ class AudioStreamPlaybackInteractive(handle: GodotHandle) : AudioStreamPlayback(
     fun switchToClip(clipIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.switchToClipBind, segment, clipIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -39,7 +41,9 @@ class AudioStreamPlaybackInteractive(handle: GodotHandle) : AudioStreamPlayback(
      */
     fun getCurrentClipIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentClipIndexBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentClipIndexBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

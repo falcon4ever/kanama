@@ -21,6 +21,7 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
     fun setDelay(delay: Double): MethodTweener {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.setDelayBind, segment, delay)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -37,6 +38,7 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
     fun setTrans(trans: Tween.TransitionType): MethodTweener {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setTransBind, segment, trans.value)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -53,6 +55,7 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
     fun setEase(ease: Tween.EaseType): MethodTweener {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setEaseBind, segment, ease.value)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this

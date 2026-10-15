@@ -50,6 +50,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -59,7 +60,9 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -70,6 +73,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setHeight(height: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightBind, segment, height)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -79,7 +83,9 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -90,6 +96,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setRadialSegments(radialSegments: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setRadialSegmentsBind, segment, radialSegments)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -99,7 +106,9 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRadialSegments(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRadialSegmentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getRadialSegmentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -110,6 +119,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setRings(rings: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setRingsBind, segment, rings)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -119,7 +129,9 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRings(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -131,6 +143,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setIsHemisphere(isHemisphere: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setIsHemisphereBind, segment, isHemisphere)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -141,7 +154,9 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getIsHemisphere(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsHemisphereBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsHemisphereBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {
@@ -158,7 +173,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         // Downcast a Resource to SphereMesh (null if not).
         @JvmStatic
         fun fromResource(value: Resource): SphereMesh? =
-            if (value.isClass("SphereMesh")) RefCounted.retained(SphereMesh(value.handle)) else null
+            if (value.isClass("SphereMesh")) RefCounted.retained(SphereMesh(value.handle), value) else null
     }
 
     private object Binds {

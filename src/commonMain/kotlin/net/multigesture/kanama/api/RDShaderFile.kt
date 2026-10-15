@@ -28,6 +28,8 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
     fun setBytecode(bytecode: RDShaderSPIRV?, version: String = "") {
         checkOpen()
         ObjectCalls.ptrcallWithObjectAndStringNameArg(Binds.setBytecodeBind, segment, bytecode?.requireOpenHandle() ?: NULL_SEGMENT, version)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(bytecode)
     }
 
     /**
@@ -37,7 +39,9 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
      */
     fun getSpirv(version: String = ""): RDShaderSPIRV? {
         checkOpen()
-        return RDShaderSPIRV.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getSpirvBind, segment, version))
+        val ret = RDShaderSPIRV.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getSpirvBind, segment, version))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -47,7 +51,9 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
      */
     fun getVersionList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getVersionListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getVersionListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -60,6 +66,7 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
     fun setBaseError(error: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setBaseErrorBind, segment, error)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -71,7 +78,9 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBaseError(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getBaseErrorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getBaseErrorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

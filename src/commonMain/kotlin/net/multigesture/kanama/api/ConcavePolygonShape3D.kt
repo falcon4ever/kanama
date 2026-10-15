@@ -34,6 +34,7 @@ class ConcavePolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
     fun setFaces(faces: List<Vector3>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListArg(Binds.setFacesBind, segment, faces)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -44,7 +45,9 @@ class ConcavePolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getFaces(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getFacesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getFacesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -56,6 +59,7 @@ class ConcavePolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
     fun setBackfaceCollisionEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setBackfaceCollisionEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -66,7 +70,9 @@ class ConcavePolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun isBackfaceCollisionEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBackfaceCollisionEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isBackfaceCollisionEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

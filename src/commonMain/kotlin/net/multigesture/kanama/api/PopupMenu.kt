@@ -108,7 +108,9 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.activate_item_by_event
      */
     fun activateItemByEvent(event: InputEvent?, forGlobalOnly: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(Binds.activateItemByEventBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT, forGlobalOnly)
+        val ret = ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(Binds.activateItemByEventBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT, forGlobalOnly)
+        ObjectCalls.keepReachable(event)
+        return ret
     }
 
     /**
@@ -167,6 +169,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun addIconItem(texture: Texture2D?, label: String, id: Int = -1, accel: Key = Key.NONE) {
         ObjectCalls.ptrcallWithObjectStringIntLongArgs(Binds.addIconItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -197,6 +200,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun addIconCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Key = Key.NONE) {
         ObjectCalls.ptrcallWithObjectStringIntLongArgs(Binds.addIconCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -221,6 +225,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun addIconRadioCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Key = Key.NONE) {
         ObjectCalls.ptrcallWithObjectStringIntLongArgs(Binds.addIconRadioCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -246,6 +251,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun addShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false, allowEcho: Boolean = false) {
         ObjectCalls.ptrcallWithObjectIntTwoBoolArgs(Binds.addShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global, allowEcho)
+        ObjectCalls.keepReachable(shortcut)
     }
 
     /**
@@ -258,6 +264,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun addIconShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false, allowEcho: Boolean = false) {
         ObjectCalls.ptrcallWithObjectObjectIntTwoBoolArgs(Binds.addIconShortcutBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global, allowEcho)
+        ObjectCalls.keepReachable(texture)
+        ObjectCalls.keepReachable(shortcut)
     }
 
     /**
@@ -271,6 +279,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun addCheckShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
         ObjectCalls.ptrcallWithObjectIntBoolArgs(Binds.addCheckShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
+        ObjectCalls.keepReachable(shortcut)
     }
 
     /**
@@ -284,6 +293,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun addIconCheckShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
         ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(Binds.addIconCheckShortcutBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
+        ObjectCalls.keepReachable(texture)
+        ObjectCalls.keepReachable(shortcut)
     }
 
     /**
@@ -297,6 +308,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun addRadioCheckShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
         ObjectCalls.ptrcallWithObjectIntBoolArgs(Binds.addRadioCheckShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
+        ObjectCalls.keepReachable(shortcut)
     }
 
     /**
@@ -306,6 +318,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun addIconRadioCheckShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
         ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(Binds.addIconRadioCheckShortcutBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
+        ObjectCalls.keepReachable(texture)
+        ObjectCalls.keepReachable(shortcut)
     }
 
     /**
@@ -333,6 +347,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun addSubmenuNodeItem(label: String, submenu: PopupMenu, id: Int = -1) {
         ObjectCalls.ptrcallWithStringObjectIntArgs(Binds.addSubmenuNodeItemBind, segment, label, submenu.segment, id)
+        ObjectCalls.keepReachable(submenu)
     }
 
     /**
@@ -382,6 +397,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun setItemIcon(index: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemIconBind, segment, index, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -475,6 +491,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun setItemSubmenuNode(index: Int, submenu: PopupMenu) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemSubmenuNodeBind, segment, index, submenu.segment)
+        ObjectCalls.keepReachable(submenu)
     }
 
     /**
@@ -524,6 +541,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun setItemShortcut(index: Int, shortcut: Shortcut?, global: Boolean = false) {
         ObjectCalls.ptrcallWithIntObjectBoolArgs(Binds.setItemShortcutBind, segment, index, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, global)
+        ObjectCalls.keepReachable(shortcut)
     }
 
     /**

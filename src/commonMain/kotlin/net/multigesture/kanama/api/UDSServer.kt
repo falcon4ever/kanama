@@ -20,7 +20,9 @@ class UDSServer(handle: GodotHandle) : SocketServer(handle) {
      */
     fun listen(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.listenBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.listenBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class UDSServer(handle: GodotHandle) : SocketServer(handle) {
      */
     fun takeConnection(): StreamPeerUDS? {
         checkOpen()
-        return StreamPeerUDS.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.takeConnectionBind, segment))
+        val ret = StreamPeerUDS.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.takeConnectionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

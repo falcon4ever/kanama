@@ -40,6 +40,7 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
     fun setPanPullout(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPanPulloutBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -50,7 +51,9 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPanPullout(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPanPulloutBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPanPulloutBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,6 +65,7 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
     fun setTimePullout(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTimePulloutBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -72,7 +76,9 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getTimePullout(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimePulloutBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimePulloutBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -84,6 +90,7 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
     fun setSurround(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSurroundBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -94,7 +101,9 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getSurround(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSurroundBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSurroundBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

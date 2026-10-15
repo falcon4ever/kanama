@@ -85,7 +85,9 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.test_move
      */
     fun testMove(from: Transform3D, motion: Vector3, collision: KinematicCollision3D?, safeMargin: Double = 0.001, recoveryAsCollision: Boolean = false, maxCollisions: Int = 1): Boolean {
-        return ObjectCalls.ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(Binds.testMoveBind, segment, from, motion, collision?.requireOpenHandle() ?: NULL_SEGMENT, safeMargin, recoveryAsCollision, maxCollisions)
+        val ret = ObjectCalls.ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(Binds.testMoveBind, segment, from, motion, collision?.requireOpenHandle() ?: NULL_SEGMENT, safeMargin, recoveryAsCollision, maxCollisions)
+        ObjectCalls.keepReachable(collision)
+        return ret
     }
 
     /**
@@ -132,6 +134,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      */
     fun addCollisionExceptionWith(body: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addCollisionExceptionWithBind, segment, listOf(body.segment))
+        ObjectCalls.keepReachable(body)
     }
 
     /**
@@ -141,6 +144,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      */
     fun removeCollisionExceptionWith(body: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeCollisionExceptionWithBind, segment, listOf(body.segment))
+        ObjectCalls.keepReachable(body)
     }
 
     companion object {

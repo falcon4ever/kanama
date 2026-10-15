@@ -29,6 +29,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     fun setMode(mode: Shader.Mode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -39,6 +40,8 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     fun addNode(type: VisualShader.Type, node: VisualShaderNode?, position: Vector2, id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongObjectVector2IntArgs(Binds.addNodeBind, segment, type.value, node?.requireOpenHandle() ?: NULL_SEGMENT, position, id)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -48,7 +51,9 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
      */
     fun getNode(type: VisualShader.Type, id: Int): VisualShaderNode? {
         checkOpen()
-        return VisualShaderNode.wrapOwned(ObjectCalls.ptrcallWithLongAndIntArgsRetObject(Binds.getNodeBind, segment, type.value, id))
+        val ret = VisualShaderNode.wrapOwned(ObjectCalls.ptrcallWithLongAndIntArgsRetObject(Binds.getNodeBind, segment, type.value, id))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +64,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     fun setNodePosition(type: VisualShader.Type, id: Int, position: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithLongIntVector2Args(Binds.setNodePositionBind, segment, type.value, id, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +74,9 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
      */
     fun getNodePosition(type: VisualShader.Type, id: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetVector2(Binds.getNodePositionBind, segment, type.value, id)
+        val ret = ObjectCalls.ptrcallWithLongAndIntArgsRetVector2(Binds.getNodePositionBind, segment, type.value, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -78,7 +86,9 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
      */
     fun getNodeList(type: VisualShader.Type): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedInt32List(Binds.getNodeListBind, segment, type.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetPackedInt32List(Binds.getNodeListBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -88,7 +98,9 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
      */
     fun getValidNodeId(type: VisualShader.Type): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getValidNodeIdBind, segment, type.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetInt(Binds.getValidNodeIdBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -99,6 +111,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     fun removeNode(type: VisualShader.Type, id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(Binds.removeNodeBind, segment, type.value, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -109,6 +122,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     fun replaceNode(type: VisualShader.Type, id: Int, newClass: String) {
         checkOpen()
         ObjectCalls.ptrcallWithLongIntStringNameArgs(Binds.replaceNodeBind, segment, type.value, id, newClass)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -118,7 +132,9 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
      */
     fun isNodeConnection(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(Binds.isNodeConnectionBind, segment, type.value, fromNode, fromPort, toNode, toPort)
+        val ret = ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(Binds.isNodeConnectionBind, segment, type.value, fromNode, fromPort, toNode, toPort)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -128,7 +144,9 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
      */
     fun canConnectNodes(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(Binds.canConnectNodesBind, segment, type.value, fromNode, fromPort, toNode, toPort)
+        val ret = ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(Binds.canConnectNodesBind, segment, type.value, fromNode, fromPort, toNode, toPort)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -138,7 +156,9 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
      */
     fun connectNodes(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongAndFourIntArgsRetLong(Binds.connectNodesBind, segment, type.value, fromNode, fromPort, toNode, toPort))
+        val ret = GodotError(ObjectCalls.ptrcallWithLongAndFourIntArgsRetLong(Binds.connectNodesBind, segment, type.value, fromNode, fromPort, toNode, toPort))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -149,6 +169,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     fun disconnectNodes(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndFourIntArgs(Binds.disconnectNodesBind, segment, type.value, fromNode, fromPort, toNode, toPort)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -160,6 +181,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     fun connectNodesForced(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndFourIntArgs(Binds.connectNodesForcedBind, segment, type.value, fromNode, fromPort, toNode, toPort)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -169,7 +191,9 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
      */
     fun getNodeConnections(type: VisualShader.Type): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDictionaryList(Binds.getNodeConnectionsBind, segment, type.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetDictionaryList(Binds.getNodeConnectionsBind, segment, type.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -180,6 +204,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     fun attachNodeToFrame(type: VisualShader.Type, id: Int, frame: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndTwoIntArgs(Binds.attachNodeToFrameBind, segment, type.value, id, frame)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -190,6 +215,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     fun detachNodeFromFrame(type: VisualShader.Type, id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(Binds.detachNodeFromFrameBind, segment, type.value, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -200,6 +226,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     fun addVarying(name: String, mode: VisualShader.VaryingMode, type: VisualShader.VaryingType) {
         checkOpen()
         ObjectCalls.ptrcallWithStringTwoLongArgs(Binds.addVaryingBind, segment, name, mode.value, type.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -211,6 +238,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     fun removeVarying(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.removeVaryingBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -220,7 +248,9 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
      */
     fun hasVarying(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasVaryingBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasVaryingBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -231,6 +261,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     fun setGraphOffset(offset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setGraphOffsetBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -240,7 +271,9 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
      */
     fun getGraphOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGraphOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGraphOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

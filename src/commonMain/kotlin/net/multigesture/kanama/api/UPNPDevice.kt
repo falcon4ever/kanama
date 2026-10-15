@@ -57,7 +57,9 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isValidGateway(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isValidGatewayBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isValidGatewayBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -67,7 +69,9 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
      */
     fun queryExternalAddress(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.queryExternalAddressBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.queryExternalAddressBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -78,7 +82,9 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addPortMapping(port: Int, portInternal: Int = 0, desc: String = "", proto: String = "UDP", duration: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(Binds.addPortMappingBind, segment, port, portInternal, desc, proto, duration)
+        val ret = ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(Binds.addPortMappingBind, segment, port, portInternal, desc, proto, duration)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -89,7 +95,9 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
      */
     fun deletePortMapping(port: Int, proto: String = "UDP"): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetInt(Binds.deletePortMappingBind, segment, port, proto)
+        val ret = ObjectCalls.ptrcallWithIntAndStringArgRetInt(Binds.deletePortMappingBind, segment, port, proto)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -100,6 +108,7 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
     fun setDescriptionUrl(url: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setDescriptionUrlBind, segment, url)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -109,7 +118,9 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDescriptionUrl(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDescriptionUrlBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getDescriptionUrlBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -120,6 +131,7 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
     fun setServiceType(type: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setServiceTypeBind, segment, type)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -129,7 +141,9 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getServiceType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getServiceTypeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getServiceTypeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -140,6 +154,7 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
     fun setIgdControlUrl(url: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setIgdControlUrlBind, segment, url)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -149,7 +164,9 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIgdControlUrl(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getIgdControlUrlBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getIgdControlUrlBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -160,6 +177,7 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
     fun setIgdServiceType(type: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setIgdServiceTypeBind, segment, type)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -169,7 +187,9 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIgdServiceType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getIgdServiceTypeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getIgdServiceTypeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -180,6 +200,7 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
     fun setIgdOurAddr(addr: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setIgdOurAddrBind, segment, addr)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -189,7 +210,9 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIgdOurAddr(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getIgdOurAddrBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getIgdOurAddrBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -200,6 +223,7 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
     fun setIgdStatus(status: UPNPDevice.IGDStatus) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setIgdStatusBind, segment, status.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -209,7 +233,9 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIgdStatus(): UPNPDevice.IGDStatus {
         checkOpen()
-        return UPNPDevice.IGDStatus(ObjectCalls.ptrcallNoArgsRetLong(Binds.getIgdStatusBind, segment))
+        val ret = UPNPDevice.IGDStatus(ObjectCalls.ptrcallNoArgsRetLong(Binds.getIgdStatusBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

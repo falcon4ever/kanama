@@ -131,6 +131,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setHorizontalAlignment(alignment: HorizontalAlignment) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setHorizontalAlignmentBind, segment, alignment.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -141,7 +142,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getHorizontalAlignment(): HorizontalAlignment {
         checkOpen()
-        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHorizontalAlignmentBind, segment))
+        val ret = HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHorizontalAlignmentBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -152,6 +155,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setVerticalAlignment(alignment: VerticalAlignment) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setVerticalAlignmentBind, segment, alignment.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -161,7 +165,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getVerticalAlignment(): VerticalAlignment {
         checkOpen()
-        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVerticalAlignmentBind, segment))
+        val ret = VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVerticalAlignmentBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -174,6 +180,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setText(text: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setTextBind, segment, text)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -185,7 +192,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTextBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getTextBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -196,6 +205,8 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setFont(font: Font?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -205,7 +216,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getFont(): Font? {
         checkOpen()
-        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFontBind, segment))
+        val ret = Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFontBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -221,6 +234,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setFontSize(fontSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setFontSizeBind, segment, fontSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -235,7 +249,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getFontSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFontSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFontSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -247,6 +263,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setLineSpacing(lineSpacing: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLineSpacingBind, segment, lineSpacing)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -257,7 +274,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getLineSpacing(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineSpacingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineSpacingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -270,6 +289,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setAutowrapMode(autowrapMode: TextServer.AutowrapMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAutowrapModeBind, segment, autowrapMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -281,7 +301,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getAutowrapMode(): TextServer.AutowrapMode {
         checkOpen()
-        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAutowrapModeBind, segment))
+        val ret = TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAutowrapModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -292,6 +314,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setJustificationFlags(justificationFlags: TextServer.JustificationFlag) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setJustificationFlagsBind, segment, justificationFlags.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -301,7 +324,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getJustificationFlags(): TextServer.JustificationFlag {
         checkOpen()
-        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getJustificationFlagsBind, segment))
+        val ret = TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getJustificationFlagsBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -313,6 +338,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setDepth(depth: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthBind, segment, depth)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -323,7 +349,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getDepth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -334,6 +362,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setWidth(width: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setWidthBind, segment, width)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -343,7 +372,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWidthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWidthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -357,6 +388,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setPixelSize(pixelSize: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPixelSizeBind, segment, pixelSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -369,7 +401,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getPixelSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPixelSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPixelSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -382,6 +416,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setOffset(offset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -393,7 +428,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -407,6 +444,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setCurveStep(curveStep: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCurveStepBind, segment, curveStep)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -419,7 +457,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getCurveStep(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCurveStepBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCurveStepBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -430,6 +470,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setTextDirection(direction: TextServer.Direction) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextDirectionBind, segment, direction.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -439,7 +480,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getTextDirection(): TextServer.Direction {
         checkOpen()
-        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextDirectionBind, segment))
+        val ret = TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextDirectionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -451,6 +494,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setLanguage(language: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setLanguageBind, segment, language)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -461,7 +505,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getLanguage(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLanguageBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getLanguageBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -472,6 +518,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setStructuredTextBidiOverride(parser: TextServer.StructuredTextParser) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setStructuredTextBidiOverrideBind, segment, parser.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -481,7 +528,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getStructuredTextBidiOverride(): TextServer.StructuredTextParser {
         checkOpen()
-        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStructuredTextBidiOverrideBind, segment))
+        val ret = TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStructuredTextBidiOverrideBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -492,6 +541,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setStructuredTextBidiOverrideOptionsBind, segment, args)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -501,7 +551,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getStructuredTextBidiOverrideOptionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getStructuredTextBidiOverrideOptionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -512,6 +564,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setUppercase(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUppercaseBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -521,7 +574,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun isUppercase(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUppercaseBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUppercaseBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

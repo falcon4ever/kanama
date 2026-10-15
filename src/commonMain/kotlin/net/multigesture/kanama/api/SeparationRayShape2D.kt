@@ -32,6 +32,7 @@ class SeparationRayShape2D(handle: GodotHandle) : Shape2D(handle) {
     fun setLength(length: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLengthBind, segment, length)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -41,7 +42,9 @@ class SeparationRayShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun getLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -54,6 +57,7 @@ class SeparationRayShape2D(handle: GodotHandle) : Shape2D(handle) {
     fun setSlideOnSlope(active: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setSlideOnSlopeBind, segment, active)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -65,7 +69,9 @@ class SeparationRayShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun getSlideOnSlope(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSlideOnSlopeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getSlideOnSlopeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

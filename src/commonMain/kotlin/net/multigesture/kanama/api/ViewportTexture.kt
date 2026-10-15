@@ -30,6 +30,7 @@ class ViewportTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setViewportPathInScene(path: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(Binds.setViewportPathInSceneBind, segment, path)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -42,7 +43,9 @@ class ViewportTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getViewportPathInScene(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getViewportPathInSceneBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getViewportPathInSceneBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -27,6 +27,7 @@ class PlaceholderTexture3D(handle: GodotHandle) : Texture3D(handle) {
     fun setSize(size: Vector3i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3iArg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class PlaceholderTexture3D(handle: GodotHandle) : Texture3D(handle) {
      */
     fun getSize(): Vector3i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3i(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3i(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

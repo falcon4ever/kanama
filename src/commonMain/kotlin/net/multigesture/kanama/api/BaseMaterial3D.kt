@@ -813,6 +813,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setAlbedo(albedo: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setAlbedoBind, segment, albedo)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -825,7 +826,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAlbedo(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getAlbedoBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getAlbedoBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -838,6 +841,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setTransparency(transparency: BaseMaterial3D.Transparency) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTransparencyBind, segment, transparency.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -849,7 +853,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getTransparency(): BaseMaterial3D.Transparency {
         checkOpen()
-        return BaseMaterial3D.Transparency(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTransparencyBind, segment))
+        val ret = BaseMaterial3D.Transparency(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTransparencyBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -860,6 +866,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setAlphaAntialiasing(alphaAa: BaseMaterial3D.AlphaAntiAliasing) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAlphaAntialiasingBind, segment, alphaAa.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -869,7 +876,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAlphaAntialiasing(): BaseMaterial3D.AlphaAntiAliasing {
         checkOpen()
-        return BaseMaterial3D.AlphaAntiAliasing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlphaAntialiasingBind, segment))
+        val ret = BaseMaterial3D.AlphaAntiAliasing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlphaAntialiasingBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -880,6 +889,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setAlphaAntialiasingEdge(edge: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAlphaAntialiasingEdgeBind, segment, edge)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -889,7 +899,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAlphaAntialiasingEdge(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaAntialiasingEdgeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaAntialiasingEdgeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -902,6 +914,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setShadingMode(shadingMode: BaseMaterial3D.ShadingMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setShadingModeBind, segment, shadingMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -913,7 +926,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getShadingMode(): BaseMaterial3D.ShadingMode {
         checkOpen()
-        return BaseMaterial3D.ShadingMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getShadingModeBind, segment))
+        val ret = BaseMaterial3D.ShadingMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getShadingModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -929,6 +944,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setSpecular(specular: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSpecularBind, segment, specular)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -943,7 +959,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getSpecular(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpecularBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpecularBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -960,6 +978,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setMetallic(metallic: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMetallicBind, segment, metallic)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -975,7 +994,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getMetallic(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMetallicBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMetallicBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -987,6 +1008,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setRoughness(roughness: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRoughnessBind, segment, roughness)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -997,7 +1019,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getRoughness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRoughnessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRoughnessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1008,6 +1032,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setEmission(emission: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setEmissionBind, segment, emission)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1017,7 +1042,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getEmission(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getEmissionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getEmissionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1028,6 +1055,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setEmissionEnergyMultiplier(emissionEnergyMultiplier: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionEnergyMultiplierBind, segment, emissionEnergyMultiplier)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1037,7 +1065,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionEnergyMultiplierBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionEnergyMultiplierBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1050,6 +1080,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setEmissionIntensity(emissionEnergyMultiplier: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionIntensityBind, segment, emissionEnergyMultiplier)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1061,7 +1092,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionIntensityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionIntensityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1072,6 +1105,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setNormalScale(normalScale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setNormalScaleBind, segment, normalScale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1081,7 +1115,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getNormalScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNormalScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNormalScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1092,6 +1128,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setRim(rim: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRimBind, segment, rim)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1101,7 +1138,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getRim(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRimBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRimBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1113,6 +1152,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setRimTint(rimTint: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRimTintBind, segment, rimTint)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1123,7 +1163,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getRimTint(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRimTintBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRimTintBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1135,6 +1177,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setClearcoat(clearcoat: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setClearcoatBind, segment, clearcoat)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1145,7 +1188,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getClearcoat(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getClearcoatBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getClearcoatBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1157,6 +1202,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setClearcoatRoughness(clearcoatRoughness: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setClearcoatRoughnessBind, segment, clearcoatRoughness)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1167,7 +1213,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getClearcoatRoughness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getClearcoatRoughnessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getClearcoatRoughnessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1179,6 +1227,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setAnisotropy(anisotropy: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAnisotropyBind, segment, anisotropy)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1189,7 +1238,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAnisotropy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAnisotropyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAnisotropyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1210,6 +1261,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setHeightmapScale(heightmapScale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightmapScaleBind, segment, heightmapScale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1229,7 +1281,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getHeightmapScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightmapScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightmapScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1242,6 +1296,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setSubsurfaceScatteringStrength(strength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSubsurfaceScatteringStrengthBind, segment, strength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1253,7 +1308,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getSubsurfaceScatteringStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSubsurfaceScatteringStrengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSubsurfaceScatteringStrengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1265,6 +1322,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setTransmittanceColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setTransmittanceColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1275,7 +1333,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getTransmittanceColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getTransmittanceColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getTransmittanceColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1286,6 +1346,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setTransmittanceDepth(depth: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTransmittanceDepthBind, segment, depth)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1295,7 +1356,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getTransmittanceDepth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTransmittanceDepthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTransmittanceDepthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1306,6 +1369,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setTransmittanceBoost(boost: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setTransmittanceBoostBind, segment, boost)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1315,7 +1379,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getTransmittanceBoost(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTransmittanceBoostBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTransmittanceBoostBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1326,6 +1392,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setBacklight(backlight: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setBacklightBind, segment, backlight)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1335,7 +1402,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getBacklight(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getBacklightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getBacklightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1346,6 +1415,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setRefraction(refraction: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRefractionBind, segment, refraction)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1355,7 +1425,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getRefraction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRefractionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRefractionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1366,6 +1438,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setPointSize(pointSize: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPointSizeBind, segment, pointSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1375,7 +1448,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getPointSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPointSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPointSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1386,6 +1461,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setDetailUv(detailUv: BaseMaterial3D.DetailUV) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDetailUvBind, segment, detailUv.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1395,7 +1471,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDetailUv(): BaseMaterial3D.DetailUV {
         checkOpen()
-        return BaseMaterial3D.DetailUV(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDetailUvBind, segment))
+        val ret = BaseMaterial3D.DetailUV(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDetailUvBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1407,6 +1485,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setBlendMode(blendMode: BaseMaterial3D.BlendMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBlendModeBind, segment, blendMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1417,7 +1496,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getBlendMode(): BaseMaterial3D.BlendMode {
         checkOpen()
-        return BaseMaterial3D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendModeBind, segment))
+        val ret = BaseMaterial3D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1428,6 +1509,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setDepthDrawMode(depthDrawMode: BaseMaterial3D.DepthDrawMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDepthDrawModeBind, segment, depthDrawMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1437,7 +1519,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDepthDrawMode(): BaseMaterial3D.DepthDrawMode {
         checkOpen()
-        return BaseMaterial3D.DepthDrawMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDepthDrawModeBind, segment))
+        val ret = BaseMaterial3D.DepthDrawMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDepthDrawModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1450,6 +1534,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setDepthTest(depthTest: BaseMaterial3D.DepthTest) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDepthTestBind, segment, depthTest.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1461,7 +1546,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDepthTest(): BaseMaterial3D.DepthTest {
         checkOpen()
-        return BaseMaterial3D.DepthTest(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDepthTestBind, segment))
+        val ret = BaseMaterial3D.DepthTest(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDepthTestBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1473,6 +1560,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setCullMode(cullMode: BaseMaterial3D.CullMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setCullModeBind, segment, cullMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1483,7 +1571,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getCullMode(): BaseMaterial3D.CullMode {
         checkOpen()
-        return BaseMaterial3D.CullMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCullModeBind, segment))
+        val ret = BaseMaterial3D.CullMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCullModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1494,6 +1584,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setDiffuseMode(diffuseMode: BaseMaterial3D.DiffuseMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDiffuseModeBind, segment, diffuseMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1503,7 +1594,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDiffuseMode(): BaseMaterial3D.DiffuseMode {
         checkOpen()
-        return BaseMaterial3D.DiffuseMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDiffuseModeBind, segment))
+        val ret = BaseMaterial3D.DiffuseMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDiffuseModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1517,6 +1610,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setSpecularMode(specularMode: BaseMaterial3D.SpecularMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSpecularModeBind, segment, specularMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1529,7 +1623,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getSpecularMode(): BaseMaterial3D.SpecularMode {
         checkOpen()
-        return BaseMaterial3D.SpecularMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSpecularModeBind, segment))
+        val ret = BaseMaterial3D.SpecularMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSpecularModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1540,6 +1636,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setFlag(flag: BaseMaterial3D.Flags, enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setFlagBind, segment, flag.value, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1549,7 +1646,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getFlag(flag: BaseMaterial3D.Flags): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getFlagBind, segment, flag.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetBool(Binds.getFlagBind, segment, flag.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1563,6 +1662,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setTextureFilter(mode: BaseMaterial3D.TextureFilter) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextureFilterBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1575,7 +1675,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getTextureFilter(): BaseMaterial3D.TextureFilter {
         checkOpen()
-        return BaseMaterial3D.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureFilterBind, segment))
+        val ret = BaseMaterial3D.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureFilterBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1587,6 +1689,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setFeature(feature: BaseMaterial3D.Feature, enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setFeatureBind, segment, feature.value, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1597,7 +1700,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getFeature(feature: BaseMaterial3D.Feature): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getFeatureBind, segment, feature.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetBool(Binds.getFeatureBind, segment, feature.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1609,6 +1714,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setTexture(param: BaseMaterial3D.TextureParam, texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndObjectArg(Binds.setTextureBind, segment, param.value, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -1619,7 +1726,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getTexture(param: BaseMaterial3D.TextureParam): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(Binds.getTextureBind, segment, param.value))
+        val ret = Texture2D.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(Binds.getTextureBind, segment, param.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1630,6 +1739,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setDetailBlendMode(detailBlendMode: BaseMaterial3D.BlendMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDetailBlendModeBind, segment, detailBlendMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1639,7 +1749,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDetailBlendMode(): BaseMaterial3D.BlendMode {
         checkOpen()
-        return BaseMaterial3D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDetailBlendModeBind, segment))
+        val ret = BaseMaterial3D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDetailBlendModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1651,6 +1763,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setUv1Scale(scale: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setUv1ScaleBind, segment, scale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1661,7 +1774,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getUv1Scale(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getUv1ScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getUv1ScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1674,6 +1789,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setUv1Offset(offset: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setUv1OffsetBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1685,7 +1801,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getUv1Offset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getUv1OffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getUv1OffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1698,6 +1816,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setUv1TriplanarBlendSharpness(sharpness: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setUv1TriplanarBlendSharpnessBind, segment, sharpness)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1709,7 +1828,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getUv1TriplanarBlendSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getUv1TriplanarBlendSharpnessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getUv1TriplanarBlendSharpnessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1721,6 +1842,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setUv2Scale(scale: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setUv2ScaleBind, segment, scale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1731,7 +1853,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getUv2Scale(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getUv2ScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getUv2ScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1744,6 +1868,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setUv2Offset(offset: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setUv2OffsetBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1755,7 +1880,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getUv2Offset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getUv2OffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getUv2OffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1768,6 +1895,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setUv2TriplanarBlendSharpness(sharpness: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setUv2TriplanarBlendSharpnessBind, segment, sharpness)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1779,7 +1907,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getUv2TriplanarBlendSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getUv2TriplanarBlendSharpnessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getUv2TriplanarBlendSharpnessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1793,6 +1923,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setBillboardMode(mode: BaseMaterial3D.BillboardMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBillboardModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1805,7 +1936,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getBillboardMode(): BaseMaterial3D.BillboardMode {
         checkOpen()
-        return BaseMaterial3D.BillboardMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBillboardModeBind, segment))
+        val ret = BaseMaterial3D.BillboardMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBillboardModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1817,6 +1950,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setParticlesAnimHFrames(frames: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setParticlesAnimHFramesBind, segment, frames)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1827,7 +1961,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimHFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getParticlesAnimHFramesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getParticlesAnimHFramesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1839,6 +1975,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setParticlesAnimVFrames(frames: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setParticlesAnimVFramesBind, segment, frames)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1849,7 +1986,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimVFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getParticlesAnimVFramesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getParticlesAnimVFramesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1861,6 +2000,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setParticlesAnimLoop(loop: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setParticlesAnimLoopBind, segment, loop)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1871,7 +2011,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getParticlesAnimLoopBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getParticlesAnimLoopBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1885,6 +2027,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setHeightmapDeepParallax(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setHeightmapDeepParallaxBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1897,7 +2040,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun isHeightmapDeepParallaxEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHeightmapDeepParallaxEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isHeightmapDeepParallaxEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1912,6 +2057,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setHeightmapDeepParallaxMinLayers(layer: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setHeightmapDeepParallaxMinLayersBind, segment, layer)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1925,7 +2071,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getHeightmapDeepParallaxMinLayers(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightmapDeepParallaxMinLayersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightmapDeepParallaxMinLayersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1940,6 +2088,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setHeightmapDeepParallaxMaxLayers(layer: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setHeightmapDeepParallaxMaxLayersBind, segment, layer)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1953,7 +2102,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getHeightmapDeepParallaxMaxLayers(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightmapDeepParallaxMaxLayersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightmapDeepParallaxMaxLayersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1966,6 +2117,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setHeightmapDeepParallaxFlipTangent(flip: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setHeightmapDeepParallaxFlipTangentBind, segment, flip)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1977,7 +2129,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getHeightmapDeepParallaxFlipTangent(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getHeightmapDeepParallaxFlipTangentBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getHeightmapDeepParallaxFlipTangentBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1990,6 +2144,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setHeightmapDeepParallaxFlipBinormal(flip: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setHeightmapDeepParallaxFlipBinormalBind, segment, flip)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2001,7 +2156,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getHeightmapDeepParallaxFlipBinormal(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getHeightmapDeepParallaxFlipBinormalBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getHeightmapDeepParallaxFlipBinormalBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2012,6 +2169,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setGrow(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGrowBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2021,7 +2179,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getGrow(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGrowBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGrowBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2032,6 +2192,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setEmissionOperator(operator: BaseMaterial3D.EmissionOperator) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setEmissionOperatorBind, segment, operator.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2041,7 +2202,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionOperator(): BaseMaterial3D.EmissionOperator {
         checkOpen()
-        return BaseMaterial3D.EmissionOperator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEmissionOperatorBind, segment))
+        val ret = BaseMaterial3D.EmissionOperator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEmissionOperatorBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2055,6 +2218,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setAoLightAffect(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAoLightAffectBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2067,7 +2231,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAoLightAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAoLightAffectBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAoLightAffectBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2081,6 +2247,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setAlphaScissorThreshold(threshold: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAlphaScissorThresholdBind, segment, threshold)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2093,7 +2260,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAlphaScissorThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaScissorThresholdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaScissorThresholdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2104,6 +2273,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setAlphaHashScale(threshold: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAlphaHashScaleBind, segment, threshold)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2113,7 +2283,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAlphaHashScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaHashScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaHashScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2130,6 +2302,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setGrowEnabled(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setGrowEnabledBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2145,7 +2318,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun isGrowEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isGrowEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isGrowEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2159,6 +2334,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setMetallicTextureChannel(channel: BaseMaterial3D.TextureChannel) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setMetallicTextureChannelBind, segment, channel.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2171,7 +2347,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getMetallicTextureChannel(): BaseMaterial3D.TextureChannel {
         checkOpen()
-        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMetallicTextureChannelBind, segment))
+        val ret = BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMetallicTextureChannelBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2185,6 +2363,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setRoughnessTextureChannel(channel: BaseMaterial3D.TextureChannel) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setRoughnessTextureChannelBind, segment, channel.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2197,7 +2376,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getRoughnessTextureChannel(): BaseMaterial3D.TextureChannel {
         checkOpen()
-        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRoughnessTextureChannelBind, segment))
+        val ret = BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRoughnessTextureChannelBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2211,6 +2392,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setAoTextureChannel(channel: BaseMaterial3D.TextureChannel) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAoTextureChannelBind, segment, channel.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2223,7 +2405,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAoTextureChannel(): BaseMaterial3D.TextureChannel {
         checkOpen()
-        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAoTextureChannelBind, segment))
+        val ret = BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAoTextureChannelBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2237,6 +2421,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setRefractionTextureChannel(channel: BaseMaterial3D.TextureChannel) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setRefractionTextureChannelBind, segment, channel.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2249,7 +2434,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getRefractionTextureChannel(): BaseMaterial3D.TextureChannel {
         checkOpen()
-        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRefractionTextureChannelBind, segment))
+        val ret = BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRefractionTextureChannelBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2261,6 +2448,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setProximityFadeEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setProximityFadeEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2271,7 +2459,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun isProximityFadeEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isProximityFadeEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isProximityFadeEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2283,6 +2473,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setProximityFadeDistance(distance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setProximityFadeDistanceBind, segment, distance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2293,7 +2484,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getProximityFadeDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getProximityFadeDistanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getProximityFadeDistanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2305,6 +2498,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setMsdfPixelRange(range: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMsdfPixelRangeBind, segment, range)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2315,7 +2509,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getMsdfPixelRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMsdfPixelRangeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMsdfPixelRangeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2326,6 +2522,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setMsdfOutlineSize(size: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMsdfOutlineSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2335,7 +2532,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getMsdfOutlineSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMsdfOutlineSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMsdfOutlineSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2346,6 +2545,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setDistanceFade(mode: BaseMaterial3D.DistanceFadeMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDistanceFadeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2355,7 +2555,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDistanceFade(): BaseMaterial3D.DistanceFadeMode {
         checkOpen()
-        return BaseMaterial3D.DistanceFadeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDistanceFadeBind, segment))
+        val ret = BaseMaterial3D.DistanceFadeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDistanceFadeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2369,6 +2571,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setDistanceFadeMaxDistance(distance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDistanceFadeMaxDistanceBind, segment, distance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2381,7 +2584,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDistanceFadeMaxDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceFadeMaxDistanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceFadeMaxDistanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2396,6 +2601,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setDistanceFadeMinDistance(distance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDistanceFadeMinDistanceBind, segment, distance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2409,7 +2615,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDistanceFadeMinDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceFadeMinDistanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceFadeMinDistanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2424,6 +2632,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setZClipScale(scale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setZClipScaleBind, segment, scale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2437,7 +2646,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getZClipScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getZClipScaleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getZClipScaleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2451,6 +2662,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setFovOverride(scale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFovOverrideBind, segment, scale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2463,7 +2675,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getFovOverride(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFovOverrideBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFovOverrideBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2474,6 +2688,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setStencilMode(stencilMode: BaseMaterial3D.StencilMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setStencilModeBind, segment, stencilMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2483,7 +2698,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getStencilMode(): BaseMaterial3D.StencilMode {
         checkOpen()
-        return BaseMaterial3D.StencilMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStencilModeBind, segment))
+        val ret = BaseMaterial3D.StencilMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStencilModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2494,6 +2711,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setStencilFlags(stencilFlags: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setStencilFlagsBind, segment, stencilFlags)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2503,7 +2721,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getStencilFlags(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStencilFlagsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getStencilFlagsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2514,6 +2734,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setStencilCompare(stencilCompare: BaseMaterial3D.StencilCompare) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setStencilCompareBind, segment, stencilCompare.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2523,7 +2744,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getStencilCompare(): BaseMaterial3D.StencilCompare {
         checkOpen()
-        return BaseMaterial3D.StencilCompare(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStencilCompareBind, segment))
+        val ret = BaseMaterial3D.StencilCompare(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStencilCompareBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2534,6 +2757,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setStencilReference(stencilReference: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setStencilReferenceBind, segment, stencilReference)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2543,7 +2767,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getStencilReference(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStencilReferenceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getStencilReferenceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2554,6 +2780,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setStencilEffectColor(stencilColor: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setStencilEffectColorBind, segment, stencilColor)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2563,7 +2790,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getStencilEffectColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getStencilEffectColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getStencilEffectColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2574,6 +2803,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     fun setStencilEffectOutlineThickness(stencilOutlineThickness: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setStencilEffectOutlineThicknessBind, segment, stencilOutlineThickness)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2583,7 +2813,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getStencilEffectOutlineThickness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStencilEffectOutlineThicknessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStencilEffectOutlineThicknessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -3722,7 +3954,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         // Downcast a Material to BaseMaterial3D (null if not).
         @JvmStatic
         fun fromMaterial(value: Material): BaseMaterial3D? =
-            if (value.isClass("BaseMaterial3D")) RefCounted.retained(BaseMaterial3D(value.handle)) else null
+            if (value.isClass("BaseMaterial3D")) RefCounted.retained(BaseMaterial3D(value.handle), value) else null
     }
 
     private object Binds {

@@ -68,7 +68,10 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun connectToUrl(url: String, tlsClientOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(Binds.connectToUrlBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(Binds.connectToUrlBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(tlsClientOptions)
+        return ret
     }
 
     /**
@@ -80,7 +83,10 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun acceptStream(stream: StreamPeer?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.acceptStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.acceptStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(stream)
+        return ret
     }
 
     /**
@@ -91,7 +97,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun send(message: ByteArray, writeMode: WebSocketPeer.WriteMode = WebSocketPeer.WriteMode.BINARY): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayAndLongArgRetLong(Binds.sendBind, segment, message, writeMode.value))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayAndLongArgRetLong(Binds.sendBind, segment, message, writeMode.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -103,7 +111,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun sendText(message: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.sendTextBind, segment, message))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.sendTextBind, segment, message))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -113,7 +123,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun wasStringPacket(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.wasStringPacketBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.wasStringPacketBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -125,6 +137,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun poll() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.pollBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -141,6 +154,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun closeConnection(code: Int = 1000, reason: String = "") {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(Binds.closeConnectionBind, segment, code, reason)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -150,7 +164,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getConnectedHost(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getConnectedHostBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getConnectedHostBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -160,7 +176,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getConnectedPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getConnectedPortBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getConnectedPortBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -171,7 +189,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getSelectedProtocol(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSelectedProtocolBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getSelectedProtocolBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -183,7 +203,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getRequestedUrl(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getRequestedUrlBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getRequestedUrlBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -195,6 +217,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun setNoDelay(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setNoDelayBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -205,7 +228,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getCurrentOutboundBufferedAmount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentOutboundBufferedAmountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentOutboundBufferedAmountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -215,7 +240,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getReadyState(): WebSocketPeer.State {
         checkOpen()
-        return WebSocketPeer.State(ObjectCalls.ptrcallNoArgsRetLong(Binds.getReadyStateBind, segment))
+        val ret = WebSocketPeer.State(ObjectCalls.ptrcallNoArgsRetLong(Binds.getReadyStateBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -226,7 +253,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getCloseCode(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCloseCodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCloseCodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -237,7 +266,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getCloseReason(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCloseReasonBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getCloseReasonBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -247,7 +278,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getSupportedProtocols(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSupportedProtocolsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSupportedProtocolsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -258,6 +291,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun setSupportedProtocols(protocols: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setSupportedProtocolsBind, segment, protocols)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -268,7 +302,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getHandshakeHeaders(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getHandshakeHeadersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getHandshakeHeadersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -280,6 +316,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun setHandshakeHeaders(protocols: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setHandshakeHeadersBind, segment, protocols)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -290,7 +327,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getInboundBufferSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInboundBufferSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getInboundBufferSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -302,6 +341,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun setInboundBufferSize(bufferSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setInboundBufferSizeBind, segment, bufferSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -312,7 +352,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getOutboundBufferSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutboundBufferSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutboundBufferSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -324,6 +366,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun setOutboundBufferSize(bufferSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setOutboundBufferSizeBind, segment, bufferSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -334,6 +377,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun setMaxQueuedPackets(bufferSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMaxQueuedPacketsBind, segment, bufferSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -343,7 +387,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getMaxQueuedPackets(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxQueuedPacketsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxQueuedPacketsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -356,6 +402,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun setHeartbeatInterval(interval: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setHeartbeatIntervalBind, segment, interval)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -367,7 +414,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getHeartbeatInterval(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeartbeatIntervalBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeartbeatIntervalBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

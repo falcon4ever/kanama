@@ -27,6 +27,7 @@ class MultiMeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      */
     fun setMultimesh(multimesh: MultiMesh?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMultimeshBind, segment, listOf(multimesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(multimesh)
     }
 
     /**

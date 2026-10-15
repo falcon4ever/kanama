@@ -69,6 +69,7 @@ class NavigationRegion3D(handle: GodotHandle) : Node3D(handle) {
      */
     fun setNavigationMesh(navigationMesh: NavigationMesh?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setNavigationMeshBind, segment, listOf(navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(navigationMesh)
     }
 
     /**

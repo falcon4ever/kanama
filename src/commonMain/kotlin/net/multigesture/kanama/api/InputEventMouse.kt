@@ -40,6 +40,7 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
     fun setButtonMask(buttonMask: MouseButtonMask) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setButtonMaskBind, segment, buttonMask.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -50,7 +51,9 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
      */
     fun getButtonMask(): MouseButtonMask {
         checkOpen()
-        return MouseButtonMask(ObjectCalls.ptrcallNoArgsRetLong(Binds.getButtonMaskBind, segment))
+        val ret = MouseButtonMask(ObjectCalls.ptrcallNoArgsRetLong(Binds.getButtonMaskBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -64,6 +67,7 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
     fun setPosition(position: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setPositionBind, segment, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -76,7 +80,9 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
      */
     fun getPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -90,6 +96,7 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
     fun setGlobalPosition(globalPosition: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setGlobalPositionBind, segment, globalPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -102,7 +109,9 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
      */
     fun getGlobalPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGlobalPositionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGlobalPositionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

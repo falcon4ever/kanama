@@ -17,17 +17,23 @@ import net.multigesture.kanama.types.Vector2
 class XRInterfaceExtension(handle: GodotHandle) : XRInterface(handle) {
     fun getColorTexture(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getColorTextureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getColorTextureBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun getDepthTexture(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getDepthTextureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getDepthTextureBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun getVelocityTexture(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getVelocityTextureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getVelocityTextureBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -39,6 +45,7 @@ class XRInterfaceExtension(handle: GodotHandle) : XRInterface(handle) {
     fun addBlit(renderTarget: RID, srcRect: Rect2, dstRect: Rect2i, useLayer: Boolean, layer: Long, applyLensDistortion: Boolean, eyeCenter: Vector2, k1: Double, k2: Double, upscale: Double, aspectRatio: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDRect2Rect2iBoolUInt32BoolVector2FourDoubleArgs(Binds.addBlitBind, segment, renderTarget, srcRect, dstRect, useLayer, layer, applyLensDistortion, eyeCenter, k1, k2, upscale, aspectRatio)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -49,7 +56,9 @@ class XRInterfaceExtension(handle: GodotHandle) : XRInterface(handle) {
      */
     fun getRenderTargetTexture(renderTarget: RID): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.getRenderTargetTextureBind, segment, renderTarget)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetRID(Binds.getRenderTargetTextureBind, segment, renderTarget)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

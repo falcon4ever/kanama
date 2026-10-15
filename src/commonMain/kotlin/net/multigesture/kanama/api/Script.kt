@@ -25,7 +25,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun canInstantiate(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.canInstantiateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.canInstantiateBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -38,7 +40,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun hasSourceCode(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasSourceCodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasSourceCodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -49,7 +53,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceCode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSourceCodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getSourceCodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,6 +67,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
     fun setSourceCode(source: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setSourceCodeBind, segment, source)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -70,7 +77,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun reload(keepState: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(Binds.reloadBind, segment, keepState))
+        val ret = GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(Binds.reloadBind, segment, keepState))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -81,6 +90,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
     fun getBaseScript(): Script? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getBaseScriptBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -95,7 +105,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getInstanceBaseType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getInstanceBaseTypeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getInstanceBaseTypeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -107,7 +119,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlobalName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getGlobalNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetStringName(Binds.getGlobalNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -117,7 +131,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun hasScriptMethod(methodName: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasScriptMethodBind, segment, methodName)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasScriptMethodBind, segment, methodName)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -127,7 +143,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun hasScriptSignal(signalName: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasScriptSignalBind, segment, signalName)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasScriptSignalBind, segment, signalName)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -138,7 +156,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getScriptPropertyList(): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getScriptPropertyListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getScriptPropertyListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -149,7 +169,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getScriptMethodList(): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getScriptMethodListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getScriptMethodListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -160,7 +182,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getScriptSignalList(): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getScriptSignalListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getScriptSignalListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -170,7 +194,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getScriptConstantMap(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getScriptConstantMapBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getScriptConstantMapBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -180,7 +206,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getPropertyDefaultValue(property: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getPropertyDefaultValueBind, segment, property)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getPropertyDefaultValueBind, segment, property)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -190,7 +218,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun isTool(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isToolBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isToolBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -201,7 +231,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun isAbstract(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAbstractBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAbstractBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -211,7 +243,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getRpcConfig(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getRpcConfigBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getRpcConfigBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -221,7 +255,10 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun instanceHas(baseObject: GodotObject): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.instanceHasBind, segment, baseObject.segment)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.instanceHasBind, segment, baseObject.segment)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(baseObject)
+        return ret
     }
 
     companion object {

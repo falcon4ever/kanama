@@ -25,7 +25,9 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun getPressedButton(): BaseButton? {
         checkOpen()
-        return BaseButton.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPressedButtonBind, segment))
+        val ret = BaseButton.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPressedButtonBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -36,7 +38,9 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun getButtons(): List<BaseButton> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getButtonsBind, segment, BaseButton::wrap)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getButtonsBind, segment, BaseButton::wrap)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -47,6 +51,7 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
     fun setAllowUnpress(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAllowUnpressBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -56,7 +61,9 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun isAllowUnpress(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowUnpressBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowUnpressBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `pressed(button: BaseButton)`; see [TypedSignal]. */

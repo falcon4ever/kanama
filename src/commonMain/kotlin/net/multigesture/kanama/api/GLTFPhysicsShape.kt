@@ -63,7 +63,9 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
      */
     fun toNode(cacheShapes: Boolean = false): CollisionShape3D? {
         checkOpen()
-        return CollisionShape3D.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(Binds.toNodeBind, segment, cacheShapes))
+        val ret = CollisionShape3D.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(Binds.toNodeBind, segment, cacheShapes))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -73,7 +75,9 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
      */
     fun toResource(cacheShapes: Boolean = false): Shape3D? {
         checkOpen()
-        return Shape3D.wrapOwned(ObjectCalls.ptrcallWithBoolArgRetObject(Binds.toResourceBind, segment, cacheShapes))
+        val ret = Shape3D.wrapOwned(ObjectCalls.ptrcallWithBoolArgRetObject(Binds.toResourceBind, segment, cacheShapes))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -84,7 +88,9 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
      */
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -95,7 +101,9 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
      */
     fun getShapeType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getShapeTypeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getShapeTypeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -107,6 +115,7 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
     fun setShapeType(shapeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setShapeTypeBind, segment, shapeType)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -117,7 +126,9 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
      */
     fun getSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -129,6 +140,7 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
     fun setSize(size: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -139,7 +151,9 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -151,6 +165,7 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
     fun setRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -162,7 +177,9 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
      */
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -175,6 +192,7 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
     fun setHeight(height: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightBind, segment, height)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -186,7 +204,9 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
      */
     fun getIsTrigger(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsTriggerBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsTriggerBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -199,6 +219,7 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
     fun setIsTrigger(isTrigger: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setIsTriggerBind, segment, isTrigger)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -209,7 +230,9 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
      */
     fun getMeshIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMeshIndexBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMeshIndexBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -221,6 +244,7 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
     fun setMeshIndex(meshIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMeshIndexBind, segment, meshIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -231,7 +255,9 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
      */
     fun getImporterMesh(): ImporterMesh? {
         checkOpen()
-        return ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getImporterMeshBind, segment))
+        val ret = ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getImporterMeshBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -243,6 +269,8 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
     fun setImporterMesh(importerMesh: ImporterMesh?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setImporterMeshBind, segment, listOf(importerMesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(importerMesh)
     }
 
     companion object {
@@ -252,7 +280,9 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: GLTFPhysicsShape.from_node
          */
         fun fromNode(shapeNode: CollisionShape3D): GLTFPhysicsShape? {
-            return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, shapeNode.segment))
+            val ret = GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, shapeNode.segment))
+            ObjectCalls.keepReachable(shapeNode)
+            return ret
         }
 
         /**
@@ -261,7 +291,9 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: GLTFPhysicsShape.from_resource
          */
         fun fromResource(shapeResource: Shape3D?): GLTFPhysicsShape? {
-            return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromResourceBind, NULL_SEGMENT, shapeResource?.requireOpenHandle() ?: NULL_SEGMENT))
+            val ret = GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromResourceBind, NULL_SEGMENT, shapeResource?.requireOpenHandle() ?: NULL_SEGMENT))
+            ObjectCalls.keepReachable(shapeResource)
+            return ret
         }
 
         /**

@@ -51,6 +51,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
     fun setColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -60,7 +61,9 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -71,6 +74,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
     fun setThickness(thickness: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setThicknessBind, segment, thickness)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -80,7 +84,9 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getThickness(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getThicknessBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getThicknessBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,6 +98,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
     fun setGrowBegin(offset: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGrowBeginBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -102,7 +109,9 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getGrowBegin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGrowBeginBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGrowBeginBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -114,6 +123,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
     fun setGrowEnd(offset: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGrowEndBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -124,7 +134,9 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getGrowEnd(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGrowEndBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGrowEndBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -135,6 +147,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
     fun setVertical(vertical: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setVerticalBind, segment, vertical)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -144,7 +157,9 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun isVertical(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVerticalBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isVerticalBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

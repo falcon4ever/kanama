@@ -27,7 +27,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasFeature(feature: TextServer.Feature): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.hasFeatureBind, segment, feature.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetBool(Binds.hasFeatureBind, segment, feature.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -37,7 +39,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -47,7 +51,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFeatures(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getFeaturesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getFeaturesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,7 +65,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun loadSupportData(filename: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.loadSupportDataBind, segment, filename)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.loadSupportDataBind, segment, filename)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -69,7 +77,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSupportDataFilename(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSupportDataFilenameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getSupportDataFilenameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -79,7 +89,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSupportDataInfo(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSupportDataInfoBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getSupportDataInfoBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -90,7 +102,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun saveSupportData(filename: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.saveSupportDataBind, segment, filename)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.saveSupportDataBind, segment, filename)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -100,7 +114,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSupportData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getSupportDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getSupportDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -110,7 +126,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isLocaleUsingSupportData(locale: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isLocaleUsingSupportDataBind, segment, locale)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.isLocaleUsingSupportDataBind, segment, locale)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -120,7 +138,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isLocaleRightToLeft(locale: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isLocaleRightToLeftBind, segment, locale)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.isLocaleRightToLeftBind, segment, locale)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -131,7 +151,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun nameToTag(name: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(Binds.nameToTagBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringArgRetLong(Binds.nameToTagBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -142,7 +164,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tagToName(tag: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(Binds.tagToNameBind, segment, tag)
+        val ret = ObjectCalls.ptrcallWithLongArgRetString(Binds.tagToNameBind, segment, tag)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -152,7 +176,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun has(rid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.hasBind, segment, rid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetBool(Binds.hasBind, segment, rid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -163,6 +189,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun freeRid(rid: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.freeRidBind, segment, rid)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -173,7 +200,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createFont(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.createFontBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.createFontBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -184,7 +213,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createFontLinkedVariation(fontRid: RID): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.createFontLinkedVariationBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetRID(Binds.createFontLinkedVariationBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -195,6 +226,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetData(fontRid: RID, data: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndByteArrayArg(Binds.fontSetDataBind, segment, fontRid, data)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -205,6 +237,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetFaceIndex(fontRid: RID, faceIndex: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fontSetFaceIndexBind, segment, fontRid, faceIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -214,7 +247,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetFaceIndex(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetFaceIndexBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetFaceIndexBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -224,7 +259,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetFaceCount(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetFaceCountBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetFaceCountBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -237,6 +274,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetStyle(fontRid: RID, style: TextServer.FontStyle) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fontSetStyleBind, segment, fontRid, style.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -246,7 +284,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetStyle(fontRid: RID): TextServer.FontStyle {
         checkOpen()
-        return TextServer.FontStyle(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetStyleBind, segment, fontRid))
+        val ret = TextServer.FontStyle(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetStyleBind, segment, fontRid))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -257,6 +297,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetName(fontRid: RID, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(Binds.fontSetNameBind, segment, fontRid, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -266,7 +307,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetName(fontRid: RID): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetString(Binds.fontGetNameBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetString(Binds.fontGetNameBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -277,7 +320,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetOtNameStrings(fontRid: RID): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionary(Binds.fontGetOtNameStringsBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDictionary(Binds.fontGetOtNameStringsBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -288,6 +333,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetStyleName(fontRid: RID, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(Binds.fontSetStyleNameBind, segment, fontRid, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -297,7 +343,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetStyleName(fontRid: RID): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetString(Binds.fontGetStyleNameBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetString(Binds.fontGetStyleNameBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -311,6 +359,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetWeight(fontRid: RID, weight: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fontSetWeightBind, segment, fontRid, weight)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -321,7 +370,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetWeight(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetWeightBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetWeightBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -334,6 +385,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetStretch(fontRid: RID, weight: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fontSetStretchBind, segment, fontRid, weight)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -344,7 +396,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetStretch(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetStretchBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetStretchBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -355,6 +409,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetAntialiasing(fontRid: RID, antialiasing: TextServer.FontAntialiasing) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fontSetAntialiasingBind, segment, fontRid, antialiasing.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -364,7 +419,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetAntialiasing(fontRid: RID): TextServer.FontAntialiasing {
         checkOpen()
-        return TextServer.FontAntialiasing(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetAntialiasingBind, segment, fontRid))
+        val ret = TextServer.FontAntialiasing(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetAntialiasingBind, segment, fontRid))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -376,6 +433,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetDisableEmbeddedBitmaps(fontRid: RID, disableEmbeddedBitmaps: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.fontSetDisableEmbeddedBitmapsBind, segment, fontRid, disableEmbeddedBitmaps)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -385,7 +443,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetDisableEmbeddedBitmaps(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontGetDisableEmbeddedBitmapsBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontGetDisableEmbeddedBitmapsBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -396,6 +456,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetGenerateMipmaps(fontRid: RID, generateMipmaps: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.fontSetGenerateMipmapsBind, segment, fontRid, generateMipmaps)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -405,7 +466,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetGenerateMipmaps(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontGetGenerateMipmapsBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontGetGenerateMipmapsBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -425,6 +488,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetMultichannelSignedDistanceField(fontRid: RID, msdf: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.fontSetMultichannelSignedDistanceFieldBind, segment, fontRid, msdf)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -435,7 +499,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontIsMultichannelSignedDistanceField(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontIsMultichannelSignedDistanceFieldBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontIsMultichannelSignedDistanceFieldBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -447,6 +513,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetMsdfPixelRange(fontRid: RID, msdfPixelRange: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fontSetMsdfPixelRangeBind, segment, fontRid, msdfPixelRange)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -457,7 +524,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetMsdfPixelRange(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetMsdfPixelRangeBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetMsdfPixelRangeBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -468,6 +537,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetMsdfSize(fontRid: RID, msdfSize: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fontSetMsdfSizeBind, segment, fontRid, msdfSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -477,7 +547,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetMsdfSize(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetMsdfSizeBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetMsdfSizeBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -489,6 +561,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetFixedSize(fontRid: RID, fixedSize: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fontSetFixedSizeBind, segment, fontRid, fixedSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -498,7 +571,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetFixedSize(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetFixedSizeBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetFixedSizeBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -509,6 +584,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetFixedSizeScaleMode(fontRid: RID, fixedSizeScaleMode: TextServer.FixedSizeScaleMode) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fontSetFixedSizeScaleModeBind, segment, fontRid, fixedSizeScaleMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -518,7 +594,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetFixedSizeScaleMode(fontRid: RID): TextServer.FixedSizeScaleMode {
         checkOpen()
-        return TextServer.FixedSizeScaleMode(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetFixedSizeScaleModeBind, segment, fontRid))
+        val ret = TextServer.FixedSizeScaleMode(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetFixedSizeScaleModeBind, segment, fontRid))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -529,6 +607,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetAllowSystemFallback(fontRid: RID, allowSystemFallback: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.fontSetAllowSystemFallbackBind, segment, fontRid, allowSystemFallback)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -538,7 +617,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontIsAllowSystemFallback(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontIsAllowSystemFallbackBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontIsAllowSystemFallbackBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -549,6 +630,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontClearSystemFallbackCache() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.fontClearSystemFallbackCacheBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -559,6 +641,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetForceAutohinter(fontRid: RID, forceAutohinter: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.fontSetForceAutohinterBind, segment, fontRid, forceAutohinter)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -569,7 +652,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontIsForceAutohinter(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontIsForceAutohinterBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontIsForceAutohinterBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -581,6 +666,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetModulateColorGlyphs(fontRid: RID, modulate: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.fontSetModulateColorGlyphsBind, segment, fontRid, modulate)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -590,7 +676,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontIsModulateColorGlyphs(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontIsModulateColorGlyphsBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontIsModulateColorGlyphsBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -601,7 +689,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetPaletteCount(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetPaletteCountBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetPaletteCountBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -612,7 +702,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetPaletteName(fontRid: RID, index: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(Binds.fontGetPaletteNameBind, segment, fontRid, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetString(Binds.fontGetPaletteNameBind, segment, fontRid, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -624,7 +716,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetPaletteColors(fontRid: RID, index: Long): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedColorList(Binds.fontGetPaletteColorsBind, segment, fontRid, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetPackedColorList(Binds.fontGetPaletteColorsBind, segment, fontRid, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -636,6 +730,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetPaletteCustomColors(fontRid: RID, colors: List<Color>) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndPackedColorListArgs(Binds.fontSetPaletteCustomColorsBind, segment, fontRid, colors)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -645,7 +740,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetPaletteCustomColors(fontRid: RID): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetPackedColorList(Binds.fontGetPaletteCustomColorsBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetPackedColorList(Binds.fontGetPaletteCustomColorsBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -655,7 +752,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetUsedPalette(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetUsedPaletteBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetUsedPaletteBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -666,6 +765,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetUsedPalette(fontRid: RID, index: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fontSetUsedPaletteBind, segment, fontRid, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -676,6 +776,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetHinting(fontRid: RID, hinting: TextServer.Hinting) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fontSetHintingBind, segment, fontRid, hinting.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -685,7 +786,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetHinting(fontRid: RID): TextServer.Hinting {
         checkOpen()
-        return TextServer.Hinting(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetHintingBind, segment, fontRid))
+        val ret = TextServer.Hinting(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetHintingBind, segment, fontRid))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -696,6 +799,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetSubpixelPositioning(fontRid: RID, subpixelPositioning: TextServer.SubpixelPositioning) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fontSetSubpixelPositioningBind, segment, fontRid, subpixelPositioning.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -705,7 +809,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetSubpixelPositioning(fontRid: RID): TextServer.SubpixelPositioning {
         checkOpen()
-        return TextServer.SubpixelPositioning(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetSubpixelPositioningBind, segment, fontRid))
+        val ret = TextServer.SubpixelPositioning(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.fontGetSubpixelPositioningBind, segment, fontRid))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -718,6 +824,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetKeepRoundingRemainders(fontRid: RID, keepRoundingRemainders: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.fontSetKeepRoundingRemaindersBind, segment, fontRid, keepRoundingRemainders)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -729,7 +836,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetKeepRoundingRemainders(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontGetKeepRoundingRemaindersBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetBool(Binds.fontGetKeepRoundingRemaindersBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -741,6 +850,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetEmbolden(fontRid: RID, strength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.fontSetEmboldenBind, segment, fontRid, strength)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -750,7 +860,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetEmbolden(fontRid: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.fontGetEmboldenBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.fontGetEmboldenBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -761,6 +873,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetSpacing(fontRid: RID, spacing: TextServer.SpacingType, value: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndTwoLongArgs(Binds.fontSetSpacingBind, segment, fontRid, spacing.value, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -770,7 +883,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetSpacing(fontRid: RID, spacing: TextServer.SpacingType): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.fontGetSpacingBind, segment, fontRid, spacing.value)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.fontGetSpacingBind, segment, fontRid, spacing.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -781,6 +896,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetBaselineOffset(fontRid: RID, baselineOffset: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.fontSetBaselineOffsetBind, segment, fontRid, baselineOffset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -790,7 +906,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetBaselineOffset(fontRid: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.fontGetBaselineOffsetBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.fontGetBaselineOffsetBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -803,6 +921,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetTransform(fontRid: RID, transform: Transform2D) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndTransform2DArg(Binds.fontSetTransformBind, segment, fontRid, transform)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -812,7 +931,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetTransform(fontRid: RID): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetTransform2D(Binds.fontGetTransformBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetTransform2D(Binds.fontGetTransformBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -824,6 +945,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetVariationCoordinates(fontRid: RID, variationCoordinates: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndDictionaryArg(Binds.fontSetVariationCoordinatesBind, segment, fontRid, variationCoordinates)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -834,7 +956,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetVariationCoordinates(fontRid: RID): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionary(Binds.fontGetVariationCoordinatesBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDictionary(Binds.fontGetVariationCoordinatesBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -847,6 +971,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetOversampling(fontRid: RID, oversampling: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.fontSetOversamplingBind, segment, fontRid, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -858,7 +983,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetOversampling(fontRid: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.fontGetOversamplingBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.fontGetOversamplingBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -869,7 +996,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetSizeCacheList(fontRid: RID): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetVector2iList(Binds.fontGetSizeCacheListBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetVector2iList(Binds.fontGetSizeCacheListBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -880,6 +1009,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontClearSizeCache(fontRid: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.fontClearSizeCacheBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -890,6 +1020,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontRemoveSizeCache(fontRid: RID, size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndVector2iArg(Binds.fontRemoveSizeCacheBind, segment, fontRid, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -902,7 +1033,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetSizeCacheInfo(fontRid: RID): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(Binds.fontGetSizeCacheInfoBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDictionaryList(Binds.fontGetSizeCacheInfoBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -913,6 +1046,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetAscent(fontRid: RID, size: Long, ascent: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.fontSetAscentBind, segment, fontRid, size, ascent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -922,7 +1056,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetAscent(fontRid: RID, size: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.fontGetAscentBind, segment, fontRid, size)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.fontGetAscentBind, segment, fontRid, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -933,6 +1069,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetDescent(fontRid: RID, size: Long, descent: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.fontSetDescentBind, segment, fontRid, size, descent)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -942,7 +1079,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetDescent(fontRid: RID, size: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.fontGetDescentBind, segment, fontRid, size)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.fontGetDescentBind, segment, fontRid, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -953,6 +1092,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetUnderlinePosition(fontRid: RID, size: Long, underlinePosition: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.fontSetUnderlinePositionBind, segment, fontRid, size, underlinePosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -962,7 +1102,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetUnderlinePosition(fontRid: RID, size: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.fontGetUnderlinePositionBind, segment, fontRid, size)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.fontGetUnderlinePositionBind, segment, fontRid, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -973,6 +1115,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetUnderlineThickness(fontRid: RID, size: Long, underlineThickness: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.fontSetUnderlineThicknessBind, segment, fontRid, size, underlineThickness)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -982,7 +1125,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetUnderlineThickness(fontRid: RID, size: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.fontGetUnderlineThicknessBind, segment, fontRid, size)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.fontGetUnderlineThicknessBind, segment, fontRid, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -993,6 +1138,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetScale(fontRid: RID, size: Long, scale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.fontSetScaleBind, segment, fontRid, size, scale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1002,7 +1148,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetScale(fontRid: RID, size: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.fontGetScaleBind, segment, fontRid, size)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.fontGetScaleBind, segment, fontRid, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1012,7 +1160,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetTextureCount(fontRid: RID, size: Vector2i): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndVector2iArgRetLong(Binds.fontGetTextureCountBind, segment, fontRid, size)
+        val ret = ObjectCalls.ptrcallWithRIDAndVector2iArgRetLong(Binds.fontGetTextureCountBind, segment, fontRid, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1024,6 +1174,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontClearTextures(fontRid: RID, size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndVector2iArg(Binds.fontClearTexturesBind, segment, fontRid, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1035,6 +1186,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontRemoveTexture(fontRid: RID, size: Vector2i, textureIndex: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongArgs(Binds.fontRemoveTextureBind, segment, fontRid, size, textureIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1045,6 +1197,8 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetTextureImage(fontRid: RID, size: Vector2i, textureIndex: Long, image: Image?) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongObjectArgs(Binds.fontSetTextureImageBind, segment, fontRid, size, textureIndex, image?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(image)
     }
 
     /**
@@ -1054,7 +1208,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetTextureImage(fontRid: RID, size: Vector2i, textureIndex: Long): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDVector2iLongArgsRetObject(Binds.fontGetTextureImageBind, segment, fontRid, size, textureIndex))
+        val ret = Image.wrapOwned(ObjectCalls.ptrcallWithRIDVector2iLongArgsRetObject(Binds.fontGetTextureImageBind, segment, fontRid, size, textureIndex))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1065,6 +1221,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetTextureOffsets(fontRid: RID, size: Vector2i, textureIndex: Long, offset: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongPackedInt32ListArgs(Binds.fontSetTextureOffsetsBind, segment, fontRid, size, textureIndex, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1074,7 +1231,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetTextureOffsets(fontRid: RID, size: Vector2i, textureIndex: Long): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetPackedInt32List(Binds.fontGetTextureOffsetsBind, segment, fontRid, size, textureIndex)
+        val ret = ObjectCalls.ptrcallWithRIDVector2iLongArgsRetPackedInt32List(Binds.fontGetTextureOffsetsBind, segment, fontRid, size, textureIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1084,7 +1243,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetGlyphList(fontRid: RID, size: Vector2i): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndVector2iArgRetPackedInt32List(Binds.fontGetGlyphListBind, segment, fontRid, size)
+        val ret = ObjectCalls.ptrcallWithRIDAndVector2iArgRetPackedInt32List(Binds.fontGetGlyphListBind, segment, fontRid, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1096,6 +1257,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontClearGlyphs(fontRid: RID, size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndVector2iArg(Binds.fontClearGlyphsBind, segment, fontRid, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1107,6 +1269,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontRemoveGlyph(fontRid: RID, size: Vector2i, glyph: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongArgs(Binds.fontRemoveGlyphBind, segment, fontRid, size, glyph)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1117,7 +1280,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetGlyphAdvance(fontRid: RID, size: Long, glyph: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetVector2(Binds.fontGetGlyphAdvanceBind, segment, fontRid, size, glyph)
+        val ret = ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetVector2(Binds.fontGetGlyphAdvanceBind, segment, fontRid, size, glyph)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1129,6 +1294,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetGlyphAdvance(fontRid: RID, size: Long, glyph: Long, advance: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDTwoLongAndVector2Args(Binds.fontSetGlyphAdvanceBind, segment, fontRid, size, glyph, advance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1138,7 +1304,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetGlyphOffset(fontRid: RID, size: Vector2i, glyph: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(Binds.fontGetGlyphOffsetBind, segment, fontRid, size, glyph)
+        val ret = ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(Binds.fontGetGlyphOffsetBind, segment, fontRid, size, glyph)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1149,6 +1317,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetGlyphOffset(fontRid: RID, size: Vector2i, glyph: Long, offset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongVector2Args(Binds.fontSetGlyphOffsetBind, segment, fontRid, size, glyph, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1158,7 +1327,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetGlyphSize(fontRid: RID, size: Vector2i, glyph: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(Binds.fontGetGlyphSizeBind, segment, fontRid, size, glyph)
+        val ret = ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(Binds.fontGetGlyphSizeBind, segment, fontRid, size, glyph)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1169,6 +1340,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetGlyphSize(fontRid: RID, size: Vector2i, glyph: Long, glSize: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongVector2Args(Binds.fontSetGlyphSizeBind, segment, fontRid, size, glyph, glSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1178,7 +1350,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetGlyphUvRect(fontRid: RID, size: Vector2i, glyph: Long): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetRect2(Binds.fontGetGlyphUvRectBind, segment, fontRid, size, glyph)
+        val ret = ObjectCalls.ptrcallWithRIDVector2iLongArgsRetRect2(Binds.fontGetGlyphUvRectBind, segment, fontRid, size, glyph)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1189,6 +1363,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetGlyphUvRect(fontRid: RID, size: Vector2i, glyph: Long, uvRect: Rect2) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongRect2Args(Binds.fontSetGlyphUvRectBind, segment, fontRid, size, glyph, uvRect)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1198,7 +1373,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetGlyphTextureIdx(fontRid: RID, size: Vector2i, glyph: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetLong(Binds.fontGetGlyphTextureIdxBind, segment, fontRid, size, glyph)
+        val ret = ObjectCalls.ptrcallWithRIDVector2iLongArgsRetLong(Binds.fontGetGlyphTextureIdxBind, segment, fontRid, size, glyph)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1209,6 +1386,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetGlyphTextureIdx(fontRid: RID, size: Vector2i, glyph: Long, textureIdx: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iTwoLongArgs(Binds.fontSetGlyphTextureIdxBind, segment, fontRid, size, glyph, textureIdx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1219,7 +1397,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetGlyphTextureRid(fontRid: RID, size: Vector2i, glyph: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetRID(Binds.fontGetGlyphTextureRidBind, segment, fontRid, size, glyph)
+        val ret = ObjectCalls.ptrcallWithRIDVector2iLongArgsRetRID(Binds.fontGetGlyphTextureRidBind, segment, fontRid, size, glyph)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1230,7 +1410,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetGlyphTextureSize(fontRid: RID, size: Vector2i, glyph: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(Binds.fontGetGlyphTextureSizeBind, segment, fontRid, size, glyph)
+        val ret = ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(Binds.fontGetGlyphTextureSizeBind, segment, fontRid, size, glyph)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1251,7 +1433,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetGlyphContours(font: RID, size: Long, index: Long): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetDictionary(Binds.fontGetGlyphContoursBind, segment, font, size, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetDictionary(Binds.fontGetGlyphContoursBind, segment, font, size, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1261,7 +1445,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetKerningList(fontRid: RID, size: Long): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2iList(Binds.fontGetKerningListBind, segment, fontRid, size)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetVector2iList(Binds.fontGetKerningListBind, segment, fontRid, size)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1272,6 +1458,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontClearKerningMap(fontRid: RID, size: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fontClearKerningMapBind, segment, fontRid, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1282,6 +1469,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontRemoveKerning(fontRid: RID, size: Long, glyphPair: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDLongVector2iArgs(Binds.fontRemoveKerningBind, segment, fontRid, size, glyphPair)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1292,6 +1480,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetKerning(fontRid: RID, size: Long, glyphPair: Vector2i, kerning: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDLongVector2iAndVector2Args(Binds.fontSetKerningBind, segment, fontRid, size, glyphPair, kerning)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1301,7 +1490,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetKerning(fontRid: RID, size: Long, glyphPair: Vector2i): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDLongVector2iArgsRetVector2(Binds.fontGetKerningBind, segment, fontRid, size, glyphPair)
+        val ret = ObjectCalls.ptrcallWithRIDLongVector2iArgsRetVector2(Binds.fontGetKerningBind, segment, fontRid, size, glyphPair)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1312,7 +1503,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetGlyphIndex(fontRid: RID, size: Long, char: Long, variationSelector: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndThreeLongArgsRetLong(Binds.fontGetGlyphIndexBind, segment, fontRid, size, char, variationSelector)
+        val ret = ObjectCalls.ptrcallWithRIDAndThreeLongArgsRetLong(Binds.fontGetGlyphIndexBind, segment, fontRid, size, char, variationSelector)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1323,7 +1516,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetCharFromGlyphIndex(fontRid: RID, size: Long, glyphIndex: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(Binds.fontGetCharFromGlyphIndexBind, segment, fontRid, size, glyphIndex)
+        val ret = ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(Binds.fontGetCharFromGlyphIndexBind, segment, fontRid, size, glyphIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1333,7 +1528,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontHasChar(fontRid: RID, char: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(Binds.fontHasCharBind, segment, fontRid, char)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetBool(Binds.fontHasCharBind, segment, fontRid, char)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1343,7 +1540,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetSupportedChars(fontRid: RID): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetString(Binds.fontGetSupportedCharsBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetString(Binds.fontGetSupportedCharsBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1353,7 +1552,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetSupportedGlyphs(fontRid: RID): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(Binds.fontGetSupportedGlyphsBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(Binds.fontGetSupportedGlyphsBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1364,6 +1565,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontRenderRange(fontRid: RID, size: Vector2i, start: Long, end: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iTwoLongArgs(Binds.fontRenderRangeBind, segment, fontRid, size, start, end)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1374,6 +1576,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontRenderGlyph(fontRid: RID, size: Vector2i, index: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2iLongArgs(Binds.fontRenderGlyphBind, segment, fontRid, size, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1388,6 +1591,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontDrawGlyph(fontRid: RID, canvas: RID, size: Long, pos: Vector2, index: Long, color: Color, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoRIDLongVector2LongColorDoubleArgs(Binds.fontDrawGlyphBind, segment, fontRid, canvas, size, pos, index, color, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1403,6 +1607,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontDrawGlyphOutline(fontRid: RID, canvas: RID, size: Long, outlineSize: Long, pos: Vector2, index: Long, color: Color, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoRIDTwoLongVector2LongColorDoubleArgs(Binds.fontDrawGlyphOutlineBind, segment, fontRid, canvas, size, outlineSize, pos, index, color, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1413,7 +1618,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontIsLanguageSupported(fontRid: RID, language: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(Binds.fontIsLanguageSupportedBind, segment, fontRid, language)
+        val ret = ObjectCalls.ptrcallWithRIDAndStringArgRetBool(Binds.fontIsLanguageSupportedBind, segment, fontRid, language)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1424,6 +1631,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetLanguageSupportOverride(fontRid: RID, language: String, supported: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDStringAndBoolArgs(Binds.fontSetLanguageSupportOverrideBind, segment, fontRid, language, supported)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1433,7 +1641,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetLanguageSupportOverride(fontRid: RID, language: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(Binds.fontGetLanguageSupportOverrideBind, segment, fontRid, language)
+        val ret = ObjectCalls.ptrcallWithRIDAndStringArgRetBool(Binds.fontGetLanguageSupportOverrideBind, segment, fontRid, language)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1444,6 +1654,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontRemoveLanguageSupportOverride(fontRid: RID, language: String) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(Binds.fontRemoveLanguageSupportOverrideBind, segment, fontRid, language)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1453,7 +1664,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetLanguageSupportOverrides(fontRid: RID): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(Binds.fontGetLanguageSupportOverridesBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetPackedStringList(Binds.fontGetLanguageSupportOverridesBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1464,7 +1677,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontIsScriptSupported(fontRid: RID, script: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(Binds.fontIsScriptSupportedBind, segment, fontRid, script)
+        val ret = ObjectCalls.ptrcallWithRIDAndStringArgRetBool(Binds.fontIsScriptSupportedBind, segment, fontRid, script)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1475,6 +1690,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetScriptSupportOverride(fontRid: RID, script: String, supported: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDStringAndBoolArgs(Binds.fontSetScriptSupportOverrideBind, segment, fontRid, script, supported)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1484,7 +1700,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetScriptSupportOverride(fontRid: RID, script: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(Binds.fontGetScriptSupportOverrideBind, segment, fontRid, script)
+        val ret = ObjectCalls.ptrcallWithRIDAndStringArgRetBool(Binds.fontGetScriptSupportOverrideBind, segment, fontRid, script)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1495,6 +1713,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontRemoveScriptSupportOverride(fontRid: RID, script: String) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(Binds.fontRemoveScriptSupportOverrideBind, segment, fontRid, script)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1504,7 +1723,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetScriptSupportOverrides(fontRid: RID): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(Binds.fontGetScriptSupportOverridesBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetPackedStringList(Binds.fontGetScriptSupportOverridesBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1515,6 +1736,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetOpentypeFeatureOverrides(fontRid: RID, overrides: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndDictionaryArg(Binds.fontSetOpentypeFeatureOverridesBind, segment, fontRid, overrides)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1524,7 +1746,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetOpentypeFeatureOverrides(fontRid: RID): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionary(Binds.fontGetOpentypeFeatureOverridesBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDictionary(Binds.fontGetOpentypeFeatureOverridesBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1534,7 +1758,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontSupportedFeatureList(fontRid: RID): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionary(Binds.fontSupportedFeatureListBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDictionary(Binds.fontSupportedFeatureListBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1544,7 +1770,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontSupportedVariationList(fontRid: RID): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionary(Binds.fontSupportedVariationListBind, segment, fontRid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDictionary(Binds.fontSupportedVariationListBind, segment, fontRid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1554,7 +1782,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetGlobalOversampling(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.fontGetGlobalOversamplingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.fontGetGlobalOversamplingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1565,6 +1795,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun fontSetGlobalOversampling(oversampling: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.fontSetGlobalOversamplingBind, segment, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1575,7 +1806,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getHexCodeBoxSize(size: Long, index: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector2(Binds.getHexCodeBoxSizeBind, segment, size, index)
+        val ret = ObjectCalls.ptrcallWithTwoLongArgsRetVector2(Binds.getHexCodeBoxSizeBind, segment, size, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1586,6 +1819,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun drawHexCodeBox(canvas: RID, size: Long, pos: Vector2, index: Long, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDLongVector2LongColorArgs(Binds.drawHexCodeBoxBind, segment, canvas, size, pos, index, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1599,7 +1833,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createShapedText(direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetRID(Binds.createShapedTextBind, segment, direction.value, orientation.value)
+        val ret = ObjectCalls.ptrcallWithTwoLongArgsRetRID(Binds.createShapedTextBind, segment, direction.value, orientation.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1610,6 +1846,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun shapedTextClear(rid: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.shapedTextClearBind, segment, rid)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1619,7 +1856,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextDuplicate(rid: RID): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.shapedTextDuplicateBind, segment, rid)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetRID(Binds.shapedTextDuplicateBind, segment, rid)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1632,6 +1871,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun shapedTextSetDirection(shaped: RID, direction: TextServer.Direction = TextServer.Direction.AUTO) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.shapedTextSetDirectionBind, segment, shaped, direction.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1641,7 +1881,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetDirection(shaped: RID): TextServer.Direction {
         checkOpen()
-        return TextServer.Direction(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetDirectionBind, segment, shaped))
+        val ret = TextServer.Direction(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetDirectionBind, segment, shaped))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1651,7 +1893,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetInferredDirection(shaped: RID): TextServer.Direction {
         checkOpen()
-        return TextServer.Direction(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetInferredDirectionBind, segment, shaped))
+        val ret = TextServer.Direction(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetInferredDirectionBind, segment, shaped))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1663,6 +1907,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun shapedTextSetBidiOverride(shaped: RID, override: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndArrayArg(Binds.shapedTextSetBidiOverrideBind, segment, shaped, override)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1674,6 +1919,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun shapedTextSetCustomPunctuation(shaped: RID, punct: String) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(Binds.shapedTextSetCustomPunctuationBind, segment, shaped, punct)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1684,7 +1930,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetCustomPunctuation(shaped: RID): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetString(Binds.shapedTextGetCustomPunctuationBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetString(Binds.shapedTextGetCustomPunctuationBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1695,6 +1943,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun shapedTextSetCustomEllipsis(shaped: RID, char: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.shapedTextSetCustomEllipsisBind, segment, shaped, char)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1704,7 +1953,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetCustomEllipsis(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetCustomEllipsisBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetCustomEllipsisBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1716,6 +1967,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun shapedTextSetOrientation(shaped: RID, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndLongArg(Binds.shapedTextSetOrientationBind, segment, shaped, orientation.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1725,7 +1977,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetOrientation(shaped: RID): TextServer.Orientation {
         checkOpen()
-        return TextServer.Orientation(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetOrientationBind, segment, shaped))
+        val ret = TextServer.Orientation(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetOrientationBind, segment, shaped))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1737,6 +1991,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun shapedTextSetPreserveInvalid(shaped: RID, enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.shapedTextSetPreserveInvalidBind, segment, shaped, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1747,7 +2002,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetPreserveInvalid(shaped: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.shapedTextGetPreserveInvalidBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetBool(Binds.shapedTextGetPreserveInvalidBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1758,6 +2015,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun shapedTextSetPreserveControl(shaped: RID, enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.shapedTextSetPreserveControlBind, segment, shaped, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1767,7 +2025,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetPreserveControl(shaped: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.shapedTextGetPreserveControlBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetBool(Binds.shapedTextGetPreserveControlBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1778,6 +2038,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun shapedTextSetSpacing(shaped: RID, spacing: TextServer.SpacingType, value: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndTwoLongArgs(Binds.shapedTextSetSpacingBind, segment, shaped, spacing.value, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1787,7 +2048,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetSpacing(shaped: RID, spacing: TextServer.SpacingType): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedTextGetSpacingBind, segment, shaped, spacing.value)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedTextGetSpacingBind, segment, shaped, spacing.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1797,7 +2060,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextAddString(shaped: RID, text: String, fonts: List<RID>, size: Long, opentypeFeatures: Map<String, Any?> = emptyMap(), language: String = "", meta: Any? = null): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool(Binds.shapedTextAddStringBind, segment, shaped, text, fonts, size, opentypeFeatures, language, meta)
+        val ret = ObjectCalls.ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool(Binds.shapedTextAddStringBind, segment, shaped, text, fonts, size, opentypeFeatures, language, meta)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1808,7 +2073,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextAddObject(shaped: RID, key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, length: Long = 1L, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool(Binds.shapedTextAddObjectBind, segment, shaped, key, size, inlineAlign.value, length, baseline)
+        val ret = ObjectCalls.ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool(Binds.shapedTextAddObjectBind, segment, shaped, key, size, inlineAlign.value, length, baseline)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1818,7 +2085,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextResizeObject(shaped: RID, key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVariantVector2LongDoubleArgsRetBool(Binds.shapedTextResizeObjectBind, segment, shaped, key, size, inlineAlign.value, baseline)
+        val ret = ObjectCalls.ptrcallWithRIDVariantVector2LongDoubleArgsRetBool(Binds.shapedTextResizeObjectBind, segment, shaped, key, size, inlineAlign.value, baseline)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1828,7 +2097,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextHasObject(shaped: RID, key: Any?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndVariantArgRetBool(Binds.shapedTextHasObjectBind, segment, shaped, key)
+        val ret = ObjectCalls.ptrcallWithRIDAndVariantArgRetBool(Binds.shapedTextHasObjectBind, segment, shaped, key)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1838,7 +2109,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetText(shaped: RID): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetString(Binds.shapedGetTextBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetString(Binds.shapedGetTextBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1848,7 +2121,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetSpanCount(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedGetSpanCountBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedGetSpanCountBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1858,7 +2133,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetSpanMeta(shaped: RID, index: Long): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.shapedGetSpanMetaBind, segment, shaped, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.shapedGetSpanMetaBind, segment, shaped, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1868,7 +2145,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetSpanEmbeddedObject(shaped: RID, index: Long): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.shapedGetSpanEmbeddedObjectBind, segment, shaped, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.shapedGetSpanEmbeddedObjectBind, segment, shaped, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1878,7 +2157,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetSpanText(shaped: RID, index: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(Binds.shapedGetSpanTextBind, segment, shaped, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetString(Binds.shapedGetSpanTextBind, segment, shaped, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1888,7 +2169,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetSpanObject(shaped: RID, index: Long): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.shapedGetSpanObjectBind, segment, shaped, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.shapedGetSpanObjectBind, segment, shaped, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1899,6 +2182,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun shapedSetSpanUpdateFont(shaped: RID, index: Long, fonts: List<RID>, size: Long, opentypeFeatures: Map<String, Any?> = emptyMap()) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDLongRIDListLongDictionaryArgs(Binds.shapedSetSpanUpdateFontBind, segment, shaped, index, fonts, size, opentypeFeatures)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1908,7 +2192,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetRunCount(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedGetRunCountBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedGetRunCountBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1918,7 +2204,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetRunText(shaped: RID, index: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(Binds.shapedGetRunTextBind, segment, shaped, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetString(Binds.shapedGetRunTextBind, segment, shaped, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1928,7 +2216,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetRunRange(shaped: RID, index: Long): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2i(Binds.shapedGetRunRangeBind, segment, shaped, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetVector2i(Binds.shapedGetRunRangeBind, segment, shaped, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1938,7 +2228,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetRunGlyphRange(shaped: RID, index: Long): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2i(Binds.shapedGetRunGlyphRangeBind, segment, shaped, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetVector2i(Binds.shapedGetRunGlyphRangeBind, segment, shaped, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1948,7 +2240,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetRunFontRid(shaped: RID, index: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetRID(Binds.shapedGetRunFontRidBind, segment, shaped, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetRID(Binds.shapedGetRunFontRidBind, segment, shaped, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1958,7 +2252,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetRunFontSize(shaped: RID, index: Long): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetInt(Binds.shapedGetRunFontSizeBind, segment, shaped, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetInt(Binds.shapedGetRunFontSizeBind, segment, shaped, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1968,7 +2264,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetRunLanguage(shaped: RID, index: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(Binds.shapedGetRunLanguageBind, segment, shaped, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetString(Binds.shapedGetRunLanguageBind, segment, shaped, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1978,7 +2276,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetRunDirection(shaped: RID, index: Long): TextServer.Direction {
         checkOpen()
-        return TextServer.Direction(ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedGetRunDirectionBind, segment, shaped, index))
+        val ret = TextServer.Direction(ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedGetRunDirectionBind, segment, shaped, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1988,7 +2288,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedGetRunObject(shaped: RID, index: Long): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.shapedGetRunObjectBind, segment, shaped, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.shapedGetRunObjectBind, segment, shaped, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -1999,7 +2301,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextSubstr(shaped: RID, start: Long, length: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetRID(Binds.shapedTextSubstrBind, segment, shaped, start, length)
+        val ret = ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetRID(Binds.shapedTextSubstrBind, segment, shaped, start, length)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2009,7 +2313,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetParent(shaped: RID): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.shapedTextGetParentBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetRID(Binds.shapedTextGetParentBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2019,7 +2325,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextFitToWidth(shaped: RID, width: Double, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L)): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDDoubleAndLongArgsRetDouble(Binds.shapedTextFitToWidthBind, segment, shaped, width, justificationFlags.value)
+        val ret = ObjectCalls.ptrcallWithRIDDoubleAndLongArgsRetDouble(Binds.shapedTextFitToWidthBind, segment, shaped, width, justificationFlags.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2029,7 +2337,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextTabAlign(shaped: RID, tabStops: List<Float>): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndPackedFloat32ListArgRetDouble(Binds.shapedTextTabAlignBind, segment, shaped, tabStops)
+        val ret = ObjectCalls.ptrcallWithRIDAndPackedFloat32ListArgRetDouble(Binds.shapedTextTabAlignBind, segment, shaped, tabStops)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2041,7 +2351,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextShape(shaped: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.shapedTextShapeBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetBool(Binds.shapedTextShapeBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2051,7 +2363,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextIsReady(shaped: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.shapedTextIsReadyBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetBool(Binds.shapedTextIsReadyBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2061,7 +2375,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextHasVisibleChars(shaped: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.shapedTextHasVisibleCharsBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetBool(Binds.shapedTextHasVisibleCharsBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2071,7 +2387,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetGlyphs(shaped: RID): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(Binds.shapedTextGetGlyphsBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDictionaryList(Binds.shapedTextGetGlyphsBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2081,7 +2399,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextSortLogical(shaped: RID): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(Binds.shapedTextSortLogicalBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDictionaryList(Binds.shapedTextSortLogicalBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2091,7 +2411,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetGlyphCount(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetGlyphCountBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetGlyphCountBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2101,7 +2423,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetRange(shaped: RID): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetVector2i(Binds.shapedTextGetRangeBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetVector2i(Binds.shapedTextGetRangeBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2111,7 +2435,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetLineBreaksAdv(shaped: RID, width: List<Float>, start: Long = 0L, once: Boolean = true, breakFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L)): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List(Binds.shapedTextGetLineBreaksAdvBind, segment, shaped, width, start, once, breakFlags.value)
+        val ret = ObjectCalls.ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List(Binds.shapedTextGetLineBreaksAdvBind, segment, shaped, width, start, once, breakFlags.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2121,7 +2447,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetLineBreaks(shaped: RID, width: Double, start: Long = 0L, breakFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L)): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List(Binds.shapedTextGetLineBreaksBind, segment, shaped, width, start, breakFlags.value)
+        val ret = ObjectCalls.ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List(Binds.shapedTextGetLineBreaksBind, segment, shaped, width, start, breakFlags.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2132,7 +2460,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetWordBreaks(shaped: RID, graphemeFlags: TextServer.GraphemeFlag = TextServer.GraphemeFlag(264L), skipGraphemeFlags: TextServer.GraphemeFlag = TextServer.GraphemeFlag.VIRTUAL): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedInt32List(Binds.shapedTextGetWordBreaksBind, segment, shaped, graphemeFlags.value, skipGraphemeFlags.value)
+        val ret = ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedInt32List(Binds.shapedTextGetWordBreaksBind, segment, shaped, graphemeFlags.value, skipGraphemeFlags.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2142,7 +2472,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetTrimPos(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetTrimPosBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetTrimPosBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2152,7 +2484,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetEllipsisPos(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetEllipsisPosBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetEllipsisPosBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2162,7 +2496,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetEllipsisGlyphs(shaped: RID): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(Binds.shapedTextGetEllipsisGlyphsBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDictionaryList(Binds.shapedTextGetEllipsisGlyphsBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2172,7 +2508,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetEllipsisGlyphCount(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetEllipsisGlyphCountBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapedTextGetEllipsisGlyphCountBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2183,6 +2521,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun shapedTextOverrunTrimToWidth(shaped: RID, width: Double = 0.0, overrunTrimFlags: TextServer.TextOverrunFlag = TextServer.TextOverrunFlag.NO_TRIM) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDDoubleAndLongArgs(Binds.shapedTextOverrunTrimToWidthBind, segment, shaped, width, overrunTrimFlags.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2192,7 +2531,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetObjects(shaped: RID): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetArray(Binds.shapedTextGetObjectsBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetArray(Binds.shapedTextGetObjectsBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2202,7 +2543,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetObjectRect(shaped: RID, key: Any?): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndVariantArgRetRect2(Binds.shapedTextGetObjectRectBind, segment, shaped, key)
+        val ret = ObjectCalls.ptrcallWithRIDAndVariantArgRetRect2(Binds.shapedTextGetObjectRectBind, segment, shaped, key)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2212,7 +2555,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetObjectRange(shaped: RID, key: Any?): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndVariantArgRetVector2i(Binds.shapedTextGetObjectRangeBind, segment, shaped, key)
+        val ret = ObjectCalls.ptrcallWithRIDAndVariantArgRetVector2i(Binds.shapedTextGetObjectRangeBind, segment, shaped, key)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2222,7 +2567,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetObjectGlyph(shaped: RID, key: Any?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndVariantArgRetLong(Binds.shapedTextGetObjectGlyphBind, segment, shaped, key)
+        val ret = ObjectCalls.ptrcallWithRIDAndVariantArgRetLong(Binds.shapedTextGetObjectGlyphBind, segment, shaped, key)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2232,7 +2579,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetSize(shaped: RID): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetVector2(Binds.shapedTextGetSizeBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetVector2(Binds.shapedTextGetSizeBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2244,7 +2593,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetAscent(shaped: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.shapedTextGetAscentBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.shapedTextGetAscentBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2256,7 +2607,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetDescent(shaped: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.shapedTextGetDescentBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.shapedTextGetDescentBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2266,7 +2619,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetWidth(shaped: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.shapedTextGetWidthBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.shapedTextGetWidthBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2276,7 +2631,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetUnderlinePosition(shaped: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.shapedTextGetUnderlinePositionBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.shapedTextGetUnderlinePositionBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2286,7 +2643,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetUnderlineThickness(shaped: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.shapedTextGetUnderlineThicknessBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.shapedTextGetUnderlineThicknessBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2297,7 +2656,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetCarets(shaped: RID, position: Long): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDictionary(Binds.shapedTextGetCaretsBind, segment, shaped, position)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetDictionary(Binds.shapedTextGetCaretsBind, segment, shaped, position)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2307,7 +2668,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetSelection(shaped: RID, start: Long, end: Long): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedVector2List(Binds.shapedTextGetSelectionBind, segment, shaped, start, end)
+        val ret = ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedVector2List(Binds.shapedTextGetSelectionBind, segment, shaped, start, end)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2317,7 +2680,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextHitTestGrapheme(shaped: RID, coords: Double): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndDoubleArgRetLong(Binds.shapedTextHitTestGraphemeBind, segment, shaped, coords)
+        val ret = ObjectCalls.ptrcallWithRIDAndDoubleArgRetLong(Binds.shapedTextHitTestGraphemeBind, segment, shaped, coords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2328,7 +2693,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextHitTestPosition(shaped: RID, coords: Double): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndDoubleArgRetLong(Binds.shapedTextHitTestPositionBind, segment, shaped, coords)
+        val ret = ObjectCalls.ptrcallWithRIDAndDoubleArgRetLong(Binds.shapedTextHitTestPositionBind, segment, shaped, coords)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2338,7 +2705,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetGraphemeBounds(shaped: RID, pos: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2(Binds.shapedTextGetGraphemeBoundsBind, segment, shaped, pos)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetVector2(Binds.shapedTextGetGraphemeBoundsBind, segment, shaped, pos)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2348,7 +2717,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextNextGraphemePos(shaped: RID, pos: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedTextNextGraphemePosBind, segment, shaped, pos)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedTextNextGraphemePosBind, segment, shaped, pos)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2358,7 +2729,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextPrevGraphemePos(shaped: RID, pos: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedTextPrevGraphemePosBind, segment, shaped, pos)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedTextPrevGraphemePosBind, segment, shaped, pos)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2368,7 +2741,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetCharacterBreaks(shaped: RID): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(Binds.shapedTextGetCharacterBreaksBind, segment, shaped)
+        val ret = ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(Binds.shapedTextGetCharacterBreaksBind, segment, shaped)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2378,7 +2753,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextNextCharacterPos(shaped: RID, pos: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedTextNextCharacterPosBind, segment, shaped, pos)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedTextNextCharacterPosBind, segment, shaped, pos)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2388,7 +2765,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextPrevCharacterPos(shaped: RID, pos: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedTextPrevCharacterPosBind, segment, shaped, pos)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedTextPrevCharacterPosBind, segment, shaped, pos)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2398,7 +2777,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextClosestCharacterPos(shaped: RID, pos: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedTextClosestCharacterPosBind, segment, shaped, pos)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.shapedTextClosestCharacterPosBind, segment, shaped, pos)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2415,6 +2796,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun shapedTextDraw(shaped: RID, canvas: RID, pos: Vector2, clipL: Double = -1.0, clipR: Double = -1.0, color: Color, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoRIDVector2TwoDoubleColorDoubleArgs(Binds.shapedTextDrawBind, segment, shaped, canvas, pos, clipL, clipR, color, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2431,6 +2813,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     fun shapedTextDrawOutline(shaped: RID, canvas: RID, pos: Vector2, clipL: Double = -1.0, clipR: Double = -1.0, outlineSize: Long = 1L, color: Color, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoRIDVector2TwoDoubleLongColorDoubleArgs(Binds.shapedTextDrawOutlineBind, segment, shaped, canvas, pos, clipL, clipR, outlineSize, color, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -2440,7 +2823,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun shapedTextGetDominantDirectionInRange(shaped: RID, start: Long, end: Long): TextServer.Direction {
         checkOpen()
-        return TextServer.Direction(ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(Binds.shapedTextGetDominantDirectionInRangeBind, segment, shaped, start, end))
+        val ret = TextServer.Direction(ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(Binds.shapedTextGetDominantDirectionInRangeBind, segment, shaped, start, end))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2451,7 +2836,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun formatNumber(number: String, language: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetString(Binds.formatNumberBind, segment, number, language)
+        val ret = ObjectCalls.ptrcallWithTwoStringArgsRetString(Binds.formatNumberBind, segment, number, language)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2462,7 +2849,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun parseNumber(number: String, language: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetString(Binds.parseNumberBind, segment, number, language)
+        val ret = ObjectCalls.ptrcallWithTwoStringArgsRetString(Binds.parseNumberBind, segment, number, language)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2473,7 +2862,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun percentSign(language: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(Binds.percentSignBind, segment, language)
+        val ret = ObjectCalls.ptrcallWithStringArgRetString(Binds.percentSignBind, segment, language)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2485,7 +2876,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun stringGetWordBreaks(string: String, language: String = "", charsPerLine: Long = 0L): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringAndLongArgRetPackedInt32List(Binds.stringGetWordBreaksBind, segment, string, language, charsPerLine)
+        val ret = ObjectCalls.ptrcallWithTwoStringAndLongArgRetPackedInt32List(Binds.stringGetWordBreaksBind, segment, string, language, charsPerLine)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2495,7 +2888,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun stringGetCharacterBreaks(string: String, language: String = ""): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetPackedInt32List(Binds.stringGetCharacterBreaksBind, segment, string, language)
+        val ret = ObjectCalls.ptrcallWithTwoStringArgsRetPackedInt32List(Binds.stringGetCharacterBreaksBind, segment, string, language)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2508,7 +2903,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isConfusable(string: String, dict: List<String>): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(Binds.isConfusableBind, segment, string, dict)
+        val ret = ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(Binds.isConfusableBind, segment, string, dict)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2519,7 +2916,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun spoofCheck(string: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.spoofCheckBind, segment, string)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.spoofCheckBind, segment, string)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2529,7 +2928,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun stripDiacritics(string: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(Binds.stripDiacriticsBind, segment, string)
+        val ret = ObjectCalls.ptrcallWithStringArgRetString(Binds.stripDiacriticsBind, segment, string)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2545,7 +2946,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isValidIdentifier(string: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isValidIdentifierBind, segment, string)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.isValidIdentifierBind, segment, string)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2556,7 +2959,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isValidLetter(unicode: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isValidLetterBind, segment, unicode)
+        val ret = ObjectCalls.ptrcallWithLongArgRetBool(Binds.isValidLetterBind, segment, unicode)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2568,7 +2973,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun stringToUpper(string: String, language: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetString(Binds.stringToUpperBind, segment, string, language)
+        val ret = ObjectCalls.ptrcallWithTwoStringArgsRetString(Binds.stringToUpperBind, segment, string, language)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2580,7 +2987,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun stringToLower(string: String, language: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetString(Binds.stringToLowerBind, segment, string, language)
+        val ret = ObjectCalls.ptrcallWithTwoStringArgsRetString(Binds.stringToLowerBind, segment, string, language)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2592,7 +3001,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun stringToTitle(string: String, language: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetString(Binds.stringToTitleBind, segment, string, language)
+        val ret = ObjectCalls.ptrcallWithTwoStringArgsRetString(Binds.stringToTitleBind, segment, string, language)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -2602,7 +3013,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun parseStructuredText(parserType: TextServer.StructuredTextParser, args: List<Any?>, text: String): List<Vector3i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArrayStringArgsRetVector3iList(Binds.parseStructuredTextBind, segment, parserType.value, args, text)
+        val ret = ObjectCalls.ptrcallWithLongArrayStringArgsRetVector3iList(Binds.parseStructuredTextBind, segment, parserType.value, args, text)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

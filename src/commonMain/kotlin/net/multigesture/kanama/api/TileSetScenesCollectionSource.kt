@@ -19,7 +19,9 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun getSceneTilesCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSceneTilesCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSceneTilesCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -29,7 +31,9 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun getSceneTileId(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSceneTileIdBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSceneTileIdBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -39,7 +43,9 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun hasSceneTileId(id: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasSceneTileIdBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasSceneTileIdBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -49,7 +55,10 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun createSceneTile(packedScene: PackedScene?, idOverride: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(Binds.createSceneTileBind, segment, packedScene?.requireOpenHandle() ?: NULL_SEGMENT, idOverride)
+        val ret = ObjectCalls.ptrcallWithObjectAndIntArgRetInt(Binds.createSceneTileBind, segment, packedScene?.requireOpenHandle() ?: NULL_SEGMENT, idOverride)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(packedScene)
+        return ret
     }
 
     /**
@@ -61,6 +70,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
     fun setSceneTileId(id: Int, newId: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setSceneTileIdBind, segment, id, newId)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -73,6 +83,8 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
     fun setSceneTileScene(id: Int, packedScene: PackedScene?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setSceneTileSceneBind, segment, id, packedScene?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(packedScene)
     }
 
     /**
@@ -82,7 +94,9 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun getSceneTileScene(id: Int): PackedScene? {
         checkOpen()
-        return PackedScene.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSceneTileSceneBind, segment, id))
+        val ret = PackedScene.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSceneTileSceneBind, segment, id))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,6 +108,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
     fun setSceneTileDisplayPlaceholder(id: Int, displayPlaceholder: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setSceneTileDisplayPlaceholderBind, segment, id, displayPlaceholder)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -103,7 +118,9 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun getSceneTileDisplayPlaceholder(id: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getSceneTileDisplayPlaceholderBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.getSceneTileDisplayPlaceholderBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -114,6 +131,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
     fun removeSceneTile(id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeSceneTileBind, segment, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -123,7 +141,9 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun getNextSceneTileId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getNextSceneTileIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getNextSceneTileIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -19,7 +19,9 @@ class CryptoKey(handle: GodotHandle) : Resource(handle) {
      */
     fun save(path: String, publicOnly: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.saveBind, segment, path, publicOnly))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.saveBind, segment, path, publicOnly))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class CryptoKey(handle: GodotHandle) : Resource(handle) {
      */
     fun load(path: String, publicOnly: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.loadBind, segment, path, publicOnly))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.loadBind, segment, path, publicOnly))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,7 +44,9 @@ class CryptoKey(handle: GodotHandle) : Resource(handle) {
      */
     fun isPublicOnly(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPublicOnlyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isPublicOnlyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -51,7 +57,9 @@ class CryptoKey(handle: GodotHandle) : Resource(handle) {
      */
     fun saveToString(publicOnly: Boolean = false): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetString(Binds.saveToStringBind, segment, publicOnly)
+        val ret = ObjectCalls.ptrcallWithBoolArgRetString(Binds.saveToStringBind, segment, publicOnly)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,7 +70,9 @@ class CryptoKey(handle: GodotHandle) : Resource(handle) {
      */
     fun loadFromString(stringKey: String, publicOnly: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.loadFromStringBind, segment, stringKey, publicOnly))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.loadFromStringBind, segment, stringKey, publicOnly))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

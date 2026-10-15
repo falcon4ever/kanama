@@ -36,37 +36,48 @@ class GLTFSkeleton(handle: GodotHandle) : Resource(handle) {
 
     fun getJoints(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getJointsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getJointsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setJoints(joints: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setJointsBind, segment, joints)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getRoots(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getRootsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getRootsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setRoots(roots: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setRootsBind, segment, roots)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getGodotSkeleton(): Skeleton3D? {
         checkOpen()
-        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGodotSkeletonBind, segment))
+        val ret = Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGodotSkeletonBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun getUniqueNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedStringList(Binds.getUniqueNamesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedStringList(Binds.getUniqueNamesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setUniqueNames(uniqueNames: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithTypedStringListArg(Binds.setUniqueNamesBind, segment, uniqueNames)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -78,7 +89,9 @@ class GLTFSkeleton(handle: GodotHandle) : Resource(handle) {
      */
     fun getGodotBoneNode(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getGodotBoneNodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getGodotBoneNodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -91,16 +104,21 @@ class GLTFSkeleton(handle: GodotHandle) : Resource(handle) {
     fun setGodotBoneNode(godotBoneNode: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setGodotBoneNodeBind, segment, godotBoneNode)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getBoneAttachmentCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneAttachmentCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneAttachmentCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun getBoneAttachment(idx: Int): BoneAttachment3D? {
         checkOpen()
-        return BoneAttachment3D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBoneAttachmentBind, segment, idx))
+        val ret = BoneAttachment3D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBoneAttachmentBind, segment, idx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

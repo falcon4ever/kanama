@@ -21,7 +21,9 @@ class OpenXRSpatialComponentMesh2DList(handle: GodotHandle) : OpenXRSpatialCompo
      */
     fun getTransform(index: Long): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getTransformBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getTransformBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -31,7 +33,9 @@ class OpenXRSpatialComponentMesh2DList(handle: GodotHandle) : OpenXRSpatialCompo
      */
     fun getVertices(snapshot: RID, index: Long): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedVector2List(Binds.getVerticesBind, segment, snapshot, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetPackedVector2List(Binds.getVerticesBind, segment, snapshot, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -41,7 +45,9 @@ class OpenXRSpatialComponentMesh2DList(handle: GodotHandle) : OpenXRSpatialCompo
      */
     fun getIndices(snapshot: RID, index: Long): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedInt32List(Binds.getIndicesBind, segment, snapshot, index)
+        val ret = ObjectCalls.ptrcallWithRIDAndLongArgRetPackedInt32List(Binds.getIndicesBind, segment, snapshot, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

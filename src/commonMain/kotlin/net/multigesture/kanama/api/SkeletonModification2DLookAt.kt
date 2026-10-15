@@ -39,6 +39,7 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
     fun setBone2dNode(bone2dNodepath: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(Binds.setBone2dNodeBind, segment, bone2dNodepath)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -48,7 +49,9 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
      */
     fun getBone2dNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getBone2dNodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getBone2dNodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +62,7 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
     fun setBoneIndex(boneIdx: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBoneIndexBind, segment, boneIdx)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +72,9 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
      */
     fun getBoneIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneIndexBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneIndexBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,6 +86,7 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
     fun setTargetNode(targetNodepath: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(Binds.setTargetNodeBind, segment, targetNodepath)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -90,7 +97,9 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
      */
     fun getTargetNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTargetNodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTargetNodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -102,6 +111,7 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
     fun setAdditionalRotation(rotation: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAdditionalRotationBind, segment, rotation)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -112,7 +122,9 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
      */
     fun getAdditionalRotation(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAdditionalRotationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAdditionalRotationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -124,6 +136,7 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
     fun setEnableConstraint(enableConstraint: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnableConstraintBind, segment, enableConstraint)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -133,7 +146,9 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
      */
     fun getEnableConstraint(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableConstraintBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableConstraintBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -144,6 +159,7 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
     fun setConstraintAngleMin(angleMin: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setConstraintAngleMinBind, segment, angleMin)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -153,7 +169,9 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
      */
     fun getConstraintAngleMin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getConstraintAngleMinBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getConstraintAngleMinBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,6 +182,7 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
     fun setConstraintAngleMax(angleMax: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setConstraintAngleMaxBind, segment, angleMax)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -173,7 +192,9 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
      */
     fun getConstraintAngleMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getConstraintAngleMaxBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getConstraintAngleMaxBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -187,6 +208,7 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
     fun setConstraintAngleInvert(invert: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setConstraintAngleInvertBind, segment, invert)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -196,7 +218,9 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
      */
     fun getConstraintAngleInvert(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getConstraintAngleInvertBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getConstraintAngleInvertBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

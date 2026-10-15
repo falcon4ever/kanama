@@ -346,6 +346,7 @@ object EditorInterface {
     @JvmStatic
     fun popupDialog(dialog: Window, rect: Rect2i) {
         ObjectCalls.ptrcallWithObjectAndRect2iArg(Binds.popupDialogBind, singleton, dialog.segment, rect)
+        ObjectCalls.keepReachable(dialog)
     }
 
     /**
@@ -358,6 +359,7 @@ object EditorInterface {
     @JvmStatic
     fun popupDialogCentered(dialog: Window, minsize: Vector2i) {
         ObjectCalls.ptrcallWithObjectAndVector2iArg(Binds.popupDialogCenteredBind, singleton, dialog.segment, minsize)
+        ObjectCalls.keepReachable(dialog)
     }
 
     /**
@@ -370,6 +372,7 @@ object EditorInterface {
     @JvmStatic
     fun popupDialogCenteredRatio(dialog: Window, ratio: Double = 0.8) {
         ObjectCalls.ptrcallWithObjectAndDoubleArg(Binds.popupDialogCenteredRatioBind, singleton, dialog.segment, ratio)
+        ObjectCalls.keepReachable(dialog)
     }
 
     /**
@@ -382,6 +385,7 @@ object EditorInterface {
     @JvmStatic
     fun popupDialogCenteredClamped(dialog: Window, minsize: Vector2i, fallbackRatio: Double = 0.75) {
         ObjectCalls.ptrcallWithObjectVector2iAndDoubleArg(Binds.popupDialogCenteredClampedBind, singleton, dialog.segment, minsize, fallbackRatio)
+        ObjectCalls.keepReachable(dialog)
     }
 
     /**
@@ -426,6 +430,8 @@ object EditorInterface {
     @JvmStatic
     fun popupNodeSelector(callback: GodotCallable, validTypes: List<String>, currentValue: Node) {
         ObjectCalls.ptrcallWithCallableStringNameListObjectArgs(Binds.popupNodeSelectorBind, singleton, callback.target.segment, callback.method, validTypes, currentValue.segment)
+        ObjectCalls.keepReachable(callback)
+        ObjectCalls.keepReachable(currentValue)
     }
 
     /**
@@ -441,6 +447,8 @@ object EditorInterface {
     @JvmStatic
     fun popupPropertySelector(objectValue: GodotObject, callback: GodotCallable, typeFilter: List<Int>, currentValue: String = "") {
         ObjectCalls.ptrcallWithObjectCallablePackedInt32ListStringArgs(Binds.popupPropertySelectorBind, singleton, objectValue.segment, callback.target.segment, callback.method, typeFilter, currentValue)
+        ObjectCalls.keepReachable(objectValue)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -454,6 +462,8 @@ object EditorInterface {
     @JvmStatic
     fun popupMethodSelector(objectValue: GodotObject, callback: GodotCallable, currentValue: String = "") {
         ObjectCalls.ptrcallWithObjectCallableStringArgs(Binds.popupMethodSelectorBind, singleton, objectValue.segment, callback.target.segment, callback.method, currentValue)
+        ObjectCalls.keepReachable(objectValue)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -467,6 +477,7 @@ object EditorInterface {
     @JvmStatic
     fun popupQuickOpen(callback: GodotCallable, baseTypes: List<String>) {
         ObjectCalls.ptrcallWithCallableStringNameListArgs(Binds.popupQuickOpenBind, singleton, callback.target.segment, callback.method, baseTypes)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -489,6 +500,7 @@ object EditorInterface {
     @JvmStatic
     fun popupCreateDialog(callback: GodotCallable, baseType: String = "", currentType: String = "", dialogTitle: String = "", typeBlocklist: List<String>) {
         ObjectCalls.ptrcallWithCallableStringNameTwoStringStringNameListArgs(Binds.popupCreateDialogBind, singleton, callback.target.segment, callback.method, baseType, currentType, dialogTitle, typeBlocklist)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -564,6 +576,7 @@ object EditorInterface {
     @JvmStatic
     fun inspectObject(objectValue: GodotObject, forProperty: String = "", inspectorOnly: Boolean = false) {
         ObjectCalls.ptrcallWithObjectStringBoolArgs(Binds.inspectObjectBind, singleton, objectValue.segment, forProperty, inspectorOnly)
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**
@@ -575,6 +588,7 @@ object EditorInterface {
     @JvmStatic
     fun editResource(resource: Resource?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.editResourceBind, singleton, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(resource)
     }
 
     /**
@@ -585,6 +599,7 @@ object EditorInterface {
     @JvmStatic
     fun editNode(node: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.editNodeBind, singleton, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -597,6 +612,7 @@ object EditorInterface {
     @JvmStatic
     fun editScript(script: Script?, line: Int = -1, column: Int = 0, grabFocus: Boolean = true) {
         ObjectCalls.ptrcallWithObjectTwoIntBoolArgs(Binds.editScriptBind, singleton, script?.requireOpenHandle() ?: NULL_SEGMENT, line, column, grabFocus)
+        ObjectCalls.keepReachable(script)
     }
 
     /**
@@ -633,6 +649,7 @@ object EditorInterface {
     @JvmStatic
     fun setObjectEdited(objectValue: GodotObject, edited: Boolean) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.setObjectEditedBind, singleton, objectValue.segment, edited)
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**
@@ -642,7 +659,9 @@ object EditorInterface {
      */
     @JvmStatic
     fun isObjectEdited(objectValue: GodotObject): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isObjectEditedBind, singleton, objectValue.segment)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isObjectEditedBind, singleton, objectValue.segment)
+        ObjectCalls.keepReachable(objectValue)
+        return ret
     }
 
     /**
@@ -694,6 +713,7 @@ object EditorInterface {
     @JvmStatic
     fun addRootNode(node: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addRootNodeBind, singleton, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**

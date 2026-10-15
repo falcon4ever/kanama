@@ -63,6 +63,8 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
     fun setPacketSequence(packetSequence: OggPacketSequence?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setPacketSequenceBind, segment, listOf(packetSequence?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(packetSequence)
     }
 
     /**
@@ -72,7 +74,9 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getPacketSequence(): OggPacketSequence? {
         checkOpen()
-        return OggPacketSequence.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPacketSequenceBind, segment))
+        val ret = OggPacketSequence.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPacketSequenceBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -85,6 +89,7 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
     fun setLoop(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setLoopBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -96,7 +101,9 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
      */
     fun hasLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasLoopBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasLoopBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -107,6 +114,7 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
     fun setLoopOffset(seconds: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLoopOffsetBind, segment, seconds)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -116,7 +124,9 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getLoopOffset(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLoopOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLoopOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -127,6 +137,7 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
     fun setBpm(bpm: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBpmBind, segment, bpm)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -136,7 +147,9 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getBpm(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBpmBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBpmBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -149,6 +162,7 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
     fun setBeatCount(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBeatCountBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -160,7 +174,9 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getBeatCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBeatCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBeatCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -171,6 +187,7 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
     fun setBarBeats(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBarBeatsBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -180,7 +197,9 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getBarBeats(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBarBeatsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBarBeatsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -194,6 +213,7 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
     fun setTags(tags: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setTagsBind, segment, tags)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -206,7 +226,9 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getTags(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getTagsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getTagsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

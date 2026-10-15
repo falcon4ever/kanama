@@ -39,6 +39,7 @@ class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
     fun setDuration(duration: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDurationBind, segment, duration)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -49,7 +50,9 @@ class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
      */
     fun getDuration(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getDurationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getDurationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,6 +64,7 @@ class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
     fun setFrequency(frequency: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFrequencyBind, segment, frequency)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -71,7 +75,9 @@ class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
      */
     fun getFrequency(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrequencyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrequencyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -82,6 +88,7 @@ class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
     fun setAmplitude(amplitude: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAmplitudeBind, segment, amplitude)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -91,7 +98,9 @@ class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
      */
     fun getAmplitude(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAmplitudeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAmplitudeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

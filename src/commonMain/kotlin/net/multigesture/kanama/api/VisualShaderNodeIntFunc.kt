@@ -27,6 +27,7 @@ class VisualShaderNodeIntFunc(handle: GodotHandle) : VisualShaderNode(handle) {
     fun setFunction(func: VisualShaderNodeIntFunc.Function) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFunctionBind, segment, func.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeIntFunc(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getFunction(): VisualShaderNodeIntFunc.Function {
         checkOpen()
-        return VisualShaderNodeIntFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
+        val ret = VisualShaderNodeIntFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

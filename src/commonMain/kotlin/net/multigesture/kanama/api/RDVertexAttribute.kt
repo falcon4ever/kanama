@@ -59,6 +59,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
     fun setBinding(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setBindingBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -71,7 +72,9 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBinding(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getBindingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getBindingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -82,6 +85,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
     fun setLocation(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setLocationBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -91,7 +95,9 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocation(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getLocationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getLocationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -103,6 +109,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
     fun setOffset(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setOffsetBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -113,7 +120,9 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -124,6 +133,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
     fun setFormat(pMember: RenderingDevice.DataFormat) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFormatBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -133,7 +143,9 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFormat(): RenderingDevice.DataFormat {
         checkOpen()
-        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        val ret = RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -144,6 +156,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
     fun setStride(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setStrideBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -153,7 +166,9 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getStride(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getStrideBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getStrideBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,6 +179,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
     fun setFrequency(pMember: RenderingDevice.VertexFrequency) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFrequencyBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -173,7 +189,9 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrequency(): RenderingDevice.VertexFrequency {
         checkOpen()
-        return RenderingDevice.VertexFrequency(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrequencyBind, segment))
+        val ret = RenderingDevice.VertexFrequency(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrequencyBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

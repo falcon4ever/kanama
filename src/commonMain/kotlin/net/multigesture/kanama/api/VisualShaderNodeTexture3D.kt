@@ -28,6 +28,8 @@ class VisualShaderNodeTexture3D(handle: GodotHandle) : VisualShaderNodeSample3D(
     fun setTexture(value: Texture3D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(value?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(value)
     }
 
     /**
@@ -38,7 +40,9 @@ class VisualShaderNodeTexture3D(handle: GodotHandle) : VisualShaderNodeSample3D(
      */
     fun getTexture(): Texture3D? {
         checkOpen()
-        return Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
+        val ret = Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

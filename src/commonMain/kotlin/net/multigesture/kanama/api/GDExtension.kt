@@ -19,7 +19,9 @@ class GDExtension(handle: GodotHandle) : Resource(handle) {
      */
     fun isLibraryOpen(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLibraryOpenBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isLibraryOpenBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class GDExtension(handle: GodotHandle) : Resource(handle) {
      */
     fun getMinimumLibraryInitializationLevel(): GDExtension.InitializationLevel {
         checkOpen()
-        return GDExtension.InitializationLevel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMinimumLibraryInitializationLevelBind, segment))
+        val ret = GDExtension.InitializationLevel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMinimumLibraryInitializationLevelBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

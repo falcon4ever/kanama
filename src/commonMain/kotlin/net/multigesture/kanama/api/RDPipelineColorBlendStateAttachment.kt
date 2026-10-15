@@ -91,6 +91,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     fun setAsMix() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.setAsMixBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -104,6 +105,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     fun setEnableBlend(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnableBlendBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -116,7 +118,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getEnableBlend(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableBlendBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableBlendBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -128,6 +132,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     fun setSrcColorBlendFactor(pMember: RenderingDevice.BlendFactor) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSrcColorBlendFactorBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -138,7 +143,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getSrcColorBlendFactor(): RenderingDevice.BlendFactor {
         checkOpen()
-        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSrcColorBlendFactorBind, segment))
+        val ret = RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSrcColorBlendFactorBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -150,6 +157,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     fun setDstColorBlendFactor(pMember: RenderingDevice.BlendFactor) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDstColorBlendFactorBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -160,7 +168,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getDstColorBlendFactor(): RenderingDevice.BlendFactor {
         checkOpen()
-        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDstColorBlendFactorBind, segment))
+        val ret = RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDstColorBlendFactorBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -171,6 +181,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     fun setColorBlendOp(pMember: RenderingDevice.BlendOperation) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setColorBlendOpBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -180,7 +191,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getColorBlendOp(): RenderingDevice.BlendOperation {
         checkOpen()
-        return RenderingDevice.BlendOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getColorBlendOpBind, segment))
+        val ret = RenderingDevice.BlendOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getColorBlendOpBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -192,6 +205,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     fun setSrcAlphaBlendFactor(pMember: RenderingDevice.BlendFactor) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSrcAlphaBlendFactorBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -202,7 +216,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getSrcAlphaBlendFactor(): RenderingDevice.BlendFactor {
         checkOpen()
-        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSrcAlphaBlendFactorBind, segment))
+        val ret = RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSrcAlphaBlendFactorBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -214,6 +230,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     fun setDstAlphaBlendFactor(pMember: RenderingDevice.BlendFactor) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDstAlphaBlendFactorBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -224,7 +241,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getDstAlphaBlendFactor(): RenderingDevice.BlendFactor {
         checkOpen()
-        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDstAlphaBlendFactorBind, segment))
+        val ret = RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDstAlphaBlendFactorBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -235,6 +254,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     fun setAlphaBlendOp(pMember: RenderingDevice.BlendOperation) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAlphaBlendOpBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -244,7 +264,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getAlphaBlendOp(): RenderingDevice.BlendOperation {
         checkOpen()
-        return RenderingDevice.BlendOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlphaBlendOpBind, segment))
+        val ret = RenderingDevice.BlendOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlphaBlendOpBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -255,6 +277,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     fun setWriteR(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setWriteRBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -264,7 +287,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getWriteR(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getWriteRBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getWriteRBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -275,6 +300,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     fun setWriteG(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setWriteGBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -284,7 +310,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getWriteG(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getWriteGBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getWriteGBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -295,6 +323,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     fun setWriteB(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setWriteBBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -304,7 +333,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getWriteB(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getWriteBBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getWriteBBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -315,6 +346,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     fun setWriteA(pMember: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setWriteABind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -324,7 +356,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getWriteA(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getWriteABind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getWriteABind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

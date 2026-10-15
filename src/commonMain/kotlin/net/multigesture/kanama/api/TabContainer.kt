@@ -313,6 +313,7 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      */
     fun setTabIcon(tabIdx: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setTabIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -407,6 +408,7 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      */
     fun setTabButtonIcon(tabIdx: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setTabButtonIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(icon)
     }
 
     /**
@@ -435,7 +437,9 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_idx_from_control
      */
     fun getTabIdxFromControl(control: Control): Int {
-        return ObjectCalls.ptrcallWithObjectArgRetInt(Binds.getTabIdxFromControlBind, segment, control.segment)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetInt(Binds.getTabIdxFromControlBind, segment, control.segment)
+        ObjectCalls.keepReachable(control)
+        return ret
     }
 
     /**
@@ -447,6 +451,7 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      */
     fun setPopup(popup: Node) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setPopupBind, segment, listOf(popup.segment))
+        ObjectCalls.keepReachable(popup)
     }
 
     /**

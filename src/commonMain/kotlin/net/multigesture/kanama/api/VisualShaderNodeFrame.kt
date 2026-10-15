@@ -51,6 +51,7 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
     fun setTitle(title: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setTitleBind, segment, title)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -60,7 +61,9 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
      */
     fun getTitle(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTitleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getTitleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -71,6 +74,7 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
     fun setTintColorEnabled(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setTintColorEnabledBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -80,7 +84,9 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
      */
     fun isTintColorEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTintColorEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isTintColorEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -91,6 +97,7 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
     fun setTintColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setTintColorBind, segment, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -100,7 +107,9 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
      */
     fun getTintColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getTintColorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getTintColorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -111,6 +120,7 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
     fun setAutoshrinkEnabled(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAutoshrinkEnabledBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -120,7 +130,9 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
      */
     fun isAutoshrinkEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutoshrinkEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutoshrinkEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -132,6 +144,7 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
     fun addAttachedNode(node: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.addAttachedNodeBind, segment, node)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -143,6 +156,7 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
     fun removeAttachedNode(node: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeAttachedNodeBind, segment, node)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -153,6 +167,7 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
     fun setAttachedNodes(attachedNodes: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setAttachedNodesBind, segment, attachedNodes)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -162,7 +177,9 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
      */
     fun getAttachedNodes(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getAttachedNodesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getAttachedNodesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -27,6 +27,7 @@ class VisualShaderNodeParticleEmit(handle: GodotHandle) : VisualShaderNode(handl
     fun setFlags(flags: VisualShaderNodeParticleEmit.EmitFlags) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFlagsBind, segment, flags.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeParticleEmit(handle: GodotHandle) : VisualShaderNode(handl
      */
     fun getFlags(): VisualShaderNodeParticleEmit.EmitFlags {
         checkOpen()
-        return VisualShaderNodeParticleEmit.EmitFlags(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFlagsBind, segment))
+        val ret = VisualShaderNodeParticleEmit.EmitFlags(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFlagsBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

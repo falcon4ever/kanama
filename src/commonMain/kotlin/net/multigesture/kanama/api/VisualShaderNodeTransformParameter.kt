@@ -33,6 +33,7 @@ class VisualShaderNodeTransformParameter(handle: GodotHandle) : VisualShaderNode
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -42,7 +43,9 @@ class VisualShaderNodeTransformParameter(handle: GodotHandle) : VisualShaderNode
      */
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +56,7 @@ class VisualShaderNodeTransformParameter(handle: GodotHandle) : VisualShaderNode
     fun setDefaultValue(value: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(Binds.setDefaultValueBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,7 +66,9 @@ class VisualShaderNodeTransformParameter(handle: GodotHandle) : VisualShaderNode
      */
     fun getDefaultValue(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getDefaultValueBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getDefaultValueBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

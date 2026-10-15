@@ -425,6 +425,7 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
      */
     fun setMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(material)
     }
 
     /**

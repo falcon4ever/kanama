@@ -57,6 +57,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      */
     fun setSpriteFrames(spriteFrames: SpriteFrames?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSpriteFramesBind, segment, listOf(spriteFrames?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(spriteFrames)
     }
 
     /**

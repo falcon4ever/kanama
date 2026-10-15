@@ -108,6 +108,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      */
     fun setTlsOptions(clientOptions: TLSOptions?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTlsOptionsBind, segment, listOf(clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(clientOptions)
     }
 
     /**

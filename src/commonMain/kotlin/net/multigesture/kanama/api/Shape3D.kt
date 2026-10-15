@@ -35,6 +35,7 @@ open class Shape3D(handle: GodotHandle) : Resource(handle) {
     fun setCustomSolverBias(bias: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCustomSolverBiasBind, segment, bias)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -47,7 +48,9 @@ open class Shape3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomSolverBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCustomSolverBiasBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCustomSolverBiasBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,6 +65,7 @@ open class Shape3D(handle: GodotHandle) : Resource(handle) {
     fun setMargin(margin: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMarginBind, segment, margin)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -75,7 +79,9 @@ open class Shape3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getMargin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMarginBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMarginBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -85,7 +91,9 @@ open class Shape3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getDebugMesh(): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDebugMeshBind, segment))
+        val ret = ArrayMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDebugMeshBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

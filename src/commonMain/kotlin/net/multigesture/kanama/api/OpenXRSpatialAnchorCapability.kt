@@ -52,7 +52,9 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
      * Generated from Godot docs: OpenXRSpatialAnchorCapability.create_default_persistence_context
      */
     fun createDefaultPersistenceContext(userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithCallableArgRetObject(Binds.createDefaultPersistenceContextBind, segment, userCallback.target.segment, userCallback.method))
+        val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithCallableArgRetObject(Binds.createDefaultPersistenceContextBind, segment, userCallback.target.segment, userCallback.method))
+        ObjectCalls.keepReachable(userCallback)
+        return ret
     }
 
     /**
@@ -64,7 +66,9 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
      * Generated from Godot docs: OpenXRSpatialAnchorCapability.create_persistence_context
      */
     fun createPersistenceContext(scope: OpenXRSpatialAnchorCapability.PersistenceScope, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithLongCallableArgsRetObject(Binds.createPersistenceContextBind, segment, scope.value, userCallback.target.segment, userCallback.method))
+        val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithLongCallableArgsRetObject(Binds.createPersistenceContextBind, segment, scope.value, userCallback.target.segment, userCallback.method))
+        ObjectCalls.keepReachable(userCallback)
+        return ret
     }
 
     /**
@@ -96,7 +100,9 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
      * Generated from Godot docs: OpenXRSpatialAnchorCapability.create_new_anchor
      */
     fun createNewAnchor(transform: Transform3D, spatialContext: RID, next: OpenXRStructureBase?): OpenXRAnchorTracker? {
-        return OpenXRAnchorTracker.wrapOwned(ObjectCalls.ptrcallWithTransform3DRIDObjectArgsRetObject(Binds.createNewAnchorBind, segment, transform, spatialContext, next?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = OpenXRAnchorTracker.wrapOwned(ObjectCalls.ptrcallWithTransform3DRIDObjectArgsRetObject(Binds.createNewAnchorBind, segment, transform, spatialContext, next?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(next)
+        return ret
     }
 
     /**
@@ -107,6 +113,7 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
      */
     fun removeAnchor(anchorTracker: OpenXRAnchorTracker?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeAnchorBind, segment, listOf(anchorTracker?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(anchorTracker)
     }
 
     /**
@@ -122,7 +129,10 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
      * Generated from Godot docs: OpenXRSpatialAnchorCapability.persist_anchor
      */
     fun persistAnchor(anchorTracker: OpenXRAnchorTracker?, persistenceContext: RID, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithObjectRIDCallableArgsRetObject(Binds.persistAnchorBind, segment, anchorTracker?.requireOpenHandle() ?: NULL_SEGMENT, persistenceContext, userCallback.target.segment, userCallback.method))
+        val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithObjectRIDCallableArgsRetObject(Binds.persistAnchorBind, segment, anchorTracker?.requireOpenHandle() ?: NULL_SEGMENT, persistenceContext, userCallback.target.segment, userCallback.method))
+        ObjectCalls.keepReachable(anchorTracker)
+        ObjectCalls.keepReachable(userCallback)
+        return ret
     }
 
     /**
@@ -137,7 +147,10 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
      * Generated from Godot docs: OpenXRSpatialAnchorCapability.unpersist_anchor
      */
     fun unpersistAnchor(anchorTracker: OpenXRAnchorTracker?, persistenceContext: RID, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithObjectRIDCallableArgsRetObject(Binds.unpersistAnchorBind, segment, anchorTracker?.requireOpenHandle() ?: NULL_SEGMENT, persistenceContext, userCallback.target.segment, userCallback.method))
+        val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithObjectRIDCallableArgsRetObject(Binds.unpersistAnchorBind, segment, anchorTracker?.requireOpenHandle() ?: NULL_SEGMENT, persistenceContext, userCallback.target.segment, userCallback.method))
+        ObjectCalls.keepReachable(anchorTracker)
+        ObjectCalls.keepReachable(userCallback)
+        return ret
     }
 
     /**
@@ -158,7 +171,11 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
      * Generated from Godot docs: OpenXRSpatialAnchorCapability.start_entity_discovery
      */
     fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(Binds.startEntityDiscoveryBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: NULL_SEGMENT, nextSnapshotQuery?.requireOpenHandle() ?: NULL_SEGMENT, userCallback.target.segment, userCallback.method))
+        val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(Binds.startEntityDiscoveryBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: NULL_SEGMENT, nextSnapshotQuery?.requireOpenHandle() ?: NULL_SEGMENT, userCallback.target.segment, userCallback.method))
+        ObjectCalls.keepReachable(nextSnapshotCreate)
+        ObjectCalls.keepReachable(nextSnapshotQuery)
+        ObjectCalls.keepReachable(userCallback)
+        return ret
     }
 
     /**
@@ -173,6 +190,8 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
      */
     fun doEntityUpdate(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?) {
         ObjectCalls.ptrcallWithRIDObjectListTwoObjectArgs(Binds.doEntityUpdateBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: NULL_SEGMENT, nextSnapshotQuery?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(nextSnapshotCreate)
+        ObjectCalls.keepReachable(nextSnapshotQuery)
     }
 
     /**

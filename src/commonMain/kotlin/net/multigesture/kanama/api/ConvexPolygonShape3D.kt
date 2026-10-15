@@ -27,6 +27,7 @@ class ConvexPolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
     fun setPoints(points: List<Vector3>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListArg(Binds.setPointsBind, segment, points)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class ConvexPolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getPoints(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getPointsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getPointsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

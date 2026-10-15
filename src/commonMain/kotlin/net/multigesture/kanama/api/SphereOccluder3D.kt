@@ -26,6 +26,7 @@ class SphereOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
     fun setRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -35,7 +36,9 @@ class SphereOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

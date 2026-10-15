@@ -54,7 +54,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getNextSourceId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getNextSourceIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getNextSourceIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -68,7 +70,10 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun addSource(source: TileSetSource?, atlasSourceIdOverride: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(Binds.addSourceBind, segment, source?.requireOpenHandle() ?: NULL_SEGMENT, atlasSourceIdOverride)
+        val ret = ObjectCalls.ptrcallWithObjectAndIntArgRetInt(Binds.addSourceBind, segment, source?.requireOpenHandle() ?: NULL_SEGMENT, atlasSourceIdOverride)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(source)
+        return ret
     }
 
     /**
@@ -79,6 +84,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun removeSource(sourceId: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeSourceBind, segment, sourceId)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -89,6 +95,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setSourceId(sourceId: Int, newSourceId: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setSourceIdBind, segment, sourceId, newSourceId)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -98,7 +105,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSourceCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getSourceCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -108,7 +117,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceId(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSourceIdBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSourceIdBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -118,7 +129,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun hasSource(sourceId: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasSourceBind, segment, sourceId)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasSourceBind, segment, sourceId)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -128,7 +141,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getSource(sourceId: Int): TileSetSource? {
         checkOpen()
-        return TileSetSource.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSourceBind, segment, sourceId))
+        val ret = TileSetSource.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSourceBind, segment, sourceId))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -139,6 +154,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setTileShape(shape: TileSet.TileShape) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTileShapeBind, segment, shape.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -148,7 +164,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTileShape(): TileSet.TileShape {
         checkOpen()
-        return TileSet.TileShape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTileShapeBind, segment))
+        val ret = TileSet.TileShape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTileShapeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -160,6 +178,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setTileLayout(layout: TileSet.TileLayout) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTileLayoutBind, segment, layout.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -170,7 +189,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTileLayout(): TileSet.TileLayout {
         checkOpen()
-        return TileSet.TileLayout(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTileLayoutBind, segment))
+        val ret = TileSet.TileLayout(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTileLayoutBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -182,6 +203,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setTileOffsetAxis(alignment: TileSet.TileOffsetAxis) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTileOffsetAxisBind, segment, alignment.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -192,7 +214,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTileOffsetAxis(): TileSet.TileOffsetAxis {
         checkOpen()
-        return TileSet.TileOffsetAxis(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTileOffsetAxisBind, segment))
+        val ret = TileSet.TileOffsetAxis(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTileOffsetAxisBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -204,6 +228,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setTileSize(size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setTileSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -214,7 +239,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTileSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getTileSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getTileSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -225,6 +252,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setUvClipping(uvClipping: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUvClippingBind, segment, uvClipping)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -234,7 +262,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun isUvClipping(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUvClippingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUvClippingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -244,7 +274,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getOcclusionLayersCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOcclusionLayersCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getOcclusionLayersCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -257,6 +289,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun addOcclusionLayer(toPosition: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.addOcclusionLayerBind, segment, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -268,6 +301,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun moveOcclusionLayer(layerIndex: Int, toPosition: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveOcclusionLayerBind, segment, layerIndex, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -278,6 +312,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun removeOcclusionLayer(layerIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeOcclusionLayerBind, segment, layerIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -289,6 +324,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setOcclusionLayerLightMask(layerIndex: Int, lightMask: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setOcclusionLayerLightMaskBind, segment, layerIndex, lightMask)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -298,7 +334,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getOcclusionLayerLightMask(layerIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getOcclusionLayerLightMaskBind, segment, layerIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getOcclusionLayerLightMaskBind, segment, layerIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -309,6 +347,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setOcclusionLayerSdfCollision(layerIndex: Int, sdfCollision: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setOcclusionLayerSdfCollisionBind, segment, layerIndex, sdfCollision)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -318,7 +357,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getOcclusionLayerSdfCollision(layerIndex: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getOcclusionLayerSdfCollisionBind, segment, layerIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.getOcclusionLayerSdfCollisionBind, segment, layerIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -328,7 +369,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPhysicsLayersCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPhysicsLayersCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPhysicsLayersCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -341,6 +384,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun addPhysicsLayer(toPosition: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.addPhysicsLayerBind, segment, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -352,6 +396,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun movePhysicsLayer(layerIndex: Int, toPosition: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.movePhysicsLayerBind, segment, layerIndex, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -362,6 +407,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun removePhysicsLayer(layerIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removePhysicsLayerBind, segment, layerIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -373,6 +419,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setPhysicsLayerCollisionLayer(layerIndex: Int, layer: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndUInt32Args(Binds.setPhysicsLayerCollisionLayerBind, segment, layerIndex, layer)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -383,7 +430,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPhysicsLayerCollisionLayer(layerIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(Binds.getPhysicsLayerCollisionLayerBind, segment, layerIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetUInt32(Binds.getPhysicsLayerCollisionLayerBind, segment, layerIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -394,6 +443,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setPhysicsLayerCollisionMask(layerIndex: Int, mask: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndUInt32Args(Binds.setPhysicsLayerCollisionMaskBind, segment, layerIndex, mask)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -403,7 +453,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPhysicsLayerCollisionMask(layerIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(Binds.getPhysicsLayerCollisionMaskBind, segment, layerIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetUInt32(Binds.getPhysicsLayerCollisionMaskBind, segment, layerIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -414,6 +466,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setPhysicsLayerCollisionPriority(layerIndex: Int, priority: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setPhysicsLayerCollisionPriorityBind, segment, layerIndex, priority)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -423,7 +476,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPhysicsLayerCollisionPriority(layerIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPhysicsLayerCollisionPriorityBind, segment, layerIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPhysicsLayerCollisionPriorityBind, segment, layerIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -434,6 +489,8 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setPhysicsLayerPhysicsMaterial(layerIndex: Int, physicsMaterial: PhysicsMaterial?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setPhysicsLayerPhysicsMaterialBind, segment, layerIndex, physicsMaterial?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(physicsMaterial)
     }
 
     /**
@@ -443,7 +500,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPhysicsLayerPhysicsMaterial(layerIndex: Int): PhysicsMaterial? {
         checkOpen()
-        return PhysicsMaterial.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getPhysicsLayerPhysicsMaterialBind, segment, layerIndex))
+        val ret = PhysicsMaterial.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getPhysicsLayerPhysicsMaterialBind, segment, layerIndex))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -453,7 +512,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTerrainSetsCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTerrainSetsCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getTerrainSetsCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -465,6 +526,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun addTerrainSet(toPosition: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.addTerrainSetBind, segment, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -476,6 +538,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun moveTerrainSet(terrainSet: Int, toPosition: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveTerrainSetBind, segment, terrainSet, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -486,6 +549,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun removeTerrainSet(terrainSet: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeTerrainSetBind, segment, terrainSet)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -497,6 +561,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setTerrainSetMode(terrainSet: Int, mode: TileSet.TerrainMode) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setTerrainSetModeBind, segment, terrainSet, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -506,7 +571,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTerrainSetMode(terrainSet: Int): TileSet.TerrainMode {
         checkOpen()
-        return TileSet.TerrainMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getTerrainSetModeBind, segment, terrainSet))
+        val ret = TileSet.TerrainMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getTerrainSetModeBind, segment, terrainSet))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -516,7 +583,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTerrainsCount(terrainSet: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getTerrainsCountBind, segment, terrainSet)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getTerrainsCountBind, segment, terrainSet)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -528,6 +597,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun addTerrain(terrainSet: Int, toPosition: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.addTerrainBind, segment, terrainSet, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -539,6 +609,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun moveTerrain(terrainSet: Int, terrainIndex: Int, toPosition: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeIntArgs(Binds.moveTerrainBind, segment, terrainSet, terrainIndex, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -550,6 +621,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun removeTerrain(terrainSet: Int, terrainIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.removeTerrainBind, segment, terrainSet, terrainIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -560,6 +632,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun clearTerrains(terrainSet: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.clearTerrainsBind, segment, terrainSet)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -570,6 +643,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setTerrainName(terrainSet: Int, terrainIndex: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndStringArgs(Binds.setTerrainNameBind, segment, terrainSet, terrainIndex, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -579,7 +653,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTerrainName(terrainSet: Int, terrainIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.getTerrainNameBind, segment, terrainSet, terrainIndex)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.getTerrainNameBind, segment, terrainSet, terrainIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -591,6 +667,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setTerrainColor(terrainSet: Int, terrainIndex: Int, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndColorArg(Binds.setTerrainColorBind, segment, terrainSet, terrainIndex, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -600,7 +677,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTerrainColor(terrainSet: Int, terrainIndex: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(Binds.getTerrainColorBind, segment, terrainSet, terrainIndex)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetColor(Binds.getTerrainColorBind, segment, terrainSet, terrainIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -610,7 +689,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getNavigationLayersCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getNavigationLayersCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getNavigationLayersCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -623,6 +704,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun addNavigationLayer(toPosition: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.addNavigationLayerBind, segment, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -634,6 +716,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun moveNavigationLayer(layerIndex: Int, toPosition: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveNavigationLayerBind, segment, layerIndex, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -644,6 +727,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun removeNavigationLayer(layerIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeNavigationLayerBind, segment, layerIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -655,6 +739,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setNavigationLayerLayers(layerIndex: Int, layers: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndUInt32Args(Binds.setNavigationLayerLayersBind, segment, layerIndex, layers)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -665,7 +750,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getNavigationLayerLayers(layerIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(Binds.getNavigationLayerLayersBind, segment, layerIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetUInt32(Binds.getNavigationLayerLayersBind, segment, layerIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -678,6 +765,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setNavigationLayerLayerValue(layerIndex: Int, layerNumber: Int, value: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndBoolArgs(Binds.setNavigationLayerLayerValueBind, segment, layerIndex, layerNumber, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -689,7 +777,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getNavigationLayerLayerValue(layerIndex: Int, layerNumber: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.getNavigationLayerLayerValueBind, segment, layerIndex, layerNumber)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.getNavigationLayerLayerValueBind, segment, layerIndex, layerNumber)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -699,7 +789,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomDataLayersCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCustomDataLayersCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getCustomDataLayersCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -712,6 +804,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun addCustomDataLayer(toPosition: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.addCustomDataLayerBind, segment, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -723,6 +816,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun moveCustomDataLayer(layerIndex: Int, toPosition: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveCustomDataLayerBind, segment, layerIndex, toPosition)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -733,6 +827,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun removeCustomDataLayer(layerIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeCustomDataLayerBind, segment, layerIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -742,7 +837,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomDataLayerByName(layerName: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetInt(Binds.getCustomDataLayerByNameBind, segment, layerName)
+        val ret = ObjectCalls.ptrcallWithStringArgRetInt(Binds.getCustomDataLayerByNameBind, segment, layerName)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -754,6 +851,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setCustomDataLayerName(layerIndex: Int, layerName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(Binds.setCustomDataLayerNameBind, segment, layerIndex, layerName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -763,7 +861,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun hasCustomDataLayerByName(layerName: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasCustomDataLayerByNameBind, segment, layerName)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasCustomDataLayerByNameBind, segment, layerName)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -773,7 +873,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomDataLayerName(layerIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getCustomDataLayerNameBind, segment, layerIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getCustomDataLayerNameBind, segment, layerIndex)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -784,6 +886,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setCustomDataLayerType(layerIndex: Int, layerType: VariantType) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setCustomDataLayerTypeBind, segment, layerIndex, layerType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -793,7 +896,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomDataLayerType(layerIndex: Int): VariantType {
         checkOpen()
-        return VariantType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getCustomDataLayerTypeBind, segment, layerIndex))
+        val ret = VariantType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getCustomDataLayerTypeBind, segment, layerIndex))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -807,6 +912,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setSourceLevelTileProxy(sourceFrom: Int, sourceTo: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setSourceLevelTileProxyBind, segment, sourceFrom, sourceTo)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -817,7 +923,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceLevelTileProxy(sourceFrom: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSourceLevelTileProxyBind, segment, sourceFrom)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSourceLevelTileProxyBind, segment, sourceFrom)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -827,7 +935,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun hasSourceLevelTileProxy(sourceFrom: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasSourceLevelTileProxyBind, segment, sourceFrom)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasSourceLevelTileProxyBind, segment, sourceFrom)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -838,6 +948,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun removeSourceLevelTileProxy(sourceFrom: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeSourceLevelTileProxyBind, segment, sourceFrom)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -851,6 +962,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, sourceTo: Int, coordsTo: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntVector2iArgs(Binds.setCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom, sourceTo, coordsTo)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -862,7 +974,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iArgsRetArray(Binds.getCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
+        val ret = ObjectCalls.ptrcallWithIntVector2iArgsRetArray(Binds.getCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -872,7 +986,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun hasCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndVector2iArgRetBool(Binds.hasCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
+        val ret = ObjectCalls.ptrcallWithIntAndVector2iArgRetBool(Binds.hasCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -883,6 +999,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun removeCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2iArg(Binds.removeCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -895,6 +1012,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun setAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int, sourceTo: Int, coordsTo: Vector2i, alternativeTo: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntVector2iTwoIntVector2iIntArgs(Binds.setAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom, sourceTo, coordsTo, alternativeTo)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -906,7 +1024,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(Binds.getAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
+        val ret = ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(Binds.getAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -916,7 +1036,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun hasAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetBool(Binds.hasAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
+        val ret = ObjectCalls.ptrcallWithIntVector2iIntArgsRetBool(Binds.hasAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -927,6 +1049,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun removeAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(Binds.removeAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -940,7 +1063,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun mapTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(Binds.mapTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
+        val ret = ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(Binds.mapTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -951,6 +1076,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun cleanupInvalidTileProxies() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.cleanupInvalidTileProxiesBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -961,6 +1087,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun clearTileProxies() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearTileProxiesBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -971,7 +1098,10 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun addPattern(pattern: TileMapPattern?, index: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(Binds.addPatternBind, segment, pattern?.requireOpenHandle() ?: NULL_SEGMENT, index)
+        val ret = ObjectCalls.ptrcallWithObjectAndIntArgRetInt(Binds.addPatternBind, segment, pattern?.requireOpenHandle() ?: NULL_SEGMENT, index)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(pattern)
+        return ret
     }
 
     /**
@@ -981,7 +1111,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPattern(index: Int = -1): TileMapPattern? {
         checkOpen()
-        return TileMapPattern.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getPatternBind, segment, index))
+        val ret = TileMapPattern.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getPatternBind, segment, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -992,6 +1124,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     fun removePattern(index: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removePatternBind, segment, index)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -1001,7 +1134,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPatternsCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPatternsCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPatternsCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

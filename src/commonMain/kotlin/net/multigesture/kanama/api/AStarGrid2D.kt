@@ -79,6 +79,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun setRegion(region: Rect2i) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2iArg(Binds.setRegionBind, segment, region)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -89,7 +90,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRegion(): Rect2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2i(Binds.getRegionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRect2i(Binds.getRegionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -101,6 +104,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun setSize(size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -111,7 +115,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -123,6 +129,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun setOffset(offset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetBind, segment, offset)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -133,7 +140,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -146,6 +155,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun setCellSize(cellSize: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setCellSizeBind, segment, cellSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -157,7 +167,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCellSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getCellSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getCellSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -169,6 +181,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun setCellShape(cellShape: AStarGrid2D.CellShape) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setCellShapeBind, segment, cellShape.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -179,7 +192,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCellShape(): AStarGrid2D.CellShape {
         checkOpen()
-        return AStarGrid2D.CellShape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCellShapeBind, segment))
+        val ret = AStarGrid2D.CellShape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCellShapeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -190,7 +205,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isInBounds(x: Int, y: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isInBoundsBind, segment, x, y)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isInBoundsBind, segment, x, y)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -201,7 +218,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isInBoundsv(id: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.isInBoundsvBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.isInBoundsvBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -211,7 +230,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isDirty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDirtyBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDirtyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -225,6 +246,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun update() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.updateBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -237,6 +259,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun setJumpingEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setJumpingEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -248,7 +271,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isJumpingEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isJumpingEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isJumpingEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -260,6 +285,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun setDiagonalMode(mode: AStarGrid2D.DiagonalMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDiagonalModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -270,7 +296,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDiagonalMode(): AStarGrid2D.DiagonalMode {
         checkOpen()
-        return AStarGrid2D.DiagonalMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDiagonalModeBind, segment))
+        val ret = AStarGrid2D.DiagonalMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDiagonalModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -282,6 +310,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun setDefaultComputeHeuristic(heuristic: AStarGrid2D.Heuristic) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDefaultComputeHeuristicBind, segment, heuristic.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -292,7 +321,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDefaultComputeHeuristic(): AStarGrid2D.Heuristic {
         checkOpen()
-        return AStarGrid2D.Heuristic(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDefaultComputeHeuristicBind, segment))
+        val ret = AStarGrid2D.Heuristic(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDefaultComputeHeuristicBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -304,6 +335,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun setDefaultEstimateHeuristic(heuristic: AStarGrid2D.Heuristic) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDefaultEstimateHeuristicBind, segment, heuristic.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -314,7 +346,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDefaultEstimateHeuristic(): AStarGrid2D.Heuristic {
         checkOpen()
-        return AStarGrid2D.Heuristic(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDefaultEstimateHeuristicBind, segment))
+        val ret = AStarGrid2D.Heuristic(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDefaultEstimateHeuristicBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -327,6 +361,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun setPointSolid(id: Vector2i, solid: Boolean = true) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iAndBoolArg(Binds.setPointSolidBind, segment, id, solid)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -336,7 +371,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPointSolid(id: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.isPointSolidBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.isPointSolidBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -350,6 +387,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun setPointWeightScale(id: Vector2i, weightScale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iAndDoubleArg(Binds.setPointWeightScaleBind, segment, id, weightScale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -359,7 +397,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointWeightScale(id: Vector2i): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetDouble(Binds.getPointWeightScaleBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetDouble(Binds.getPointWeightScaleBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -371,6 +411,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun fillSolidRegion(region: Rect2i, solid: Boolean = true) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2iAndBoolArg(Binds.fillSolidRegionBind, segment, region, solid)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -382,6 +423,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun fillWeightScaleRegion(region: Rect2i, weightScale: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2iAndDoubleArg(Binds.fillWeightScaleRegionBind, segment, region, weightScale)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -392,6 +434,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -401,7 +444,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointPosition(id: Vector2i): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2(Binds.getPointPositionBind, segment, id)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetVector2(Binds.getPointPositionBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -412,7 +457,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointDataInRegion(region: Rect2i): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRect2iArgRetDictionaryList(Binds.getPointDataInRegionBind, segment, region)
+        val ret = ObjectCalls.ptrcallWithRect2iArgRetDictionaryList(Binds.getPointDataInRegionBind, segment, region)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -430,7 +477,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointPath(fromId: Vector2i, toId: Vector2i, allowPartialPath: Boolean = false): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetPackedVector2List(Binds.getPointPathBind, segment, fromId, toId, allowPartialPath)
+        val ret = ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetPackedVector2List(Binds.getPointPathBind, segment, fromId, toId, allowPartialPath)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -446,7 +495,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIdPath(fromId: Vector2i, toId: Vector2i, allowPartialPath: Boolean = false): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetVector2iList(Binds.getIdPathBind, segment, fromId, toId, allowPartialPath)
+        val ret = ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetVector2iList(Binds.getIdPathBind, segment, fromId, toId, allowPartialPath)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

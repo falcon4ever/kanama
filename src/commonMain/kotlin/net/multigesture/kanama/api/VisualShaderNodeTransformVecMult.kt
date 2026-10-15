@@ -27,6 +27,7 @@ class VisualShaderNodeTransformVecMult(handle: GodotHandle) : VisualShaderNode(h
     fun setOperator(op: VisualShaderNodeTransformVecMult.Operator) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOperatorBind, segment, op.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeTransformVecMult(handle: GodotHandle) : VisualShaderNode(h
      */
     fun getOperator(): VisualShaderNodeTransformVecMult.Operator {
         checkOpen()
-        return VisualShaderNodeTransformVecMult.Operator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOperatorBind, segment))
+        val ret = VisualShaderNodeTransformVecMult.Operator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOperatorBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

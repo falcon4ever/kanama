@@ -44,6 +44,7 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setInnerRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setInnerRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -53,7 +54,9 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getInnerRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInnerRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInnerRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -64,6 +67,7 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setOuterRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setOuterRadiusBind, segment, radius)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -73,7 +77,9 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getOuterRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOuterRadiusBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOuterRadiusBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -84,6 +90,7 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setRings(rings: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setRingsBind, segment, rings)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -93,7 +100,9 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRings(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -104,6 +113,7 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     fun setRingSegments(rings: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setRingSegmentsBind, segment, rings)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -113,7 +123,9 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRingSegments(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingSegmentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingSegmentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

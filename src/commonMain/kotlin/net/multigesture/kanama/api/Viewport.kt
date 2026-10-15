@@ -325,6 +325,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      */
     fun setWorld2d(world2d: World2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setWorld2dBind, segment, listOf(world2d?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(world2d)
     }
 
     /**
@@ -876,6 +877,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      */
     fun pushInput(event: InputEvent, inLocalCoords: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.pushInputBind, segment, event.requireOpenHandle(), inLocalCoords)
+        ObjectCalls.keepReachable(event)
     }
 
     /**
@@ -895,6 +897,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      */
     fun pushUnhandledInput(event: InputEvent, inLocalCoords: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.pushUnhandledInputBind, segment, event.requireOpenHandle(), inLocalCoords)
+        ObjectCalls.keepReachable(event)
     }
 
     /**
@@ -1507,6 +1510,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      */
     fun setWorld3d(world3d: World3D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setWorld3dBind, segment, listOf(world3d?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(world3d)
     }
 
     /**
@@ -1855,6 +1859,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      */
     fun setVrsTexture(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setVrsTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**

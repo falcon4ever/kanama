@@ -26,7 +26,9 @@ object ResourceSaver {
      */
     @JvmStatic
     fun save(resource: Resource, path: String = "", flags: ResourceSaver.SaverFlags = ResourceSaver.SaverFlags.NONE): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithObjectStringLongArgsRetLong(Binds.saveBind, singleton, resource.requireOpenHandle(), path, flags.value))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectStringLongArgsRetLong(Binds.saveBind, singleton, resource.requireOpenHandle(), path, flags.value))
+        ObjectCalls.keepReachable(resource)
+        return ret
     }
 
     /**
@@ -48,7 +50,9 @@ object ResourceSaver {
      */
     @JvmStatic
     fun getRecognizedExtensions(type: Resource): List<String> {
-        return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(Binds.getRecognizedExtensionsBind, singleton, type.requireOpenHandle())
+        val ret = ObjectCalls.ptrcallWithObjectArgRetPackedStringList(Binds.getRecognizedExtensionsBind, singleton, type.requireOpenHandle())
+        ObjectCalls.keepReachable(type)
+        return ret
     }
 
     /**
@@ -61,6 +65,7 @@ object ResourceSaver {
     @JvmStatic
     fun addResourceFormatSaver(formatSaver: ResourceFormatSaver, atFront: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addResourceFormatSaverBind, singleton, formatSaver.requireOpenHandle(), atFront)
+        ObjectCalls.keepReachable(formatSaver)
     }
 
     /**
@@ -71,6 +76,7 @@ object ResourceSaver {
     @JvmStatic
     fun removeResourceFormatSaver(formatSaver: ResourceFormatSaver) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeResourceFormatSaverBind, singleton, listOf(formatSaver.requireOpenHandle()))
+        ObjectCalls.keepReachable(formatSaver)
     }
 
     /**

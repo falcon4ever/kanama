@@ -119,6 +119,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      */
     fun setMaterialOverride(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialOverrideBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -139,6 +140,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      */
     fun setMaterialOverlay(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialOverlayBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(material)
     }
 
     /**

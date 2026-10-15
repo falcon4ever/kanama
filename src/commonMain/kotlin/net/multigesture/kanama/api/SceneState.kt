@@ -20,7 +20,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getPathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -32,6 +34,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
     fun getBaseSceneState(): SceneState? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getBaseSceneStateBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -47,7 +50,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getNodeCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getNodeCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -57,7 +62,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeType(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getNodeTypeBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getNodeTypeBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -67,7 +74,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeName(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getNodeNameBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getNodeNameBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -78,7 +87,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodePath(idx: Int, forParent: Boolean = false): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndBoolArgRetNodePath(Binds.getNodePathBind, segment, idx, forParent)
+        val ret = ObjectCalls.ptrcallWithIntAndBoolArgRetNodePath(Binds.getNodePathBind, segment, idx, forParent)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -88,7 +99,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeOwnerPath(idx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getNodeOwnerPathBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getNodeOwnerPathBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -98,7 +111,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isNodeInstancePlaceholder(idx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isNodeInstancePlaceholderBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.isNodeInstancePlaceholderBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -108,7 +123,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeInstancePlaceholder(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getNodeInstancePlaceholderBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getNodeInstancePlaceholderBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -119,7 +136,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeInstance(idx: Int): PackedScene? {
         checkOpen()
-        return PackedScene.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getNodeInstanceBind, segment, idx))
+        val ret = PackedScene.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getNodeInstanceBind, segment, idx))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -129,7 +148,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeGroups(idx: Int): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(Binds.getNodeGroupsBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetPackedStringList(Binds.getNodeGroupsBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -142,7 +163,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeIndex(idx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getNodeIndexBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getNodeIndexBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -154,7 +177,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodePropertyCount(idx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getNodePropertyCountBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getNodePropertyCountBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,7 +189,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodePropertyName(idx: Int, propIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(Binds.getNodePropertyNameBind, segment, idx, propIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetStringName(Binds.getNodePropertyNameBind, segment, idx, propIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -174,7 +201,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodePropertyValue(idx: Int, propIdx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(Binds.getNodePropertyValueBind, segment, idx, propIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(Binds.getNodePropertyValueBind, segment, idx, propIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -186,7 +215,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getConnectionCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getConnectionCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -196,7 +227,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionSource(idx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getConnectionSourceBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getConnectionSourceBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -206,7 +239,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionSignal(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getConnectionSignalBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getConnectionSignalBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -217,7 +252,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionTarget(idx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getConnectionTargetBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getConnectionTargetBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -227,7 +264,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionMethod(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getConnectionMethodBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getConnectionMethodBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -237,7 +276,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionFlags(idx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getConnectionFlagsBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getConnectionFlagsBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -247,7 +288,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionBinds(idx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getConnectionBindsBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetArray(Binds.getConnectionBindsBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -257,7 +300,9 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionUnbinds(idx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getConnectionUnbindsBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getConnectionUnbindsBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

@@ -27,7 +27,9 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasMultiplayerPeer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMultiplayerPeerBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMultiplayerPeerBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -42,7 +44,9 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMultiplayerPeer(): MultiplayerPeer? {
         checkOpen()
-        return MultiplayerPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMultiplayerPeerBind, segment))
+        val ret = MultiplayerPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMultiplayerPeerBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -58,6 +62,8 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
     fun setMultiplayerPeer(peer: MultiplayerPeer?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMultiplayerPeerBind, segment, listOf(peer?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(peer)
     }
 
     /**
@@ -67,7 +73,9 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUniqueId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getUniqueIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getUniqueIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -78,7 +86,9 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isServer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isServerBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isServerBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -90,7 +100,9 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRemoteSenderId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRemoteSenderIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getRemoteSenderIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -103,7 +115,9 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun poll(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -118,7 +132,10 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun rpc(peer: Int, objectValue: GodotObject, method: String, arguments: List<Any?> = emptyList()): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntObjectStringNameArrayArgsRetLong(Binds.rpcBind, segment, peer, objectValue.segment, method, arguments))
+        val ret = GodotError(ObjectCalls.ptrcallWithIntObjectStringNameArrayArgsRetLong(Binds.rpcBind, segment, peer, objectValue.segment, method, arguments))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(objectValue)
+        return ret
     }
 
     /**
@@ -133,7 +150,10 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun objectConfigurationAdd(objectValue: GodotObject, configuration: Any?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(Binds.objectConfigurationAddBind, segment, objectValue.segment, configuration))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(Binds.objectConfigurationAddBind, segment, objectValue.segment, configuration))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(objectValue)
+        return ret
     }
 
     /**
@@ -148,7 +168,10 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun objectConfigurationRemove(objectValue: GodotObject, configuration: Any?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(Binds.objectConfigurationRemoveBind, segment, objectValue.segment, configuration))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(Binds.objectConfigurationRemoveBind, segment, objectValue.segment, configuration))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(objectValue)
+        return ret
     }
 
     /**
@@ -158,7 +181,9 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPeers(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getPeersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getPeersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `peer_connected(id: int)`; see [TypedSignal]. */

@@ -50,6 +50,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
     fun setPressed(pressed: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPressedBind, segment, pressed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -64,6 +65,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
     fun setKeycode(keycode: Key) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setKeycodeBind, segment, keycode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -77,7 +79,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getKeycode(): Key {
         checkOpen()
-        return Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getKeycodeBind, segment))
+        val ret = Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getKeycodeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -90,6 +94,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
     fun setPhysicalKeycode(physicalKeycode: Key) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setPhysicalKeycodeBind, segment, physicalKeycode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -101,7 +106,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getPhysicalKeycode(): Key {
         checkOpen()
-        return Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPhysicalKeycodeBind, segment))
+        val ret = Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPhysicalKeycodeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -116,6 +123,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
     fun setKeyLabel(keyLabel: Key) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setKeyLabelBind, segment, keyLabel.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -129,7 +137,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getKeyLabel(): Key {
         checkOpen()
-        return Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getKeyLabelBind, segment))
+        val ret = Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getKeyLabelBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -144,6 +154,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
     fun setUnicode(unicode: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setUnicodeBind, segment, unicode)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -157,7 +168,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getUnicode(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getUnicodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getUnicodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -168,6 +181,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
     fun setLocation(location: KeyLocation) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setLocationBind, segment, location.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -177,7 +191,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getLocation(): KeyLocation {
         checkOpen()
-        return KeyLocation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLocationBind, segment))
+        val ret = KeyLocation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLocationBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -193,6 +209,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
     fun setEcho(echo: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setEchoBind, segment, echo)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -205,7 +222,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getKeycodeWithModifiers(): Key {
         checkOpen()
-        return Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getKeycodeWithModifiersBind, segment))
+        val ret = Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getKeycodeWithModifiersBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -218,7 +237,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getPhysicalKeycodeWithModifiers(): Key {
         checkOpen()
-        return Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPhysicalKeycodeWithModifiersBind, segment))
+        val ret = Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPhysicalKeycodeWithModifiersBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -231,7 +252,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getKeyLabelWithModifiers(): Key {
         checkOpen()
-        return Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getKeyLabelWithModifiersBind, segment))
+        val ret = Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getKeyLabelWithModifiersBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -241,7 +264,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun asTextKeycode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.asTextKeycodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.asTextKeycodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -251,7 +276,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun asTextPhysicalKeycode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.asTextPhysicalKeycodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.asTextPhysicalKeycodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -261,7 +288,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun asTextKeyLabel(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.asTextKeyLabelBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.asTextKeyLabelBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -272,7 +301,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun asTextLocation(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.asTextLocationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.asTextLocationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {
@@ -294,7 +325,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
         // Downcast a GodotObject to InputEventKey (null if not).
         @JvmStatic
         fun from(value: GodotObject): InputEventKey? =
-            if (value.isClass("InputEventKey")) RefCounted.retained(InputEventKey(value.handle)) else null
+            if (value.isClass("InputEventKey")) RefCounted.retained(InputEventKey(value.handle), value) else null
     }
 
     private object Binds {

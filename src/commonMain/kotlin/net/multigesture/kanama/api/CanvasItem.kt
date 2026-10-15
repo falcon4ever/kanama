@@ -593,6 +593,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawTexture(texture: Texture2D, position: Vector2, modulate: Color) {
         ObjectCalls.ptrcallWithObjectVector2AndColorArgs(Binds.drawTextureBind, segment, texture.requireOpenHandle(), position, modulate)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -608,6 +609,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawTextureRect(texture: Texture2D, rect: Rect2, tile: Boolean, modulate: Color, transpose: Boolean = false) {
         ObjectCalls.ptrcallWithObjectRect2BoolColorBoolArgs(Binds.drawTextureRectBind, segment, texture.requireOpenHandle(), rect, tile, modulate, transpose)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -623,6 +625,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawTextureRectRegion(texture: Texture2D, rect: Rect2, srcRect: Rect2, modulate: Color, transpose: Boolean = false, clipUv: Boolean = true) {
         ObjectCalls.ptrcallWithObjectTwoRect2ColorTwoBoolArgs(Binds.drawTextureRectRegionBind, segment, texture.requireOpenHandle(), rect, srcRect, modulate, transpose, clipUv)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -641,6 +644,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawMsdfTextureRectRegion(texture: Texture2D, rect: Rect2, srcRect: Rect2, modulate: Color, outline: Double = 0.0, pixelRange: Double = 4.0, scale: Double = 1.0) {
         ObjectCalls.ptrcallWithObjectTwoRect2ColorThreeDoubleArgs(Binds.drawMsdfTextureRectRegionBind, segment, texture.requireOpenHandle(), rect, srcRect, modulate, outline, pixelRange, scale)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -651,6 +655,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawLcdTextureRectRegion(texture: Texture2D, rect: Rect2, srcRect: Rect2, modulate: Color) {
         ObjectCalls.ptrcallWithObjectTwoRect2AndColorArgs(Binds.drawLcdTextureRectRegionBind, segment, texture.requireOpenHandle(), rect, srcRect, modulate)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -664,6 +669,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawStyleBox(styleBox: StyleBox, rect: Rect2) {
         ObjectCalls.ptrcallWithObjectAndRect2Arg(Binds.drawStyleBoxBind, segment, styleBox.requireOpenHandle(), rect)
+        ObjectCalls.keepReachable(styleBox)
     }
 
     /**
@@ -680,6 +686,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawPrimitive(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D?) {
         ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(Binds.drawPrimitiveBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -699,6 +706,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawPolygon(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D?) {
         ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(Binds.drawPolygonBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -716,6 +724,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawColoredPolygon(points: List<Vector2>, color: Color, uvs: List<Vector2>, texture: Texture2D?) {
         ObjectCalls.ptrcallWithPackedVector2ListColorPackedVector2ListAndObjectArgs(Binds.drawColoredPolygonBind, segment, points, color, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -729,6 +738,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawString(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         ObjectCalls.ptrcallWithObjectVector2StringLongDoubleIntColorThreeLongDoubleArgs(Binds.drawStringBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -742,6 +752,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawMultilineString(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(Binds.drawMultilineStringBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, maxLines, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -755,6 +766,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawStringOutline(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(Binds.drawStringOutlineBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, size, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -768,6 +780,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawMultilineStringOutline(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         ObjectCalls.ptrcallWithObjectVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(Binds.drawMultilineStringOutlineBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, maxLines, size, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -779,6 +792,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawChar(font: Font, pos: Vector2, char: String, fontSize: Int = 16, modulate: Color, oversampling: Double = 0.0) {
         ObjectCalls.ptrcallWithObjectVector2StringIntColorDoubleArgs(Binds.drawCharBind, segment, font.requireOpenHandle(), pos, char, fontSize, modulate, oversampling)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -790,6 +804,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawCharOutline(font: Font, pos: Vector2, char: String, fontSize: Int = 16, size: Int = -1, modulate: Color, oversampling: Double = 0.0) {
         ObjectCalls.ptrcallWithObjectVector2StringTwoIntColorDoubleArgs(Binds.drawCharOutlineBind, segment, font.requireOpenHandle(), pos, char, fontSize, size, modulate, oversampling)
+        ObjectCalls.keepReachable(font)
     }
 
     /**
@@ -804,6 +819,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawMesh(mesh: Mesh, texture: Texture2D?, transform: Transform2D, modulate: Color) {
         ObjectCalls.ptrcallWithTwoObjectTransform2DColorArgs(Binds.drawMeshBind, segment, mesh.requireOpenHandle(), texture?.requireOpenHandle() ?: NULL_SEGMENT, transform, modulate)
+        ObjectCalls.keepReachable(mesh)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -817,6 +834,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun drawMultimesh(multimesh: MultiMesh, texture: Texture2D?) {
         ObjectCalls.ptrcallWithTwoObjectArgs(Binds.drawMultimeshBind, segment, multimesh.requireOpenHandle(), texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(multimesh)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -999,6 +1018,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      */
     fun setMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(material)
     }
 
     /**
@@ -1124,7 +1144,9 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.make_input_local
      */
     fun makeInputLocal(event: InputEvent): InputEvent {
-        return requireGodotReturn(InputEvent.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.makeInputLocalBind, segment, event.requireOpenHandle())), "CanvasItem.make_input_local")
+        val ret = requireGodotReturn(InputEvent.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.makeInputLocalBind, segment, event.requireOpenHandle())), "CanvasItem.make_input_local")
+        ObjectCalls.keepReachable(event)
+        return ret
     }
 
     /**

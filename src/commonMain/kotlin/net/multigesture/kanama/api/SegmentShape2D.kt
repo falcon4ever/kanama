@@ -33,6 +33,7 @@ class SegmentShape2D(handle: GodotHandle) : Shape2D(handle) {
     fun setA(a: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setABind, segment, a)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -42,7 +43,9 @@ class SegmentShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun getA(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getABind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getABind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +56,7 @@ class SegmentShape2D(handle: GodotHandle) : Shape2D(handle) {
     fun setB(b: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setBBind, segment, b)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,7 +66,9 @@ class SegmentShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun getB(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

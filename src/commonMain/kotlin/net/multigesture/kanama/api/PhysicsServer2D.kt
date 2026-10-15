@@ -496,6 +496,7 @@ object PhysicsServer2D {
     @JvmStatic
     fun areaSetMonitorCallback(area: RID, callback: GodotCallable) {
         ObjectCalls.ptrcallWithRIDCallableArgs(Binds.areaSetMonitorCallbackBind, singleton, area, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -515,6 +516,7 @@ object PhysicsServer2D {
     @JvmStatic
     fun areaSetAreaMonitorCallback(area: RID, callback: GodotCallable) {
         ObjectCalls.ptrcallWithRIDCallableArgs(Binds.areaSetAreaMonitorCallbackBind, singleton, area, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(callback)
     }
 
     /**
@@ -1133,6 +1135,7 @@ object PhysicsServer2D {
     @JvmStatic
     fun bodySetStateSyncCallback(body: RID, callable: GodotCallable) {
         ObjectCalls.ptrcallWithRIDCallableArgs(Binds.bodySetStateSyncCallbackBind, singleton, body, callable.target.segment, callable.method)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**
@@ -1151,6 +1154,7 @@ object PhysicsServer2D {
     @JvmStatic
     fun bodySetForceIntegrationCallback(body: RID, callable: GodotCallable, userdata: Any? = null) {
         ObjectCalls.ptrcallWithRIDCallableVariantArgs(Binds.bodySetForceIntegrationCallbackBind, singleton, body, callable.target.segment, callable.method, userdata)
+        ObjectCalls.keepReachable(callable)
     }
 
     /**
@@ -1163,7 +1167,10 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyTestMotion(body: RID, parameters: PhysicsTestMotionParameters2D, result: PhysicsTestMotionResult2D?): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndTwoObjectArgsRetBool(Binds.bodyTestMotionBind, singleton, body, parameters.requireOpenHandle(), result?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithRIDAndTwoObjectArgsRetBool(Binds.bodyTestMotionBind, singleton, body, parameters.requireOpenHandle(), result?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(parameters)
+        ObjectCalls.keepReachable(result)
+        return ret
     }
 
     /**

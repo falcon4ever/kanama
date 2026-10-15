@@ -18,7 +18,9 @@ class EditorScenePostImport(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSourceFile(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSourceFileBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getSourceFileBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

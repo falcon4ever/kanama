@@ -100,6 +100,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      */
     fun setTexture(texture: Texture3D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**

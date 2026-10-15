@@ -99,6 +99,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     fun setMaxConcavity(maxConcavity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxConcavityBind, segment, maxConcavity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -108,7 +109,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMaxConcavity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxConcavityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxConcavityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -119,6 +122,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     fun setSymmetryPlanesClippingBias(symmetryPlanesClippingBias: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSymmetryPlanesClippingBiasBind, segment, symmetryPlanesClippingBias)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -128,7 +132,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getSymmetryPlanesClippingBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSymmetryPlanesClippingBiasBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSymmetryPlanesClippingBiasBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -139,6 +145,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     fun setRevolutionAxesClippingBias(revolutionAxesClippingBias: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRevolutionAxesClippingBiasBind, segment, revolutionAxesClippingBias)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -148,7 +155,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getRevolutionAxesClippingBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRevolutionAxesClippingBiasBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRevolutionAxesClippingBiasBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -159,6 +168,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     fun setMinVolumePerConvexHull(minVolumePerConvexHull: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMinVolumePerConvexHullBind, segment, minVolumePerConvexHull)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -168,7 +178,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMinVolumePerConvexHull(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinVolumePerConvexHullBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinVolumePerConvexHullBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -179,6 +191,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     fun setResolution(minVolumePerConvexHull: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setResolutionBind, segment, minVolumePerConvexHull)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -188,7 +201,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getResolution(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getResolutionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getResolutionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -199,6 +214,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     fun setMaxNumVerticesPerConvexHull(maxNumVerticesPerConvexHull: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setMaxNumVerticesPerConvexHullBind, segment, maxNumVerticesPerConvexHull)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -208,7 +224,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMaxNumVerticesPerConvexHull(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getMaxNumVerticesPerConvexHullBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getMaxNumVerticesPerConvexHullBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -219,6 +237,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     fun setPlaneDownsampling(planeDownsampling: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setPlaneDownsamplingBind, segment, planeDownsampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -228,7 +247,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPlaneDownsampling(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getPlaneDownsamplingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getPlaneDownsamplingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -240,6 +261,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     fun setConvexHullDownsampling(convexHullDownsampling: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setConvexHullDownsamplingBind, segment, convexHullDownsampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -250,7 +272,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getConvexHullDownsampling(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getConvexHullDownsamplingBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getConvexHullDownsamplingBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -261,6 +285,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     fun setNormalizeMesh(normalizeMesh: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setNormalizeMeshBind, segment, normalizeMesh)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -270,7 +295,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getNormalizeMesh(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getNormalizeMeshBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getNormalizeMeshBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -281,6 +308,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     fun setMode(mode: MeshConvexDecompositionSettings.Mode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -290,7 +318,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMode(): MeshConvexDecompositionSettings.Mode {
         checkOpen()
-        return MeshConvexDecompositionSettings.Mode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModeBind, segment))
+        val ret = MeshConvexDecompositionSettings.Mode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -301,6 +331,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     fun setConvexHullApproximation(convexHullApproximation: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setConvexHullApproximationBind, segment, convexHullApproximation)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -310,7 +341,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getConvexHullApproximation(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getConvexHullApproximationBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getConvexHullApproximationBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -321,6 +354,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     fun setMaxConvexHulls(maxConvexHulls: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setMaxConvexHullsBind, segment, maxConvexHulls)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -330,7 +364,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMaxConvexHulls(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getMaxConvexHullsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getMaxConvexHullsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -342,6 +378,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     fun setProjectHullVertices(projectHullVertices: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setProjectHullVerticesBind, segment, projectHullVertices)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -352,7 +389,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getProjectHullVertices(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getProjectHullVerticesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getProjectHullVerticesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

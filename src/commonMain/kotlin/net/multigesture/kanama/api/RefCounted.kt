@@ -59,7 +59,9 @@ open class RefCounted internal constructor(
      */
     fun getReferenceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getReferenceCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(getReferenceCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -197,6 +199,17 @@ open class RefCounted internal constructor(
          */
         internal fun <T : RefCounted> retained(wrapper: T): T {
             wrapper.retainForKotlinWrapper()
+            return wrapper
+        }
+
+        /**
+         * [retained] for a view built over [source]'s handle (a generated `from*` downcast): [source]
+         * stays reachable until the `+1` is taken (task 138 item 6), so a forgotten owned [source]
+         * cannot be released between its last read and the `reference()` call.
+         */
+        internal fun <T : RefCounted> retained(wrapper: T, source: GodotObject): T {
+            wrapper.retainForKotlinWrapper()
+            ObjectCalls.keepReachable(source)
             return wrapper
         }
 

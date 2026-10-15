@@ -242,7 +242,9 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.create_shape_owner
      */
     fun createShapeOwner(owner: GodotObject): Long {
-        return ObjectCalls.ptrcallWithObjectArgRetUInt32(Binds.createShapeOwnerBind, segment, owner.segment)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetUInt32(Binds.createShapeOwnerBind, segment, owner.segment)
+        ObjectCalls.keepReachable(owner)
+        return ret
     }
 
     /**
@@ -316,6 +318,7 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
      */
     fun shapeOwnerAddShape(ownerId: Long, shape: Shape3D) {
         ObjectCalls.ptrcallWithUInt32AndObjectArg(Binds.shapeOwnerAddShapeBind, segment, ownerId, shape.requireOpenHandle())
+        ObjectCalls.keepReachable(shape)
     }
 
     /**

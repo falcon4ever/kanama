@@ -27,6 +27,7 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
     fun setPhysicalBoneChainLength(length: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setPhysicalBoneChainLengthBind, segment, length)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
      */
     fun getPhysicalBoneChainLength(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPhysicalBoneChainLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPhysicalBoneChainLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -48,6 +51,7 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
     fun setPhysicalBoneNode(jointIdx: Int, physicalbone2dNode: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndNodePathArg(Binds.setPhysicalBoneNodeBind, segment, jointIdx, physicalbone2dNode)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -57,7 +61,9 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
      */
     fun getPhysicalBoneNode(jointIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getPhysicalBoneNodeBind, segment, jointIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getPhysicalBoneNodeBind, segment, jointIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -69,6 +75,7 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
     fun fetchPhysicalBones() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.fetchPhysicalBonesBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -81,6 +88,7 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
     fun startSimulation(bones: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameListArg(Binds.startSimulationBind, segment, bones)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -93,6 +101,7 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
     fun stopSimulation(bones: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameListArg(Binds.stopSimulationBind, segment, bones)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

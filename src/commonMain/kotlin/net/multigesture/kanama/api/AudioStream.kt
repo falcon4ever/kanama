@@ -21,7 +21,9 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun getLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -32,7 +34,9 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun isMonophonic(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMonophonicBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isMonophonicBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -45,7 +49,9 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun instantiatePlayback(): AudioStreamPlayback? {
         checkOpen()
-        return AudioStreamPlayback.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.instantiatePlaybackBind, segment))
+        val ret = AudioStreamPlayback.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.instantiatePlaybackBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -56,7 +62,9 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun canBeSampled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.canBeSampledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.canBeSampledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -66,7 +74,9 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun generateSample(): AudioSample? {
         checkOpen()
-        return AudioSample.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.generateSampleBind, segment))
+        val ret = AudioSample.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.generateSampleBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -76,7 +86,9 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun isMetaStream(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMetaStreamBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isMetaStreamBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `parameter_list_changed()`; see [TypedSignal]. */

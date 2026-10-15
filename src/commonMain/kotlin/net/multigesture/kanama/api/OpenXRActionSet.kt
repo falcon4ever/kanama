@@ -39,6 +39,7 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
     fun setLocalizedName(localizedName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setLocalizedNameBind, segment, localizedName)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -48,7 +49,9 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getLocalizedName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLocalizedNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getLocalizedNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +62,7 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
     fun setPriority(priority: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setPriorityBind, segment, priority)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +72,9 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPriority(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPriorityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getPriorityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -78,7 +84,9 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getActionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getActionCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getActionCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -89,6 +97,7 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
     fun setActions(actions: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setActionsBind, segment, actions)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -98,7 +107,9 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getActions(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getActionsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getActionsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -109,6 +120,8 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
     fun addAction(action: OpenXRAction?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.addActionBind, segment, listOf(action?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(action)
     }
 
     /**
@@ -119,6 +132,8 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
     fun removeAction(action: OpenXRAction?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeActionBind, segment, listOf(action?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(action)
     }
 
     companion object {

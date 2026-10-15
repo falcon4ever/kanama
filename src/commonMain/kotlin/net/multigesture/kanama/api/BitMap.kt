@@ -23,6 +23,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
     fun create(size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.createBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -35,6 +36,8 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
     fun createFromImageAlpha(image: Image?, threshold: Double = 0.1) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectAndDoubleArg(Binds.createFromImageAlphaBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, threshold)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(image)
     }
 
     /**
@@ -45,6 +48,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
     fun setBitv(position: Vector2i, bit: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iAndBoolArg(Binds.setBitvBind, segment, position, bit)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -55,6 +59,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
     fun setBit(x: Int, y: Int, bit: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndBoolArgs(Binds.setBitBind, segment, x, y, bit)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -64,7 +69,9 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun getBitv(position: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.getBitvBind, segment, position)
+        val ret = ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.getBitvBind, segment, position)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -74,7 +81,9 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun getBit(x: Int, y: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.getBitBind, segment, x, y)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.getBitBind, segment, x, y)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -85,6 +94,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
     fun setBitRect(rect: Rect2i, bit: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2iAndBoolArg(Binds.setBitRectBind, segment, rect, bit)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -94,7 +104,9 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun getTrueBitCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTrueBitCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getTrueBitCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -104,7 +116,9 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -115,6 +129,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
     fun resize(newSize: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.resizeBind, segment, newSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -128,6 +143,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
     fun growMask(pixels: Int, rect: Rect2i) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndRect2iArg(Binds.growMaskBind, segment, pixels, rect)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -139,7 +155,9 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun convertToImage(): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.convertToImageBind, segment))
+        val ret = Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.convertToImageBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -151,7 +169,9 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun opaqueToPolygons(rect: Rect2i, epsilon: Double = 2.0): List<List<Vector2>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList(Binds.opaqueToPolygonsBind, segment, rect, epsilon)
+        val ret = ObjectCalls.ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList(Binds.opaqueToPolygonsBind, segment, rect, epsilon)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

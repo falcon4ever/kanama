@@ -88,6 +88,8 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun addBlendPoint(node: AnimationRootNode?, pos: Vector2, atIndex: Int = -1, name: String = "") {
         checkOpen()
         ObjectCalls.ptrcallWithObjectVector2IntStringNameArgs(Binds.addBlendPointBind, segment, node?.requireOpenHandle() ?: NULL_SEGMENT, pos, atIndex, name)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -98,6 +100,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun setBlendPointPosition(point: Int, pos: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setBlendPointPositionBind, segment, point, pos)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -107,7 +110,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getBlendPointPosition(point: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getBlendPointPositionBind, segment, point)
+        val ret = ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getBlendPointPositionBind, segment, point)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -118,6 +123,8 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun setBlendPointNode(point: Int, node: AnimationRootNode?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setBlendPointNodeBind, segment, point, node?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -128,6 +135,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun getBlendPointNode(point: Int): AnimationRootNode? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBlendPointNodeBind, segment, point)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -144,6 +152,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun setBlendPointName(point: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setBlendPointNameBind, segment, point, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -153,7 +162,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getBlendPointName(point: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBlendPointNameBind, segment, point)
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBlendPointNameBind, segment, point)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -164,7 +175,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun findBlendPointByName(name: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetInt(Binds.findBlendPointByNameBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetInt(Binds.findBlendPointByNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -175,6 +188,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun removeBlendPoint(point: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeBlendPointBind, segment, point)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -184,7 +198,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getBlendPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBlendPointCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBlendPointCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -196,6 +212,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun reorderBlendPoint(fromIndex: Int, toIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.reorderBlendPointBind, segment, fromIndex, toIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -208,6 +225,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun addTriangle(x: Int, y: Int, z: Int, atIndex: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithFourIntArgs(Binds.addTriangleBind, segment, x, y, z, atIndex)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -217,7 +235,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getTrianglePoint(triangle: Int, point: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getTrianglePointBind, segment, triangle, point)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getTrianglePointBind, segment, triangle, point)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -228,6 +248,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun removeTriangle(triangle: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeTriangleBind, segment, triangle)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -237,7 +258,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getTriangleCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTriangleCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getTriangleCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -248,6 +271,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun setMinSpace(minSpace: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setMinSpaceBind, segment, minSpace)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -257,7 +281,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getMinSpace(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMinSpaceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMinSpaceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -268,6 +294,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun setMaxSpace(maxSpace: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setMaxSpaceBind, segment, maxSpace)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -277,7 +304,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getMaxSpace(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMaxSpaceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMaxSpaceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -288,6 +317,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun setSnap(snap: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setSnapBind, segment, snap)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -297,7 +327,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getSnap(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSnapBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSnapBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -308,6 +340,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun setXLabel(text: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setXLabelBind, segment, text)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -317,7 +350,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getXLabel(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getXLabelBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getXLabelBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -328,6 +363,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun setYLabel(text: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setYLabelBind, segment, text)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -337,7 +373,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getYLabel(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getYLabelBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getYLabelBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -349,6 +387,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun setAutoTriangles(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAutoTrianglesBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -359,7 +398,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getAutoTriangles(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAutoTrianglesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getAutoTrianglesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -370,6 +411,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun setBlendMode(mode: AnimationNodeBlendSpace2D.BlendMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBlendModeBind, segment, mode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -379,7 +421,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getBlendMode(): AnimationNodeBlendSpace2D.BlendMode {
         checkOpen()
-        return AnimationNodeBlendSpace2D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendModeBind, segment))
+        val ret = AnimationNodeBlendSpace2D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -391,6 +435,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun setUseSync(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseSyncBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -401,7 +446,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun isUsingSync(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingSyncBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingSyncBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -412,6 +459,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun setSyncMode(syncMode: AnimationNodeBlendSpace2D.SyncMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSyncModeBind, segment, syncMode.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -421,7 +469,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getSyncMode(): AnimationNodeBlendSpace2D.SyncMode {
         checkOpen()
-        return AnimationNodeBlendSpace2D.SyncMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSyncModeBind, segment))
+        val ret = AnimationNodeBlendSpace2D.SyncMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSyncModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -434,6 +484,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     fun setCyclicLength(length: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCyclicLengthBind, segment, length)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -445,7 +496,9 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getCyclicLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCyclicLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCyclicLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `triangles_updated()`; see [TypedSignal]. */

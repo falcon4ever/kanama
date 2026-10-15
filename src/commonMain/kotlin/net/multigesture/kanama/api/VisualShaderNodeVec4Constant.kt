@@ -27,6 +27,7 @@ class VisualShaderNodeVec4Constant(handle: GodotHandle) : VisualShaderNodeConsta
     fun setConstant(constant: Quaternion) {
         checkOpen()
         ObjectCalls.ptrcallWithQuaternionArg(Binds.setConstantBind, segment, constant)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class VisualShaderNodeVec4Constant(handle: GodotHandle) : VisualShaderNodeConsta
      */
     fun getConstant(): Quaternion {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getConstantBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getConstantBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

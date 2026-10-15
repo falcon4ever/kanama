@@ -21,21 +21,28 @@ class PolygonPathFinder(handle: GodotHandle) : Resource(handle) {
     fun setup(points: List<Vector2>, connections: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListAndPackedInt32ListArgs(Binds.setupBind, segment, points, connections)
+        ObjectCalls.keepReachable(this)
     }
 
     fun findPath(from: Vector2, to: Vector2): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(Binds.findPathBind, segment, from, to)
+        val ret = ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(Binds.findPathBind, segment, from, to)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun getIntersections(from: Vector2, to: Vector2): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(Binds.getIntersectionsBind, segment, from, to)
+        val ret = ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(Binds.getIntersectionsBind, segment, from, to)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun getClosestPoint(point: Vector2): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2(Binds.getClosestPointBind, segment, point)
+        val ret = ObjectCalls.ptrcallWithVector2ArgRetVector2(Binds.getClosestPointBind, segment, point)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -45,22 +52,29 @@ class PolygonPathFinder(handle: GodotHandle) : Resource(handle) {
      */
     fun isPointInside(point: Vector2): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetBool(Binds.isPointInsideBind, segment, point)
+        val ret = ObjectCalls.ptrcallWithVector2ArgRetBool(Binds.isPointInsideBind, segment, point)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setPointPenalty(idx: Int, penalty: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setPointPenaltyBind, segment, idx, penalty)
+        ObjectCalls.keepReachable(this)
     }
 
     fun getPointPenalty(idx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPointPenaltyBind, segment, idx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPointPenaltyBind, segment, idx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun getBounds(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getBoundsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRect2(Binds.getBoundsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -27,6 +27,7 @@ class AudioEffectPanner(handle: GodotHandle) : AudioEffect(handle) {
     fun setPan(cpanume: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setPanBind, segment, cpanume)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ class AudioEffectPanner(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPan(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPanBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPanBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

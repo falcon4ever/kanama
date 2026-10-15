@@ -34,6 +34,7 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     fun setHasTrackingData(hasData: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setHasTrackingDataBind, segment, hasData)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -43,7 +44,9 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun getHasTrackingData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getHasTrackingDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getHasTrackingDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -54,6 +57,7 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     fun setBodyFlags(flags: XRBodyTracker.BodyFlags) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBodyFlagsBind, segment, flags.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -63,7 +67,9 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun getBodyFlags(): XRBodyTracker.BodyFlags {
         checkOpen()
-        return XRBodyTracker.BodyFlags(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBodyFlagsBind, segment))
+        val ret = XRBodyTracker.BodyFlags(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBodyFlagsBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -74,6 +80,7 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     fun setJointFlags(joint: XRBodyTracker.Joint, flags: XRBodyTracker.JointFlags) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoLongArgs(Binds.setJointFlagsBind, segment, joint.value, flags.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -83,7 +90,9 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun getJointFlags(joint: XRBodyTracker.Joint): XRBodyTracker.JointFlags {
         checkOpen()
-        return XRBodyTracker.JointFlags(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getJointFlagsBind, segment, joint.value))
+        val ret = XRBodyTracker.JointFlags(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getJointFlagsBind, segment, joint.value))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -94,6 +103,7 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     fun setJointTransform(joint: XRBodyTracker.Joint, transform: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndTransform3DArg(Binds.setJointTransformBind, segment, joint.value, transform)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -103,7 +113,9 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun getJointTransform(joint: XRBodyTracker.Joint): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getJointTransformBind, segment, joint.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getJointTransformBind, segment, joint.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

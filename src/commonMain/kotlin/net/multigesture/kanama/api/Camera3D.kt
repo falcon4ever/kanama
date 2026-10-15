@@ -487,6 +487,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      */
     fun setEnvironment(env: Environment?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(env)
     }
 
     /**
@@ -505,6 +506,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      */
     fun setAttributes(env: CameraAttributes?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setAttributesBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(env)
     }
 
     /**
@@ -523,6 +525,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      */
     fun setCompositor(compositor: Compositor?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCompositorBind, segment, listOf(compositor?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(compositor)
     }
 
     /**

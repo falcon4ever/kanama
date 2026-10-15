@@ -334,6 +334,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      */
     fun ensureControlVisible(control: Control) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.ensureControlVisibleBind, segment, listOf(control.segment))
+        ObjectCalls.keepReachable(control)
     }
 
     /**

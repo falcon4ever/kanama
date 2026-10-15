@@ -26,6 +26,7 @@ class VisualShaderNodeFloatConstant(handle: GodotHandle) : VisualShaderNodeConst
     fun setConstant(constant: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setConstantBind, segment, constant)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -35,7 +36,9 @@ class VisualShaderNodeFloatConstant(handle: GodotHandle) : VisualShaderNodeConst
      */
     fun getConstant(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getConstantBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getConstantBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

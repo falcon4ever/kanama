@@ -23,7 +23,9 @@ class CompressedTexture3D(handle: GodotHandle) : Texture3D(handle) {
      */
     fun load(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBind, segment, path))
+        val ret = GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBind, segment, path))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -33,7 +35,9 @@ class CompressedTexture3D(handle: GodotHandle) : Texture3D(handle) {
      */
     fun getLoadPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLoadPathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getLoadPathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

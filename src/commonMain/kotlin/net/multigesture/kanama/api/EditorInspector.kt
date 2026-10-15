@@ -22,6 +22,7 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
      */
     fun edit(objectValue: GodotObject) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.editBind, segment, listOf(objectValue.segment))
+        ObjectCalls.keepReachable(objectValue)
     }
 
     /**
@@ -134,7 +135,9 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
          * Generated from Godot docs: EditorInspector.instantiate_property_editor
          */
         fun instantiatePropertyEditor(objectValue: GodotObject, type: VariantType, path: String, hint: GodotPropertyHint, hintText: String, usage: Long, wide: Boolean = false): EditorProperty? {
-            return EditorProperty.wrap(ObjectCalls.ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(Binds.instantiatePropertyEditorBind, NULL_SEGMENT, objectValue.segment, type.value, path, hint.value, hintText, usage, wide))
+            val ret = EditorProperty.wrap(ObjectCalls.ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(Binds.instantiatePropertyEditorBind, NULL_SEGMENT, objectValue.segment, type.value, path, hint.value, hintText, usage, wide))
+            ObjectCalls.keepReachable(objectValue)
+            return ret
         }
 
         /**
@@ -145,7 +148,9 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
          * Generated from Godot docs: EditorInspector.create_default_inspector
          */
         fun createDefaultInspector(filterLineEdit: LineEdit): EditorInspector? {
-            return EditorInspector.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.createDefaultInspectorBind, NULL_SEGMENT, filterLineEdit.segment))
+            val ret = EditorInspector.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.createDefaultInspectorBind, NULL_SEGMENT, filterLineEdit.segment))
+            ObjectCalls.keepReachable(filterLineEdit)
+            return ret
         }
 
         @JvmStatic

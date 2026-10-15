@@ -48,6 +48,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
     fun setLightmapTextures(lightTextures: List<TextureLayered>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setLightmapTexturesBind, segment, lightTextures)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -57,7 +58,9 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getLightmapTextures(): List<TextureLayered> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getLightmapTexturesBind, segment, TextureLayered::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getLightmapTexturesBind, segment, TextureLayered::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -68,6 +71,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
     fun setShadowmaskTextures(shadowmaskTextures: List<TextureLayered>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setShadowmaskTexturesBind, segment, shadowmaskTextures)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -77,7 +81,9 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getShadowmaskTextures(): List<TextureLayered> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getShadowmaskTexturesBind, segment, TextureLayered::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getShadowmaskTexturesBind, segment, TextureLayered::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,6 +98,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
     fun setUsesSphericalHarmonics(usesSphericalHarmonics: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUsesSphericalHarmonicsBind, segment, usesSphericalHarmonics)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -101,7 +108,9 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun isUsingSphericalHarmonics(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingSphericalHarmonicsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingSphericalHarmonicsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -112,6 +121,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
     fun addUser(path: NodePath, uvScale: Rect2, sliceIndex: Int, subInstance: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathRect2TwoIntArgs(Binds.addUserBind, segment, path, uvScale, sliceIndex, subInstance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -121,7 +131,9 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getUserCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getUserCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getUserCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -131,7 +143,9 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getUserPath(userIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getUserPathBind, segment, userIdx)
+        val ret = ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getUserPathBind, segment, userIdx)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -142,6 +156,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
     fun clearUsers() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearUsersBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -152,6 +167,8 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
     fun setLightTexture(lightTexture: TextureLayered?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setLightTextureBind, segment, listOf(lightTexture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(lightTexture)
     }
 
     /**
@@ -161,7 +178,9 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getLightTexture(): TextureLayered? {
         checkOpen()
-        return TextureLayered.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getLightTextureBind, segment))
+        val ret = TextureLayered.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getLightTextureBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

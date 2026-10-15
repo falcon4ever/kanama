@@ -39,6 +39,7 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
     fun setBoundsSize(boundsSize: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setBoundsSizeBind, segment, boundsSize)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -48,7 +49,9 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
      */
     fun getBoundsSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBoundsSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBoundsSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -59,6 +62,7 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
     fun setMarkerType(markerType: OpenXRSpatialComponentMarkerList.MarkerType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setMarkerTypeBind, segment, markerType.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -68,7 +72,9 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
      */
     fun getMarkerType(): OpenXRSpatialComponentMarkerList.MarkerType {
         checkOpen()
-        return OpenXRSpatialComponentMarkerList.MarkerType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMarkerTypeBind, segment))
+        val ret = OpenXRSpatialComponentMarkerList.MarkerType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMarkerTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,6 +86,7 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
     fun setMarkerId(markerId: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setMarkerIdBind, segment, markerId)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -90,7 +97,9 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
      */
     fun getMarkerId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getMarkerIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getMarkerIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -101,6 +110,7 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
     fun setMarkerData(markerData: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithVariantArg(Binds.setMarkerDataBind, segment, markerData)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -111,7 +121,9 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
      */
     fun getMarkerData(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getMarkerDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getMarkerDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

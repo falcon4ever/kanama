@@ -20,6 +20,8 @@ class EditorResourceTooltipPlugin(handle: GodotHandle) : RefCounted(handle) {
     fun requestThumbnail(path: String, control: TextureRect) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndObjectArg(Binds.requestThumbnailBind, segment, path, control.segment)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(control)
     }
 
     companion object {

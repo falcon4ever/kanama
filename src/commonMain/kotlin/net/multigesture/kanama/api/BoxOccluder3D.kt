@@ -27,6 +27,7 @@ class BoxOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
     fun setSize(size: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class BoxOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
      */
     fun getSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

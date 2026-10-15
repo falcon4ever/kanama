@@ -19,7 +19,9 @@ class WeakRef(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRef(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getRefBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getRefBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

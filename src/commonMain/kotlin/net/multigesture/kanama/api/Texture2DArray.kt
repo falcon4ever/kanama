@@ -20,6 +20,7 @@ class Texture2DArray(handle: GodotHandle) : ImageTextureLayered(handle) {
     fun createPlaceholder(): Resource? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.createPlaceholderBind, segment)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this

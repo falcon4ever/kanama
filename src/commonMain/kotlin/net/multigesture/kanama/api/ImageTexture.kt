@@ -23,6 +23,8 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setImage(image: Image?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setImageBind, segment, listOf(image?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(image)
     }
 
     /**
@@ -37,6 +39,8 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
     fun update(image: Image?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.updateBind, segment, listOf(image?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(image)
     }
 
     /**
@@ -47,6 +51,7 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setSizeOverride(size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(Binds.setSizeOverrideBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {
@@ -57,7 +62,9 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
          * Generated from Godot docs: ImageTexture.create_from_image
          */
         fun createFromImage(image: Image?): ImageTexture? {
-            return ImageTexture.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.createFromImageBind, NULL_SEGMENT, image?.requireOpenHandle() ?: NULL_SEGMENT))
+            val ret = ImageTexture.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.createFromImageBind, NULL_SEGMENT, image?.requireOpenHandle() ?: NULL_SEGMENT))
+            ObjectCalls.keepReachable(image)
+            return ret
         }
 
         @JvmStatic

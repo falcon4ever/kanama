@@ -58,6 +58,7 @@ class CollisionShape2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setShape(shape: Shape2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(shape)
     }
 
     /**

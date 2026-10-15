@@ -41,6 +41,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setWidth(width: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setWidthBind, segment, width)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -51,6 +52,8 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setCurveX(curve: Curve?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveXBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -60,7 +63,9 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurveX(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveXBind, segment))
+        val ret = Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveXBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -71,6 +76,8 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setCurveY(curve: Curve?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveYBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -80,7 +87,9 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurveY(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveYBind, segment))
+        val ret = Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveYBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -91,6 +100,8 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
     fun setCurveZ(curve: Curve?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveZBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -100,7 +111,9 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurveZ(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveZBind, segment))
+        val ret = Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveZBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

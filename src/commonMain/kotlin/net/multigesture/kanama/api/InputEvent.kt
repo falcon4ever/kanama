@@ -31,6 +31,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
     fun setDevice(device: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setDeviceBind, segment, device)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -41,7 +42,9 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun getDevice(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDeviceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getDeviceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,7 +56,9 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isAction(action: String, exactMatch: Boolean = false): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(Binds.isActionBind, segment, action, exactMatch)
+        val ret = ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(Binds.isActionBind, segment, action, exactMatch)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -70,7 +75,9 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isActionPressed(action: String, allowEcho: Boolean = false, exactMatch: Boolean = false): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndTwoBoolArgsRetBool(Binds.isActionPressedBind, segment, action, allowEcho, exactMatch)
+        val ret = ObjectCalls.ptrcallWithStringNameAndTwoBoolArgsRetBool(Binds.isActionPressedBind, segment, action, allowEcho, exactMatch)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -83,7 +90,9 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isActionReleased(action: String, exactMatch: Boolean = false): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(Binds.isActionReleasedBind, segment, action, exactMatch)
+        val ret = ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(Binds.isActionReleasedBind, segment, action, exactMatch)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -96,7 +105,9 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun getActionStrength(action: String, exactMatch: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDouble(Binds.getActionStrengthBind, segment, action, exactMatch)
+        val ret = ObjectCalls.ptrcallWithStringNameAndBoolArgRetDouble(Binds.getActionStrengthBind, segment, action, exactMatch)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -106,7 +117,9 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isCanceled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCanceledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isCanceledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -120,7 +133,9 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPressedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isPressedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -131,7 +146,9 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isReleased(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isReleasedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isReleasedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -147,7 +164,9 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isEcho(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEchoBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isEchoBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -157,7 +176,9 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun asText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.asTextBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.asTextBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -173,7 +194,10 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isMatch(event: InputEvent?, exactMatch: Boolean = true): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(Binds.isMatchBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT, exactMatch)
+        val ret = ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(Binds.isMatchBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT, exactMatch)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(event)
+        return ret
     }
 
     /**
@@ -185,7 +209,9 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isActionType(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isActionTypeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isActionTypeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -198,7 +224,10 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun accumulate(withEvent: InputEvent?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.accumulateBind, segment, withEvent?.requireOpenHandle() ?: NULL_SEGMENT)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetBool(Binds.accumulateBind, segment, withEvent?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(withEvent)
+        return ret
     }
 
     /**
@@ -212,6 +241,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
     fun xformedBy(xform: Transform2D, localOfs: Vector2 = Vector2(0.0, 0.0)): InputEvent {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithTransform2DVector2ArgsRetObject(Binds.xformedByBind, segment, xform, localOfs)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this

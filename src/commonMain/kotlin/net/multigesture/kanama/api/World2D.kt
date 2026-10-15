@@ -36,7 +36,9 @@ class World2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getCanvas(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getCanvasBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getCanvasBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -46,7 +48,9 @@ class World2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getNavigationMap(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getNavigationMapBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getNavigationMapBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -57,7 +61,9 @@ class World2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getSpace(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getSpaceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getSpaceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -69,7 +75,9 @@ class World2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getDirectSpaceState(): PhysicsDirectSpaceState2D? {
         checkOpen()
-        return PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDirectSpaceStateBind, segment))
+        val ret = PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDirectSpaceStateBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

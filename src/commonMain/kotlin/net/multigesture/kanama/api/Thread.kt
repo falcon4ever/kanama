@@ -23,7 +23,10 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
      */
     fun start(callable: GodotCallable, priority: Thread.Priority = Thread.Priority.NORMAL): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithCallableLongArgsRetLong(Binds.startBind, segment, callable.target.segment, callable.method, priority.value))
+        val ret = GodotError(ObjectCalls.ptrcallWithCallableLongArgsRetLong(Binds.startBind, segment, callable.target.segment, callable.method, priority.value))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(callable)
+        return ret
     }
 
     /**
@@ -34,7 +37,9 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getId(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -46,7 +51,9 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isStarted(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isStartedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isStartedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -58,7 +65,9 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isAlive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAliveBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isAliveBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -71,7 +80,9 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
      */
     fun waitToFinish(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.waitToFinishBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.waitToFinishBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

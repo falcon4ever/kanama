@@ -315,6 +315,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      */
     fun setRadiusDampingCurve(index: Int, curve: Curve?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setRadiusDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -354,6 +355,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      */
     fun setStiffnessDampingCurve(index: Int, curve: Curve?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setStiffnessDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -392,6 +394,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      */
     fun setDragDampingCurve(index: Int, curve: Curve?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setDragDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**
@@ -431,6 +434,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      */
     fun setGravityDampingCurve(index: Int, curve: Curve?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setGravityDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(curve)
     }
 
     /**

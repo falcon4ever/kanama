@@ -20,6 +20,7 @@ class AwaitTweener(handle: GodotHandle) : Tweener(handle) {
     fun setTimeout(timeout: Double): AwaitTweener? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.setTimeoutBind, segment, timeout)
+        ObjectCalls.keepReachable(this)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this

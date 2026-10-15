@@ -27,7 +27,9 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      */
     fun getMode(): Shader.Mode {
         checkOpen()
-        return Shader.Mode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModeBind, segment))
+        val ret = Shader.Mode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -39,6 +41,7 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
     fun setCode(code: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setCodeBind, segment, code)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -49,7 +52,9 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      */
     fun getCode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCodeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getCodeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,6 +67,8 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
     fun setDefaultTextureParameter(name: String, texture: Texture?, index: Int = 0) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameObjectIntArgs(Binds.setDefaultTextureParameterBind, segment, name, texture?.requireOpenHandle() ?: NULL_SEGMENT, index)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -73,7 +80,9 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      */
     fun getDefaultTextureParameter(name: String, index: Int = 0): Texture? {
         checkOpen()
-        return Texture.wrapOwned(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(Binds.getDefaultTextureParameterBind, segment, name, index))
+        val ret = Texture.wrapOwned(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(Binds.getDefaultTextureParameterBind, segment, name, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -87,7 +96,9 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      */
     fun getShaderUniformList(getGroups: Boolean = false): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetArray(Binds.getShaderUniformListBind, segment, getGroups)
+        val ret = ObjectCalls.ptrcallWithBoolArgRetArray(Binds.getShaderUniformListBind, segment, getGroups)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -100,6 +111,7 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
     fun inspectNativeShaderCode() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.inspectNativeShaderCodeBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

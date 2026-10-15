@@ -51,6 +51,7 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
      */
     fun setModificationStack(modificationStack: SkeletonModificationStack2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setModificationStackBind, segment, listOf(modificationStack?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(modificationStack)
     }
 
     /**

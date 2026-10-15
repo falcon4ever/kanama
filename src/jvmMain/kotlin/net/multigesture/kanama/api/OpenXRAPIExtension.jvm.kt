@@ -21,7 +21,9 @@ import net.multigesture.kanama.types.Transform3D
  */
 fun OpenXRAPIExtension.transformFromPose(pose: MemorySegment): Transform3D {
     checkOpen()
-    return ObjectCalls.ptrcallWithConstVoidPtrArgRetTransform3D(OpenXRAPIExtensionJvmBinds.transformFromPoseBind, segment, pose)
+    val ret = ObjectCalls.ptrcallWithConstVoidPtrArgRetTransform3D(OpenXRAPIExtensionJvmBinds.transformFromPoseBind, segment, pose)
+    ObjectCalls.keepReachable(this)
+    return ret
 }
 
 /**
@@ -33,6 +35,7 @@ fun OpenXRAPIExtension.transformFromPose(pose: MemorySegment): Transform3D {
 fun OpenXRAPIExtension.setCustomPlaySpace(space: MemorySegment) {
     checkOpen()
     ObjectCalls.ptrcallWithConstVoidPtrArg(OpenXRAPIExtensionJvmBinds.setCustomPlaySpaceBind, segment, space)
+    ObjectCalls.keepReachable(this)
 }
 
 private object OpenXRAPIExtensionJvmBinds {

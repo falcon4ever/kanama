@@ -28,6 +28,8 @@ class InputEventShortcut(handle: GodotHandle) : InputEvent(handle) {
     fun setShortcut(shortcut: Shortcut?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(shortcut)
     }
 
     /**
@@ -38,7 +40,9 @@ class InputEventShortcut(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getShortcut(): Shortcut? {
         checkOpen()
-        return Shortcut.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getShortcutBind, segment))
+        val ret = Shortcut.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getShortcutBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

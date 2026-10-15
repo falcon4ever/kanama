@@ -210,6 +210,7 @@ class Label(handle: GodotHandle) : Control(handle) {
      */
     fun setLabelSettings(settings: LabelSettings?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setLabelSettingsBind, segment, listOf(settings?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(settings)
     }
 
     /**

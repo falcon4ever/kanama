@@ -19,7 +19,9 @@ class HMACContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun start(hashType: HashingContext.HashType, key: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongAndByteArrayArgRetLong(Binds.startBind, segment, hashType.value, key))
+        val ret = GodotError(ObjectCalls.ptrcallWithLongAndByteArrayArgRetLong(Binds.startBind, segment, hashType.value, key))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class HMACContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun update(data: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.updateBind, segment, data))
+        val ret = GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.updateBind, segment, data))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -40,7 +44,9 @@ class HMACContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun finish(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.finishBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.finishBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

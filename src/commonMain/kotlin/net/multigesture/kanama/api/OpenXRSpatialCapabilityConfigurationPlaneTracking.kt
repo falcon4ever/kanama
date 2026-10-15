@@ -19,7 +19,9 @@ class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: GodotHandle) : O
      */
     fun supportsMesh2d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.supportsMesh2dBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.supportsMesh2dBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: GodotHandle) : O
      */
     fun supportsPolygons(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.supportsPolygonsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.supportsPolygonsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -42,7 +46,9 @@ class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: GodotHandle) : O
      */
     fun supportsLabels(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.supportsLabelsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.supportsLabelsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,7 +59,9 @@ class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: GodotHandle) : O
      */
     fun getEnabledComponents(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

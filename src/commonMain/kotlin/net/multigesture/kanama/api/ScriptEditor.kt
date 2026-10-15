@@ -48,6 +48,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      */
     fun registerSyntaxHighlighter(syntaxHighlighter: EditorSyntaxHighlighter?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.registerSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(syntaxHighlighter)
     }
 
     /**
@@ -58,6 +59,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      */
     fun unregisterSyntaxHighlighter(syntaxHighlighter: EditorSyntaxHighlighter?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.unregisterSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(syntaxHighlighter)
     }
 
     /**
@@ -132,6 +134,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      */
     fun updateDocsFromScript(script: Script?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.updateDocsFromScriptBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(script)
     }
 
     /**
@@ -142,6 +145,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      */
     fun clearDocsFromScript(script: Script?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.clearDocsFromScriptBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(script)
     }
 
     /**

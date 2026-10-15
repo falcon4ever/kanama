@@ -33,6 +33,7 @@ class VisualShaderNodeColorParameter(handle: GodotHandle) : VisualShaderNodePara
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -42,7 +43,9 @@ class VisualShaderNodeColorParameter(handle: GodotHandle) : VisualShaderNodePara
      */
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,6 +56,7 @@ class VisualShaderNodeColorParameter(handle: GodotHandle) : VisualShaderNodePara
     fun setDefaultValue(value: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setDefaultValueBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -62,7 +66,9 @@ class VisualShaderNodeColorParameter(handle: GodotHandle) : VisualShaderNodePara
      */
     fun getDefaultValue(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getDefaultValueBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetColor(Binds.getDefaultValueBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

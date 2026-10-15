@@ -36,7 +36,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun resize(length: Long): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongArgRetLong(Binds.resizeBind, segment, length))
+        val ret = GodotError(ObjectCalls.ptrcallWithLongArgRetLong(Binds.resizeBind, segment, length))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -51,6 +53,7 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
     fun flush() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.flushBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -60,7 +63,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getPathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -70,7 +75,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPathAbsolute(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPathAbsoluteBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getPathAbsoluteBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -80,7 +87,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isOpen(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOpenBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isOpenBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -92,6 +101,7 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
     fun seek(position: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.seekBind, segment, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -104,6 +114,7 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
     fun seekEnd(position: Long = 0L) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.seekEndBind, segment, position)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -114,7 +125,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPosition(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPositionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getPositionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -125,7 +138,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLength(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -136,7 +151,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun eofReached(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.eofReachedBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.eofReachedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -147,7 +164,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun get8(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.get8Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.get8Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -158,7 +177,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun get16(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.get16Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.get16Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -169,7 +190,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun get32(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.get32Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.get32Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -180,7 +203,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun get64(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.get64Bind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.get64Bind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -191,7 +216,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getHalf(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHalfBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHalfBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -202,7 +229,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFloat(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFloatBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFloatBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -213,7 +242,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDouble(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDoubleBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDoubleBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -227,7 +258,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getReal(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRealBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRealBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -238,7 +271,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBuffer(length: Long): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetByteArray(Binds.getBufferBind, segment, length)
+        val ret = ObjectCalls.ptrcallWithLongArgRetByteArray(Binds.getBufferBind, segment, length)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -251,7 +286,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLine(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLineBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getLineBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -266,7 +303,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCsvLine(delim: String = ","): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getCsvLineBind, segment, delim)
+        val ret = ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getCsvLineBind, segment, delim)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -277,7 +316,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAsText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getAsTextBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getAsTextBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -292,7 +333,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isBigEndian(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBigEndianBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isBigEndianBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -308,6 +351,7 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
     fun setBigEndian(bigEndian: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setBigEndianBind, segment, bigEndian)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -318,7 +362,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getError(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.getErrorBind, segment))
+        val ret = GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.getErrorBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -334,7 +380,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVar(allowObjects: Boolean = false): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(Binds.getVarBind, segment, allowObjects)
+        val ret = ObjectCalls.ptrcallWithBoolArgRetVariantScalar(Binds.getVarBind, segment, allowObjects)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -348,7 +396,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun store8(value: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.store8Bind, segment, value)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.store8Bind, segment, value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -363,7 +413,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun store16(value: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.store16Bind, segment, value)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.store16Bind, segment, value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -377,7 +429,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun store32(value: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithUInt32ArgRetBool(Binds.store32Bind, segment, value)
+        val ret = ObjectCalls.ptrcallWithUInt32ArgRetBool(Binds.store32Bind, segment, value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -390,7 +444,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun store64(value: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.store64Bind, segment, value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetBool(Binds.store64Bind, segment, value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -402,7 +458,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun storeHalf(value: Double): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetBool(Binds.storeHalfBind, segment, value)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetBool(Binds.storeHalfBind, segment, value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -414,7 +472,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun storeFloat(value: Double): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetBool(Binds.storeFloatBind, segment, value)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetBool(Binds.storeFloatBind, segment, value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -426,7 +486,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun storeDouble(value: Double): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetBool(Binds.storeDoubleBind, segment, value)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetBool(Binds.storeDoubleBind, segment, value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -441,7 +503,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun storeReal(value: Double): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetBool(Binds.storeRealBind, segment, value)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetBool(Binds.storeRealBind, segment, value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -453,7 +517,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun storeBuffer(buffer: ByteArray): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetBool(Binds.storeBufferBind, segment, buffer)
+        val ret = ObjectCalls.ptrcallWithByteArrayArgRetBool(Binds.storeBufferBind, segment, buffer)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -467,7 +533,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun storeLine(line: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.storeLineBind, segment, line)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.storeLineBind, segment, line)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -481,7 +549,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun storeCsvLine(values: List<String>, delim: String = ","): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithPackedStringListAndStringArgsRetBool(Binds.storeCsvLineBind, segment, values, delim)
+        val ret = ObjectCalls.ptrcallWithPackedStringListAndStringArgsRetBool(Binds.storeCsvLineBind, segment, values, delim)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -499,7 +569,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun storeString(string: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.storeStringBind, segment, string)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.storeStringBind, segment, string)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -519,7 +591,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun storeVar(value: Any?, fullObjects: Boolean = false): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantAndBoolArgRetBool(Binds.storeVarBind, segment, value, fullObjects)
+        val ret = ObjectCalls.ptrcallWithVariantAndBoolArgRetBool(Binds.storeVarBind, segment, value, fullObjects)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -533,7 +607,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun storePascalString(string: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.storePascalStringBind, segment, string)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.storePascalStringBind, segment, string)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -546,7 +622,9 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPascalString(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPascalStringBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getPascalStringBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -561,6 +639,7 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
     fun closeFile() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.closeFileBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     private var fileClosed = false

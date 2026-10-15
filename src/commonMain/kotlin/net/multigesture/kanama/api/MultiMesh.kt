@@ -81,6 +81,8 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun setMesh(mesh: Mesh?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(mesh)
     }
 
     /**
@@ -91,7 +93,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
+        val ret = Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -104,6 +108,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun setUseColors(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseColorsBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -115,7 +120,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun isUsingColors(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingColorsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingColorsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -128,6 +135,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun setUseCustomData(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseCustomDataBind, segment, enable)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -139,7 +147,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun isUsingCustomData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingCustomDataBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingCustomDataBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -150,6 +160,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun setTransformFormat(format: MultiMesh.TransformFormat) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTransformFormatBind, segment, format.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -159,7 +170,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getTransformFormat(): MultiMesh.TransformFormat {
         checkOpen()
-        return MultiMesh.TransformFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTransformFormatBind, segment))
+        val ret = MultiMesh.TransformFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTransformFormatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -172,6 +185,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun setInstanceCount(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setInstanceCountBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -183,7 +197,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getInstanceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInstanceCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getInstanceCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -195,6 +211,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun setVisibleInstanceCount(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setVisibleInstanceCountBind, segment, count)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -205,7 +222,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getVisibleInstanceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVisibleInstanceCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getVisibleInstanceCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -219,6 +238,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun setPhysicsInterpolationQuality(quality: MultiMesh.PhysicsInterpolationQuality) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setPhysicsInterpolationQualityBind, segment, quality.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -231,7 +251,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getPhysicsInterpolationQuality(): MultiMesh.PhysicsInterpolationQuality {
         checkOpen()
-        return MultiMesh.PhysicsInterpolationQuality(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPhysicsInterpolationQualityBind, segment))
+        val ret = MultiMesh.PhysicsInterpolationQuality(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPhysicsInterpolationQualityBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -242,6 +264,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun setInstanceTransform(instance: Int, transform: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.setInstanceTransformBind, segment, instance, transform)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -252,6 +275,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun setInstanceTransform2d(instance: Int, transform: Transform2D) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform2DArg(Binds.setInstanceTransform2dBind, segment, instance, transform)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -261,7 +285,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getInstanceTransform(instance: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getInstanceTransformBind, segment, instance)
+        val ret = ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getInstanceTransformBind, segment, instance)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -271,7 +297,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getInstanceTransform2d(instance: Int): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform2D(Binds.getInstanceTransform2dBind, segment, instance)
+        val ret = ObjectCalls.ptrcallWithIntArgRetTransform2D(Binds.getInstanceTransform2dBind, segment, instance)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -288,6 +316,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun setInstanceColor(instance: Int, color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(Binds.setInstanceColorBind, segment, instance, color)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -297,7 +326,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getInstanceColor(instance: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getInstanceColorBind, segment, instance)
+        val ret = ObjectCalls.ptrcallWithIntArgRetColor(Binds.getInstanceColorBind, segment, instance)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -312,6 +343,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun setInstanceCustomData(instance: Int, customData: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(Binds.setInstanceCustomDataBind, segment, instance, customData)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -321,7 +353,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getInstanceCustomData(instance: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getInstanceCustomDataBind, segment, instance)
+        val ret = ObjectCalls.ptrcallWithIntArgRetColor(Binds.getInstanceCustomDataBind, segment, instance)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -335,6 +369,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun resetInstancePhysicsInterpolation(instance: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.resetInstancePhysicsInterpolationBind, segment, instance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -347,6 +382,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun resetInstancesPhysicsInterpolation() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.resetInstancesPhysicsInterpolationBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -358,6 +394,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun setCustomAabb(aabb: AABB) {
         checkOpen()
         ObjectCalls.ptrcallWithAABBArg(Binds.setCustomAabbBind, segment, aabb)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -368,7 +405,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getCustomAabbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetAABB(Binds.getCustomAabbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -378,17 +417,22 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getAabbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetAABB(Binds.getAabbBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun getBuffer(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getBufferBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getBufferBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     fun setBuffer(buffer: List<Float>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setBufferBind, segment, buffer)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -404,6 +448,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     fun setBufferInterpolated(bufferCurr: List<Float>, bufferPrev: List<Float>) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoPackedFloat32ListArgs(Binds.setBufferInterpolatedBind, segment, bufferCurr, bufferPrev)
+        ObjectCalls.keepReachable(this)
     }
 
     /**

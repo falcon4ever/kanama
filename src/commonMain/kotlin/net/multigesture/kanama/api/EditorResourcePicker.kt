@@ -72,6 +72,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
      */
     fun setEditedResource(resource: Resource?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setEditedResourceBind, segment, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(resource)
     }
 
     /**

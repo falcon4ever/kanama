@@ -20,7 +20,9 @@ class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getStatus(): OpenXRFutureResult.ResultStatus {
         checkOpen()
-        return OpenXRFutureResult.ResultStatus(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
+        val ret = OpenXRFutureResult.ResultStatus(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -30,7 +32,9 @@ class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFuture(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getFutureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getFutureBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -41,6 +45,7 @@ class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
     fun cancelFuture() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.cancelFutureBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -52,6 +57,7 @@ class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
     fun setResultValue(resultValue: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithVariantArg(Binds.setResultValueBind, segment, resultValue)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -63,7 +69,9 @@ class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getResultValue(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getResultValueBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getResultValueBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /** Signal `completed(result: OpenXRFutureResult)`; see [TypedSignal]. */

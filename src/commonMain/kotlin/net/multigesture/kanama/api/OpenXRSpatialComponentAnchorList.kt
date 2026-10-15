@@ -19,7 +19,9 @@ class OpenXRSpatialComponentAnchorList(handle: GodotHandle) : OpenXRSpatialCompo
      */
     fun getEntityPose(index: Long): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getEntityPoseBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getEntityPoseBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

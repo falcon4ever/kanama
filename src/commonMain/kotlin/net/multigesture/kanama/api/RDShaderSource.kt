@@ -86,6 +86,7 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
     fun setStageSource(stage: RenderingDevice.ShaderStage, source: String) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndStringArg(Binds.setStageSourceBind, segment, stage.value, source)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -95,7 +96,9 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getStageSource(stage: RenderingDevice.ShaderStage): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getStageSourceBind, segment, stage.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetString(Binds.getStageSourceBind, segment, stage.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -106,6 +109,7 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
     fun setLanguage(language: RenderingDevice.ShaderLanguage) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setLanguageBind, segment, language.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -115,7 +119,9 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLanguage(): RenderingDevice.ShaderLanguage {
         checkOpen()
-        return RenderingDevice.ShaderLanguage(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLanguageBind, segment))
+        val ret = RenderingDevice.ShaderLanguage(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLanguageBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

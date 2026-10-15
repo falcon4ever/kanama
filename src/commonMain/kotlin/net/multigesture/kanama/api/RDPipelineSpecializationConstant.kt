@@ -33,6 +33,7 @@ class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle)
     fun setValue(value: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithVariantArg(Binds.setValueBind, segment, value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -43,7 +44,9 @@ class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle)
      */
     fun getValue(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getValueBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getValueBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -55,6 +58,7 @@ class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle)
     fun setConstantId(constantId: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setConstantIdBind, segment, constantId)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -65,7 +69,9 @@ class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle)
      */
     fun getConstantId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getConstantIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getConstantIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

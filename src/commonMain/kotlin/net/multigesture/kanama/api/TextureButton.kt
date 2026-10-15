@@ -82,6 +82,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      */
     fun setTextureNormal(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureNormalBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -93,6 +94,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      */
     fun setTexturePressed(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTexturePressedBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -103,6 +105,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      */
     fun setTextureHover(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureHoverBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -113,6 +116,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      */
     fun setTextureDisabled(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureDisabledBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -127,6 +131,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      */
     fun setTextureFocused(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureFocusedBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**
@@ -137,6 +142,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      */
     fun setClickMask(mask: BitMap?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setClickMaskBind, segment, listOf(mask?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(mask)
     }
 
     /**

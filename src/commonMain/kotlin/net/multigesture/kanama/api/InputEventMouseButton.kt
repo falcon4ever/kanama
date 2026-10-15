@@ -40,6 +40,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
     fun setFactor(factor: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFactorBind, segment, factor)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -51,7 +52,9 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getFactor(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFactorBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFactorBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -62,6 +65,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
     fun setButtonIndex(buttonIndex: MouseButton) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setButtonIndexBind, segment, buttonIndex.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -71,7 +75,9 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getButtonIndex(): MouseButton {
         checkOpen()
-        return MouseButton(ObjectCalls.ptrcallNoArgsRetLong(Binds.getButtonIndexBind, segment))
+        val ret = MouseButton(ObjectCalls.ptrcallNoArgsRetLong(Binds.getButtonIndexBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -83,6 +89,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
     fun setPressed(pressed: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPressedBind, segment, pressed)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -93,6 +100,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
     fun setCanceled(canceled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setCanceledBind, segment, canceled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -103,6 +111,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
     fun setDoubleClick(doubleClick: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDoubleClickBind, segment, doubleClick)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -112,7 +121,9 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun isDoubleClick(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDoubleClickBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDoubleClickBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {
@@ -134,7 +145,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
         // Downcast a GodotObject to InputEventMouseButton (null if not).
         @JvmStatic
         fun from(value: GodotObject): InputEventMouseButton? =
-            if (value.isClass("InputEventMouseButton")) RefCounted.retained(InputEventMouseButton(value.handle)) else null
+            if (value.isClass("InputEventMouseButton")) RefCounted.retained(InputEventMouseButton(value.handle), value) else null
     }
 
     private object Binds {

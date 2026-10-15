@@ -214,6 +214,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      */
     fun addException(node: CollisionObject3D) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.addExceptionBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**
@@ -232,6 +233,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      */
     fun removeException(node: CollisionObject3D) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeExceptionBind, segment, listOf(node.segment))
+        ObjectCalls.keepReachable(node)
     }
 
     /**

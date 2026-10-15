@@ -28,6 +28,7 @@ class ConvexPolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
     fun setPointCloud(pointCloud: List<Vector2>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setPointCloudBind, segment, pointCloud)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -40,6 +41,7 @@ class ConvexPolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
     fun setPoints(points: List<Vector2>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setPointsBind, segment, points)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -51,7 +53,9 @@ class ConvexPolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun getPoints(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getPointsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getPointsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

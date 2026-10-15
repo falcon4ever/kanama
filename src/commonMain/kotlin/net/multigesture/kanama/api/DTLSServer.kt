@@ -19,7 +19,10 @@ class DTLSServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setup(serverOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.setupBind, segment, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.setupBind, segment, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(serverOptions)
+        return ret
     }
 
     /**
@@ -32,7 +35,10 @@ class DTLSServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun takeConnection(udpPeer: PacketPeerUDP?): PacketPeerDTLS? {
         checkOpen()
-        return PacketPeerDTLS.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.takeConnectionBind, segment, udpPeer?.requireOpenHandle() ?: NULL_SEGMENT))
+        val ret = PacketPeerDTLS.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.takeConnectionBind, segment, udpPeer?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(udpPeer)
+        return ret
     }
 
     companion object {

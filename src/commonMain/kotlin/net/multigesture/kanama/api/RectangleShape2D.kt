@@ -27,6 +27,7 @@ class RectangleShape2D(handle: GodotHandle) : Shape2D(handle) {
     fun setSize(size: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setSizeBind, segment, size)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -36,7 +37,9 @@ class RectangleShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

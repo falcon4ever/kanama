@@ -133,7 +133,9 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.create_item
      */
     fun createItem(parent: TreeItem, index: Int = -1): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithObjectAndIntArgRetObject(Binds.createItemBind, segment, parent.segment, index))
+        val ret = TreeItem.wrap(ObjectCalls.ptrcallWithObjectAndIntArgRetObject(Binds.createItemBind, segment, parent.segment, index))
+        ObjectCalls.keepReachable(parent)
+        return ret
     }
 
     /**
@@ -257,7 +259,9 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_next_selected
      */
     fun getNextSelected(from: TreeItem): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.getNextSelectedBind, segment, from.segment))
+        val ret = TreeItem.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.getNextSelectedBind, segment, from.segment))
+        ObjectCalls.keepReachable(from)
+        return ret
     }
 
     /**
@@ -279,6 +283,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      */
     fun setSelected(item: TreeItem, column: Int) {
         ObjectCalls.ptrcallWithObjectAndIntArg(Binds.setSelectedBind, segment, item.segment, column)
+        ObjectCalls.keepReachable(item)
     }
 
     /**
@@ -399,7 +404,9 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_item_area_rect
      */
     fun getItemAreaRect(item: TreeItem, column: Int = -1, buttonIndex: Int = -1): Rect2 {
-        return ObjectCalls.ptrcallWithObjectAndTwoIntArgsRetRect2(Binds.getItemAreaRectBind, segment, item.segment, column, buttonIndex)
+        val ret = ObjectCalls.ptrcallWithObjectAndTwoIntArgsRetRect2(Binds.getItemAreaRectBind, segment, item.segment, column, buttonIndex)
+        ObjectCalls.keepReachable(item)
+        return ret
     }
 
     /**
@@ -585,6 +592,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      */
     fun scrollToItem(item: TreeItem, centerOnItem: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.scrollToItemBind, segment, item.segment, centerOnItem)
+        ObjectCalls.keepReachable(item)
     }
 
     /**

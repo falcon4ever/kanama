@@ -35,6 +35,7 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
     fun setBufferLength(seconds: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBufferLengthBind, segment, seconds)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -45,7 +46,9 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getBufferLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBufferLengthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBufferLengthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -58,6 +61,7 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
     fun setFftSize(size: AudioEffectSpectrumAnalyzer.FFTSize) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFftSizeBind, segment, size.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -69,7 +73,9 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getFftSize(): AudioEffectSpectrumAnalyzer.FFTSize {
         checkOpen()
-        return AudioEffectSpectrumAnalyzer.FFTSize(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFftSizeBind, segment))
+        val ret = AudioEffectSpectrumAnalyzer.FFTSize(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFftSizeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**

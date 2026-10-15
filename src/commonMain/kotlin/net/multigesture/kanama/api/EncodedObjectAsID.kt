@@ -27,6 +27,7 @@ class EncodedObjectAsID(handle: GodotHandle) : RefCounted(handle) {
     fun setObjectId(id: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setObjectIdBind, segment, id)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -37,7 +38,9 @@ class EncodedObjectAsID(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getObjectId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getObjectIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getObjectIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

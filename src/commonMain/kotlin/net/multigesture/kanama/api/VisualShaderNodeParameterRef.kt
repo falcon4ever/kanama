@@ -26,6 +26,7 @@ class VisualShaderNodeParameterRef(handle: GodotHandle) : VisualShaderNode(handl
     fun setParameterName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setParameterNameBind, segment, name)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -35,7 +36,9 @@ class VisualShaderNodeParameterRef(handle: GodotHandle) : VisualShaderNode(handl
      */
     fun getParameterName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getParameterNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getParameterNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

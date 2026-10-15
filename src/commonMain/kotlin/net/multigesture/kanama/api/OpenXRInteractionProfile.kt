@@ -38,6 +38,7 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
     fun setInteractionProfilePath(interactionProfilePath: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setInteractionProfilePathBind, segment, interactionProfilePath)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -47,7 +48,9 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getInteractionProfilePath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getInteractionProfilePathBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getInteractionProfilePathBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -57,7 +60,9 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBindingCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -67,7 +72,9 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBinding(index: Int): OpenXRIPBinding? {
         checkOpen()
-        return OpenXRIPBinding.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBindingBind, segment, index))
+        val ret = OpenXRIPBinding.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBindingBind, segment, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -78,6 +85,7 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
     fun setBindings(bindings: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setBindingsBind, segment, bindings)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -87,7 +95,9 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBindings(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getBindingsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getBindingsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -97,7 +107,9 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBindingModifierCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingModifierCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingModifierCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -107,7 +119,9 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBindingModifier(index: Int): OpenXRIPBindingModifier? {
         checkOpen()
-        return OpenXRIPBindingModifier.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBindingModifierBind, segment, index))
+        val ret = OpenXRIPBindingModifier.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBindingModifierBind, segment, index))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -118,6 +132,7 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
     fun setBindingModifiers(bindingModifiers: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setBindingModifiersBind, segment, bindingModifiers)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -127,7 +142,9 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBindingModifiers(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getBindingModifiersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getBindingModifiersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

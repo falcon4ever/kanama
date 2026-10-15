@@ -55,6 +55,7 @@ class GPUParticlesAttractorVectorField3D(handle: GodotHandle) : GPUParticlesAttr
      */
     fun setTexture(texture: Texture3D?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(texture)
     }
 
     /**

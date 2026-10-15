@@ -23,7 +23,9 @@ class VisualShaderNodeReroute(handle: GodotHandle) : VisualShaderNode(handle) {
      */
     fun getPortType(): VisualShaderNode.PortType {
         checkOpen()
-        return VisualShaderNode.PortType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPortTypeBind, segment))
+        val ret = VisualShaderNode.PortType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPortTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

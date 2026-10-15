@@ -20,6 +20,7 @@ class Mutex(handle: GodotHandle) : RefCounted(handle) {
     fun lock() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.lockBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -30,7 +31,9 @@ class Mutex(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tryLock(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.tryLockBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.tryLockBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -45,6 +48,7 @@ class Mutex(handle: GodotHandle) : RefCounted(handle) {
     fun unlock() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.unlockBind, segment)
+        ObjectCalls.keepReachable(this)
     }
 
     companion object {

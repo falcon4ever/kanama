@@ -78,6 +78,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
     fun setDofBlurFarEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDofBlurFarEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -91,7 +92,9 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun isDofBlurFarEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDofBlurFarEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDofBlurFarEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -103,6 +106,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
     fun setDofBlurFarDistance(distance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDofBlurFarDistanceBind, segment, distance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -113,7 +117,9 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getDofBlurFarDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurFarDistanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurFarDistanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -127,6 +133,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
     fun setDofBlurFarTransition(distance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDofBlurFarTransitionBind, segment, distance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -139,7 +146,9 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getDofBlurFarTransition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurFarTransitionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurFarTransitionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -154,6 +163,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
     fun setDofBlurNearEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDofBlurNearEnabledBind, segment, enabled)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -167,7 +177,9 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun isDofBlurNearEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDofBlurNearEnabledBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isDofBlurNearEnabledBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -179,6 +191,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
     fun setDofBlurNearDistance(distance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDofBlurNearDistanceBind, segment, distance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -189,7 +202,9 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getDofBlurNearDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurNearDistanceBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurNearDistanceBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -203,6 +218,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
     fun setDofBlurNearTransition(distance: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDofBlurNearTransitionBind, segment, distance)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -215,7 +231,9 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getDofBlurNearTransition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurNearTransitionBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurNearTransitionBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -228,6 +246,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
     fun setDofBlurAmount(amount: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDofBlurAmountBind, segment, amount)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -239,7 +258,9 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getDofBlurAmount(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurAmountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurAmountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -253,6 +274,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
     fun setAutoExposureMaxSensitivity(maxSensitivity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAutoExposureMaxSensitivityBind, segment, maxSensitivity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -265,7 +287,9 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getAutoExposureMaxSensitivity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureMaxSensitivityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureMaxSensitivityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -279,6 +303,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
     fun setAutoExposureMinSensitivity(minSensitivity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAutoExposureMinSensitivityBind, segment, minSensitivity)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -291,7 +316,9 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getAutoExposureMinSensitivity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureMinSensitivityBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureMinSensitivityBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

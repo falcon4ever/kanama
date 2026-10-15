@@ -40,6 +40,7 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
      */
     fun setTreeRoot(animationNode: AnimationRootNode?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTreeRootBind, segment, listOf(animationNode?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(animationNode)
     }
 
     /**

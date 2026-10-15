@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.NodePath
 
 // Typed checked casts, script checks, tree accessors and the delegates behind
@@ -83,7 +84,10 @@ internal object GodotClasses {
     val token = token(type)
     if (!value.isClass(token.godotName)) return null
     if (value !is RefCounted && type.isInstance(value)) return value as T
-    return token.wrapRetained(value.handle) as T
+    val cast = token.wrapRetained(value.handle) as T
+    // Task 138 item 6: [value] stays reachable until the cast took its own reference.
+    ObjectCalls.keepReachable(value)
+    return cast
   }
 
   fun <T : GodotObject> cast(value: GodotObject, type: KClass<T>): T =

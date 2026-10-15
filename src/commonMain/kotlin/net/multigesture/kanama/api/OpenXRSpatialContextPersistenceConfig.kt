@@ -22,6 +22,7 @@ class OpenXRSpatialContextPersistenceConfig(handle: GodotHandle) : OpenXRStructu
     fun addPersistenceContext(persistenceContext: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.addPersistenceContextBind, segment, persistenceContext)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -32,6 +33,7 @@ class OpenXRSpatialContextPersistenceConfig(handle: GodotHandle) : OpenXRStructu
     fun removePersistenceContext(persistenceContext: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.removePersistenceContextBind, segment, persistenceContext)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -41,7 +43,9 @@ class OpenXRSpatialContextPersistenceConfig(handle: GodotHandle) : OpenXRStructu
      */
     fun getPersistenceContexts(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getPersistenceContextsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetArray(Binds.getPersistenceContextsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

@@ -32,6 +32,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
     fun setFallbacks(fallbacks: List<Font>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setFallbacksBind, segment, fallbacks)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -43,7 +44,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFallbacks(): List<Font> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getFallbacksBind, segment, Font::wrapBorrowed)
+        val ret = ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getFallbacksBind, segment, Font::wrapBorrowed)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -53,7 +56,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun findVariation(variationCoordinates: Map<String, Any?>, faceIndex: Int = 0, strength: Double = 0.0, transform: Transform2D, spacingTop: Int = 0, spacingBottom: Int = 0, spacingSpace: Int = 0, spacingGlyph: Int = 0, baselineOffset: Double = 0.0, paletteIndex: Long = 0L, customColors: List<Color>): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID(Binds.findVariationBind, segment, variationCoordinates, faceIndex, strength, transform, spacingTop, spacingBottom, spacingSpace, spacingGlyph, baselineOffset, paletteIndex, customColors)
+        val ret = ObjectCalls.ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID(Binds.findVariationBind, segment, variationCoordinates, faceIndex, strength, transform, spacingTop, spacingBottom, spacingSpace, spacingGlyph, baselineOffset, paletteIndex, customColors)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -63,7 +68,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getRids(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getRidsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getRidsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -75,7 +82,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getHeight(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getHeightBind, segment, fontSize)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getHeightBind, segment, fontSize)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -88,7 +97,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getAscent(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getAscentBind, segment, fontSize)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getAscentBind, segment, fontSize)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -101,7 +112,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getDescent(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getDescentBind, segment, fontSize)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getDescentBind, segment, fontSize)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -113,7 +126,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getUnderlinePosition(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getUnderlinePositionBind, segment, fontSize)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getUnderlinePositionBind, segment, fontSize)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -125,7 +140,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getUnderlineThickness(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getUnderlineThicknessBind, segment, fontSize)
+        val ret = ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getUnderlineThicknessBind, segment, fontSize)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -135,7 +152,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getFontNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getFontNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -145,7 +164,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontStyleName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getFontStyleNameBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getFontStyleNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -156,7 +177,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getOtNameStrings(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getOtNameStringsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getOtNameStringsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -166,7 +189,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontStyle(): TextServer.FontStyle {
         checkOpen()
-        return TextServer.FontStyle(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFontStyleBind, segment))
+        val ret = TextServer.FontStyle(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFontStyleBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -177,7 +202,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontWeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFontWeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFontWeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -188,7 +215,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontStretch(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFontStretchBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getFontStretchBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -199,7 +228,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getPaletteCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPaletteCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getPaletteCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -210,7 +241,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getPaletteName(index: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getPaletteNameBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithLongArgRetString(Binds.getPaletteNameBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -222,7 +255,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getPaletteColors(index: Long): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedColorList(Binds.getPaletteColorsBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithLongArgRetPackedColorList(Binds.getPaletteColorsBind, segment, index)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -232,7 +267,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getSpacing(spacing: TextServer.SpacingType): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getSpacingBind, segment, spacing.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetInt(Binds.getSpacingBind, segment, spacing.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -243,7 +280,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getOpentypeFeatures(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getOpentypeFeaturesBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getOpentypeFeaturesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -254,6 +293,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
     fun setCacheCapacity(singleLine: Int, multiLine: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setCacheCapacityBind, segment, singleLine, multiLine)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -264,7 +304,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getStringSize(text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(Binds.getStringSizeBind, segment, text, alignment.value, width, fontSize, justificationFlags.value, direction.value, orientation.value)
+        val ret = ObjectCalls.ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(Binds.getStringSizeBind, segment, text, alignment.value, width, fontSize, justificationFlags.value, direction.value, orientation.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -275,7 +317,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getMultilineStringSize(text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(Binds.getMultilineStringSizeBind, segment, text, alignment.value, width, fontSize, maxLines, brkFlags.value, justificationFlags.value, direction.value, orientation.value)
+        val ret = ObjectCalls.ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(Binds.getMultilineStringSizeBind, segment, text, alignment.value, width, fontSize, maxLines, brkFlags.value, justificationFlags.value, direction.value, orientation.value)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -290,6 +334,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
     fun drawString(canvasItem: RID, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(Binds.drawStringBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -305,6 +350,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
     fun drawMultilineString(canvasItem: RID, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(Binds.drawMultilineStringBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, maxLines, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -319,6 +365,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
     fun drawStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(Binds.drawStringOutlineBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, size, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -334,6 +381,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
     fun drawMultilineStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(Binds.drawMultilineStringOutlineBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, maxLines, size, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -346,7 +394,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getCharSize(char: Int, fontSize: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(Binds.getCharSizeBind, segment, char, fontSize)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetVector2(Binds.getCharSizeBind, segment, char, fontSize)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -360,7 +410,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun drawChar(canvasItem: RID, pos: Vector2, char: Int, fontSize: Int, modulate: Color, oversampling: Double = 0.0): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble(Binds.drawCharBind, segment, canvasItem, pos, char, fontSize, modulate, oversampling)
+        val ret = ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble(Binds.drawCharBind, segment, canvasItem, pos, char, fontSize, modulate, oversampling)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -375,7 +427,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun drawCharOutline(canvasItem: RID, pos: Vector2, char: Int, fontSize: Int, size: Int = -1, modulate: Color, oversampling: Double = 0.0): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble(Binds.drawCharOutlineBind, segment, canvasItem, pos, char, fontSize, size, modulate, oversampling)
+        val ret = ObjectCalls.ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble(Binds.drawCharOutlineBind, segment, canvasItem, pos, char, fontSize, size, modulate, oversampling)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -385,7 +439,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun hasChar(char: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasCharBind, segment, char)
+        val ret = ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasCharBind, segment, char)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -396,7 +452,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getSupportedChars(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSupportedCharsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getSupportedCharsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -407,7 +465,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun isLanguageSupported(language: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isLanguageSupportedBind, segment, language)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.isLanguageSupportedBind, segment, language)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -418,7 +478,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun isScriptSupported(script: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isScriptSupportedBind, segment, script)
+        val ret = ObjectCalls.ptrcallWithStringArgRetBool(Binds.isScriptSupportedBind, segment, script)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -428,7 +490,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getSupportedFeatureList(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getSupportedFeatureListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getSupportedFeatureListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -442,7 +506,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getSupportedVariationList(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getSupportedVariationListBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getSupportedVariationListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -452,7 +518,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFaceCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getFaceCountBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getFaceCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

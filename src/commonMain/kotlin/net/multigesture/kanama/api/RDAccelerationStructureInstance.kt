@@ -58,6 +58,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
     fun setTransform(pMember: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(Binds.setTransformBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -67,7 +68,9 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getTransform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getTransformBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getTransformBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -78,6 +81,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
     fun setId(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setIdBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -87,7 +91,9 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getIdBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getIdBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -98,6 +104,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
     fun setMask(pMember: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMaskBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -107,7 +114,9 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMask(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaskBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaskBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -119,6 +128,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
     fun setHitSbtRange(pMember: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setHitSbtRangeBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -129,7 +139,9 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getHitSbtRange(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getHitSbtRangeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetLong(Binds.getHitSbtRangeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -140,6 +152,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
     fun setFlags(pMember: RenderingDevice.AccelerationStructureInstanceFlagBits) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFlagsBind, segment, pMember.value)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -149,7 +162,9 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getFlags(): RenderingDevice.AccelerationStructureInstanceFlagBits {
         checkOpen()
-        return RenderingDevice.AccelerationStructureInstanceFlagBits(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFlagsBind, segment))
+        val ret = RenderingDevice.AccelerationStructureInstanceFlagBits(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFlagsBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -161,6 +176,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
     fun setBlas(pMember: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setBlasBind, segment, pMember)
+        ObjectCalls.keepReachable(this)
     }
 
     /**
@@ -171,7 +187,9 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getBlas(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getBlasBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetRID(Binds.getBlasBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     companion object {

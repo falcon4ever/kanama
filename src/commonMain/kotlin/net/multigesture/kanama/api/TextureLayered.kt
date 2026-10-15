@@ -20,7 +20,9 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun getFormat(): Image.Format {
         checkOpen()
-        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        val ret = Image.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -31,7 +33,9 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun getLayeredType(): TextureLayered.LayeredType {
         checkOpen()
-        return TextureLayered.LayeredType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLayeredTypeBind, segment))
+        val ret = TextureLayered.LayeredType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLayeredTypeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -41,7 +45,9 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun getWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWidthBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getWidthBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -51,7 +57,9 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -61,7 +69,9 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun getLayers(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLayersBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getLayersBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -71,7 +81,9 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun hasMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMipmapsBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMipmapsBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -81,7 +93,9 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun getLayerData(layer: Int): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getLayerDataBind, segment, layer))
+        val ret = Image.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getLayerDataBind, segment, layer))
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
