@@ -779,6 +779,12 @@ case("tool_smoke.sh (plugin copies)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Append("example_project/addons/kanama_tools/plugin.gd", "\n# red run: this copy now differs from the starter template\n")],
      "plugin copies differ", "the example project's editor plugin drifts from the starter template's copy (the cheap pre-check)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+PLUGIN_DOCS_WAIT = ("    _finish_pending_editor_docs()\n    var editor_settings", "    var editor_settings")
+case("tool_smoke.sh (failing export exit)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit("templates/starter/addons/kanama_tools/plugin.gd", *PLUGIN_DOCS_WAIT),
+      Edit("example_project/addons/kanama_tools/plugin.gd", *PLUGIN_DOCS_WAIT)],
+     "failing export of a fresh project exited 134", "the editor plugin no longer waits for the editor's doc thread on exit: a failing export of a project without .godot/ crashes in Godot's exit path instead of exiting 1",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(file)._readyX health=")],
      "missing pattern", "the example script no longer logs its scene-delivered properties",
