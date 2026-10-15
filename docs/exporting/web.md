@@ -126,13 +126,14 @@ files. No source maps are published.
 
 ## Export A Demo
 
-A plain Godot Web export of a project that has the desktop addon and Kanama Tools
-enabled is guarded like the other platforms: if a `.kt` script the project attaches
-does not bind in the editor (the desktop addon or the project's `kanama-scripts.jar`
-is missing or stale), the export stops with an error naming the scripts and the fix
-instead of shipping scenes without their script properties. The `exportWeb` task
-below stages a copy of the project without `addons/kanama*` and `kotlin-src/` (its
-scripts are the generated proxies), so the check has nothing to do there.
+The `exportWeb` task below stages a copy of the project without `addons/kanama/`
+and `kotlin-src/` and points every scene at the generated Web proxies, so no staged
+scene attaches a `.kt` script. The Kanama Tools plugin stays enabled in that copy;
+its export check (see the Android guide's
+[Export Guard](android.md#export-guard)) finds no `.kt` script to check and stays
+silent. A plain Godot Web export of the project itself is checked like the other
+platforms and stops with `Kanama: Export stopped: …` when a `.kt` script that its
+scenes attach does not bind in the editor.
 
 `exportWeb` stages a disposable copy of the project, runs the Godot Web export,
 installs the Kotlin/Wasm runtime and bridge, cache-busts the entry scripts, and

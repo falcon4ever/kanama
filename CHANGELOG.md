@@ -52,19 +52,30 @@ update runs while the editor is still up and the export exits 1 with the same er
 loads only `addons/kanama` without the Kanama Tools plugin enabled can still crash this way;
 `tool_smoke.sh` runs the failing export on a fresh copy of the example project.
 
-### Added — the editor refuses an export that would ship scenes without their script properties
+### Added — the editor stops an export whose Kotlin scripts do not bind
 
-When the desktop addon or the project's `kanama-scripts.jar` does not know a `.kt` script, Godot's
-export converts every scene that uses it without the script's property values and finishes without an
-error; GDScript projects cannot get into that state. The Kanama Tools editor plugin now checks the
-`.kt` scripts that scenes, resources and autoloads attach before any scene is converted. If one does
-not bind (no `.kt` loader because the addon is not loaded, or the class is not in the jar), the export
-stops with one error that names the scripts and the fix (`installAddonJar`, then restart the editor) and
-the export command exits non-zero; no converted scene is cached. A project whose scripts all bind
-exports with no extra output (the check took about 45 ms for 31 scripts). `.kt` files no scene attaches
-(helper code) are not checked. The setting `kanama/tools/export_guard_enabled` turns the check off.
-The check runs in the editor, so it applies to every platform it exports; it is verified with headless Web
-exports. See `docs/exporting/`.
+When `kanama-scripts.jar` does not contain a `.kt` script, Godot's export converts every scene that
+uses it without the script's property values; when the desktop addon is missing, the export leaves the
+`.kt` scripts out and ships the scenes that use them unconverted. Godot finishes both exports without an
+error; GDScript projects cannot get into that state. The Kanama Tools editor plugin now checks, before
+the export writes anything, the `.kt` scripts that the scenes and resources the preset exports attach
+(its export mode, selected files and filters; addon folders included, `.gdignore` folders and nested
+projects skipped like Godot does), plus `.kt` autoloads. When one does not bind, it prints one error
+that starts with `Kanama: Export stopped:` and names the scripts, the reason, the fix and the opt-out
+setting `kanama/tools/export_guard_enabled`. Godot 4.7 has no way for a plugin to fail an export, and
+its Android, iOS and macOS exporters and `--export-pack` ignore plugin errors, so:
+
+- a command-line export (`--export-release`, `--export-debug`, `--export-pack`, `--export-patch`) ends
+  the editor process before any file is written: a non-zero exit status (137 on macOS and Linux) and no
+  artifact, on every platform (verified for Web, Android APK, iOS, macOS and PCK/ZIP exports);
+- an export from the editor's Export dialog shows the error and is marked failed; its files are left
+  as Godot writes them. A one-click deploy has its temporary export removed before the install step.
+
+A `.kt` file that no scene attaches (helper code) is not checked. A project whose scripts all bind
+exports with no extra output; the check takes about 0.4 s for 1,000 scenes and 5,000 resources. The
+Android and iOS smoke scripts fail on the `Kanama: Export stopped` line, and
+`scripts/check_exported_scene_properties.gd -- --require-converted` fails when no scene was converted.
+See `docs/exporting/android.md` (Export Guard).
 
 ### Fixed — iOS: a value-type script property set to a value of another type follows GDScript
 

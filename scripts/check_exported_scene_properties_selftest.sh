@@ -7,7 +7,8 @@
 #           CHILD node (an override node: no type/instance/script of its own), so the check PASSES
 #           and reports one script property checked on main.tscn;
 #   red   — a property is added to the SOURCE main.tscn after the export (`extra = 5`, default 1),
-#           so the converted scene lacks it and the check must FAIL naming node `Sub/inner`.
+#           so the converted scene lacks it and the check must FAIL naming node `Sub/inner`;
+#   none  — before the export, `-- --require-converted` must FAIL (nothing converted), and pass after it.
 # Needs the pinned Godot's Web export templates (web_nothreads_*.zip) installed.
 # Finding while building this (task 119): Godot's re-pack keeps an override on an instanced child
 # ONLY when the instance is editable (`[editable path="Sub"]`, which the editor always writes); a
@@ -23,6 +24,16 @@ work="$(mktemp -d "${TMPDIR:-/tmp}/kanama_scene_check_selftest.XXXXXX")"
 trap 'rm -rf "$work"' EXIT
 cp -R "$ROOT_DIR/scripts/fixtures/exported_scene_check/." "$work/"
 mkdir -p "$work/build"
+
+echo "[scene_check_selftest] red run: --require-converted before any export (nothing converted) must fail"
+none_rc=0
+none="$("$GODOT_BIN" --headless --path "$work" --script "$CHECK" -- --require-converted 2>&1)" || none_rc=$?
+if [[ "$none_rc" -eq 0 ]] || ! printf '%s\n' "$none" | grep -q 'FAIL: no res://.godot/exported directory'; then
+  echo "[scene_check_selftest] FAIL: --require-converted passed (exit $none_rc) on a project with no converted scene" >&2
+  printf '%s\n' "$none" | tail -5 >&2
+  exit 1
+fi
+rm -rf "$work/.godot"
 
 echo "[scene_check_selftest] export (Web, headless) -> converts main.tscn/sub.tscn to binary"
 if ! "$GODOT_BIN" --headless --path "$work" --export-release Web "$work/build/index.html" >"$work/export.log" 2>&1; then
@@ -49,6 +60,11 @@ if ! printf '%s\n' "$green" | grep -q 'PASS: 2 converted scene(s)'; then
   echo "[scene_check_selftest] FAIL: expected PASS over 2 converted scenes" >&2
   exit 1
 fi
+if ! "$GODOT_BIN" --headless --path "$work" --script "$CHECK" -- --require-converted >"$work/require.log" 2>&1; then
+  echo "[scene_check_selftest] FAIL: --require-converted failed although 2 scenes were converted" >&2
+  tail -5 "$work/require.log" >&2
+  exit 1
+fi
 if ! printf '%s\n' "$green" | grep -qE 'ok res://main.tscn \([0-9]+ nodes, 1 script properties checked\)'; then
   echo "[scene_check_selftest] FAIL: the override node's property was not checked (expected 1 on main.tscn)" >&2
   exit 1
@@ -70,4 +86,4 @@ if ! printf '%s\n' "$red" | grep -qE "FAIL res://main.tscn: node '[^']*inner' \(
   echo "[scene_check_selftest] FAIL: the missing override property was not reported" >&2
   exit 1
 fi
-echo "[scene_check_selftest] PASS (green run kept the override, red run caught the loss)"
+echo "[scene_check_selftest] PASS (green run kept the override, red run caught the loss, --require-converted fails with nothing converted)"

@@ -1,72 +1,124 @@
 @tool
 extends EditorExportPlugin
-## Stops an export that would ship scenes without their Kotlin script properties.
+## Stops an export that would ship scenes the editor could not bind to their Kotlin scripts.
 ##
 ## Godot instantiates and re-packs every scene when it converts text resources to binary, and keeps
-## only the properties the script instance reports. When the editor cannot bind a project `.kt`
-## script (the desktop addon is missing, or kanama-scripts.jar predates the script), the script
-## reports none, every scene-stored value is dropped, and the export succeeds without a word.
-## GDScript projects cannot reach that state, so a Kanama project must not either.
+## only the properties the script instance reports. When kanama-scripts.jar has no class for a
+## project `.kt` script, the script reports none and every scene-stored value is dropped; when the
+## desktop addon is missing, the editor has no `.kt` loader at all, leaves the `.kt` files out of the
+## export and ships the scenes that use them unconverted and unchecked. Godot reports neither as an
+## export failure. GDScript projects cannot reach that state, so a Kanama project must not either.
 ##
-## _export_begin runs before any scene is converted. It checks the `.kt` scripts the project
-## actually uses (attached in a scene or resource, or listed as an autoload; a helper `.kt` that no
-## scene attaches is not a script class and is not checked). A script binds when the editor loads
-## it as a Script that can instantiate; a missing loader makes `load` return null, a script missing
-## from the jar loads unbound (`can_instantiate()` is false). When any script fails, the export
-## stops with one message (logged as an export error, so it also shows in the export dialog) that
-## names them and the fix.
+## _export_begin runs before Godot writes anything. It checks the `.kt` scripts that the scenes and
+## resources this preset exports attach, and the `.kt` autoloads (a helper `.kt` that nothing
+## attaches is not a script class and is not checked). A script binds when the editor loads it as a
+## Script that can instantiate; a missing loader makes `load` return null, a script missing from the
+## jar loads unbound (`can_instantiate()` is false).
 ##
-## Godot 4.7 gives an export plugin no way to cancel (push_error and add_message only log), so the
-## failure is forced the one way the exporter honours: a shared object that does not exist makes the
-## platform exporter return an error and the export command exit non-zero. Every file is skipped
-## meanwhile, so no scene is converted and no stripped copy lands in the .godot/exported cache.
+## Godot 4.7 gives an export plugin no way to fail an export: an error message only marks it failed
+## in the export dialog, and the platform exporters (Android, iOS, macOS, PCK/ZIP) finish and exit 0
+## whatever a plugin reports. So, when a script does not bind:
+## - a command-line export (`--export-release`, `--export-debug`, `--export-pack`, `--export-patch`)
+##   prints the message and ends the editor process before any file is written: the exit status is
+##   non-zero and no artifact is produced on every platform;
+## - an editor (GUI) export reports the message as an export error ("Failed" in the export dialog)
+##   and is otherwise left exactly as Godot produces it; a one-click deploy (Remote Deploy), which
+##   Godot exports into the editor's temp folder and installs right after, has that temporary export
+##   removed in _export_end, so nothing reaches the device and the deploy reports the error.
+## Every message starts with the stable line `Kanama: Export stopped`.
 ##
 ## Opt out with the project setting `kanama/tools/export_guard_enabled` (default true).
 
 const SETTING_ENABLED := "kanama/tools/export_guard_enabled"
 const CATEGORY := "Kanama"
-const BLOCK_PATH := "res://kanama_export_stopped_see_error_above.so"
+const STOP_LINE := "Kanama: Export stopped"
 const MAX_LISTED := 10
 const RESOURCE_EXTENSIONS := ["tscn", "scn", "tres", "res"]
+const TEXT_RESOURCE_EXTENSIONS := ["tscn", "tres"]
 const KOTLIN_EXTENSION := "kt"
 const SCRIPT_CLASS := "KanamaScript"
+const COMMAND_LINE_EXPORT_ARGS := ["--export-release", "--export-debug", "--export-pack", "--export-patch"]
 
-const REASON_NO_LOADER := "no .kt loader: the desktop addon is not loaded"
-const REASON_NOT_BOUND := "not in kanama-scripts.jar"
+const REASON_NO_LOADER := "no .kt loader: the desktop addon (addons/kanama) is missing or did not load, so the export would leave the script out and could not convert or check the scenes that use it"
+const REASON_NOT_BOUND := "not in kanama-scripts.jar: the scenes that use it would be exported without its property values"
 
-var _blocked := false
+var _discard_on_end := ""
 
 
 func _get_name() -> String:
     return "KanamaExportGuard"
 
 
-func _export_begin(_features: PackedStringArray, _is_debug: bool, _path: String, _flags: int) -> void:
-    _blocked = false
+func _export_begin(_features: PackedStringArray, _is_debug: bool, path: String, _flags: int) -> void:
+    _discard_on_end = ""
     if not bool(ProjectSettings.get_setting(SETTING_ENABLED, true)):
         return
-    var problems := find_unbound_scripts()
+    var problems := find_unbound_scripts(get_export_preset())
     if problems.is_empty():
         return
     var message := format_message(problems)
     get_export_platform().add_message(EditorExportPlatform.EXPORT_MESSAGE_ERROR, CATEGORY, message)
-    _blocked = true
-    add_shared_object(BLOCK_PATH, PackedStringArray(), "")
-
-
-func _export_file(_path: String, _type: String, _features: PackedStringArray) -> void:
-    if _blocked:
-        skip()
+    if is_command_line_export():
+        printerr("%s: ending the export process before it writes any file (the exit status is non-zero)." % STOP_LINE)
+        end_process()
+        return
+    if is_one_click_deploy(path):
+        _discard_on_end = path
 
 
 func _export_end() -> void:
-    _blocked = false
+    if not _discard_on_end.is_empty():
+        discard_export(_discard_on_end)
+    _discard_on_end = ""
 
 
-## The `.kt` scripts the project uses that do not bind in this editor: [{"path", "reason"}].
-static func find_unbound_scripts() -> Array:
+static func is_command_line_export() -> bool:
+    for arg in OS.get_cmdline_args():
+        if COMMAND_LINE_EXPORT_ARGS.has(arg):
+            return true
+    return false
+
+
+## Ends this process at once with a non-zero status. On Unix OS.kill sends SIGKILL (status 137). On
+## Windows OS.kill terminates with status 0, so taskkill /F (status 1) runs first.
+static func end_process() -> void:
+    var pid := OS.get_process_id()
+    if OS.get_name() == "Windows":
+        OS.execute("taskkill", ["/F", "/PID", str(pid)])
+    OS.kill(pid)
+
+
+## Godot exports a one-click deploy into the editor's temp folder and installs it from there.
+static func is_one_click_deploy(path: String) -> bool:
+    var temp_dir: String = _editor().get_editor_paths().get_temp_dir()
+    return not temp_dir.is_empty() and path.simplify_path().begins_with(temp_dir.simplify_path().path_join(""))
+
+
+## Removes a one-click deploy's temporary export: the file (an Android APK, its .idsig) and, for iOS,
+## the Xcode archive Godot installs the app from.
+static func discard_export(path: String) -> void:
+    for file in [path, path + ".idsig"]:
+        if FileAccess.file_exists(file):
+            DirAccess.remove_absolute(file)
+    _remove_tree(path.get_basename() + ".xcarchive")
+
+
+static func _remove_tree(dir: String) -> void:
+    if not DirAccess.dir_exists_absolute(dir):
+        return
+    for file in DirAccess.get_files_at(dir):
+        DirAccess.remove_absolute(dir.path_join(file))
+    for sub in DirAccess.get_directories_at(dir):
+        _remove_tree(dir.path_join(sub))
+    DirAccess.remove_absolute(dir)
+
+
+## The `.kt` scripts the export uses that do not bind in this editor: [{"path", "reason"}]. With a
+## preset (in the editor), only the scenes and resources that preset exports count; without one, every
+## scene and resource under res://.
+static func find_unbound_scripts(preset: EditorExportPreset = null) -> Array:
     var problems := []
-    for path in used_kotlin_scripts():
+    for path in used_kotlin_scripts(preset):
         var reason := unbound_reason(path)
         if not reason.is_empty():
             problems.append({"path": path, "reason": reason})
@@ -89,35 +141,139 @@ static func unbound_reason(path: String) -> String:
     return ""
 
 
-## Every `.kt` path a scene, a resource or an autoload attaches. Sorted, de-duplicated.
-static func used_kotlin_scripts() -> Array:
+## Every `.kt` path an exported scene or resource attaches, plus the `.kt` autoloads. Sorted, de-duplicated.
+static func used_kotlin_scripts(preset: EditorExportPreset = null) -> Array:
     var found := {}
-    _scan_dir("res://", found)
-    for info in ProjectSettings.get_property_list():
-        var name := String(info["name"])
-        if name.begins_with("autoload/"):
-            var target := String(ProjectSettings.get_setting(name, "")).trim_prefix("*")
-            if target.get_extension() == KOTLIN_EXTENSION:
-                found[target] = true
+    for file in exported_resource_files(preset):
+        # A text resource that never mentions ".kt" attaches no Kotlin script: skip the dependency parse.
+        if TEXT_RESOURCE_EXTENSIONS.has(file.get_extension()) and not FileAccess.get_file_as_string(file).contains("." + KOTLIN_EXTENSION):
+            continue
+        for dependency in ResourceLoader.get_dependencies(file):
+            var path := _dependency_path(dependency)
+            if path.get_extension() == KOTLIN_EXTENSION:
+                found[path] = true
+    for target in _autoload_paths():
+        if target.get_extension() == KOTLIN_EXTENSION:
+            found[target] = true
     var paths := found.keys()
     paths.sort()
     return paths
 
 
-static func _scan_dir(dir: String, found: Dictionary) -> void:
+## The scenes and resources (.tscn, .scn, .tres, .res) the export writes. In the editor this follows
+## the preset like Godot's exporter does (export mode, selected files and their dependencies, include
+## and exclude filters) over the editor's file system, which already leaves out hidden folders,
+## folders with .gdignore and nested projects. Outside the editor (scripts/check_export_guard.gd) it
+## walks res:// the same way and takes every scene and resource.
+static func exported_resource_files(preset: EditorExportPreset = null) -> PackedStringArray:
+    var all := {}
+    var editor := _editor()
+    if editor != null:
+        _collect_editor_files(editor.get_resource_filesystem().get_filesystem(), all)
+    else:
+        _collect_disk_files("res://", all)
+    var exported := {}
+    var mode := EditorExportPreset.EXPORT_ALL_RESOURCES if preset == null else preset.get_export_filter()
+    match mode:
+        EditorExportPreset.EXPORT_SELECTED_SCENES, EditorExportPreset.EXPORT_SELECTED_RESOURCES:
+            for file in preset.get_files_to_export():
+                if mode == EditorExportPreset.EXPORT_SELECTED_SCENES and String(all.get(file, "")) != "PackedScene":
+                    continue
+                _add_with_dependencies(file, exported)
+            for target in _autoload_paths():
+                _add_with_dependencies(target, exported)
+        EditorExportPreset.EXCLUDE_SELECTED_RESOURCES:
+            exported = all.duplicate()
+            for file in preset.get_files_to_export():
+                exported.erase(file)
+        EditorExportPreset.EXPORT_CUSTOMIZED:
+            _collect_customized(preset, editor.get_resource_filesystem().get_filesystem(), preset.get_file_export_mode("res://", EditorExportPreset.MODE_FILE_NOT_CUSTOMIZED), exported)
+        _:
+            exported = all
+    if preset != null:
+        _apply_filter(all, preset.get_include_filter(), exported, false)
+        _apply_filter(all, preset.get_exclude_filter(), exported, true)
+    var files := PackedStringArray()
+    for file in exported:
+        if RESOURCE_EXTENSIONS.has(String(file).get_extension()):
+            files.append(file)
+    return files
+
+
+## EditorInterface, looked up at run time: this file also runs outside the editor (scripts/check_export_guard.gd).
+static func _editor() -> Object:
+    return Engine.get_singleton("EditorInterface") if Engine.is_editor_hint() else null
+
+
+static func _collect_editor_files(dir: EditorFileSystemDirectory, out: Dictionary) -> void:
+    for i in dir.get_subdir_count():
+        _collect_editor_files(dir.get_subdir(i), out)
+    for i in dir.get_file_count():
+        var type := dir.get_file_type(i)
+        if type != "TextFile":
+            out[dir.get_file_path(i)] = type
+
+
+static func _collect_disk_files(dir: String, out: Dictionary) -> void:
     for file in DirAccess.get_files_at(dir):
         if RESOURCE_EXTENSIONS.has(file.get_extension()):
-            for dependency in ResourceLoader.get_dependencies(dir.path_join(file)):
-                var path := _dependency_path(dependency)
-                if path.get_extension() == KOTLIN_EXTENSION:
-                    found[path] = true
+            out[dir.path_join(file)] = ""
     for sub in DirAccess.get_directories_at(dir):
-        # addons ship their own scripts; hidden folders (.godot) and .gdignore folders are not exported.
-        if sub.begins_with(".") or (dir == "res://" and sub == "addons"):
+        var path := dir.path_join(sub)
+        # Godot's file system skips hidden folders (.godot), .gdignore folders and nested projects.
+        if sub.begins_with(".") or FileAccess.file_exists(path.path_join(".gdignore")) or FileAccess.file_exists(path.path_join("project.godot")):
             continue
-        if FileAccess.file_exists(dir.path_join(sub).path_join(".gdignore")):
+        _collect_disk_files(path, out)
+
+
+static func _collect_customized(preset: EditorExportPreset, dir: EditorFileSystemDirectory, dir_mode: EditorExportPreset.FileExportMode, out: Dictionary) -> void:
+    for i in dir.get_subdir_count():
+        var sub := dir.get_subdir(i)
+        _collect_customized(preset, sub, preset.get_file_export_mode(sub.get_path(), dir_mode), out)
+    for i in dir.get_file_count():
+        if dir.get_file_type(i) == "TextFile":
             continue
-        _scan_dir(dir.path_join(sub), found)
+        var path := dir.get_file_path(i)
+        if preset.get_file_export_mode(path, dir_mode) != EditorExportPreset.MODE_FILE_REMOVE:
+            out[path] = true
+
+
+static func _add_with_dependencies(path: String, out: Dictionary) -> void:
+    if path.is_empty() or out.has(path):
+        return
+    out[path] = true
+    if not RESOURCE_EXTENSIONS.has(path.get_extension()):
+        return
+    for dependency in ResourceLoader.get_dependencies(path):
+        _add_with_dependencies(_dependency_path(dependency), out)
+
+
+## A preset's comma-separated wildcard filter, matched like Godot's exporter: against the full path and
+## the path without res://, case-insensitively.
+static func _apply_filter(all: Dictionary, filter: String, exported: Dictionary, exclude: bool) -> void:
+    var patterns := PackedStringArray()
+    for pattern in filter.split(","):
+        if not pattern.strip_edges().is_empty():
+            patterns.append(pattern.strip_edges())
+    if patterns.is_empty():
+        return
+    for file in (exported.keys() if exclude else all.keys()):
+        for pattern in patterns:
+            if String(file).matchn(pattern) or String(file).trim_prefix("res://").matchn(pattern):
+                if exclude:
+                    exported.erase(file)
+                else:
+                    exported[file] = true
+                break
+
+
+static func _autoload_paths() -> PackedStringArray:
+    var paths := PackedStringArray()
+    for info in ProjectSettings.get_property_list():
+        var name := String(info["name"])
+        if name.begins_with("autoload/"):
+            paths.append(String(ProjectSettings.get_setting(name, "")).trim_prefix("*"))
+    return paths
 
 
 ## get_dependencies() yields "path" or "uid://...::Type::path"; the uid wins when the file moved.
@@ -131,12 +287,14 @@ static func _dependency_path(dependency: String) -> String:
     return path
 
 
+## The message (without the "Kanama: " category prefix Godot adds to export messages).
 static func format_message(problems: Array) -> String:
     var lines := PackedStringArray()
-    lines.append("Export stopped: %d Kotlin script(s) used by this project do not bind in this editor. Exporting now would ship every scene that uses them without the scripts' property values, and Godot would not report it." % problems.size())
+    lines.append("Export stopped: %d Kotlin script(s) that this export uses do not bind in this editor." % problems.size())
     for i in mini(problems.size(), MAX_LISTED):
         lines.append("  %s (%s)" % [problems[i]["path"], problems[i]["reason"]])
     if problems.size() > MAX_LISTED:
         lines.append("  ... and %d more" % (problems.size() - MAX_LISTED))
-    lines.append("Fix: install the desktop addon and rebuild the scripts jar, then restart the editor: ./gradlew installAddonJar -PkanamaProjectDir=<project> -PkanamaProjectScriptsDir=<project>/kotlin-src (from the Kanama checkout; for an Android project, run installAndroidPluginAar first and installAddonJar after it), or use Build Scripts in the editor when addons/kanama is already installed.")
+    lines.append("Fix: install the desktop addon and rebuild the scripts jar, then restart the editor: ./gradlew installAddonJar -PkanamaProjectDir=<project> -PkanamaProjectScriptsDir=<project>/kotlin-src (from the Kanama checkout; for an Android project run installAndroidPluginAar first and installAddonJar after it; for an iOS project installIosAddon with -PkanamaProjectScriptsDir), or use Build Scripts in the editor when addons/kanama is already installed.")
+    lines.append("To export anyway, with those scenes as described above, turn off the project setting %s." % SETTING_ENABLED)
     return "\n".join(lines)

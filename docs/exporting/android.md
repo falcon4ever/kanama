@@ -82,13 +82,14 @@ Requirements:
 - **The desktop Kanama addon installed in the project** (`addons/kanama/kanama.jar`,
   the project's `kanama-scripts.jar`, the bootstrap library): the export runs in
   the desktop editor, which needs them to load the project's `.kt` scripts. Without
-  them the editor logs `No loader found for resource: res://….kt`, and with a
-  `kanama-scripts.jar` that predates a script Godot's export re-packs the scenes that
-  use it with **no script properties**, silently. The Kanama Tools editor plugin
-  therefore checks every `.kt` script the project attaches before it converts any
-  scene, and when one does not bind the export stops with an error that names the
-  scripts and the fix (the export command exits non-zero). The install step below
-  stays necessary; the check only makes forgetting it loud. Install with
+  them the editor has no `.kt` loader (`No loader found for resource: res://….kt`):
+  the export leaves the scripts out and ships the scenes that use them unconverted.
+  With a `kanama-scripts.jar` that predates a script, Godot's export re-packs the
+  scenes that use it with **no script properties**. Godot finishes either export
+  without an error, so the Kanama Tools editor plugin checks, before the export
+  writes anything, every `.kt` script that the exported scenes and resources attach
+  (see [Export Guard](#export-guard)). The install step below stays necessary; the
+  check only makes forgetting it loud. Install with
   `./gradlew installAddonJar -PkanamaProjectDir=<project> -PkanamaProjectScriptsDir=<project>/kotlin-src`
   after the AAR (so the Android `.gdextension` entries are preserved), and verify an
   export with `scripts/check_exported_scene_properties.gd` (see the iOS guide).
@@ -145,11 +146,34 @@ godot --headless \
   --install-android-build-template \
   --export-debug Android /absolute/path/to/output.apk
 godot --headless --path /absolute/path/to/godot_project \
-  --script /path/to/kanama/scripts/check_exported_scene_properties.gd   # fails if a scene lost a script property
+  --script /path/to/kanama/scripts/check_exported_scene_properties.gd \
+  -- --require-converted   # fails if a scene lost a script property, or if no scene was converted
 ```
 
 Use a Godot binary that matches the project export preset and installed Android
 export templates.
+
+### Export Guard
+
+When a `.kt` script that the export uses does not bind in the export-time editor
+(the desktop addon is missing, or `kanama-scripts.jar` does not contain the script),
+the Kanama Tools editor plugin stops the export with one error that starts with
+`Kanama: Export stopped:` and names the scripts, the reason, the fix and the opt-out
+setting:
+
+- A command-line export (`--export-debug`, `--export-release`, `--export-pack`) ends
+  before it writes any file: the exit status is non-zero (137 on macOS and Linux) and
+  there is no APK. Godot's Android exporter ignores an export plugin's error, so the
+  plugin ends the editor process itself; scripts can also look for the
+  `Kanama: Export stopped` line.
+- An export from the editor's Export dialog shows the error and reports the export as
+  failed; the APK it writes is the one Godot would have written without the check, so
+  do not ship it. A one-click deploy (Remote Deploy) removes its temporary APK before
+  the install step, so nothing is installed and the deploy reports the error.
+
+Only the scenes and resources the export preset exports are checked (its export mode,
+selected files and include and exclude filters); a `.kt` file that no scene attaches
+(helper code) is not. `kanama/tools/export_guard_enabled` turns the check off.
 
 ## Run A Smoke Test
 
@@ -170,8 +194,9 @@ without them the export stops with the Kanama Tools error described under
 Godot Export Requirements), installs the Android build template
 (by hand from the export templates when Godot's `--install-android-build-template
 --quit` leaves nothing, as it does on 4.7.2), clears `.godot/exported/`, exports
-a debug APK and fails if the export log shows an unbound `.kt` script, runs
-`scripts/check_exported_scene_properties.gd` on the project, then installs and
+a debug APK and fails if the export prints `Kanama: Export stopped`, exits
+non-zero or shows an unbound `.kt` script, runs
+`scripts/check_exported_scene_properties.gd -- --require-converted` on the project, then installs and
 launches the APK with `adb`, checks logcat for Kanama startup signals, verifies a
 captured screenshot is not blank, and force-stops the app before exiting.
 `scripts/android_export_minified.sh` (the R8 release smoke) does the same up to

@@ -151,7 +151,7 @@ Useful editor settings:
 | `kanama/tools/developer_mode` | Shows runtime build actions intended for Kanama maintainers. |
 | `kanama/build/jdk_path` (Editor Setting) | JDK 25+ home directory (absolute) used by Build Scripts and the runtime. Empty tries `JAVA_HOME`, then the usual install locations. See [Which JDK Kanama Uses](#which-jdk-kanama-uses). |
 | `kanama/tools/java_preflight_enabled` | Shows editor warnings when desktop `libjvm` cannot be found. |
-| `kanama/tools/export_guard_enabled` | Default on. Before an export converts any scene, stops it with an error naming the `.kt` scripts that do not bind in the editor (desktop addon missing, or `kanama-scripts.jar` stale), because Godot would otherwise ship scenes without those scripts' property values. Turn it off only to export knowingly without them. |
+| `kanama/tools/export_guard_enabled` | Default on. Before an export writes anything, stops it with an error (`Kanama: Export stopped: …`) naming the `.kt` scripts the exported scenes attach that do not bind in the editor (desktop addon missing, or `kanama-scripts.jar` stale), because Godot would otherwise ship those scenes without the scripts' property values or unconverted. A command-line export then exits non-zero with nothing written; see [Export Guard](../exporting/android.md#export-guard). Turn it off only to export knowingly without them. |
 
 `Build Runtime` is hidden unless `developer_mode` is enabled. Normal game
 projects should use `Build Scripts`; runtime rebuilds are mainly for Kanama
