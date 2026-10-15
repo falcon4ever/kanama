@@ -20,6 +20,7 @@ var cost_node: Node
 var button: Button
 var doomed: Node
 var bumps := 0
+var orphan: Window
 
 
 func _ready() -> void:
@@ -147,6 +148,19 @@ func keeper_loads(_unused: int) -> int:
 ## companion.
 func keeper_keeps_nodes(_unused: int) -> int:
 	return int(keeper.call("keep_nodes", 0))
+
+
+## pageHandlesAtMostTwo: a Window outside the tree (OwnProbe holds its handle).
+func orphan_window() -> Window:
+	if orphan == null:
+		orphan = Window.new()
+	return orphan
+
+
+func _exit_tree() -> void:
+	if orphan != null:
+		orphan.free()
+		orphan = null
 
 
 ## OwnProbe's shared row: the keeper looks up the node OwnProbe's generic call minted a handle for.

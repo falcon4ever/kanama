@@ -424,8 +424,10 @@ not who keeps it: when that script goes, `releaseBrowserHandlesOwnedBy` re-route
 `outlivesItsRouter` keeps to another installed proxy, so a value another script stored, or a
 companion holds (`nodeOutlivesItsReceiver`), stays valid; the last proxy releases everything. The
 SceneTree and the root Window live as long as the page: `_kanama_track` marks their one handle each
-(`markPageHandle`), which the bridge counts in `pageHandles`, apart from the live handles a scene's
-teardown returns to zero (an autoload's proxy keeps routing them after the scene is gone). The generic tier's `WebGenericCallResult.close()`
+(`markPageHandle`; an orphan Window is no page handle, only the tree's root is), which the bridge
+counts in `pageHandles`, apart from the live handles a scene's teardown returns to zero (an
+autoload's proxy keeps routing them after the scene is gone). Every Web run's envelope fails when
+`pageHandles` passes 2 (`pageHandlesAtMostTwo`). The generic tier's `WebGenericCallResult.close()`
 releases a RefCounted's or a tween's minted handle; on a Node's or plain Object's, which another
 script may hold, it does nothing (`genericCloseKeepsSharedNode`). A
 retired handle's entry in the proxies' shared `_kanama_object_handles` dictionary is erased

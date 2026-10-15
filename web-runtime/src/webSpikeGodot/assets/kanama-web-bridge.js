@@ -303,6 +303,8 @@
     liveBrowserHandleCount: 0,
     // Handles of the SceneTree and the root Window (markPageHandle), apart from the live count.
     pageHandles: 0,
+    // The most page handles at once: never more than the two (the envelope's pageHandlesAtMostTwo).
+    maxPageHandles: 0,
     maxLiveBrowserHandles: 0,
     // The handles minted for a dispatch's object arguments (a signal argument, `_input`'s event, a
     // method's object argument; one an earlier lookup or result made is handed over as it is):
@@ -1828,6 +1830,7 @@
       slot.page = true;
       this.liveBrowserHandleCount -= 1;
       this.pageHandles += 1;
+      this.maxPageHandles = Math.max(this.maxPageHandles, this.pageHandles);
       return 1;
     },
     /**
@@ -3625,6 +3628,7 @@
         maxLiveBrowserHandles: this.maxLiveBrowserHandles,
         liveBrowserHandles: this.liveBrowserHandleCount,
         pageHandles: this.pageHandles,
+        maxPageHandles: this.maxPageHandles,
         lentMints: this.lentMints,
         lentReleases: this.lentReleases,
         lentSwept: this.lentSwept,

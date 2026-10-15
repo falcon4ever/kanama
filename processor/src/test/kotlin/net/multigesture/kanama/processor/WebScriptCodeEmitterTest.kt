@@ -1818,6 +1818,14 @@ class WebScriptCodeEmitterTest {
       ),
       proxy,
     )
+    // Only the tree's root Window is a page handle; an orphan Window is an ordinary node.
+    assertTrue(
+      proxy.contains(
+        "\tif tracked is SceneTree or (tracked is Window and is_same(tracked, (Engine.get_main_loop() as SceneTree).root)):\n"
+      ),
+      proxy,
+    )
+    assertFalse(proxy.contains("get_parent() == null"), proxy)
     assertTrue(proxy.contains("\tKanamaWebHandles.sweep(2, true)\n"), proxy)
     // The tree and the root Window outlive every scene: counted apart by the bridge.
     assertTrue(proxy.contains("\t\t_kanama_bridge.markPageHandle(handle)\n"), proxy)

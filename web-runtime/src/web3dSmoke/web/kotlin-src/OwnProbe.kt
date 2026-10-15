@@ -143,6 +143,7 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     // O9 first: the body it hands over stays lent (it lives), so O2's baseline comes after it.
     rayRow()
     uint32Rows()
+    orphanWindowRow()
     lentBase = counter("liveLent")
     pinnedBase = counter("rcPinned")
     gcBase = counter("rcReleasedByGc")
@@ -306,6 +307,15 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     }
     val ring = twinLong("ring_size")
     if (ring <= ringBase + 64) mask = mask or 8388608L else note("ring $ringBase -> $ring")
+  }
+
+  /**
+   * The envelope's `pageHandlesAtMostTwo`: a Window outside the tree that a script holds is an
+   * ordinary node, not a third page handle beside the SceneTree's and the root Window's.
+   */
+  private fun orphanWindowRow() {
+    val result = WebExperimentalGenericCall.callImmediate(twin(), "orphan_window")
+    if (result.objectKind != "node") note("orphan window: ${result.tag} ${result.objectKind}")
   }
 
   /**

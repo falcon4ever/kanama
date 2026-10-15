@@ -4568,11 +4568,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tKanamaWebHandles.ring_ids[id] = true")
     appendLine("\t\tKanamaWebHandles.lent_ring.append(id)")
     appendLine(
-      "\tif tracked is SceneTree or (tracked is Window and (tracked as Window).get_parent() == null):"
+      "\tif tracked is SceneTree or (tracked is Window and is_same(tracked, (Engine.get_main_loop() as SceneTree).root)):"
     )
     appendLine(
-      "\t\t# The tree and the root Window live as long as the page (the bridge counts them apart)."
+      "\t\t# The tree and its root Window live as long as the page (the bridge counts them apart);"
     )
+    appendLine("\t\t# an orphan Window is an ordinary node.")
     appendLine("\t\t_kanama_bridge.markPageHandle(handle)")
     appendLine(
       "\t# Each new one also checks the one before it and one ring entry: churn stays bounded."
