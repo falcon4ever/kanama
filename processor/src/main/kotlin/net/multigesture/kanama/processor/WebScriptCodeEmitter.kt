@@ -948,7 +948,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             appendLine(
               "# more, once per process frame whatever runs (no proxy has to process): bound to this"
             )
-            appendLine("# class, not to a proxy, so it outlives every script. Made by the first mark.")
+            appendLine(
+              "# class, not to a proxy, so it outlives every script. Made by the first mark."
+            )
             appendLine("static var drain_hook: Callable = Callable()")
             appendLine()
             appendLine("static func hook_drain() -> void:")

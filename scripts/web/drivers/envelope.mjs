@@ -14,15 +14,19 @@ const SCHEMA_VERSION = 1;
 // that wrapper (desktop's late release), on the next frame of a proxy that still runs (a smoke
 // autoload). A teardown check waits for that collection: gc() where the page exposes it (Chrome,
 // --expose-gc), else a burst of short-lived allocation (Firefox collects under allocation pressure).
+// The burst is kept until the next poll, so it survives a minor collection and grows the old
+// generation: that, not short-lived garbage, is what makes Firefox run the full collection a long-held
+// wrapper needs.
 const COLLECT_EXPRESSION = `(() => {
   if (typeof globalThis.gc === "function") { globalThis.gc(); return 1; }
-  let kept = 0;
+  const burst = [new ArrayBuffer(8 << 20)];
   for (let round = 0; round < 32; round += 1) {
     const chunk = new Array(16384);
     for (let index = 0; index < chunk.length; index += 1) chunk[index] = { index, round };
-    kept += chunk.length;
+    burst.push(chunk);
   }
-  return kept > 0 ? 0 : -1;
+  globalThis.__kanamaCollectBurst = burst;
+  return 0;
 })()`;
 
 /** `evaluate`, asking the page to collect before every call (the teardown checks' polls). */

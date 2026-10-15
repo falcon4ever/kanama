@@ -37,6 +37,7 @@ async function snapshot(evaluate) {
         continuations: bridge.frameSchedulerContinuations ?? 0,
         appliedCommands: bridge.appliedCommands,
         liveHandles: bridge.liveBrowserHandleCount,
+        rcPinned: bridge.rcPinned ?? 0,
         maxLiveHandles: bridge.maxLiveBrowserHandles,
         crossings: bridge.kotlinToGodotCalls,
         callbackErrors: bridge.callbackErrors,
@@ -469,8 +470,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   // Batch of two (Main.freed_batch_probe): a setter on the freed node, then a command on a live one,
   // in one batch. The freed one is skipped and reported; the live command must still apply, and a
   // live `queueFree` after the skip must release its bridge slot (live handles back to where they
-  // were).
-  const liveBeforeBatch = (await snapshot(evaluate))?.liveHandles;
+  // were; the RefCounted ones are left out, a collection of their wrappers may release some meanwhile).
+  const nonRefCounted = (snap) => (snap ? snap.liveHandles - snap.rcPinned : undefined);
+  const liveBeforeBatch = nonRefCounted(await snapshot(evaluate));
   await evaluate(
     `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("freed_batch_probe")}, 0)`,
   );
@@ -484,7 +486,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     await delay(150);
     freedBatchAfter = await readFreedBatchAfter();
   }
-  const liveAfterBatch = (await snapshot(evaluate))?.liveHandles;
+  const liveAfterBatch = nonRefCounted(await snapshot(evaluate));
   trace(`freedBatchAfter: ${freedBatchAfter} liveHandles ${liveBeforeBatch} -> ${liveAfterBatch}`);
   // The web bundle (task 129 E, task 138 items 2, 20, 22; see Main.bundle_probe): two lambdas on
   // one signal, the signal queries, GodotCallable, Map/List/Array/Dictionary on the builtin and
