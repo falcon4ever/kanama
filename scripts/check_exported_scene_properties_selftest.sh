@@ -100,4 +100,17 @@ if [[ "$off_rc" -ne 0 ]] || ! printf '%s\n' "$off" | grep -q 'PASS: conversion d
   printf '%s\n' "$off" | tail -5 >&2
   exit 1
 fi
-echo "[scene_check_selftest] PASS (green run kept the override, red run caught the loss, --require-converted fails with nothing converted and passes with conversion off)"
+echo "[scene_check_selftest] conversion off with a feature override: a '.web=true' override converts again, so the check must compare"
+# Godot reads the setting with the preset's features: an export for that feature converts, and the red edit
+# to main.tscn is still in place, so the check must fail on the lost property instead of passing early.
+perl -pi -e 's/^(export\/convert_text_resources_to_binary=false)$/$1\nexport\/convert_text_resources_to_binary.web=true/' "$work/project.godot"
+grep -q '^export/convert_text_resources_to_binary.web=true$' "$work/project.godot" ||
+  { echo "[scene_check_selftest] FAIL: could not add the feature override in the fixture" >&2; exit 1; }
+ovr_rc=0
+ovr="$("$GODOT_BIN" --headless --path "$work" --script "$CHECK" -- --require-converted 2>&1)" || ovr_rc=$?
+if [[ "$ovr_rc" -eq 0 ]] || printf '%s\n' "$ovr" | grep -q 'PASS: conversion disabled by the project'; then
+  echo "[scene_check_selftest] FAIL: a feature override that converts again was ignored (exit $ovr_rc)" >&2
+  printf '%s\n' "$ovr" | tail -5 >&2
+  exit 1
+fi
+echo "[scene_check_selftest] PASS (green run kept the override, red run caught the loss, --require-converted fails with nothing converted and passes with conversion off unless a feature override converts again)"

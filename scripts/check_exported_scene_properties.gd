@@ -19,7 +19,8 @@ extends SceneTree
 ## or wrote its scenes unconverted, must not pass as "nothing to compare"); exit 2 = a scene failed to load.
 ## A project that sets editor/export/convert_text_resources_to_binary=false exports its scenes as text,
 ## with every value intact: the check passes with a note in both modes and does not compare any old
-## conversion cache. (A per-feature override of that setting, `....<feature tag>`, is not consulted.)
+## conversion cache. A per-feature override of that setting (`....<feature tag>`, e.g. `.web=true`) can turn
+## conversion back on for an export, so with any override present the check compares as usual.
 
 const TAG := "[check_exported_scenes]"
 const CONVERT_SETTING := "editor/export/convert_text_resources_to_binary"
@@ -37,12 +38,18 @@ func _is_native_property(type: String, prop: String) -> bool:
 		_native_props[type] = names
 	return _native_props[type].has(prop)
 
+func _has_feature_override(setting: String) -> bool:
+	for info in ProjectSettings.get_property_list():
+		if String(info["name"]).begins_with(setting + "."):
+			return true
+	return false
+
 func _initialize() -> void:
 	quit(_run())
 
 func _run() -> int:
 	var require_converted := OS.get_cmdline_user_args().has("--require-converted")
-	if not bool(ProjectSettings.get_setting(CONVERT_SETTING, true)):
+	if not bool(ProjectSettings.get_setting(CONVERT_SETTING, true)) and not _has_feature_override(CONVERT_SETTING):
 		print("%s PASS: conversion disabled by the project (%s=false); text scenes keep their values, nothing to compare" % [TAG, CONVERT_SETTING])
 		return 0
 	var exported_root := "res://.godot/exported"
