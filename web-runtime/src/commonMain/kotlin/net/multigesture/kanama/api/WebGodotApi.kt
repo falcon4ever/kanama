@@ -7,7 +7,6 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import net.multigesture.kanama.web.KanamaWebScript
-import net.multigesture.kanama.web.WebObjectId
 
 /**
  * Hand-written base of the Web API. The Godot classes themselves are generated from the Web call
@@ -141,32 +140,6 @@ internal fun genericWebGameplayFallback(signature: String) {
 internal expect fun instantiateWebScript(className: String): Int
 
 internal expect fun releaseWebScriptResource(handle: Int)
-
-/**
- * Every wrapper of a browser handle announces itself (the generated [GodotObject] root's init). A
- * wrapper of a RefCounted handle registers with the bridge, which keeps the handle while the
- * wrapper is reachable or until its [RefCounted.close] (protocol 37, desktop's rule); a Node or
- * plain-Object wrapper costs one set lookup and no crossing.
- */
-internal expect fun webWrapperCreated(wrapper: GodotObject, token: Int)
-
-/** [RefCounted.close]: [wrapper]'s hold on [token] ends; the last hold's end releases it at once. */
-internal expect fun releaseWebWrapper(wrapper: GodotObject, token: Int)
-
-/** True for a browser handle that names a RefCounted, held by the Kotlin wrappers of it. */
-internal expect fun isRefCountedWebHandle(token: Int): Boolean
-
-/** This wrapper's token for a call that crosses: a closed RefCounted wrapper fails loud here. */
-@OptIn(net.multigesture.kanama.backend.InternalKanamaBackendApi::class)
-internal fun GodotObject.openToken(): Int = requireOpenHandle().backendToken().toInt()
-
-/**
- * The wrapper a decoded object handle gets (a signal argument, a Variant or generic-call result):
- * a [RefCounted] for a RefCounted handle, so `as? RefCounted`, `as? AutoCloseable` and `use { }`
- * work on it as on desktop; a [GodotObject] otherwise.
- */
-internal fun webWrap(handle: WebObjectId): GodotObject =
-  if (isRefCountedWebHandle(handle.value)) RefCounted(handle) else GodotObject(handle)
 
 internal expect fun isWebBrowserHandleLive(handle: Int): Boolean
 

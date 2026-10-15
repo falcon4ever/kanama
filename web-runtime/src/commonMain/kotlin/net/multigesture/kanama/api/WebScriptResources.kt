@@ -20,7 +20,6 @@ internal constructor(
 class ScriptResource internal constructor(godotObject: GodotHandle) : Resource(godotObject) {
   private var closed = false
 
-  /** Releases the creation reference (a script handle: its own path, not a wrapper's hold). */
   override fun close() {
     if (closed) return
     closed = true
