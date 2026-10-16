@@ -15,7 +15,13 @@ question.
 
 Usage:
     python3 visibility_probe.py --export-dir <dir> --browser <path> [--engine chrome]
-                               [--timeout 60] [--profile-dir <dir>]
+                               [--timeout 60]
+    python3 visibility_probe.py --export-dir <dir> --driver <engine driver> --engine <e>
+                               [--browser <path>] [--timeout 60]
+
+With --driver, --browser is optional and should normally be OMITTED: the driver then
+resolves the browser exactly as the Web matrix does (web_export_smoke.sh passes no
+--browser-binary either), so the control runs the same binary the matrix runs.
 
 Exit codes: 0 the signal fired, 1 it did not, 2 the probe could not run.
 """
@@ -57,7 +63,13 @@ class _ProbeHandler(http.server.SimpleHTTPRequestHandler):
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="Godot visibility-notifier control probe.")
     parser.add_argument("--export-dir", required=True)
-    parser.add_argument("--browser", required=True, help="browser binary to launch")
+    parser.add_argument(
+        "--browser",
+        help=(
+            "browser binary to launch (required without --driver). With --driver, pass it "
+            "only to override the driver's own binary lookup; the Web matrix does not."
+        ),
+    )
     parser.add_argument("--engine", default="chrome", choices=["chrome", "firefox"])
     parser.add_argument("--timeout", type=int, default=60)
     parser.add_argument(
@@ -75,7 +87,10 @@ def main(argv: list[str]) -> int:
     if not os.path.isfile(os.path.join(args.export_dir, "index.html")):
         print(f"visibility_probe: no export at {args.export_dir}", file=sys.stderr)
         return 2
-    if not os.path.exists(args.browser):
+    if not args.driver and not args.browser:
+        print("visibility_probe: --browser is required unless --driver is given", file=sys.stderr)
+        return 2
+    if args.browser and not os.path.exists(args.browser):
         print(f"visibility_probe: no browser at {args.browser}", file=sys.stderr)
         return 2
 
@@ -122,9 +137,13 @@ def main(argv: list[str]) -> int:
             "node", args.driver, "--url", url, "--result", result_path,
             "--demo", "visibilityprobe", "--timeout", str(args.timeout),
             "--source-checksum", "control", "--export-dir", args.export_dir,
-            "--browser-binary", args.browser,
         ]
-        print(f"visibility_probe: driving via {os.path.basename(args.driver)}")
+        # Same as web_export_smoke.sh: the binary is passed only when the caller named one,
+        # otherwise the driver's own lookup decides (the matrix's path on every platform).
+        if args.browser:
+            cmd += ["--browser-binary", args.browser]
+        print(f"visibility_probe: driving via {os.path.basename(args.driver)} "
+              f"({'browser ' + args.browser if args.browser else 'driver-resolved browser, as the matrix'})")
     browser = subprocess.Popen(cmd, stdout=browser_log, stderr=subprocess.STDOUT)
     deadline = time.monotonic() + args.timeout
     verdict = None

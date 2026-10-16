@@ -41,6 +41,14 @@ only `--write`.
 
 Upgrading from 0.4? See [Upgrading from 0.4 to 0.5](docs/getting-started/upgrading-0.4-to-0.5.md).
 
+### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
+
+The control (a plain GDScript visibility-notifier export, `visibility-control` in `web.yml`) handed the
+Firefox driver the browser found by `command -v firefox`, the one launch input the Web matrix does
+not pass, and Firefox reported "WebGL2 missing" so the probe never ran. It now lets the driver pick
+the browser exactly as `web_export_smoke.sh` does and prints the candidate binaries. A control that
+never ran now emits a `::warning::` and a job-summary line instead of a silent green tick.
+
 ### Changed — the Web dodge cell is deterministic and checks hits strictly
 
 The dodge driver of the Web matrix used to restart a round when the stationary player was hit early,
