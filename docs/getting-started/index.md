@@ -10,6 +10,7 @@ flows only after matching GitHub zip artifacts are published.
 | Release kit | You have a locally built or published desktop kit and want a small new Godot project without a sibling Kanama source checkout. | [Use a Release Kit](release-kit.md) |
 | Store addon | You have a locally built or published store-addon zip and want to add Kanama to an existing Godot project without a sibling Kanama source checkout. | [Use a Store Addon](store-addon.md) |
 | Contributor checkout | You want to work on Kanama runtime, wrappers, docs, native bootstrap, or release packaging. | [Work on Kanama](work-on-kanama.md) |
+| Upgrading | You have Kotlin scripts written against Kanama 0.4. | [Upgrading from 0.4 to 0.5](upgrading-0.4-to-0.5.md) |
 
 Android and iOS exports use their own toolchains; once the desktop workflow is
 running, continue with [Android](../exporting/android.md) or
