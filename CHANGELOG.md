@@ -63,6 +63,14 @@ over and frees them now requires the handle counts not to grow, rather than to s
 (a browser collection in the same frames lowered them). The nightly red-run set's scene-check case
 edits the current line of the check again.
 
+The dodge cell's `mobsSpawnAndFree` now requires every mob of both rounds to be freed, by flying off
+screen or by the next game's `queue_free` of the mobs, counted from the bridge's mob scripts. It used
+to count any drop in the live-handle count, which the browser collecting a mob's `SpriteFrames` also
+causes: on the Linux CI runner's Firefox, where no mob ever reports leaving the screen, the old driver
+passed on those collections alone and the new one failed once the collector stayed quiet. Mobs freed
+off screen are reported (`mobScreenExitFrees`, `mobScreenExitSignals`), not required, and
+`KANAMA_WEB_DODGE_NO_SCREEN_EXIT=1` reproduces that host on any machine.
+
 ### Changed — iOS device runs read the app's engine errors; the gate verdict is per step
 
 After the console window, the demos' iOS runner fetches the device's log archive over USB
