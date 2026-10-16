@@ -393,7 +393,7 @@ tasks
 // mean compiling Kotlin/Native on every `publishToMavenLocal`. A consumer resolving `kanama` for a
 // JVM project therefore gets the jar directly, with no indirection that can dangle; a consumer
 // asking for an iOS variant gets Gradle's ordinary "no matching variant" instead of a 404 on a
-// module Kanama never writes. (KGP has no per-target publication switch in 2.3.21:
+// module Kanama never writes. (KGP has no per-target publication switch in 2.4.21:
 // `KotlinTarget.publishable` is a read-only `val`.)
 configure<PublishingExtension> {
   publications.withType<MavenPublication>().configureEach {
