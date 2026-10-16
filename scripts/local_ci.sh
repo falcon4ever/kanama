@@ -798,8 +798,9 @@ if [[ $skip_web -eq 0 ]]; then
     node "$ROOT_DIR/scripts/web/bridge_rc_ownership_selftest.mjs"
 
     # The dodge driver's round logic: a round the player was hit in early is resumed to 4 mobs (the cell
-    # does not depend on the RNG), a hit before the first mob is red, and handle retention is judged per
-    # round between rounds, after a forced collection, so a leak in a restarted round is red too.
+    # does not depend on the RNG), a second hit in a round, a hit before a round's first mob or sooner than
+    # a mob can reach the player is red, and every run restarts once and judges both rounds' handle
+    # retention between rounds, after a forced collection, so a leak in either round is red.
     stage "web dodge round self-test"
     node "$ROOT_DIR/scripts/web/dodge_restart_selftest.mjs"
 

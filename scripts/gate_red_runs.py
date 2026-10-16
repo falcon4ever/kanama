@@ -948,20 +948,35 @@ case("web/bridge_rc_ownership_selftest.mjs (Variant result cap)", ["node", "scri
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "        slot.lendFrame = this.ownershipFrame;\n        this.lentRefCountedByAge.add(handle);\n", "")],
      "variant cap: a Variant result's RefCounted is not under the lent cap", "a Variant result's RefCounted (a per-frame GD.weakref) leaves the lent cap again: without a collection the handle table grows without bound")
 case("web/dodge_restart_selftest.mjs", ["node", "scripts/web/dodge_restart_selftest.mjs"],
-     [Edit("scripts/web/drivers/demos/dodge.mjs", '      await callMain(evaluate, "_on_StartTimer_timeout");\n', "")],
-     "one early hit (1 mob): checks red: mobsInstantiated", "dodge stops resuming a round the player was hit in before its 4th mob: the run hangs on the RNG again (an early hit fails mobsInstantiated)")
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "      await callMain(evaluate, mainIds._on_StartTimer_timeout);\n", "")],
+     "early hit in round 1 (1st mob): checks red: mobsInstantiated", "dodge stops resuming a round the player was hit in before its 4th mob: the run hangs on the RNG again (an early hit fails mobsInstantiated)")
 case("web/dodge_restart_selftest.mjs (per-round mob count)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
-     [Edit("scripts/web/drivers/demos/dodge.mjs", "mobsInstantiated: (peak.bestRoundMobs ?? 0) >= 4,", "mobsInstantiated: peak.mobInstantiations >= 4,")],
-     "spawning never resumes: mobsInstantiated must be false", "dodge counts mobs across rounds again: a forced restart after 2 mobs plus a round that stops spawning at 2 reaches 2 + 2 = 4 and passes")
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "mobsInstantiated: rounds.length >= 2 && rounds.every((finished) => finished.mobs >= 4),", "mobsInstantiated: peak.mobInstantiations >= 4,")],
+     "round 2 hit early, spawning never resumes: mobsInstantiated must be false", "dodge counts mobs across rounds again: round 1's 4 mobs plus a round 2 that stops spawning after 2 reach 6 and pass")
 case("web/dodge_restart_selftest.mjs (per-round retention)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "for (const finished of rounds) {", "for (const finished of rounds.slice(-1)) {")],
-     "leaked per mob of the restarted round: noPerMobHandleRetention must be false", "dodge judges only the last round's retention again: a per-mob leak in a round that ended in a restart passes")
+     "leaked per mob of round 1 (the restarted round): noPerMobHandleRetention must be false", "dodge judges only the last round's retention again: a per-mob leak in a round that ended in a restart passes")
+case("web/dodge_restart_selftest.mjs (restart every run)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "if (roundRestarts === 0 && p.roundMobs >= FORCED_RESTART_AT_MOBS) {", "if (false) {")],
+     "one handle leaked per mob of round 2 only: noPerMobHandleRetention must be false", "dodge stops ending round 1 with a restart in every run: a leak that only shows after the first new_game passes CI (it was behind KANAMA_WEB_DODGE_FORCE_RESTART)")
 case("web/dodge_restart_selftest.mjs (forced collection)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
-     [Edit("scripts/web/drivers/demos/dodge.mjs", "const collect = collecting(evaluate);", "const collect = evaluate;")],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "const takeCollected = () => snapshot(collecting(evaluate));", "const takeCollected = take;")],
      "healthy: checks red: noPerMobHandleRetention", "dodge's between-rounds trough stops forcing a collection: a mob's dropped SpriteFrames wrapper reads as a retained handle until the browser collects on its own (CI: 4 over 7 mobs)")
 case("web/dodge_restart_selftest.mjs (instant kill)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
-     [Edit("scripts/web/drivers/demos/dodge.mjs", "noHitBeforeFirstMob: !hits.some(([index, mobs]) => index === 1 && mobs === 0),", "noHitBeforeFirstMob: true,")],
-     "hit before the first mob: noHitBeforeFirstMob must be false", "dodge stops failing a build where the player is hit before round 1 spawned a mob (resuming the round would hide it)")
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "noHitBeforeFirstMob: !hits.some((hit) => hit.mobs === 0),", "noHitBeforeFirstMob: true,")],
+     "hit before round 1's first mob: noHitBeforeFirstMob must be false", "dodge stops failing a build where the player is hit before a round spawned a mob (resuming the round would hide it)")
+case("web/dodge_restart_selftest.mjs (instant kill, round 2)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "noHitBeforeFirstMob: !hits.some((hit) => hit.mobs === 0),", "noHitBeforeFirstMob: !hits.some((hit) => hit.round === 1 && hit.mobs === 0),")],
+     "hit before round 2's first mob: noHitBeforeFirstMob must be false", "dodge judges a hit before the first mob in round 1 only again: an instant kill after the restart passes")
+case("web/dodge_restart_selftest.mjs (second hit)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "atMostOneHitPerRound: Object.values(hitsPerRound).every((count) => count <= 1),", "atMostOneHitPerRound: true,")],
+     "the hit does not disable the player: atMostOneHitPerRound must be false", "dodge passes a round the player was hit in twice: a Player whose hit no longer hides and disables it is resumed after every hit and stays green")
+case("web/dodge_restart_selftest.mjs (early hit)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "noEarlyHit: !hits.some((hit) => hit.mobs > 0 && hit.sinceFirstSpawn !== null && hit.sinceFirstSpawn < EARLIEST_HIT_SECONDS),", "noEarlyHit: true,")],
+     "a mob hits the player as it spawns: noEarlyHit must be false", "dodge stops failing a hit sooner than a mob can fly from the screen edge to the stationary player (an instant kill on the first mob passes as bad luck)")
+case("web/dodge_restart_selftest.mjs (hit across the press)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "const target = previousRound && event.sim === pressSim ? previousRound : round;", "const target = round;")],
+     "round 1's hit reported in the first frame after the restart: checks red: noHitBeforeFirstMob", "dodge bills a hit Godot reports in the first frame after Start (an overlap from the old round's last physics step) to the new round: a healthy run goes red as an instant kill")
 case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then', 'if false; then')],
      "below-floor expected exit 1", "web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that)")
