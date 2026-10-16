@@ -63,8 +63,10 @@ kotlin {
         // generated registrars) inside android/build's Gradle intermediates;
         // sweeping those up as script sources causes mass redeclarations. A
         // project's android/ dir (build template + plugins) and .godot cache
-        // never hold hand-written script sources.
-        kotlin.exclude("android/**", ".godot/**", "build/**")
+        // never hold hand-written script sources. Nor do Gradle build scripts: a scripts dir at
+        // the root of a Gradle consumer project (a starter or kit) holds build.gradle.kts,
+        // settings.gradle.kts and addons/kanama/kanama-project.gradle.kts.
+        kotlin.exclude("android/**", ".godot/**", "build/**", "**/*.kts")
     }
 }
 
@@ -77,6 +79,9 @@ dependencies {
 
 tasks.matching { it.name == "kspKotlin" || it.name == "compileKotlin" }.configureEach {
     inputs.property("kanamaProjectScriptsDirs", activeScriptDirs)
+    // `./gradlew createStarterProject installAddonJar ...` in one run: the scripts are compiled from
+    // the starter that run writes, so after it.
+    mustRunAfter(":createStarterProject", ":installStarterTemplate")
 }
 
 // Task 133 C: the processor generates `Autoloads` from the project's `project.godot` (the one above

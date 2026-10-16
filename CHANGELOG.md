@@ -78,6 +78,29 @@ any thread be released by the garbage collector (see "a forgotten `close()` is a
 thread"). On Android 8 (API 26-27) the fence does not exist and is skipped; the GC release stays off there.
 Measured cost on desktop: within noise.
 
+### Changed — the source-checkout starter is a Gradle project IntelliJ IDEA imports
+
+`createStarterProject` now writes the same project shape as a desktop kit: `kotlin-src/HelloScript.kt`
+attached to `main.tscn`, `build.gradle.kts` and `settings.gradle.kts`, the Gradle wrapper, and
+`addons/kanama/kanama-project.gradle.kts`. `installAddonJar` adds `addons/kanama/maven` (the runtime,
+annotations and processor published from the checkout) to such a project and refreshes it on every run.
+Open the starter folder in IntelliJ IDEA as a Gradle project for completion of the Kanama API, and build
+scripts with **Build Scripts** or `./gradlew buildScripts` in the starter, which the README Quick Start
+now documents. A starter made before this change keeps building through the checkout's
+`installAddonJar`; recreate it to get the Gradle build. The two setup commands also work in one
+`./gradlew createStarterProject installAddonJar …` run, the starter has a README for a project made
+from a checkout, `installStarterTemplate` no longer copies the template's README over the
+project's, and a scripts dir at a Gradle project's root no longer feeds its `*.kts` build files to
+the script compiler.
+
+### Fixed — the starter's `HelloScript.kt` compiles for iOS
+
+The starter script of the desktop kit, the store addon and `createStarterProject` formatted its
+status line with `String.format`, which exists only on the JVM, so building a fresh starter's
+`kotlin-src` for iOS (`installIosAddon -PkanamaIosProjectScriptsDir=…`) failed with
+`Unresolved reference 'format'`. It now rounds with `kotlin.math`, and the iOS smoke's Kotlin
+modes compile it too.
+
 ### Changed — Web `set("position:x", …)` does what it does on desktop: nothing
 
 On Web, `GodotObject.set(property, value)` wrote a property path (Godot's `set_indexed`), so

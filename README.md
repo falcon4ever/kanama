@@ -81,16 +81,22 @@ cd kanama
   -PkanamaStarterProjectDir=/path/to/kanama-starter
 ./gradlew installAddonJar \
   -PkanamaProjectDir=/path/to/kanama-starter \
-  -PkanamaProjectScriptsDir=/path/to/kanama-starter
+  -PkanamaProjectScriptsDir=/path/to/kanama-starter/kotlin-src
 ```
 
 Open `kanama-starter/project.godot` in Godot and press **Play**. The starter
-script is `kanama-starter/HelloScript.kt` (at the project root). After editing it,
-press **Build Scripts** in Godot, or rerun the `installAddonJar` command above
-from the Kanama checkout. The starter project has no Gradle wrapper of its own, so
-`./gradlew buildScripts` does not exist there; **Build Scripts** finds the
-checkout when it is a sibling folder named `kanama` (otherwise set the
-`kanama/tools/repo_dir` project setting, see [The Editor Loop](docs/getting-started/editor-workflow.md#project-settings)).
+script is `kanama-starter/kotlin-src/HelloScript.kt`. The starter is a Gradle
+project with its own wrapper: open the `kanama-starter` folder in IntelliJ IDEA
+as a Gradle project for Kotlin completion of the Kanama API. After editing a
+script, press **Build Scripts** in Godot, or run it from the starter folder:
+
+```sh
+cd /path/to/kanama-starter
+./gradlew buildScripts
+```
+
+After updating the Kanama checkout, rerun the `installAddonJar` command above to
+refresh the runtime and the API the starter compiles against.
 
 Package tasks can also build local desktop kit and store-addon zips for smoke
 testing:
