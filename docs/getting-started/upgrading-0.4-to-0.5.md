@@ -311,7 +311,7 @@ it calls, so `SceneTree.quit()`, `SceneTree.delaySeconds(...)`,
 | `changeSceneToPacked(h: GodotHandle): Long` | `changeSceneToPacked(packedScene: PackedScene): GodotError` |
 | `changeSceneToNode(h: GodotHandle): Long` | `changeSceneToNode(node: Node): GodotError` |
 | `changeSceneToFile(path): Long`, `reloadCurrentScene(): Long` | `GodotError` |
-| `getMultiplayer(forPath: String = ""): GodotHandle` | `getMultiplayer(forPath: NodePath = NodePath("")): MultiplayerAPI` |
+| `getMultiplayer(forPath: String = ""): GodotHandle` | `getMultiplayer(forPath: NodePath): MultiplayerAPI` on the instance; the companion keeps the default: `getMultiplayer(forPath: NodePath = NodePath(""))` |
 
 A Java caller of the companion entry points writes `SceneTree.Companion.quit()`.
 `SceneTree.delaySeconds` waits in engine frames on every platform now, so it
@@ -439,18 +439,21 @@ ResourceLoader.addResourceFormatLoader(loader) // non-null ResourceFormatLoader
 - `ResourceLoader.ThreadLoadStatus`, the data class, is
   `ResourceLoader.ThreadLoadProgress(status, progress)`: `ThreadLoadStatus` is
   Godot's enum name now. `loadThreadedRequest` returns `GodotError`.
-- iOS only (calls compile): `Engine.getMainLoop()` returns `MainLoop?` (use
-  `Engine.getMainLoop()?.handle`); `fromResource(value)` of `ShaderMaterial`,
-  `ParticleProcessMaterial` and `ProceduralSkyMaterial` takes a non-null
-  `Resource` (`res?.let { ShaderMaterial.fromResource(it) }`);
-  `AudioStreamPlayer.play(fromPosition: Double = 0.0)`;
-  `NoiseTexture2D.setGenerateMipmaps(generate)`; `SurfaceTool.commit(existing:
-  ArrayMesh? = null, flags: Long = 0)` is one function with defaults (a function
-  reference `SurfaceTool::commit` changes);
-  `ProjectSettings.getSettingDouble(name, defaultValue = 0.0)`;
-  `ShapeCast3D.getCollisionPoint(index: Int)` (the `Long` overload is gone);
+- **iOS compile errors:** `Engine.getMainLoop()` returns `MainLoop?` (it returned
+  a `GodotHandle`; use `Engine.getMainLoop()?.handle`); `fromResource(value)` of
+  `ShaderMaterial`, `ParticleProcessMaterial` and `ProceduralSkyMaterial` takes a
+  non-null `Resource` (`res?.let { ShaderMaterial.fromResource(it) }`); the
+  iOS-only `Long` overload of `ShapeCast3D.getCollisionPoint` is gone (pass an
+  `Int`: `getCollisionPoint(Int)`, and `getCollisionCount()` returns `Int`);
   `PhysicsRayQueryParameters3D.create(from, to)` returns
   `PhysicsRayQueryParameters3D?` there too (add `?: return` or `!!`).
+- **iOS, calls compile unchanged:** `AudioStreamPlayer.play(fromPosition: Double
+  = 0.0)` and `setStreamFromPath(path)` (it gains desktop's `cacheMode`);
+  `NoiseTexture2D.setGenerateMipmaps(generate)`;
+  `ProjectSettings.getSettingDouble(name, defaultValue = 0.0)`;
+  `SurfaceTool.commit(existing: ArrayMesh? = null, flags: Long = 0)` is one
+  function with defaults, so only a function reference `SurfaceTool::commit`
+  changes.
 - Renamed parameters matter only to a call that names its arguments:
   `AudioStreamPlayer.setBus(bus)` / `setPitchScale(pitchScale)` /
   `setVolumeDb(volumeDb)` / `setStreamPaused(paused)` on iOS.
@@ -480,10 +483,13 @@ val a = Mathf.inverseLerp(from = 0.0, to = 10.0, weight = x)
   `GD.degToRad(deg)`, `GD.seed(base)`, `GD.typeOf(variable)`, `GD.hash(variable)`),
   which matters only to a call that names its arguments.
 - `GD.typeString` and `GD.errorString` take a `Long` (a literal still compiles).
-- iOS: `GD.isInstanceValid` takes `GodotObject?`; `GD.degToRad` / `radToDeg` name
-  their parameter `deg` / `rad`.
-- Web: `GD.print(message)` is `GD.print(vararg values)`; `Mathf.pow(x, y)`,
-  `Mathf.PI` / `Mathf.TAU` are `const`; see [Web](#web).
+- `GD.isInstanceValid` takes `GodotObject?` on every platform (desktop 0.4.0
+  took `Any?`); for an instance id use `GD.isInstanceIdValid(id)`. iOS:
+  `GD.degToRad` / `radToDeg` name their parameter `deg` / `rad`.
+- Web, in builds of `main` between 0.4 and 0.5 (0.4.0's preview had no `GD.print`
+  and a `Mathf` with only `abs` and `log`): `GD.print(message)` is
+  `GD.print(vararg values)`; `Mathf.pow(x, y)`, `Mathf.PI` / `Mathf.TAU` are
+  `const`; see [Web](#web).
 
 Script: none.
 
@@ -545,6 +551,8 @@ Announced because the signature snapshots record them; your code compiles as is.
   entry points of the iOS C shim, not for scripts.
 - On Web `KanamaScript.self` is public, as on the other platforms, so shared code
   can reach an autoload's node (`Autoloads.Events.self`).
+- The per-platform `kotlinScriptInstance<T>()` extension on nodes is now the common
+  `GodotObject.kotlinScriptInstance<T>()`; calls compile unchanged.
 - `GodotSignal`'s default arguments became overloads (`connect(target, method)`
   plus `connect(target, method, flags)`, and so on): positional, trailing-lambda
   and named-argument calls compile unchanged. A script compiled against an old
@@ -832,8 +840,19 @@ the `== 0L` result checks are by hand.
 Web is the area that changed most toward the other platforms. Rebuild and
 re-export every Web game (bridge protocol 38 <!-- kanama-claim: protocol -->). See the [Web export guide](../exporting/web.md).
 
+**A 0.4.0 Web project used the preview API.** 0.4.0 shipped Web as a two-demo
+preview (a small set of hand-written wrappers): it had no `GodotObject.set`,
+`call` or `callDeferred`, no `Basis`, no `GD.print`, and a `Mathf` with only `abs`
+and `log`. Most of what follows describes the change from builds of `main`
+between 0.4 and 0.5, where Web had grown those members. If your Web code is
+still the 0.4.0 preview, follow the compiler and the
+[enum script](#enums-and-bitfields): for example `GodotObject.CONNECT_ONE_SHOT`
+becomes `GodotObject.ConnectFlags.ONE_SHOT`, `GodotSignal.connect` returns a
+`GodotError` (it returned `Long`), and `InputEventMouseButton.getButtonIndex()`
+returns a `MouseButton` (it returned `Long`).
+
 ```kotlin
-// 0.4 (Web)
+// builds of main between 0.4 and 0.5 (Web)
 import net.multigesture.kanama.api.call               // top-level extension
 node.set("position:x", 5.0)
 node.call("play", "walk")                             // queued, returned Unit
@@ -851,6 +870,8 @@ GD.print("hello")                                     // GD.print(vararg values)
 val d = Mathf.pow(x = 2.0, y = 3.0)
 ```
 
+The notes below are written against those `main` builds.
+
 - **`GodotObject.set`** is `Object.set` as on desktop. A property path such as
   `"position:x"` names no property and changes nothing; `setIndexed(path, value)`
   is the path form. `set(property: String, value: Any?)` replaces the typed
@@ -867,7 +888,8 @@ val d = Mathf.pow(x = 2.0, y = 3.0)
   `1e-6`, and the Web-only spellings sources import by name
   (`net.multigesture.kanama.api.radToDeg`, `randf`, `randi`, `randomize`,
   `pushError`, `Basis`) are kept.
-- **Value types** are the shared classes: `Basis.getColumn(i)` and
+- **Value types** are the shared classes (0.4.0's preview had only `Vector2`,
+  `Vector2i`, `Rect2` and a `Float` `Color`): `Basis.getColumn(i)` and
   `Basis.fromAxisAngle` are gone, and parameter names follow desktop
   (`Basis(x, y, z)`, `withX(value)`, `lookingAt(target, up, useModelFront)`,
   `interpolateWith(xform, weight)`, `withBasis(value)`, `bounce(n)`, `times(scale)`).
@@ -894,8 +916,8 @@ Web sources too.
 - **A script method iOS cannot dispatch now fails the iOS build** instead of
   warning and silently never running: a registered function or virtual with a
   parameter type the iOS call path does not pass (`Map`, `List`,
-  `Packed*Array`), or an `@OverrideVirtual` whose return type iOS does not
-  marshal. The error names the method, the parameter and the supported types;
+  `Packed*Array`), an `@OverrideVirtual` whose return type iOS does not
+  marshal, or an exported property iOS cannot deliver (a typed `Map`). The error names the method, the parameter and the supported types;
   change the type, or build with `-PkanamaIosAllowSkips=true` to accept the skip
   (a warning again). `RID` and `Any?` parameters, and `NodePath` and every value
   type as an `@OverrideVirtual` return, are dispatched now.
@@ -904,7 +926,11 @@ Web sources too.
   `GodotHandle`; the `emitSignal(name, Int | Long | Vector2i): Int` overloads are
   gone, `emitSignal(name, vararg args)` returns `Unit`; `connect` / `disconnect`
   name the parameter `signal` (was `signalName`); `connectBound` / `disconnectBound`
-  are internal; `RefCounted`'s constructor is internal; see also the iOS items
+  are internal; `RefCounted`'s constructor is internal; `GodotObject` is no longer
+  `AutoCloseable` (0.4.0 iOS had a no-op `close()`), so `close()` or `use { }` on a
+  wrapper that is not a `RefCounted` no longer compiles (like desktop: `RefCounted`
+  still owns `close()`); building a `GodotObject` over a NULL handle now throws
+  instead of yielding a wrapper with `instanceId == 0`; see also the iOS items
   under [Kotlin API surface](#kotlin-api-surface).
 - **`toString()` is an engine call on iOS** (`Object.to_string`, `<Node2D#123>`),
   as on desktop. Calling it on a wrapper whose object was freed (a string
@@ -994,14 +1020,18 @@ These compile and still change results. Check each against your project.
   zero vector or an empty collection. Now Godot's conversion rules apply (an `int`
   for a `float`, a `Vector2i` for a `Vector2`, ... are converted) and anything else
   fails with `Expected Vector3 for property 'velocity' but the Variant holds
-  Vector2`, naming the property, and the property keeps its value. A
-  `@RegisterFunction` argument of a value type (`Quaternion`, `Basis`, `Rect2`,
+  Vector2`, naming the property, and the property keeps its value. A registered
+  function's argument of a value type (`Quaternion`, `Basis`, `Rect2`,
   `Transform3D`, ...) that received a Variant of another type fails the call with
   the same message instead of becoming zero or identity. On iOS the same rule
-  replaces a bare `ClassCastException` (or a dropped `null`).
+  covers only the value-type and `NodePath` properties, where it replaces a bare
+  `ClassCastException` (or a dropped `null`); `Boolean`, `Long`, `Double`,
+  `String`, `List` and `Map` properties are unchanged on iOS.
 - **`GD.clamp(value, min, max)` with `min > max`** matches GDScript: `value` is set
   to `min` if it is less, then to `max` if it is greater, so `GD.clamp(0.0, 3.0, 1.0)`
-  is `1.0` (it was `3.0` in Kotlin). `clampf` and `clampi` keep Godot's typed result.
+  is `1.0`. 0.4.0 had no `GD.clamp` (only `clampf` and `clampi`, and `Mathf.clamp`
+on top of them), and those gave `3.0`; builds of `main` between 0.4 and 0.5 had a
+`GD.clamp` that did too. `clampf` and `clampi` keep Godot's typed result.
 - **Value types print and compare like Godot.** `toString()` is GDScript's `str(v)`
   (`(0.1, 0.2)`, not `Vector2(x=0.1, y=0.2)`); `==` compares the stored
   components; basic arithmetic gives Godot's results bit for bit.
@@ -1013,6 +1043,16 @@ These compile and still change results. Check each against your project.
 - **`StringName` values** in generic decodes arrive as text, not `null` (desktop,
   Android, iOS). On iOS, script properties now report their initializer as the
   default value, so a scene packed at runtime stores only what differs.
+- **Typed resource loaders check the class.** `ResourceLoader.loadTexture2D`,
+  `loadPackedScene`, `loadAudioStream`, `loadLightmapGIData` and
+  `loadThreadedGetPackedScene` return `null` and call `pushError` (`'path' is a
+  Texture2D, not a PackedScene`) when the resource is of another class; they used
+  to wrap it as the requested type. On iOS `loadThreadedGet` now really calls
+  Godot's `load_threaded_get`: it consumes the load, and returns `null` with an
+  error when nothing was requested for the path.
+  `loadThreadedGetStatusWithProgress` fails loudly when Godot returns no progress
+  value instead of reporting 0 (desktop throws `IllegalStateException`, iOS
+  reports `INVALID_RESOURCE`).
 
 **Random numbers and math (Web)**
 
@@ -1021,11 +1061,27 @@ These compile and still change results. Check each against your project.
   `GD.seed(n)` reproduces GDScript's sequence everywhere. Web's own generator is
   gone. Each draw is one bridge call.
 - `Mathf.inverseLerp(a, a, x)` answers Godot's NaN or infinity (Web answered 0),
-  `Mathf.roundToInt` rounds halves away from zero (Web rounded to even), and
-  `GD.randiRange` / `randfRange` no longer throw for `from > to`.
+  and `Mathf.roundToInt` rounds halves away from zero (Web rounded to even); both
+  compare builds of `main` between 0.4 and 0.5, since 0.4.0's Web `Mathf` had
+  only `abs` and `log`. `GD.randiRange` / `randfRange` no longer throw for
+  `from > to` (they did in 0.4.0).
 
 **Ownership and lifetime**
 
+- **Two wrappers of one object are equal** on desktop, Android and iOS.
+  `equals` and `hashCode` (now `final`) compare the instance id, whatever the
+  wrapper class (`Node` vs `Node3D`), so `node == other` is `true`, and
+  `List.contains`, `Set` and `Map` keys treat them as one. 0.4.0's desktop
+  `GodotObject` had no `equals`, so two wrappers were two keys. Check any
+  `Set<Node>`, `Map<Node, ...>` or `indexOf` you relied on being identity-based.
+- **A call through a freed wrapper throws** on desktop, Android and iOS, in debug
+  builds (the editor and debug exports): `IllegalStateException: Invalid access to
+  previously freed instance (Node3D, instance id ...)`, contained and reported
+  like any script error. Before, the call read freed memory (wrong values, or a
+  native crash). Comparing such a wrapper, `GD.isInstanceValid` and `toString()`
+  stay silent, and a release export does not check, so keep
+  `GD.isInstanceValid(node)` before using an object that may be gone. The Web
+  rule is the next bullet.
 - **Web:** a node or plain object you hold is valid until the engine frees it,
   whichever script got it, and a node you `queueFree()` stays usable to the end of
   the frame. A handler argument can be kept (`lastHit = body`) and `body == player`
@@ -1053,6 +1109,14 @@ These compile and still change results. Check each against your project.
 
 **Scripts and signals**
 
+- **A Kotlin exception is a Godot script error** on desktop, Android and iOS
+  (Web: see "Web script exceptions" above). It is reported as `SCRIPT ERROR: <type>:
+  <message>` with `at: Player.ready (res://kotlin-src/.../Player.kt:42)`, as
+  GDScript reports a runtime error, and it shows in the editor's Errors tab.
+  The failed call returns `null` with `CALL_OK` (it was `INVALID_METHOD`, so Godot
+  also added a misleading "method not found"): a caller that tested for that
+  error now gets a normal `null` result. On iOS the exception is contained; it
+  used to cross the native boundary and end the app.
 - **Public functions are registered** and **subclasses inherit the base's
   members** (see [Script annotations](#script-annotations-and-export-hints)); a
   public helper that was Kotlin-only is now callable from GDScript, and the build
@@ -1065,7 +1129,13 @@ These compile and still change results. Check each against your project.
 **Build and export**
 
 - **iOS script builds fail** for a method the platform cannot dispatch, and **an
-  export fails** when a `.kt` script does not bind (the export guard).
+  export fails** when a `.kt` script does not bind (the export guard). A command-line
+  export ends non-zero and writes no artifact; an export from the Export dialog is
+  only marked Failed and its files stay written as Godot wrote them.
+- **A failing headless export of a project without `.godot/` exits 1, not 134**
+  (an unknown preset, an unwritable folder, an export plugin that stops the
+  export), as a GDScript project does. A CI step that expected 134 needs 1. A
+  project that does not enable the Kanama Tools plugin can still crash this way.
 - **R8-minified Android builds are larger** (see [Android](#android)).
 - **An export built with an older Web protocol refuses to run**: re-export.
 
@@ -1126,6 +1196,8 @@ here as well):
 | Typed Godot enums and required returns (BREAKING) | [Enums and bitfields](#enums-and-bitfields) |
 | Typed export hints, one annotation set (BREAKING) | [Script annotations and export hints](#script-annotations-and-export-hints) |
 | `GodotHandle` replaces `MemorySegment` in every public signature | [The script constructor handle](#the-script-constructor-handle) |
+| Desktop `GD.isInstanceValid(Any?)` takes `GodotObject?` | [`GD` and `Mathf`](#gd-and-mathf) |
+| iOS `GodotObject` is no longer `AutoCloseable` | [iOS](#ios) |
 | The roots written once (desktop and iOS source breaks) | [Node, SceneTree, Viewport and Resource](#node-scenetree-viewport-and-resource), [iOS](#ios) |
 | `Node`, `SceneTree` generated once; `SceneTreeHandle` retired | [Node, SceneTree, Viewport and Resource](#node-scenetree-viewport-and-resource) |
 | `Viewport`, `Resource`, `Button`, `LineEdit`, `Range`, `Slider`, `TabBar`, `AnimationPlayer` generated once | [Node, SceneTree, Viewport and Resource](#node-scenetree-viewport-and-resource) |
