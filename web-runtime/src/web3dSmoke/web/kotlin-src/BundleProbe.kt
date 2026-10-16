@@ -11,9 +11,12 @@ import net.multigesture.kanama.api.GodotSignal
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Mathf
 import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.api.Node3D
 import net.multigesture.kanama.api.Signal2
 import net.multigesture.kanama.api.SignalArgType
 import net.multigesture.kanama.builtins.godotFormat
+import net.multigesture.kanama.types.NodePath
+import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebExperimentalGenericCall
 
 /**
@@ -355,6 +358,35 @@ class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     else GD.print("lent rows: $same of $rounds rounds kept identity")
     if (after == before) mask = mask or 4L
     else GD.print("lent rows: live handles $before -> $after")
+    return mask
+  }
+
+  /**
+   * `set` is `Object.set` and `setIndexed` the path form, as on desktop (HelloScript's
+   * "Object.set property path" row) and in GDScript. 1 = `set("position:x", 5.0)` leaves x at 0;
+   * 2 = `setIndexed("position:x", 5.0)` sets it; 4 = `set` of a Vector3 and of a typed enum; 8 =
+   * `setIndexed(NodePath)` and a 64-bit int on a path.
+   */
+  fun propertyPathRows(value: Long): Long {
+    val target = self.requireAs("../PathTarget", ::Node3D)
+    val read = { path: String -> target.call("get_indexed", NodePath(path)) }
+    var mask = 0L
+    target.set("position:x", 5.0)
+    if (read("position:x") == 0.0) mask = mask or 1L
+    else GD.print("property path rows: set(\"position:x\") gave x=${read("position:x")}")
+    target.setIndexed("position:x", 5.0)
+    if (read("position:x") == 5.0) mask = mask or 2L
+    target.set("scale", Vector3(1.0, 2.0, 3.0))
+    target.set("rotation_edit_mode", Node3D.RotationEditMode.QUATERNION)
+    if (
+      read("scale") == Vector3(1.0, 2.0, 3.0) &&
+        read("rotation_edit_mode") == Node3D.RotationEditMode.QUATERNION.value
+    ) {
+      mask = mask or 4L
+    }
+    target.setIndexed(NodePath("position:y"), 7.0)
+    target.setIndexed("metadata/wide", 1L shl 40)
+    if (read("position:y") == 7.0 && read("metadata/wide") == 1L shl 40) mask = mask or 8L
     return mask
   }
 

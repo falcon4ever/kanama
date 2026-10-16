@@ -738,7 +738,11 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // call("get_children")) keeps its handle after the handler -- it still answers (bit 4096), the
     // result == the argument in every round on both dispatch arms (8192), and twenty more rounds
     // leave the live handles where one left them (16384).
-    lentHandlesSurviveTheirDispatch: bundleValues >> 12 === 7,
+    lentHandlesSurviveTheirDispatch: ((bundleValues >> 12) & 7) === 7,
+    // set(property, value) is Object.set and setIndexed the path form, as on desktop and in
+    // GDScript: set("position:x", 5.0) changes nothing (bit 32768), setIndexed sets x (65536), set of
+    // a Vector3 and of a typed enum (131072), setIndexed(NodePath) and a 64-bit int on a path (262144).
+    setTakesAPropertyNameNotAPath: bundleValues >> 15 === 15,
     // L1: an argument a handler stored still answers 2 frames later, and 8 frames later, on every
     // dispatch path: the one-object signal arm, the packed arm, a method's object argument, a packed
     // method argument, `_input` and `_unhandled_input`.

@@ -6,6 +6,7 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
+import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
@@ -139,8 +140,8 @@ open class GodotObject(godotObject: GodotHandle) {
       property,
     )?.let { GodotObject(it.toWebId()) }
 
-  /** Property-path write (AnimationTree parameters); the typed overloads pick the transport. */
-  fun set(propertyPath: String, value: Double) {
+  /** `set_indexed` with a Double (the typed arm behind AnimationMixer.setParameter). */
+  internal fun setIndexedDouble(propertyPath: String, value: Double) {
     GodotBackendCalls.invokeStringNameDoubleArg(
       D.OBJECT_SET_INDEXED_DOUBLE,
       requireOpenHandle(),
@@ -186,7 +187,7 @@ open class GodotObject(godotObject: GodotHandle) {
     )
   }
 
-  fun set(propertyPath: String, value: String) {
+  internal fun setIndexedString(propertyPath: String, value: String) {
     GodotBackendCalls.invokeStringNameStringNameArg(
       D.OBJECT_SET_INDEXED_STRING,
       requireOpenHandle(),
@@ -195,7 +196,7 @@ open class GodotObject(godotObject: GodotHandle) {
     )
   }
 
-  fun set(propertyPath: String, value: Long) {
+  internal fun setIndexedLong(propertyPath: String, value: Long) {
     GodotBackendCalls.invokeStringNameLongArg(
       D.OBJECT_SET_INDEXED_LONG,
       requireOpenHandle(),
@@ -204,7 +205,7 @@ open class GodotObject(godotObject: GodotHandle) {
     )
   }
 
-  fun set(propertyPath: String, value: Vector2) {
+  internal fun setIndexedVector2(propertyPath: String, value: Vector2) {
     GodotBackendCalls.invokeStringNameVector2Arg(
       D.OBJECT_SET_INDEXED_VECTOR2,
       requireOpenHandle(),
@@ -286,12 +287,9 @@ open class GodotObject(godotObject: GodotHandle) {
     webEmitSignalGeneric(this, signal, args)
   }
 
-  /**
-   * Desktop parity (task 128 C): a typed Godot enum written through the dynamic `set` crosses as
-   * the INT it stands for, like desktop/iOS encode a `GodotEnumValue` Variant.
-   */
-  fun set(propertyPath: String, value: GodotEnumValue) {
-    set(propertyPath, value.value)
+  /** Desktop's `setIndexed` with the path as a String: `setIndexed("position:x", 5.0)`. */
+  fun setIndexed(propertyPath: String, value: Any?) {
+    setIndexed(NodePath(propertyPath), value)
   }
 
   /**
@@ -320,6 +318,23 @@ open class GodotObject(godotObject: GodotHandle) {
 
   fun getMethodArgumentCount(method: String): Long =
     webGenericCall(this, "get_method_argument_count", listOf(method)) as Long
+
+  /**
+   * Desktop's `set` (Godot's `Object.set`, GDScript's `set`): writes the property named
+   * [property]. A path such as `"position:x"` names no property, so it changes nothing;
+   * [setIndexed] is the path form. Queued, like every Web mutation.
+   */
+  fun set(property: String, value: Any?): Unit {
+    webGenericQueue(this, "set", listOf<Any?>(property, value))
+  }
+
+  /**
+   * Desktop's `setIndexed` (Godot's `Object.set_indexed`): writes the property path
+   * [propertyPath], so `setIndexed(NodePath("position:x"), 5.0)` sets the x component. Queued.
+   */
+  fun setIndexed(propertyPath: NodePath, value: Any?): Unit {
+    webGenericQueue(this, "set_indexed", listOf<Any?>(propertyPath, value))
+  }
 
   /**
    * The engine instance id, read once per handle and then kept (desktop captures it at
@@ -390,19 +405,7 @@ fun GodotObject.emitSignal(signal: String, value: GodotObject) = emitSignal(sign
 fun GodotObject.getObjectProperty(property: String): GodotObject? = getObjectProperty(property)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun GodotObject.set(propertyPath: String, value: Double) = set(propertyPath, value)
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun GodotObject.emitSignal(signal: String, value: String) = emitSignal(signal, value)
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun GodotObject.set(propertyPath: String, value: String) = set(propertyPath, value)
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun GodotObject.set(propertyPath: String, value: Long) = set(propertyPath, value)
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun GodotObject.set(propertyPath: String, value: Vector2) = set(propertyPath, value)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun GodotObject.getVector2(property: String): Vector2 = getVector2(property)
@@ -412,3 +415,6 @@ fun GodotObject.hasSignal(signal: String): Boolean = hasSignal(signal)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun GodotObject.isQueuedForDeletion(): Boolean = isQueuedForDeletion()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun GodotObject.set(property: String, value: Any?) = set(property, value)

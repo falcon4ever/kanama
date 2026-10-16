@@ -55,6 +55,7 @@ import net.multigesture.kanama.api.Mathf
 import net.multigesture.kanama.api.MeshInstance3D
 import net.multigesture.kanama.api.MethodName
 import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.api.Node3D
 import net.multigesture.kanama.api.OS
 import net.multigesture.kanama.api.OptionButton
 import net.multigesture.kanama.api.PackedScene
@@ -377,6 +378,20 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
       System.err.println(
         "[kanama:kt] task52a setOwner set=$ownerSet cleared=$ownerCleared " +
           "prop_set=$propSet prop_cleared=$propCleared"
+      )
+    }
+    // `set` takes a property name, as GDScript's does: a path names no property, so
+    // set("position:x", ...) changes nothing; setIndexed is the path form. The web3d bundle
+    // (BundleProbe.propertyPathRows) checks the same on Web.
+    run {
+      val pathTarget = Node3D(GodotHandle(ObjectCalls.constructObject("Node3D")))
+      pathTarget.set("position:x", 5.0)
+      val setX = pathTarget.position.x
+      pathTarget.setIndexed("position:x", 5.0)
+      val setIndexedX = pathTarget.position.x
+      ObjectCalls.destroyObject(pathTarget.handle.segment)
+      System.err.println(
+        "[kanama:kt] Object.set property path set_x=$setX set_indexed_x=$setIndexedX"
       )
     }
     val scriptUid = ResourceSaver.getResourceIdForPath("res://HelloScript.kt")

@@ -39,6 +39,23 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — Web `set("position:x", …)` does what it does on desktop: nothing
+
+On Web, `GodotObject.set(property, value)` wrote a property path (Godot's `set_indexed`), so
+`node.set("position:x", 5.0)` moved the node on Web and did nothing on desktop, Android and iOS,
+where `set` is Godot's `Object.set` like GDScript's `set`. Web's `set` is now `Object.set` too: a
+path such as `"position:x"` names no property and changes nothing. The path form is `setIndexed`,
+on Web as on desktop (`setIndexed("position:x", 5.0)`, `setIndexed(NodePath(...), value)`).
+A property name without a `:` (`set("speed", v)`, `set("parameters/state/transition_request", "walk")`)
+writes the same property as before. Web's `set` and `setIndexed` take any value desktop's take
+(`Any?`), not only a Double, Long, String, Vector2 or enum.
+
+- **Source break:** `GodotObject.set` (Web): `set(propertyPath, value)` with a path that has a `:`
+  now changes nothing (it set the component); call `setIndexed(propertyPath, value)` instead. The
+  typed overloads `set(propertyPath: String, value: Double / Long / String / Vector2 /
+  GodotEnumValue)` are one `set(property: String, value: Any?)`, so a call that names the first
+  argument writes `property =`.
+
 ### Changed — a forgotten `close()` is a late release on every thread
 
 Owned `RefCounted` wrappers made on a worker thread (a `Dispatchers.Default` coroutine, your own
