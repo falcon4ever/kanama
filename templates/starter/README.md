@@ -1,7 +1,8 @@
 # Kanama Starter Template
 
 This folder contains the small Kotlin script and editor plugin copied by the
-starter Gradle tasks.
+starter Gradle tasks, and `project-README.md`, the README of a project made by
+`createStarterProject`.
 
 For a new first project, run this from the Kanama source checkout:
 
@@ -10,7 +11,7 @@ For a new first project, run this from the Kanama source checkout:
   -PkanamaStarterProjectDir=/absolute/path/to/new_godot_project
 ./gradlew installAddonJar \
   -PkanamaProjectDir=/absolute/path/to/new_godot_project \
-  -PkanamaProjectScriptsDir=/absolute/path/to/new_godot_project
+  -PkanamaProjectScriptsDir=/absolute/path/to/new_godot_project/kotlin-src
 ```
 
 For an existing Godot project, copy only the safe starter files:
@@ -23,8 +24,11 @@ For an existing Godot project, copy only the safe starter files:
   -PkanamaProjectScriptsDir=/absolute/path/to/your_godot_project
 ```
 
-`createStarterProject` adds a tiny `main.tscn` with `HelloScript.kt` already
-attached to a `Node2D`. `installStarterTemplate` copies only `HelloScript.kt`
+`createStarterProject` creates the release-kit project shape: a tiny `main.tscn`
+with `kotlin-src/HelloScript.kt` attached to a `Node2D`, a Gradle build with its
+own wrapper (`./gradlew buildScripts`; open the folder in IntelliJ IDEA as a
+Gradle project), and the editor tools. `installAddonJar` then adds the runtime
+and `addons/kanama/maven`. `installStarterTemplate` copies only `HelloScript.kt`
 and `addons/kanama_tools`, so it will not replace an existing `project.godot`
 or main scene.
 
