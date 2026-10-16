@@ -89,10 +89,10 @@ and on every `@Signal`: an object, `int`, `float`, `bool`, `String`/`StringName`
 `NodePath`, `RID`, a `Variant`, a Godot enum, or any value type. `connect`,
 `await`, `emit` and the script's `connect { }` work as above, and an `await` whose
 emitter is freed before the signal fires is cancelled, as on desktop (one whose
-awaiting script is freed first is disconnected from the emitter). Two
-differences remain: an object argument is valid while the callback runs (keep
-what you need from it, not the wrapper), and its wrapper is not `==` to another
-wrapper of the same object (Web compares handle tokens). The two
+awaiting script is freed first is disconnected from the emitter). An object
+argument is the object, as on desktop: you can keep it, and it is `==` to your own
+reference to the same object (see
+[Objects you receive](godot-api.md#objects-you-receive)). The two
 `NavigationAgent3D` signals with a `Dictionary` argument have no typed handle on
 Web; connect them by method name.
 
@@ -313,8 +313,7 @@ connection.close()
 
 Lifetime is the same as for the typed form: the connection dies with its target
 or the emitter, or after a one-shot call, and Kanama then releases the lambda.
-This holds on desktop, Android and iOS; the Web backend does not release them
-yet.
+This holds on every platform, Web included.
 
 `connect(target, argumentCount) { args -> ... }` receives the first
 `argumentCount` emitted arguments as a `List<Any?>` (no upper limit since task
