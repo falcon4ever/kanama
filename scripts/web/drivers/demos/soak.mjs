@@ -27,7 +27,7 @@
 // Duration comes from KANAMA_WEB_SOAK_SECONDS (default 600). The smoke shell's
 // --timeout must exceed it; scripts/web/demos.sh derives that budget.
 
-import { callSmokeMethod, collecting } from "../envelope.mjs";
+import { callScriptMethod, callSmokeMethod, collecting } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -92,10 +92,9 @@ async function snapshot(evaluate) {
   }
 }
 
-async function callMain(evaluate, method) {
-  return evaluate(
-    `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.dodgeMainHandle, globalThis.KanamaWebBridge.dodgeMethodId(${JSON.stringify(method)})); true`,
-  );
+// Resolved by name from the export manifest (a missing method throws), never a hard-coded ordinal.
+async function callMain(evaluate, exportDir, method) {
+  return callScriptMethod(evaluate, exportDir, "dodge.Main", "dodgeMainHandle", method);
 }
 
 async function callTeardown(evaluate, exportDir) {
@@ -131,7 +130,7 @@ export async function runSoak({ url, evaluate, navigate, deadline, exportDir }) 
     if (Date.now() >= nextCycleAt) {
       // Restart the round. The first call starts the game; later ones exercise
       // new_game's own teardown path (it queue_frees the whole mobs group).
-      await callMain(evaluate, "new_game");
+      await callMain(evaluate, exportDir, "new_game");
       cycles += 1;
       nextCycleAt = Date.now() + CYCLE_SECONDS * 1000;
       trace(`cycle ${cycles} (live=${last.liveHandles} before restart)`);

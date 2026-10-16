@@ -797,9 +797,11 @@ if [[ $skip_web -eq 0 ]]; then
     stage "web bridge RefCounted-hold self-test"
     node "$ROOT_DIR/scripts/web/bridge_rc_ownership_selftest.mjs"
 
-    # The dodge driver's round restarts are a budget: a build that kills the player on the first mob of every
-    # round must fail instead of passing on the mobs spawned across the restarts (tooling bundle fix round 2).
-    stage "web dodge restart-budget self-test"
+    # The dodge driver's round logic: a round the player was hit in early is resumed to 4 mobs (the cell
+    # does not depend on the RNG), a second hit in a round, a hit before a round's first mob or sooner than
+    # a mob can reach the player is red, and every run restarts once and judges both rounds' handle
+    # retention between rounds, after a forced collection, so a leak in either round is red.
+    stage "web dodge round self-test"
     node "$ROOT_DIR/scripts/web/dodge_restart_selftest.mjs"
 
     # Correctness lint over the same drivers (task 86: an unused variable held

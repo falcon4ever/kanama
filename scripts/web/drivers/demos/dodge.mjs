@@ -1,14 +1,16 @@
 // demos/dodge.mjs -- dodge-the-creeps play + teardown assertions for the Web smoke.
 //
 // Unlike Bunnymark (driven by bridge method calls) and Match3 (driven by synthetic
-// pointer input), dodge is a real-time, self-driven demo: the SmokeQuit script starts
-// a game (new_game), lets Godot's MobTimer spawn mobs and the ScoreTimer tick, then
-// tears the mobs down and quits. This driver OBSERVES: it polls the bridge telemetry,
-// captures the gameplay peak (mobs instantiated + added to the tree, kotlin->godot
-// crossings advancing) and the post-teardown trough, and asserts a clean run with no
-// callback faults.
+// pointer input), dodge is a real-time, self-driven demo: the driver presses Start
+// (HUD._on_StartButton_pressed -> Main.new_game), lets Godot's MobTimer spawn mobs and
+// the ScoreTimer tick, plays two rounds (each ended by game_over, then Start) to measure
+// per-mob handle retention between rounds, tears the scene down and quits. Beyond those calls (and
+// resuming a round the player was hit in early) the driver OBSERVES: it polls the bridge
+// telemetry, captures the gameplay peak (mobs instantiated + added to the tree,
+// kotlin->godot crossings advancing) and the post-teardown trough, and asserts a clean
+// run with no callback faults.
 
-import { callSmokeMethod, collecting } from "../envelope.mjs";
+import { callSmokeMethod, collecting, resolveMethodId } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -18,8 +20,17 @@ const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
 // instead of the settled one. The run must go RED -- a gate only ever observed
 // passing is not evidence that it discriminates.
 const FALSIFY = process.env.KANAMA_WEB_T81_FALSIFY ?? "";
-// Early game overs the driver restarts through before the run counts as suspect (see restartAfterEarlyGameOver).
-const MAX_ROUND_RESTARTS = 3;
+// Every run ends round 1 with a restart once it has spawned this many mobs, so every run measures
+// two rounds. Four, not two: a handle kept once per round (not per mob) then reads 0.25 per mob,
+// well clear of the 0.5 retention threshold instead of exactly on it.
+const FORCED_RESTART_AT_MOBS = 4;
+// The earliest a mob can reach the stationary player, in game seconds after the round's first spawn:
+// StartPosition (240, 450) is at least 240 px from the spawn path (the 480x720 screen edge), the
+// player's capsule (radius 27, height 68) and a mob's (radius 37, height 100, lying along its
+// velocity) touch at most 34 + 50 = 84 px apart centre to centre, so a mob travels at least 156 px,
+// at most 250 px/s: 0.62 s. A hit sooner than this is an instant-kill bug; the margin absorbs the
+// physics step and the poll that observes the hit.
+const EARLIEST_HIT_SECONDS = 0.4;
 const START = Date.now();
 const trace = (msg) => {
   if (DEBUG) process.stderr.write(`[dodge ${((Date.now() - START) / 1000).toFixed(1)}s] ${msg}\n`);
@@ -49,11 +60,8 @@ async function snapshot(evaluate) {
         mobReady: classCount(".Mob"),
         mobInstantiations: bridge.match3PackedSceneInstantiations,
         mobAddChildCommands: bridge.match3AddChildCommands,
-        // Main.game_over dispatches so far (the player was hit; MobTimer is stopped).
-        gameOvers: (() => {
-          const main = Object.entries(bridge.exercisedMembers ?? {}).find(([n]) => n.endsWith(".Main"));
-          return main?.[1]?.["method#" + bridge.dodgeMethodId("game_over")] ?? 0;
-        })(),
+        // Every mob spawn and Main.game_over dispatch so far, with its game time (installProbe).
+        probe: bridge.__kanamaDodgeProbe ? bridge.__kanamaDodgeProbe.events.slice() : null,
         liveHandles: bridge.liveBrowserHandleCount,
         // Live handles broken down by kind. A per-entity leak is a RATIO -- handles
         // retained per entity created -- and a ratio needs no long window: one
@@ -114,6 +122,19 @@ async function snapshot(evaluate) {
         // release did not follow".
         frames: bridge.processCalls ?? 0,
         simSeconds: Math.round((bridge.simSeconds ?? 0) * 10) / 10,
+        // Debug only: every live handle as kind@owner script (rc = RefCounted, lent = a dispatch
+        // argument), to name what a retention trough still holds.
+        liveDetail: ${DEBUG} ? (() => {
+          const counts = {};
+          for (const [handle, owner] of bridge.handleOwners ?? []) {
+            const slot = bridge.browserHandleSlot?.(handle);
+            if (!slot || !slot.live) continue;
+            const ownerName = String(bridge.scriptNameByHandle?.[owner] ?? owner).split(".").pop();
+            const key = (slot.kind ?? "?") + "@" + ownerName + (slot.refCounted ? " rc" : "") + (slot.lent ? " lent" : "") + (slot.page ? " page" : "");
+            counts[key] = (counts[key] ?? 0) + 1;
+          }
+          return JSON.stringify(counts);
+        })() : null,
       };
     })()`);
   } catch {
@@ -121,10 +142,54 @@ async function snapshot(evaluate) {
   }
 }
 
-async function callMain(evaluate, method) {
-  return evaluate(
-    `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.dodgeMainHandle, globalThis.KanamaWebBridge.dodgeMethodId(${JSON.stringify(method)})); true`,
-  );
+// Main's registered methods the driver calls or counts, resolved by NAME from the export manifest:
+// a hard-coded ordinal silently runs another method once a registered function is added or moved.
+const MAIN_METHODS = ["game_over", "_on_StartTimer_timeout"];
+function resolveMainIds(exportDir) {
+  const ids = {};
+  for (const name of MAIN_METHODS) {
+    const id = resolveMethodId(exportDir, "dodge.Main", name);
+    if (id === null) throw new Error(`dodge.Main.${name} is not in the export manifest (KanamaWebProtocol.generated.json)`);
+    ids[name] = id;
+  }
+  return ids;
+}
+
+async function callMain(evaluate, id) {
+  return evaluate(`globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.dodgeMainHandle, ${id}); true`);
+}
+
+// Records, in the page, every mob spawn (a PackedScene instantiation) and every Main.game_over
+// dispatch with the game time and the mob count at that moment, so the hit checks need no poll
+// timing: a poll sees a hit up to 150 ms late, and a round can change in between. It wraps two
+// bridge methods the page already calls through the bridge object (Kotlin's instantiate goes
+// through `KanamaWebBridge.immediatePackedSceneInstantiate`, every registered-method dispatch
+// through `recordExercisedDispatch`), and changes nothing else. `driving` marks the driver's own
+// game_over call.
+async function installProbe(evaluate, gameOverId) {
+  return evaluate(`(() => {
+    const bridge = globalThis.KanamaWebBridge;
+    if (bridge.__kanamaDodgeProbe) return true;
+    const probe = { events: [], driving: false };
+    bridge.__kanamaDodgeProbe = probe;
+    const recordExercisedDispatch = bridge.recordExercisedDispatch;
+    bridge.recordExercisedDispatch = function (owner, callback, member) {
+      if (callback === "registered_function" && member === "method#${gameOverId}" && String(this.scriptNameByHandle?.[owner] ?? "").endsWith(".Main")) {
+        probe.events.push({ kind: "gameOver", sim: this.simSeconds ?? 0, mobs: this.match3PackedSceneInstantiations, driver: probe.driving });
+      }
+      return recordExercisedDispatch.call(this, owner, callback, member);
+    };
+    const instantiate = bridge.immediatePackedSceneInstantiate;
+    bridge.immediatePackedSceneInstantiate = function (...args) {
+      const before = this.match3PackedSceneInstantiations;
+      const result = instantiate.apply(this, args);
+      if (this.match3PackedSceneInstantiations > before) {
+        probe.events.push({ kind: "spawn", sim: this.simSeconds ?? 0, mobs: this.match3PackedSceneInstantiations });
+      }
+      return result;
+    };
+    return true;
+  })()`);
 }
 
 // SmokeQuit.smoke_teardown (resolved by name from the export manifest) quits the
@@ -135,13 +200,13 @@ async function callTeardown(evaluate, exportDir) {
 
 // Polls the snapshot until `predicate` holds or the window elapses, tracking the
 // running peak and returning { last, peak }. Robust to the page briefly returning null.
-async function observe(evaluate, seedPeak, windowMs, deadline, predicate, onSample = null) {
+async function observe(take, seedPeak, windowMs, deadline, predicate, onSample = null) {
   const peak = { mobFrees: 0, ...seedPeak };
   let last = null;
   let prevLive = seedPeak.maxLiveHandles;
   const until = Math.min(deadline, Date.now() + windowMs);
   while (Date.now() < until) {
-    const snap = await snapshot(evaluate);
+    const snap = await take();
     if (snap) {
       peak.mobInstantiations = Math.max(peak.mobInstantiations, snap.mobInstantiations);
       peak.mobAddChildCommands = Math.max(peak.mobAddChildCommands, snap.mobAddChildCommands);
@@ -159,7 +224,7 @@ async function observe(evaluate, seedPeak, windowMs, deadline, predicate, onSamp
       // not counted as off-screen frees.
       if (onSample && (await onSample(snap, peak))) {
         await delay(300);
-        prevLive = (await snapshot(evaluate))?.liveHandles ?? prevLive;
+        prevLive = (await take())?.liveHandles ?? prevLive;
       }
       last = snap;
       trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} frees=${peak.mobFrees} crossings=${snap.crossings} errs=${snap.callbackErrors} canvas=${snap.canvasW}x${snap.canvasH} frames=${snap.frames} sim=${snap.simSeconds}s mobs@ ${snap.mobPositions}`);
@@ -170,8 +235,49 @@ async function observe(evaluate, seedPeak, windowMs, deadline, predicate, onSamp
   return { last, peak };
 }
 
+// The scene between two rounds: MobTimer stopped (game_over), the mobs queue_freed (new_game), the
+// next mob not due before StartTimer's 2s. `take` asks the page to collect before every poll
+// (`collecting`: a RefCounted handle goes when the browser collects its dropped Kotlin wrapper, and
+// only a forced collection makes that happen on time on both engines) and the sampler keeps each
+// kind's minimum, until every kind is back at or below `reference` (a healthy round: within a poll or
+// two), the next round's first mob spawns (after `startMobs`), or `capMs` elapses. Without a
+// reference (round 1's baseline) it samples the whole window. A kind missing from a sample counts as
+// 0 there. It returns the probe log of the last poll, the one that saw a new mob included.
+async function sampleBetweenRounds(take, reference, deadline, capMs, startMobs) {
+  const byKind = {};
+  let samples = 0;
+  let settled = false;
+  let detail = null;
+  let probe = null;
+  const until = Math.min(deadline, Date.now() + capMs);
+  while (Date.now() < until) {
+    const snap = await take();
+    if (snap?.liveByKind) {
+      probe = snap.probe ?? probe;
+      if (snap.mobInstantiations !== startMobs) break; // the next round's first mob
+      for (const kind of new Set([...Object.keys(byKind), ...Object.keys(snap.liveByKind)])) {
+        const previous = kind in byKind ? byKind[kind] : samples > 0 ? 0 : Number.POSITIVE_INFINITY;
+        byKind[kind] = Math.min(previous, snap.liveByKind[kind] ?? 0);
+      }
+      samples += 1;
+      detail = snap.liveDetail;
+      if (reference && Object.entries(byKind).every(([kind, count]) => count <= (reference[kind] ?? 0))) {
+        settled = true;
+        break;
+      }
+    }
+    await delay(150);
+  }
+  return { byKind: samples > 0 ? byKind : null, samples, settled, probe, detail };
+}
+
 export async function runDodge({ url, evaluate, navigate, deadline, exportDir }) {
   const startupStart = Date.now();
+  const mainIds = resolveMainIds(exportDir);
+  const startPressedId = resolveMethodId(exportDir, "dodge.HUD", "_on_StartButton_pressed");
+  if (startPressedId === null) throw new Error("dodge.HUD._on_StartButton_pressed is not in the export manifest");
+  const take = () => snapshot(evaluate);
+  const takeCollected = () => snapshot(collecting(evaluate));
   trace("navigate");
   await navigate(`${url}?dodge=${Date.now()}`);
 
@@ -179,7 +285,7 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   const readyDeadline = Math.min(deadline, Date.now() + 30_000);
   let ready = null;
   while (Date.now() < readyDeadline) {
-    const snap = await snapshot(evaluate);
+    const snap = await take();
     if (
       snap &&
       snap.mode === "dodge" &&
@@ -199,126 +305,195 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   const startupDurationMs = Date.now() - startupStart;
   trace(`ready: readyCount=${ready.readyCount} mainHandle=${ready.mainHandle} protocol=${ready.protocol}`);
 
-  // Drive gameplay from the browser (dodge's SmokeQuit env-var gate is inert on Web):
-  // new_game starts StartTimer (2s), then MobTimer spawns a mob every 0.5s and ScoreTimer
-  // ticks. Observe until several mobs have spawned (the gameplay peak).
-  const seedPeak = { mobInstantiations: 0, mobAddChildCommands: 0, maxLiveHandles: ready.liveHandles, crossings: ready.crossings, callbackErrors: 0 };
-  // Baseline before any mob exists: everything alive here belongs to the scene.
-  const baselineByKind = ready.liveByKind ?? {};
-  trace("new_game");
-  await callMain(evaluate, "new_game");
-  // Round baseline: sampled after new_game has done its own work (HUD score/message
-  // lookups, music) but before StartTimer's 2s has elapsed, so no mob exists yet.
-  // Comparing the post-restart trough against THIS rather than against the
-  // pre-game scene keeps a fixed per-round cost out of a per-mob ratio -- otherwise
-  // three HUD handles over seven mobs reads as 0.43 retention and the threshold is
-  // measuring the mob count.
-  await delay(1_200);
-  const roundBaselineSnap = await snapshot(evaluate);
-  const roundBaselineByKind = roundBaselineSnap?.liveByKind ?? baselineByKind;
-  trace(`round baseline: ${JSON.stringify(roundBaselineByKind)}`);
-  // Play long enough for several mobs to spawn AND for the earliest ones to fly across
-  // and leave the screen (each mob queue_frees itself on VisibleOnScreenNotifier2D
-  // screen_exited). Run the full window so the spawn+free lifecycle is exercised.
-  // The window is a CEILING, not a duration: the predicate ends it as soon as two mobs
-  // have actually been freed, which on a workstation is a few seconds. It is generous
-  // because a software-GL host simulates less game time per wall-clock second, and the
-  // assertion should wait for the evidence rather than be graded on the host's speed.
-  // Dodge is a real game: the player stands still at the start position and a mob can hit
-  // it within a second of the first spawn (Main.game_over stops MobTimer). How many mobs
-  // spawn before that is decided by the engine RNG, which Godot seeds randomly at startup.
-  // A hit is gameplay, not a bridge fault, so when the round ends before enough mobs have
-  // spawned, start another round (new_game). The bridge's instantiation counter is cumulative
-  // across rounds, so the driver keeps a round baseline (the counter at the last new_game) and
-  // judges mobs PER ROUND: `mobsInstantiated` needs at least one round to reach 4 mobs, and the
-  // window ends on that round's count, not the cumulative one.
+  // Drive gameplay from the browser (dodge's SmokeQuit env-var gate is inert on Web), the way a
+  // player does: HUD._on_StartButton_pressed hides the Start button and emits start_game, which
+  // main.tscn connects to Main.new_game. new_game starts StartTimer (2s), then MobTimer spawns a
+  // mob every 0.5s and ScoreTimer ticks. Pressing Start rather than calling new_game also looks the
+  // Start button up before the first baseline: the HUD's game-over coroutine shows it again two
+  // seconds after a game over, and a handle first minted there would read as one handle retained
+  // by the mobs of the round it lands in.
   //
-  // The restarts are a budget, not a free pass. A healthy run ends a round early about 10-15% of
-  // the time, so it needs 0-1 restarts and three in a row happen about 0.2% of the time. What the
-  // two checks deliver together: a build that kills the player on the 1st, 2nd or 3rd mob of every
-  // round never gets a 4-mob round, so `mobsInstantiated` fails; one that kills it on the 1st mob
-  // of the first three rounds and then recovers uses every restart, so `restartBudgetNotExhausted`
-  // fails. What they do not catch: a player that dies at exactly the 4th mob of every round (that
-  // round counts as long enough), or a regression that only shows up after the 4th mob.
-  let gameOversSeen = 0;
+  // One evaluate calls Main.game_over when asked (the round is still spawning; marked as the
+  // driver's in the probe) and presses Start, and returns the probe log, the mobs spawned so far and
+  // the game time: no mob spawns between game_over and the press.
+  const seedPeak = { mobInstantiations: 0, mobAddChildCommands: 0, maxLiveHandles: ready.liveHandles, crossings: ready.crossings, callbackErrors: 0 };
+  await installProbe(evaluate, mainIds.game_over);
+  const pressStart = (gameOverFirst) =>
+    evaluate(`(() => {
+      const bridge = globalThis.KanamaWebBridge;
+      const probe = bridge.__kanamaDodgeProbe;
+      if (!probe) throw new Error("dodge: the spawn/game-over probe is gone (did the page reload?)");
+      const entry = Object.entries(bridge.scriptNameByHandle ?? {}).find(
+        ([handle, name]) => String(name).endsWith(".HUD") && bridge.api.kanamaWebIsLive(Number(handle)) === 1,
+      );
+      if (!entry) throw new Error("dodge: no live HUD script handle to press Start on");
+      if (${gameOverFirst ? "true" : "false"}) {
+        probe.driving = true;
+        try {
+          bridge.callNoArgs(bridge.dodgeMainHandle, ${mainIds.game_over});
+        } finally {
+          probe.driving = false;
+        }
+      }
+      bridge.callNoArgs(Number(entry[0]), ${startPressedId});
+      return { probe: probe.events.slice(), mobs: bridge.match3PackedSceneInstantiations, sim: bridge.simSeconds ?? 0 };
+    })()`);
+
+  // Dodge is a real game: the player stands still at the start position and a mob can hit it
+  // within a second of the first spawn. Main.game_over then stops MobTimer, and how many mobs had
+  // spawned by then is decided by the engine RNG, which Godot seeds randomly at startup (an early
+  // hit ended a round in roughly one run in ten; three in a row failed CI). A hit is gameplay, not
+  // a bridge fault, so the driver RESUMES the round instead of restarting it: it calls
+  // Main._on_StartTimer_timeout, the handler StartTimer runs, which starts MobTimer and ScoreTimer
+  // again. The player cannot be hit a second time: its own _on_body_entered hides it and disables
+  // its CollisionShape2D (set_deferred), and only Player.start (new_game) enables it again. Every
+  // round therefore reaches 4 mobs, whatever the RNG does.
+  //
+  // Every run plays two rounds: round 1 ends with a restart (game_over, then Start) once it spawned
+  // FORCED_RESTART_AT_MOBS mobs, round 2 ends with the measuring restart, and both are judged, so a
+  // leak that only shows after the first new_game is red in CI too.
+  //
+  // What the hits prove, in every round, from the probe's exact game times and mob counts:
+  // `atMostOneHitPerRound` (a second hit means the player's hide/disable stopped working; resuming
+  // would otherwise hide it), `noHitBeforeFirstMob` (nothing else in the scene can hit the player)
+  // and `noEarlyHit` (no mob can reach the stationary player sooner than EARLIEST_HIT_SECONDS of game
+  // time after the round's first spawn).
   let roundRestarts = 0;
-  let roundBaseline = roundBaselineSnap?.mobInstantiations ?? 0; // cumulative counter at the last new_game
-  const earlyGameOvers = []; // mobs spawned in the round at each early game over that was restarted
-  const trackRound = (snap, p) => {
-    p.roundMobs = snap.mobInstantiations - roundBaseline;
+  let roundResumes = 0;
+  const hits = []; // { round, mobs, sinceFirstSpawn } at each game over the game itself reported
+  const rounds = []; // finished rounds: { index, mobs, baseline, trough, samples, settled }
+  let round = null;
+  let previousRound = null;
+  let pressSim = null;
+  let consumed = 0; // probe events already attributed
+  const recordHit = (target, mobs, sim) => {
+    target.hits += 1;
+    target.spawning = false;
+    const sinceFirstSpawn = target.firstSpawnSim === null ? null : Math.round((sim - target.firstSpawnSim) * 1000) / 1000;
+    hits.push({ round: target.index, mobs, sinceFirstSpawn });
+    trace(`hit in round ${target.index} after ${mobs} mob(s), ${sinceFirstSpawn}s after its first spawn`);
+  };
+  // Attributes the probe events not yet seen to their round. A spawn is the current round's. A hit
+  // is too, except one reported at the press's own game time, before the engine ran any frame
+  // after it: Area2D reports a physics step's overlaps at the start of the next frame, so that is a
+  // hit in the round the press ended (new_game's queue_free and Player.start come after it).
+  const consume = (log) => {
+    for (; consumed < (log?.length ?? 0); consumed += 1) {
+      const event = log[consumed];
+      if (event.kind === "spawn") {
+        if (round.firstSpawnSim === null) round.firstSpawnSim = event.sim;
+      } else if (event.kind === "gameOver" && !event.driver) {
+        const target = previousRound && event.sim === pressSim ? previousRound : round;
+        const mobs = event.mobs - target.startMobs;
+        recordHit(target, mobs, event.sim);
+        // The round loop resumes a current round hit after its first mob and before its 4th (before
+        // the first mob, StartTimer has yet to start MobTimer).
+        if (target === round && mobs > 0 && mobs < 4) round.resume = true;
+      }
+    }
+  };
+  // Starts round `index`: game_over first when the old round is still spawning, then Start, then the
+  // scene between the rounds (the old round's trough, the new round's baseline).
+  const startRound = async (index, gameOverFirst, reference, capMs) => {
+    const press = await pressStart(gameOverFirst);
+    consume(press.probe); // everything up to the press is the old round's
+    previousRound = round;
+    pressSim = press.sim;
+    round = { index, startMobs: press.mobs, baseline: null, spawning: true, firstSpawnSim: null, hits: 0, resume: false };
+    const between = await sampleBetweenRounds(takeCollected, reference, deadline, capMs, press.mobs);
+    round.baseline = between.byKind;
+    consume(between.probe);
+    return { ...between, oldMobs: previousRound ? press.mobs - previousRound.startMobs : 0 };
+  };
+  // Ends the current round the way a player's next game starts (game_over unless the player's hit
+  // already ran it, then Start: new_game queue_frees the whole mobs group).
+  const endRound = async (label) => {
+    const finished = round;
+    const between = await startRound(finished.index + 1, finished.spawning, finished.baseline, 4_000);
+    rounds.push({ index: finished.index, mobs: between.oldMobs, baseline: finished.baseline, trough: between.byKind, samples: between.samples, settled: between.settled });
+    trace(`${label}: round ${finished.index} ended after ${between.oldMobs} mob(s); trough (${between.samples} samples, settled=${between.settled}): ${JSON.stringify(between.byKind)}${between.detail ? ` detail ${between.detail}` : ""}`);
+  };
+
+  trace("press Start (new_game)");
+  // Round 1's baseline: the scene with the game started and no mob yet (StartTimer's 2s).
+  const firstBetween = await startRound(1, false, null, 1_200);
+  if (!round.baseline) round.baseline = ready.liveByKind ?? {};
+  trace(`round 1 baseline (${firstBetween.samples} samples): ${JSON.stringify(round.baseline)}`);
+
+  const onRoundSample = async (snap, p) => {
+    p.roundMobs = snap.mobInstantiations - round.startMobs;
     p.bestRoundMobs = Math.max(p.bestRoundMobs ?? 0, p.roundMobs);
+    consume(snap.probe);
+    if (round.resume) {
+      round.resume = false;
+      roundResumes += 1;
+      trace(`game over after ${p.roundMobs} mob(s) in round ${round.index}: resume spawning`);
+      await callMain(evaluate, mainIds._on_StartTimer_timeout);
+      round.spawning = true;
+    }
+    if (roundRestarts === 0 && p.roundMobs >= FORCED_RESTART_AT_MOBS) {
+      roundRestarts += 1;
+      await endRound("restart");
+      p.roundMobs = 0;
+      return true;
+    }
+    return false;
   };
-  const restartAfterEarlyGameOver = async (snap, p) => {
-    trackRound(snap, p);
-    if (snap.gameOvers <= gameOversSeen) return false;
-    gameOversSeen = snap.gameOvers;
-    if (p.roundMobs >= 4 || roundRestarts >= MAX_ROUND_RESTARTS) return false;
-    roundRestarts += 1;
-    earlyGameOvers.push(p.roundMobs);
-    trace(`game over after ${p.roundMobs} mob(s) this round: new round ${roundRestarts}`);
-    await callMain(evaluate, "new_game");
-    roundBaseline = snap.mobInstantiations;
-    return true;
-  };
+  // Play long enough for several mobs to spawn AND for the earliest ones to fly across and leave
+  // the screen (each mob queue_frees itself on VisibleOnScreenNotifier2D screen_exited). The window
+  // is a CEILING, not a duration: the predicate ends it as soon as round 2 has spawned 4 mobs and two
+  // mobs have been freed, which on a workstation is a few seconds. It is generous because a
+  // software-GL host simulates less game time per wall-clock second.
   const gameplay = await observe(
-    evaluate,
+    take,
     seedPeak,
     45_000,
     deadline,
-    (snap, p) => p.mobFrees >= 2 && p.bestRoundMobs >= 4,
-    restartAfterEarlyGameOver,
+    (snap, p) => roundRestarts > 0 && p.mobFrees >= 2 && (p.roundMobs ?? 0) >= 4,
+    onRoundSample,
   );
   const peak = gameplay.peak;
   const atPeak = gameplay.last ?? ready;
-  trace(`gameplay: mobs=${peak.mobInstantiations} bestRound=${peak.bestRoundMobs} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} frees=${peak.mobFrees} finalLive=${atPeak.liveHandles} crossings=${peak.crossings}`);
+  trace(`gameplay: mobs=${peak.mobInstantiations} bestRound=${peak.bestRoundMobs} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} frees=${peak.mobFrees} finalLive=${atPeak.liveHandles} crossings=${peak.crossings} hits=${JSON.stringify(hits)} resumes=${roundResumes} restarts=${roundRestarts}`);
 
-  // Full teardown: SmokeQuit.smoke_teardown quits the SceneTree, exiting every node so it
-  // releases its handles. Poll until the live-handle count drains to zero (the smoke
-  // wrapper's schema requires liveAfterTeardown === 0). The wasm/JS stays readable after
-  // the loop stops, so the snapshot still resolves.
-  // Per-entity retention, measured at the one moment dodge makes unambiguous:
-  // just after a restart. `new_game` queue_frees the whole mobs group, so every
-  // mob instantiated so far is gone and the next one has not spawned yet (a 2s
-  // StartTimer). Anything still held above the scene baseline at that trough was
-  // retained by mobs that no longer exist.
+  // Per-entity retention, measured PER ROUND between rounds, where dodge makes it unambiguous: after
+  // game_over (no mob spawns any more) and new_game (the whole mobs group is queue_freed), and
+  // before StartTimer brings the next mob. Anything a round's trough holds above that round's own
+  // baseline was retained by mobs that no longer exist. Each round is judged against the scene as
+  // it stood when that round began -- after the previous round's mobs were gone -- so a dead round's
+  // leftovers never count against the next round's mobs. The sampler asks the page to collect before
+  // every poll: a mob's RefCounted results (its SpriteFrames) are released when the browser collects
+  // the dropped Kotlin wrapper, and waiting for the collector to run by itself is what made the
+  // trough read 4 SpriteFrames over 7 mobs on CI.
   //
-  // Measuring during play cannot work: mobs alive on screen hold their handles
-  // legitimately, and in a short run they have no time to die -- which is exactly
-  // why task 72's one-handle-per-mob leak needed a ten-minute soak to show as
-  // absolute growth. As a RATIO at the trough it needs seconds.
-  trace("restart to measure retention");
-  const mobsBeforeRestart = peak.mobInstantiations;
-  await callMain(evaluate, "new_game");
-  const troughByKind = {};
-  const troughUntil = Math.min(deadline, Date.now() + 4_000);
-  while (Date.now() < troughUntil) {
-    const snap = await snapshot(evaluate);
-    if (snap?.liveByKind) {
-      for (const [kind, count] of Object.entries(snap.liveByKind)) {
-        const above = count - (roundBaselineByKind[kind] ?? 0);
-        troughByKind[kind] = Math.min(troughByKind[kind] ?? Number.POSITIVE_INFINITY, above);
-      }
-    }
-    await delay(150);
-  }
+  // Measuring during play cannot work: mobs alive on screen hold their handles legitimately, and in
+  // a short run they have no time to die -- which is exactly why task 72's one-handle-per-mob leak
+  // needed a ten-minute soak to show as absolute growth. As a RATIO at the trough it needs seconds.
+  await endRound("measure retention");
   const retention = {};
   let worstRetention = 0;
   let worstRetentionKind = "none";
-  if (mobsBeforeRestart > 0) {
-    for (const [kind, above] of Object.entries(troughByKind)) {
-      const perMob = Math.round((Math.max(above, 0) / mobsBeforeRestart) * 100) / 100;
-      retention[kind] = perMob;
+  let worstRetentionRound = 0;
+  for (const finished of rounds) {
+    if (finished.mobs <= 0) continue;
+    for (const [kind, count] of Object.entries(finished.trough ?? {})) {
+      const above = Math.max(count - (finished.baseline[kind] ?? 0), 0);
+      const perMob = Math.round((above / finished.mobs) * 100) / 100;
+      retention[`${kind}@round${finished.index}`] = perMob;
       if (perMob > worstRetention) {
         worstRetention = perMob;
         worstRetentionKind = kind;
+        worstRetentionRound = finished.index;
       }
     }
   }
-  trace(`retention per mob after restart (${mobsBeforeRestart} mobs): ${JSON.stringify(retention)} worst=${worstRetentionKind}:${worstRetention}`);
+  const hitsPerRound = {};
+  for (const hit of hits) hitsPerRound[hit.round] = (hitsPerRound[hit.round] ?? 0) + 1;
+  trace(`retention per mob, per round (${rounds.map((r) => r.mobs).join(" + ")} mobs): ${JSON.stringify(retention)} worst=${worstRetentionKind}@round${worstRetentionRound}:${worstRetention}`);
 
   trace("smoke_teardown");
   await callTeardown(evaluate, exportDir);
-  const teardown = await observe(collecting(evaluate), { ...peak, maxLiveHandles: peak.maxLiveHandles }, 6_000, deadline, (snap) => snap.liveHandles === 0);
+  const teardown = await observe(takeCollected, { ...peak, maxLiveHandles: peak.maxLiveHandles }, 6_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} (peak=${peak.maxLiveHandles}) callbacks=${settled.callbacks} pending=${settled.pending} jobs=${settled.jobs} errs=${settled.callbackErrors}`);
 
@@ -326,7 +501,8 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   const checks = {
     modeDodge: ready.mode === "dodge",
     sceneScriptsReady: ready.mainReady >= 1 && ready.playerReady >= 1 && ready.hudReady >= 1,
-    mobsInstantiated: (peak.bestRoundMobs ?? 0) >= 4,
+    // Both rounds (the restarted one and the measured one) spawned at least 4 mobs.
+    mobsInstantiated: rounds.length >= 2 && rounds.every((finished) => finished.mobs >= 4),
     mobsAddedToTree: peak.mobAddChildCommands >= peak.mobInstantiations,
     handleGrowthDuringGameplay: peak.maxLiveHandles > ready.liveHandles,
     crossingsAdvanced: peak.crossings > ready.crossings,
@@ -341,14 +517,20 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
     mobsSpawnAndFree: peak.mobFrees >= 2,
     // Full teardown: quitting the tree drained every live handle to zero.
     fullTeardownToZero: settled.liveHandles === 0,
-    // No handle kind is retained per spawned mob, measured at the post-restart
-    // trough where every earlier mob is provably gone. A real per-spawn leak sits
-    // at 1.0 (task 72 measured exactly that); a healthy run sits near 0. This is
-    // the SHORT-run form of what the soak gate needs ten minutes to see.
+    // No handle kind is retained per spawned mob, measured per round at the trough between
+    // rounds, where every mob of the round is provably gone, against that round's own baseline,
+    // with a collection forced before every poll. A real per-spawn leak sits at 1.0 (task 72
+    // measured exactly that); a healthy run sits at 0. This is the SHORT-run form of what the soak
+    // gate needs ten minutes to see.
     noPerMobHandleRetention: worstRetention <= 0.5,
-    // Fewer than MAX_ROUND_RESTARTS early game overs: a build that ends the first rounds on the first
-    // mob uses them all, even if a later round runs long enough for mobsInstantiated.
-    restartBudgetNotExhausted: roundRestarts < MAX_ROUND_RESTARTS,
+    // The player's _on_body_entered hides it and disables its collision shape until new_game: a
+    // second hit in one round means that stopped working (the resumed round would otherwise pass).
+    atMostOneHitPerRound: Object.values(hitsPerRound).every((count) => count <= 1),
+    // Nothing in the scene but a mob can hit the player: a hit before a round spawned its first mob
+    // is an instant-kill bug.
+    noHitBeforeFirstMob: !hits.some((hit) => hit.mobs === 0),
+    // No mob reaches the stationary player sooner than EARLIEST_HIT_SECONDS after the round's first spawn.
+    noEarlyHit: !hits.some((hit) => hit.mobs > 0 && hit.sinceFirstSpawn !== null && hit.sinceFirstSpawn < EARLIEST_HIT_SECONDS),
     noCallbackFaults: peak.callbackErrors === 0 && settled.callbackErrors === 0 && settled.failure === null,
   };
 
@@ -360,11 +542,14 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   const boundaryErrors = [];
   if (peak.callbackErrors !== 0) boundaryErrors.push(`callbackErrors=${peak.callbackErrors}`);
   if (settled.failure !== null) boundaryErrors.push(`failure: ${settled.failure}`);
-  if (roundRestarts >= MAX_ROUND_RESTARTS) {
-    boundaryErrors.push(
-      `dodge restart budget exhausted: ${roundRestarts} early game overs, after ${earlyGameOvers.join(", ")} mob(s) in each round ` +
-        `(a healthy run needs 0-1 restarts); the player may be dying on the first mob (instant-kill bug)`,
-    );
+  if (!checks.noHitBeforeFirstMob) {
+    boundaryErrors.push("dodge: the player was hit before a round spawned its first mob (instant-kill bug: only a mob can hit it)");
+  }
+  if (!checks.atMostOneHitPerRound) {
+    boundaryErrors.push(`dodge: the player was hit more than once in a round (its hide/disable after a hit stopped working): ${JSON.stringify(hits)}`);
+  }
+  if (!checks.noEarlyHit) {
+    boundaryErrors.push(`dodge: a mob hit the player sooner than ${EARLIEST_HIT_SECONDS}s of game time after the round's first spawn (no mob can reach it before ~0.6s): ${JSON.stringify(hits)}`);
   }
 
   return {
@@ -386,8 +571,12 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
       // Mobs spawned in the best single round (the count mobsInstantiated judges; mobInstantiations is cumulative).
       bestRoundMobInstantiations: peak.bestRoundMobs ?? 0,
       mobAddChildCommands: peak.mobAddChildCommands,
-      // New rounds started after an early game over (0-1 when healthy; the check fails at 3).
+      // Restarts (game_over + Start) before the measuring one: 1 (round 1 ends after FORCED_RESTART_AT_MOBS mobs).
       roundRestarts,
+      // Rounds the driver resumed after the player was hit before the round's 4th mob.
+      roundResumes,
+      // Game overs the game itself reported (the player was hit).
+      playerHits: hits.length,
       // Worst per-mob handle retention, x100 so the envelope stays integer-friendly
       // (the schema requires numeric counters). 0 is healthy; 100 is one leaked
       // handle per spawn.

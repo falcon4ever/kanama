@@ -1257,16 +1257,6 @@
       if (method === "finish") return spriteVariant ? 3 : 4;
       throw new Error(`Unknown Bunnymark method=${method}`);
     },
-    dodgeMethodId(method) {
-      // Ordinals follow the registered-function order in dodge's Main.kt (mirrored by
-      // the generated Main.gd proxy: game_over=1, new_game=2, timer callbacks 3-5).
-      if (method === "game_over") return 1;
-      if (method === "new_game") return 2;
-      if (method === "_on_MobTimer_timeout") return 3;
-      if (method === "_on_ScoreTimer_timeout") return 4;
-      if (method === "_on_StartTimer_timeout") return 5;
-      throw new Error(`Unknown dodge method=${method}`);
-    },
     roundTrip(value) {
       return this.api.kanamaWebRoundTrip(value);
     },
