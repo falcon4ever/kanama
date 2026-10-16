@@ -305,11 +305,18 @@ class Main(godotObject: GodotHandle) :
     val parent = generic.callImmediate(spinner, "get_parent")
     val child = generic.callImmediate(self, "get_node", listOf("Spinner"))
 
-    // (d) MINTED object returns, one per kind. The Window (a Node) is deliberately left
-    // unclosed: the smoke's liveAfterTeardown === 0 gate proves owner teardown drains
-    // minted handles. The MultiplayerAPI (RefCounted, not a Resource -> plain "object")
-    // is closed explicitly to exercise the OBJECT-kind release lane.
+    // (d) MINTED object returns, one per kind. close() on the Window (a Node) is a no-op: a
+    // node's handle lives as long as the node, whoever else holds it, so the next ask answers the
+    // same handle, still tracked. The MultiplayerAPI (RefCounted, not a Resource -> plain
+    // "object") is closed explicitly to exercise the OBJECT-kind release lane.
     val window = generic.callImmediate(self, "get_window")
+    var windowKeptAfterClose = false
+    if (window.isMintedHandle) {
+      window.close()
+      val again = generic.callImmediate(self, "get_window")
+      windowKeptAfterClose =
+        again.objectKind == "tracked" && again.asObjectHandle() == window.asObjectHandle()
+    }
     val multiplayer = generic.callImmediate(self, "get_multiplayer")
     var closedObjectOk = false
     if (multiplayer.isMintedHandle) {
@@ -386,6 +393,7 @@ class Main(godotObject: GodotHandle) :
         "\"childHandle\":${handleOf(child)}," +
         "\"spinnerHandle\":${spinner.handle.value}," +
         "\"windowKind\":\"${kindOf(window)}\",\"windowHandle\":${handleOf(window)}," +
+        "\"windowKeptAfterClose\":$windowKeptAfterClose," +
         "\"multiplayerKind\":\"${kindOf(multiplayer)}\"," +
         "\"multiplayerHandle\":${handleOf(multiplayer)}," +
         "\"closedObjectOk\":$closedObjectOk," +
@@ -1393,8 +1401,8 @@ class Main(godotObject: GodotHandle) :
    *   child throw the same error, not a bridge failure and not a silent null;
    * - 64, 128: `emitSignal` on the freed node and a `Control.position` read on a freed Control (the
    *   shapes that used to answer a default) throw it too;
-   * - 256: a setter on the freed node came back (it is a queued command; the driver checks that the
-   *   freed-instance error was REPORTED as a script error and no other fault appeared);
+   * - 256: a setter on the freed node (a queued command) throws the same error at the call, as on
+   *   desktop: the sweep released the node's handle as freed;
    * - 512: frames kept running after the setter.
    * A healthy run returns 1023 from [freedProbeAfter].
    */
@@ -1415,7 +1423,7 @@ class Main(godotObject: GodotHandle) :
       if (says("freed_get_child") == 2L) freedMask = freedMask or 32L
       if (says("freed_emit_signal") == 2L) freedMask = freedMask or 64L
       if (says("freed_control_position") == 2L) freedMask = freedMask or 128L
-      if (says("freed_setter") == 1L) freedMask = freedMask or 256L
+      if (says("freed_setter") == 2L) freedMask = freedMask or 256L
       MainThread.postAfterFrames(3) { freedMask = freedMask or 512L }
     }
     return 0L
@@ -1522,9 +1530,10 @@ class Main(godotObject: GodotHandle) :
     WebExperimentalGenericCall.callImmediate(lentProbeNode(), method, listOf(value)).asLong()
 
   /**
-   * The RefCounted-ownership rows (see OwnProbe): a RefCounted held only by Kotlin lives while a
-   * wrapper of it is reachable, until `close()`. [ownProbe] arms them; they run over the next frames
-   * (up to ~750), [ownProbeDone] says when, then [ownMask] (1023) and [ownCost] are the results.
+   * The ownership rows (see OwnProbe): a RefCounted held only by Kotlin lives while a wrapper of it
+   * is reachable, until `close()`; a Node lives as long as the node. [ownProbe] arms them; they run
+   * over the next frames (up to ~1700), [ownProbeDone] says when, then [ownMask] (16777215) and
+   * [ownCost] are the results.
    */
   fun ownProbe(value: Long): Long = ownSays("own_arm", 0L)
 

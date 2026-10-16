@@ -18,8 +18,10 @@ committed file. The committed file's formatting is separately guaranteed by ktfm
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
+from functools import cache
 from pathlib import Path
 
 from platform_backend_contract import INITIAL_BACKEND_CALLS, BackendCallPolicy
@@ -57,7 +59,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     12: {},
     13: {},
     14: {},
-    15: {"on_queue_free": True},
+    15: {},
     16: {},
     17: {},
     18: {"ret": "node"},
@@ -382,6 +384,51 @@ WEB_POLICY: dict[int, dict[str, object]] = {
 
 class GenerationError(RuntimeError):
     pass
+
+
+ROOT = Path(__file__).resolve().parents[1]
+EXTENSION_API = ROOT / "extension_api.json"
+# The applier arms of the queued setters (the proxy GDScript the processor emits).
+WEB_APPLIER = ROOT / "processor/src/main/kotlin/net/multigesture/kanama/processor/WebScriptCodeEmitter.kt"
+
+
+@cache
+def _arg_metas() -> dict[tuple[str, str, int], tuple[str | None, ...]]:
+    """(class, method, hash) -> each argument's `meta` (`uint32`, `int32`, ...) in extension_api.json."""
+    api = json.loads(EXTENSION_API.read_text())
+    return {
+        (cls["name"], method["name"], method.get("hash", 0)): tuple(
+            arg.get("meta") for arg in method.get("arguments", ())
+        )
+        for cls in api["classes"]
+        for method in cls.get("methods", ())
+    }
+
+
+def _uint32_opcodes(calls: list[BackendCallPolicy]) -> list[int]:
+    """The opcodes whose one integer argument is a uint32 in Godot (a layer or collision mask).
+
+    Derived from extension_api.json's `meta`, so a new uint32 setter takes the uint32 path by
+    itself; its applier arm must decode the word unsigned too ([_check_uint32_appliers]).
+    """
+    metas = _arg_metas()
+    return [
+        call.opcode
+        for call in calls
+        if metas.get((call.class_name, call.method_name, call.expected_hash), ())[:1] == ("uint32",)
+    ]
+
+
+def _check_uint32_appliers(opcodes: list[int]) -> None:
+    """Each uint32 setter's applier arm reads its word with `decode_u32` (never `decode_s32`)."""
+    source = WEB_APPLIER.read_text()
+    for opcode in opcodes:
+        arm = re.search(rf"elif opcode == {opcode} and .*?applied \+= 1", source, re.S)
+        if arm is None or "decode_u32" not in arm.group(0) or "decode_s32" in arm.group(0):
+            raise GenerationError(
+                f"opcode {opcode} takes a uint32: its applier arm in {WEB_APPLIER.name} must read "
+                "the value with decode_u32"
+            )
 
 
 def _by_shape() -> dict[str, list[BackendCallPolicy]]:
@@ -929,17 +976,14 @@ def body_NOARGS_RET_RECT2(calls):
 
 
 def body_NOARGS_VOID(calls):
-    free_op = next((c.opcode for c in calls if WEB_POLICY[c.opcode].get("on_queue_free")), None)
     immediate = [c for c in calls if c.execution_mode.value == "IMMEDIATE_RESULT"]
     lines = [
         "val objectId = receiver.webId()",
         "when (descriptor.executionMode) {",
         f"{_QUEUED} -> {{",
         "commands.appendNoArgsMutation(descriptor.opcode, objectId)",
+        "}",
     ]
-    if free_op is not None:
-        lines.append(f"if (descriptor.opcode == {free_op}) onWebQueueFree(objectId)")
-    lines.append("}")
     lines += [f"{_IMMEDIATE} -> {{", "commands.flush()", "when (descriptor.opcode) {"]
     for c in immediate:
         if c.opcode == 37:
@@ -1145,14 +1189,33 @@ def body_NODEPATH_RET_HANDLE(calls):
 
 
 def body_LONG_ARG(calls):
-    return [
-        f"require(descriptor.executionMode == {_QUEUED})",
-        f"require({_opcode_guard(calls)})",
+    uint32 = _uint32_opcodes(calls)
+    _check_uint32_appliers(uint32)
+    int32 = [
         "require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {",
         '"Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit '
         "Godot's int32 ABI\"",
         "}",
         "commands.appendLongMutation(descriptor.opcode, receiver.webId(), value)",
+    ]
+    lines = [
+        f"require(descriptor.executionMode == {_QUEUED})",
+        f"require({_opcode_guard(calls)})",
+    ]
+    if not uint32:
+        return lines + int32
+    # A layer or collision mask is a uint32 in Godot (`meta` in extension_api.json): the whole
+    # 0..0xffffffff range, as desktop's requireUInt32; the word carries its bit pattern.
+    return lines + [
+        f"if ({_opcode_guard([c for c in calls if c.opcode in uint32])}) {{",
+        "require(value in 0L..0xffffffffL) {",
+        '"Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit '
+        "Godot's uint32 ABI (0..0xffffffff), got $value\"",
+        "}",
+        "commands.appendUInt32Mutation(descriptor.opcode, receiver.webId(), value)",
+        "} else {",
+        *int32,
+        "}",
     ]
 
 
@@ -2035,7 +2098,11 @@ def body_VECTOR3_VECTOR3_LONG_OBJECT_RET_STRING(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
         f"require({_opcode_guard(calls)})",
-        "require(collisionMask in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        # PhysicsRayQueryParameters3D.collision_mask is a uint32 (its default 0xffffffff).
+        "require(collisionMask in 0L..0xffffffffL) {",
+        '"Kanama Web ray query collision mask must fit Godot\'s uint32 ABI (0..0xffffffff), '
+        'got $collisionMask"',
+        "}",
         "commands.flush()",
         "// Ray endpoints, mask, and the optional exclusion handle ride one query string",
         "// (unit separator). The applier resolves the receiver's world, builds the query",

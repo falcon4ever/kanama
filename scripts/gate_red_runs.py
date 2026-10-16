@@ -311,7 +311,7 @@ case("check_android_remap_sources.py (address space, NULL_SEGMENT)", py("check_a
              "package net.multigesture.kanama\nval zz = NULL_SEGMENT.reinterpret(Long.MAX_VALUE)\n")],
      "ZzRedRun.kt:2: whole-address-space segment", "Kanama's `NULL_SEGMENT` reinterpreted as the whole address space")
 case("check_doc_claims.py", py("check_doc_claims.py"),
-     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 37)", "versioned JavaScript bridge (protocol 21)")],
+     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 38)", "versioned JavaScript bridge (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
 case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
      [Create(f"{COMMON}/api/ZzRedRun.expect.kt", "package net.multigesture.kanama.api\n\nexpect fun redRun(a: Int = 1)\n")],
@@ -463,7 +463,7 @@ case("check_property_coverage.py", py("check_property_coverage.py"),
      [Edit(f"{COMMON}/api/CanvasItem.kt", "    var visible: Boolean", "    var visibleRedRun: Boolean")],
      "silently dropped", "a generated wrapper property disappears")
 case("check_protocol_pins.py", py("check_protocol_pins.py"),
-     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 37", "KANAMA_WEB_PROTOCOL_VERSION = 36")],
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 38", "KANAMA_WEB_PROTOCOL_VERSION = 37")],
      "protocol version disagrees", "the bridge pins protocol 35 while the emitter says 36")
 case("check_protocol_pins.py (sentinel)", py("check_protocol_pins.py"),
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", 'scriptErrorResult: "\\u001fkanama-script-error\\u001f",', 'scriptErrorResult: "\\u001fkanama-script-errorX\\u001f",')],
@@ -937,8 +937,11 @@ case("web/bridge_rc_ownership_selftest.mjs (fallback drop)", ["node", "scripts/w
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "      if (this.wrapperRegistryWorks === false) return 0;\n      const slot = this.browserHandleSlot(handle);\n      if (!slot?.refCounted) return 0;\n      if (this.wrapperRegistry?.unregister(ref)", "      const slot = this.browserHandleSlot(handle);\n      if (!slot?.refCounted) return 0;\n      if (this.wrapperRegistry?.unregister(ref)")],
      "late fallback: dropWrapper released", "once the registry refused a wrapper, ending a counted temporary's hold releases the handle an uncounted wrapper still names")
 case("web/bridge_rc_ownership_selftest.mjs (lent cap order)", ["node", "scripts/web/bridge_rc_ownership_selftest.mjs"],
-     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "      if (slot.lent && this.lentRefCountedByAge.delete(handle)) this.lentRefCountedByAge.add(handle);\n", "")],
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "      if (this.lentRefCountedByAge.delete(handle)) this.lentRefCountedByAge.add(handle);\n", "")],
      "cap: evicted the first minted lend", "the lent cap evicts the first minted lend again, not the least recently wrapped one")
+case("web/bridge_rc_ownership_selftest.mjs (Variant result cap)", ["node", "scripts/web/bridge_rc_ownership_selftest.mjs"],
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "        slot.lendFrame = this.ownershipFrame;\n        this.lentRefCountedByAge.add(handle);\n", "")],
+     "variant cap: a Variant result's RefCounted is not under the lent cap", "a Variant result's RefCounted (a per-frame GD.weakref) leaves the lent cap again: without a collection the handle table grows without bound")
 case("web/dodge_restart_selftest.mjs", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "restartBudgetNotExhausted: roundRestarts < MAX_ROUND_RESTARTS,", "restartBudgetNotExhausted: true,")],
      "restartBudgetNotExhausted must be false", "dodge stops failing a run that used every round restart (a build that kills the player on the first mob passes on the cumulative mob counter)")

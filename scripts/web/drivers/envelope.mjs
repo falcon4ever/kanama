@@ -96,12 +96,15 @@ export async function collectPerformance(evaluate) {
         // crossing each; the per-tick ones run in Kotlin). Reported, not budgeted yet.
         builtinCalls: bridge.builtinCalls ?? 0,
         builtinCallsPerTick: ticks > 0 ? Math.round(((bridge.builtinCalls ?? 0) / ticks) * 100) / 100 : 0,
-        // The handles lent to Kotlin for dispatch arguments (signal / input / method object
-        // arguments): how many were minted, taken over from a lookup, released (swept: the engine
-        // freed the object), the most alive at once, and the GDScript->JS calls the lending cost.
-        // Reported, not budgeted.
+        // The handles minted for dispatch arguments (signal / input / method object arguments):
+        // how many were minted, released, the most alive at once; the Node / Object handles
+        // released because the engine freed the object (swept); and the GDScript->JS calls the
+        // lending cost. Reported, not budgeted.
+        // The SceneTree's and root Window's handles: they live as long as the page, apart from the
+        // live handles a teardown returns to zero (now, and the most at once: gated at 2 below).
+        pageHandles: bridge.pageHandles ?? 0,
+        maxPageHandles: bridge.maxPageHandles ?? 0,
         lentMints: bridge.lentMints ?? 0,
-        lentAdopts: bridge.lentAdopts ?? 0,
         lentReleases: bridge.lentReleases ?? 0,
         lentSwept: bridge.lentSwept ?? 0,
         maxLiveLent: bridge.maxLiveLent ?? 0,
@@ -283,7 +286,12 @@ export function buildEnvelope({
   performance = null,
   exercisedMembers = null,
 }) {
-  const checks = demoResult.checks;
+  // Every demo: the SceneTree's and the root Window's handles are the only page handles (an orphan
+  // Window is an ordinary node, not one that lives as long as the page).
+  const checks = {
+    ...demoResult.checks,
+    ...(performance ? { pageHandlesAtMostTwo: (performance.maxPageHandles ?? 0) <= 2 } : {}),
+  };
   const checkNames = Object.keys(checks);
   const passed = checkNames.filter((name) => checks[name] === true).length;
   const total = checkNames.length;

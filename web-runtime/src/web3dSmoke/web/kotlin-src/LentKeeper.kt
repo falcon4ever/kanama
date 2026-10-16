@@ -7,13 +7,15 @@ import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.Resource
 import net.multigesture.kanama.api.ResourceLoader
+import net.multigesture.kanama.api.Sprite2D
 
 /**
  * Harness-only (LentProbe's escape row): the script that RECEIVES a dispatch argument and stores it
  * where another script reads it (a companion object), then is freed. The stored value must outlive
  * the script that received it, as it does in GDScript and on desktop. OwnProbe's O5 / O6 rows make
  * one at run time: it stores a RefCounted it received ([armOwn]) or loaded ([keepLoaded]) in the
- * companion, and is freed; the value must stay valid while Kotlin holds it.
+ * companion, and is freed; the value must stay valid while Kotlin holds it. O11 ([keepNodes]): a node
+ * it looked up and one a top-level initializer made while it ran stay valid after it is freed.
  */
 @ScriptClass(attachTo = "Node")
 class LentKeeper(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
@@ -37,6 +39,23 @@ class LentKeeper(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::N
     return if (ownLoaded != null) 1L else 0L
   }
 
+  /**
+   * O11: a node looked up, and one made by a top-level object's initializer (it runs on first
+   * access, inside this script's call), both kept in the companion. 1 when both are there.
+   */
+  fun keepNodes(value: Long): Long {
+    nodeKept = self.getNodeOrNull("../OwnTwin/OwnKeptNode")
+    madeKept = OwnMade.sprite
+    self.requireAs("../OwnTwin", ::Node).addChild(OwnMade.sprite)
+    return if (nodeKept != null) 1L else 0L
+  }
+
+  /** OwnProbe's shared row: the node OwnProbe's generic call minted a handle for, looked up here. */
+  fun keepShared(value: Long): Long {
+    sharedKept = self.getNodeOrNull("../OwnTwin/OwnSharedNode")
+    return if (sharedKept != null) 1L else 0L
+  }
+
   companion object {
     /** The argument this script's handler stored. */
     var kept: GodotObject? = null
@@ -47,6 +66,20 @@ class LentKeeper(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::N
     /** O6: the resource a run-time keeper loaded. */
     var ownLoaded: Resource? = null
 
+    /** O11: the node a run-time keeper looked up. */
+    var nodeKept: Node? = null
+
+    /** O11: the node [OwnMade]'s initializer made while a run-time keeper ran. */
+    var madeKept: Sprite2D? = null
+
+    /** OwnProbe's shared row: the node a run-time keeper looked up after a generic call minted it. */
+    var sharedKept: Node? = null
+
     const val OWN_LOADED_PATH = "res://assets/beep.wav"
   }
+}
+
+/** O11: an engine object made by a top-level initializer (Kotlin runs it on first access). */
+object OwnMade {
+  val sprite: Sprite2D = Sprite2D.create().also { it.name = "OwnMadeSprite" }
 }

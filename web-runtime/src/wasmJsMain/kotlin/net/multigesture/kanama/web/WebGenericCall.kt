@@ -30,9 +30,9 @@ import net.multigesture.kanama.api.webWrap
  * Return encoding (immediate calls): `typeTag<US>payload...`. Object returns resolve to an
  * already-tracked handle first (`_kanama_ensure_created` for script-backed objects, the instance-id
  * index otherwise); an untracked engine object is classified at runtime (Node / Resource / plain
- * Object) and a tracked handle of that kind is MINTED, owned by the receiver's proxy per the
- * task-61 "close what you create" contract — release it with [WebGenericCallResult.close] or let
- * the owner script's teardown drain it.
+ * Object) and a tracked handle of that kind is MINTED. A RefCounted's lives while a Kotlin wrapper
+ * holds it or until [WebGenericCallResult.close]; a Node's or plain Object's lives as long as its
+ * object (its close does nothing).
  */
 object WebExperimentalGenericCall {
   internal const val UNIT_SEPARATOR = '\u001f' // matches the packed-string transport
@@ -204,9 +204,12 @@ class WebGenericCallResult internal constructor(val tag: String, val payload: Li
     get() = objectKind == "node" || objectKind == "resource" || objectKind == "object"
 
   /**
-   * Releases a MINTED handle now (task-61 "close what you create"), whatever else holds it: the
-   * proxy erases its dictionary reference and the browser slot retires. Handles that resolved to
-   * `script`/`tracked` are not owned by this caller and refuse to close.
+   * Ends this caller's hold on a MINTED handle (task-61 "close what you create"). A RefCounted's (a
+   * `resource` or an `object` that is one) or a tween's handle is released now: the proxy erases
+   * its dictionary reference and the browser slot retires. A Node's or plain Object's handle is the
+   * one handle of its object, which other scripts may hold too; it lives as long as the object, so
+   * this does nothing to it. Handles that resolved to `script`/`tracked` are not owned by this
+   * caller and refuse to close.
    */
   fun close() {
     check(isMintedHandle) {

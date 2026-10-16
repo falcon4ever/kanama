@@ -182,10 +182,17 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
         descriptor.opcode in
           setOf(52, 115, 129, 140, 185, 189, 209, 273, 274, 285, 286, 295, 297, 301, 302, 333, 334)
       )
-      require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
-        "Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit Godot's int32 ABI"
+      if (descriptor.opcode in setOf(140, 285, 286)) {
+        require(value in 0L..0xffffffffL) {
+          "Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit Godot's uint32 ABI (0..0xffffffff), got $value"
+        }
+        commands.appendUInt32Mutation(descriptor.opcode, receiver.webId(), value)
+      } else {
+        require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
+          "Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit Godot's int32 ABI"
+        }
+        commands.appendLongMutation(descriptor.opcode, receiver.webId(), value)
       }
-      commands.appendLongMutation(descriptor.opcode, receiver.webId(), value)
     }
   }
 
@@ -266,7 +273,6 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       when (descriptor.executionMode) {
         GodotExecutionMode.QUEUED_MUTATION -> {
           commands.appendNoArgsMutation(descriptor.opcode, objectId)
-          if (descriptor.opcode == 15) onWebQueueFree(objectId)
         }
         GodotExecutionMode.IMMEDIATE_RESULT -> {
           commands.flush()
@@ -2136,7 +2142,9 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     return webFreedAware {
       require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
       require(descriptor.opcode == 229)
-      require(collisionMask in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+      require(collisionMask in 0L..0xffffffffL) {
+        "Kanama Web ray query collision mask must fit Godot's uint32 ABI (0..0xffffffff), got $collisionMask"
+      }
       commands.flush()
       // Ray endpoints, mask, and the optional exclusion handle ride one query string
       // (unit separator). The applier resolves the receiver's world, builds the query

@@ -52,9 +52,7 @@ var adopted_nodes: Array[Node] = []
 var minter: Node
 var minted_node: Node
 var adopt_frame := -1
-var adopt_base := 0
-var adopt_with := 0
-var adopt_after := 0
+var adopt_handle := 0
 var adopt_result := -1
 
 
@@ -336,9 +334,9 @@ func paused_state(which: int) -> int:
 	return paused_result if which == 0 else (paused_base if which == 1 else paused_lent_after)
 
 
-## L16 / L17: a node a Kotlin script created (its handle is that script's, tracked before any
-## dispatch) handed over: the dispatch takes the handle over for the node's lifetime. A Node2D is
-## moved first, so the handler's read shows whether the dispatch refreshed its snapshot.
+## L16 / L17: a node a Kotlin script created (its handle tracked before any dispatch, for the node's
+## lifetime) handed over: the dispatch hands over that handle. A Node2D is moved first, so the
+## handler's read shows whether the dispatch refreshed its snapshot.
 func emit_adopted(node: Node, x: int) -> int:
 	if node is Node2D:
 		(node as Node2D).position = Vector2(float(x), 5.0)
@@ -353,21 +351,10 @@ func free_adopted(_unused: int) -> int:
 	adopted_nodes.clear()
 	return 1
 
-## The sweep's connection to process_frame gone, as after the proxy that made it was freed.
-func _unhook() -> void:
-	var hook := KanamaWebHandles.sweep_hook
-	var tree := get_tree()
-	if hook.is_valid() and tree.process_frame.is_connected(hook):
-		tree.process_frame.disconnect(hook)
-	KanamaWebHandles.sweep_hook = Callable()
-
-
-## L18: with the sweep unhooked, a short-lived LentKeeper proxy is the first to lend (a mint, so it
-## makes the connection) and is freed at once, taking the connection with it. Returns the lent
-## handles before the lend.
+## L18: a short-lived LentKeeper proxy lends a node (a mint) and is freed at once. Returns the
+## lent handles before the lend.
 func emit_minter(_unused: int) -> int:
 	var base := counter("liveLent")
-	_unhook()
 	minter = load(KanamaWebHandles.proxy_paths["LentKeeper"]).new()
 	# A sibling, so its "../LentTwin" finds this node.
 	get_parent().add_child(minter)
@@ -381,30 +368,29 @@ func emit_minter(_unused: int) -> int:
 	return base
 
 
-## L18, later: the lent node is freed with no lend since; the sweep must be connected again.
+## L18, later: the lent node is freed with no lend since; the sweep (the shared class's frame hook,
+## no proxy's) still releases its handle.
 func free_minted(_unused: int) -> int:
 	minted_node.free()
 	minted_node = null
 	return 1
 
 
-## L19: with the sweep unhooked and the tree paused (no proxy processes), a handle a script created
-## is taken over by a dispatch (no mint), and the node freed. `_process` reads the lent handles 6
-## frames later and resumes the tree. 1 = the takeover lent it and the sweep released it paused.
+## L19: the tree paused (no proxy processes), a handle a script created (never lent; it lives as
+## long as the node) handed over, and the node freed. `_process` asks the bridge 6 frames later and
+## resumes the tree. 1 = the sweep released the handle while paused.
 func emit_paused_adopt(node: Node) -> int:
-	adopt_base = counter("liveLent")
-	_unhook()
+	adopt_handle = int(KanamaWebHandles.by_id.get(node.get_instance_id(), 0))
 	paused_adopt.emit(node)
-	adopt_with = counter("liveLent")
 	adopt_frame = Engine.get_process_frames()
 	adopt_result = -1
 	get_tree().paused = true
 	node.free()
-	return adopt_base
+	return adopt_handle
 
 
 func paused_adopt_state(which: int) -> int:
-	return adopt_result if which == 0 else (adopt_base if which == 1 else (adopt_with if which == 2 else adopt_after))
+	return adopt_result if which == 0 else adopt_handle
 
 
 func _process(_delta: float) -> void:
@@ -424,7 +410,7 @@ func _process(_delta: float) -> void:
 		paused_frame = -1
 		get_tree().paused = false
 	if adopt_frame >= 0 and frame >= adopt_frame + 6:
-		adopt_after = counter("liveLent")
-		adopt_result = 1 if adopt_with == adopt_base + 1 and adopt_after == adopt_base else 0
+		var live := int(JavaScriptBridge.eval("globalThis.KanamaWebBridge.isBrowserHandleLive(%d)" % adopt_handle))
+		adopt_result = 1 if adopt_handle != 0 and live == 0 else 0
 		adopt_frame = -1
 		get_tree().paused = false
