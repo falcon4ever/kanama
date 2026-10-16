@@ -32,6 +32,8 @@ architecture. If you want a more established Kotlin integration for Godot today,
 evaluate [Godot Kotlin/JVM](https://godot-kotl.in/en/stable/). It is a
 separate project with a different runtime and export model.
 
+Upgrading from 0.4? See the [0.4 to 0.5 migration guide](docs/getting-started/upgrading-0.4-to-0.5.md).
+
 ## Status
 
 Kanama is desktop-first. The badges above are the current platform tiers;

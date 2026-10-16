@@ -39,6 +39,7 @@ nav:
       - Use a Release Kit: getting-started/release-kit.md
       - Use a Store Addon: getting-started/store-addon.md
       - Use a Source Checkout: getting-started/source-checkout.md
+      - Upgrading from 0.4 to 0.5: getting-started/upgrading-0.4-to-0.5.md
       - Work on Kanama: getting-started/work-on-kanama.md
       - The Editor Loop: getting-started/editor-workflow.md
   - Game Development:
