@@ -551,7 +551,8 @@ driver's performance section reports `maxRcPinned`, `rcReleasedByGc`, `rcRelease
 fallback). Because a freed script's dropped wrappers release its handles only once the browser
 collects them, every demo driver's teardown check asks the page to collect before each poll
 (`collecting` in `scripts/web/drivers/envelope.mjs`: `gc()` on Chrome, an allocation burst on
-Firefox), and match3's mid-game bound leaves out the RefCounted handles still pinned (`rcPinned`).
+Firefox), so does dodge's per-mob retention trough between rounds, and match3's mid-game bound leaves
+out the RefCounted handles still pinned (`rcPinned`).
 
 The web3d `LentProbe` rows (`lentStoredArgumentStaysValid`, `lentArgumentIdentity`,
 `lentNestedDispatchIdentity`, `lentArgumentOutlivesItsReceiver`, `lentEngineFreeIsFreedInstance`,

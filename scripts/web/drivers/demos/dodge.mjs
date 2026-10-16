@@ -1,14 +1,16 @@
 // demos/dodge.mjs -- dodge-the-creeps play + teardown assertions for the Web smoke.
 //
 // Unlike Bunnymark (driven by bridge method calls) and Match3 (driven by synthetic
-// pointer input), dodge is a real-time, self-driven demo: the SmokeQuit script starts
-// a game (new_game), lets Godot's MobTimer spawn mobs and the ScoreTimer tick, then
-// tears the mobs down and quits. This driver OBSERVES: it polls the bridge telemetry,
-// captures the gameplay peak (mobs instantiated + added to the tree, kotlin->godot
-// crossings advancing) and the post-teardown trough, and asserts a clean run with no
-// callback faults.
+// pointer input), dodge is a real-time, self-driven demo: the driver presses Start
+// (HUD._on_StartButton_pressed -> Main.new_game), lets Godot's MobTimer spawn mobs and
+// the ScoreTimer tick, then ends the round (game_over, Start) to measure per-mob handle
+// retention between rounds, tears the scene down and quits. Beyond those calls (and
+// resuming a round the player was hit in early) the driver OBSERVES: it polls the bridge
+// telemetry, captures the gameplay peak (mobs instantiated + added to the tree,
+// kotlin->godot crossings advancing) and the post-teardown trough, and asserts a clean
+// run with no callback faults.
 
-import { callSmokeMethod, collecting } from "../envelope.mjs";
+import { callSmokeMethod, collecting, resolveMethodId } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -18,8 +20,8 @@ const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
 // instead of the settled one. The run must go RED -- a gate only ever observed
 // passing is not evidence that it discriminates.
 const FALSIFY = process.env.KANAMA_WEB_T81_FALSIFY ?? "";
-// Early game overs the driver restarts through before the run counts as suspect (see restartAfterEarlyGameOver).
-const MAX_ROUND_RESTARTS = 3;
+// KANAMA_WEB_DODGE_FORCE_RESTART=1 ends round 1 with a restart once it has spawned this many mobs.
+const FORCED_RESTART_AT_MOBS = 2;
 const START = Date.now();
 const trace = (msg) => {
   if (DEBUG) process.stderr.write(`[dodge ${((Date.now() - START) / 1000).toFixed(1)}s] ${msg}\n`);
@@ -114,6 +116,19 @@ async function snapshot(evaluate) {
         // release did not follow".
         frames: bridge.processCalls ?? 0,
         simSeconds: Math.round((bridge.simSeconds ?? 0) * 10) / 10,
+        // Debug only: every live handle as kind@owner script (rc = RefCounted, lent = a dispatch
+        // argument), to name what a retention trough still holds.
+        liveDetail: ${DEBUG} ? (() => {
+          const counts = {};
+          for (const [handle, owner] of bridge.handleOwners ?? []) {
+            const slot = bridge.browserHandleSlot?.(handle);
+            if (!slot || !slot.live) continue;
+            const ownerName = String(bridge.scriptNameByHandle?.[owner] ?? owner).split(".").pop();
+            const key = (slot.kind ?? "?") + "@" + ownerName + (slot.refCounted ? " rc" : "") + (slot.lent ? " lent" : "") + (slot.page ? " page" : "");
+            counts[key] = (counts[key] ?? 0) + 1;
+          }
+          return JSON.stringify(counts);
+        })() : null,
       };
     })()`);
   } catch {
@@ -170,6 +185,44 @@ async function observe(evaluate, seedPeak, windowMs, deadline, predicate, onSamp
   return { last, peak };
 }
 
+// The scene between two rounds: MobTimer stopped (game_over), the mobs queue_freed (new_game), the
+// next mob not due before StartTimer's 2s. Asks the page to collect before every poll (`collecting`:
+// a RefCounted handle goes when the browser collects its dropped Kotlin wrapper, and only a forced
+// collection makes that happen on time on both engines) and keeps each kind's minimum, until every
+// kind is back at or below `reference` (a healthy round: within a poll or two), the next round's
+// first mob spawns, or `capMs` elapses. Without a reference (round 1's baseline) it samples the
+// whole window. A kind missing from a sample counts as 0 there.
+async function sampleBetweenRounds(evaluate, reference, deadline, capMs) {
+  const byKind = {};
+  let samples = 0;
+  let settled = false;
+  let mobs = null;
+  let gameOvers = 0;
+  let detail = null;
+  const collect = collecting(evaluate);
+  const until = Math.min(deadline, Date.now() + capMs);
+  while (Date.now() < until) {
+    const snap = await snapshot(collect);
+    if (snap?.liveByKind) {
+      if (mobs === null) mobs = snap.mobInstantiations;
+      else if (snap.mobInstantiations !== mobs) break; // the next round's first mob
+      gameOvers = Math.max(gameOvers, snap.gameOvers);
+      for (const kind of new Set([...Object.keys(byKind), ...Object.keys(snap.liveByKind)])) {
+        const previous = kind in byKind ? byKind[kind] : samples > 0 ? 0 : Number.POSITIVE_INFINITY;
+        byKind[kind] = Math.min(previous, snap.liveByKind[kind] ?? 0);
+      }
+      samples += 1;
+      detail = snap.liveDetail;
+      if (reference && Object.entries(byKind).every(([kind, count]) => count <= (reference[kind] ?? 0))) {
+        settled = true;
+        break;
+      }
+    }
+    await delay(150);
+  }
+  return { byKind: samples > 0 ? byKind : null, samples, settled, mobs: mobs ?? 0, gameOvers, detail };
+}
+
 export async function runDodge({ url, evaluate, navigate, deadline, exportDir }) {
   const startupStart = Date.now();
   trace("navigate");
@@ -199,122 +252,163 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   const startupDurationMs = Date.now() - startupStart;
   trace(`ready: readyCount=${ready.readyCount} mainHandle=${ready.mainHandle} protocol=${ready.protocol}`);
 
-  // Drive gameplay from the browser (dodge's SmokeQuit env-var gate is inert on Web):
-  // new_game starts StartTimer (2s), then MobTimer spawns a mob every 0.5s and ScoreTimer
-  // ticks. Observe until several mobs have spawned (the gameplay peak).
+  // Drive gameplay from the browser (dodge's SmokeQuit env-var gate is inert on Web), the way a
+  // player does: HUD._on_StartButton_pressed hides the Start button and emits start_game, which
+  // main.tscn connects to Main.new_game. new_game starts StartTimer (2s), then MobTimer spawns a
+  // mob every 0.5s and ScoreTimer ticks. Pressing Start rather than calling new_game also looks the
+  // Start button up before the first baseline: the HUD's game-over coroutine shows it again two
+  // seconds after a game over, and a handle first minted there would read as one handle retained
+  // by the mobs of the round it lands in.
   const seedPeak = { mobInstantiations: 0, mobAddChildCommands: 0, maxLiveHandles: ready.liveHandles, crossings: ready.crossings, callbackErrors: 0 };
-  // Baseline before any mob exists: everything alive here belongs to the scene.
-  const baselineByKind = ready.liveByKind ?? {};
-  trace("new_game");
-  await callMain(evaluate, "new_game");
-  // Round baseline: sampled after new_game has done its own work (HUD score/message
-  // lookups, music) but before StartTimer's 2s has elapsed, so no mob exists yet.
-  // Comparing the post-restart trough against THIS rather than against the
-  // pre-game scene keeps a fixed per-round cost out of a per-mob ratio -- otherwise
-  // three HUD handles over seven mobs reads as 0.43 retention and the threshold is
-  // measuring the mob count.
-  await delay(1_200);
-  const roundBaselineSnap = await snapshot(evaluate);
-  const roundBaselineByKind = roundBaselineSnap?.liveByKind ?? baselineByKind;
-  trace(`round baseline: ${JSON.stringify(roundBaselineByKind)}`);
-  // Play long enough for several mobs to spawn AND for the earliest ones to fly across
-  // and leave the screen (each mob queue_frees itself on VisibleOnScreenNotifier2D
-  // screen_exited). Run the full window so the spawn+free lifecycle is exercised.
-  // The window is a CEILING, not a duration: the predicate ends it as soon as two mobs
-  // have actually been freed, which on a workstation is a few seconds. It is generous
-  // because a software-GL host simulates less game time per wall-clock second, and the
-  // assertion should wait for the evidence rather than be graded on the host's speed.
-  // Dodge is a real game: the player stands still at the start position and a mob can hit
-  // it within a second of the first spawn (Main.game_over stops MobTimer). How many mobs
-  // spawn before that is decided by the engine RNG, which Godot seeds randomly at startup.
-  // A hit is gameplay, not a bridge fault, so when the round ends before enough mobs have
-  // spawned, start another round (new_game). The bridge's instantiation counter is cumulative
-  // across rounds, so the driver keeps a round baseline (the counter at the last new_game) and
-  // judges mobs PER ROUND: `mobsInstantiated` needs at least one round to reach 4 mobs, and the
-  // window ends on that round's count, not the cumulative one.
+  const forceRestart = process.env.KANAMA_WEB_DODGE_FORCE_RESTART === "1";
+  const startPressedId = resolveMethodId(exportDir, "dodge.HUD", "_on_StartButton_pressed");
+  if (startPressedId === null) throw new Error("dodge.HUD._on_StartButton_pressed is not in the export manifest");
+  const pressStart = async () => {
+    await evaluate(`(() => {
+      const bridge = globalThis.KanamaWebBridge;
+      const entry = Object.entries(bridge.scriptNameByHandle ?? {}).find(
+        ([handle, name]) => String(name).endsWith(".HUD") && bridge.api.kanamaWebIsLive(Number(handle)) === 1,
+      );
+      if (!entry) throw new Error("dodge: no live HUD script handle to press Start on");
+      bridge.callNoArgs(Number(entry[0]), ${startPressedId});
+      return true;
+    })()`);
+  };
+  trace("press Start (new_game)");
+  await pressStart();
+  // Round 1's baseline: the scene with the game started and no mob yet (StartTimer's 2s).
+  const firstBetween = await sampleBetweenRounds(evaluate, null, deadline, 1_200);
+  const baselineByKind = firstBetween.byKind ?? ready.liveByKind ?? {};
+  trace(`round 1 baseline (${firstBetween.samples} samples): ${JSON.stringify(baselineByKind)}`);
+
+  // Dodge is a real game: the player stands still at the start position and a mob can hit it
+  // within a second of the first spawn. Main.game_over then stops MobTimer, and how many mobs had
+  // spawned by then is decided by the engine RNG, which Godot seeds randomly at startup (an early
+  // hit ended a round in roughly one run in ten; three in a row failed CI). A hit is gameplay, not
+  // a bridge fault, so the driver RESUMES the round instead of restarting it: it calls
+  // Main._on_StartTimer_timeout, the handler StartTimer runs, which starts MobTimer and ScoreTimer
+  // again. The player cannot be hit a second time: its own _on_body_entered hides it and disables
+  // its CollisionShape2D (set_deferred), and only Player.start (new_game) enables it again. Every
+  // round therefore reaches 4 mobs, whatever the RNG does.
   //
-  // The restarts are a budget, not a free pass. A healthy run ends a round early about 10-15% of
-  // the time, so it needs 0-1 restarts and three in a row happen about 0.2% of the time. What the
-  // two checks deliver together: a build that kills the player on the 1st, 2nd or 3rd mob of every
-  // round never gets a 4-mob round, so `mobsInstantiated` fails; one that kills it on the 1st mob
-  // of the first three rounds and then recovers uses every restart, so `restartBudgetNotExhausted`
-  // fails. What they do not catch: a player that dies at exactly the 4th mob of every round (that
-  // round counts as long enough), or a regression that only shows up after the 4th mob.
+  // What the hits still prove: `noHitBeforeFirstMob` fails a build where the player is hit before
+  // round 1 has spawned a mob (nothing else in the scene can hit it). A build that kills the player
+  // on the first mob is no longer told apart from bad luck; it was a probability before (it needed
+  // three early rounds in a row), and that probability is what made the cell flaky.
+  //
+  // KANAMA_WEB_DODGE_FORCE_RESTART=1 ends round 1 after FORCED_RESTART_AT_MOBS mobs with exactly one
+  // restart (game_over, then Start), so a local run can prove the retention measurement across a
+  // restart on demand.
   let gameOversSeen = 0;
   let roundRestarts = 0;
-  let roundBaseline = roundBaselineSnap?.mobInstantiations ?? 0; // cumulative counter at the last new_game
-  const earlyGameOvers = []; // mobs spawned in the round at each early game over that was restarted
+  let roundResumes = 0;
+  const hits = []; // [round, mobs spawned in that round] at each game over the game itself reported
+  const rounds = []; // finished rounds: { index, mobs, baseline, trough, samples, settled }
+  let round = { index: 1, startMobs: firstBetween.mobs ?? 0, baseline: baselineByKind, spawning: true };
+  if (firstBetween.gameOvers > 0) {
+    // Hit while the baseline was sampled, before round 1's first mob. StartTimer still starts MobTimer.
+    gameOversSeen = firstBetween.gameOvers;
+    hits.push([1, 0]);
+  }
+  // Ends the current round the way a player's next game starts: game_over (unless the player's hit
+  // already ran it: MobTimer stops, no mob spawns any more), then Start (new_game queue_frees the
+  // whole mobs group). The scene between the two rounds is the finished round's trough and the next
+  // round's baseline.
+  const endRound = async (label) => {
+    if (round.spawning) {
+      await callMain(evaluate, "game_over");
+      gameOversSeen += 1;
+    }
+    await pressStart();
+    const between = await sampleBetweenRounds(evaluate, round.baseline, deadline, 4_000);
+    // A dead round's mob that reaches the player before new_game's queue_free lands is that round's.
+    gameOversSeen = Math.max(gameOversSeen, between.gameOvers);
+    const mobs = between.mobs - round.startMobs;
+    rounds.push({ index: round.index, mobs, baseline: round.baseline, trough: between.byKind, samples: between.samples, settled: between.settled });
+    trace(`${label}: round ${round.index} ended after ${mobs} mob(s); trough (${between.samples} samples, settled=${between.settled}): ${JSON.stringify(between.byKind)}${between.detail ? ` detail ${between.detail}` : ""}`);
+    round = { index: round.index + 1, startMobs: between.mobs, baseline: between.byKind, spawning: true };
+  };
   const trackRound = (snap, p) => {
-    p.roundMobs = snap.mobInstantiations - roundBaseline;
+    p.roundMobs = snap.mobInstantiations - round.startMobs;
     p.bestRoundMobs = Math.max(p.bestRoundMobs ?? 0, p.roundMobs);
   };
-  const restartAfterEarlyGameOver = async (snap, p) => {
+  const onRoundSample = async (snap, p) => {
     trackRound(snap, p);
-    if (snap.gameOvers <= gameOversSeen) return false;
-    gameOversSeen = snap.gameOvers;
-    if (p.roundMobs >= 4 || roundRestarts >= MAX_ROUND_RESTARTS) return false;
-    roundRestarts += 1;
-    earlyGameOvers.push(p.roundMobs);
-    trace(`game over after ${p.roundMobs} mob(s) this round: new round ${roundRestarts}`);
-    await callMain(evaluate, "new_game");
-    roundBaseline = snap.mobInstantiations;
-    return true;
+    if (snap.gameOvers > gameOversSeen) {
+      gameOversSeen = snap.gameOvers;
+      hits.push([round.index, p.roundMobs]);
+      round.spawning = false;
+      if (p.roundMobs >= 4) return false;
+      if (forceRestart && roundRestarts === 0) {
+        roundRestarts += 1;
+        await endRound(`hit after ${p.roundMobs} mob(s), forced restart`);
+        p.roundMobs = 0;
+        return true;
+      }
+      roundResumes += 1;
+      trace(`game over after ${p.roundMobs} mob(s) in round ${round.index}: resume spawning`);
+      await callMain(evaluate, "_on_StartTimer_timeout");
+      round.spawning = true;
+      return false;
+    }
+    if (forceRestart && roundRestarts === 0 && p.roundMobs >= FORCED_RESTART_AT_MOBS) {
+      roundRestarts += 1;
+      await endRound("forced restart");
+      p.roundMobs = 0;
+      return true;
+    }
+    return false;
   };
+  // Play long enough for several mobs to spawn AND for the earliest ones to fly across and leave
+  // the screen (each mob queue_frees itself on VisibleOnScreenNotifier2D screen_exited). The window
+  // is a CEILING, not a duration: the predicate ends it as soon as a round has spawned 4 mobs and two
+  // mobs have been freed, which on a workstation is a few seconds. It is generous because a
+  // software-GL host simulates less game time per wall-clock second.
   const gameplay = await observe(
     evaluate,
     seedPeak,
     45_000,
     deadline,
-    (snap, p) => p.mobFrees >= 2 && p.bestRoundMobs >= 4,
-    restartAfterEarlyGameOver,
+    (snap, p) => p.mobFrees >= 2 && (p.roundMobs ?? 0) >= 4,
+    onRoundSample,
   );
   const peak = gameplay.peak;
   const atPeak = gameplay.last ?? ready;
-  trace(`gameplay: mobs=${peak.mobInstantiations} bestRound=${peak.bestRoundMobs} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} frees=${peak.mobFrees} finalLive=${atPeak.liveHandles} crossings=${peak.crossings}`);
+  trace(`gameplay: mobs=${peak.mobInstantiations} bestRound=${peak.bestRoundMobs} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} frees=${peak.mobFrees} finalLive=${atPeak.liveHandles} crossings=${peak.crossings} hits=${JSON.stringify(hits)} resumes=${roundResumes} restarts=${roundRestarts}`);
 
-  // Full teardown: SmokeQuit.smoke_teardown quits the SceneTree, exiting every node so it
-  // releases its handles. Poll until the live-handle count drains to zero (the smoke
-  // wrapper's schema requires liveAfterTeardown === 0). The wasm/JS stays readable after
-  // the loop stops, so the snapshot still resolves.
-  // Per-entity retention, measured at the one moment dodge makes unambiguous:
-  // just after a restart. `new_game` queue_frees the whole mobs group, so every
-  // mob instantiated so far is gone and the next one has not spawned yet (a 2s
-  // StartTimer). Anything still held above the scene baseline at that trough was
-  // retained by mobs that no longer exist.
+  // Per-entity retention, measured PER ROUND between rounds, where dodge makes it unambiguous: after
+  // game_over (no mob spawns any more) and new_game (the whole mobs group is queue_freed), and
+  // before StartTimer brings the next mob. Anything a round's trough holds above that round's own
+  // baseline was retained by mobs that no longer exist. Each round is judged against the scene as
+  // it stood when that round began -- after the previous round's mobs were gone -- so a dead round's
+  // leftovers never count against the next round's mobs. The sampler asks the page to collect before
+  // every poll: a mob's RefCounted results (its SpriteFrames) are released when the browser collects
+  // the dropped Kotlin wrapper, and waiting for the collector to run by itself is what made the
+  // trough read 4 SpriteFrames over 7 mobs on CI.
   //
-  // Measuring during play cannot work: mobs alive on screen hold their handles
-  // legitimately, and in a short run they have no time to die -- which is exactly
-  // why task 72's one-handle-per-mob leak needed a ten-minute soak to show as
-  // absolute growth. As a RATIO at the trough it needs seconds.
-  trace("restart to measure retention");
+  // Measuring during play cannot work: mobs alive on screen hold their handles legitimately, and in
+  // a short run they have no time to die -- which is exactly why task 72's one-handle-per-mob leak
+  // needed a ten-minute soak to show as absolute growth. As a RATIO at the trough it needs seconds.
+  await endRound("measure retention");
   const mobsBeforeRestart = peak.mobInstantiations;
-  await callMain(evaluate, "new_game");
-  const troughByKind = {};
-  const troughUntil = Math.min(deadline, Date.now() + 4_000);
-  while (Date.now() < troughUntil) {
-    const snap = await snapshot(evaluate);
-    if (snap?.liveByKind) {
-      for (const [kind, count] of Object.entries(snap.liveByKind)) {
-        const above = count - (roundBaselineByKind[kind] ?? 0);
-        troughByKind[kind] = Math.min(troughByKind[kind] ?? Number.POSITIVE_INFINITY, above);
-      }
-    }
-    await delay(150);
-  }
   const retention = {};
   let worstRetention = 0;
   let worstRetentionKind = "none";
-  if (mobsBeforeRestart > 0) {
-    for (const [kind, above] of Object.entries(troughByKind)) {
-      const perMob = Math.round((Math.max(above, 0) / mobsBeforeRestart) * 100) / 100;
-      retention[kind] = perMob;
+  let worstRetentionRound = 0;
+  for (const finished of rounds) {
+    if (finished.mobs <= 0) continue;
+    for (const [kind, count] of Object.entries(finished.trough ?? {})) {
+      const above = Math.max(count - (finished.baseline[kind] ?? 0), 0);
+      const perMob = Math.round((above / finished.mobs) * 100) / 100;
+      retention[`${kind}@round${finished.index}`] = perMob;
       if (perMob > worstRetention) {
         worstRetention = perMob;
         worstRetentionKind = kind;
+        worstRetentionRound = finished.index;
       }
     }
   }
-  trace(`retention per mob after restart (${mobsBeforeRestart} mobs): ${JSON.stringify(retention)} worst=${worstRetentionKind}:${worstRetention}`);
+  trace(`retention per mob, per round (${mobsBeforeRestart} mobs over ${rounds.length} round(s)): ${JSON.stringify(retention)} worst=${worstRetentionKind}@round${worstRetentionRound}:${worstRetention}`);
 
   trace("smoke_teardown");
   await callTeardown(evaluate, exportDir);
@@ -341,14 +435,15 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
     mobsSpawnAndFree: peak.mobFrees >= 2,
     // Full teardown: quitting the tree drained every live handle to zero.
     fullTeardownToZero: settled.liveHandles === 0,
-    // No handle kind is retained per spawned mob, measured at the post-restart
-    // trough where every earlier mob is provably gone. A real per-spawn leak sits
-    // at 1.0 (task 72 measured exactly that); a healthy run sits near 0. This is
-    // the SHORT-run form of what the soak gate needs ten minutes to see.
+    // No handle kind is retained per spawned mob, measured per round at the trough between
+    // rounds, where every mob of the round is provably gone, against that round's own baseline,
+    // with a collection forced before every poll. A real per-spawn leak sits at 1.0 (task 72
+    // measured exactly that); a healthy run sits at 0. This is the SHORT-run form of what the soak
+    // gate needs ten minutes to see.
     noPerMobHandleRetention: worstRetention <= 0.5,
-    // Fewer than MAX_ROUND_RESTARTS early game overs: a build that ends the first rounds on the first
-    // mob uses them all, even if a later round runs long enough for mobsInstantiated.
-    restartBudgetNotExhausted: roundRestarts < MAX_ROUND_RESTARTS,
+    // Nothing in the scene but a mob can hit the player: a hit before round 1 spawned its first mob
+    // is an instant-kill bug (the hit is detected a poll late, so this can only err towards green).
+    noHitBeforeFirstMob: !hits.some(([index, mobs]) => index === 1 && mobs === 0),
     noCallbackFaults: peak.callbackErrors === 0 && settled.callbackErrors === 0 && settled.failure === null,
   };
 
@@ -360,11 +455,8 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   const boundaryErrors = [];
   if (peak.callbackErrors !== 0) boundaryErrors.push(`callbackErrors=${peak.callbackErrors}`);
   if (settled.failure !== null) boundaryErrors.push(`failure: ${settled.failure}`);
-  if (roundRestarts >= MAX_ROUND_RESTARTS) {
-    boundaryErrors.push(
-      `dodge restart budget exhausted: ${roundRestarts} early game overs, after ${earlyGameOvers.join(", ")} mob(s) in each round ` +
-        `(a healthy run needs 0-1 restarts); the player may be dying on the first mob (instant-kill bug)`,
-    );
+  if (!checks.noHitBeforeFirstMob) {
+    boundaryErrors.push("dodge: the player was hit before round 1 spawned a mob (instant-kill bug: only a mob can hit it)");
   }
 
   return {
@@ -386,8 +478,12 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
       // Mobs spawned in the best single round (the count mobsInstantiated judges; mobInstantiations is cumulative).
       bestRoundMobInstantiations: peak.bestRoundMobs ?? 0,
       mobAddChildCommands: peak.mobAddChildCommands,
-      // New rounds started after an early game over (0-1 when healthy; the check fails at 3).
+      // Restarts (game_over + Start) before the measuring one: 0, or 1 with KANAMA_WEB_DODGE_FORCE_RESTART=1.
       roundRestarts,
+      // Rounds the driver resumed after the player was hit before the round's 4th mob.
+      roundResumes,
+      // Game overs the game itself reported (the player was hit).
+      playerHits: hits.length,
       // Worst per-mob handle retention, x100 so the envelope stays integer-friendly
       // (the schema requires numeric counters). 0 is healthy; 100 is one leaked
       // handle per spawn.

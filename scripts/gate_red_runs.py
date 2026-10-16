@@ -948,11 +948,20 @@ case("web/bridge_rc_ownership_selftest.mjs (Variant result cap)", ["node", "scri
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "        slot.lendFrame = this.ownershipFrame;\n        this.lentRefCountedByAge.add(handle);\n", "")],
      "variant cap: a Variant result's RefCounted is not under the lent cap", "a Variant result's RefCounted (a per-frame GD.weakref) leaves the lent cap again: without a collection the handle table grows without bound")
 case("web/dodge_restart_selftest.mjs", ["node", "scripts/web/dodge_restart_selftest.mjs"],
-     [Edit("scripts/web/drivers/demos/dodge.mjs", "restartBudgetNotExhausted: roundRestarts < MAX_ROUND_RESTARTS,", "restartBudgetNotExhausted: true,")],
-     "restartBudgetNotExhausted must be false", "dodge stops failing a run that used every round restart (a build that kills the player on the first mob passes on the cumulative mob counter)")
+     [Edit("scripts/web/drivers/demos/dodge.mjs", '      await callMain(evaluate, "_on_StartTimer_timeout");\n', "")],
+     "one early hit (1 mob): checks red: mobsInstantiated", "dodge stops resuming a round the player was hit in before its 4th mob: the run hangs on the RNG again (an early hit fails mobsInstantiated)")
 case("web/dodge_restart_selftest.mjs (per-round mob count)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "mobsInstantiated: (peak.bestRoundMobs ?? 0) >= 4,", "mobsInstantiated: peak.mobInstantiations >= 4,")],
-     "2 mobs per round: mobsInstantiated must be false", "dodge counts mobs across rounds again: a build that kills the player on the 2nd mob of every round reaches 2 + 2 = 4 and passes with one restart")
+     "spawning never resumes: mobsInstantiated must be false", "dodge counts mobs across rounds again: a forced restart after 2 mobs plus a round that stops spawning at 2 reaches 2 + 2 = 4 and passes")
+case("web/dodge_restart_selftest.mjs (per-round retention)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "for (const finished of rounds) {", "for (const finished of rounds.slice(-1)) {")],
+     "leaked per mob of the restarted round: noPerMobHandleRetention must be false", "dodge judges only the last round's retention again: a per-mob leak in a round that ended in a restart passes")
+case("web/dodge_restart_selftest.mjs (forced collection)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "const collect = collecting(evaluate);", "const collect = evaluate;")],
+     "healthy: checks red: noPerMobHandleRetention", "dodge's between-rounds trough stops forcing a collection: a mob's dropped SpriteFrames wrapper reads as a retained handle until the browser collects on its own (CI: 4 over 7 mobs)")
+case("web/dodge_restart_selftest.mjs (instant kill)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "noHitBeforeFirstMob: !hits.some(([index, mobs]) => index === 1 && mobs === 0),", "noHitBeforeFirstMob: true,")],
+     "hit before the first mob: noHitBeforeFirstMob must be false", "dodge stops failing a build where the player is hit before round 1 spawned a mob (resuming the round would hide it)")
 case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then', 'if false; then')],
      "below-floor expected exit 1", "web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that)")
