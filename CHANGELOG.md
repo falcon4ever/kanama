@@ -39,6 +39,8 @@ only `--write`.
 
 ## Unreleased
 
+Upgrading from 0.4? See [Upgrading from 0.4 to 0.5](docs/getting-started/upgrading-0.4-to-0.5.md).
+
 ### Changed — the Web dodge cell is deterministic and checks hits strictly
 
 The dodge driver of the Web matrix used to restart a round when the stationary player was hit early,
