@@ -1,7 +1,8 @@
 # Kanama Starter Template
 
 This folder contains the small Kotlin script and editor plugin copied by the
-starter Gradle tasks.
+starter Gradle tasks, and `project-README.md`, the README of a project made by
+`createStarterProject`.
 
 For a new first project, run this from the Kanama source checkout:
 
@@ -10,7 +11,7 @@ For a new first project, run this from the Kanama source checkout:
   -PkanamaStarterProjectDir=/absolute/path/to/new_godot_project
 ./gradlew installAddonJar \
   -PkanamaProjectDir=/absolute/path/to/new_godot_project \
-  -PkanamaProjectScriptsDir=/absolute/path/to/new_godot_project
+  -PkanamaProjectScriptsDir=/absolute/path/to/new_godot_project/kotlin-src
 ```
 
 For an existing Godot project, copy only the safe starter files:

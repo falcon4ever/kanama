@@ -900,6 +900,12 @@ case("check_gradle_templates_configure.sh (starter wrapper)", ["bash", "scripts/
 case("check_gradle_templates_configure.sh (documented task)", ["bash", "scripts/check_gradle_templates_configure.sh"],
      [Edit("README.md", "cd /path/to/kanama-starter\n./gradlew buildScripts", "cd /path/to/kanama-starter\n./gradlew buildKotlinScripts")],
      "has no task buildKotlinScripts", "the README Quick Start tells the user to run a starter task that does not exist", slow=True)
+case("check_gradle_templates_configure.sh (task path)", ["bash", "scripts/check_gradle_templates_configure.sh"],
+     [Edit("README.md", "cd /path/to/kanama-starter\n./gradlew buildScripts", "cd /path/to/kanama-starter\n./gradlew :buildKotlinScripts")],
+     "has no task :buildKotlinScripts", "a documented task given by its path (`:task`) is skipped by the doc-command scan", slow=True)
+case("check_gradle_templates_configure.sh (kit README, titled fence)", ["bash", "scripts/check_gradle_templates_configure.sh"],
+     [Edit("templates/release-kit/README.md", "```sh\n./gradlew buildScripts\n```", "```bash title=\"Build\"\n./gradlew buildKotlinScripts\n```")],
+     "has no task buildKotlinScripts", "the README a kit ships with tells the user to run a task that does not exist, in a ```bash title=... block", slow=True)
 
 
 case("web/scaffold_selftest.sh", ["bash", "scripts/web/scaffold_selftest.sh"],

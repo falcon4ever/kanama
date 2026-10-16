@@ -47,7 +47,7 @@ and import into IntelliJ IDEA, use [the store addon](store-addon.md).
 ```sh
 ./gradlew installAddonJar \
   -PkanamaProjectDir=/absolute/path/to/kanama-starter \
-  -PkanamaProjectScriptsDir=/absolute/path/to/kanama-starter
+  -PkanamaProjectScriptsDir=/absolute/path/to/kanama-starter/kotlin-src
 ```
 
 This builds `kanama.jar`, builds the host native bootstrap with CMake, compiles
@@ -59,8 +59,8 @@ published from this checkout) and `addons/kanama/kanama-project.gradle.kts`, so
 the starter's own Gradle build compiles against the runtime it runs on. Rerun it
 after updating the checkout.
 
-If your Kotlin scripts live outside the project root, point
-`kanamaProjectScriptsDir` at that folder. For multiple roots, use
+`kanamaProjectScriptsDir` is the folder whose `.kt` files are compiled: the
+starter's `kotlin-src`, or wherever your scripts live. For multiple roots, use
 `-PkanamaProjectScriptsDirs=` with path-separated or comma-separated paths.
 
 ## 4. Open and Iterate

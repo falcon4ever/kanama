@@ -34,9 +34,11 @@ fail() {
   exit 1
 }
 
-# The documented commands: `<repo|project> <task> <page>:<line>` per `./gradlew <task>` in a fenced shell block. A
-# block runs in the page's default place; `cd kanama` moves it to the checkout, any other `cd` or the store-addon
-# setup script to the project; `gradlew -p <dir>` always runs in the checkout.
+# The documented commands: `<repo|project> <task> <page>:<line>` per `./gradlew <task>` in a fenced shell block
+# (```sh, ```bash title="..." and the like). A block runs in the page's default place; `cd kanama` moves it to the
+# checkout, any other `cd` or the store-addon setup script to the project; `gradlew -p <dir>` always runs in the
+# checkout. A task path (`:processor:test`) is checked by its path. The pages include the READMEs a new project
+# ships with (the kit's and the source-checkout starter's) and the starter template's.
 documented="$WORK/documented.txt"
 python3 - "$ROOT_DIR" >"$documented" <<'PY'
 import re
@@ -50,20 +52,28 @@ PAGES = {
     "docs/getting-started/editor-workflow.md": "repo",
     "docs/getting-started/release-kit.md": "project",
     "docs/getting-started/store-addon.md": "project",
+    "templates/release-kit/README.md": "project",
+    "templates/starter/project-README.md": "project",
+    "templates/starter/README.md": "repo",
 }
+SHELLS = ("sh", "bash", "shell", "zsh", "console", "powershell", "pwsh", "ps1")
 GRADLEW = re.compile(r"^(?:\./|\.\\)?gradlew(?:\.bat)?\s+(.*)$")
-TASK = re.compile(r"^[A-Za-z][A-Za-z0-9:_-]*$")
+TASK = re.compile(r"^:?[A-Za-z][A-Za-z0-9:_-]*$")
 found = 0
 for page, default in PAGES.items():
     fence = None
     where = default
     for number, raw in enumerate((root / page).read_text(encoding="utf-8").splitlines(), 1):
         line = raw.strip()
+        if line.startswith(("$ ", "> ")):
+            line = line[2:].strip()  # a console prompt
         match = GRADLEW.match(line)
         if line.startswith("```"):
-            fence = None if fence is not None else line[3:].strip()
+            # The info string's first word is the language: ```bash title="..." is a bash block.
+            info = line[3:].strip().lstrip("{.").split()
+            fence = None if fence is not None else (info[0].lower().rstrip("}") if info else "")
             where = default
-        elif fence not in ("sh", "bash", "shell", "powershell"):
+        elif fence not in SHELLS:
             pass  # prose, or a non-shell block: no command runs there
         elif line.startswith("cd "):
             where = "repo" if Path(line[3:].strip()).name == "kanama" else "project"
@@ -71,10 +81,11 @@ for page, default in PAGES.items():
             where = "project"
         elif match:
             args = match.group(1).replace("\\", " ").split()
-            context = "repo" if "-p" in args else where
-            for task in (a for a in args if TASK.match(a)):
-                print(f"{context} {task} {page}:{number}")
-                found += 1
+            context = "repo" if "-p" in args or "--project-dir" in args else where
+            for previous, task in zip([""] + args, args):
+                if TASK.match(task) and previous not in ("-p", "--project-dir"):
+                    print(f"{context} {task} {page}:{number}")
+                    found += 1
 if found == 0:
     sys.exit("no ./gradlew command found in the getting-started pages: the scan is vacuous")
 PY
@@ -89,7 +100,8 @@ check_tasks() {
   fi
   local missing=0 task where
   while read -r ctx task where; do
-    if [[ "$ctx" == "$context" ]] && ! grep -Eq "^${task}( - |$)" "$log"; then
+    # `tasks --all` lists `:processor:test` as `processor:test` and `:jvmTest` as `jvmTest`.
+    if [[ "$ctx" == "$context" ]] && ! grep -Eq "^${task#:}( - |$)" "$log"; then
       echo "$TAG FAIL -- $where tells the user to run \`./gradlew $task\`, and the $name build has no task $task" >&2
       missing=1
     fi

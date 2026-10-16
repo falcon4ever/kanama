@@ -980,8 +980,10 @@ tasks.register<Zip>("packageStoreNativeArtifact") {
 // declares Kanama's repositories, dependencies and `buildScripts`. The desktop kit zips it and
 // createStarterProject copies it, so a starter made from a source checkout is the same IntelliJ-
 // importable Gradle project as a kit (installAddonJar then adds the runtime and addons/kanama/maven).
+// Each adds its own README.md: the kit's speaks of downloaded zips, the starter's of the checkout.
 val kanamaGradleProjectSpec = copySpec {
   from(layout.projectDirectory.dir("templates/release-kit")) {
+    exclude("README.md")
     filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
   }
   from(layout.projectDirectory.file("templates/starter/HelloScript.kt")) { into("kotlin-src") }
@@ -1017,6 +1019,7 @@ tasks.register<Zip>("packageDesktopKit") {
   isReproducibleFileOrder = true
 
   with(kanamaGradleProjectSpec)
+  from(layout.projectDirectory.file("templates/release-kit/README.md"))
   from(packageGdextensionDescriptorFile) {
     into("addons/kanama")
     rename { "kanama.gdextension" }
@@ -2159,11 +2162,21 @@ tasks.register<Copy>("installAddonJar") {
   // A Gradle consumer project (createStarterProject's output: it applies
   // addons/kanama/kanama-project.gradle.kts) builds its own scripts with `./gradlew buildScripts`
   // and IntelliJ resolves the Kanama API from addons/kanama/maven. Refresh both from this checkout
-  // with the runtime, so the API it compiles against is the runtime it runs on.
+  // with the runtime, so the API it compiles against is the runtime it runs on. The copy's sources
+  // are fixed at configuration time, so a starter that createStarterProject writes in this same
+  // build counts too (`./gradlew createStarterProject installAddonJar ...` in one run); doFirst
+  // below stops a build whose target became such a project any other way.
+  val consumerBuildScript = "addons/kanama/kanama-project.gradle.kts"
+  val starterCreatedInThisBuild =
+    gradle.startParameter.taskNames.any { it.substringAfterLast(':') == "createStarterProject" } &&
+      targetProjectDir.isPresent &&
+      providers.gradleProperty("kanamaStarterProjectDir").orNull?.let {
+        file(it).canonicalFile == file(targetProjectDir.get()).canonicalFile
+      } == true
   val consumerGradleProject =
-    targetProjectDir
-      .map { file(it).resolve("addons/kanama/kanama-project.gradle.kts").isFile }
-      .getOrElse(false)
+    starterCreatedInThisBuild ||
+      targetProjectDir.map { file(it).resolve(consumerBuildScript).isFile }.getOrElse(false)
+  mustRunAfter("createStarterProject")
   if (consumerGradleProject) {
     dependsOn(publishKanamaPackageMavenRepository)
     from(packageMavenRepositoryDir) { into("maven") }
@@ -2199,6 +2212,12 @@ tasks.register<Copy>("installAddonJar") {
     }
 
     val targetProject = file(targetProjectDir.get())
+    if (!consumerGradleProject && targetProject.resolve(consumerBuildScript).isFile) {
+      throw GradleException(
+        "${targetProject.resolve(consumerBuildScript)} appeared after this build was configured, " +
+          "so installAddonJar would skip addons/kanama/maven. Run installAddonJar again on its own."
+      )
+    }
     val existingExtension = targetProject.resolve("addons/kanama/kanama.gdextension")
     preserveAndroidExtensionMetadata.set(
       targetProject.resolve("android/plugins/KanamaAndroid.gdap").isFile ||
@@ -2227,7 +2246,11 @@ tasks.register<Copy>("installAddonJar") {
 
 tasks.register<Copy>("installStarterTemplate") {
   val targetProjectDir = providers.gradleProperty("kanamaStarterProjectDir")
-  from(layout.projectDirectory.dir("templates/starter"))
+  // Only the script and the editor tools, as the docs promise: never the template's READMEs over
+  // the project's own.
+  from(layout.projectDirectory.dir("templates/starter")) {
+    include("HelloScript.kt", "addons/kanama_tools/**")
+  }
   into(targetProjectDir.map { file(it) })
 
   doFirst {
@@ -2245,6 +2268,9 @@ tasks.register<Copy>("createStarterProject") {
     providers.gradleProperty("kanamaStarterOverwrite").map(String::toBoolean).orElse(false)
 
   with(kanamaGradleProjectSpec)
+  from(layout.projectDirectory.file("templates/starter/project-README.md")) {
+    rename { "README.md" }
+  }
   into(targetProjectDir.map { file(it) })
 
   doFirst {

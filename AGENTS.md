@@ -206,7 +206,7 @@ Use the source-checkout path for current `main` or unreleased changes:
   -PkanamaStarterProjectDir=/absolute/path/to/kanama-starter
 ./gradlew installAddonJar \
   -PkanamaProjectDir=/absolute/path/to/kanama-starter \
-  -PkanamaProjectScriptsDir=/absolute/path/to/kanama-starter
+  -PkanamaProjectScriptsDir=/absolute/path/to/kanama-starter/kotlin-src
 ```
 
 For an existing project, use `installStarterTemplate` instead of copying a full

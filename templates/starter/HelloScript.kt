@@ -13,6 +13,7 @@ import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Label
 import net.multigesture.kanama.api.Node2D
 import net.multigesture.kanama.types.*
+import kotlin.math.roundToInt
 
 @ScriptClass(attachTo = "Node2D")
 @GlobalClass
@@ -39,7 +40,9 @@ class HelloScript(godotObject: GodotHandle) :
     fun process(delta: Double) {
         elapsedSeconds += delta
         self.rotation = elapsedSeconds * spinSpeed
-        updateStatus("running for %.1fs".format(elapsedSeconds))
+        // One decimal without String.format, which is JVM-only: the script also compiles for iOS.
+        val seconds = (elapsedSeconds * 10).roundToInt() / 10.0
+        updateStatus("running for ${seconds}s")
     }
 
     fun greet(name: String): String = "$greeting, $name"

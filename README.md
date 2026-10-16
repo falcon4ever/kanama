@@ -81,7 +81,7 @@ cd kanama
   -PkanamaStarterProjectDir=/path/to/kanama-starter
 ./gradlew installAddonJar \
   -PkanamaProjectDir=/path/to/kanama-starter \
-  -PkanamaProjectScriptsDir=/path/to/kanama-starter
+  -PkanamaProjectScriptsDir=/path/to/kanama-starter/kotlin-src
 ```
 
 Open `kanama-starter/project.godot` in Godot and press **Play**. The starter
