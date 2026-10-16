@@ -39,7 +39,9 @@ import net.multigesture.kanama.web.WebGenericCallResult
  * - O2 `rcReleasedWhenCollected`: 8 = once Kotlin drops them and the browser collects (Chrome:
  *   `gc()`; Firefox: allocation), the three objects are gone within 600 frames, their handles are
  *   released, the live lent handles and pinned RefCounted are back to the baseline and
- *   `rcReleasedByGc` counted them.
+ *   `rcReleasedByGc` counted them. Where no collection can be forced (Firefox, which collects only
+ *   when it decides to, or a run whose bridge ignores collections) each handle is released or
+ *   still pinned under the lent cap: the bound the design keeps without a collection.
  * - O3 `rcCloseReleasesNow`: 16 = a RefCounted argument is `AutoCloseable` and `close()` on its one
  *   wrapper releases it (the object is gone a frame later); 32 = a second wrapper of the same object
  *   made before the close still answers after it; 64 = a use of the closed wrapper throws
@@ -50,12 +52,15 @@ import net.multigesture.kanama.web.WebGenericCallResult
  * - O5 `rcOutlivesItsReceiver`: 128 = a RefCounted argument a keeper script stored, read 30 frames
  *   after the keeper was freed.
  * - O6 `rcResultOutlivesItsScript`: 256 = a resource a keeper script loaded into its companion, read
- *   10 frames after the keeper was freed; 512 = once dropped and collected, its handle is released.
+ *   10 frames after the keeper was freed; 512 = once dropped and collected, its handle is released
+ *   (where no collection can be forced: released, or still held as a RefCounted for its collection;
+ *   a load is never capped).
  * - O4 `rcNeverMaterializedIsReleased`: 2048 = a RefCounted on the packed arm to a handler that
  *   never reads it is gone 4 frames later (nothing wrapped it, so its lend's floor ends).
  * - O7 `weakrefDoesNotGrow`: 4096 = 300 frames of `GD.weakref(node)` nobody keeps leave the live
- *   handles within 64 of where they were once the browser collected; 8192 = `close()` on one
- *   releases its handle at once.
+ *   handles within 64 of where they were once the browser collected, or, where no collection can
+ *   be forced, every handle above that is a RefCounted under the lent cap (a Variant result is
+ *   capped like a lend); 8192 = `close()` on one releases its handle at once.
  * - O8 `lookupSurvivesQueueFree`: 16384 = a node looked up and `queueFree()`d still answers a typed
  *   call in the same frame, and a dispatch of it in that frame hands over the same value; 32768 = a
  *   use a frame later throws desktop's "previously freed instance", and the live handles are back.
@@ -100,6 +105,10 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
   private var loadedHandle = 0
   private var doomedArg: GodotObject? = null
   private var weakBase = 0L
+  private var cappedBase = 0L
+
+  /** False once the page could not force a collection (Firefox, or a bridge ignoring them). */
+  private var forced = true
   private var ringBase = 0L
   private var ringHeld: WebGenericCallResult? = null
 
@@ -423,7 +432,10 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
    * collects; `close()` on one releases its handle at once.
    */
   private fun weakrefRows(frame: Int) {
-    if (frame == 0) weakBase = counter("liveBrowserHandleCount")
+    if (frame == 0) {
+      weakBase = counter("liveBrowserHandleCount")
+      cappedBase = twinLong("capped_count")
+    }
     if (frame < WEAKREF_FRAMES) {
       GD.weakref(twin())
       MainThread.postAfterFrames(1) { weakrefRows(frame + 1) }
@@ -445,8 +457,17 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
       return
     }
     garbage = null
-    if (live <= weakBase + 64) mask = mask or 4096L
-    else note("O7 live $weakBase -> $live after $frame frames")
+    val capped = twinLong("capped_count")
+    if (live <= weakBase + 64) {
+      mask = mask or 4096L
+    } else if (!forced && live - weakBase <= capped - cappedBase + 64) {
+      // Nothing collected them: the lent cap bounds them (released above 4096, least recently
+      // wrapped first), the design's bound without a collection.
+      mask = mask or 4096L
+      note("O7 capped: live $weakBase -> $live, capped $cappedBase -> $capped after $frame frames")
+    } else {
+      note("O7 live $weakBase -> $live, capped $cappedBase -> $capped after $frame frames")
+    }
     twin().call("publish_notes", notes.joinToString(" | "))
     done = 1L
   }
@@ -454,6 +475,7 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
   /** A collection: `gc()` where the page has it (Chrome), else allocation (Firefox). */
   private fun churn() {
     if (twinLong("collect") == 0L) {
+      forced = false
       garbage = ByteArray(4 shl 20)
       var sum = 0
       repeat(8000) { sum += IntArray(4) { i -> i + it }.sum() }
@@ -492,13 +514,27 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     val lent = counter("liveLent")
     val pinned = counter("rcPinned")
     val byGc = counter("rcReleasedByGc") - gcBase
+    // Without a forced collection: each handle released, or live and pinned under the lent cap.
+    val states = o1Handles.map { twinLong("handle_state", it.toLong()) }
+    val capped = !forced && o1Handles.size == 3 && states.all { it == 0L || it == HANDLE_CAPPED }
     if (mask and 7L == 7L && gone && handlesReleased && lent <= lentBase && pinned <= pinnedBase && byGc >= 3) {
       mask = mask or 8L
+    } else if (mask and 7L == 7L && capped) {
+      mask = mask or 8L
+      note("O2 capped after $frame frames: states=$states")
     } else {
-      note("O2 after $frame frames: gone=$gone handles=$handlesReleased lent $lentBase->$lent pinned $pinnedBase->$pinned byGc=$byGc")
+      note("O2 after $frame frames: gone=$gone handles=$handlesReleased states=$states lent $lentBase->$lent pinned $pinnedBase->$pinned byGc=$byGc")
     }
-    if (mask and 256L == 256L && loadedReleased) mask = mask or 512L
-    else note("O6 released=$loadedReleased after $frame frames")
+    // A load is never capped: without a forced collection it must still be held for its collection.
+    val loadedState = if (loadedHandle == 0) 0L else twinLong("handle_state", loadedHandle.toLong())
+    if (mask and 256L == 256L && loadedReleased) {
+      mask = mask or 512L
+    } else if (mask and 256L == 256L && !forced && loadedState and HANDLE_HELD == HANDLE_HELD) {
+      mask = mask or 512L
+      note("O6 held for its collection after $frame frames: state=$loadedState")
+    } else {
+      note("O6 released=$loadedReleased state=$loadedState after $frame frames")
+    }
     costRows()
     weakrefRows(0)
   }
@@ -524,6 +560,12 @@ private const val SETTLE_FRAMES = 600
 
 /** O7: the frames that each make one `GD.weakref` nobody keeps. */
 private const val WEAKREF_FRAMES = 300
+
+/** OwnTwin.handle_state: live and a RefCounted Kotlin wrappers hold. */
+private const val HANDLE_HELD = 3L
+
+/** OwnTwin.handle_state: live, a RefCounted Kotlin wrappers hold, and under the lent cap. */
+private const val HANDLE_CAPPED = 7L
 
 /** O8: frames for the sweep to release a freed node's handle (32 a frame, so a few). */
 private const val SWEEP_FRAMES = 12

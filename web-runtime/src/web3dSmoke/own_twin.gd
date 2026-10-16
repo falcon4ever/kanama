@@ -82,9 +82,26 @@ func handle_live(handle: int) -> int:
 
 
 ## A full collection where the page offers one (Chrome with --expose-gc): 1 when it ran. Firefox has
-## none; the probe allocates instead.
+## none (the probe allocates instead, and a row accepts the capped bound when nothing was collected);
+## nor does a run whose bridge ignores collections (the driver's KANAMA_WEB_IGNORE_COLLECTIONS).
 func collect(_unused: int) -> int:
-	return int(JavaScriptBridge.eval("typeof globalThis.gc === 'function' ? (globalThis.gc(), 1) : 0"))
+	return int(JavaScriptBridge.eval(
+		"globalThis.KanamaWebBridge.ignoreWrapperCollections ? 0"
+		+ " : typeof globalThis.gc === 'function' ? (globalThis.gc(), 1) : 0"))
+
+
+## The bridge's view of `handle`: 1 live, | 2 a RefCounted held by Kotlin wrappers, | 4 under the
+## lent cap (released, least recently wrapped first, above 4096 pinned).
+func handle_state(handle: int) -> int:
+	return int(JavaScriptBridge.eval(
+		"(() => { const b = globalThis.KanamaWebBridge; const s = b.browserHandleSlot(%d);" % handle
+		+ " if (!s) return 0; return 1 | (s.refCounted ? 2 : 0)"
+		+ " | (b.lentRefCountedByAge.has(%d) ? 4 : 0); })()" % handle))
+
+
+## How many RefCounted handles are under the lent cap now.
+func capped_count(_unused: int) -> int:
+	return int(JavaScriptBridge.eval("globalThis.KanamaWebBridge.lentRefCountedByAge.size"))
 
 
 ## 1 while the object the row `name` emitted still lives.

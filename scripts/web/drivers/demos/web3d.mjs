@@ -537,7 +537,13 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   // The ownership rows (see OwnProbe): a RefCounted held only by Kotlin lives while a wrapper of it
   // is reachable, until close(); released once the browser collects the wrappers; a Node lives as
   // long as the node. The rows run over up to ~1700 frames (O2/O6/O7 wait for a collection: gc() on
-  // Chrome, allocation on Firefox).
+  // Chrome, allocation on Firefox, which may not collect: then they accept the lent cap's bound).
+  // KANAMA_WEB_IGNORE_COLLECTIONS=1 (local proof only) makes the bridge ignore every collection from
+  // here on, as a browser that never collects would: the rows must pass on the bound alone.
+  if (process.env.KANAMA_WEB_IGNORE_COLLECTIONS === "1") {
+    await evaluate("globalThis.KanamaWebBridge.ignoreWrapperCollections = true");
+    trace("own: the bridge ignores collections (KANAMA_WEB_IGNORE_COLLECTIONS)");
+  }
   await callMain("own_probe");
   let ownDone = await callMain("own_probe_done");
   const ownDeadline = Math.min(deadline, Date.now() + 90_000);
@@ -790,7 +796,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // answers 2, 30 and 120 frames after its dispatch, and the object lives.
     rcHeldByKotlinOutlives: ownDone === 1 && (ownMask & 7) === 7,
     // O2: once Kotlin drops them and the browser collects, the objects are gone and their handles
-    // released (lent handles and pinned RefCounted back to the baseline, rcReleasedByGc counted).
+    // released (lent handles and pinned RefCounted back to the baseline, rcReleasedByGc counted);
+    // where no collection can be forced (Firefox), each is released or pinned under the lent cap.
     rcReleasedWhenCollected: (ownMask & 8) === 8,
     // O3: close() on a RefCounted's one wrapper releases it at once; another wrapper of the same
     // object stays valid; a use of the closed wrapper throws "RefCounted handle is closed".
@@ -801,12 +808,13 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // O5: a RefCounted argument a script stored outlives that script.
     rcOutlivesItsReceiver: (ownMask & 128) === 128,
     // O6: a resource a script loaded into a companion outlives the script, and is released once
-    // dropped and collected.
+    // dropped and collected (where no collection can be forced: released, or held for it).
     rcResultOutlivesItsScript: (ownMask & 768) === 768,
     // O4: a RefCounted on the packed arm to a handler that never reads it is gone 4 frames later.
     rcNeverMaterializedIsReleased: (ownMask & 2048) === 2048,
-    // O7: GD.weakref results nobody keeps do not pile up once the browser collects, and close() on
-    // one releases its handle at once.
+    // O7: GD.weakref results nobody keeps do not pile up once the browser collects (where no
+    // collection can be forced: every one left is under the lent cap), and close() on one releases
+    // its handle at once.
     weakrefDoesNotGrow: (ownMask & 12288) === 12288,
     // O8: a looked-up node queueFree()d still answers (a typed call, a dispatch of it) to the end of
     // the frame, as on desktop; a frame later its use is the freed-instance error.

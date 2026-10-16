@@ -27,9 +27,11 @@
   // close() (desktop's rule). A lent one (a dispatch's argument) a handler never wrapped is held
   // for its dispatch plus these engine frames, the floor for an argument nobody materialized.
   const LENT_GRACE_FRAMES = 2;
-  // At most this many lent RefCounted handles stay pinned past their grace: above it the drain
-  // releases the oldest lends first. Kanama's own bound (C# has none): Firefox collects only under
-  // allocation pressure, so a quiet scene with mouse motion would otherwise pin every event.
+  // At most this many lent RefCounted handles (a dispatch's argument, or a Variant result: a utility,
+  // builtin or generic call's) stay pinned past their grace: above it the drain releases the least
+  // recently wrapped first. Kanama's own bound (C# has none): Firefox collects only under allocation
+  // pressure, so a quiet scene with mouse motion, or a per-frame `GD.weakref`, would otherwise pin
+  // every one. A typed load, construction or create() the script owns is never capped.
   const RC_LENT_CAP = 4096;
   // The bridge kinds of the handles that go with the script that made them (a tween runs its
   // callbacks through that script's proxy); every other non-RefCounted handle lives as long as its
@@ -331,9 +333,14 @@
     wrapperRegistryWorks: null,
     wrapperRegistry: null,
     // Handles whose last wrapper went (collected, or never made for a lent one): the drain at the
-    // next engine frame releases them. Lent RefCounted still pinned, oldest lend first (the cap).
+    // next engine frame releases them. Lent RefCounted still pinned (arguments and Variant results),
+    // least recently wrapped first (the cap).
     pendingUnheld: new Set(),
     lentRefCountedByAge: new Set(),
+    // Harness only (the web3d driver's KANAMA_WEB_IGNORE_COLLECTIONS): the bridge ignores the
+    // FinalizationRegistry's callbacks, as a browser that never collects would, so the rows prove
+    // the bounds that hold without a collection. Never set by a game.
+    ignoreWrapperCollections: false,
     // Engine frames the drain has seen (the frame scheduler's pump; a lend's grace counts them).
     ownershipFrame: 0,
     lastDrainRafTick: -1,
@@ -1460,6 +1467,8 @@
       slot.refCounted = false;
       slot.wrappers = 0;
       slot.lendFrame = 0;
+      // A Variant result's mint (mintGenericHandle): a RefCounted one joins the cap when marked.
+      slot.variantResult = false;
       slot.collected = false;
       slot.page = false;
       const handle = BROWSER_HANDLE_NAMESPACE | (slot.generation << 16) | slotIndex;
@@ -1537,6 +1546,12 @@
       slot.wrappers = 0;
       this.rcPinned += 1;
       this.maxRcPinned = Math.max(this.maxRcPinned, this.rcPinned);
+      if (slot.variantResult) {
+        // A utility, builtin or generic call's RefCounted result (a per-frame `GD.weakref`) is
+        // bounded like a lend: the cap releases the least recently wrapped above RC_LENT_CAP.
+        slot.lendFrame = this.ownershipFrame;
+        this.lentRefCountedByAge.add(handle);
+      }
       this.api.kanamaWebMarkRefCountedHandle(handle);
       return 1;
     },
@@ -1584,8 +1599,8 @@
       this.wrapperRegistryWorks = true;
       slot.wrappers += 1;
       this.wrapperRegistrations += 1;
-      // A lent one Kotlin wraps again is in use: the cap evicts the least recently wrapped first.
-      if (slot.lent && this.lentRefCountedByAge.delete(handle)) this.lentRefCountedByAge.add(handle);
+      // A capped one Kotlin wraps again is in use: the cap evicts the least recently wrapped first.
+      if (this.lentRefCountedByAge.delete(handle)) this.lentRefCountedByAge.add(handle);
       return 1;
     },
     /**
@@ -1594,6 +1609,7 @@
      * since a miss. The last one queues the handle for the next frame's drain.
      */
     onWrapperFinalized(handle) {
+      if (this.ignoreWrapperCollections) return;
       const slot = this.browserHandleSlot(handle);
       if (!slot?.refCounted || slot.wrappers <= 0) return;
       slot.wrappers -= 1;
@@ -1658,7 +1674,7 @@
     /**
      * Once per engine frame (inside a Godot callback): release every
      * RefCounted handle whose last hold went (a lent one only once its grace is over), then, above
-     * RC_LENT_CAP pinned lends, the oldest lends. A capped one Kotlin still holds is released as
+     * RC_LENT_CAP pinned lends (arguments and Variant results), the least recently wrapped. A capped one Kotlin still holds is released as
      * freed: its later use is the freed-instance error.
      */
     drainUnheldHandles() {
@@ -2054,8 +2070,9 @@
       // script-backed nor already tracked. Mint a tracked browser handle of the kind the
       // GDScript arm classified (node / resource / tween / object), routed through the calling
       // script: a RefCounted is released by `WebGenericCallResult.close` (releaseHandleNow) or its
-      // Kotlin wrappers' end (the proxy marks it), a tween by its close or with the calling script,
-      // and a Node or plain Object when the engine frees it (its close does nothing).
+      // Kotlin wrappers' end (the proxy marks it; the lent cap bounds it: variantResult), a tween
+      // by its close or with the calling script, and a Node or plain Object when the engine frees it
+      // (its close does nothing).
       if (kindTag === "node") {
         const handle = this.allocateBrowserHandle("Node", ownerHandle);
         this.api.kanamaWebAdoptNodeHandle(handle);
@@ -2063,11 +2080,13 @@
       }
       if (kindTag === "resource") {
         const handle = this.allocateBrowserHandle("Resource", ownerHandle);
+        this.browserHandleSlot(handle).variantResult = true;
         this.api.kanamaWebAdoptResourceHandle(handle);
         return handle;
       }
       // A tween goes with the calling script (OWNER_BOUND_KINDS); Kotlin knows it as an OBJECT.
       const handle = this.allocateBrowserHandle(kindTag === "tween" ? "Tween" : "Object", ownerHandle);
+      if (kindTag !== "tween") this.browserHandleSlot(handle).variantResult = true;
       this.api.kanamaWebAdoptObjectHandle(handle);
       return handle;
     },

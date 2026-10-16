@@ -527,10 +527,14 @@ too (`holdRefCounted`): `sprite.texture` answers after the code that set it drop
 A lent RefCounted the handler never wrapped (a packed argument nobody read) has no hold from its
 lend, so the drain releases it after its dispatch and the next 2 engine frames (`LENT_GRACE_FRAMES`
 in the bridge). Above `RC_LENT_CAP` (4096) lent RefCounted handles pinned past that floor, the drain
-releases the oldest lends first; a use of one Kotlin still holds is the freed-instance error. The
+releases the least recently wrapped first; a use of one Kotlin still holds is the freed-instance
+error. A RefCounted a Variant result hands over (a utility, builtin or generic call's: the bridge's
+`mintGenericHandle`, so a per-frame `GD.weakref`) is under the same cap from its mint; a load, a
+construction or a typed call's result the script owns never is. The
 cap is Kanama's own (C#'s binding has none): Chrome collects within about a second under game load
 and at once when the page idles, but Firefox collects only under allocation pressure, so a quiet
-scene with mouse motion would otherwise pin every event until its nursery fills. A browser whose
+scene with mouse motion would otherwise pin every event until its nursery fills (CI's Linux Firefox
+collected none of 300 `GD.weakref` results in 600 frames of 4 MB allocation). A browser whose
 `FinalizationRegistry` refuses a Kotlin/Wasm object (not seen in Chrome or Firefox; Safari is not
 measured) makes `registerWrapper` answer 0 after one console warning: a RefCounted only Kotlin keeps
 then goes with its script, a lent one after its 2 frames (the protocol-36 rule, loud). In that mode
@@ -557,7 +561,12 @@ The web3d `LentProbe` rows (`lentStoredArgumentStaysValid`, `lentArgumentIdentit
 `rcNeverMaterializedIsReleased`, `weakrefDoesNotGrow`, `lookupSurvivesQueueFree`,
 `rayHitColliderIsLent`, `nodeOutlivesItsReceiver`, `constructorRollbackAfterFlush`,
 `uint32Masks`, `genericCloseKeepsSharedNode`, `handleRingBounded`, `rcDispatchCost`; Chrome runs with `--js-flags=--expose-gc` so the collection rows call `gc()`,
-Firefox allocates 4 MB a frame instead) pin all of it.
+Firefox allocates 4 MB a frame instead) pin all of it. A collection row never depends on the browser
+choosing to collect: where `gc()` forces one (Chrome) the release must happen; where nothing can force
+one (Firefox) the row also passes on the bound that holds without it (O2 and O7: every handle left is
+pinned under the lent cap; O6, a load, which is never capped: still held for its collection). The
+driver's `KANAMA_WEB_IGNORE_COLLECTIONS=1` makes the bridge ignore every collection
+(`ignoreWrapperCollections`, harness only) to prove those bounds locally on either engine.
 `lentDispatchCost` holds a seen plain Node argument at 0 lending JS calls per dispatch and a Node3D
 at 1 (the old per-dispatch lend cost 2), `rcDispatchCost` a seen `InputEvent` at 1 (its wrapper's
 registration).

@@ -8,6 +8,8 @@
 //   (`sprite.texture = a; sprite.texture = b` dropped `a`). Chrome and Firefox both accept the wrappers, so
 //   no browser run is in this mode.
 // - The lent cap evicts the least recently wrapped lend first, not the first minted.
+// - A Variant result's RefCounted (a utility, builtin or generic call's: a per-frame `GD.weakref`) is
+//   under the same cap; a RefCounted the script made through a typed call (a load, a create()) is not.
 //
 // The bridge is loaded unmodified into a vm context with the browser pieces it touches stubbed (as
 // bridge_simtime_selftest.mjs does); the FinalizationRegistry stub refuses a target marked `refuse`.
@@ -61,6 +63,7 @@ async function loadBridge() {
     kanamaWebProtocolVersion: () => protocolVersion,
     kanamaWebMarkRefCountedHandle: () => 1,
     kanamaWebAdoptObjectHandle: () => 1,
+    kanamaWebAdoptResourceHandle: () => 1,
     kanamaWebIsNodeHandle: () => 0,
     kanamaWebDiscardBrowserHandle: () => 1,
     kanamaWebDiscardFreedHandle: () => 1,
@@ -152,6 +155,26 @@ const expect = (ok, message) => {
   expect(bridge.isBrowserHandleLive(lent[0]) === 1, "cap: evicted the first minted lend although it was wrapped most recently");
   expect(bridge.isBrowserHandleLive(lent[1]) === 0, "cap: the least recently wrapped lend must go first");
 }
+{
+  // A Variant result is capped like a lend: RC_LENT_CAP + 1 wrapped results after one typed
+  // create() the script owns (made first, so the oldest). The cap evicts the first result, never
+  // the owned one.
+  const { bridge, frames, madeRefCounted, live } = await loadBridge();
+  const owned = madeRefCounted();
+  bridge.registerWrapper({}, owned);
+  const results = [];
+  for (let i = 0; i <= RC_LENT_CAP; i += 1) {
+    const handle = bridge.mintGenericHandle(1, i % 2 === 0 ? "object" : "resource");
+    bridge.markRefCounted(handle);
+    bridge.registerWrapper({}, handle);
+    results.push(handle);
+  }
+  frames(LENT_GRACE_FRAMES + 2);
+  expect(bridge.rcReleasedByCap === 1, `variant cap: expected 1 Variant result released by the cap, got ${bridge.rcReleasedByCap}`);
+  expect(!live(results[0]), "variant cap: a Variant result's RefCounted is not under the lent cap");
+  expect(live(results[1]), "variant cap: the cap released more than the oldest Variant result");
+  expect(live(owned), "variant cap: the cap released a typed create() the script owns");
+}
 
 if (failures.length > 0) {
   console.error("bridge_rc_ownership_selftest FAIL:");
@@ -159,5 +182,5 @@ if (failures.length > 0) {
   process.exit(1);
 }
 console.log(
-  "bridge_rc_ownership_selftest PASS: without a working FinalizationRegistry a snapshot hold or a dropped temporary releases nothing; with one they count; the lent cap evicts the least recently wrapped lend",
+  "bridge_rc_ownership_selftest PASS: without a working FinalizationRegistry a snapshot hold or a dropped temporary releases nothing; with one they count; the lent cap evicts the least recently wrapped lend, and bounds Variant results but never a typed create()",
 );
