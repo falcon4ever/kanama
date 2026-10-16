@@ -72,7 +72,7 @@ see the Backend-dispatch codegen section below.
 
 `web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js` is the seam between
 the Kanama Wasm module and Godot's Web export. It carries a
-`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 37); startup rejects a mismatch <!-- kanama-claim: protocol -->
+`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 38); startup rejects a mismatch <!-- kanama-claim: protocol -->
 between the bridge constant and the value the Wasm backend reports, so a bridge
 and a backend built from different revisions fail loudly instead of drifting.
 
@@ -324,10 +324,11 @@ simulated second (`maxBuiltinCallsPerSimSecond`) and not against the per-tick de
 
 **Objects in results keep their handles** (review B2). An object inside a builtin, utility or
 generic-call result (`GD.instanceFromId`, an Array of nodes, a Callable's target) resolves like a
-generic call's object return: its script handle, else the handle already tracking it (retained for
-the calling script, `retainSharedHandle`; a RefCounted's is held by its Kotlin wrappers instead),
-else a handle of its kind minted for the calling script and released with it (a RefCounted's when
-its wrappers go, see "RefCounted handles" below). A repeated query reuses one handle and keeps
+generic call's object return: its script handle, else the handle already tracking it, else a handle
+of its kind minted for it (a Node's or plain Object's lives as long as the object, a RefCounted's
+while its wrappers hold it, see "RefCounted handles" below; a tween's goes with the calling
+script). A `GD.weakref` result is a RefCounted like any other, so a per-frame `weakref` does not
+grow the table past what one collection holds (`weakrefDoesNotGrow`). A repeated query reuses one handle and keeps
 identity (`call("get_children")[i] == getChild(i)`). A lambda connection's guard is held weakly, so
 a `getConnections()` answer does not keep it (or its Kotlin callback) alive.
 
@@ -406,28 +407,37 @@ proving it *resumed*, asserted by the browser driver.
 
 ### Lifecycle ownership
 
-Handles, callbacks, connections, tweens/tweeners, scheduler continuations, audio
-players, particles, resource handles, snapshots, queued commands, and generation
-tables are owned per script/owner and released at owner, direct, and full
-teardown. The validated runs return every owned registry to baseline after both
+Callbacks, connections, tweens/tweeners, scheduler continuations, snapshots,
+queued commands, and generation tables are owned per script/owner and released
+at owner, direct, and full teardown; browser handles are routed per script but
+live as long as what they name (below), and full teardown releases them all. The validated runs return every owned registry to baseline after both
 gameplay and full scene teardown; stale handle use after teardown fails.
 
-**A handle several scripts hold is counted, not duplicated.** When a lookup (`getNode` /
-`requireAs`, `getChild`, an indexed hit, a property object read, a generic call's object return)
-finds the object already tracked, the GDScript arm answers with the *existing* handle, and the
-bridge records the asking script as one more holder (`retainSharedHandle`; per handle a set of
-holders, so a script holds it once however often it looks it up; a RefCounted handle has none, its
-Kotlin wrappers hold it). The asking script is the holder,
-not the instantiator a spawned scripted child routes through (`handleOwners` names that routing
-owner). The handle is released with its last holder; freeing the script that routed it re-routes it
-to a remaining holder, so the others keep calling it. Retiring a handle also erases its entry in the
-proxies' shared `_kanama_object_handles` dictionary (through any installed proxy's release
-callback), so a later lookup of the same object mints a fresh handle instead of finding a dead one.
-A node freed from Kotlin (`queueFree`) through a looked-up handle stays a script error for every
-holder (`IllegalStateException: Stale Kanama Web browser handle=...`, catchable in the script): the
-handle is released when the free is queued, so it is stale at once, also for the rest of that frame
-(a dispatch of the same node later in the frame hands Kotlin that released handle). A lent handle
-(below) does not have this gap.
+**A handle lives as long as the thing it names, never with the script that obtained it** (protocol
+38). A Node or plain Object handle, however it was minted (a lookup, `getChild`, an indexed hit, a
+property object read, a call's object result, a construction, an instantiated scene, a dispatch
+argument, a ray's collider), lives as long as its object; a RefCounted one while a Kotlin wrapper of
+it is reachable (below); only a tween's or tweener's goes with the script that made it (the bridge's
+`OWNER_BOUND_KINDS`, `mintGenericHandle`'s `tween` tag: its proxy runs the tween's callbacks). The
+bridge's `handleOwners` names a handle's routing owner (the proxy whose callbacks run its calls),
+not who keeps it: when that script goes, `releaseBrowserHandlesOwnedBy` re-routes every handle
+`outlivesItsRouter` keeps to another installed proxy, so a value another script stored, or a
+companion holds (`nodeOutlivesItsReceiver`), stays valid; the last proxy releases everything. The
+SceneTree and the root Window live as long as the page: `_kanama_track` marks their one handle each
+(`markPageHandle`; an orphan Window is no page handle, only the tree's root is), which the bridge
+counts in `pageHandles`, apart from the live handles a scene's teardown returns to zero (an
+autoload's proxy keeps routing them after the scene is gone). Every Web run's envelope fails when
+`pageHandles` passes 2 (`pageHandlesAtMostTwo`). The generic tier's `WebGenericCallResult.close()`
+releases a RefCounted's or a tween's minted handle; on a Node's or plain Object's, which another
+script may hold, it does nothing (`genericCloseKeepsSharedNode`). A
+retired handle's entry in the proxies' shared `_kanama_object_handles` dictionary is erased
+(through any installed proxy's release callback), so a later lookup of the same object mints a fresh
+handle instead of finding a dead one. The calls that answer a live object (a collider, `getParent`,
+`getViewport`, `getCamera3d`, `getTree`, `getRoot`) answer the handle it already has, so a
+per-frame call does not pile up handles. Before protocol 38 a lookup's handle was held by the
+scripts that looked it up (counted per holder) and released with the last of them, and released at
+once by Kotlin's `queueFree()`, so a node a companion kept, or one used later in the frame it was
+queue-freed in, was a stale handle.
 
 **One handle per object: the instance-id index.** Every browser handle the proxies enter into the
 shared `_kanama_object_handles` for an object goes through `_kanama_track` (and leaves through
@@ -440,31 +450,29 @@ argument find the handle already tracking their object with one dictionary looku
 
 **Dispatch arguments are lent for the object's lifetime.** A signal argument (one-object and packed
 arms), `_input` / `_unhandled_input`'s event and a registered method's object arguments cross as
-`_kanama_lend(value)`: the handle already tracking the object, else one `bridge.lendHandle` mints
-(NODE kind for a Node, so its snapshot and `queueFree` work; OBJECT otherwise). The handle is not
-released when the handler returns, and lending adds no holder: it lives until the engine frees the
-object, or the last Kanama script goes away (a RefCounted's while Kotlin wraps it, below). A lookup's handle a dispatch lends is taken over the
-same way (`flags 2`: its holders no longer matter). Its owner is only the proxy its calls route
-through: `releaseBrowserHandlesOwnedBy` re-routes a lent handle to another installed proxy, so a
-copy another script stored outlives the script that received it; the last proxy releases it. A
-Node2D, Node3D or Control argument carries its transform snapshot, refreshed on every dispatch in the
+`_kanama_lend(value)`: the handle already tracking the object (no JS call), else one
+`bridge.lendHandle` mints (NODE kind for a Node, so its snapshot and `queueFree` work; OBJECT
+otherwise). The handle is not released when the handler returns: like every Node or plain Object
+handle it lives until the engine frees the object, or the last Kanama script goes away (a
+RefCounted's while Kotlin wraps it, below). `liveLent` / `lentMints` count the handles a dispatch
+minted. A Node2D, Node3D or Control argument carries its transform snapshot, refreshed on every dispatch in the
 same call, so `body.position` reads the current value inside the handler (a stored one read later
 reads its last refresh, the rule for every non-self node).
 
 *Engine frees: the sweep.* The engine frees objects without telling Kotlin, so a sweep runs once
-per process frame: `_kanama_sweep_frame` is connected to `SceneTree.process_frame`
-(`KanamaWebHandles.sweep_hook`), which fires every frame even while the tree is paused, a script
-called `set_process(false)` or only non-Node scripts exist. The proxy that lends connects it; Godot
-drops the connection with that proxy, and the next lend or any processing proxy's `_process`
-connects it again (one size check per proxy while nothing is lent). It checks up to 32 lent handles
-from a ring cursor (`KanamaWebHandles.lent_ring`); a handle whose object is gone
+per process frame from `KanamaWebHandles.drain_frame`, the shared class's `SceneTree.process_frame`
+hook (made by the first track, bound to the class, not a proxy), which fires every frame even while
+the tree is paused, a script called `set_process(false)` or only non-Node scripts exist. Every Node
+or plain Object handle `_kanama_track` enters joins its ring (`KanamaWebHandles.lent`, `lent_ring`;
+an object's instance id is in the ring once, `ring_ids`, however many handles it had: the web3d row
+`handleRingBounded`). It checks up to 32 handles from a ring cursor; a handle whose object is gone
 (`is_instance_id_valid`, or a dead weak entry) is untracked and released in one
 `bridge.releaseFreedHandles` call, which drops the slot's per-kind state too (an adopted
 `AudioStreamPlayer`'s audio state, a `Resource`'s path) as an owner teardown does. So K lent handles
 whose objects die at once are all released within ⌈K / 32⌉ frames (`lentBurstDrains`: 256 within 10).
-Each new lend also checks the lend before it and one ring entry, which keeps create / hand over /
+Each new handle also checks the one before it and one ring entry, which keeps create / hand over /
 free churn bounded (the web3d row `lentHandlesBounded`: 500 rounds stay within 34 handles of the
-baseline). Nothing else retires a lent handle: a queued command whose target the engine freed is
+baseline). Nothing else retires such a handle: a queued command whose target the engine freed is
 skipped and reported (see the freed-target ladder) but leaves the handle to the sweep. A released
 handle is remembered as freed (the bridge's `freedHandles`, Kotlin's `freedBrowserHandles`, the last
 4096 each), so its later use throws "Invalid access to previously freed instance", desktop's error.
@@ -476,11 +484,11 @@ makes the same one, so a call by name reads the same. `webFreedAware` does not t
 bridge no longer owns is a bookkeeping disagreement and stays a fatal page error;
 `lentLongFreedHandleIsIllegalState` pins the script-visible side.
 
-*Kotlin `queueFree()` of a lent node.* The node lives to the end of the frame, as on desktop, so the
-lent handle stays: the bridge keeps its slot (marked `freeQueued`) and Kotlin its registration
-(`setWebLentHandle` / `kanamaWebSetLentHandle` mark lent handles on both sides). A second dispatch of
-the node in the same frame reads it; once the engine freed it the sweep releases the handle as freed
-and a use is the freed-instance error (`lentKotlinQueueFree`, `lentQueueFreedNodeLivesToFrameEnd`).
+*Kotlin `queueFree()`.* The node lives to the end of the frame, as on desktop, so its handle stays,
+however it was obtained: the bridge keeps its slot (marked `freeQueued`) and Kotlin its
+registration. A typed call or a second dispatch of the node in the same frame reads it; once the
+engine freed it the sweep releases the handle as freed and a use is the freed-instance error
+(`lentKotlinQueueFree`, `lentQueueFreedNodeLivesToFrameEnd`, `lookupSurvivesQueueFree`).
 
 *RefCounted handles: held by Kotlin wrappers* (protocol 37, closes
 [#332](https://github.com/falcon4ever/kanama/issues/332)). A browser handle that names a
@@ -519,10 +527,14 @@ too (`holdRefCounted`): `sprite.texture` answers after the code that set it drop
 A lent RefCounted the handler never wrapped (a packed argument nobody read) has no hold from its
 lend, so the drain releases it after its dispatch and the next 2 engine frames (`LENT_GRACE_FRAMES`
 in the bridge). Above `RC_LENT_CAP` (4096) lent RefCounted handles pinned past that floor, the drain
-releases the oldest lends first; a use of one Kotlin still holds is the freed-instance error. The
+releases the least recently wrapped first; a use of one Kotlin still holds is the freed-instance
+error. A RefCounted a Variant result hands over (a utility, builtin or generic call's: the bridge's
+`mintGenericHandle`, so a per-frame `GD.weakref`) is under the same cap from its mint; a load, a
+construction or a typed call's result the script owns never is. The
 cap is Kanama's own (C#'s binding has none): Chrome collects within about a second under game load
 and at once when the page idles, but Firefox collects only under allocation pressure, so a quiet
-scene with mouse motion would otherwise pin every event until its nursery fills. A browser whose
+scene with mouse motion would otherwise pin every event until its nursery fills (CI's Linux Firefox
+collected none of 300 `GD.weakref` results in 600 frames of 4 MB allocation). A browser whose
 `FinalizationRegistry` refuses a Kotlin/Wasm object (not seen in Chrome or Firefox; Safari is not
 measured) makes `registerWrapper` answer 0 after one console warning: a RefCounted only Kotlin keeps
 then goes with its script, a lent one after its 2 frames (the protocol-36 rule, loud). In that mode
@@ -543,10 +555,18 @@ The web3d `LentProbe` rows (`lentStoredArgumentStaysValid`, `lentArgumentIdentit
 `lentHandlesBounded`, `lentRefCountedGracePeriod`, `lentRefCountedExpiry`, `lentNodeSnapshotReads`,
 `lentKotlinQueueFree`, `lentDispatchCost`, `lentQueueFreedNodeLivesToFrameEnd`,
 `lentLongFreedHandleIsIllegalState`, `lentRefCountedGraceRenewed`, `lentBurstDrains`,
-`lentSweepRunsWhilePaused`) and `OwnProbe` rows (`rcHeldByKotlinOutlives`,
-`rcReleasedWhenCollected`, `rcCloseReleasesNow`, `rcCloseAfterQueuedSet`, `rcOutlivesItsReceiver`,
-`rcResultOutlivesItsScript`, `rcDispatchCost`; Chrome runs with `--js-flags=--expose-gc` so the
-collection rows call `gc()`, Firefox allocates 4 MB a frame instead) pin all of it.
+`lentSweepRunsWhilePaused`, `lentSweepOutlivesItsMinter`, `createdHandleSweptWhilePaused`) and
+`OwnProbe` rows (`rcHeldByKotlinOutlives`, `rcReleasedWhenCollected`, `rcCloseReleasesNow`,
+`rcCloseAfterQueuedSet`, `rcOutlivesItsReceiver`, `rcResultOutlivesItsScript`,
+`rcNeverMaterializedIsReleased`, `weakrefDoesNotGrow`, `lookupSurvivesQueueFree`,
+`rayHitColliderIsLent`, `nodeOutlivesItsReceiver`, `constructorRollbackAfterFlush`,
+`uint32Masks`, `genericCloseKeepsSharedNode`, `handleRingBounded`, `rcDispatchCost`; Chrome runs with `--js-flags=--expose-gc` so the collection rows call `gc()`,
+Firefox allocates 4 MB a frame instead) pin all of it. A collection row never depends on the browser
+choosing to collect: where `gc()` forces one (Chrome) the release must happen; where nothing can force
+one (Firefox) the row also passes on the bound that holds without it (O2 and O7: every handle left is
+pinned under the lent cap; O6, a load, which is never capped: still held for its collection). The
+driver's `KANAMA_WEB_IGNORE_COLLECTIONS=1` makes the bridge ignore every collection
+(`ignoreWrapperCollections`, harness only) to prove those bounds locally on either engine.
 `lentDispatchCost` holds a seen plain Node argument at 0 lending JS calls per dispatch and a Node3D
 at 1 (the old per-dispatch lend cost 2), `rcDispatchCost` a seen `InputEvent` at 1 (its wrapper's
 registration).
@@ -573,23 +593,27 @@ as desktop and iOS) and hands it to the bridge's `reportScriptError`, which the 
 throws an exception with a marker prefix that `invoke` recognises, so the callback returns its
 fallback instead of ending the page (a bridge or protocol fault still does). Coroutines
 (`CoroutineExceptionHandler`) and frame-scheduler tasks (a per-task catch) report the same way, and a
-script constructor that throws is reported, its half-built script torn down. What Wasm provides: the
+script constructor that throws is reported, its half-built script torn down and the commands its
+initializers queued dropped (`kanamaWebConstruct` rolls the queue back to its checkpoint; if a
+`close()` or an immediate call applied the queue meanwhile, only what was queued since goes:
+`constructorRollbackAfterFlush`). What Wasm provides: the
 trace is the JS `Error.stack` -- `kotlin.createJsError` then anonymous `wasm-function[n]:0xoffset`
 frames; the production build has no name section and no source map, so no game frame can be named
 and the report's function is the containment site (`Script.callback`, `<signal handler>`,
 `<coroutine>`). A build that keeps names is parsed (`WebScriptErrors.parseFrame`) and picks the
 game frame. Reported errors are counted in `callbackErrors` as well (and in `scriptErrors`), so a
-demo that throws still fails its zero-errors check; the web3d driver expects exactly its seven
-deliberate ones (`scriptErrors === 7`, four from `ErrorProbe`, three thrown at scene load by the
-`Throwing*` scripts), subtracts only those from `callbackErrors`, and lists them as
+demo that throws still fails its zero-errors check; the web3d driver expects exactly its eight
+deliberate ones (four from `ErrorProbe`, three thrown at scene load by the `Throwing*` scripts, and
+`OwnProbe`'s `ThrowingCloser` constructor) plus its four freed-target setter reports, subtracts only those from `callbackErrors`, and lists them as
 `expectedConsoleErrors`, which the envelope verifies reach the console. A call whose script threw
 answers the bridge's `scriptErrorResult` sentinel instead of a packed value, which the proxy turns
 into the declared type's default (Variant returns: `null`) before any parse. Red run for the
 boundary: `KANAMA_WEB3D_INJECT_RUNTIME_FAULT=1` dispatches a callback id the registry never issued
 and expects the page to end (`runtimeFaultIsFatal`).
 
-**A freed object is a freed-object error.** A browser handle's object the engine frees (not
-Kotlin's `queueFree`, which retires the Kotlin-side handle at once) leaves the handle live in Kotlin.
+**A freed object is a freed-object error.** A browser handle's object the engine frees leaves the
+handle live in Kotlin until the sweep releases it as freed (after that, `requireLive` throws before
+crossing, as desktop's setter does).
 When a bridge callback then cannot publish its result, `unpublishedResult` asks the proxy
 (`FREED_CHECK_OPCODE` 1004) whether the object is gone and throws "Invalid access to previously freed
 instance"; `webFreedAware` turns that `JsException` into the `IllegalStateException` desktop throws,

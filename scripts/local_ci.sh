@@ -793,7 +793,7 @@ if [[ $skip_web -eq 0 ]]; then
 
     # The bridge's RefCounted holds where no browser run reaches them: without a working
     # FinalizationRegistry a snapshot hold or a dropped temporary releases nothing, and the lent cap
-    # evicts the least recently wrapped lend.
+    # evicts the least recently wrapped lend and bounds a Variant result, never a typed create().
     stage "web bridge RefCounted-hold self-test"
     node "$ROOT_DIR/scripts/web/bridge_rc_ownership_selftest.mjs"
 

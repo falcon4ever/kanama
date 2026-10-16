@@ -467,7 +467,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     freedProbeAfter = await readFreedAfter();
   }
   trace(`freedProbeAfter: ${freedProbeAfter}`);
-  // Batch of two (Main.freed_batch_probe): a setter on the freed node, then a command on a live one,
+  // Batch of two (Main.freed_batch_probe): a setter on a node the engine freed that frame, then a
+  // command on a live one,
   // in one batch. The freed one is skipped and reported; the live command must still apply, and a
   // live `queueFree` after the skip must release its bridge slot (live handles back to where they
   // were; the RefCounted ones are left out, a collection of their wrappers may release some meanwhile).
@@ -533,13 +534,19 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   for (let index = 0; index < 4; index += 1) lentCost.push(await callMain("lent_cost", index));
   trace(`lent: done=${lentDone} maskA=${lentA} maskB=${lentB} maskC=${lentC} cost=${lentCost.join(",")}`);
   trace(`lent notes: ${await evaluate("String(globalThis.KanamaWebLentNotes ?? '')")}`);
-  // The RefCounted-ownership rows (see OwnProbe): a RefCounted held only by Kotlin lives while a
-  // wrapper of it is reachable, until close(); released once the browser collects the wrappers. The
-  // rows run over up to ~750 frames (O2/O6 wait for a collection: gc() on Chrome, allocation on
-  // Firefox).
+  // The ownership rows (see OwnProbe): a RefCounted held only by Kotlin lives while a wrapper of it
+  // is reachable, until close(); released once the browser collects the wrappers; a Node lives as
+  // long as the node. The rows run over up to ~1700 frames (O2/O6/O7 wait for a collection: gc() on
+  // Chrome, allocation on Firefox, which may not collect: then they accept the lent cap's bound).
+  // KANAMA_WEB_IGNORE_COLLECTIONS=1 (local proof only) makes the bridge ignore every collection from
+  // here on, as a browser that never collects would: the rows must pass on the bound alone.
+  if (process.env.KANAMA_WEB_IGNORE_COLLECTIONS === "1") {
+    await evaluate("globalThis.KanamaWebBridge.ignoreWrapperCollections = true");
+    trace("own: the bridge ignores collections (KANAMA_WEB_IGNORE_COLLECTIONS)");
+  }
   await callMain("own_probe");
   let ownDone = await callMain("own_probe_done");
-  const ownDeadline = Math.min(deadline, Date.now() + 60_000);
+  const ownDeadline = Math.min(deadline, Date.now() + 90_000);
   while (ownDone !== 1 && Date.now() < ownDeadline) {
     await delay(150);
     ownDone = await callMain("own_probe_done");
@@ -561,9 +568,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   }
   trace(`leakProbeAfter: ${leakProbeAfter}`);
 
-  // The seven deliberate script errors have landed: three at scene load (constructor, property
-  // setter, _ready), the rest when ErrorProbe's calls run (the process and coroutine ones a frame or
-  // two after the arm); and the frame loop went on past them.
+  // The eight deliberate script errors have landed: three at scene load (constructor, property
+  // setter, _ready), OwnProbe's ThrowingCloser constructor, the rest when ErrorProbe's calls run (the
+  // process and coroutine ones a frame or two after the arm); and the frame loop went on past them.
   // Kind -> the containment site the report's `at:` line names (a Wasm trace has no Kotlin frame).
   const expectedSites = {
     function: "ErrorProbe.error_throw",
@@ -573,14 +580,16 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     constructor: "ThrowingConstructor.<init>",
     property: "ThrowingProperty.gate",
     ready: "ThrowingReady._ready",
+    closer: "ThrowingCloser.<init>",
   };
   const expectedScriptErrors = Object.keys(expectedSites);
-  // ...plus the queued setters on a node the engine freed: FreedHolder.freed_setter (one), the
-  // two batches of FreedHolder.freed_batch (one each) and FreedHolder.freed_script_late's setter on
-  // a script-backed node freed in the same batch (one), and LentProbe's setter on a lent node the
-  // engine freed in the same frame (one, L5). Each is reported once as a script error naming the
-  // freed instance, and none is counted among the deliberate throws.
-  const freedSetterReports = 5;
+  // ...plus the queued setters on a node the engine freed before the sweep saw it: the two batches
+  // of FreedHolder.freed_batch (one each), FreedHolder.freed_script_late's setter on a script-backed
+  // node freed in the same batch (one), and LentProbe's setter on a lent node the engine freed in the
+  // same frame (one, L5). Each is reported once as a script error naming the freed instance, and
+  // none is counted among the deliberate throws. (FreedHolder.freed_setter's node was swept, so its
+  // setter throws at the call, as on desktop: freedProbeAfter bit 256.)
+  const freedSetterReports = 4;
   const expectedReportTotal = expectedScriptErrors.length + freedSetterReports;
   let errorSnap = null;
   const errorDeadline = Math.min(deadline, Date.now() + 10_000);
@@ -777,17 +786,18 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // L17: once the engine frees a taken-over AudioStreamPlayer, its release drops the bridge's
     // audio state, and a use throws the freed-instance error.
     lentAdoptedReleaseDropsKindState: (lentC & 64) === 64,
-    // L18: the proxy that made the sweep's connection (the first to lend) is freed; a node lent
-    // before is freed later and its handle is still released (a processing proxy connects again).
-    lentSweepSurvivesItsHookHolder: (lentC & 128) === 128,
-    // L19: a takeover (not a mint) of a handle a script created connects the sweep when nothing
-    // else does: the tree is paused, and the freed node's handle is released while paused.
-    lentTakeoverConnectsSweep: (lentC & 256) === 256,
+    // L18: the proxy that lent a node is freed; the node is freed later and its handle is still
+    // released (the sweep is the shared class's frame hook, no proxy's).
+    lentSweepOutlivesItsMinter: (lentC & 128) === 128,
+    // L19: a handle a script created lives as long as its node: the tree is paused (no proxy
+    // processes), the node freed, and its handle is released while paused.
+    createdHandleSweptWhilePaused: (lentC & 256) === 256,
     // O1: a RefCounted only Kotlin keeps (a signal argument on either arm, an input event) still
     // answers 2, 30 and 120 frames after its dispatch, and the object lives.
     rcHeldByKotlinOutlives: ownDone === 1 && (ownMask & 7) === 7,
     // O2: once Kotlin drops them and the browser collects, the objects are gone and their handles
-    // released (lent handles and pinned RefCounted back to the baseline, rcReleasedByGc counted).
+    // released (lent handles and pinned RefCounted back to the baseline, rcReleasedByGc counted);
+    // where no collection can be forced (Firefox), each is released or pinned under the lent cap.
     rcReleasedWhenCollected: (ownMask & 8) === 8,
     // O3: close() on a RefCounted's one wrapper releases it at once; another wrapper of the same
     // object stays valid; a use of the closed wrapper throws "RefCounted handle is closed".
@@ -798,8 +808,32 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // O5: a RefCounted argument a script stored outlives that script.
     rcOutlivesItsReceiver: (ownMask & 128) === 128,
     // O6: a resource a script loaded into a companion outlives the script, and is released once
-    // dropped and collected.
+    // dropped and collected (where no collection can be forced: released, or held for it).
     rcResultOutlivesItsScript: (ownMask & 768) === 768,
+    // O4: a RefCounted on the packed arm to a handler that never reads it is gone 4 frames later.
+    rcNeverMaterializedIsReleased: (ownMask & 2048) === 2048,
+    // O7: GD.weakref results nobody keeps do not pile up once the browser collects (where no
+    // collection can be forced: every one left is under the lent cap), and close() on one releases
+    // its handle at once.
+    weakrefDoesNotGrow: (ownMask & 12288) === 12288,
+    // O8: a looked-up node queueFree()d still answers (a typed call, a dispatch of it) to the end of
+    // the frame, as on desktop; a frame later its use is the freed-instance error.
+    lookupSurvivesQueueFree: (ownMask & 49152) === 49152,
+    // O9: a ray hitting a body no script tracks answers that body (== its lookup).
+    rayHitColliderIsLent: (ownMask & 65536) === 65536,
+    // O11: a node a script looked up, and one a top-level initializer made while it ran, both kept
+    // in a companion, outlive that script.
+    nodeOutlivesItsReceiver: (ownMask & 393216) === 393216,
+    // A call queued before a constructor that applies the queue and then throws runs once: the
+    // failed construction does not hand it back to the queue.
+    constructorRollbackAfterFlush: (ownMask & 524288) === 524288,
+    // A ray query with the default mask (0xffffffff) hits; collisionLayer / collisionMask =
+    // 0xffffffff and a render layers value with bit 31 reach the engine whole (uint32, as desktop).
+    uint32Masks: (ownMask & 3145728) === 3145728,
+    // A script closing a generic result for a node leaves another script's handle to it working.
+    genericCloseKeepsSharedNode: (ownMask & 4194304) === 4194304,
+    // 300 frames of a generic call for one node, closed when minted: the sweep's ring stays bounded.
+    handleRingBounded: (ownMask & 8388608) === 8388608,
     // O10: handing over an already-seen InputEvent costs at most one JS call (the wrapper's
     // registration); a plain Node still none.
     rcDispatchCost: ownCost[0] >= 0 && ownCost[0] <= 1010 && ownCost[1] >= 0 && ownCost[1] <= 10,
@@ -899,10 +933,11 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
       generic.childKind === "tracked" &&
       generic.childHandle > 0 &&
       generic.childHandle === generic.spinnerHandle,
-    // Minting policy: an untracked engine Node (get_window) mints a NODE-kind handle —
-    // deliberately left unclosed, so fullTeardownToZero below proves owner teardown
-    // drains minted handles.
+    // Minting policy: an untracked engine Node (get_window) mints a NODE-kind handle; close() on
+    // it is a no-op (a node's handle lives as long as the node), so the next ask answers the same
+    // handle, tracked.
     genericMintsNodeHandle: generic.windowKind === "node" && generic.windowHandle > 0,
+    genericCloseOfNodeKeepsHandle: generic.windowKeptAfterClose === true,
     // An untracked RefCounted non-Resource (get_multiplayer) mints a plain OBJECT-kind
     // handle, closed through the OBJECT release lane.
     genericMintsObjectHandleAndCloses:

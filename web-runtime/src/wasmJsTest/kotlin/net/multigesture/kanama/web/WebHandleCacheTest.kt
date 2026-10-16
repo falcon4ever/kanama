@@ -68,15 +68,6 @@ class WebHandleCacheTest {
   }
 
   @Test
-  fun queueFreeOfABrowserNodeForgetsItsCachedValues() {
-    val handle = 0x40030001
-    registerWebBrowserHandle(handle, WebBrowserHandleKind.NODE)
-    WebHandleCache.read(handle, "get_instance_id") { 1L }
-    onWebQueueFree(handle)
-    assertFalse(WebHandleCache.contains(handle))
-  }
-
-  @Test
   fun discardingABrowserHandleForgetsItsCachedValues() {
     val handle = 0x40030002
     registerWebBrowserHandle(handle, WebBrowserHandleKind.OBJECT)
@@ -98,7 +89,7 @@ class WebHandleCacheTest {
       val node = 0x40040000 + cycle
       registerWebBrowserHandle(node, WebBrowserHandleKind.NODE)
       WebHandleCache.read(node, "get_instance_id") { cycle.toLong() }
-      onWebQueueFree(node)
+      assertTrue(discardWebBrowserHandle(node, freed = true))
       assertTrue(WebHandleCache.size <= before + 1, "cycle $cycle: ${WebHandleCache.size}")
     }
     assertEquals(before, WebHandleCache.size)

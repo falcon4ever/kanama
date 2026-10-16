@@ -242,7 +242,8 @@ async function teardownCurrentRun(evaluate, exportDir) {
            v.tweensCreated === v.tweensReleased,
     15_000,
   );
-  const sceneTreeStaleProbe = await evaluate(`globalThis.KanamaWebBridge.api.kanamaWebMatch3Group8SceneTreeStaleProbe(${sceneTreeHandle})`);
+  // The SceneTree handle Main got lives as long as the tree, not with Main (desktop's wrapper too).
+  const sceneTreeKeptProbe = await evaluate(`globalThis.KanamaWebBridge.api.kanamaWebMatch3Group8SceneTreeKeptProbe(${sceneTreeHandle})`);
   const audioTeardownResult = await evaluate(`globalThis.KanamaWebBridge.invoke(${afterMain.audioHandle}, "g7_audio_teardown", "g7_audio_teardown", () => globalThis.KanamaWebBridge.api.kanamaWebMatch3Group7AudioOwnerTeardownProbe(${afterMain.audioHandle}), 0)`);
   // The Smoke autoload outlives Main like Audio does, and the node handles its probe looked up are
   // released with the script, so the live-handle baseline is only reached once it is freed too.
@@ -252,7 +253,7 @@ async function teardownCurrentRun(evaluate, exportDir) {
     (v) => v.audioHandle === 0 && v.liveHandles === 0 && v.callbacks === 0 && v.pending === 0 && v.jobs === 0,
     15_000,
   );
-  return { beforeMain, sceneTreeProbe, sceneTreeHandle, afterSceneTree, mainTeardownResult, afterMain, sceneTreeStaleProbe, audioTeardownResult, afterAudio };
+  return { beforeMain, sceneTreeProbe, sceneTreeHandle, afterSceneTree, mainTeardownResult, afterMain, sceneTreeKeptProbe, audioTeardownResult, afterAudio };
 }
 
 function teardownClean(t) {
@@ -261,7 +262,7 @@ function teardownClean(t) {
     t.afterSceneTree.sceneTreeHandles.length === 1 &&
     t.mainTeardownResult === 1 && t.afterMain.mainHandle === 0 &&
     t.afterMain.tileGrid.length === 0 && t.afterMain.sceneTreeHandles.length === 0 &&
-    t.sceneTreeStaleProbe === 1 && t.audioTeardownResult === 1 &&
+    t.sceneTreeKeptProbe === 1 && t.audioTeardownResult === 1 &&
     t.afterAudio.audioHandle === 0 && t.afterAudio.liveHandles === 0 &&
     t.afterAudio.callbacks === 0 && t.afterAudio.pending === 0 && t.afterAudio.jobs === 0
   );
@@ -359,9 +360,6 @@ export async function runMatch3({ url, evaluate, navigate, pointer, exportDir })
   if (secondTeardown.afterAudio.callbackErrors !== 0) boundaryErrors.push("callbackErrors > 0");
   if (secondTeardown.afterAudio.failure !== null) boundaryErrors.push(`failure: ${secondTeardown.afterAudio.failure}`);
 
-  const staleRejected =
-    (firstTeardown.sceneTreeStaleProbe === 1 ? 1 : 0) +
-    (secondTeardown.sceneTreeStaleProbe === 1 ? 1 : 0);
 
   // Task 80 slice 6: read the demo's own hydrated-state dump. The SAME Kotlin runs on
   // desktop, which prints it to stdout under the smoke env var, so the two payloads must
@@ -389,7 +387,9 @@ export async function runMatch3({ url, evaluate, navigate, pointer, exportDir })
     handles: {
       liveAfterGameplay: afterSwap.liveHandles,
       liveAfterTeardown: secondTeardown.afterAudio.liveHandles,
-      staleRejected,
+      // A handle outlives the script that obtained it (it lives as long as its object), so the
+      // teardown probes have no stale use left to reject.
+      staleRejected: 0,
     },
     crossings: {
       packedSceneInstantiations: afterSwap.packedSceneInstantiations,

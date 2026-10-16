@@ -9,6 +9,8 @@ signal own_two(obj: Object, round: int)
 signal own_close(obj: Object)
 signal own_keep(obj: Object)
 signal own_cost(obj: Object)
+signal own_ignored(obj: Object, round: int)
+signal own_doomed(obj: Object)
 
 ## Weak references to the objects a row emitted, by row name.
 var weak: Dictionary = {}
@@ -16,15 +18,52 @@ var keeper: Node
 var cost_event: InputEventKey
 var cost_node: Node
 var button: Button
+var doomed: Node
+var bumps := 0
+var orphan: Window
 
 
 func _ready() -> void:
+	add_to_group("own_bump")
 	cost_node = Node.new()
 	cost_node.name = "OwnCostNode"
 	add_child(cost_node)
 	button = Button.new()
 	button.name = "OwnButton"
 	add_child(button)
+	# O11: a node no script looks up before the keeper does.
+	var kept := Node.new()
+	kept.name = "OwnKeptNode"
+	add_child(kept)
+	# O9: a body no script tracks, far from the level, and a Node3D to query the world from.
+	var body := StaticBody3D.new()
+	body.name = "OwnRayBody"
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(2.0, 2.0, 2.0)
+	shape.shape = box
+	body.add_child(shape)
+	add_child(body)
+	body.global_position = Vector3(500.0, 500.0, 500.0)
+	var from := Node3D.new()
+	from.name = "OwnRayFrom"
+	add_child(from)
+	# uint32Masks: a body and a visual instance OwnProbe writes uint32 masks to (no shape: it
+	# collides with nothing).
+	var mask_body := StaticBody3D.new()
+	mask_body.name = "OwnMaskBody"
+	add_child(mask_body)
+	var layered := MeshInstance3D.new()
+	layered.name = "OwnLayered"
+	add_child(layered)
+	# genericCloseKeepsSharedNode / handleRingBounded: nodes no script looks up before OwnProbe's
+	# generic calls do.
+	var shared := Node.new()
+	shared.name = "OwnSharedNode"
+	add_child(shared)
+	var ringed := Node.new()
+	ringed.name = "OwnRingNode"
+	add_child(ringed)
 
 
 ## Why an OwnProbe row failed, for the driver's trace.
@@ -43,9 +82,26 @@ func handle_live(handle: int) -> int:
 
 
 ## A full collection where the page offers one (Chrome with --expose-gc): 1 when it ran. Firefox has
-## none; the probe allocates instead.
+## none (the probe allocates instead, and a row accepts the capped bound when nothing was collected);
+## nor does a run whose bridge ignores collections (the driver's KANAMA_WEB_IGNORE_COLLECTIONS).
 func collect(_unused: int) -> int:
-	return int(JavaScriptBridge.eval("typeof globalThis.gc === 'function' ? (globalThis.gc(), 1) : 0"))
+	return int(JavaScriptBridge.eval(
+		"globalThis.KanamaWebBridge.ignoreWrapperCollections ? 0"
+		+ " : typeof globalThis.gc === 'function' ? (globalThis.gc(), 1) : 0"))
+
+
+## The bridge's view of `handle`: 1 live, | 2 a RefCounted held by Kotlin wrappers, | 4 under the
+## lent cap (released, least recently wrapped first, above 4096 pinned).
+func handle_state(handle: int) -> int:
+	return int(JavaScriptBridge.eval(
+		"(() => { const b = globalThis.KanamaWebBridge; const s = b.browserHandleSlot(%d);" % handle
+		+ " if (!s) return 0; return 1 | (s.refCounted ? 2 : 0)"
+		+ " | (b.lentRefCountedByAge.has(%d) ? 4 : 0); })()" % handle))
+
+
+## How many RefCounted handles are under the lent cap now.
+func capped_count(_unused: int) -> int:
+	return int(JavaScriptBridge.eval("globalThis.KanamaWebBridge.lentRefCountedByAge.size"))
 
 
 ## 1 while the object the row `name` emitted still lives.
@@ -105,6 +161,43 @@ func keeper_loads(_unused: int) -> int:
 	return int(keeper.call("keep_loaded", 0))
 
 
+## O11: the keeper looks a node up and makes one in a companion initializer, both kept in its
+## companion.
+func keeper_keeps_nodes(_unused: int) -> int:
+	return int(keeper.call("keep_nodes", 0))
+
+
+## pageHandlesAtMostTwo: a Window outside the tree (OwnProbe holds its handle).
+func orphan_window() -> Window:
+	if orphan == null:
+		orphan = Window.new()
+	return orphan
+
+
+func _exit_tree() -> void:
+	if orphan != null:
+		orphan.free()
+		orphan = null
+
+
+## OwnProbe's shared row: the keeper looks up the node OwnProbe's generic call minted a handle for.
+func keeper_keeps_shared(_unused: int) -> int:
+	return int(keeper.call("keep_shared", 0))
+
+
+## uint32Masks: 1 when OwnProbe's uint32 writes reached the engine whole.
+func uint32_masks(_unused: int) -> int:
+	var body := get_node("OwnMaskBody") as StaticBody3D
+	var layered := get_node("OwnLayered") as MeshInstance3D
+	var whole := body.collision_layer == 0xffffffff and body.collision_mask == 0xffffffff
+	return 1 if whole and layered.layers == 0x80000001 else 0
+
+
+## handleRingBounded: the sweep ring's length.
+func ring_size(_unused: int) -> int:
+	return KanamaWebHandles.lent_ring.size()
+
+
 func free_keeper(_unused: int) -> int:
 	keeper.free()
 	keeper = null
@@ -127,3 +220,34 @@ func measure_cost(kind: int, rounds: int) -> PackedInt64Array:
 	var elapsed := Time.get_ticks_usec() - started
 	var calls := counter("lendBridgeCalls") + counter("wrapperRegistrations") - calls_before
 	return PackedInt64Array([calls * 1000 / rounds, elapsed * 1000 / rounds])
+
+
+## O4: a RefCounted on the packed arm to a handler that never reads it.
+func emit_ignored(_unused: int) -> int:
+	own_ignored.emit(_fresh("o4"), 0)
+	return 1
+
+
+## O8: a fresh node no script tracks, for the probe to look up and queue_free.
+func make_doomed(_unused: int) -> int:
+	doomed = Node.new()
+	doomed.name = "OwnDoomed"
+	add_child(doomed)
+	return 1
+
+
+## O8: the queue_free'd node handed to a handler in the same frame (it lives to the frame's end).
+func emit_doomed(_unused: int) -> int:
+	if not is_instance_valid(doomed):
+		return 0
+	own_doomed.emit(doomed)
+	return 1
+
+
+## The constructor-rollback row: the group call the probe queued; how often it ran.
+func own_bump() -> void:
+	bumps += 1
+
+
+func own_bumps(_unused: int) -> int:
+	return bumps

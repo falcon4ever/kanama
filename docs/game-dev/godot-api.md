@@ -437,11 +437,9 @@ until it is freed, a `RefCounted` while Godot or one of your Kotlin references s
 `lastEvent = event`) and use it frames later, and `body == player` is `true` when both are the same
 node, on Web as on desktop. Using it after the engine freed the object throws the
 `IllegalStateException` "Invalid access to previously freed instance", which a script can catch. A
-node you receive as an argument and `queueFree()` stays usable until the end of the frame, as in
-GDScript. **Web limit:** a node you looked up (`getNode<Sprite2D>("Coin")`) or got as a call's
-result is released as soon as you `queueFree()` it, so using that value afterwards, even in the same
-frame, throws "Stale Kanama Web browser handle" where desktop keeps it usable until the end of the
-frame. Read what you need from it before you call `queueFree()`, or `queueFree()` last.
+node you `queueFree()` stays usable until the end of the frame, as in GDScript, however you got it.
+A value stays valid after the script that obtained it is freed: a node another script looked up
+and stored in a `companion object`, or one a top-level initializer made, keeps working.
 
 On Web a `RefCounted` you keep (an `InputEvent` argument, a loaded `Resource`, a `create()` result)
 is released when the browser collects your last wrapper of it, or when you `close()` it; `close()`

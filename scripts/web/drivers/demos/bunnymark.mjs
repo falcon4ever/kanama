@@ -61,13 +61,25 @@ export async function runBunnymark({ url, evaluate, navigate, deadline }) {
   const running = await snapshot(evaluate);
   trace(`steady: adds=${running.addBunnyCalls} live=${running.liveBrowserHandles} batch=${running.maxPositionMutationBatch}`);
 
+  // A queue-freed bunny's handle lives to the end of its frame and is released by the per-frame
+  // sweep once the engine freed the node (32 handles a frame: within ⌈live / 32⌉ frames), so the
+  // driver waits for it instead of a fixed delay (a slow headless frame rate took longer than one).
+  const settled = async (done) => {
+    const until = Math.min(deadline, Date.now() + 5_000);
+    let snap = await snapshot(evaluate);
+    while (!done(snap) && Date.now() < until) {
+      await delay(50);
+      snap = await snapshot(evaluate);
+    }
+    return snap;
+  };
   await evaluate(`globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.firstHandle, globalThis.KanamaWebBridge.bunnymarkMethodId("remove")); true`);
-  await delay(100);
-  const removed = await snapshot(evaluate);
+  const removed = await settled((snap) => snap.objectFrees === 1 && snap.liveBrowserHandles === BUNNY_COUNT);
 
   await evaluate(`globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.firstHandle, globalThis.KanamaWebBridge.bunnymarkMethodId("add")); true`);
-  await delay(250);
-  const replaced = await snapshot(evaluate);
+  const replaced = await settled(
+    (snap) => snap.objectConstructions === BUNNY_COUNT + 1 && snap.liveBrowserHandles === BUNNY_COUNT + 1,
+  );
 
   const staleHandleFailed = Boolean(
     await evaluate(`(() => {

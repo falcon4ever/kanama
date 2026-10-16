@@ -393,6 +393,12 @@ tasks.register<Exec>("generateWebBackendDispatch") {
     inputs.file(webBackendDispatchGenerator)
     inputs.file(rootProject.file("scripts/platform_backend_contract.py"))
     inputs.file(webBackendPolicy)
+    inputs.file(rootProject.file("extension_api.json"))
+    inputs.file(
+        rootProject.file(
+            "processor/src/main/kotlin/net/multigesture/kanama/processor/WebScriptCodeEmitter.kt"
+        )
+    )
     outputs.file(webBackendDispatchFile)
     commandLine(
         "python3",
@@ -408,6 +414,12 @@ tasks.register<Exec>("checkWebBackendDispatch") {
     inputs.file(webBackendDispatchGenerator)
     inputs.file(rootProject.file("scripts/platform_backend_contract.py"))
     inputs.file(webBackendPolicy)
+    inputs.file(rootProject.file("extension_api.json"))
+    inputs.file(
+        rootProject.file(
+            "processor/src/main/kotlin/net/multigesture/kanama/processor/WebScriptCodeEmitter.kt"
+        )
+    )
     inputs.file(webBackendDispatchFile)
     commandLine(
         "python3",
