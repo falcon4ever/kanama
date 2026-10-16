@@ -211,7 +211,8 @@ another wrapper of the same object stays valid. A dropped one is released late, 
 garbage collector runs, as a forgotten `close()` is on desktop. At most 4096 `RefCounted` arguments
 that only Kotlin holds stay alive this way (Kanama's bound for Firefox, which collects only under
 allocation pressure; C# has none): past that the oldest go first. A `Sprite2D`'s `texture` keeps
-answering after the code that set it dropped its wrapper. See
+answering after the code that set it dropped its wrapper. The owner links (a Kotlin script object
+of a `RefCounted` owner keeping its owner alive) are not implemented on Web yet. See
 [Objects you receive](docs/game-dev/godot-api.md#objects-you-receive).
 
 Three Web behaviours change with it. A second `close()` does nothing (on `ConfigFile`,
@@ -1101,7 +1102,8 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
 - Still failing, with a message that names the cause: engine code that runs with no script running.
   A companion-object or top-level property initializes on first access inside whichever script
   touches it, so its engine objects are billed to that script (see
-  [Exporting to the Web](docs/exporting/web.md)). A script's `create` failure carries its cause chain
+  [Exporting to the Web](docs/exporting/web.md); since protocol 38 a node it keeps outlives that
+  script, and a `RefCounted` lives while Kotlin holds it). A script's `create` failure carries its cause chain
   like a callback failure does, and the bridge keeps the first eight boundary failures
   (`callbackErrorLog`). Proof: the web3d smoke's `InitProbe` script (initializers that call a
   singleton, build a `ConfigFile`, read `self.getTree()`, `self.position`, a sibling and the
@@ -1120,6 +1122,8 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   several scripts obtained is now counted per owning script and released with its last owner; the
   dictionary entry goes with it. Nothing changes for scripts that never share a node. Proof: the
   web3d smoke's `sharedNodeHandleSurvivesFirstFree` check (red on main, green with the fix).
+  Protocol 38 replaced the per-owner count: a node's handle now lives as long as the node (see
+  "Web: a node you looked up lives as long as the node" above).
 
 ### Fixed — Web: a typed `await()` on an engine object (task 134 C follow-up)
 
@@ -1784,10 +1788,9 @@ accessors now and the rest in a follow-up (see "Web" below).
   plugin) logs each release the collector made, once per creation site:
   `released by GC: Mesh (created at Player.kt:42)`.
 - Android 8-12 debug installs have no `java.lang.ref.Cleaner`; there `close()` stays the only
-  release. Web keeps the explicit rule for now: the GC fallback and the owner links do not exist on
-  Web yet, and Web's `RefCounted` is not `AutoCloseable` (only a dozen classes such as
-  `PackedScene`, `Texture2D` and `AudioStream` have `close()`), so code shared with Web cannot
-  `use { }` most `RefCounted` wrappers. `KANAMA_GC_RELEASES=0` in the game's environment
+  release. Web followed later (see "Web: a RefCounted lives while Kotlin holds it" above): the
+  browser's collector releases a dropped wrapper and every `RefCounted` is `AutoCloseable` there;
+  the owner links do not exist on Web yet. `KANAMA_GC_RELEASES=0` in the game's environment
   turns the fallback off (a measurement knob). The shutdown collection runs at the editor and the
   scene deinitialization levels and is timed in the log; on Android it uses `Runtime.gc()`, which
   ART honours (`System.gc()` is ignored there without a finalization in between). The log

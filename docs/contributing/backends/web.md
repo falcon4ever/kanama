@@ -523,6 +523,9 @@ wrapper the script got releases at once. Owner teardown re-routes a
 RefCounted handle that still has wrappers to another proxy, like a lent one; the last proxy
 releases everything, so full teardown stays deterministic. A Sprite2D texture snapshot is a hold
 too (`holdRefCounted`): `sprite.texture` answers after the code that set it dropped its wrapper.
+Owner links are not implemented: a Kotlin script object of a `RefCounted` owner (a custom resource)
+does not hold its owner on Web, as the desktop runtime's does, so only a wrapper of the resource
+keeps it (the user-facing sentence is in `godot-api.md`, "A script object keeps its resource alive").
 
 A lent RefCounted the handler never wrapped (a packed argument nobody read) has no hold from its
 lend, so the drain releases it after its dispatch and the next 2 engine frames (`LENT_GRACE_FRAMES`
@@ -571,6 +574,47 @@ driver's `KANAMA_WEB_IGNORE_COLLECTIONS=1` makes the bridge ignore every collect
 at 1 (the old per-dispatch lend cost 2), `rcDispatchCost` a seen `InputEvent` at 1 (its wrapper's
 registration).
 The web3d smoke's `sharedNodeHandleSurvivesFirstFree` check (`Main.share_probe`) pins the rule.
+
+**Ownership measurements (2026-10-15, `54fe2ab7`, protocol 38).** One `web_ci_matrix.sh --demo-set ci`
+run of the 13 demos at the workflow's `DEMOS_REF` on Chrome 155 and Firefox 157 (macOS arm64, Godot
+4.7.2 stable, `web_nothreads_release`), read from each cell's envelope: `liveAfterGameplay` and
+`liveAfterTeardown` (browser handles live after the driven play and after the full scene teardown),
+`maxRcPinned` (most RefCounted handles pinned at once by Kotlin wrappers or lends), `maxPageHandles`
+(the SceneTree and root Window), `rcReleasedByGc` (handles the browser's collector released through
+the wrapper registry; 0 where the browser did not collect during the run), `crossings`
+(`crossings.kotlinToGodotCalls`) and `durationMs` (the driven run). `liveAfterTeardown` is 0 in
+every cell. The first Firefox run of `charactercontroller` failed `playerMovedOnInput` and
+`physicsFramesAdvanced` (142 physics ticks where the rerun had 293; handles and pins unchanged), so
+its row is from the passing rerun.
+
+| demo | engine | liveAfterGameplay | liveAfterTeardown | maxRcPinned | maxPageHandles | rcReleasedByGc | crossings | durationMs |
+|---|---|---|---|---|---|---|---|---|
+| match3 | chrome | 86 | 0 | 10 | 2 | 6 | 269 | 15117 |
+| match3 | firefox | 96 | 0 | 10 | 2 | 0 | 322 | 18260 |
+| bunnymark | chrome | 257 | 0 | 1 | 0 | 0 | 423 | 8491 |
+| bunnymark | firefox | 257 | 0 | 1 | 0 | 0 | 422 | 10240 |
+| dodge | chrome | 26 | 0 | 7 | 2 | 6 | 437 | 17329 |
+| dodge | firefox | 22 | 0 | 7 | 2 | 10 | 280 | 16100 |
+| web3d | chrome | 16 | 0 | 197 | 2 | 318 | 82 | 20120 |
+| web3d | firefox | 16 | 0 | 254 | 2 | 262 | 85 | 34513 |
+| platformer | chrome | 51 | 0 | 1 | 0 | 1 | 1547 | 14898 |
+| platformer | firefox | 52 | 0 | 1 | 0 | 0 | 1964 | 43502 |
+| squash | chrome | 15 | 0 | 2 | 0 | 0 | 1508 | 15316 |
+| squash | firefox | 14 | 0 | 2 | 0 | 0 | 1257 | 24590 |
+| fps | chrome | 44 | 0 | 6 | 1 | 1 | 480 | 11377 |
+| fps | firefox | 42 | 0 | 6 | 1 | 1 | 488 | 30561 |
+| charactercontroller | chrome | 17 | 0 | 4 | 1 | 4 | 1886 | 28099 |
+| charactercontroller | firefox | 21 | 0 | 6 | 1 | 0 | 2089 | 60755 |
+| thirdperson | chrome | 185 | 0 | 15 | 1 | 12 | 1515 | 41385 |
+| thirdperson | firefox | 187 | 0 | 15 | 1 | 12 | 3009 | 98801 |
+| racing | chrome | 15 | 0 | 0 | 1 | 0 | 972 | 16533 |
+| racing | firefox | 16 | 0 | 0 | 1 | 0 | 1369 | 25449 |
+| citybuilder | chrome | 85 | 0 | 64 | 1 | 47 | 481 | 17028 |
+| citybuilder | firefox | 85 | 0 | 64 | 1 | 47 | 1216 | 29185 |
+| tpsdemo | chrome | 293 | 0 | 33 | 2 | 4 | 395 | 67496 |
+| tpsdemo | firefox | 294 | 0 | 34 | 2 | 4 | 3243 | 155721 |
+| spike | chrome | 1 | 0 | 1 | 0 | 0 | 186 | 17618 |
+| spike | firefox | 1 | 0 | 1 | 0 | 0 | 184 | 12307 |
 
 **A lambda connection's Kotlin callback goes with whatever held it.** `connect { }`, `connectLong`,
 `connectObject` and the other typed overloads register a callback in `WebSignalCallbackRegistry` and

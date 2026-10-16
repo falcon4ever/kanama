@@ -416,9 +416,11 @@ rather than an FFI pointer boundary, with the same rule: every `RefCounted` is
 engine calls you made before it, so `ButtonGroup.create().use { button.buttonGroup = it }`
 leaves the button its group), and a wrapper you forget is released after the
 browser's garbage collector drops it. A second `close()` does nothing. The
-script-object owner links above do not exist on Web yet. See
-[Objects you receive](godot-api.md#objects-you-receive) for the Web limits and
-[Web internals → RefCounted resource ownership](../contributing/backends/web.md).
+script-object owner links above are not implemented on Web yet (see
+[A script object keeps its resource alive](godot-api.md#a-script-object-keeps-its-resource-alive)).
+See [Objects you receive](godot-api.md#objects-you-receive) for the Web rule and its
+4096-event cap, and
+[Web internals → RefCounted resource ownership](../contributing/backends/web.md#refcounted-resource-ownership-createclose-on-the-handle-bridge).
 
 For more detail, see [Calling Godot APIs](godot-api.md#resource-ownership).
 
