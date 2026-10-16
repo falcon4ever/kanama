@@ -514,7 +514,10 @@ Lifting one is a one-line deletion.
 <!-- KANAMA-BLOCKED(since:2026-07-28, task:71): the dodge quarantine below -->
 Currently quarantined: `dodge:firefox` — task 71, spawned mobs never free on a
 Linux host (dodge passes on macOS, and `dodge:chrome` passes on Linux, so it is
-neither a browser nor a demo property). `squash:firefox` was lifted on
+neither a browser nor a demo property). `screen_exited` never fires for dodge's
+mobs on the Linux runner's Firefox, so the cell fails `mobsFreedOffScreen` there
+and nothing else (the next game's `queue_free` still frees every mob); the
+quarantine runs until 2027-03-31. `squash:firefox` was lifted on
 2026-08-11 (the task-71 signature stopped reproducing there and the cell passes
 outright under the task-81 gameplay checks, death path included).
 `squash:chrome` was lifted on 2026-08-12: its quarantine covered the

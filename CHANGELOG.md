@@ -67,8 +67,11 @@ The dodge cell's `mobsSpawnAndFree` now requires every mob of both rounds to be 
 screen or by the next game's `queue_free` of the mobs, counted from the bridge's mob scripts. It used
 to count any drop in the live-handle count, which the browser collecting a mob's `SpriteFrames` also
 causes: on the Linux CI runner's Firefox, where no mob ever reports leaving the screen, the old driver
-passed on those collections alone and the new one failed once the collector stayed quiet. Mobs freed
-off screen are reported (`mobScreenExitFrees`, `mobScreenExitSignals`), not required, and
+passed on those collections alone and the new one failed once the collector stayed quiet. A new
+check, `mobsFreedOffScreen`, requires at least one mob freed by its `screen_exited` signal (the run
+gives round 2 up to 12 s of game time for it; `mobScreenExitFrees`, `mobScreenExitSignals` and
+`mobRoundEndFrees` are reported). The Linux runner's Firefox fails that check and only that one, so
+the `dodge:firefox` quarantine (task 71) is renewed until 2027-03-31.
 `KANAMA_WEB_DODGE_NO_SCREEN_EXIT=1` reproduces that host on any machine.
 
 ### Changed — iOS device runs read the app's engine errors; the gate verdict is per step

@@ -33,13 +33,15 @@ const FORCED_RESTART_AT_MOBS = 4;
 const EARLIEST_HIT_SECONDS = 0.4;
 // How long round 2 keeps playing, in game seconds after its first spawn, for mobs to fly off screen
 // and free themselves (Mob._on_VisibilityNotifier2D_screen_exited -> queue_free) before the driver
-// ends it. A mob crosses the 480x720 screen in 2-7 s at 150-250 px/s. Those frees are REPORTED
-// (mobScreenExitFrees), not required: on the Linux CI runner's Firefox screen_exited never fires
-// (task 71), and every mob is freed by the round's queue_free instead, which mobsSpawnAndFree judges.
-const SCREEN_EXIT_WAIT_SECONDS = 8;
+// ends it, unless two have already. A mob crosses the 480x720 screen in 2-7 s at 150-250 px/s
+// (slowing under its damping); 60 local runs saw round 2's first exit at most 4.4 s after its first
+// spawn. mobsFreedOffScreen requires one such free: on the Linux CI runner's Firefox screen_exited
+// never fires (task 71) and the quarantined cell fails exactly that check, while new_game's
+// queue_free still frees every mob (mobsSpawnAndFree).
+const SCREEN_EXIT_WAIT_SECONDS = 12;
 // KANAMA_WEB_DODGE_NO_SCREEN_EXIT=1 reproduces that host anywhere: the probe swallows every
-// Mob._on_VisibilityNotifier2D_screen_exited dispatch, so no mob frees itself off screen. The run
-// must stay GREEN (the round's queue_free frees every mob) with mobScreenExitFrees 0.
+// Mob._on_VisibilityNotifier2D_screen_exited dispatch (still counting it), so no mob frees itself off
+// screen. The run must go red on mobsFreedOffScreen and on nothing else.
 const NO_SCREEN_EXIT = process.env.KANAMA_WEB_DODGE_NO_SCREEN_EXIT === "1";
 const START = Date.now();
 const trace = (msg) => {
@@ -561,6 +563,8 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   trace(`teardown: live=${settled.liveHandles} (peak=${peak.maxLiveHandles}) callbacks=${settled.callbacks} pending=${settled.pending} jobs=${settled.jobs} errs=${settled.callbackErrors}`);
 
   const protocolVersion = ready.protocol;
+  const mobScreenExitFrees = rounds.reduce((sum, finished) => sum + finished.screenExitFrees, 0);
+  const mobScreenExitSignals = settled.mobScreenExits ?? 0;
   const checks = {
     modeDodge: ready.mode === "dodge",
     sceneScriptsReady: ready.mainReady >= 1 && ready.playerReady >= 1 && ready.hudReady >= 1,
@@ -576,10 +580,15 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
     // also the browser collecting a mob's dropped SpriteFrames wrapper, and the old ">= 2 drops" form
     // passed on GC timing alone (Linux CI Firefox: 4/4 green while no mob ever left the screen, then
     // red once the collector stayed quiet in the window). Off-screen frees are reported
-    // (mobScreenExitFrees), not required: that host never fires screen_exited (task 71).
+    // (mobScreenExitFrees) and required by mobsFreedOffScreen below, not here: that host never fires
+    // screen_exited (task 71), and this check must still judge its frees.
     mobsSpawnAndFree:
       rounds.length >= 2 &&
       rounds.every((finished) => finished.mobs > 0 && finished.mobLive === 0 && finished.screenExitFrees + finished.roundEndFrees === finished.mobs),
+    // At least one mob flew off screen and freed itself: its VisibleOnScreenNotifier2D's screen_exited
+    // reached Mob through the bridge and the free followed. Red on the Linux CI runner's Firefox, where
+    // the signal never fires (task 71, the dodge:firefox quarantine), and under NO_SCREEN_EXIT.
+    mobsFreedOffScreen: mobScreenExitFrees >= 1 && mobScreenExitSignals >= 1,
     // Full teardown: quitting the tree drained every live handle to zero.
     fullTeardownToZero: settled.liveHandles === 0,
     // No handle kind is retained per spawned mob, measured per round at the trough between
@@ -644,10 +653,11 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
       playerHits: hits.length,
       // Mobs freed while their round ran (flew off screen; 0 where screen_exited never fires, task 71),
       // and by the round's end (new_game's queue_free), over both rounds; mobsSpawnAndFree needs the
-      // two to add up to every mob. Signals: Mob screen_exited dispatches the page saw.
-      mobScreenExitFrees: rounds.reduce((sum, finished) => sum + finished.screenExitFrees, 0),
+      // two to add up to every mob, mobsFreedOffScreen the first to be 1+. Signals: Mob screen_exited
+      // dispatches the page saw.
+      mobScreenExitFrees,
       mobRoundEndFrees: rounds.reduce((sum, finished) => sum + finished.roundEndFrees, 0),
-      mobScreenExitSignals: settled.mobScreenExits ?? 0,
+      mobScreenExitSignals,
       // Worst per-mob handle retention, x100 so the envelope stays integer-friendly
       // (the schema requires numeric counters). 0 is healthy; 100 is one leaked
       // handle per spawn.

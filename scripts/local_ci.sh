@@ -801,7 +801,8 @@ if [[ $skip_web -eq 0 ]]; then
     # does not depend on the RNG), a second hit in a round, a hit before a round's first mob or sooner than
     # a mob can reach the player is red, and every run restarts once and judges both rounds' handle
     # retention between rounds, after a forced collection, so a leak in either round is red. Every mob
-    # must be freed (off screen or by the round's queue_free), counted from the bridge's mob scripts.
+    # must be freed (off screen or by the round's queue_free), counted from the bridge's mob scripts,
+    # and at least one must free itself off screen (screen_exited).
     stage "web dodge round self-test"
     node "$ROOT_DIR/scripts/web/dodge_restart_selftest.mjs"
 

@@ -127,7 +127,7 @@
       "todo": [
         {
           "member": "Mob._on_VisibilityNotifier2D_screen_exited",
-          "reason": "Host-variant lifecycle (task 71: mobs never free on Linux Firefox, cell quarantined). The required-member gate has no per-engine quarantine mechanism, so requiring this would re-litigate the quarantine at the schema layer; the driver reports it as mobScreenExitSignals / mobScreenExitFrees (0 on that host) without gating it, and mobsSpawnAndFree requires every mob freed, off screen or by the round's queue_free."
+          "reason": "Host-variant lifecycle (task 71: mobs never free on Linux Firefox, cell quarantined). The required-member gate has no per-engine quarantine mechanism, so requiring this would re-litigate the quarantine at the schema layer; the driver's mobsFreedOffScreen check carries it (at least one mob freed by screen_exited, signal seen), which the quarantined cell fails there, and mobsSpawnAndFree requires every mob freed, off screen or by the round's queue_free."
         },
         {
           "member": "Main.game_over",

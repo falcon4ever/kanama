@@ -194,8 +194,10 @@ kanama_web_quarantine_reason() {
 # citing task is re-planned; the matrix warns loudly once today is past it.
 kanama_web_quarantine_until() {
   case "$1" in
-    # quarantined 2026-07-28 (task 71 parked); maintainer sets the real date.
-    dodge:firefox) echo "2026-10-31" ;;
+    # quarantined 2026-07-28 (task 71 parked); renewed 2026-10-16 to 2027-03-31: screen_exited never
+    # fires for dodge's mobs on the Linux runner's Firefox, so the cell fails mobsFreedOffScreen there
+    # and only that (new_game frees every mob; the cell is otherwise green there).
+    dodge:firefox) echo "2027-03-31" ;;
     *) : ;;
   esac
 }

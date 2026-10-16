@@ -14,7 +14,8 @@
 // freed -- off screen (Mob's screen_exited dispatch) or by new_game's queue_free -- counted from the
 // bridge's mob scripts, not from live-handle drops (the browser collecting a mob's SpriteFrames drops
 // them too); a host that never reports a mob off screen (the Linux CI runner's Firefox, task 71) is
-// green on the round's frees. The scenarios below pin all of it.
+// red on mobsFreedOffScreen and nothing else (at least one mob must free itself off screen). The
+// scenarios below pin all of it.
 //
 // This drives the real runDodge() against a fake bridge (no browser): `evaluate` runs the driver's own
 // snapshot/call source inside a vm context whose KanamaWebBridge is a small game simulation. Time is
@@ -61,6 +62,7 @@ const HUD_COROUTINE_TICKS = 6; // game over -> MessageTimer -> 1s delay -> Start
  *   roundFreeIgnored  new_game's queue_free of the mobs group frees no mob.
  *   roundFreeDelay    polls before new_game's queue_free lands (default 1: the end of the frame).
  *   teardownIgnored   a freed mob's script is never torn down by the bridge (its handles go).
+ *   screenExitIgnored Mob's screen_exited dispatch reaches the bridge but frees nothing.
  */
 function makeFakeBridge({
   hitAt = () => Infinity,
@@ -74,6 +76,7 @@ function makeFakeBridge({
   roundFreeIgnored = false,
   roundFreeDelay = 1,
   teardownIgnored = false,
+  screenExitIgnored = false,
 }) {
   const slots = [];
   const mint = (kind, extra = {}) => {
@@ -180,7 +183,7 @@ function makeFakeBridge({
         lookUpStartButton(); // startButton.hide(), then start_game -> Main.new_game
         newGame();
       } else if (mobByHandle.has(handle) && id === SCREEN_EXITED_ID) {
-        freeMob(mobByHandle.get(handle)); // Mob._on_VisibilityNotifier2D_screen_exited: queue_free
+        if (!screenExitIgnored) freeMob(mobByHandle.get(handle)); // Mob._on_VisibilityNotifier2D_screen_exited: queue_free
       } else if (handle === SMOKE_HANDLE && id === TEARDOWN_ID) {
         state.torn = true;
         for (const slot of slots) slot.live = false;
@@ -318,7 +321,8 @@ const redChecks = (result) => Object.entries(result.checks).filter(([, ok]) => o
 
 // [label, fake options, expected: { red: [checks] (empty: all green), restarts (default 1: round 1 ends
 // after 4 mobs), resumes, hits, retentionX100 (green; default 0), screenExitFrees (green; default: at
-// least 2, every mob freed off screen or by the round's end either way) }]
+// least 2, every mob freed off screen or by the round's end either way; also checked for an exact
+// red set), exact (red must be exactly `red`) }]
 const round1 = (value) => (round) => (round === 1 ? value : Infinity);
 const round2 = (value) => (round) => (round === 2 ? value : Infinity);
 const scenarios = [
@@ -338,7 +342,8 @@ const scenarios = [
   ["one handle leaked per mob of round 2 only", { leakPerMob: (round) => (round === 2 ? 1 : 0) }, { red: ["noPerMobHandleRetention"], resumes: 0, hits: 0 }],
   ["one handle kept per round, not per mob", { leakPerRound: 1 }, { red: [], resumes: 0, hits: 0, retentionX100: 25 }],
   ["round 1's hit reported in the first frame after the restart", { hitAtRestart: true }, { red: [], resumes: 0, hits: 1 }],
-  ["no mob is ever reported off screen (Linux CI Firefox)", { screenExits: false }, { red: [], resumes: 0, hits: 0, screenExitFrees: 0 }],
+  ["no mob is ever reported off screen (Linux CI Firefox)", { screenExits: false }, { red: ["mobsFreedOffScreen"], exact: true, resumes: 0, hits: 0, screenExitFrees: 0 }],
+  ["screen_exited reaches the bridge, the mob does not free", { screenExitIgnored: true }, { red: ["mobsFreedOffScreen"], exact: true, screenExitFrees: 0 }],
   ["the round's queue_free lands two polls after the press (slow host)", { roundFreeDelay: 2 }, { red: [], resumes: 0, hits: 0 }],
   ["new_game's queue_free frees no mob", { roundFreeIgnored: true }, { red: ["mobsSpawnAndFree"] }],
   ["new_game's queue_free frees no mob, none reported off screen", { roundFreeIgnored: true, screenExits: false }, { red: ["mobsSpawnAndFree"] }],
@@ -359,15 +364,23 @@ for (const [label, options, expected] of scenarios) {
     expect(result.boundaryErrors.length === 0, `${label}: boundaryErrors ${JSON.stringify(result.boundaryErrors)}`);
     expect(c.bestRoundMobInstantiations >= 4, `${label}: bestRoundMobInstantiations is ${c.bestRoundMobInstantiations}, expected 4+`);
     expect(c.worstHandleRetentionPerMobX100 === retentionX100, `${label}: worstHandleRetentionPerMobX100 is ${c.worstHandleRetentionPerMobX100}, expected ${retentionX100}`);
+  } else {
+    expect(red.length > 0, `${label}: expected a red check, but every check is green (the run would pass)`);
+    for (const name of expected.red) expect(red.includes(name), `${label}: ${name} must be false (red: [${red.join(", ")}])`);
+    if (expected.exact) {
+      expect(
+        red.length === expected.red.length,
+        `${label}: red checks are [${red.join(", ")}], expected exactly [${expected.red.join(", ")}]`,
+      );
+    }
+  }
+  if (expected.red.length === 0 || expected.exact) {
     if (expected.screenExitFrees === undefined) expect(c.mobScreenExitFrees >= 2, `${label}: mobScreenExitFrees is ${c.mobScreenExitFrees}, expected 2+`);
     else expect(c.mobScreenExitFrees === expected.screenExitFrees, `${label}: mobScreenExitFrees is ${c.mobScreenExitFrees}, expected ${expected.screenExitFrees}`);
     expect(
       c.mobScreenExitFrees + c.mobRoundEndFrees === c.mobInstantiations,
       `${label}: ${c.mobScreenExitFrees} mob(s) freed off screen + ${c.mobRoundEndFrees} by the round's end, expected all ${c.mobInstantiations}`,
     );
-  } else {
-    expect(red.length > 0, `${label}: expected a red check, but every check is green (the run would pass)`);
-    for (const name of expected.red) expect(red.includes(name), `${label}: ${name} must be false (red: [${red.join(", ")}])`);
   }
   console.log(
     `  ${label}: restarts=${c.roundRestarts} resumes=${c.roundResumes} hits=${c.playerHits} bestRound=${c.bestRoundMobInstantiations} ` +
@@ -411,6 +424,6 @@ if (failures.length > 0) {
 }
 console.log(
   "dodge_restart_selftest: OK (early hits resume to 4 mobs; every run restarts once and judges both rounds; " +
-    "no resume, a second hit, a hit before the first mob or too soon after it, a per-mob leak in either round and a mob left unfreed " +
-    "are red; a host that never reports a mob off screen is green on the round's frees)",
+    "no resume, a second hit, a hit before the first mob or too soon after it, a per-mob leak in either round, a mob left unfreed and " +
+    "a run where no mob frees itself off screen are red; a host that never reports one is red on mobsFreedOffScreen alone)",
 );
