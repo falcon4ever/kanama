@@ -73,6 +73,8 @@ gives round 2 up to 12 s of game time for it; `mobScreenExitFrees`, `mobScreenEx
 `mobRoundEndFrees` are reported). The Linux runner's Firefox fails that check and only that one, so
 the `dodge:firefox` quarantine (task 71) is renewed until 2027-03-31.
 `KANAMA_WEB_DODGE_NO_SCREEN_EXIT=1` reproduces that host on any machine.
+The quarantine reason and the Web and version-support docs now name that symptom (no `screen_exited`)
+instead of "mobs never free": the round's `queue_free` still frees every mob there.
 
 ### Changed — iOS device runs read the app's engine errors; the gate verdict is per step
 
