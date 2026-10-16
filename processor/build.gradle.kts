@@ -8,7 +8,7 @@ kotlin {
 
 dependencies {
     implementation(project(":annotations"))
-    implementation("com.google.devtools.ksp:symbol-processing-api:2.3.9")
+    implementation("com.google.devtools.ksp:symbol-processing-api:2.3.12")
     testImplementation(kotlin("test-junit5"))
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

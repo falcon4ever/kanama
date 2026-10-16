@@ -87,7 +87,7 @@ smoke matrix for every claimed target.
 
 ## Build Toolchain
 
-The current source build uses Kotlin `2.3.21`, KSP `2.3.9`, and
+The current source build uses Kotlin `2.4.21`, KSP `2.3.12`, and
 kotlinx.coroutines `1.11.0`. Gradle build cache is enabled for the main Kanama
 build and the Android plugin build.
 

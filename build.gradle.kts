@@ -1,7 +1,7 @@
 plugins {
-  kotlin("jvm") version "2.3.21" apply false
-  kotlin("multiplatform") version "2.3.21" apply false
-  id("com.google.devtools.ksp") version "2.3.9" apply false
+  kotlin("jvm") version "2.4.21" apply false
+  kotlin("multiplatform") version "2.4.21" apply false
+  id("com.google.devtools.ksp") version "2.3.12" apply false
   id("com.ncorti.ktfmt.gradle") version "0.22.0" apply false
 }
 
