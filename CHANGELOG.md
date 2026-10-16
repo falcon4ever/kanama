@@ -39,6 +39,43 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — the Web dodge cell is deterministic and checks hits strictly
+
+The dodge driver of the Web matrix used to restart a round when the stationary player was hit early,
+and a run that was hit early in three rounds in a row failed, which happened by chance on CI. It now
+resumes the round after an early hit and judges the game by exact game times from a probe in the page:
+a player hit twice in one round, a hit before a round's first mob, or a hit sooner than 0.4 s of game
+time after that mob spawned (the physical minimum is 0.62 s) fails the run. Every run restarts once
+after the first round's fourth mob, and handle retention is judged per round, between rounds, after a
+forced collection, so a leak that only appears after a restart is caught. The driver finds `Main`'s
+methods by name in the export manifest instead of a fixed number. The web3d row that hands two nodes
+over and frees them now requires the handle counts not to grow, rather than to stay exactly equal
+(a browser collection in the same frames lowered them). The nightly red-run set's scene-check case
+edits the current line of the check again.
+
+### Changed — iOS device runs read the app's engine errors; the gate verdict is per step
+
+After the console window, the demos' iOS runner fetches the device's log archive over USB
+(`idevicesyslog … archive`, read with `log show` and filtered to the app) and prints the app's
+`ERROR` and `SHADER ERROR` lines; it fails on any `SCRIPT ERROR` except the five the self-test raises on
+purpose, which it counts. `KANAMA_IOS_ENGINE_LOG=auto` (default) skips the check loudly when
+`idevicesyslog` with `archive` is not installed or the phone is not on USB, `1` requires it, `0` turns
+it off; maintainers who run the iOS gate need `brew install libimobiledevice`. The iOS device gate's
+verdict checks that every planned step has exactly one result row, including runs that start at a
+later demo; `--check-results` and `--check-built-bundle-id` check this without a device.
+`ios_visual_smoke.sh --kanama-script-probe` waits for the probe's real `_ready` line and binds the
+probe in the export-time editor. The Web matrix retries an export once only when Godot aborted with
+exit 134 after a finished pack, and records the retry.
+
+### Changed — every engine call keeps its wrapper reachable until it returns
+
+Generated and hand-written call paths on desktop and Android now end with a reachability fence on the
+receiver and on every object, `Callable` and `Signal` argument, so the JVM cannot collect a wrapper while
+its engine call is still running. This changes no behaviour on its own; it is what lets a wrapper made on
+any thread be released by the garbage collector (see "a forgotten `close()` is a late release on every
+thread"). On Android 8 (API 26-27) the fence does not exist and is skipped; the GC release stays off there.
+Measured cost on desktop: within noise.
+
 ### Changed — Web `set("position:x", …)` does what it does on desktop: nothing
 
 On Web, `GodotObject.set(property, value)` wrote a property path (Godot's `set_indexed`), so
