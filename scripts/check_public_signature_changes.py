@@ -1275,11 +1275,6 @@ _NOT_ON_WEB = (
     "not on Web yet: Web's GodotObject is a hand-shaped facade that has not grown this member; a desktop "
     "call fails to compile on Web (loud), it is never rerouted"
 )
-_WEB_SET = (
-    "Web's typed set(propertyPath, ...) runs Object.set_indexed and returns Unit; desktop's set(property, Any?) "
-    "runs Object.set and returns Unit, so set(\"position:x\", 5.0) writes the component on Web and "
-    "nothing on desktop"
-)
 _WEB_SET_DEFERRED = "Web's setDeferred takes only a Boolean (its one queued arm); desktop's takes any Variant"
 _WEB_EMIT = (
     "Web's typed emit_signal arms (one crossing each, no Variant packing); desktop's vararg emitSignal takes "
@@ -1322,8 +1317,6 @@ WEB_GODOT_OBJECT_DRIFT: dict[str, str] = {
             "fun removeMeta(name: String)",
             "fun removeUserSignal(signal: String)",
             "fun setBlockSignals(enable: Boolean)",
-            "fun setIndexed(propertyPath: NodePath, value: Any?)",
-            "fun setIndexed(propertyPath: String, value: Any?)",
             "fun setMessageTranslation(enable: Boolean)",
             "fun setMeta(name: String, value: Any?)",
             "fun setScript(script: Resource?)",
@@ -1334,9 +1327,6 @@ WEB_GODOT_OBJECT_DRIFT: dict[str, str] = {
     },
     "desktop-only GodotObject: fun get(property: String): Any?":
         "Web has no Variant get(property): only the typed reads (getVector2, getObjectProperty)",
-    "desktop-only GodotObject: fun set(property: String, value: Any?)": _WEB_SET,
-    **{f"web-only GodotObject: fun set(propertyPath: String, value: {t})": _WEB_SET
-       for t in ("Double", "GodotEnumValue", "Long", "String", "Vector2")},
     "desktop-only GodotObject: fun setDeferred(property: String, value: Any?)": _WEB_SET_DEFERRED,
     "web-only GodotObject: fun setDeferred(property: String, value: Boolean)": _WEB_SET_DEFERRED,
     **{f"web-only GodotObject: fun emitSignal({params})": _WEB_EMIT

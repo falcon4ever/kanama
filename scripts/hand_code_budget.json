@@ -371,9 +371,15 @@
       "lines": 2
     },
     "generate_web_wrappers.CLASS_POLICY[Object].custom": {
-      "lines": 58,
+      "lines": 55,
       "raises": [
         "49 -> 58: task 129 E: GodotObject.isInstanceLive on Web (the shared GD.isInstanceValid's seam, answered from the handle tables); the Variant call/callv/callDeferred/getMethodArgumentCount/instanceId members are generated (WEB_GENERIC_METHODS, review S7: 84 -> 58)"
+      ]
+    },
+    "generate_web_wrappers.CLASS_POLICY[Object].top_level": {
+      "lines": 2,
+      "raises": [
+        "0 -> 2: import-compat alias: Web sources import net.multigesture.kanama.api.set (the removed typed set overloads had top-level aliases); it forwards to the member, desktop's Object.set"
       ]
     },
     "generate_web_wrappers.CLASS_POLICY[PropertyTweener].custom": {

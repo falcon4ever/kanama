@@ -717,10 +717,13 @@ WRAPPER_POLICY: dict[int, dict] = {
     # Object.get / set_indexed restricted to one value type each; the descriptor name says which.
     149: {"name": "getObjectProperty", "doc": "Object.get restricted to object-valued properties; non-objects resolve to null."},
     233: {"name": "getVector2", "doc": "Vector2-valued property read (the robot's aim blend position)."},
-    151: {"name": "set", "doc": "Property-path write (AnimationTree parameters); the typed overloads pick the transport."},
-    230: {"name": "set"},
-    231: {"name": "set"},
-    232: {"name": "set"},
+    # The typed set_indexed arms are internal: the public `set` and `setIndexed` are desktop's
+    # (Object.set and Object.set_indexed, any value; WEB_GENERIC_METHODS). AnimationMixer's
+    # setParameter keeps the Double arm.
+    151: {"name": "setIndexedDouble", "visibility": "internal", "doc": "`set_indexed` with a Double (the typed arm behind AnimationMixer.setParameter)."},
+    230: {"name": "setIndexedString", "visibility": "internal"},
+    231: {"name": "setIndexedLong", "visibility": "internal"},
+    232: {"name": "setIndexedVector2", "visibility": "internal"},
     # Owning construction stays behind the generated factories.
     12: {"visibility": "internal", "ret": "BackendGodotHandle?"},
     # Tween/Tweener fluent returns collapse onto the receiver (desktop's self-collapse policy).
@@ -855,12 +858,9 @@ CLASS_POLICY: dict[str, dict] = {
     webEmitSignalGeneric(this, signal, args)
   }
 
-  /**
-   * Desktop parity (task 128 C): a typed Godot enum written through the dynamic `set` crosses as
-   * the INT it stands for, like desktop/iOS encode a `GodotEnumValue` Variant.
-   */
-  fun set(propertyPath: String, value: GodotEnumValue) {
-    set(propertyPath, value.value)
+  /** Desktop's `setIndexed` with the path as a String: `setIndexed("position:x", 5.0)`. */
+  fun setIndexed(propertyPath: String, value: Any?) {
+    setIndexed(NodePath(propertyPath), value)
   }
 
   /**
@@ -872,7 +872,13 @@ CLASS_POLICY: dict[str, dict] = {
     return webScriptInstance(token) != null || isWebBrowserHandleLive(token)
   }
 """,
-        "imports": ["net.multigesture.kanama.web.webScriptInstance"],
+        "imports": ["net.multigesture.kanama.types.NodePath", "net.multigesture.kanama.web.webScriptInstance"],
+        # Web sources import `net.multigesture.kanama.api.set` (the typed `set` overloads had
+        # top-level aliases); kept so those imports compile. It forwards to the member.
+        "top_level": """
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun GodotObject.set(property: String, value: Any?) = set(property, value)
+""",
     },
     "Window": {
         "custom": """
@@ -1224,14 +1230,14 @@ val SceneTree.root: Viewport
     getObjectProperty(path)?.let { webRetyped(it, AnimationNodeStateMachinePlayback(it.handle)) }
       ?: error("AnimationMixer parameter '$path' is not an AnimationNodeStateMachinePlayback")
 
-  /** Double-valued blend parameter write (the run tilt add_amount). */
+  /** Double-valued blend parameter write (the run tilt add_amount), `set_indexed` as on desktop. */
   fun setParameter(path: String, value: Double) {
-    set(path, value)
+    setIndexedDouble(path, value)
   }
 
   /** Long parameters (one-shot requests) ride the double family; Godot coerces Variants. */
   fun setParameter(path: String, value: Long) {
-    set(path, value.toDouble())
+    setIndexedDouble(path, value.toDouble())
   }
 """,
         "top_level": """
@@ -1932,6 +1938,8 @@ WEB_GENERIC_METHODS: dict[str, dict[str, tuple[str, str, dict[str, str], str]]] 
         "callv": ("forward", "callv", {"arg_array": "arguments"}, "Desktop's `callv`: [call] with the arguments as one list."),
         "call_deferred": ("queued", "callDeferred", {}, "Desktop's Variant `call_deferred`: queued, so it runs at idle time after this batch."),
         "get_method_argument_count": ("immediate", "getMethodArgumentCount", {}, ""),
+        "set": ("queued", "set", {}, "Desktop's `set` (Godot's `Object.set`, GDScript's `set`): writes the property named\n   * [property]. A path such as `\"position:x\"` names no property, so it changes nothing;\n   * [setIndexed] is the path form. Queued, like every Web mutation."),
+        "set_indexed": ("queued", "setIndexed", {}, "Desktop's `setIndexed` (Godot's `Object.set_indexed`): writes the property path\n   * [propertyPath], so `setIndexed(NodePath(\"position:x\"), 5.0)` sets the x component. Queued."),
         "get_instance_id": ("cached", "instanceId", {}, "The engine instance id, read once per handle and then kept (desktop captures it at\n   * construction): every wrapper of the handle answers without crossing again, also after the\n   * object is freed."),
     },
     # Review N2: Godot's own answer (a popup's window too), one immediate call.
@@ -1939,7 +1947,7 @@ WEB_GENERIC_METHODS: dict[str, dict[str, tuple[str, str, dict[str, str], str]]] 
         "get_window": ("immediate", "getWindow", {}, ""),
     },
 }
-_GENERIC_TYPES = {"Variant": "Any?", "StringName": "String", "String": "String", "Array": "List<Any?>", "int": "Long",
+_GENERIC_TYPES = {"Variant": "Any?", "StringName": "String", "String": "String", "NodePath": "NodePath", "Array": "List<Any?>", "int": "Long",
                   "float": "Double", "bool": "Boolean"}
 
 

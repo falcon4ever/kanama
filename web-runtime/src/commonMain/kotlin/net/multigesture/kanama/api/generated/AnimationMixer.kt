@@ -51,14 +51,14 @@ open class AnimationMixer(godotObject: GodotHandle) : Node(godotObject) {
     getObjectProperty(path)?.let { webRetyped(it, AnimationNodeStateMachinePlayback(it.handle)) }
       ?: error("AnimationMixer parameter '$path' is not an AnimationNodeStateMachinePlayback")
 
-  /** Double-valued blend parameter write (the run tilt add_amount). */
+  /** Double-valued blend parameter write (the run tilt add_amount), `set_indexed` as on desktop. */
   fun setParameter(path: String, value: Double) {
-    set(path, value)
+    setIndexedDouble(path, value)
   }
 
   /** Long parameters (one-shot requests) ride the double family; Godot coerces Variants. */
   fun setParameter(path: String, value: Long) {
-    set(path, value.toDouble())
+    setIndexedDouble(path, value.toDouble())
   }
 
   /** Signal `animation_list_changed`; see [TypedSignal]. */

@@ -214,6 +214,8 @@ script = ExtResource("16_twin")
 [node name="GuardReceiver" type="Node" parent="."]
 script = ExtResource("17_fscript")
 
+[node name="PathTarget" type="Node3D" parent="."]
+
 [node name="LentTwin" type="Node" parent="."]
 script = ExtResource("18_lenttwin")
 

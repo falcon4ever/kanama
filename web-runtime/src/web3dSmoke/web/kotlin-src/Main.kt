@@ -1479,7 +1479,8 @@ class Main(godotObject: GodotHandle) :
       says(probe, "container_rows") or
         (says(probe, "gd_rows") shl 6) or
         (says(probe, "handle_rows") shl 9) or
-        (says(probe, "lent_rows") shl 12)
+        (says(probe, "lent_rows") shl 12) or
+        (says(probe, "property_path_rows") shl 15)
     bundleAfterMask = 0L
     val guardConnected = says(probe, "guard_receiver_connect") == 1L
     val freedLate = says(holder, "freed_script_lookup") == 1L && says(holder, "freed_script_late") == 1L
@@ -1494,7 +1495,7 @@ class Main(godotObject: GodotHandle) :
 
   /**
    * Container rows (6 bits) | GD rows (3 bits) << 6 | handle rows (3 bits) << 9 | lent-handle rows
-   * (3 bits) << 12 of [bundleProbe]: 32767 when healthy.
+   * (3 bits) << 12 | property-path rows (4 bits) << 15 of [bundleProbe]: 524287 when healthy.
    */
   fun bundleValues(value: Long): Long = bundleValues
 

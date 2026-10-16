@@ -499,6 +499,11 @@ case("check_public_signature_changes.py (Web parity)", py("check_public_signatur
            "  internal fun callQueued(method: String, value: Double) {", "  fun call(method: String, value: Double) {")],
      "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only GodotObject: fun call(method: String, value: Double)",
      "Web declares a `call` overload desktop does not have (a Unit-returning queued call hides the Variant `call`, task 129 E review S3)")
+case("check_public_signature_changes.py (Web path-form set)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated/GodotObject.kt",
+           "  internal fun setIndexedDouble(propertyPath: String, value: Double) {", "  fun set(propertyPath: String, value: Double) {")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only GodotObject: fun set(propertyPath: String, value: Double)",
+     "Web publishes its typed set_indexed arm as a `set` overload again: set(\"position:x\", 5.0) would write the component on Web and nothing on desktop")
 case("check_public_signature_changes.py (Web GodotObject extension)", py("check_public_signature_changes.py"),
      [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt",
            "fun GodotObject.asObject(): GodotObject = this",
