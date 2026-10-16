@@ -477,6 +477,13 @@ of both surfaces):
 Code that must compile for Web and native should not rely on parameter names where they differ,
 and should treat `getTree()` as nullable.
 
+A difference is a compile error, never a different result. `GodotObject.set(property, value)` is
+Godot's `Object.set` on every backend, like GDScript's `set`: a path such as `"position:x"` names
+no property, so it changes nothing; `setIndexed("position:x", value)` is the path form. Web's own
+`GodotObject` members that native lacks or declares differently (no `get(property): Any?`, a
+`setDeferred` that takes only a `Boolean`) fail the Web compile; `check_public_signature_changes.py`
+lists each one with its reason (`WEB_GODOT_OBJECT_DRIFT`) and fails on any it does not list.
+
 ## Source breaks
 
 A source break is any change that can stop a script from compiling: a removed or renamed

@@ -255,6 +255,9 @@ check "task51 resource meta set_get=51 has=true"
 # task 52a / issue #60 — Node.setOwner(null) clears the owner through the typed wrapper
 # (and the writable owner: Node? property). Reverting to a non-null setOwner fails to compile.
 check "task52a setOwner set=true cleared=true prop_set=true prop_cleared=true"
+# GodotObject.set is Object.set on every backend: set("position:x", 5.0) changes nothing (as in
+# GDScript), setIndexed is the path form. The web3d bundle has the Web twin of this row.
+check "Object.set property path set_x=0.0 set_indexed_x=5.0"
 # MutableList export (preserves mutability in the setter): ARRAY + PROPERTY_HINT_TYPE_STRING,
 # set/get round-trip for a mutable typed list.
 check "kt script mutable list export type=true hint=true hint_string=true roundtrip=true"
