@@ -39,6 +39,12 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — the dodge × Firefox Web quarantine is renewed to 2027-03-31
+
+With the deterministic dodge driver, dodge on the Linux runner's Firefox still fails only
+`mobsSpawnAndFree` (spawned mobs never free on a Linux host; it passes on macOS), so the cell stays
+quarantined: it still exports, runs and reports, and does not fail the build.
+
 ### Changed — the Web dodge cell is deterministic and checks hits strictly
 
 The dodge driver of the Web matrix used to restart a round when the stationary player was hit early,

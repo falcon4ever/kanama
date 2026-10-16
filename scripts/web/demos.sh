@@ -194,8 +194,9 @@ kanama_web_quarantine_reason() {
 # citing task is re-planned; the matrix warns loudly once today is past it.
 kanama_web_quarantine_until() {
   case "$1" in
-    # quarantined 2026-07-28 (task 71 parked); maintainer sets the real date.
-    dodge:firefox) echo "2026-10-31" ;;
+    # quarantined 2026-07-28 (task 71 parked); renewed 2026-10-16: the deterministic dodge driver
+    # still fails mobsSpawnAndFree on the Linux runner's Firefox (run 38935816875) and passes on macOS.
+    dodge:firefox) echo "2027-03-31" ;;
     *) : ;;
   esac
 }
