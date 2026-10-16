@@ -286,13 +286,16 @@ The full statement is [Resource Ownership](../game-dev/godot-api.md#resource-own
   close them. Nodes and plain `Object`s have no `close()`; free nodes with `queueFree()`.
 - A lambda signal connection is released by Godot when the receiver or the emitter is freed, a
   one-shot connection fires, or it is disconnected; `SignalConnection.close()` is only needed to
-  disconnect early (task 131; desktop, Android and iOS, not yet Web). See
+  disconnect early (task 131; every platform). See
   [Signals](../game-dev/signals.md).
 - An exception thrown from a script callback is reported as a Godot script error with the Kotlin
-  file and line, and the call returns `null` (task 131; desktop, Android and iOS, not yet Web).
+  file and line, and the call returns `null` (task 131; desktop, Android and iOS). On Web the same
+  report reaches the Godot log, but the production build cannot name the Kotlin line (it names the
+  containment site, see [Web internals](../contributing/backends/web.md)).
 
 - **Close to release early.** A forgotten `close()` is a late release, not a leak (task 132;
-  desktop, Android 13+ and iOS, not yet Web; device runs pending): an owned wrapper registers a cleanup that holds only
+  desktop, Android 13+ and iOS (device self-tests on the Pixel and iPhone); on Web the browser's collector
+  drives it and the bridge drains it each frame): an owned wrapper registers a cleanup that holds only
   its handle, and once the garbage collector drops the wrapper the reference is released on the
   main thread at the next frame. `close()` cancels that cleanup, so a reference is released once.
   Borrowed views register nothing. At shutdown a collection runs before Godot's leak report. The

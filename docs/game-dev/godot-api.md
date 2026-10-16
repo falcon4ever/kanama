@@ -601,6 +601,10 @@ forgotten wrapper of it is not released until its script is detached
 therefore safe, at the price of that resource staying alive. Extend
 `KanamaScript` for resources you create and drop often.
 
+On Web this link does not exist yet: a script object does not keep its
+`RefCounted` owner alive, so keep your wrapper of the resource (or the resource
+itself) for as long as you use the script object.
+
 ### Two cleanups in one function
 
 Nodes are **not** reference-counted, so `close()` does not apply to them at all.
