@@ -19,7 +19,7 @@ kanama/
 ├── web-runtime/            # Kotlin/Wasm Web backend, generated wrappers (api/generated/), proxies, JS bridge
 ├── kanama-common-api/      # Web call contract (opcodes, shapes, descriptors) from extension_api.json
 ├── example_project/        # Godot smoke-test project
-├── templates/              # starter, starter_project, consumer-gradle, release-kit, store-addon
+├── templates/              # starter, consumer-gradle, release-kit, store-addon
 ├── scripts/                # Local CI, smoke, audit, and generator scripts
 └── docs/                   # MkDocs documentation
 ```

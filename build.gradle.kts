@@ -975,6 +975,29 @@ tasks.register<Zip>("packageStoreNativeArtifact") {
   from(prepareStoreNativeArtifact)
 }
 
+// The Gradle project shape of a new Kanama game: the release-kit project and Gradle files, the
+// Gradle wrapper, kotlin-src/HelloScript.kt, the editor tools and the consumer build script that
+// declares Kanama's repositories, dependencies and `buildScripts`. The desktop kit zips it and
+// createStarterProject copies it, so a starter made from a source checkout is the same IntelliJ-
+// importable Gradle project as a kit (installAddonJar then adds the runtime and addons/kanama/maven).
+val kanamaGradleProjectSpec = copySpec {
+  from(layout.projectDirectory.dir("templates/release-kit")) {
+    filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
+  }
+  from(layout.projectDirectory.file("templates/starter/HelloScript.kt")) { into("kotlin-src") }
+  from(layout.projectDirectory.dir("templates/starter/addons/kanama_tools")) {
+    into("addons/kanama_tools")
+  }
+  from(layout.projectDirectory.file("LICENSE")) { into("addons/kanama_tools") }
+  from(layout.projectDirectory.file("templates/consumer-gradle/kanama-project.gradle.kts")) {
+    into("addons/kanama")
+    filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
+  }
+  from(layout.projectDirectory.file("gradlew")) { filePermissions { unix("rwxr-xr-x") } }
+  from(layout.projectDirectory.file("gradlew.bat"))
+  from(layout.projectDirectory.dir("gradle")) { into("gradle") }
+}
+
 tasks.register<Zip>("packageDesktopKit") {
   group = "distribution"
   description = "Build a source-free Kanama desktop starter kit for the selected host platform."
@@ -993,23 +1016,12 @@ tasks.register<Zip>("packageDesktopKit") {
   isPreserveFileTimestamps = false
   isReproducibleFileOrder = true
 
-  from(layout.projectDirectory.dir("templates/release-kit")) {
-    filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
-  }
-  from(layout.projectDirectory.file("templates/starter/HelloScript.kt")) { into("kotlin-src") }
-  from(layout.projectDirectory.dir("templates/starter/addons/kanama_tools")) {
-    into("addons/kanama_tools")
-  }
-  from(layout.projectDirectory.file("LICENSE")) { into("addons/kanama_tools") }
+  with(kanamaGradleProjectSpec)
   from(packageGdextensionDescriptorFile) {
     into("addons/kanama")
     rename { "kanama.gdextension" }
   }
   from(layout.buildDirectory.file("libs/kanama.jar")) { into("addons/kanama") }
-  from(layout.projectDirectory.file("templates/consumer-gradle/kanama-project.gradle.kts")) {
-    into("addons/kanama")
-    filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
-  }
   from(packageMavenRepositoryDir) { into("addons/kanama/maven") }
   from(nativeBootstrapArtifact) { into("addons/kanama/bin/${packagePlatformClassifier.get()}") }
   from(packageExtensionListFile) {
@@ -1017,9 +1029,6 @@ tasks.register<Zip>("packageDesktopKit") {
     rename { "extension_list.cfg" }
   }
   from(layout.projectDirectory.file("LICENSE")) { into("addons/kanama") }
-  from(layout.projectDirectory.file("gradlew")) { filePermissions { unix("rwxr-xr-x") } }
-  from(layout.projectDirectory.file("gradlew.bat"))
-  from(layout.projectDirectory.dir("gradle")) { into("gradle") }
 }
 
 tasks.register<Zip>("packageStoreAddon") {
@@ -2147,6 +2156,21 @@ tasks.register<Copy>("installAddonJar") {
   }
   from(layout.buildDirectory.file("libs/kanama.jar"))
   from(project(":project-scripts").tasks.named<Jar>("jar").flatMap { it.archiveFile })
+  // A Gradle consumer project (createStarterProject's output: it applies
+  // addons/kanama/kanama-project.gradle.kts) builds its own scripts with `./gradlew buildScripts`
+  // and IntelliJ resolves the Kanama API from addons/kanama/maven. Refresh both from this checkout
+  // with the runtime, so the API it compiles against is the runtime it runs on.
+  val consumerGradleProject =
+    targetProjectDir
+      .map { file(it).resolve("addons/kanama/kanama-project.gradle.kts").isFile }
+      .getOrElse(false)
+  if (consumerGradleProject) {
+    dependsOn(publishKanamaPackageMavenRepository)
+    from(packageMavenRepositoryDir) { into("maven") }
+    from(layout.projectDirectory.file("templates/consumer-gradle/kanama-project.gradle.kts")) {
+      filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
+    }
+  }
   into(targetProjectDir.map { file(it).resolve("addons/kanama") })
   outputs.file(extensionListFile)
 
@@ -2220,8 +2244,7 @@ tasks.register<Copy>("createStarterProject") {
   val allowOverwrite =
     providers.gradleProperty("kanamaStarterOverwrite").map(String::toBoolean).orElse(false)
 
-  from(layout.projectDirectory.dir("templates/starter"))
-  from(layout.projectDirectory.dir("templates/starter_project"))
+  with(kanamaGradleProjectSpec)
   into(targetProjectDir.map { file(it) })
 
   doFirst {

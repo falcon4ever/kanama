@@ -43,7 +43,13 @@ includes `Open Kotlin`, which opens the configured Kotlin source folder in the
 operating system so you can jump back to IntelliJ IDEA or another external
 editor workflow quickly.
 
-For starter and external projects, `Build Scripts` runs:
+In a project with its own Gradle wrapper (a starter from
+`createStarterProject`, a release kit, or a project set up from the store
+addon), `Build Scripts` runs `./gradlew buildScripts` in the project folder. It
+compiles the project's `kotlin-src` against the Kanama API in
+`addons/kanama/maven` and writes `addons/kanama/kanama-scripts.jar`.
+
+In a project without one, `Build Scripts` runs from the Kanama checkout:
 
 ```sh
 ./gradlew -p <kanama repo> installAddonJar \
@@ -135,11 +141,11 @@ lives:
 tools/repo_dir="/absolute/path/to/kanama"
 ```
 
-Projects created with `createStarterProject` do not include a Gradle wrapper.
-In that case, **Build Scripts** runs `installAddonJar` from the Kanama source
-checkout resolved through `kanama/tools/repo_dir` or the sibling checkout
-autodetection. If a consumer project adds its own Gradle wrapper, the plugin
-expects that project to provide a `buildScripts` task.
+A project without its own Gradle wrapper (one prepared with
+`installStarterTemplate`) builds through `installAddonJar` from the Kanama
+source checkout resolved through `kanama/tools/repo_dir` or the sibling checkout
+autodetection. A project with its own Gradle wrapper must provide a
+`buildScripts` task; the starter, release-kit and store-addon builds do.
 
 Useful editor settings:
 

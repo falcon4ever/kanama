@@ -628,6 +628,10 @@ else
 DEVELOPER_DIR="$xcode_developer_dir" "$ROOT_DIR/gradlew" createStarterProject \
   -PkanamaStarterProjectDir="$project_dir" \
   -PkanamaStarterOverwrite=true
+# The smoke writes its own main.tscn and scripts. The starter's kotlin-src/HelloScript.kt (a desktop
+# starter: it formats with the JVM-only String.format) must not reach the probe modes that compile
+# kotlin-src for iOS, so it goes; the scene that attached it is rewritten below.
+rm -f "$project_dir/kotlin-src/HelloScript.kt"
 
 cp "$ROOT_DIR/docs/assets/kanama-logo.png" "$project_dir/icon.png"
 

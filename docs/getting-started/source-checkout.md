@@ -10,8 +10,10 @@ git clone https://github.com/falcon4ever/kanama
 cd kanama
 ```
 
-Keep the checkout near your Godot projects so the editor plugin can find
-`gradlew`, or set `kanama/tools/repo_dir` in Godot project settings.
+A project without its own Gradle wrapper (one prepared with
+`installStarterTemplate` below) builds through this checkout: keep it near your
+Godot projects so the editor plugin can find its `gradlew`, or set
+`kanama/tools/repo_dir` in Godot project settings.
 
 ## 2. Create or Prepare a Godot Project
 
@@ -22,6 +24,11 @@ For a new starter project:
   -PkanamaStarterProjectDir=/absolute/path/to/kanama-starter
 ```
 
+The starter has the same shape as a [release kit](release-kit.md): a Godot
+project and a Gradle project with its own wrapper, `kotlin-src/HelloScript.kt`
+attached to the main scene, and `addons/kanama/kanama-project.gradle.kts`, which
+declares the Kanama dependencies and the `buildScripts` task.
+
 For an existing project, copy only the safe starter files:
 
 ```sh
@@ -30,7 +37,10 @@ For an existing project, copy only the safe starter files:
 ```
 
 `installStarterTemplate` copies `HelloScript.kt` and
-`addons/kanama_tools` without replacing `project.godot` or your main scene.
+`addons/kanama_tools` without replacing `project.godot` or your main scene. It
+adds no Gradle build: such a project builds through the checkout's
+`installAddonJar` (step 3). For an existing project that should build on its own
+and import into IntelliJ IDEA, use [the store addon](store-addon.md).
 
 ## 3. Build and Sync Kanama
 
@@ -43,7 +53,11 @@ For an existing project, copy only the safe starter files:
 This builds `kanama.jar`, builds the host native bootstrap with CMake, compiles
 project `.kt` files into `kanama-scripts.jar`, copies addon files into
 `<kanamaProjectDir>/addons/kanama`, and registers the extension in
-`<kanamaProjectDir>/.godot/extension_list.cfg`.
+`<kanamaProjectDir>/.godot/extension_list.cfg`. In a starter project it also
+refreshes `addons/kanama/maven` (the Kanama runtime, annotations and processor
+published from this checkout) and `addons/kanama/kanama-project.gradle.kts`, so
+the starter's own Gradle build compiles against the runtime it runs on. Rerun it
+after updating the checkout.
 
 If your Kotlin scripts live outside the project root, point
 `kanamaProjectScriptsDir` at that folder. For multiple roots, use
@@ -54,8 +68,10 @@ If your Kotlin scripts live outside the project root, point
 1. Open the project in Godot.
 2. Confirm **Kanama Tools** is enabled in **Project > Project Settings > Plugins**.
 3. Press **Play**.
-4. Edit a Kotlin script.
-5. Press **Build Scripts** in the Godot toolbar.
+4. Open the starter folder in IntelliJ IDEA as a Gradle project (it resolves the
+   Kanama API from `addons/kanama/maven`) and edit a Kotlin script.
+5. Press **Build Scripts** in the Godot toolbar, or run `./gradlew buildScripts`
+   in the starter folder.
 6. Press **Play** again.
 
 See [The Editor Loop](editor-workflow.md) for hot reload and debugger setup.

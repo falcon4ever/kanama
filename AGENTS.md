@@ -105,10 +105,11 @@ task, then use targeted `rg` searches.
 - `annotations`: public KSP annotation definitions for game scripts.
 - `processor`: KSP processor that emits script registrars and metadata.
 - `project-scripts`: Gradle support for compiling consumer project scripts.
-- `templates/starter` and `templates/starter_project`: source-checkout
-  onboarding templates.
-- `templates/release-kit` and `templates/store-addon`: packaged artifact
-  templates.
+- `templates/starter`: the starter script and editor tools (`installStarterTemplate`).
+- `templates/release-kit` and `templates/consumer-gradle`: the Gradle project
+  shape of a new game, shared by the desktop kit and `createStarterProject`
+  (one `copySpec` in `build.gradle.kts`); `templates/store-addon`: the
+  store-addon setup scripts.
 - `example_project`: local smoke-test Godot project.
 - `scripts`: CI, smoke, audit, packaging, and generator helper scripts.
 - `docs`: public MkDocs documentation.

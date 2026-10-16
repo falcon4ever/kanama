@@ -1,6 +1,8 @@
 # Kanama Desktop Kit
 
-This project is ready to run with the packaged Kanama addon.
+This Godot project builds its Kotlin scripts with Gradle and the Kanama addon.
+Open the folder in IntelliJ IDEA as a Gradle project for Kotlin completion of
+the Kanama API (resolved from `addons/kanama/maven`).
 
 `build.gradle.kts` is intentionally small. Kanama's reusable repositories,
 dependencies, and build/run tasks live in `addons/kanama/kanama-project.gradle.kts`.

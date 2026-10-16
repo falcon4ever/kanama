@@ -894,6 +894,12 @@ case("check_bootstrap_jdk_resolution.sh", ["bash", "scripts/check_bootstrap_jdk_
 case("check_gradle_templates_configure.sh", ["bash", "scripts/check_gradle_templates_configure.sh"],
      [Edit("templates/release-kit/settings.gradle.kts", "pluginManagement {", "plugins { }\npluginManagement {")],
      "does not configure", "the release-kit settings file puts `plugins {}` before `pluginManagement {}`", slow=True)
+case("check_gradle_templates_configure.sh (starter wrapper)", ["bash", "scripts/check_gradle_templates_configure.sh"],
+     [Edit("build.gradle.kts", '  from(layout.projectDirectory.file("gradlew")) { filePermissions { unix("rwxr-xr-x") } }\n  from(layout.projectDirectory.file("gradlew.bat"))\n  from(layout.projectDirectory.dir("gradle")) { into("gradle") }\n}', "}")],
+     "source-checkout starter has no gradlew", "createStarterProject stops copying the Gradle wrapper (the starter then has no `./gradlew buildScripts`)", slow=True)
+case("check_gradle_templates_configure.sh (documented task)", ["bash", "scripts/check_gradle_templates_configure.sh"],
+     [Edit("README.md", "cd /path/to/kanama-starter\n./gradlew buildScripts", "cd /path/to/kanama-starter\n./gradlew buildKotlinScripts")],
+     "has no task buildKotlinScripts", "the README Quick Start tells the user to run a starter task that does not exist", slow=True)
 
 
 case("web/scaffold_selftest.sh", ["bash", "scripts/web/scaffold_selftest.sh"],

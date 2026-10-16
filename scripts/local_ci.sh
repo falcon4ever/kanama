@@ -520,7 +520,7 @@ if ! grep -Fq 'libjvm not found. Kanama desktop runtime requires a JDK 25+' "$RO
   exit 1
 fi
 
-stage "Gradle templates configure (release kit + consumer script)"
+stage "Gradle templates configure (starters + documented commands)"
 "$ROOT_DIR/scripts/check_gradle_templates_configure.sh"
 
 stage "gradle sync"
