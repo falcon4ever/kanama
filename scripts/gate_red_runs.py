@@ -863,7 +863,7 @@ case("check_exported_scene_properties_selftest.sh (--require-converted)", ["bash
      "--require-converted passed", "the scene check stops honouring --require-converted: a caller that expects converted scenes would pass an export that converted none",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("check_exported_scene_properties_selftest.sh (conversion off)", ["bash", "scripts/check_exported_scene_properties_selftest.sh", GODOT],
-     [Edit("scripts/check_exported_scene_properties.gd", "\tif not bool(ProjectSettings.get_setting(CONVERT_SETTING, true)):", "\tif false:")],
+     [Edit("scripts/check_exported_scene_properties.gd", "\tif not bool(ProjectSettings.get_setting(CONVERT_SETTING, true)) and not _has_feature_override(CONVERT_SETTING):", "\tif false:")],
      "on a project that turns conversion off", "the scene check ignores editor/export/convert_text_resources_to_binary=false: --require-converted fails a project whose scenes ship as text with their values",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("tool_smoke.sh (export guard check)",["bash", "scripts/tool_smoke.sh", GODOT],
