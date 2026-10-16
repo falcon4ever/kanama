@@ -406,8 +406,10 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
       }
       val lentAfter = counter("liveLent")
       val liveAfter = counter("liveBrowserHandleCount")
-      if (lentAfter == lentBefore) maskB = maskB or 4L else note("L5 lent $lentBefore -> $lentAfter")
-      if (liveAfter == liveBefore) maskB = maskB or 8L else note("L5 live $liveBefore -> $liveAfter")
+      // Not more than before: the two freed nodes' handles are released. Fewer is fine — the browser's
+      // collector may release earlier rows' RefCounted handles in the same frames (Linux CI Firefox did).
+      if (lentAfter <= lentBefore) maskB = maskB or 4L else note("L5 lent $lentBefore -> $lentAfter")
+      if (liveAfter <= liveBefore) maskB = maskB or 8L else note("L5 live $liveBefore -> $liveAfter")
       // L1, much later.
       if (l1Mask() == 63L) maskA = maskA or 64L
       // L7: the twin drops the RefCounted it held; nothing else holds it (checked after L6).
