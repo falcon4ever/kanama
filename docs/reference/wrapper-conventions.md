@@ -294,7 +294,7 @@ The full statement is [Resource Ownership](../game-dev/godot-api.md#resource-own
   containment site, see [Web internals](../contributing/backends/web.md)).
 
 - **Close to release early.** A forgotten `close()` is a late release, not a leak (task 132;
-  desktop, Android 13+ and iOS; device runs pending; on Web the browser's collector
+  desktop, Android 13+ and iOS (device self-tests on the Pixel and iPhone); on Web the browser's collector
   drives it and the bridge drains it each frame): an owned wrapper registers a cleanup that holds only
   its handle, and once the garbage collector drops the wrapper the reference is released on the
   main thread at the next frame. `close()` cancels that cleanup, so a reference is released once.
