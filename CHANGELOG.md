@@ -165,6 +165,15 @@ for a tracked gap can be listed in `KNOWN_FINDINGS` with the failure text it exc
 failure of its Variant-path half prints `KNOWN:` (counted as `known`) instead of `FAIL:`, any other
 failure still fails, and a pass fails until the entry is removed. The list is empty.
 
+### Fixed — Desktop and Android: calls that return an engine-built array no longer crash
+
+A Godot method whose engine implementation builds its `Array` result in place (a C++ `Vector<Variant>`,
+`Vector<RID>` or `Vector<Plane>` return, such as `Camera3D.getFrustum()` and
+`Animation.methodTrackGetParams()`) crashed the process when called from Kotlin on the desktop and
+Android: the return buffer Kanama handed the engine was zero-filled instead of holding an empty
+`Array`, and the engine resized a null `Array`. Every call that returns an `Array` or a typed array now
+passes a constructed one.
+
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 
 The control (a plain GDScript visibility-notifier export, `visibility-control` in `web.yml`) handed the

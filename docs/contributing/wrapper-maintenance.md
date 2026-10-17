@@ -1029,6 +1029,15 @@ iOS may declare more than desktop needs — an `actual object` may carry extra m
 is how the iOS-only `ptrcallNoArgsRetByteArray(methodBind, instance, sizeHint)` coexists
 with the two-argument shape desktop declares.
 
+**An Array return buffer holds a constructed Array.** The engine writes a ptrcall's return into
+the buffer the caller passes. For most types it assigns, which works on a zero-filled buffer, but a
+method whose C++ return type is `Vector<Variant>`, `Vector<RID>` or `Vector<Plane>` (exposed as an
+`Array` or a typed array, e.g. `Animation.method_track_get_params`, `Geometry3D.build_box_planes`)
+resizes the buffer's Array in place, and a zero-filled buffer is a null Array: the process crashes.
+Every desktop helper that reads an Array return constructs an empty one in the buffer first
+(`BuiltinTypes.constructEmptyArray`, in `callArrayReturn` and in the helpers that read their Array
+return directly). Packed arrays, `String`, `Dictionary` and `Variant` returns take a zero-filled buffer.
+
 The drift gate (`check_single_tree`) compares the region's MEMBER SET rather than its bytes,
 because the file is ktfmt-formatted outside the region and so the region gets reformatted
 after every regen; `--write-tree` skips rewriting the file for the same reason when the
