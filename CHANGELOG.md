@@ -50,6 +50,33 @@ still build against this release. The Android plugin
 now compiles with Kotlin 2.4.21 too: until now the Android Gradle plugin's built-in Kotlin (2.2.10)
 compiled it, whatever version the root build named.
 
+### Fixed — iOS: `get`, `call` and `callv` with RID, PackedByteArray and value types in arrays
+
+On iOS the generic Variant path (`GodotObject.get`, `call`, `callv`, `getMeta`, signal arguments)
+lost or refused values that work on desktop:
+
+- `get` of a `RID` property (`CharFXTransform.font`) answered `null`; it answers the `RID`.
+- An array or dictionary holding a `RID`, `Transform3D`, `Transform2D`, `Basis`, `Quaternion`,
+  `AABB`, `Plane`, `Projection`, `Rect2`, `Rect2i`, `Vector3i`, `Vector4` or `Vector4i` came back
+  with `null` in its place (`GLTFSkin.inverse_binds`, `NavigationPathQueryParameters2D.excluded_regions`,
+  a script receiving such an array as a signal argument); each element now keeps its value.
+- A `ByteArray` argument to `call` / `callv` / `set` / `setMeta` failed with
+  `encodeVariantArgs: unsupported arg type ByteArray` (`AudioStreamWAV.load_from_buffer`,
+  `Image.create_from_data` through `callv`); it is passed as a `PackedByteArray`.
+- Those value types inside a `List` or `Map` argument were refused (`ImporterMesh.merge_importer_meshes`
+  with an array of `Transform3D`), and a script method returning such a list handed Godot `nil`
+  elements; both now carry the values.
+- `get` of a `NodePath` property answered the path as a `String`; it answers a `NodePath`, as on
+  desktop. Code that cast the result to `String` on iOS reads `(value as NodePath).path` instead.
+
+- A script method returning a `List` or `Map` that holds a value with no Godot type (any other
+  Kotlin object) handed Godot `nil` for it; it now fails with an error naming the type, as on
+  desktop.
+
+`Callable` and `Signal` values still read back as `null` through this path, on desktop and iOS
+alike. On iOS only, a signal or script-method argument of either type fails with an error naming
+the type, where desktop passes `null`.
+
 ### Added — tooling: an inventory of every `ObjectCalls` helper and how a generated exercise can check it
 
 Contributors: `scripts/generate_api_exercise.py` classifies each of the 1,492 helpers the shared tree calls (static, property pair, const oracle, singleton, reach only, excluded with a reason) into [API Exercise Inventory](docs/reference/generated/api-exercise.md); the local_ci stage "API exercise inventory drift" fails when the page is stale, when `scripts/api_exercise_policy.py` names a class or method the API lacks, or when a helper is classified by nothing.

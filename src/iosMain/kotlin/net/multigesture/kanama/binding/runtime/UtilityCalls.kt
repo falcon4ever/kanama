@@ -168,20 +168,24 @@ internal actual object UtilityCalls {
     when {
       retType < 0 -> null
       retType == VT_RID -> RID(outInt.value)
+      // The decode answers a NodePath for a delivered NODE_PATH (desktop parity).
       retType == VT_NODE_PATH ->
-        with(ObjectCalls) {
-          NodePath(
-            decodeVariantScalarReturn(
-              delivered,
-              outInt,
-              outDouble,
-              outStr,
-              STR_BUF_SIZE,
-              outStrLen,
-              outIsRefCounted,
-            )
-              as String
-          )
+        when (
+          val value =
+            with(ObjectCalls) {
+              decodeVariantScalarReturn(
+                delivered,
+                outInt,
+                outDouble,
+                outStr,
+                STR_BUF_SIZE,
+                outStrLen,
+                outIsRefCounted,
+              )
+            }
+        ) {
+          is NodePath -> value
+          else -> NodePath(value as String)
         }
       else ->
         with(ObjectCalls) {

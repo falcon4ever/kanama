@@ -168,12 +168,29 @@ Four rules of the bridge (three about ownership), each with its self-test rows:
   them for the call). A type with no cell (Callable, Signal) arrives tagged
   `KANAMA_IOS_ARG_UNMARSHALLED_BASE + type` and the decode throws naming it, never a silent null;
   a container whose blob cannot be allocated arrives tagged `KANAMA_IOS_ARG_ENCODE_OOM_BASE + type`
-  and the decode reports the out-of-memory. Limits of the shared blob encoder (it also encodes
-  container returns): a container nested more than `KANAMA_IOS_BLOB_MAX_DEPTH` (8) levels, and an
-  element type it has no case for (a Vector3i inside an Array, ...), are encoded with byteLen 0 and
-  arrive as `null` inside the container. This is documented, not loud: making it loud means a
-  fault flag on the blob and a Kotlin error path shared with the returns.
+  and the decode reports the out-of-memory. The shared blob encoder (it also encodes container
+  returns) has a case for every Godot 4.7 Variant type: RID as its id, the value types Vector3i ...
+  Projection as their raw bytes (the scalar-return layout, decoded by `decodeIosRawVariant`), and
+  Nil, Callable and Signal as an empty record that decodes to `null`, which is what desktop's
+  `variantToScalar` answers for them. A Variant type a later engine adds reports a `FAULT
+  ... unknown-tag variant-type=<n>` instead of encoding silently. The one remaining limit: a
+  container nested more than `KANAMA_IOS_BLOB_MAX_DEPTH` (8) levels arrives as `null`.
   Rows: `lambda-args(...)` (scene init: String, Vector3, Color, Array, Dictionary, Vector3i).
+- **Every Variant type round-trips the generic path like desktop, with one difference.** A
+  Callable or Signal reads back as `null` on both backends, but as an inbound signal or
+  script-method argument iOS refuses it with an error naming the type (above), where desktop's
+  `variantToScalar` passes `null`. A container element or script container return value with no
+  Variant shape throws naming its type, as desktop's `initVariantFromAny` does; an element with
+  fewer bytes than its type needs reports `FAULT ... short-payload`. The scalar return decode
+  (`kanama_ios_decode_variant_scalar`) answers a RID (`Object.get` of a RID property) and a NodePath
+  as a `NodePath`; the outbound encoders take a `ByteArray` (`PT_PACKED_BYTE_ARRAY`, boxed by
+  `kanama_ios_pt_arg_to_variant`) and the value types inside a `List`/`Map` argument
+  (`IosReturnContainerScratch.taggedValue` -> `kanama_ios_pt_blob_value_to_variant`). Rows (scene
+  init, `runVariantTypeRows`): `variant-type(<T>) ret|elem|arg|in` for each of the 39 types, each
+  against a value the engine built or compared through an `Expression`, and `variant-get(...)` for
+  `CharFXTransform.font`, `NavigationPathQueryParameters2D.excluded_regions` and
+  `GLTFSkin.inverse_binds`; the line `OBJECTCALLS SELFTEST variant-types ret-failed=0[] ...`
+  names any type that fails per path.
 - **A script property's default is its initializer (task 138 item 8).** The iOS registry carries
   `KanamaIosScriptProperty.defaultValue`, emitted by KSP from the literal desktop's registrar
   declares as `default<Name>` and converted like `getProperty`; `Script._has/_get_property_default_value`
@@ -331,9 +348,10 @@ that caller is in scope and reports (`unknown-tag`, `api-unresolved`, …) with 
 helper could not name. They are not silent paths; they are the inside of a path whose exit
 reports.
 
-The reason token is one of ten fixed spellings — `api-unresolved`, `null-bind`,
+The reason token is one of fourteen fixed spellings — `api-unresolved`, `null-bind`,
 `bind-lookup-failed`, `null-instance`, `null-handle`, `null-arg`, `pending-protocol`,
-`callable-build`, `unknown-tag`, `encode-failed` — and the detail names the specific thing:
+`callable-build`, `unknown-tag`, `encode-failed`, `short-payload`, `alloc-failed`,
+`too-many-args`, `progress-readback` — and the detail names the specific thing:
 the missing interface pointer, the parameter, `Class.method hash=<hash>`, the tag number.
 They are documented for users in `docs/exporting/ios.md`.
 

@@ -316,8 +316,9 @@ typedef struct {
  * bridge simply stops failing quietly. `reason` is one of the fixed tokens documented in
  * `docs/contributing/backends/ios.md` (api-unresolved, null-bind, bind-lookup-failed,
  * null-instance, null-handle, null-arg, pending-protocol, callable-build, unknown-tag,
- * encode-failed); `detail` is optional and names the thing that was wrong (the missing
- * interface pointer, the parameter, `Class.method hash=<hash>`, the tag number).
+ * encode-failed, short-payload, alloc-failed, too-many-args, progress-readback); `detail` is
+ * optional and names the thing that was wrong (the missing interface pointer, the parameter,
+ * `Class.method hash=<hash>`, the tag number).
  *
  * There is deliberately no reset function: faults are never cleared, so a fault in frame 1
  * is still visible in the summary line at the end of the run.
@@ -778,7 +779,7 @@ enum {
     // Dictionary: [int32 count]([int32 key_len][key utf8][int32 val_tag][int32 val_len][val bytes])*
     // Array:      [int32 count]([int32 elem_tag][int32 elem_len][elem bytes])*
     // where each tagged value uses the audited scalar encodings of
-    // kanama_ios_pt_blob_value_to_variant (unaudited tags box as nil).
+    // kanama_ios_pt_blob_value_to_variant (an unknown tag boxes as nil and reports a FAULT).
     KANAMA_IOS_PT_DICTIONARY,           // 29
     KANAMA_IOS_PT_ARRAY,                // 30
     // Fixed-element packed-array returns: the PT return scratch holds a pointer to a
@@ -4160,8 +4161,50 @@ static void kanama_ios_blob_encode_variant(KanamaIosBlob *b, uint8_t *variant, i
         case KANAMA_IOS_VARIANT_TYPE_PACKED_STRING_ARRAY:
             kanama_ios_blob_encode_packed(b, vtype, variant);
             break;
-        default:
-            break;  // un-decoded type: byteLen 0 -> Kotlin surfaces null (scalar-decode philosophy)
+        case KANAMA_IOS_VARIANT_TYPE_RID: {
+            // A RID element (NavigationPathQueryParameters2D.excluded_regions) is its 64-bit id;
+            // before it fell to the default and came back null inside the container.
+            if (g_variant_to_rid == NULL && g_get_variant_to_type_constructor != NULL) {
+                g_variant_to_rid = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_RID);
+            }
+            if (g_variant_to_rid == NULL) {
+                kanama_ios_fault(__func__, "api-unresolved", "variant_to_rid");
+                break;
+            }
+            uint64_t rid = 0;
+            g_variant_to_rid((GDExtensionUninitializedTypePtr)&rid, variant);
+            kanama_ios_blob_put(b, &rid, 8);
+            break;
+        }
+        case KANAMA_IOS_VARIANT_TYPE_NIL:
+            break;  // byteLen 0: a nil element is null
+        case KANAMA_IOS_VARIANT_TYPE_CALLABLE:
+        case KANAMA_IOS_VARIANT_TYPE_SIGNAL:
+            // byteLen 0 -> null: the Variant decode has no Callable/Signal value on any backend
+            // (desktop's BuiltinTypes.variantToScalar answers null for both), and a container
+            // holding one (Object.get_signal_connection_list) must still decode its other entries.
+            break;
+        default: {
+            // The raw value kinds (task 133: Vector3i, Vector4/4i, Rect2/2i, Plane, AABB,
+            // Quaternion, Basis, Transform2D/3D, Projection): their Godot bytes, decoded by Kotlin's
+            // decodeIosRawVariant like a scalar return of the same type (GLTFSkin.inverse_binds).
+            int32_t raw = kanama_ios_raw_value_index_by_variant_type(vtype);
+            if (raw >= 0) {
+                _Alignas(16) uint8_t bytes[KANAMA_IOS_RAW_VALUE_MAX_BYTES];
+                if (kanama_ios_raw_value_from_variant(raw, variant, bytes)) {
+                    kanama_ios_blob_put(b, bytes, k_kanama_ios_raw_value_kinds[raw].bytes);
+                } else {
+                    kanama_ios_fault(__func__, "api-unresolved", "variant_to_type");
+                }
+                break;
+            }
+            // Every Godot 4.7 Variant type has a case above; a type a later engine adds reports
+            // instead of silently becoming null.
+            char detail[32];
+            snprintf(detail, sizeof detail, "variant-type=%d", (int)vtype);
+            kanama_ios_fault(__func__, "unknown-tag", detail);
+            break;
+        }
     }
     kanama_ios_blob_patch_i32(b, len_at, (int32_t)(b->len - start));
 }
@@ -5620,9 +5663,10 @@ static void kanama_ios_pt_arg_to_variant(
             break;
         }
         case KANAMA_IOS_PT_RID: {
-            // task 29 — RID passthrough (a single uint64). Boxes as a nil-RID Variant when the
+            // task 29 — RID passthrough (a single uint64). Boxes as nil, and reports, when the
             // converter is unavailable (it is resolved in the same block as g_variant_from_object).
             if (g_variant_from_rid == NULL) {
+                kanama_ios_fault(__func__, "api-unresolved", "variant_from_rid");
                 g_variant_new_nil((GDExtensionUninitializedVariantPtr)out_variant);
                 break;
             }
@@ -5663,6 +5707,24 @@ static void kanama_ios_pt_arg_to_variant(
                 g_variant_new_nil((GDExtensionUninitializedVariantPtr)out_variant);
             }
             break;
+        case KANAMA_IOS_PT_PACKED_BYTE_ARRAY: {
+            // A ByteArray Variant argument (Object.call / callv / set, a Variant-typed parameter):
+            // p is a KanamaIosPackedArgDesc {count, bytes}. The packed array is built, boxed (the
+            // Variant takes its own reference) and destroyed here, so there is no cell to hand back.
+            // Before, the Kotlin encoder refused ByteArray ("unsupported arg type ByteArray").
+            kanama_ios_cache_return_family_converters();
+            uint64_t pcell[2] = { 0, 0 };
+            if (g_variant_from_packed_byte_array == NULL ||
+                !kanama_ios_build_packed_arg(KANAMA_IOS_PT_PACKED_BYTE_ARRAY,
+                                             (const KanamaIosPackedArgDesc *)p, pcell)) {
+                kanama_ios_fault(__func__, "encode-failed", "PackedByteArray");
+                g_variant_new_nil((GDExtensionUninitializedVariantPtr)out_variant);
+                break;
+            }
+            g_variant_from_packed_byte_array(out_variant, pcell);
+            kanama_ios_destroy_packed_arg(KANAMA_IOS_PT_PACKED_BYTE_ARRAY, pcell);
+            break;
+        }
         default: {
             // Task 133: the raw value kinds (Vector3i ... Projection) box from their bytes.
             int32_t raw_index = kanama_ios_raw_value_index_by_pt(tag);
@@ -5806,8 +5868,9 @@ static void kanama_ios_cache_return_family_converters(void) {
 // into a Variant. Payload encodings (little-endian, no alignment guarantee — memcpy to locals):
 // VOID -> nil (no bytes), BOOL -> 1 byte, INT64 -> 8 bytes, FLOAT64 -> 8 bytes, RID -> 8 bytes,
 // STRING -> len utf8 bytes (NOT NUL-terminated), VECTOR2 -> 2x float32, VECTOR2I -> 2x int32,
-// VECTOR3 -> 3x float32, COLOR -> 4x float32. Unaudited tags box as nil — the same audited-set
-// policy as encodeIosReturn's Variant dispatch (nil is always a valid Variant).
+// VECTOR3 -> 3x float32, COLOR -> 4x float32, the raw value kinds -> their Godot bytes (task 133
+// layout). Unaudited tags box as nil — the same audited-set policy as encodeIosReturn's Variant
+// dispatch (nil is always a valid Variant).
 static void kanama_ios_pt_blob_value_to_variant(
     int32_t tag,
     const uint8_t *bytes,
@@ -5983,8 +6046,39 @@ static void kanama_ios_pt_blob_value_to_variant(
             kanama_ios_destroy_packed_arg(KANAMA_IOS_PT_PACKED_STRING_ARRAY, scell);
             return;
         }
-        default:
+        case KANAMA_IOS_PT_VOID:
+            break;  // a null value: nil
+        default: {
+            // The other raw value kinds (task 133: Vector3i, Vector4/4i, Rect2/2i, AABB, Quaternion,
+            // Basis, Transform2D, Projection) inside an Array / Dictionary argument or a script's
+            // container return: their Godot bytes, boxed by the engine's from-type constructor
+            // (Transform3D and Plane keep their cases above, the same bytes). Before, the Kotlin
+            // encoder refused them all inside a container (ImporterMesh.merge_importer_meshes'
+            // Array of Transform3D) and a script's container return dropped them to nil. Kotlin
+            // ships the full KANAMA_IOS_RAW_VALUE_MAX_BYTES scratch, so this table is the only
+            // place each kind's size lives.
+            int32_t raw_index = kanama_ios_raw_value_index_by_pt(tag);
+            char detail[48];
+            if (raw_index < 0) {
+                // A tag no Kotlin encoder writes: report it instead of passing nil quietly.
+                snprintf(detail, sizeof detail, "tag=%d", (int)tag);
+                kanama_ios_fault(__func__, "unknown-tag", detail);
+                break;
+            }
+            if (bytes == NULL || len < k_kanama_ios_raw_value_kinds[raw_index].bytes) {
+                snprintf(detail, sizeof detail, "tag=%d len=%d need=%d", (int)tag, (int)len,
+                         (int)k_kanama_ios_raw_value_kinds[raw_index].bytes);
+                kanama_ios_fault(__func__, "short-payload", detail);
+                break;
+            }
+            _Alignas(16) uint8_t raw[KANAMA_IOS_RAW_VALUE_MAX_BYTES];
+            memcpy(raw, bytes, (size_t)k_kanama_ios_raw_value_kinds[raw_index].bytes);
+            if (kanama_ios_raw_value_to_variant(raw_index, raw, out_variant)) {
+                return;
+            }
+            kanama_ios_fault(__func__, "api-unresolved", "variant_from_type");
             break;
+        }
     }
     g_variant_new_nil((GDExtensionUninitializedVariantPtr)out_variant);
 }
@@ -6456,10 +6550,11 @@ int64_t kanama_ios_godot_ptrcall_ret_callable_static(
 // Kotlin decoders read (ObjectCalls.decodeVariantScalarReturn): bool/int -> out_int, float ->
 // out_double, String/StringName/NodePath -> utf8 in out_str (or parked, see above), Object ->
 // handle in out_int (retained + reported when out_is_refcounted is non-NULL, the owned decode),
-// Vector2/Vector2i/Vector3/Color -> raw component bytes in out_str, Array/Dictionary/Packed*Array
-// -> one blob record in out_str (or parked, task 121), its RefCounted elements retained and marked
-// owned when own_elements is non-zero (task 122 item 3). Anything else leaves the outs zero and
-// Kotlin surfaces null, matching desktop's RetVariantScalar. Returns the Variant type.
+// RID -> its id in out_int, Vector2/Vector2i/Vector3/Color and the raw value kinds -> raw component
+// bytes in out_str, Array/Dictionary/Packed*Array -> one blob record in out_str (or parked, task
+// 121), its RefCounted elements retained and marked owned when own_elements is non-zero (task 122
+// item 3). Nil, Callable and Signal leave the outs zero and Kotlin surfaces null, matching
+// desktop's RetVariantScalar. Returns the Variant type.
 // Shared by kanama_ios_godot_object_call and kanama_ios_godot_ptrcall_ret_variant_scalar; the
 // caller destroys ret_variant afterwards.
 static int32_t kanama_ios_decode_variant_scalar(
@@ -6554,6 +6649,21 @@ static int32_t kanama_ios_decode_variant_scalar(
             if (out_int != NULL) *out_int = (int64_t)(intptr_t)obj;
             break;
         }
+        case KANAMA_IOS_VARIANT_TYPE_RID: {
+            // The 64-bit id in out_int (Object.get of a RID property, CharFXTransform.font); it
+            // surfaced null before. Kotlin wraps it in RID, as desktop's variantToScalar does.
+            if (g_variant_to_rid == NULL && g_get_variant_to_type_constructor != NULL) {
+                g_variant_to_rid = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_RID);
+            }
+            if (g_variant_to_rid == NULL) {
+                kanama_ios_fault(__func__, "api-unresolved", "variant_to_rid");
+                break;
+            }
+            uint64_t rid = 0;
+            g_variant_to_rid((GDExtensionUninitializedTypePtr)&rid, ret_variant);
+            if (out_int != NULL) *out_int = (int64_t)rid;
+            break;
+        }
         // Small fixed-size types ship their raw component bytes via out_str/out_str_len
         // (float32 components; Vector2i is 2x int32), same convention as the array-blob
         // payloads. Kotlin decodes by ret_type + byte count; out_str_len 0 surfaces null.
@@ -6625,12 +6735,20 @@ static int32_t kanama_ios_decode_variant_scalar(
             // The raw value kinds (task 133: Vector3i, Vector4, Vector4i, Rect2, Rect2i, Plane,
             // AABB, Quaternion, Basis, Transform2D/3D, Projection) ship their Godot bytes through
             // out_str like Vector3 above; Kotlin decodes them with decodeIosRawValue (task 129 B
-            // review: the Variant-form GD.abs(Vector3i) and friends). Anything else (NIL, an
-            // un-decoded type) leaves the outs zero and Kotlin surfaces null.
+            // review: the Variant-form GD.abs(Vector3i) and friends). NIL, Callable and Signal
+            // leave the outs zero and Kotlin surfaces null (desktop's variantToScalar does too).
             int32_t raw = kanama_ios_raw_value_index_by_variant_type(ret_type);
             if (raw >= 0 && out_str != NULL && out_str_size >= k_kanama_ios_raw_value_kinds[raw].bytes &&
                 kanama_ios_raw_value_from_variant(raw, ret_variant, out_str)) {
                 if (out_str_len != NULL) *out_str_len = k_kanama_ios_raw_value_kinds[raw].bytes;
+            } else if (raw < 0 && ret_type != KANAMA_IOS_VARIANT_TYPE_NIL &&
+                       ret_type != KANAMA_IOS_VARIANT_TYPE_CALLABLE &&
+                       ret_type != KANAMA_IOS_VARIANT_TYPE_SIGNAL) {
+                // Every Godot 4.7 Variant type is decoded above or is one of those three; a type a
+                // later engine adds reports instead of silently becoming null.
+                char detail[32];
+                snprintf(detail, sizeof detail, "variant-type=%d", (int)ret_type);
+                kanama_ios_fault(__func__, "unknown-tag", detail);
             }
             break;
         }
@@ -8930,7 +9048,7 @@ static void kanama_ios_callable_trampoline(
     }
     if (argc > KANAMA_IOS_PTRCALL_MAX_ARGS) {
         // Never truncate: a lambda would read the wrong arguments. A call error, loudly.
-        kanama_ios_fault(__func__, "too-many-arguments", "signal emission");
+        kanama_ios_fault(__func__, "too-many-args", "signal emission");
         if (r_return != NULL) {
             kanama_ios_init_nil_variant((GDExtensionUninitializedVariantPtr)r_return);
         }

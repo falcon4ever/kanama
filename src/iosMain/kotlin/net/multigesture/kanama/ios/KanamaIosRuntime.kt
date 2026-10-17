@@ -2278,7 +2278,7 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
       retTag[0] = IOS_PT_PACKED_FLOAT64_ARRAY
     }
     // task 29 — Dictionary return (Map<String, Any?>): ship a tagged-entry blob; the C side
-    // rebuilds the Godot Dictionary (String keys, audited scalar values, unaudited -> nil).
+    // rebuilds the Godot Dictionary (String keys; a value with no Variant shape throws).
     is Map<*, *> -> {
       retBuf.reinterpret<CPointerVar<ByteVar>>()[0] =
         IosReturnContainerScratch.encodeDictionary(value)
@@ -2571,9 +2571,8 @@ private object IosReturnPackedDescScratch {
 // length-prefixed tagged blob the C side rebuilds —
 // Dictionary: [int32 count]([int32 keyLen][key utf8][int32 valTag][int32 valLen][val bytes])*
 // Array:      [int32 count]([int32 elemTag][int32 elemLen][elem bytes])*
-// Values use the audited scalar encodings of kanama_ios_pt_blob_value_to_variant; an unaudited
-// value ships as PT_VOID/nil (the same policy as the Variant-return dispatch). Same buffer-reuse
-// contract as the other return scratches.
+// Values use the encodings of kanama_ios_pt_blob_value_to_variant; a value with no Variant shape
+// throws, naming its type (taggedValue). Same buffer-reuse contract as the other return scratches.
 @OptIn(ExperimentalForeignApi::class)
 internal object IosReturnContainerScratch {
   private var buf: CPointer<ByteVar>? = null
@@ -2609,10 +2608,11 @@ internal object IosReturnContainerScratch {
   }
 
   /**
-   * PT tag + payload bytes for one audited container value; unaudited -> PT_VOID/nil. With [strict]
-   * (the argument direction, task 100 parcel 7) an unaudited value — any Kotlin object without a
-   * Variant shape — throws instead, so a caller never silently passes nil. Nested List / Map
-   * recurse (task 122).
+   * PT tag + payload bytes for one container value. A Kotlin object without a Variant shape throws,
+   * naming its type, in both directions (an argument and a script's container return), as desktop's
+   * initVariantFromAny does: it never silently becomes nil. [strict] (the argument direction, task
+   * 100 parcel 7) also refuses a non-String Dictionary key, which the return direction still
+   * stringifies. Nested List / Map recurse (task 122).
    */
   // Nested containers recurse at most this deep (the C boxer recurses without its own bound; a
   // self-containing List would otherwise overflow the Kotlin/Native stack — no StackOverflowError).
@@ -2658,17 +2658,30 @@ internal object IosReturnContainerScratch {
       is List<*> -> Pair(IOS_PT_ARRAY, encodeArrayBytes(value, strict, depth + 1))
       is Map<*, *> -> Pair(IOS_PT_DICTIONARY, encodeDictionaryBytes(value, strict, depth + 1))
       else ->
-        if (strict) {
-          error(
+        // The value types Vector3i ... Projection (task 133 layout) as their Godot bytes, boxed by
+        // kanama_ios_pt_blob_value_to_variant: a Transform3D inside an Array argument
+        // (ImporterMesh.merge_importer_meshes) was refused, and inside a script's container return
+        // it became nil.
+        rawValueBytes(value)
+          ?: error(
             "iOS: unsupported value type ${value::class.simpleName ?: "<anonymous>"} inside a " +
-              "Dictionary / Array argument (scalars, strings, NodePath, small vectors, Color, RID, " +
-              "ByteArray, object handles and nested List / Map are marshalled — task 100 parcels " +
-              "7 and 10, task 122)"
+              "Dictionary / Array (scalars, strings, NodePath, the value types, RID, ByteArray, " +
+              "object handles and nested List / Map are marshalled)"
           )
-        } else {
-          Pair(IOS_PT_VOID, ByteArray(0))
-        }
     }
+
+  /**
+   * A raw value kind's PT tag and its Godot bytes, or null when [value] is not one. The payload is
+   * always the full [IOS_RAW_VALUE_MAX_BYTES] scratch (zeroed past the value): the shim's
+   * k_kanama_ios_raw_value_kinds is the only table of each kind's size, and it reads that many
+   * bytes, so Kotlin keeps no copy of it to drift.
+   */
+  private fun rawValueBytes(value: Any): Pair<Int, ByteArray>? = memScoped {
+    val raw = allocIosRawValue()
+    for (i in 0 until IOS_RAW_VALUE_MAX_BYTES) raw[i] = 0
+    val tag = encodeIosRawValue(value, raw)
+    if (tag < 0) null else Pair(tag, raw.readBytes(IOS_RAW_VALUE_MAX_BYTES))
+  }
 
   /**
    * Encode [map] into the entry blob. [alloc] provides the destination bytes: the return path uses
