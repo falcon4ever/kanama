@@ -50,6 +50,10 @@ still build against this release. The Android plugin
 now compiles with Kotlin 2.4.21 too: until now the Android Gradle plugin's built-in Kotlin (2.2.10)
 compiled it, whatever version the root build named.
 
+### Added — tooling: an inventory of every `ObjectCalls` helper and how a generated exercise can check it
+
+Contributors: `scripts/generate_api_exercise.py` classifies each of the 1,492 helpers the shared tree calls (static, property pair, const oracle, singleton, reach only, excluded with a reason) into [API Exercise Inventory](docs/reference/generated/api-exercise.md); the local_ci stage "API exercise inventory drift" fails when the page is stale, when `scripts/api_exercise_policy.py` names a class or method the API lacks, or when a helper is classified by nothing.
+
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 
 The control (a plain GDScript visibility-notifier export, `visibility-control` in `web.yml`) handed the

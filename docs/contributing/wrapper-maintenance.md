@@ -1035,6 +1035,28 @@ after every regen; `--write-tree` skips rewriting the file for the same reason w
 member set has not changed. `scripts/fixtures/wrapper_generator/ios/ObjectCalls.generated-members.kt.txt`
 locks the region's rendering for one class (Node3D) byte-for-byte.
 
+### The API exercise inventory
+
+A defect in a helper is shared by every call site of it, so the plan for a generated API exercise is
+one row per referenced helper per backend. `scripts/generate_api_exercise.py` keeps the inventory
+that plan starts from: it classifies every helper `referenced_objectcalls_helpers` returns by the best
+row any of its call sites allows (a static compared with `ClassDB.class_call_static`, a property
+set/get pair, a const method compared with `Object.callv`, a singleton, reach only, or excluded with a
+reason) and writes the [API Exercise Inventory](../reference/generated/api-exercise.md) page. It maps
+each call back to its Godot method through the generator's own `method_function_name`, so a rename
+table cannot fool it. The judgement calls live in one hand-kept file, `scripts/api_exercise_policy.py`:
+the exclusion list (exact class names and substrings, each with a reason), the stateless singletons,
+the runtime helpers that take no MethodBind, the static rows' arguments and the `user://` scratch
+directory rule.
+
+`--check` (the local_ci stage "API exercise inventory drift") fails when the page is stale, when a
+policy entry names a class or method the API lacks or matches nothing, and when a helper the tree
+calls is classified by nothing. After a generator change or a Godot API refresh, run
+`python3 scripts/generate_api_exercise.py --report` and review the page's diff. A new static with
+arguments needs a `STATIC_ARGS` entry; the failure prints the line to add. The rules are also checked
+against a small made-up API in `scripts/fixtures/api_exercise/` (`--write-fixture` rewrites the
+expected output after an intended rule change).
+
 ## Value-Type Audits
 
 The 19 builtin value types are ONE hand-written set under

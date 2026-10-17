@@ -459,6 +459,19 @@ case("check_objectcalls_parity.py", py("check_objectcalls_parity.py"),
      [Edit(f"{COMMON}/binding/runtime/ObjectCalls.expect.kt", "  fun ptrcallWithBoolArg(methodBind: RawSegment, instance: RawSegment, value: Boolean)",
            "  fun ptrcallWithBoolArgRedRun(methodBind: RawSegment, instance: RawSegment, value: Boolean)")],
      "does not match the referenced set", "the expect ObjectCalls renames a helper the shared tree calls")
+API_EXERCISE_CHECK = py("generate_api_exercise.py", "--check")
+case("generate_api_exercise.py --check (unclassified helper)", API_EXERCISE_CHECK,
+     [Create(f"{COMMON}/binding/runtime/ZzRedRun.kt", "package net.multigesture.kanama.binding.runtime\n\ninternal fun zzRedRun() = ObjectCalls.redRunUnclassifiedHelper()\n")],
+     "unclassified referenced helper redRunUnclassifiedHelper", "the shared sources call an `ObjectCalls` helper that no generated method calls with a MethodBind and `NON_BIND_HELPERS` does not list")
+case("generate_api_exercise.py --check (exclusion names no class)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '    "Window": _WINDOW,\n', '    "Window": _WINDOW,\n    "WindowRedRun": _WINDOW,\n')],
+     "EXCLUDE_EXACT names WindowRedRun, a class the API lacks", "an exclusion entry names a class the API lacks (as a Godot bump that renames or drops a class leaves it)")
+case("generate_api_exercise.py --check (static args name no method)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '    ("FileAccess", "open"): (None, None),\n', '    ("FileAccess", "open_red_run"): (None, None),\n')],
+     "STATIC_ARGS names FileAccess.open_red_run, a method the API lacks", "a `STATIC_ARGS` entry names a method the API lacks (and the static it was for is left without arguments)")
+case("generate_api_exercise.py --check (rule order)", API_EXERCISE_CHECK,
+     [Edit("scripts/generate_api_exercise.py", 'ORDER = "CABDFE"', 'ORDER = "ACBDFE"')],
+     "does not match the rules run on the fixture API", "the case ranking puts property pairs before statics: the toy-API fixture and the committed page both catch it")
 case("check_property_coverage.py", py("check_property_coverage.py"),
      [Edit(f"{COMMON}/api/CanvasItem.kt", "    var visible: Boolean", "    var visibleRedRun: Boolean")],
      "silently dropped", "a generated wrapper property disappears")
@@ -662,6 +675,7 @@ for name, args, target, expect, how in [
     ("migrate_enum_constants.py --check", ("migrate_enum_constants.py", "--table", f"{GEN}/enum-migration.md", "--check"), f"{GEN}/enum-migration.md", "is stale", "the committed enum migration table is hand-edited"),
     ("ios_handwritten_report.py --check", ("ios_handwritten_report.py", "--check"), f"{GEN}/ios-backend-handwritten.md", "FAIL stale", "the committed iOS handwritten report is hand-edited"),
     ("generate_gates_index.py --check", ("generate_gates_index.py", "--markdown", f"{GEN}/gates.md", "--check"), f"{GEN}/gates.md", "FAIL stale gates index", "the committed gates index is hand-edited"),
+    ("generate_api_exercise.py --check", ("generate_api_exercise.py", "--check"), f"{GEN}/api-exercise.md", "is stale", "the committed API exercise inventory is hand-edited"),
     ("generate_virtual_signature_table.py --check", ("generate_virtual_signature_table.py", "--check"), VIRTUAL_TABLE, "STALE", "the committed virtual-signature table is hand-edited"),
     ("generate_engine_method_table.py --check", ("generate_engine_method_table.py", "--check"), "processor/src/main/resources/net/multigesture/kanama/processor/engine-methods.tsv", "STALE", "the committed engine-method table is hand-edited"),
     ("generate_web_backend.py --check", ("generate_web_backend.py", "--output", WEB_BACKEND, "--check"), WEB_BACKEND, "generated Web backend dispatch drift", "the generated Web backend dispatch is hand-edited (a real token: comments and wrapping are normalised away)"),

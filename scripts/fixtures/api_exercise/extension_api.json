@@ -1,0 +1,393 @@
+{
+ "header": {
+  "version_major": 4,
+  "version_minor": 7
+ },
+ "classes": [
+  {
+   "name": "Object",
+   "is_refcounted": false,
+   "is_instantiable": true,
+   "api_type": "core",
+   "methods": [
+    {
+     "name": "get_class",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1001,
+     "return_value": {
+      "type": "String"
+     }
+    }
+   ]
+  },
+  {
+   "name": "Node",
+   "is_refcounted": false,
+   "is_instantiable": true,
+   "api_type": "core",
+   "methods": [
+    {
+     "name": "set_name",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1002,
+     "arguments": [
+      {
+       "name": "a0",
+       "type": "String"
+      }
+     ]
+    },
+    {
+     "name": "get_name",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1003,
+     "return_value": {
+      "type": "String"
+     }
+    },
+    {
+     "name": "queue_free",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1004
+    },
+    {
+     "name": "get_child_count",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1005,
+     "return_value": {
+      "type": "int"
+     }
+    },
+    {
+     "name": "move_child",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1006,
+     "return_value": {
+      "type": "int"
+     },
+     "arguments": [
+      {
+       "name": "a0",
+       "type": "int"
+      }
+     ]
+    },
+    {
+     "name": "print_orphan_nodes",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": true,
+     "is_virtual": false,
+     "hash": 1007
+    },
+    {
+     "name": "get_orphan_node_ids",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": true,
+     "is_virtual": false,
+     "hash": 1008,
+     "return_value": {
+      "type": "Array"
+     }
+    }
+   ],
+   "inherits": "Object",
+   "properties": [
+    {
+     "type": "String",
+     "name": "name",
+     "setter": "set_name",
+     "getter": "get_name"
+    },
+    {
+     "type": "int",
+     "name": "indexed",
+     "setter": "set_name",
+     "getter": "get_child_count",
+     "index": 2
+    }
+   ]
+  },
+  {
+   "name": "AbstractBase",
+   "is_refcounted": false,
+   "is_instantiable": false,
+   "api_type": "core",
+   "methods": [
+    {
+     "name": "get_value",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1009,
+     "return_value": {
+      "type": "int"
+     }
+    }
+   ],
+   "inherits": "Object"
+  },
+  {
+   "name": "ConcreteChild",
+   "is_refcounted": false,
+   "is_instantiable": true,
+   "api_type": "core",
+   "methods": [],
+   "inherits": "AbstractBase"
+  },
+  {
+   "name": "LonelyAbstract",
+   "is_refcounted": false,
+   "is_instantiable": false,
+   "api_type": "core",
+   "methods": [
+    {
+     "name": "get_x",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1010,
+     "return_value": {
+      "type": "int"
+     }
+    }
+   ],
+   "inherits": "Object"
+  },
+  {
+   "name": "Input",
+   "is_refcounted": false,
+   "is_instantiable": false,
+   "api_type": "core",
+   "methods": [
+    {
+     "name": "is_action_pressed",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1011,
+     "return_value": {
+      "type": "bool"
+     },
+     "arguments": [
+      {
+       "name": "a0",
+       "type": "StringName"
+      }
+     ]
+    }
+   ],
+   "inherits": "Object"
+  },
+  {
+   "name": "InputEventKey",
+   "is_refcounted": false,
+   "is_instantiable": true,
+   "api_type": "core",
+   "methods": [
+    {
+     "name": "is_pressed",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1012,
+     "return_value": {
+      "type": "bool"
+     }
+    }
+   ],
+   "inherits": "Object"
+  },
+  {
+   "name": "TextServer",
+   "is_refcounted": false,
+   "is_instantiable": false,
+   "api_type": "core",
+   "methods": [
+    {
+     "name": "get_name",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1013,
+     "return_value": {
+      "type": "String"
+     }
+    }
+   ],
+   "inherits": "Object"
+  },
+  {
+   "name": "TextServerExtension",
+   "is_refcounted": false,
+   "is_instantiable": true,
+   "api_type": "core",
+   "methods": [],
+   "inherits": "TextServer"
+  },
+  {
+   "name": "RDTextureFormat",
+   "is_refcounted": false,
+   "is_instantiable": true,
+   "api_type": "core",
+   "methods": [
+    {
+     "name": "get_width",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1014,
+     "return_value": {
+      "type": "int"
+     }
+    },
+    {
+     "name": "make",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": true,
+     "is_virtual": false,
+     "hash": 1015,
+     "return_value": {
+      "type": "RDTextureFormat"
+     }
+    }
+   ],
+   "inherits": "Object"
+  },
+  {
+   "name": "EditorThing",
+   "is_refcounted": false,
+   "is_instantiable": true,
+   "api_type": "editor",
+   "methods": [
+    {
+     "name": "get_size",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1016,
+     "return_value": {
+      "type": "int"
+     }
+    }
+   ],
+   "inherits": "Object"
+  },
+  {
+   "name": "Engine",
+   "is_refcounted": false,
+   "is_instantiable": false,
+   "api_type": "core",
+   "methods": [
+    {
+     "name": "get_frames_drawn",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1017,
+     "return_value": {
+      "type": "int"
+     }
+    },
+    {
+     "name": "set_time_scale",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1018,
+     "arguments": [
+      {
+       "name": "a0",
+       "type": "float"
+      }
+     ]
+    },
+    {
+     "name": "get_ratio",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1019,
+     "return_value": {
+      "type": "float"
+     }
+    }
+   ],
+   "inherits": "Object"
+  },
+  {
+   "name": "Geometry2D",
+   "is_refcounted": false,
+   "is_instantiable": false,
+   "api_type": "core",
+   "methods": [
+    {
+     "name": "is_point_in_polygon",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 1020,
+     "return_value": {
+      "type": "bool"
+     },
+     "arguments": [
+      {
+       "name": "a0",
+       "type": "Vector2"
+      },
+      {
+       "name": "a1",
+       "type": "PackedVector2Array"
+      }
+     ]
+    }
+   ],
+   "inherits": "Object"
+  }
+ ],
+ "singletons": [
+  {
+   "name": "Engine",
+   "type": "Engine"
+  },
+  {
+   "name": "Geometry2D",
+   "type": "Geometry2D"
+  },
+  {
+   "name": "Input",
+   "type": "Input"
+  }
+ ]
+}
