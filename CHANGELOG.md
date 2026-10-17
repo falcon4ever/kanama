@@ -160,11 +160,10 @@ the two existing ObjectCalls self-test summaries now end with `in <ms> ms`. The 
 property values that need a hand choice and the statics whose result is weak or new per call are kept in
 `scripts/api_exercise_policy.py` (`STATIC_ARGS`, `PAIR_OVERRIDES`, `STATIC_RESULTS`,
 `STATIC_OBJECT_CHECKS`: what each object static's result must show of its arguments); an argument that
-deliberately differs from the API default is marked `Arg(value, reason)`. Rows that fail on one platform
-for a tracked gap are listed in `KNOWN_FINDINGS` and print `KNOWN:` (counted as `known`) instead of
-`FAIL:` there; nine iOS rows are, for argument and return types the iOS generic Variant path does not
-carry yet (`PackedByteArray` arguments, a `Transform3D` inside an `Array`, `RID` and `Transform3D`
-elements and a `RID` property read through `Object.get`).
+deliberately differs from the API default is marked `Arg(value, reason)`. A row that fails on one platform
+for a tracked gap can be listed in `KNOWN_FINDINGS` with the failure text it excuses: there, that
+failure of its Variant-path half prints `KNOWN:` (counted as `known`) instead of `FAIL:`, any other
+failure still fails, and a pass fails until the entry is removed. The list is empty.
 
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 

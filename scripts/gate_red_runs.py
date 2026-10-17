@@ -453,7 +453,7 @@ IOS_SELFTEST_CHECK = ["bash", "scripts/ios_visual_smoke.sh", "--check-selftest-l
 IOS_SELFTEST_SUMMARIES = ("[kanama][ios][c] PTRCALL SELFTEST MATRIX: 120 passed, 0 failed\n"
                           "[kanama][ios][kn] OBJECTCALLS SELFTEST: 308 passed, 0 failed faults=7 expected=7 in 412 ms\n"
                           "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7 in 38 ms\n"
-                          "[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): 81 passed, 0 failed, 5 weak, 9 known, 0 reach faults=7 expected=7 in 120 ms\n")
+                          "[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): 90 passed, 0 failed, 5 weak, 0 known, 0 reach faults=7 expected=7 in 120 ms\n")
 case("ios_visual_smoke.sh --check-selftest-log (no self-test)", IOS_SELFTEST_CHECK,
      [Edit(IOS_SELFTEST_LOG, IOS_SELFTEST_SUMMARIES, "")],
      "summary missing: /PTRCALL SELFTEST MATRIX", "a console with no self-test lines at all (a build without -PkanamaIosSelfTest=true) must fail, not pass as clean")
@@ -461,10 +461,10 @@ case("ios_visual_smoke.sh --check-selftest-log (no frame 1)", IOS_SELFTEST_CHECK
      [Edit(IOS_SELFTEST_LOG, "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7 in 38 ms\n", "")],
      "summary missing: /OBJECTCALLS SELFTEST \\(frame 1\\)", "the app never reached its first frame: the frame-1 summary is missing while the other two passed")
 case("ios_visual_smoke.sh --check-selftest-log (no api exercise)", IOS_SELFTEST_CHECK,
-     [Edit(IOS_SELFTEST_LOG, "[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): 81 passed, 0 failed, 5 weak, 9 known, 0 reach faults=7 expected=7 in 120 ms\n", "")],
+     [Edit(IOS_SELFTEST_LOG, "[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): 90 passed, 0 failed, 5 weak, 0 known, 0 reach faults=7 expected=7 in 120 ms\n", "")],
      "summary missing: /OBJECTCALLS SELFTEST \\(api exercise\\)", "the generated API exercise did not run or did not finish: its summary is missing while the other three passed")
 case("ios_visual_smoke.sh --check-selftest-log (api exercise row failed)", IOS_SELFTEST_CHECK,
-     [Edit(IOS_SELFTEST_LOG, "(api exercise): 81 passed, 0 failed", "(api exercise): 80 passed, 1 failed")],
+     [Edit(IOS_SELFTEST_LOG, "(api exercise): 90 passed, 0 failed", "(api exercise): 89 passed, 1 failed")],
      "runtime self-test reported failures", "the API exercise summary reports a failed row with no FAIL line")
 case("ios_visual_smoke.sh --check-selftest-log (1 failed)", IOS_SELFTEST_CHECK,
      [Edit(IOS_SELFTEST_LOG, "(frame 1): 25 passed, 0 failed", "(frame 1): 24 passed, 1 failed")],
@@ -545,7 +545,8 @@ case("generate_api_exercise.py --check-jar (exercise class in a jar)", API_EXERC
      [Create("scripts/fixtures/api_exercise/jar/net/multigesture/kanama/exercise/ApiExerciseRows.class", "placeholder\n")],
      "carries 1 API exercise class(es)", "a jar with an `exercise/` class (a -PkanamaApiExercise=true build) is published or installed: the check must fail it")
 case("generate_api_exercise.py --check (known finding names no row)", API_EXERCISE_CHECK,
-     [Edit("scripts/api_exercise_policy.py", '    ("A", "CharFXTransform.font"):', '    ("A", "CharFXTransform.font_red_run"):')],
+     [Edit("scripts/api_exercise_policy.py", "tuple[tuple[str, ...], str, str, str]] = {}",
+           'tuple[tuple[str, ...], str, str, str]] = {("A", "CharFXTransform.font_red_run"): (("ios",), "got null", "red run", "red run")}')],
      "KNOWN_FINDINGS names A CharFXTransform.font_red_run, which is not a generated row", "a KNOWN_FINDINGS entry names a row the generator does not write (renamed or gone): it would hide nothing and stay forever")
 case("generate_api_exercise.py --check (rule order)", API_EXERCISE_CHECK,
      [Edit("scripts/generate_api_exercise.py", 'ORDER = "CABDFE"', 'ORDER = "ACBDFE"')],
@@ -976,8 +977,20 @@ case("runtime_smoke.sh (API exercise static arguments)", ["bash", "scripts/runti
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (API exercise known finding passes)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt",
-           '"Tween.interpolate_value")', '"Tween.interpolate_value", known = "desktop", knownWhy = "red run")')],
+           '"Tween.interpolate_value")', '"Tween.interpolate_value", known = "desktop", knownWhy = "red run", knownFailure = "expected")')],
      "known finding no longer reproduces on desktop", "a KNOWN_FINDINGS row passes on its platform: the run must fail until the entry is removed (a quarantine that outlives its gap)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# A known finding excuses only its own failure: the Vector3 pair row marked known on the desktop for a ByteArray
+# encoder gap, then broken by the Vector3 argument swap, must still FAIL (its failure is not the known one).
+case("runtime_smoke.sh (API exercise known finding fails differently)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt",
+           '"Area3D.gravity_direction")', '"Area3D.gravity_direction", known = "desktop", knownWhy = "red run", knownFailure = "unsupported arg type ByteArray")'),
+      Edit(JVM_OBJECT_CALLS,
+           "    value: Vector3,\n  ) {\n    Arena.ofConfined().use { arena ->\n      val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)\n"
+           "      GodotRealSegment.writeRaw(vec, 0, value.rawX)\n      GodotRealSegment.writeRaw(vec, 1, value.rawY)\n",
+           "    value: Vector3,\n  ) {\n    Arena.ofConfined().use { arena ->\n      val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)\n"
+           "      GodotRealSegment.writeRaw(vec, 0, value.rawY)\n      GodotRealSegment.writeRaw(vec, 1, value.rawX)\n")],
+     "not the known finding on desktop", "a KNOWN_FINDINGS row fails for another reason than its known one: it must fail, not print KNOWN",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (API exercise setting)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/jvmMain/kotlin/binding/runtime/ApiExerciseHook.kt", "setting = { SignalSelfTest.boolSetting(SETTING) },", "setting = { false },")],

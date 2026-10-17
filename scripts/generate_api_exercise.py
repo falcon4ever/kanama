@@ -786,14 +786,17 @@ def render(inv: Inventory, policy=policy_module) -> str:
         "",
         "## Known findings",
         "",
-        "Rows that fail on a platform for a gap tracked elsewhere (`KNOWN_FINDINGS`): the row still runs there",
-        "and prints `KNOWN:` instead of `FAIL:`; once it passes, the run fails until the entry is removed.",
+        "Rows that fail on a platform for a gap tracked elsewhere (`KNOWN_FINDINGS`): the row still runs there,",
+        "and a failure in its Variant-path half whose message contains the entry's text prints `KNOWN:` instead of",
+        "`FAIL:`; any other failure fails, and once the row passes the run fails until the entry is removed.",
         "",
         "| row | platforms | reason |",
         "|---|---|---|",
     ]
-    for (case, label), (platforms, reason, _tracking) in getattr(policy, "KNOWN_FINDINGS", {}).items():
-        lines.append(f"| {case} `{label}` | {', '.join(platforms)} | {md(reason)} (tracked) |")
+    for (case, label), (platforms, failure, reason, _tracking) in getattr(policy, "KNOWN_FINDINGS", {}).items():
+        lines.append(f"| {case} `{label}` | {', '.join(platforms)} | {md(reason)}; excuses only `{md(failure)}` (tracked) |")
+    if not getattr(policy, "KNOWN_FINDINGS", {}):
+        lines.append("| — | — | none |")
     lines += [
         "",
         "## Property-pair overrides",
@@ -1432,9 +1435,20 @@ class RowGenerator:
         call_args = ", ".join(names)
         oracle_args = "".join(f", {n}" for n in names)
         lines.append(f"val got = r.track({kotlin_cls}.{fun.name}({call_args}))")
-        lines.append(f'val oracle = r.track(ClassDB.classCallStatic("{site.cls}", "{site.method}"{oracle_args}))')
         result = getattr(self.policy, "STATIC_RESULTS", {}).get((site.cls, site.method))
         ret = method.return_type
+        # The wrapper's own result first: a known finding (KNOWN_FINDINGS) can excuse only the oracle half.
+        if ret == "enum::Error" and not verdict.weak:
+            lines.append("r.wrapperError(got.value)")
+        elif ret in self.rules.api:
+            lines.append(f'r.wrapperObject(got, "{ret}")')
+        elif ret == "enum::Error":
+            pass
+        else:
+            weak = verdict.weak or (result is not None and result[0] == "weak")
+            lines.append(f"r.wrapperValue(got, weak = {'true' if weak else 'false'})")
+        lines.append("r.oracle()")
+        lines.append(f'val oracle = r.track(ClassDB.classCallStatic("{site.cls}", "{site.method}"{oracle_args}))')
         if ret == "enum::Error" and not verdict.weak:
             lines.append("r.staticError(got.value, oracle)")
         elif ret in self.rules.api:
@@ -1518,13 +1532,15 @@ def render_rows(inv: Inventory, policy=policy_module) -> tuple[str, list[str], l
         out.append("")
     known = getattr(policy, "KNOWN_FINDINGS", {})
     labels = {(r.case, r.label) for r in rows}
-    for key, (platforms, reason, tracking) in known.items():
+    for key, (platforms, failure, reason, tracking) in known.items():
         if key not in labels:
             gen.failures.append(f"KNOWN_FINDINGS names {key[0]} {key[1]}, which is not a generated row; delete or fix the entry")
         if not platforms or set(platforms) - {"ios", "android", "desktop"}:
             gen.failures.append(f"KNOWN_FINDINGS[{key[0]} {key[1]}] names platforms {platforms!r}; use ios, android, desktop")
-        if not reason or not tracking:
-            gen.failures.append(f"KNOWN_FINDINGS[{key[0]} {key[1]}] needs its reason and where it is tracked")
+        if not failure or not reason or not tracking:
+            gen.failures.append(
+                f"KNOWN_FINDINGS[{key[0]} {key[1]}] needs the failure text it excuses, its reason and where it is tracked"
+            )
     for case in "CA":
         for index, row in enumerate(r for r in rows if r.case == case):
             out.append(f"  // {row.verdict.reason}" + (f"; weak: {row.verdict.weak}" if row.verdict.weak else ""))
@@ -1534,7 +1550,10 @@ def render_rows(inv: Inventory, policy=policy_module) -> tuple[str, list[str], l
                 out.append(f'    r.begin(\'{case}\', "{" ".join(row.helpers)}", "{row.label}")')
             else:
                 out.append(f'    r.begin(\'{case}\', "{" ".join(row.helpers)}", "{row.label}",')
-                out.append(f'      known = "{",".join(finding[0])}", knownWhy = {kotlin_string(finding[1])})')
+                out.append(
+                    f'      known = "{",".join(finding[0])}", knownWhy = {kotlin_string(finding[2])}, '
+                    f"knownFailure = {kotlin_string(finding[1])})"
+                )
             out.append("    try {")
             out += [f"      {line}" for line in row.body]
             out.append("    } catch (t: Throwable) {")

@@ -437,10 +437,10 @@ row per `ObjectCalls` helper whose best row is a static or a property pair, the 
 smoke runs (see "The exercise rows" in `wrapper-maintenance.md`). A static the shim refused shows as a
 `FAULT` line and as `faults` above `expected`; the demos' `ios_device_run.sh` fails on both, while
 `ios_visual_smoke.sh` fails on `FAIL` lines and failed rows but does not compare the fault counts. A row
-listed in `KNOWN_FINDINGS` (`scripts/api_exercise_policy.py`: an iOS gap already tracked, such as a
-`PackedByteArray` argument the generic Variant path cannot encode yet) prints `... (api exercise) KNOWN:`
-instead of `FAIL:` and counts as `known`; once it passes, it prints a `FAIL:` line until the entry is
-removed.
+listed in `KNOWN_FINDINGS` (`scripts/api_exercise_policy.py`: an iOS gap already tracked, with the
+failure text it excuses) prints `... (api exercise) KNOWN:` instead of `FAIL:` and counts as `known` when
+its Variant-path half fails with that text; any other failure prints `FAIL:`, and once it passes it
+prints a `FAIL:` line until the entry is removed.
 
 (The counter is never reset, so the frame-1 phase and the API exercise, which raise no faults of
 their own, reprint the same total.) `expected` is the constant `SELFTEST_EXPECTED_FAULTS`, declared immediately

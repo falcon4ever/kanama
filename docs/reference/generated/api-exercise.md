@@ -261,20 +261,13 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row (
 
 ## Known findings
 
-Rows that fail on a platform for a gap tracked elsewhere (`KNOWN_FINDINGS`): the row still runs there
-and prints `KNOWN:` instead of `FAIL:`; once it passes, the run fails until the entry is removed.
+Rows that fail on a platform for a gap tracked elsewhere (`KNOWN_FINDINGS`): the row still runs there,
+and a failure in its Variant-path half whose message contains the entry's text prints `KNOWN:` instead of
+`FAIL:`; any other failure fails, and once the row passes the run fails until the entry is removed.
 
 | row | platforms | reason |
 |---|---|---|
-| A `CharFXTransform.font` | ios | Object.get of a RID property returns null on iOS (tracked) |
-| A `NavigationPathQueryParameters2D.excluded_regions` | ios | the iOS Variant return path decodes this element type as null (RID: `[null]`) (tracked) |
-| A `GLTFSkin.inverse_binds` | ios | the iOS Variant return path decodes this element type as null (Transform3D: `[null]`) (tracked) |
-| C `AudioStreamWAV.load_from_buffer` | ios | the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`) (tracked) |
-| C `AudioStreamMP3.load_from_buffer` | ios | the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`) (tracked) |
-| C `FileAccess.open_encrypted` | ios | the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`) (tracked) |
-| C `Image.create_from_data` | ios | the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`) (tracked) |
-| C `FileAccess.set_extended_attribute` | ios | the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`) (tracked) |
-| C `ImporterMesh.merge_importer_meshes` | ios | the iOS Variant path cannot encode a Transform3D inside an Array argument (tracked) |
+| — | — | none |
 
 ## Property-pair overrides
 

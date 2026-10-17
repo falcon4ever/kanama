@@ -1111,9 +1111,11 @@ the kit and store `package*` tasks and `installAddonJar` fail on a flagged build
   both device runners require.
 
 A row that fails on one platform for a gap already tracked is listed in `KNOWN_FINDINGS` (row, platforms,
-reason, where it is tracked): it still runs there, prints `KNOWN:` instead of `FAIL:` and counts as
-`known` in the summary; when it passes, the run fails with "known finding no longer reproduces" until the
-entry is removed. `--check` fails on an entry that names no generated row.
+the failure text it excuses, reason, where it is tracked): it still runs there. A C row checks the
+wrapper's own result before it calls the Variant path, and only a failure of the Variant-path half
+(an A row's read-backs) whose message contains that text prints `KNOWN:` instead of `FAIL:` and counts
+as `known`; any other failure fails, and when the row passes the run fails with "known finding no longer
+reproduces" until the entry is removed. `--check` fails on an entry that names no generated row.
 
 After a Godot bump, run the rows headless (`runtime_smoke.sh`) before any device run: a class the new
 version adds gets rows it has never run.

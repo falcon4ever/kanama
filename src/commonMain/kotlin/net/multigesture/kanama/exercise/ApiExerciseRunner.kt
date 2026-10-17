@@ -159,6 +159,9 @@ internal constructor(
   private var failure = ""
   private var knownHere = false
   private var knownWhy = ""
+  private var knownFailure = ""
+  private var inOracle = false
+  private var failureInOracle = false
   private val toClose = ArrayList<RefCounted>()
   private val toFree = ArrayList<GodotObject>()
 
@@ -277,17 +280,34 @@ internal constructor(
 
   /**
    * Starts a row. [known] lists the platforms where the row is a known finding (KNOWN_FINDINGS in
-   * scripts/api_exercise_policy.py, with [knownWhy]): there its failure is reported as known, and
-   * its passing fails the run until the entry is removed.
+   * scripts/api_exercise_policy.py, with [knownWhy]): there a failure whose message contains
+   * [knownFailure], raised in the oracle half of the row, is reported as known; any other failure
+   * fails, and a pass fails the run until the entry is removed. A C row's oracle half starts at
+   * [oracle] (after the wrapper's own result was checked); an A row's is the whole row.
    */
-  fun begin(case: Char, helpers: String, label: String, known: String = "", knownWhy: String = "") {
+  fun begin(
+    case: Char,
+    helpers: String,
+    label: String,
+    known: String = "",
+    knownWhy: String = "",
+    knownFailure: String = "",
+  ) {
     this.helpers = helpers
     this.label = "$case $label"
     verdict = ' '
     failure = ""
+    failureInOracle = false
+    inOracle = case != 'C'
     knownHere = known.split(',').contains(platform)
     this.knownWhy = knownWhy
+    this.knownFailure = knownFailure
     onTrace?.let { it(this.label) }
+  }
+
+  /** A C row's wrapper half is done: what fails from here on is the Variant path's (the oracle). */
+  fun oracle() {
+    inOracle = true
   }
 
   fun end() {
@@ -301,10 +321,19 @@ internal constructor(
       toFree.clear()
     }
     if (verdict == ' ') fail("ended without a verdict")
+    val asKnown =
+      knownHere && failureInOracle && knownFailure.isNotEmpty() && failure.contains(knownFailure)
     when {
-      verdict == 'F' && knownHere -> {
+      verdict == 'F' && asKnown -> {
         known++
         onKnown("$helpers $label $failure (known finding on $platform: $knownWhy)")
+      }
+      verdict == 'F' && knownHere -> {
+        failed++
+        onFail(
+          "$helpers $label $failure (not the known finding on $platform, which fails in the " +
+            "Variant path with '$knownFailure')"
+        )
       }
       verdict == 'F' -> {
         failed++
@@ -364,6 +393,7 @@ internal constructor(
     if (verdict == 'F') return
     verdict = 'F'
     failure = what
+    failureInOracle = inOracle
   }
 
   private fun pass() {
@@ -371,6 +401,24 @@ internal constructor(
   }
 
   // ---- verdicts --------------------------------------------------------------------------------
+
+  /** C row, wrapper half: a non-null object of [className]. */
+  fun wrapperObject(got: GodotObject?, className: String) {
+    when {
+      got == null -> fail("expected a $className got null")
+      !got.isClass(className) -> fail("expected a $className got a ${got.getClassName()}")
+    }
+  }
+
+  /** C row, wrapper half: a value a no-op cannot produce (not checked for a weak row). */
+  fun wrapperValue(got: Any?, weak: Boolean) {
+    if (!weak && isZero(got)) fail("expected a value a no-op cannot produce, got ${show(got)}")
+  }
+
+  /** C row, wrapper half: a non-OK `Error`. */
+  fun wrapperError(got: Long) {
+    if (got == 0L) fail("expected a non-OK Error got OK (0)")
+  }
 
   /** C row: equal to the Variant path and not its type's zero (only equal, for a weak row). */
   fun staticValue(got: Any?, oracle: Any?, weak: Boolean) {

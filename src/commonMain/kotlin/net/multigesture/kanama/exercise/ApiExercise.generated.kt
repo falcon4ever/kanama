@@ -122,6 +122,8 @@ internal object ApiExerciseRows {
     r.begin('C', "ptrcallNoArgsRetBool", "PortableCompressedTexture2D.is_keeping_all_compressed_buffers")
     try {
       val got = r.track(PortableCompressedTexture2D.isKeepingAllCompressedBuffers())
+      r.wrapperValue(got, weak = true)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("PortableCompressedTexture2D", "is_keeping_all_compressed_buffers"))
       r.staticValue(got, oracle, weak = true)
     } catch (t: Throwable) {
@@ -135,6 +137,8 @@ internal object ApiExerciseRows {
     r.begin('C', "ptrcallNoArgsRetInt", "DirAccess.get_drive_count")
     try {
       val got = r.track(DirAccess.getDriveCount())
+      r.wrapperValue(got, weak = true)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("DirAccess", "get_drive_count"))
       r.staticValue(got, oracle, weak = true)
     } catch (t: Throwable) {
@@ -148,6 +152,7 @@ internal object ApiExerciseRows {
     r.begin('C', "ptrcallNoArgsRetLong", "DirAccess.get_open_error")
     try {
       val got = r.track(DirAccess.getOpenError())
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("DirAccess", "get_open_error"))
       r.staticValue(got.value, oracle, weak = true)
     } catch (t: Throwable) {
@@ -161,6 +166,8 @@ internal object ApiExerciseRows {
     r.begin('C', "ptrcallNoArgsRetLongList", "Node.get_orphan_node_ids")
     try {
       val got = r.track(Node.getOrphanNodeIds())
+      r.wrapperValue(got, weak = true)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("Node", "get_orphan_node_ids"))
       r.staticValue(got, oracle, weak = true)
     } catch (t: Throwable) {
@@ -174,6 +181,8 @@ internal object ApiExerciseRows {
     r.begin('C', "ptrcallNoArgsRetPackedStringList", "GLTFDocument.get_supported_gltf_extensions")
     try {
       val got = r.track(GLTFDocument.getSupportedGltfExtensions())
+      r.wrapperValue(got, weak = true)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("GLTFDocument", "get_supported_gltf_extensions"))
       r.staticValue(got, oracle, weak = true)
     } catch (t: Throwable) {
@@ -187,6 +196,8 @@ internal object ApiExerciseRows {
     r.begin('C', "ptrcallNoArgsRetString", "Resource.generate_scene_unique_id")
     try {
       val got = r.track(Resource.generateSceneUniqueId())
+      r.wrapperValue(got, weak = false)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("Resource", "generate_scene_unique_id"))
       r.staticFresh(got, oracle)
     } catch (t: Throwable) {
@@ -197,12 +208,13 @@ internal object ApiExerciseRows {
 
   // static with a return value
   private fun c006(r: ApiExerciseRunner) {
-    r.begin('C', "ptrcallWithByteArrayAndDictionaryArgRetObject", "AudioStreamWAV.load_from_buffer",
-      known = "ios", knownWhy = "the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`)")
+    r.begin('C', "ptrcallWithByteArrayAndDictionaryArgRetObject", "AudioStreamWAV.load_from_buffer")
     try {
       val a0: ByteArray = r.fixtureBytes("wav")
       val a1: Map<String, Any?> = emptyMap()
       val got = r.track(AudioStreamWAV.loadFromBuffer(a0, a1))
+      r.wrapperObject(got, "AudioStreamWAV")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("AudioStreamWAV", "load_from_buffer", a0, a1))
       r.staticObject(got, oracle, "AudioStreamWAV", "mix_rate", "stereo", "format")
     } catch (t: Throwable) {
@@ -213,11 +225,12 @@ internal object ApiExerciseRows {
 
   // static with a return value
   private fun c007(r: ApiExerciseRunner) {
-    r.begin('C', "ptrcallWithByteArrayArgRetObject", "AudioStreamMP3.load_from_buffer",
-      known = "ios", knownWhy = "the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`)")
+    r.begin('C', "ptrcallWithByteArrayArgRetObject", "AudioStreamMP3.load_from_buffer")
     try {
       val a0: ByteArray = r.fixtureBytes("mp3")
       val got = r.track(AudioStreamMP3.loadFromBuffer(a0))
+      r.wrapperObject(got, "AudioStreamMP3")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("AudioStreamMP3", "load_from_buffer", a0))
       r.staticObject(got, oracle, "AudioStreamMP3", "data")
     } catch (t: Throwable) {
@@ -232,6 +245,8 @@ internal object ApiExerciseRows {
     try {
       val a0: Map<String, Any?> = mapOf<String, Any?>("type" to "SCALAR", "componentType" to 5126L, "count" to 3L)
       val got = r.track(GLTFAccessor.fromDictionary(a0))
+      r.wrapperObject(got, "GLTFAccessor")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("GLTFAccessor", "from_dictionary", a0))
       r.staticObject(got, oracle, "GLTFAccessor", "count", "component_type")
     } catch (t: Throwable) {
@@ -246,6 +261,8 @@ internal object ApiExerciseRows {
     try {
       val a0: Int = 0
       val got = r.track(DirAccess.getDriveName(a0))
+      r.wrapperValue(got, weak = false)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("DirAccess", "get_drive_name", a0))
       r.staticValue(got, oracle, weak = false)
     } catch (t: Throwable) {
@@ -263,6 +280,8 @@ internal object ApiExerciseRows {
       val a2: String = ""
       val a3: Boolean = false
       val got = r.track(FileAccess.createTemp(a0, a1, a2, a3))
+      r.wrapperObject(got, "FileAccess")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "create_temp", a0, a1, a2, a3))
       r.staticObject(got, oracle, "FileAccess")
     } catch (t: Throwable) {
@@ -278,6 +297,8 @@ internal object ApiExerciseRows {
       val f0 = r.obj(Camera3D(r.construct("Camera3D")))
       val a0: Camera3D = f0
       val got = r.track(GLTFCamera.fromNode(a0))
+      r.wrapperObject(got, "GLTFCamera")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("GLTFCamera", "from_node", a0))
       r.staticObject(got, oracle, "GLTFCamera", "fov", "depth_far", "depth_near")
     } catch (t: Throwable) {
@@ -288,14 +309,15 @@ internal object ApiExerciseRows {
 
   // static with a return value
   private fun c012(r: ApiExerciseRunner) {
-    r.begin('C', "ptrcallWithObjectListTransform3DListBoolArgsRetObject", "ImporterMesh.merge_importer_meshes",
-      known = "ios", knownWhy = "the iOS Variant path cannot encode a Transform3D inside an Array argument")
+    r.begin('C', "ptrcallWithObjectListTransform3DListBoolArgsRetObject", "ImporterMesh.merge_importer_meshes")
     try {
       val f0 = r.ref(ImporterMesh(r.construct("ImporterMesh")))
       val a0: List<ImporterMesh> = listOf<ImporterMesh>(f0)
       val a1: List<Transform3D> = listOf<Transform3D>(Transform3D.IDENTITY)
       val a2: Boolean = true
       val got = r.track(ImporterMesh.mergeImporterMeshes(a0, a1, a2))
+      r.wrapperObject(got, "ImporterMesh")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("ImporterMesh", "merge_importer_meshes", a0, a1, a2))
       r.staticObject(got, oracle, "ImporterMesh", "get_surface_count()")
     } catch (t: Throwable) {
@@ -312,6 +334,8 @@ internal object ApiExerciseRows {
       val a0: GLTFState? = f0
       val a1: String = "/nodes/0/translation"
       val got = r.track(GLTFDocument.importObjectModelProperty(a0, a1))
+      r.wrapperObject(got, "GLTFObjectModelProperty")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("GLTFDocument", "import_object_model_property", a0, a1))
       r.staticObject(got, oracle, "GLTFObjectModelProperty", "json_pointers")
     } catch (t: Throwable) {
@@ -327,6 +351,8 @@ internal object ApiExerciseRows {
       val a0: String = r.scratch("missing")
       val a1: Boolean = true
       val got = r.track(FileAccess.setHiddenAttribute(a0, a1))
+      r.wrapperError(got.value)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "set_hidden_attribute", a0, a1))
       r.staticError(got.value, oracle)
     } catch (t: Throwable) {
@@ -342,6 +368,8 @@ internal object ApiExerciseRows {
       val a0: String = "kanama-api-exercise"
       val a1: Boolean = false
       val got = r.track(DirAccess.createTemp(a0, a1))
+      r.wrapperObject(got, "DirAccess")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("DirAccess", "create_temp", a0, a1))
       r.staticObject(got, oracle, "DirAccess")
     } catch (t: Throwable) {
@@ -357,6 +385,8 @@ internal object ApiExerciseRows {
       val a0: String = r.scratch("fixture.wav")
       val a1: Map<String, Any?> = emptyMap()
       val got = r.track(AudioStreamWAV.loadFromFile(a0, a1))
+      r.wrapperObject(got, "AudioStreamWAV")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("AudioStreamWAV", "load_from_file", a0, a1))
       r.staticObject(got, oracle, "AudioStreamWAV", "mix_rate", "stereo", "format")
     } catch (t: Throwable) {
@@ -372,6 +402,8 @@ internal object ApiExerciseRows {
       val a0: String = r.scratch("missing")
       val a1: FileAccess.UnixPermissionFlags = FileAccess.UnixPermissionFlags(256L) /* UNIX_READ_OWNER */
       val got = r.track(FileAccess.setUnixPermissions(a0, a1))
+      r.wrapperError(got.value)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "set_unix_permissions", a0, a1))
       r.staticError(got.value, oracle)
     } catch (t: Throwable) {
@@ -387,6 +419,8 @@ internal object ApiExerciseRows {
       val a0: String = r.scratch("fixture.txt")
       val a1: FileAccess.ModeFlags = FileAccess.ModeFlags(1L) /* READ */
       val got = r.track(FileAccess.open(a0, a1))
+      r.wrapperObject(got, "FileAccess")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "open", a0, a1))
       r.staticObject(got, oracle, "FileAccess", "get_path()", "get_length()")
     } catch (t: Throwable) {
@@ -401,6 +435,8 @@ internal object ApiExerciseRows {
     try {
       val a0: String = r.scratch("sub")
       val got = r.track(DirAccess.dirExistsAbsolute(a0))
+      r.wrapperValue(got, weak = false)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("DirAccess", "dir_exists_absolute", a0))
       r.staticValue(got, oracle, weak = false)
     } catch (t: Throwable) {
@@ -415,6 +451,8 @@ internal object ApiExerciseRows {
     try {
       val a0: String = r.scratch("fixture.txt")
       val got = r.track(FileAccess.getFileAsBytes(a0))
+      r.wrapperValue(got, weak = false)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "get_file_as_bytes", a0))
       r.staticValue(got, oracle, weak = false)
     } catch (t: Throwable) {
@@ -429,6 +467,8 @@ internal object ApiExerciseRows {
     try {
       val a0: String = r.scratch("sub")
       val got = r.track(DirAccess.makeDirAbsolute(a0))
+      r.wrapperError(got.value)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("DirAccess", "make_dir_absolute", a0))
       r.staticError(got.value, oracle)
     } catch (t: Throwable) {
@@ -443,6 +483,8 @@ internal object ApiExerciseRows {
     try {
       val a0: String = r.scratch("fixture.mp3")
       val got = r.track(AudioStreamMP3.loadFromFile(a0))
+      r.wrapperObject(got, "AudioStreamMP3")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("AudioStreamMP3", "load_from_file", a0))
       r.staticObject(got, oracle, "AudioStreamMP3", "data")
     } catch (t: Throwable) {
@@ -457,6 +499,8 @@ internal object ApiExerciseRows {
     try {
       val a0: String = r.scratch("")
       val got = r.track(DirAccess.getDirectoriesAt(a0))
+      r.wrapperValue(got, weak = false)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("DirAccess", "get_directories_at", a0))
       r.staticValue(got, oracle, weak = false)
     } catch (t: Throwable) {
@@ -471,6 +515,8 @@ internal object ApiExerciseRows {
     try {
       val a0: String = r.scratch("fixture.txt")
       val got = r.track(FileAccess.getFileAsString(a0))
+      r.wrapperValue(got, weak = false)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "get_file_as_string", a0))
       r.staticValue(got, oracle, weak = false)
     } catch (t: Throwable) {
@@ -485,6 +531,8 @@ internal object ApiExerciseRows {
     try {
       val a0: String = "{\"kanama\": 125}"
       val got = r.track(JSON.parseString(a0))
+      r.wrapperValue(got, weak = false)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("JSON", "parse_string", a0))
       r.staticValue(got, oracle, weak = false)
     } catch (t: Throwable) {
@@ -495,14 +543,15 @@ internal object ApiExerciseRows {
 
   // static with a return value
   private fun c026(r: ApiExerciseRunner) {
-    r.begin('C', "ptrcallWithStringLongByteArrayByteArrayArgsRetObject", "FileAccess.open_encrypted",
-      known = "ios", knownWhy = "the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`)")
+    r.begin('C', "ptrcallWithStringLongByteArrayByteArrayArgsRetObject", "FileAccess.open_encrypted")
     try {
       val a0: String = r.scratch("encrypted.bin")
       val a1: FileAccess.ModeFlags = FileAccess.ModeFlags(2L) /* WRITE */
       val a2: ByteArray = r.fixtureBytes("key32")
       val a3: ByteArray = ByteArray(0)
       val got = r.track(FileAccess.openEncrypted(a0, a1, a2, a3))
+      r.wrapperObject(got, "FileAccess")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "open_encrypted", a0, a1, a2, a3))
       r.staticObject(got, oracle, "FileAccess", "get_path()")
     } catch (t: Throwable) {
@@ -519,6 +568,8 @@ internal object ApiExerciseRows {
       val a1: FileAccess.ModeFlags = FileAccess.ModeFlags(2L) /* WRITE */
       val a2: String = "kanama125"
       val got = r.track(FileAccess.openEncryptedWithPass(a0, a1, a2))
+      r.wrapperObject(got, "FileAccess")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "open_encrypted_with_pass", a0, a1, a2))
       r.staticObject(got, oracle, "FileAccess", "get_path()")
     } catch (t: Throwable) {
@@ -536,6 +587,8 @@ internal object ApiExerciseRows {
       val a2: Double = 0.5
       val a3: Map<String, Any?> = emptyMap()
       val got = r.track(DPITexture.createFromString(a0, a1, a2, a3))
+      r.wrapperObject(got, "DPITexture")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("DPITexture", "create_from_string", a0, a1, a2, a3))
       r.staticObject(got, oracle, "DPITexture", "base_scale", "saturation")
     } catch (t: Throwable) {
@@ -552,6 +605,8 @@ internal object ApiExerciseRows {
       val a1: FileAccess.ModeFlags = FileAccess.ModeFlags(2L) /* WRITE */
       val a2: FileAccess.CompressionMode = FileAccess.CompressionMode(0L)
       val got = r.track(FileAccess.openCompressed(a0, a1, a2))
+      r.wrapperObject(got, "FileAccess")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "open_compressed", a0, a1, a2))
       r.staticObject(got, oracle, "FileAccess", "get_path()")
     } catch (t: Throwable) {
@@ -568,6 +623,8 @@ internal object ApiExerciseRows {
       val a1: String = "kanama"
       val a2: String = "kanama125"
       val got = r.track(FileAccess.setExtendedAttributeString(a0, a1, a2))
+      r.wrapperError(got.value)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "set_extended_attribute_string", a0, a1, a2))
       r.staticError(got.value, oracle)
     } catch (t: Throwable) {
@@ -583,6 +640,8 @@ internal object ApiExerciseRows {
       val a0: Transform3D = Transform3D(Basis(Vector3(0.0, 1.0, 0.0), Vector3(-1.0, 0.0, 0.0), Vector3(0.0, 0.0, 1.0)), Vector3(1.0, 2.0, 3.0))
       val a1: PathFollow3D.RotationMode = PathFollow3D.RotationMode(4L) /* ROTATION_ORIENTED */
       val got = r.track(PathFollow3D.correctPosture(a0, a1))
+      r.wrapperValue(got, weak = false)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("PathFollow3D", "correct_posture", a0, a1))
       r.staticValue(got, oracle, weak = false)
     } catch (t: Throwable) {
@@ -600,6 +659,8 @@ internal object ApiExerciseRows {
       val a2: Boolean = false
       val a3: Image.Format = Image.Format(5L) /* FORMAT_RGBA8 */
       val got = r.track(Image.create(a0, a1, a2, a3))
+      r.wrapperObject(got, "Image")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("Image", "create", a0, a1, a2, a3))
       r.staticObject(got, oracle, "Image", "get_width()", "get_height()", "get_format()")
     } catch (t: Throwable) {
@@ -610,8 +671,7 @@ internal object ApiExerciseRows {
 
   // static with a return value
   private fun c033(r: ApiExerciseRunner) {
-    r.begin('C', "ptrcallWithTwoIntBoolLongByteArrayArgsRetObject", "Image.create_from_data",
-      known = "ios", knownWhy = "the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`)")
+    r.begin('C', "ptrcallWithTwoIntBoolLongByteArrayArgsRetObject", "Image.create_from_data")
     try {
       val a0: Int = 4
       val a1: Int = 2
@@ -619,6 +679,8 @@ internal object ApiExerciseRows {
       val a3: Image.Format = Image.Format(5L) /* FORMAT_RGBA8 */
       val a4: ByteArray = r.fixtureBytes("rgba8_4x2")
       val got = r.track(Image.createFromData(a0, a1, a2, a3, a4))
+      r.wrapperObject(got, "Image")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("Image", "create_from_data", a0, a1, a2, a3, a4))
       r.staticObject(got, oracle, "Image", "get_width()", "get_height()", "get_data()")
     } catch (t: Throwable) {
@@ -636,6 +698,8 @@ internal object ApiExerciseRows {
       val a0: CryptoKey? = f0
       val a1: X509Certificate? = f1
       val got = r.track(TLSOptions.server(a0, a1))
+      r.wrapperObject(got, "TLSOptions")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("TLSOptions", "server", a0, a1))
       r.staticObject(got, oracle, "TLSOptions", "is_server()")
     } catch (t: Throwable) {
@@ -646,13 +710,14 @@ internal object ApiExerciseRows {
 
   // static returning Error: its arguments must make it fail
   private fun c035(r: ApiExerciseRunner) {
-    r.begin('C', "ptrcallWithTwoStringAndByteArrayArgsRetLong", "FileAccess.set_extended_attribute",
-      known = "ios", knownWhy = "the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`)")
+    r.begin('C', "ptrcallWithTwoStringAndByteArrayArgsRetLong", "FileAccess.set_extended_attribute")
     try {
       val a0: String = r.scratch("missing")
       val a1: String = "kanama"
       val a2: ByteArray = byteArrayOf(1, 2, 3)
       val got = r.track(FileAccess.setExtendedAttribute(a0, a1, a2))
+      r.wrapperError(got.value)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "set_extended_attribute", a0, a1, a2))
       r.staticError(got.value, oracle)
     } catch (t: Throwable) {
@@ -669,6 +734,8 @@ internal object ApiExerciseRows {
       val a1: String = r.scratch("fixture.txt")
       val a2: Int = -1
       val got = r.track(DirAccess.copyAbsolute(a0, a1, a2))
+      r.wrapperError(got.value)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("DirAccess", "copy_absolute", a0, a1, a2))
       r.staticError(got.value, oracle)
     } catch (t: Throwable) {
@@ -684,6 +751,8 @@ internal object ApiExerciseRows {
       val a0: String = r.scratch("fixture.txt")
       val a1: String = "kanama"
       val got = r.track(FileAccess.getExtendedAttribute(a0, a1))
+      r.wrapperValue(got, weak = false)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "get_extended_attribute", a0, a1))
       r.staticValue(got, oracle, weak = false)
     } catch (t: Throwable) {
@@ -699,6 +768,8 @@ internal object ApiExerciseRows {
       val a0: String = r.scratch("missing")
       val a1: String = r.scratch("renamed")
       val got = r.track(DirAccess.renameAbsolute(a0, a1))
+      r.wrapperError(got.value)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("DirAccess", "rename_absolute", a0, a1))
       r.staticError(got.value, oracle)
     } catch (t: Throwable) {
@@ -714,6 +785,8 @@ internal object ApiExerciseRows {
       val a0: String = r.scratch("fixture.txt")
       val a1: String = "kanama"
       val got = r.track(FileAccess.getExtendedAttributeString(a0, a1))
+      r.wrapperValue(got, weak = false)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "get_extended_attribute_string", a0, a1))
       r.staticValue(got, oracle, weak = false)
     } catch (t: Throwable) {
@@ -733,6 +806,8 @@ internal object ApiExerciseRows {
       val a4: Tween.TransitionType = Tween.TransitionType(0L) /* TRANS_LINEAR */
       val a5: Tween.EaseType = Tween.EaseType(0L) /* EASE_IN */
       val got = r.track(Tween.interpolateValue(a0, a1, a2, a3, a4, a5))
+      r.wrapperValue(got, weak = false)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("Tween", "interpolate_value", a0, a1, a2, a3, a4, a5))
       r.staticValue(got, oracle, weak = false)
     } catch (t: Throwable) {
@@ -750,6 +825,8 @@ internal object ApiExerciseRows {
       val a2: Long = 5L
       val a3: List<RID> = emptyList()
       val got = r.track(PhysicsRayQueryParameters2D.create(a0, a1, a2, a3))
+      r.wrapperObject(got, "PhysicsRayQueryParameters2D")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("PhysicsRayQueryParameters2D", "create", a0, a1, a2, a3))
       r.staticObject(got, oracle, "PhysicsRayQueryParameters2D", "from", "to", "collision_mask")
     } catch (t: Throwable) {
@@ -767,6 +844,8 @@ internal object ApiExerciseRows {
       val a2: Long = 5L
       val a3: List<RID> = emptyList()
       val got = r.track(PhysicsRayQueryParameters3D.create(a0, a1, a2, a3))
+      r.wrapperObject(got, "PhysicsRayQueryParameters3D")
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("PhysicsRayQueryParameters3D", "create", a0, a1, a2, a3))
       r.staticObject(got, oracle, "PhysicsRayQueryParameters3D", "from", "to", "collision_mask")
     } catch (t: Throwable) {
@@ -782,6 +861,8 @@ internal object ApiExerciseRows {
       val a0: Any? = Vector2(1.0, 2.0)
       val a1: Boolean = false
       val got = r.track(JSON.fromNative(a0, a1))
+      r.wrapperValue(got, weak = false)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("JSON", "from_native", a0, a1))
       r.staticValue(got, oracle, weak = false)
     } catch (t: Throwable) {
@@ -799,6 +880,8 @@ internal object ApiExerciseRows {
       val a2: Boolean = true
       val a3: Boolean = false
       val got = r.track(JSON.stringify(a0, a1, a2, a3))
+      r.wrapperValue(got, weak = false)
+      r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("JSON", "stringify", a0, a1, a2, a3))
       r.staticValue(got, oracle, weak = false)
     } catch (t: Throwable) {
@@ -1246,8 +1329,7 @@ internal object ApiExerciseRows {
 
   // getter of `font`
   private fun a029(r: ApiExerciseRunner) {
-    r.begin('A', "ptrcallNoArgsRetRID ptrcallWithRIDArg", "CharFXTransform.font",
-      known = "ios", knownWhy = "Object.get of a RID property returns null on iOS")
+    r.begin('A', "ptrcallNoArgsRetRID ptrcallWithRIDArg", "CharFXTransform.font")
     try {
       val o = r.ref(CharFXTransform(r.construct("CharFXTransform")))
       val before = r.track(o.getFont())
@@ -1262,8 +1344,7 @@ internal object ApiExerciseRows {
 
   // getter of `excluded_regions`
   private fun a030(r: ApiExerciseRunner) {
-    r.begin('A', "ptrcallNoArgsRetRIDList ptrcallWithRIDListArg", "NavigationPathQueryParameters2D.excluded_regions",
-      known = "ios", knownWhy = "the iOS Variant return path decodes this element type as null (RID: `[null]`)")
+    r.begin('A', "ptrcallNoArgsRetRIDList ptrcallWithRIDListArg", "NavigationPathQueryParameters2D.excluded_regions")
     try {
       val o = r.ref(NavigationPathQueryParameters2D(r.construct("NavigationPathQueryParameters2D")))
       val before = r.track(o.getExcludedRegions())
@@ -1368,8 +1449,7 @@ internal object ApiExerciseRows {
 
   // getter of `inverse_binds`
   private fun a037(r: ApiExerciseRunner) {
-    r.begin('A', "ptrcallNoArgsRetTransform3DList ptrcallWithTransform3DListArg", "GLTFSkin.inverse_binds",
-      known = "ios", knownWhy = "the iOS Variant return path decodes this element type as null (Transform3D: `[null]`)")
+    r.begin('A', "ptrcallNoArgsRetTransform3DList ptrcallWithTransform3DListArg", "GLTFSkin.inverse_binds")
     try {
       val o = r.ref(GLTFSkin(r.construct("GLTFSkin")))
       val before = r.track(o.getInverseBinds())
