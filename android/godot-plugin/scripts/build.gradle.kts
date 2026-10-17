@@ -89,6 +89,17 @@ android {
     }
 }
 
+// The APK runs on the Kotlin libraries of Godot's Android build template (4.7.2: kotlin-stdlib
+// 2.1.21 and kotlinx-coroutines 1.6.4 on its runtime classpath), not on the newer stdlib this
+// compiles against: a stdlib API newer than 2.1 would compile here and fail with NoSuchMethodError
+// on the device, so the API level keeps it out. On a Godot re-pin, re-check the template's
+// kotlinVersion (config.gradle in android_source.zip; docs/contributing/godot-upgrade.md).
+kotlin {
+    compilerOptions {
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1)
+    }
+}
+
 androidComponents {
     onVariants(selector().all()) { variant ->
         variant.sources.kotlin?.addStaticSourceDirectory("build/generated/kanamaAndroidScriptSources")
