@@ -316,8 +316,9 @@ typedef struct {
  * bridge simply stops failing quietly. `reason` is one of the fixed tokens documented in
  * `docs/contributing/backends/ios.md` (api-unresolved, null-bind, bind-lookup-failed,
  * null-instance, null-handle, null-arg, pending-protocol, callable-build, unknown-tag,
- * encode-failed); `detail` is optional and names the thing that was wrong (the missing
- * interface pointer, the parameter, `Class.method hash=<hash>`, the tag number).
+ * encode-failed, short-payload, alloc-failed, too-many-args, progress-readback); `detail` is
+ * optional and names the thing that was wrong (the missing interface pointer, the parameter,
+ * `Class.method hash=<hash>`, the tag number).
  *
  * There is deliberately no reset function: faults are never cleared, so a fault in frame 1
  * is still visible in the summary line at the end of the run.
@@ -778,7 +779,7 @@ enum {
     // Dictionary: [int32 count]([int32 key_len][key utf8][int32 val_tag][int32 val_len][val bytes])*
     // Array:      [int32 count]([int32 elem_tag][int32 elem_len][elem bytes])*
     // where each tagged value uses the audited scalar encodings of
-    // kanama_ios_pt_blob_value_to_variant (unaudited tags box as nil).
+    // kanama_ios_pt_blob_value_to_variant (an unknown tag boxes as nil and reports a FAULT).
     KANAMA_IOS_PT_DICTIONARY,           // 29
     KANAMA_IOS_PT_ARRAY,                // 30
     // Fixed-element packed-array returns: the PT return scratch holds a pointer to a
@@ -5662,9 +5663,10 @@ static void kanama_ios_pt_arg_to_variant(
             break;
         }
         case KANAMA_IOS_PT_RID: {
-            // task 29 — RID passthrough (a single uint64). Boxes as a nil-RID Variant when the
+            // task 29 — RID passthrough (a single uint64). Boxes as nil, and reports, when the
             // converter is unavailable (it is resolved in the same block as g_variant_from_object).
             if (g_variant_from_rid == NULL) {
+                kanama_ios_fault(__func__, "api-unresolved", "variant_from_rid");
                 g_variant_new_nil((GDExtensionUninitializedVariantPtr)out_variant);
                 break;
             }
@@ -6044,21 +6046,37 @@ static void kanama_ios_pt_blob_value_to_variant(
             kanama_ios_destroy_packed_arg(KANAMA_IOS_PT_PACKED_STRING_ARRAY, scell);
             return;
         }
+        case KANAMA_IOS_PT_VOID:
+            break;  // a null value: nil
         default: {
             // The other raw value kinds (task 133: Vector3i, Vector4/4i, Rect2/2i, AABB, Quaternion,
             // Basis, Transform2D, Projection) inside an Array / Dictionary argument or a script's
             // container return: their Godot bytes, boxed by the engine's from-type constructor
             // (Transform3D and Plane keep their cases above, the same bytes). Before, the Kotlin
             // encoder refused them all inside a container (ImporterMesh.merge_importer_meshes'
-            // Array of Transform3D) and a script's container return dropped them to nil.
+            // Array of Transform3D) and a script's container return dropped them to nil. Kotlin
+            // ships the full KANAMA_IOS_RAW_VALUE_MAX_BYTES scratch, so this table is the only
+            // place each kind's size lives.
             int32_t raw_index = kanama_ios_raw_value_index_by_pt(tag);
-            if (raw_index >= 0 && bytes != NULL && len >= k_kanama_ios_raw_value_kinds[raw_index].bytes) {
-                _Alignas(16) uint8_t raw[KANAMA_IOS_RAW_VALUE_MAX_BYTES];
-                memcpy(raw, bytes, (size_t)k_kanama_ios_raw_value_kinds[raw_index].bytes);
-                if (kanama_ios_raw_value_to_variant(raw_index, raw, out_variant)) {
-                    return;
-                }
+            char detail[48];
+            if (raw_index < 0) {
+                // A tag no Kotlin encoder writes: report it instead of passing nil quietly.
+                snprintf(detail, sizeof detail, "tag=%d", (int)tag);
+                kanama_ios_fault(__func__, "unknown-tag", detail);
+                break;
             }
+            if (bytes == NULL || len < k_kanama_ios_raw_value_kinds[raw_index].bytes) {
+                snprintf(detail, sizeof detail, "tag=%d len=%d need=%d", (int)tag, (int)len,
+                         (int)k_kanama_ios_raw_value_kinds[raw_index].bytes);
+                kanama_ios_fault(__func__, "short-payload", detail);
+                break;
+            }
+            _Alignas(16) uint8_t raw[KANAMA_IOS_RAW_VALUE_MAX_BYTES];
+            memcpy(raw, bytes, (size_t)k_kanama_ios_raw_value_kinds[raw_index].bytes);
+            if (kanama_ios_raw_value_to_variant(raw_index, raw, out_variant)) {
+                return;
+            }
+            kanama_ios_fault(__func__, "api-unresolved", "variant_from_type");
             break;
         }
     }
@@ -9030,7 +9048,7 @@ static void kanama_ios_callable_trampoline(
     }
     if (argc > KANAMA_IOS_PTRCALL_MAX_ARGS) {
         // Never truncate: a lambda would read the wrong arguments. A call error, loudly.
-        kanama_ios_fault(__func__, "too-many-arguments", "signal emission");
+        kanama_ios_fault(__func__, "too-many-args", "signal emission");
         if (r_return != NULL) {
             kanama_ios_init_nil_variant((GDExtensionUninitializedVariantPtr)r_return);
         }

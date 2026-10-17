@@ -378,6 +378,10 @@ The word after the colon is the reason, and it is a fixed token:
 | `callable-build` | A bound `Callable` could not be constructed for the named method. |
 | `unknown-tag` | A ptrcall type tag the shim does not know; the detail carries the number. |
 | `encode-failed` | A container argument could not be encoded for the engine. |
+| `short-payload` | A value inside a container carried fewer bytes than its type needs; the detail gives the tag and both lengths. |
+| `alloc-failed` | The shim could not allocate the argument cells of a call. |
+| `too-many-args` | A call or a signal emission had more arguments than the bridge carries; the detail gives the count. |
+| `progress-readback` | `ResourceLoader.load_threaded_get_status` reported no progress value. |
 
 Seven more you will see **on purpose**, and they carry their own tag — `FAULT-PROBE`
 instead of `FAULT`:

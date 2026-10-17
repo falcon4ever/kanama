@@ -1762,26 +1762,6 @@ internal fun decodeIosRawVariant(variantType: Int, ptr: CPointer<ByteVar>): Any?
  */
 internal const val IOS_RAW_VALUE_MAX_BYTES = 64
 
-/**
- * The byte size of a raw value kind's PT [tag] (the shim's k_kanama_ios_raw_value_kinds; real_t is
- * float32 on iOS), or [IOS_RAW_VALUE_MAX_BYTES] for any other tag.
- */
-internal fun iosRawValueSize(tag: Int): Int =
-  when (tag) {
-    IOS_PT_VECTOR3I -> 12
-    IOS_PT_VECTOR4,
-    IOS_PT_VECTOR4I,
-    IOS_PT_RECT2,
-    IOS_PT_RECT2I,
-    IOS_PT_PLANE,
-    IOS_PT_QUATERNION -> 16
-    IOS_PT_AABB,
-    IOS_PT_TRANSFORM2D -> 24
-    IOS_PT_BASIS -> 36
-    IOS_PT_TRANSFORM3D -> 48
-    else -> IOS_RAW_VALUE_MAX_BYTES
-  }
-
 /** A raw-value scratch of [IOS_RAW_VALUE_MAX_BYTES], 8-byte aligned (allocated as longs). */
 @OptIn(ExperimentalForeignApi::class)
 internal fun kotlinx.cinterop.NativePlacement.allocIosRawValue(): CPointer<ByteVar> =
@@ -2298,7 +2278,7 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
       retTag[0] = IOS_PT_PACKED_FLOAT64_ARRAY
     }
     // task 29 — Dictionary return (Map<String, Any?>): ship a tagged-entry blob; the C side
-    // rebuilds the Godot Dictionary (String keys, audited scalar values, unaudited -> nil).
+    // rebuilds the Godot Dictionary (String keys; a value with no Variant shape throws).
     is Map<*, *> -> {
       retBuf.reinterpret<CPointerVar<ByteVar>>()[0] =
         IosReturnContainerScratch.encodeDictionary(value)
@@ -2591,9 +2571,8 @@ private object IosReturnPackedDescScratch {
 // length-prefixed tagged blob the C side rebuilds —
 // Dictionary: [int32 count]([int32 keyLen][key utf8][int32 valTag][int32 valLen][val bytes])*
 // Array:      [int32 count]([int32 elemTag][int32 elemLen][elem bytes])*
-// Values use the audited scalar encodings of kanama_ios_pt_blob_value_to_variant; an unaudited
-// value ships as PT_VOID/nil (the same policy as the Variant-return dispatch). Same buffer-reuse
-// contract as the other return scratches.
+// Values use the encodings of kanama_ios_pt_blob_value_to_variant; a value with no Variant shape
+// throws, naming its type (taggedValue). Same buffer-reuse contract as the other return scratches.
 @OptIn(ExperimentalForeignApi::class)
 internal object IosReturnContainerScratch {
   private var buf: CPointer<ByteVar>? = null
@@ -2629,10 +2608,11 @@ internal object IosReturnContainerScratch {
   }
 
   /**
-   * PT tag + payload bytes for one audited container value; unaudited -> PT_VOID/nil. With [strict]
-   * (the argument direction, task 100 parcel 7) an unaudited value — any Kotlin object without a
-   * Variant shape — throws instead, so a caller never silently passes nil. Nested List / Map
-   * recurse (task 122).
+   * PT tag + payload bytes for one container value. A Kotlin object without a Variant shape throws,
+   * naming its type, in both directions (an argument and a script's container return), as desktop's
+   * initVariantFromAny does: it never silently becomes nil. [strict] (the argument direction, task
+   * 100 parcel 7) also refuses a non-String Dictionary key, which the return direction still
+   * stringifies. Nested List / Map recurse (task 122).
    */
   // Nested containers recurse at most this deep (the C boxer recurses without its own bound; a
   // self-containing List would otherwise overflow the Kotlin/Native stack — no StackOverflowError).
@@ -2683,22 +2663,24 @@ internal object IosReturnContainerScratch {
         // (ImporterMesh.merge_importer_meshes) was refused, and inside a script's container return
         // it became nil.
         rawValueBytes(value)
-          ?: if (strict) {
-            error(
-              "iOS: unsupported value type ${value::class.simpleName ?: "<anonymous>"} inside a " +
-                "Dictionary / Array argument (scalars, strings, NodePath, the value types, RID, " +
-                "ByteArray, object handles and nested List / Map are marshalled)"
-            )
-          } else {
-            Pair(IOS_PT_VOID, ByteArray(0))
-          }
+          ?: error(
+            "iOS: unsupported value type ${value::class.simpleName ?: "<anonymous>"} inside a " +
+              "Dictionary / Array (scalars, strings, NodePath, the value types, RID, ByteArray, " +
+              "object handles and nested List / Map are marshalled)"
+          )
     }
 
-  /** A raw value kind's PT tag and Godot bytes, or null when [value] is not one. */
+  /**
+   * A raw value kind's PT tag and its Godot bytes, or null when [value] is not one. The payload is
+   * always the full [IOS_RAW_VALUE_MAX_BYTES] scratch (zeroed past the value): the shim's
+   * k_kanama_ios_raw_value_kinds is the only table of each kind's size, and it reads that many
+   * bytes, so Kotlin keeps no copy of it to drift.
+   */
   private fun rawValueBytes(value: Any): Pair<Int, ByteArray>? = memScoped {
     val raw = allocIosRawValue()
+    for (i in 0 until IOS_RAW_VALUE_MAX_BYTES) raw[i] = 0
     val tag = encodeIosRawValue(value, raw)
-    if (tag < 0) null else Pair(tag, raw.readBytes(iosRawValueSize(tag)))
+    if (tag < 0) null else Pair(tag, raw.readBytes(IOS_RAW_VALUE_MAX_BYTES))
   }
 
   /**
