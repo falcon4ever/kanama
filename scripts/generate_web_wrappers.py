@@ -2157,6 +2157,34 @@ def check_hand_written(api_dir: Path, rendered: dict[str, str]) -> list[str]:
     return failures
 
 
+RID_TYPES = frozenset({"RID", "typedarray::RID"})
+
+
+def check_rid_transport(api: Api) -> list[str]:
+    """The transport rule for RIDs (the --check row; red while a typed opcode carried one).
+
+    A RID is a value: it crosses as its 64-bit id in text (the generic tier's Variant codec, or a
+    packed query string such as the ray query's), never in a typed opcode's int32, double or handle
+    slot. Godot's ids pass 2^53 after about two million RID allocations, so a double slot would
+    round them and an int32 slot cuts them; the bridge keeps no table of RIDs either (a stale one is
+    Godot's to reject, as on desktop). So no contract entry may bind a RID, and the generic tier
+    renders a RID slot as desktop's `RID` value class.
+    """
+    failures: list[str] = []
+    for call in INITIAL_BACKEND_CALLS:
+        method = api.method(call)
+        slots = [a["type"] for a in method.get("arguments", ())]
+        slots.append((method.get("return_value") or {}).get("type", ""))
+        if any(slot in RID_TYPES for slot in slots):
+            failures.append(
+                f"opcode {call.opcode} ({call.class_name}.{call.method_name}) binds a RID to a typed "
+                f"{call.shape} slot; a RID crosses as its id in text: make it a WEB_GENERIC_METHODS row"
+            )
+    if _GENERIC_TYPES.get("RID") != "RID" or _GENERIC_TYPES.get("typedarray::RID") != "List<RID>":
+        failures.append("the generic tier does not render a RID slot as RID (an array of them as List<RID>)")
+    return failures
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, default=GENERATED_DIR)
@@ -2180,6 +2208,7 @@ def main() -> int:
         for name in sorted(committed):
             failures.append(f"stray file in generated tree: {name}")
         failures += check_hand_written(out_dir.parent, rendered)
+        failures += check_rid_transport(api)
         for path, text in regions.items():
             if path.read_text() != text:
                 failures.append(f"drift in a GENERATED ENUMS region of {path.name}")

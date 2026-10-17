@@ -556,6 +556,12 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   for (let index = 0; index < 5; index += 1) ownCost.push(await callMain("own_cost", index));
   trace(`own: done=${ownDone} mask=${ownMask} cost=${ownCost.join(",")}`);
   trace(`own notes: ${await evaluate("String(globalThis.KanamaWebOwnNotes ?? '')")}`);
+  // The ray-query rows (OwnProbe's R rows), armed with the O rows and finished long before them.
+  const rayDone = await callMain("own_ray_done");
+  const rayMask = await callMain("own_ray_mask");
+  const rayCost = [];
+  for (let index = 0; index < 6; index += 1) rayCost.push(await callMain("own_ray_cost", index));
+  trace(`ray: done=${rayDone} mask=${rayMask} cost=${rayCost.join(",")}`);
   const readLeakAfter = () =>
     evaluate(
       `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("leak_probe_after")}, 0)`,
@@ -838,6 +844,26 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     genericCloseKeepsSharedNode: (ownMask & 4194304) === 4194304,
     // 300 frames of a generic call for one node, closed when minted: the sweep's ring stays bounded.
     handleRingBounded: (ownMask & 8388608) === 8388608,
+    // R1: a ray query answers desktop's Dictionary (a Map with Godot's seven keys).
+    rayHitIsDictionary: rayDone === 1 && (rayMask & 1) === 1,
+    // R2: `exclude = listOf(body.getRid())` skips that body (a RID crosses as its id, in text).
+    rayExcludesByRid: (rayMask & 2) === 2,
+    // R3: a miss is an empty Map, as on desktop.
+    rayMissIsEmptyMap: (rayMask & 4) === 4,
+    // R4: the hit's `rid` is the collider's getRid(), and the collider is its lookup (O9).
+    rayRidMatchesCollider: (rayMask & 8) === 8,
+    // R5: getRid() crosses once per handle; 10 000 rays mint no handle (after the sweep too).
+    ridIsCachedPerHandle: (rayMask & 48) === 48,
+    // R6: a freed body's RID in `exclude` still hits, reports nothing and mints nothing.
+    staleRidIsHarmless: (rayMask & 64) === 64,
+    // R7: a ray is one engine crossing and no builtin call.
+    rayIsOneCrossing: (rayMask & 128) === 128 && rayCost[1] === 100,
+    // R8: collideWithAreas, collisionMask, hitFromInside and collideWithBodies reach the engine.
+    rayFlags: (rayMask & 3840) === 3840,
+    // R9: RayCast3D.addExceptionRid and SpringArm3D.addExcludedObject(RID) take a RID.
+    rayCastExceptionRid: (rayMask & 12288) === 12288,
+    // R10: a signal's RID argument is the same value as getRid().
+    ridSignalIsSameCodec: (rayMask & 16384) === 16384,
     // O10: handing over an already-seen InputEvent costs at most one JS call (the wrapper's
     // registration); a plain Node still none.
     rcDispatchCost: ownCost[0] >= 0 && ownCost[0] <= 1010 && ownCost[1] >= 0 && ownCost[1] <= 10,
@@ -1047,6 +1073,14 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
       ownMicrosPer1000PlainNode: Math.max(0, ownCost[3]),
       // O2: the frames until the browser collected the dropped wrappers (gc() on Chrome).
       ownCollectFrames: Math.max(0, ownCost[4]),
+      // R5 / R7: engine crossings of 1000 getRid() and of 100 rays, live handles gained by 10 000
+      // rays (at once and after the sweep), builtin calls of 100 rays, microseconds of 10 000 rays.
+      ridCrossingsPer1000: Math.max(0, rayCost[0]),
+      rayCrossingsPer100: Math.max(0, rayCost[1]),
+      rayHandlesPer10000: Math.max(0, rayCost[2]),
+      rayHandlesPer10000AfterSweep: Math.max(0, rayCost[3]),
+      rayBuiltinCallsPer100: Math.max(0, rayCost[4]),
+      rayMicrosPer10000: Math.max(0, rayCost[5]),
       genericVsTypedRatioX100:
         generic.typedMs > 0 ? Math.max(0, Math.round((generic.genericMs / generic.typedMs) * 100)) : 0,
     },

@@ -48,6 +48,36 @@ func _ready() -> void:
 	var from := Node3D.new()
 	from.name = "OwnRayFrom"
 	add_child(from)
+	# The R rows: a second body below OwnRayBody (a ray that excludes the first hits it), an area
+	# above it (hit only with collide_with_areas), a body only the RID cache row asks, a RayCast3D
+	# and a SpringArm3D over a body each, and an area whose body_shape_entered carries a RID.
+	_box_body("OwnRayBody2", Vector3(500.0, 496.0, 500.0))
+	var area := Area3D.new()
+	area.name = "OwnRayArea"
+	area.add_child(_box_shape())
+	add_child(area)
+	area.global_position = Vector3(500.0, 504.0, 500.0)
+	var rid_body := StaticBody3D.new()
+	rid_body.name = "OwnRidBody"
+	add_child(rid_body)
+	_box_body("OwnCastBody", Vector3(520.0, 500.0, 500.0))
+	var cast := RayCast3D.new()
+	cast.name = "OwnRayCast"
+	cast.target_position = Vector3(0.0, -20.0, 0.0)
+	add_child(cast)
+	cast.global_position = Vector3(520.0, 510.0, 500.0)
+	_box_body("OwnSpringBody", Vector3(540.0, 500.0, 500.0))
+	var arm := SpringArm3D.new()
+	arm.name = "OwnSpringArm"
+	arm.spring_length = 20.0
+	add_child(arm)
+	arm.global_position = Vector3(540.0, 510.0, 500.0)
+	# The arm casts along its +Z: turned to point down.
+	arm.rotation_degrees = Vector3(90.0, 0.0, 0.0)
+	var rid_area := Area3D.new()
+	rid_area.name = "OwnRidArea"
+	add_child(rid_area)
+	rid_area.global_position = Vector3(580.0, 500.0, 500.0)
 	# uint32Masks: a body and a visual instance OwnProbe writes uint32 masks to (no shape: it
 	# collides with nothing).
 	var mask_body := StaticBody3D.new()
@@ -64,6 +94,43 @@ func _ready() -> void:
 	var ringed := Node.new()
 	ringed.name = "OwnRingNode"
 	add_child(ringed)
+
+
+func _box_shape() -> CollisionShape3D:
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(2.0, 2.0, 2.0)
+	shape.shape = box
+	return shape
+
+
+func _box_body(body_name: String, at: Vector3) -> StaticBody3D:
+	var body := StaticBody3D.new()
+	body.name = body_name
+	body.add_child(_box_shape())
+	add_child(body)
+	body.global_position = at
+	return body
+
+
+## R6: the RID of a body made and freed here (a stale RID: its validator no longer matches).
+func stale_rid(_unused: int) -> int:
+	var body := _box_body("OwnStaleBody", Vector3(600.0, 500.0, 500.0))
+	var id := body.get_rid().get_id()
+	body.free()
+	return id
+
+
+## R10: OwnRidArea's body_shape_entered with OwnRayBody's RID, as the physics server would emit it.
+func emit_rid_signal(_unused: int) -> int:
+	var body := get_node("OwnRayBody") as StaticBody3D
+	(get_node("OwnRidArea") as Area3D).body_shape_entered.emit(body.get_rid(), body, 0, 0)
+	return 1
+
+
+## R9: how far OwnSpringArm reaches, in millimetres (its full length is 20 m).
+func spring_hit_length_mm(_unused: int) -> int:
+	return int((get_node("OwnSpringArm") as SpringArm3D).get_hit_length() * 1000.0)
 
 
 ## Why an OwnProbe row failed, for the driver's trace.

@@ -429,6 +429,9 @@
     kotlinToGodotCalls: 0,
     snapshotBatchLoads: 0,
     immediateCalls: 0,
+    // Synchronous object-query crossings (a string or an integer answer: a ray query, a generic
+    // call, a builtin call, a lookup): the web3d ray rows count a ray's engine crossings with it.
+    objectQueries: 0,
     commandBufferGrowths: 0,
     latestSnapshotX: 0,
     latestSnapshotY: 0,
@@ -2520,6 +2523,7 @@
     },
     immediateStringQuery(opcode, handle, value) {
       const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot object query");
+      this.objectQueries += 1;
       this.immediateStringResult = null;
       callback(opcode, handle, value);
       if (typeof this.immediateStringResult !== "string") {
@@ -2896,6 +2900,7 @@
     },
     immediateObjectQuery(opcode, handle, value) {
       const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot object query");
+      this.objectQueries += 1;
       this.immediateLongResult = null;
       callback(opcode, handle, value);
       if (!Number.isInteger(this.immediateLongResult)) {
