@@ -91,6 +91,10 @@ lost or refused values that work on desktop:
 alike. On iOS only, a signal or script-method argument of either type fails with an error naming
 the type, where desktop passes `null`.
 
+Android scripts compile at Kotlin API level 2.1, the kotlin-stdlib of Godot 4.7.2's Android build
+template: a script that uses a stdlib API newer than 2.1 now fails to compile instead of crashing on
+the device.
+
 Android scripts now compile against kotlinx.coroutines 1.6.4, the version Godot 4.7.2's Android
 build template puts in the APK, so a coroutines API newer than that fails the build instead of
 the app on the device (desktop and iOS keep 1.11.0).

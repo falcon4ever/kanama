@@ -124,7 +124,11 @@ minor releases — the runbook below is identical, only smaller.
       so `android/godot-plugin/{plugin,scripts}/build.gradle.kts` compile with
       `apiVersion` set to that stdlib version and against that coroutines version
       (`kanamaAndroidCoroutinesVersion` in `android/godot-plugin/gradle.properties`).
-      Move both with the template.
+      Move both with the template. The other direction matters too: Kotlin 2.4
+      already warns that API version 2.1 is deprecated, and a later Kotlin (around
+      2.6, if the usual cycle holds) refuses it. A root Kotlin bump then fails the
+      Android build until Godot's template ships a newer stdlib; keep the older
+      Kotlin until it does, rather than raising the API level past the APK's.
     - Before tagging:
       `scripts/fresh_clone_smoke.sh /absolute/path/to/new_godot_binary`.
 
