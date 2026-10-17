@@ -126,6 +126,14 @@ object KanamaIosNoReturn
  */
 object KanamaIosNoProperty
 
+/**
+ * A typed `Map<K, V>` @Export read back by the generated bridge's getProperty: its [entries] keep
+ * their int, enum (already ordinals) and value-type keys, so they leave as the any-key Dictionary
+ * (KANAMA_IOS_PT_DICTIONARY_ANY) instead of the generic String-keyed one — the iOS twin of
+ * desktop's `BuiltinTypes.initVariantDictionaryAny`.
+ */
+class KanamaIosTypedDictionary(val entries: Map<*, *>)
+
 internal interface KanamaIosScriptBridge {
   // Generic per-signature inbound dispatch (Phase 3.3): [args] are the already-decoded Kotlin
   // values (one per method param, in order); the generated branch casts/wraps each to its
@@ -160,6 +168,11 @@ internal interface KanamaIosScriptBridge {
   // already-decoded Kotlin value; the generated branch casts it to the field's type. See
   // the C set-property value path + setScriptInstancePropertyValue's tag decode.
   fun setPropertyValue(propertyIndex: Int, value: Any): Boolean = false
+
+  // Map @Export delivery (a typed `Map<K, V>` or `Map<String, Any?>`): [entries] is the Dictionary
+  // with its keys and values decoded as they are (desktop: readVariantDictionaryAny); the generated
+  // branch converts them to the field's key and value types and drops what does not fit.
+  fun setPropertyDictionary(propertyIndex: Int, entries: Map<Any?, Any?>): Boolean = false
 
   val scriptInstance: Any?
     get() = null
@@ -637,6 +650,25 @@ internal object KanamaIosRuntime {
     if (ok) {
       log(
         "property string-array set handle=$handle index=$propertyIndex count=${values.size} path=${instance.resource.path}"
+      )
+    }
+    return ok
+  }
+
+  fun setScriptInstancePropertyDictionary(
+    handle: Long,
+    propertyIndex: Int,
+    entries: Map<Any?, Any?>,
+  ): Boolean {
+    val instance = scriptInstances[handle]
+    if (instance == null) {
+      log("property dictionary set skipped for missing script instance handle=$handle")
+      return false
+    }
+    val ok = instance.bridge.setPropertyDictionary(propertyIndex, entries)
+    if (ok) {
+      log(
+        "property dictionary set handle=$handle index=$propertyIndex count=${entries.size} path=${instance.resource.path}"
       )
     }
     return ok
@@ -1630,6 +1662,25 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyStringArray(
   }
 }
 
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_set_property_dictionary")
+fun kanamaIosRuntimeScriptInstanceSetPropertyDictionary(
+  instanceHandle: Long,
+  propertyIndex: Int,
+  blob: CPointer<ByteVar>?,
+  len: Long,
+): Int {
+  return containPropertySet(instanceHandle, propertyIndex) {
+    val entries =
+      if (blob == null || len < 4L) emptyMap()
+      else
+        net.multigesture.kanama.binding.runtime.ObjectCalls.decodeDictionaryAnyBlob(
+          blob.readBytes(len.toInt())
+        )
+    KanamaIosRuntime.setScriptInstancePropertyDictionary(instanceHandle, propertyIndex, entries)
+  }
+}
+
 // PT_* tags — must match the KANAMA_IOS_PT_* enum in kanama_ios_shim.c. NODE_PATH/STRING ship a
 // null-terminated utf8 cstring; Vector2/3/Color ship contiguous float32, Vector2i contiguous
 // int32; INT64/BOOL/FLOAT64/OBJECT ship their scalar in the buffer.
@@ -1686,6 +1737,8 @@ private const val IOS_PT_ARRAY = 30
 internal const val IOS_PT_VARIANT = 38
 // Inbound-only container argument cell, one blob record (task 122 item 4).
 private const val IOS_PT_VARIANT_RECORD = 42
+// Return-only any-key Dictionary (a typed Map @Export read): see KanamaIosTypedDictionary.
+private const val IOS_PT_DICTIONARY_ANY = 43
 private const val IOS_PT_PACKED_BYTE_ARRAY = 31
 private const val IOS_PT_PACKED_INT32_ARRAY = 32
 private const val IOS_PT_PACKED_INT64_ARRAY = 33
@@ -2286,6 +2339,12 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
         IosReturnContainerScratch.encodeDictionary(value)
       retTag[0] = IOS_PT_DICTIONARY
     }
+    // A typed Map<K, V> @Export: its keys keep their type (KANAMA_IOS_PT_DICTIONARY_ANY).
+    is KanamaIosTypedDictionary -> {
+      retBuf.reinterpret<CPointerVar<ByteVar>>()[0] =
+        IosReturnContainerScratch.encodeDictionaryAny(value.entries)
+      retTag[0] = IOS_PT_DICTIONARY_ANY
+    }
     // List returns dispatch on the element type: String -> PackedStringArray (task 13 blob),
     // Vector2/Vector3/Color -> the matching Packed*Array desc (task 29), anything else
     // (including the empty list, which converts to any packed/typed array engine-side) -> a
@@ -2688,6 +2747,35 @@ internal object IosReturnContainerScratch {
     map: Map<*, *>,
     alloc: (Int) -> CPointer<ByteVar> = ::ensure,
   ): CPointer<ByteVar> = copyOut(encodeDictionaryBytes(map), alloc)
+
+  /**
+   * The any-key entry blob of a typed Map @Export read (KANAMA_IOS_PT_DICTIONARY_ANY):
+   * [int32 count]([int32 keyTag][int32 keyLen][key][int32 valTag][int32 valLen][value])*, keys
+   * encoded like values. Same persistent scratch as [encodeDictionary].
+   */
+  fun encodeDictionaryAny(map: Map<*, *>): CPointer<ByteVar> {
+    val entries = map.entries.map { (k, v) -> Pair(taggedValue(k), taggedValue(v)) }
+    var needed = 4
+    for ((key, value) in entries) needed += 8 + key.second.size + 8 + value.second.size
+    val out = ByteArray(needed)
+    var off = 0
+    fun putInt32(v: Int) {
+      putInt32LE(out, off, v)
+      off += 4
+    }
+    fun putTagged(tagged: Pair<Int, ByteArray>) {
+      putInt32(tagged.first)
+      putInt32(tagged.second.size)
+      tagged.second.copyInto(out, off)
+      off += tagged.second.size
+    }
+    putInt32(entries.size)
+    for ((key, value) in entries) {
+      putTagged(key)
+      putTagged(value)
+    }
+    return copyOut(out, ::ensure)
+  }
 
   fun encodeArray(
     values: List<*>,

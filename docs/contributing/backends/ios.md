@@ -191,6 +191,16 @@ Four rules of the bridge (three about ownership), each with its self-test rows:
   `CharFXTransform.font`, `NavigationPathQueryParameters2D.excluded_regions` and
   `GLTFSkin.inverse_binds`; the line `OBJECTCALLS SELFTEST variant-types ret-failed=0[] ...`
   names any type that fails per path.
+- **Map @Export properties cross as an any-key Dictionary.** A set (`kanama_ios_script_instance_set_property_of_type`'s
+  Dictionary case) encodes the Dictionary with `kanama_ios_blob_encode_dictionary_any`
+  (`[count]([key record][value record])*`), `kanama_ios_runtime_script_instance_set_property_dictionary`
+  decodes it with `ObjectCalls.decodeDictionaryAnyBlob`, and the generated `setPropertyDictionary`
+  converts keys and values with the desktop registrar's own transforms (`mapKeyReadTransformSafe`,
+  `mapValueReadTransformSafe`), dropping what does not fit. A read returns `KanamaIosTypedDictionary`,
+  shipped as `KANAMA_IOS_PT_DICTIONARY_ANY` (keys tagged like values) and rebuilt by
+  `kanama_ios_build_dictionary_any_from_blob`. `Map<String, Any?>` keeps the generic String-keyed
+  read. Object- and script-valued Maps are still an iOS skip. Rows: `map-export(...)` (built-in
+  probe `DictionaryProbe.kt`, whose bridge `IosMapExportEmitTest` holds to the emitter's output).
 - **A script property's default is its initializer (task 138 item 8).** The iOS registry carries
   `KanamaIosScriptProperty.defaultValue`, emitted by KSP from the literal desktop's registrar
   declares as `default<Name>` and converted like `getProperty`; `Script._has/_get_property_default_value`

@@ -187,6 +187,12 @@ internal data class IosProperty(
   // literal desktop's registrar uses, typed and converted by [scalarGetExpression]); empty when
   // the generator read no literal. Answers Script._get_property_default_value on iOS.
   val defaultExpression: String = "",
+  // A Map @Export (typed `Map<K, V>` or `Map<String, Any?>`): the statement assigning the decoded
+  // any-key Dictionary `entries` (setPropertyDictionary) and the expression getProperty returns.
+  // The typed conversions are the desktop registrar's (mapKeyReadTransformSafe,
+  // mapValueReadTransformSafe, mapWriteSourceExpr), so both backends keep the same keys.
+  val mapSetStatement: String = "",
+  val mapGetExpression: String = "",
 )
 
 internal data class IosSignal(val godotName: String, val kotlinName: String)
@@ -389,6 +395,7 @@ internal class IosScriptCodeEmitter(
       val readableProperties =
         script.properties.filter {
           it.scalarGetExpression.isNotEmpty() ||
+            it.mapGetExpression.isNotEmpty() ||
             it.arrayElementEnumFqName.isNotEmpty() ||
             it.arrayElementGodotEnum != null ||
             it.listElementIsString
@@ -412,6 +419,8 @@ internal class IosScriptCodeEmitter(
               builder.appendLine("        $index -> script.${property.kotlinName}")
             property.scalarGetExpression.isNotEmpty() ->
               builder.appendLine("        $index -> ${property.scalarGetExpression}")
+            property.mapGetExpression.isNotEmpty() ->
+              builder.appendLine("        $index -> ${property.mapGetExpression}")
           }
         }
         builder.appendLine("        else -> net.multigesture.kanama.ios.KanamaIosNoProperty")
@@ -555,6 +564,20 @@ internal class IosScriptCodeEmitter(
         builder.appendLine("        else -> false")
         builder.appendLine("    }")
       }
+      val mapProperties = script.properties.filter { it.mapSetStatement.isNotEmpty() }
+      if (mapProperties.isNotEmpty()) {
+        builder.appendLine()
+        builder.appendLine(
+          "    override fun setPropertyDictionary(propertyIndex: Int, entries: Map<Any?, Any?>): Boolean = when (propertyIndex) {"
+        )
+        script.properties.forEachIndexed { index, property ->
+          if (property.mapSetStatement.isNotEmpty()) {
+            builder.appendLine("        $index -> { ${property.mapSetStatement}; true }")
+          }
+        }
+        builder.appendLine("        else -> false")
+        builder.appendLine("    }")
+      }
       val valueProperties = script.properties.filter { it.valueTypeClassName.isNotEmpty() }
       if (valueProperties.isNotEmpty()) {
         builder.appendLine()
@@ -610,6 +633,7 @@ internal class IosScriptCodeEmitter(
     if (property.arrayElementEnumFqName.isNotEmpty()) return true
     if (property.arrayElementGodotEnum != null) return true
     if (property.valueTypeClassName.isNotEmpty()) return true
+    if (property.mapSetStatement.isNotEmpty()) return true
     return false
   }
 
@@ -990,18 +1014,49 @@ internal class IosScriptCodeEmitter(
   private fun IosProperty.mutableSuffix(): String = if (isMutable) ".toMutableList()" else ""
 
   private fun ScriptPropertyModel.toIosProperty(className: String): IosProperty {
-    // Typed `Map<K, V>` exports (issue #40) need the key/value ordinal, wrapper, and resource
-    // retention conversions the iOS set-property path doesn't have yet: keep the Kotlin default,
-    // the same deferral boundary as the value types the generic path below warns on. Full iOS
-    // dictionary-property marshalling is a mobile follow-up. hint/hintString/usage are still
-    // advertised so the inspector renders the same DICTIONARY control as the desktop registrar.
+    // Map exports: a typed `Map<K, V>` (issue #40) with scalar, String, value-type or enum keys
+    // and values crosses as one any-key Dictionary blob both ways (setPropertyDictionary, and
+    // KanamaIosTypedDictionary on the read), converted like the desktop registrar converts it; a
+    // plain `Map<String, Any?>` rides the generic String-keyed path. Object- and script-valued
+    // Maps need the resource retention the object-array path has and stay an iOS skip.
+    // hint/hintString/usage are advertised so the inspector renders the desktop DICTIONARY control.
     if (type == TypeMapping.DICTIONARY) {
-      exportSkip(
-        className,
-        kotlinName,
-        "[kanama-ios] $className.$kotlinName (Map) — no iOS @Export dictionary path yet, " +
-          "would keep its Kotlin default",
-      )
+      val objectValued = mapValueWrapperFqName != null || mapValueCustomScriptFqName != null
+      if (objectValued) {
+        exportSkip(
+          className,
+          kotlinName,
+          "[kanama-ios] $className.$kotlinName (a Map with object or script values) — no iOS " +
+            "@Export path for object-valued Maps yet, would keep its Kotlin default",
+        )
+      }
+      val mutable = if (isMutableMap) ".toMutableMap()" else ""
+      val target = "script.$kotlinName"
+      val setStatement: String
+      val getExpression: String
+      if (mapKeyKotlinType != null) {
+        val keySafe = mapKeyReadTransformSafe(this, "entry.key")
+        val valueSafe = mapValueReadTransformSafe(this, "entry.value")
+        // Map<K, V?> keeps a key whose value is nil or of another type (as null); Map<K, V> drops
+        // it, as desktop's readVariantDictionaryAny + the registrar's decode do.
+        val bind =
+          if (mapValueNullable) "k to ($valueSafe)"
+          else "val v = $valueSafe ?: return@mapNotNull null; k to v"
+        setStatement =
+          "$target = entries.entries.mapNotNull { entry -> val k = $keySafe ?: " +
+            "return@mapNotNull null; $bind }.toMap()$mutable"
+        val nullSafe = if (nullable) "?." else "."
+        getExpression =
+          "$target${nullSafe}let { m -> net.multigesture.kanama.ios.KanamaIosTypedDictionary(" +
+            "${mapWriteSourceExpr(this, "m")}) }"
+      } else {
+        // Map<String, Any?>: the generic String-keyed Dictionary; other keys are dropped, as
+        // desktop's readDictionaryScalars drops them.
+        setStatement =
+          "$target = entries.entries.mapNotNull { entry -> (entry.key as? String)?.let { k -> " +
+            "k to entry.value } }.toMap()$mutable"
+        getExpression = target
+      }
       return IosProperty(
         godotName = godotName,
         kotlinName = kotlinName,
@@ -1018,6 +1073,8 @@ internal class IosScriptCodeEmitter(
         customScriptFqName = "",
         arrayElementCustomScriptFqName = "",
         listElementIsString = false,
+        mapSetStatement = if (objectValued) "" else setStatement,
+        mapGetExpression = if (objectValued) "" else getExpression,
       )
     }
     val isList = type == TypeMapping.ARRAY

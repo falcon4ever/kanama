@@ -1234,6 +1234,17 @@ actual object ObjectCalls {
       return out
     }
 
+    // [int32 count]([key record][value record])*: kanama_ios_blob_encode_dictionary_any.
+    fun dictionaryAny(): Map<Any?, Any?> {
+      val count = i32()
+      val out = LinkedHashMap<Any?, Any?>(if (count > 0) count else 0)
+      repeat(count) {
+        val key = record()
+        out[key] = record()
+      }
+      return out
+    }
+
     fun dictionary(): Map<String, Any?> {
       val count = i32()
       val out = LinkedHashMap<String, Any?>(if (count > 0) count else 0)
@@ -1246,6 +1257,14 @@ actual object ObjectCalls {
       return out
     }
   }
+
+  /**
+   * The Dictionary of a Map @Export set (kanama_ios_blob_encode_dictionary_any): every key and
+   * value decoded as a container element is, so int, enum and value-type keys keep their type
+   * (desktop: BuiltinTypes.readVariantDictionaryAny). Object values are borrowed wrappers.
+   */
+  internal fun decodeDictionaryAnyBlob(blob: ByteArray): Map<Any?, Any?> =
+    if (blob.size >= 4) ContainerBlob(blob, 0).dictionaryAny() else emptyMap()
 
   /**
    * One whole blob record (`[int32 variant_type][int32 byteLen][payload]`), decoded as a container

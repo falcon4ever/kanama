@@ -40,9 +40,44 @@ internal fun dictionaryProbeDescriptor(path: String): KanamaIosScriptDescriptor?
       },
     )
 
-/** Before a Map @Export had an iOS path, the generated bridge had no case for either property. */
+/** The bridge IosScriptCodeEmitter generates for the two properties (IosMapExportEmitTest). */
 private class DictionaryProbeBridge(private val script: DictionaryProbeScript) :
   KanamaIosScriptBridge {
   override val scriptInstance: Any
     get() = script
+
+  override fun getProperty(propertyIndex: Int): Any? =
+    when (propertyIndex) {
+      0 -> script.names.let { m -> net.multigesture.kanama.ios.KanamaIosTypedDictionary(m) }
+      1 -> script.cells.let { m -> net.multigesture.kanama.ios.KanamaIosTypedDictionary(m) }
+      else -> net.multigesture.kanama.ios.KanamaIosNoProperty
+    }
+
+  override fun setPropertyDictionary(propertyIndex: Int, entries: Map<Any?, Any?>): Boolean =
+    when (propertyIndex) {
+      0 -> {
+        script.names =
+          entries.entries
+            .mapNotNull { entry ->
+              val k = ((entry.key as? Number)?.toInt()) ?: return@mapNotNull null
+              val v = (entry.value as? String) ?: return@mapNotNull null
+              k to v
+            }
+            .toMap()
+        true
+      }
+      1 -> {
+        script.cells =
+          entries.entries
+            .mapNotNull { entry ->
+              val k =
+                (entry.key as? net.multigesture.kanama.types.Vector2i) ?: return@mapNotNull null
+              val v = ((entry.value as? Number)?.toLong()) ?: return@mapNotNull null
+              k to v
+            }
+            .toMap()
+        true
+      }
+      else -> false
+    }
 }

@@ -154,8 +154,11 @@ each converted scene there keyed by the source file's md5 and mtime and reuses
 a stripped conversion until the `.tscn` itself changes.
 
 An exported property (`@Export`) that the iOS backend cannot deliver —
-a typed `Map`, or a value type without an iOS path such as `RID` — fails this
-build and names the property:
+a `Map` with object or script values (`Map<String, Texture2D>`), or a value type
+without an iOS path such as `RID` — fails this build and names the property.
+`Map` exports with number, `String`, value-type or enum keys and values
+(`Map<Int, String>`, `Map<Vector2i, Long>`) are delivered, keys kept as on
+desktop:
 
 ```text
 e: [ksp] [kanama:ksp] [kanama-ios] Grid.cell (RID) — no iOS @Export

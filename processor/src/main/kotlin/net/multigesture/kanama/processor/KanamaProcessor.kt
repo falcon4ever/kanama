@@ -5715,50 +5715,6 @@ internal class ScriptCodeEmitter(
     }
   }
 
-  /**
-   * Fail-soft key transform: yields `K?`, null when the raw key can't be decoded (skips the entry).
-   */
-  private fun mapKeyReadTransformSafe(property: ScriptPropertyModel, varExpr: String): String {
-    val fq = property.mapKeyKotlinType
-    if (property.mapKeyEnumEntries.isNotEmpty() && fq != null) {
-      return enumOrdinalReadCastSafe(fq, varExpr)
-    }
-    return scalarReadCastSafe(fq, varExpr)
-  }
-
-  /**
-   * Fail-soft value transform: yields `V?`, null when the raw scalar/enum value can't be decoded.
-   */
-  private fun mapValueReadTransformSafe(property: ScriptPropertyModel, varExpr: String): String {
-    property.mapValueEnumFqName?.let { fq ->
-      return enumOrdinalReadCastSafe(fq, varExpr)
-    }
-    return scalarReadCastSafe(property.mapValueKotlinType, varExpr)
-  }
-
-  /**
-   * Fail-soft cast of a raw decoded Variant scalar/value-type ([varExpr]) to its Kotlin type,
-   * narrowing numbers. Yields a nullable expression: `null` on a type mismatch rather than a
-   * `ClassCastException` (see [mapReadPropertyExpr]).
-   */
-  private fun scalarReadCastSafe(kotlinType: String?, varExpr: String): String =
-    when (kotlinType) {
-      "String" -> "($varExpr as? String)"
-      "Long" -> "(($varExpr as? Number)?.toLong())"
-      "Int" -> "(($varExpr as? Number)?.toInt())"
-      "Double" -> "(($varExpr as? Number)?.toDouble())"
-      "Float" -> "(($varExpr as? Number)?.toFloat())"
-      "Boolean" -> "($varExpr as? Boolean)"
-      else -> "($varExpr as? $kotlinType)"
-    }
-
-  /**
-   * Fail-soft ordinal decode: clamps a valid stored ordinal into an enum entry (matching the
-   * scalar/list enum policy), but yields `null` for a non-numeric value instead of throwing.
-   */
-  private fun enumOrdinalReadCastSafe(enumFq: String, varExpr: String): String =
-    "(($varExpr as? Number)?.toInt()?.let { $enumFq.entries[it.coerceIn(0, $enumFq.entries.lastIndex)] })"
-
   private fun variantReadArgExpr(arg: ArgModel, variantPtr: String, localName: String): String =
     if (arg.godotEnum != null) {
       // Task 128 B: the Godot enum arrives as INT; wrap the raw Long into its value class.
@@ -5908,26 +5864,8 @@ internal class ScriptCodeEmitter(
    * writer, kept separate from the generic (String-key-only) [BuiltinTypes.initVariantFromAny] Map
    * path so generic Dictionary reads and writes stay symmetrical (issue #40).
    */
-  private fun mapWritePropertyRetExpr(property: ScriptPropertyModel, valueExpr: String): String {
-    val keyNeedsConv = property.mapKeyEnumEntries.isNotEmpty()
-    val valueNeedsConv =
-      property.mapValueEnumFqName != null || property.mapValueCustomScriptFqName != null
-    val source =
-      if (keyNeedsConv || valueNeedsConv) {
-        val keyConv = if (keyNeedsConv) "k.ordinal.toLong()" else "k"
-        val valueConv =
-          when {
-            property.mapValueEnumFqName != null -> "v.ordinal.toLong()"
-            property.mapValueCustomScriptFqName != null ->
-              "net.multigesture.kanama.binding.runtime.BuiltinTypes.scriptValue(v, v.godotObject)"
-            else -> "v"
-          }
-        "$valueExpr.entries.associate { (k, v) -> $keyConv to $valueConv }"
-      } else {
-        valueExpr
-      }
-    return "BuiltinTypes.initVariantDictionaryAny(ret, $source)"
-  }
+  private fun mapWritePropertyRetExpr(property: ScriptPropertyModel, valueExpr: String): String =
+    "BuiltinTypes.initVariantDictionaryAny(ret, ${mapWriteSourceExpr(property, valueExpr)})"
 
   private fun variantWriteToolButtonRetExpr(button: ToolButtonModel): String =
     "Arena.ofConfined().use { a -> val callable = BuiltinTypes.allocateCallable(a); BuiltinTypes.initCallable(callable, godotObject, \"${kotlinStringLiteral(button.method.godotName)}\"); VariantConverters.variantFromType(VariantType.CALLABLE).invoke(ret, callable); BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable) }"
@@ -6046,3 +5984,69 @@ internal fun legacyHandleConstructorMessage(simpleName: String, parameterName: S
     "`import java.lang.foreign.MemorySegment` with " +
     "`import net.multigesture.kanama.api.GodotHandle`, and leave every `SomeWrapper(other.handle)` " +
     "call site as it is. See the CHANGELOG \"Breaking\" entry and docs/game-dev/scripts.md."
+
+/**
+ * The entries a typed `Map<K, V>` property hands its any-key Dictionary writer: enum keys/values as
+ * their ordinal (Long) and custom-script values as their owner handle, everything else as it is.
+ * Shared by the desktop registrar ([ScriptCodeEmitter]) and the iOS bridge
+ * ([IosScriptCodeEmitter]).
+ */
+internal fun mapWriteSourceExpr(property: ScriptPropertyModel, valueExpr: String): String {
+  val keyNeedsConv = property.mapKeyEnumEntries.isNotEmpty()
+  val valueNeedsConv =
+    property.mapValueEnumFqName != null || property.mapValueCustomScriptFqName != null
+  if (!keyNeedsConv && !valueNeedsConv) return valueExpr
+  val keyConv = if (keyNeedsConv) "k.ordinal.toLong()" else "k"
+  val valueConv =
+    when {
+      property.mapValueEnumFqName != null -> "v.ordinal.toLong()"
+      property.mapValueCustomScriptFqName != null ->
+        "net.multigesture.kanama.binding.runtime.BuiltinTypes.scriptValue(v, v.godotObject)"
+      else -> "v"
+    }
+  return "$valueExpr.entries.associate { (k, v) -> $keyConv to $valueConv }"
+}
+
+// The fail-soft typed-Map decode transforms, shared by the desktop registrar and the iOS bridge so
+// both backends convert a delivered Dictionary's keys and values the same way.
+/**
+ * Fail-soft key transform: yields `K?`, null when the raw key can't be decoded (skips the entry).
+ */
+internal fun mapKeyReadTransformSafe(property: ScriptPropertyModel, varExpr: String): String {
+  val fq = property.mapKeyKotlinType
+  if (property.mapKeyEnumEntries.isNotEmpty() && fq != null) {
+    return enumOrdinalReadCastSafe(fq, varExpr)
+  }
+  return scalarReadCastSafe(fq, varExpr)
+}
+
+/** Fail-soft value transform: yields `V?`, null when the raw scalar/enum value can't be decoded. */
+internal fun mapValueReadTransformSafe(property: ScriptPropertyModel, varExpr: String): String {
+  property.mapValueEnumFqName?.let { fq ->
+    return enumOrdinalReadCastSafe(fq, varExpr)
+  }
+  return scalarReadCastSafe(property.mapValueKotlinType, varExpr)
+}
+
+/**
+ * Fail-soft cast of a raw decoded Variant scalar/value-type ([varExpr]) to its Kotlin type,
+ * narrowing numbers. Yields a nullable expression: `null` on a type mismatch rather than a
+ * `ClassCastException` (see [mapReadPropertyExpr]).
+ */
+internal fun scalarReadCastSafe(kotlinType: String?, varExpr: String): String =
+  when (kotlinType) {
+    "String" -> "($varExpr as? String)"
+    "Long" -> "(($varExpr as? Number)?.toLong())"
+    "Int" -> "(($varExpr as? Number)?.toInt())"
+    "Double" -> "(($varExpr as? Number)?.toDouble())"
+    "Float" -> "(($varExpr as? Number)?.toFloat())"
+    "Boolean" -> "($varExpr as? Boolean)"
+    else -> "($varExpr as? $kotlinType)"
+  }
+
+/**
+ * Fail-soft ordinal decode: clamps a valid stored ordinal into an enum entry (matching the
+ * scalar/list enum policy), but yields `null` for a non-numeric value instead of throwing.
+ */
+internal fun enumOrdinalReadCastSafe(enumFq: String, varExpr: String): String =
+  "(($varExpr as? Number)?.toInt()?.let { $enumFq.entries[it.coerceIn(0, $enumFq.entries.lastIndex)] })"

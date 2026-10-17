@@ -42,13 +42,21 @@ class IosExportSkipTest {
   private fun prop(name: String, type: TypeMapping) =
     ScriptPropertyModel(kotlinName = name, godotName = name, type = type, isMutable = true)
 
+  // A Map with engine-object values: the one Map export iOS does not deliver yet.
+  private fun objectMap(name: String) =
+    prop(name, TypeMapping.DICTIONARY)
+      .copy(
+        mapKeyKotlinType = "String",
+        mapValueWrapperFqName = "net.multigesture.kanama.api.Texture2D",
+      )
+
   @Test
-  fun aMapExportIsABuildErrorOnIos() {
-    val r = emit(false, prop("regions", TypeMapping.DICTIONARY))
+  fun anObjectValuedMapExportIsABuildErrorOnIos() {
+    val r = emit(false, objectMap("regions"))
 
     assertEquals(1, r.errors.size, "one error per property, not one per guard: ${r.errors}")
     val error = r.errors.single()
-    assertTrue(error.contains("SkipFixture.regions (Map)"), error)
+    assertTrue(error.contains("SkipFixture.regions (a Map with object or script values)"), error)
     assertTrue(error.contains("-P$ALLOW_IOS_SKIPS_OPTION=true"), error)
     assertEquals(emptyList(), r.warnings)
   }
@@ -64,7 +72,7 @@ class IosExportSkipTest {
 
   @Test
   fun theOptInTurnsEachSkipBackIntoOneWarning() {
-    val r = emit(true, prop("regions", TypeMapping.DICTIONARY), prop("cell", TypeMapping.RID))
+    val r = emit(true, objectMap("regions"), prop("cell", TypeMapping.RID))
 
     assertEquals(emptyList(), r.errors)
     assertEquals(2, r.warnings.size, "${r.warnings}")
@@ -82,6 +90,10 @@ class IosExportSkipTest {
         // Task 133 C2: Vector2i (task 131 item 15) and Color are delivered on iOS now.
         prop("cell", TypeMapping.VECTOR2I),
         prop("tint", TypeMapping.COLOR),
+        // A Map<String, Any?> and a typed Map with scalar keys and values are delivered too.
+        prop("meta", TypeMapping.DICTIONARY),
+        prop("names", TypeMapping.DICTIONARY)
+          .copy(mapKeyKotlinType = "Int", mapValueKotlinType = "String"),
         // Task 133: the remaining value types, as raw Godot bytes.
         *IOS_RAW_VALUE_TYPES.map { prop(it.name.lowercase(), it) }.toTypedArray(),
       )
