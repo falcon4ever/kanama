@@ -937,11 +937,16 @@ Web sources too.
 
 - **Exports require iOS 15.0**, Godot 4.7.2's default `application/min_ios_version`
   (Xcode 27 refuses a lower deployment target). Set it in your export preset.
+- **A `Map` with non-String keys no longer converts to a generic Godot `Dictionary` on iOS.** A
+  script method returning a `Map<Int, V>` (or a `List` holding one), or a `Map` argument with such
+  keys to `call` / `callv` / `set`, used to reach Godot with the keys turned into Strings (`"1"`); it
+  now fails with `Unsupported Dictionary key type: <class>`, as on desktop. Return a
+  `Map<String, V>`, or declare the property as a typed `@Export` `Map<K, V>`, which keeps its keys.
 - **A script method iOS cannot dispatch now fails the iOS build** instead of
   warning and silently never running: a registered function or virtual with a
   parameter type the iOS call path does not pass (`Map`, `List`,
   `Packed*Array`), an `@OverrideVirtual` whose return type iOS does not
-  marshal, or an exported property iOS cannot deliver (a typed `Map`). The error names the method, the parameter and the supported types;
+  marshal, or an exported property iOS cannot deliver (a `RID`; `Map` exports are delivered). The error names the method, the parameter and the supported types;
   change the type, or build with `-PkanamaIosAllowSkips=true` to accept the skip
   (a warning again). `RID` and `Any?` parameters, and `NodePath` and every value
   type as an `@OverrideVirtual` return, are dispatched now.

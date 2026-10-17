@@ -177,6 +177,14 @@ extern int32_t kanama_ios_runtime_script_instance_set_property_string_array(
     const char *const *strings,
     int32_t count
 );
+// Map @Export delivery (typed `Map<K, V>` and `Map<String, Any?>`): the Dictionary Variant as the
+// any-key blob of kanama_ios_blob_encode_dictionary_any, `len` bytes.
+extern int32_t kanama_ios_runtime_script_instance_set_property_dictionary(
+    int64_t instance_handle,
+    int32_t property_index,
+    const uint8_t *blob,
+    int64_t len
+);
 // Value-type (NodePath/Vector2/Vector3/Color) @Export delivery: the C side extracts
 // the Variant into a PT-tagged raw byte buffer and hands it across. NODE_PATH ships its utf8
 // path bytes (PT_NODE_PATH); Vector2/3/Color ship their float32 components (PT_VECTOR2/
@@ -825,6 +833,13 @@ enum {
     // reader. Never a ptrcall argument tag. Value (42) must match IOS_PT_VARIANT_RECORD in
     // KanamaIosRuntime.kt. Append-only — never renumber.
     KANAMA_IOS_PT_VARIANT_RECORD,       // 42
+    // RETURN-only: a typed `Map<K, V>` @Export read back (the iOS twin of desktop's
+    // initVariantDictionaryAny). The PT return scratch holds a pointer to the any-key entry blob
+    // [int32 count]([int32 key_tag][int32 key_len][key bytes][int32 val_tag][int32 val_len][val bytes])*
+    // whose keys and values both box through kanama_ios_pt_blob_value_to_variant, so int, enum
+    // and value-type keys survive. Value (43) must match IOS_PT_DICTIONARY_ANY in
+    // KanamaIosRuntime.kt. Append-only — never renumber.
+    KANAMA_IOS_PT_DICTIONARY_ANY,       // 43
 };
 
 // Descriptor for a BUILD-tagged Packed*Array arg (mirrors KanamaIosPackedArgDesc in
@@ -4297,6 +4312,53 @@ static void kanama_ios_blob_encode_dictionary(KanamaIosBlob *b, uint64_t *dict_s
     kanama_ios_blob_patch_i32(b, count_at, kept);
 }
 
+// The any-key twin of kanama_ios_blob_encode_dictionary, for a typed Map<K, V> @Export set (desktop:
+// BuiltinTypes.readVariantDictionaryAny): [int32 count]([key record][value record])*, each a
+// [int32 variant_type][int32 byteLen][payload] record, so int, enum and value-type keys reach
+// Kotlin as themselves. Kotlin decodes it with ObjectCalls.decodeDictionaryAnyBlob. Returns 0 (and
+// reports) when the Dictionary accessors are unresolved: the caller must not deliver the empty
+// blob, which would clear the property.
+static int kanama_ios_blob_encode_dictionary_any(KanamaIosBlob *b, uint64_t *dict_storage) {
+    int64_t count_at = b->len;
+    kanama_ios_blob_put_i32(b, 0);
+    kanama_ios_cache_array_methods();
+    kanama_ios_cache_dictionary_keys_method();
+    if (g_dictionary_keys_method == NULL || g_array_size_method == NULL || g_array_get_method == NULL ||
+        g_dictionary_keyed_getter == NULL || g_array_destructor == NULL || g_variant_destroy == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "Dictionary keys/getter");
+        return 0;
+    }
+    uint64_t keys = 0;
+    g_dictionary_keys_method(dict_storage, NULL, &keys, 0);
+    int64_t n = 0;
+    g_array_size_method(&keys, NULL, &n, 0);
+    for (int64_t i = 0; i < n; i++) {
+        uint8_t key_variant[24];
+        memset(key_variant, 0, sizeof(key_variant));
+        const GDExtensionConstTypePtr get_args[1] = { (GDExtensionConstTypePtr)&i };
+        g_array_get_method(&keys, get_args, key_variant, 1);
+        uint8_t value[24];
+        memset(value, 0, sizeof(value));
+        // The key came from keys(), so it is present; keep the checker gate anyway, as
+        // kanama_ios_blob_encode_dictionary does: the ptr keyed getter dereferences a missing key
+        // (see kanama_ios_raycast_dict_get). A key it refuses encodes a nil value.
+        if (g_dictionary_keyed_checker == NULL ||
+            g_dictionary_keyed_checker(
+                (GDExtensionConstVariantPtr)dict_storage, (GDExtensionConstVariantPtr)key_variant)) {
+            g_dictionary_keyed_getter((GDExtensionConstTypePtr)dict_storage,
+                                      (GDExtensionConstTypePtr)key_variant,
+                                      (GDExtensionUninitializedTypePtr)value);
+        }
+        kanama_ios_blob_encode_variant(b, key_variant, 0);
+        kanama_ios_blob_encode_variant(b, value, 0);
+        g_variant_destroy((GDExtensionVariantPtr)value);
+        g_variant_destroy((GDExtensionVariantPtr)key_variant);
+    }
+    g_array_destructor(&keys);
+    kanama_ios_blob_patch_i32(b, count_at, (int32_t)n);
+    return 1;
+}
+
 // Internal ret_type marker for kanama_ios_godot_ptrcall_dispatch: ret_out is an 8-byte Dictionary /
 // Array opaque cell. Never crosses the Kotlin boundary (see KANAMA_IOS_RET_VARIANT_CELL).
 enum { KANAMA_IOS_RET_CONTAINER_CELL = -3 };
@@ -6191,6 +6253,43 @@ static void kanama_ios_build_dictionary_from_blob(const uint8_t *blob, GDExtensi
     }
 }
 
+// The any-key twin of kanama_ios_build_dictionary_from_blob (KANAMA_IOS_PT_DICTIONARY_ANY): each
+// key is a tagged value like the value, so a typed Map export's int, enum and value-type keys are
+// set as themselves (desktop: BuiltinTypes.initDictionaryAny). The caller destroys out_cell.
+static void kanama_ios_build_dictionary_any_from_blob(const uint8_t *blob, GDExtensionTypePtr out_cell) {
+    kanama_ios_init_empty_dictionary(out_cell);
+    if (blob == NULL) {
+        return;
+    }
+    if (g_dictionary_keyed_setter == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "dictionary_keyed_setter");
+        return;
+    }
+    const uint8_t *p = blob;
+    int32_t count = kanama_ios_blob_read_int32(p);
+    p += 4;
+    for (int32_t i = 0; i < count; i++) {
+        int32_t key_tag = kanama_ios_blob_read_int32(p);
+        int32_t key_len = kanama_ios_blob_read_int32(p + 4);
+        p += 8;
+        if (key_len < 0) key_len = 0;
+        uint8_t key_variant[24];
+        kanama_ios_pt_blob_value_to_variant(key_tag, p, key_len, key_variant);
+        p += key_len;
+        int32_t val_tag = kanama_ios_blob_read_int32(p);
+        int32_t val_len = kanama_ios_blob_read_int32(p + 4);
+        p += 8;
+        if (val_len < 0) val_len = 0;
+        uint8_t value_variant[24];
+        kanama_ios_pt_blob_value_to_variant(val_tag, p, val_len, value_variant);
+        p += val_len;
+        g_dictionary_keyed_setter(out_cell, (GDExtensionConstVariantPtr)key_variant,
+                                  (GDExtensionConstVariantPtr)value_variant);
+        g_variant_destroy(key_variant);
+        g_variant_destroy(value_variant);
+    }
+}
+
 // Build a Godot Array (task 29 return path) into out_cell (a >=16-byte opaque Array storage) from
 // the blob [int32 count]([int32 elem_tag][int32 elem_len][elem bytes])*. Elements box via
 // kanama_ios_pt_blob_value_to_variant and append via Array.push_back. The caller destroys out_cell
@@ -6318,11 +6417,16 @@ static void kanama_ios_pt_return_to_variant(int32_t tag, const void *ret_buf, ui
         return;
     }
     // task 29 — Dictionary return: the scratch holds an entry-blob pointer.
-    if (tag == KANAMA_IOS_PT_DICTIONARY) {
+    // A typed Map<K, V> @Export read (PT_DICTIONARY_ANY) carries tagged keys.
+    if (tag == KANAMA_IOS_PT_DICTIONARY || tag == KANAMA_IOS_PT_DICTIONARY_ANY) {
         const uint8_t *blob = (ret_buf != NULL) ? *(const uint8_t *const *)ret_buf : NULL;
         memset(out_variant, 0, 24);
         uint64_t dict = 0;
-        kanama_ios_build_dictionary_from_blob(blob, &dict);
+        if (tag == KANAMA_IOS_PT_DICTIONARY_ANY) {
+            kanama_ios_build_dictionary_any_from_blob(blob, &dict);
+        } else {
+            kanama_ios_build_dictionary_from_blob(blob, &dict);
+        }
         if (g_variant_from_dictionary != NULL) {
             g_variant_from_dictionary(out_variant, &dict);
         } else {
@@ -9831,6 +9935,33 @@ static GDExtensionBool kanama_ios_script_instance_set_property_of_type(
         if (g_packed_string_array_destructor != NULL) {
             g_packed_string_array_destructor(array_storage);
         }
+        return (GDExtensionBool)ok;
+    } else if (type == KANAMA_IOS_VARIANT_TYPE_DICTIONARY) {
+        // A Map @Export (typed Map<K, V> keeps int, enum and value-type keys, as desktop's
+        // readVariantDictionaryAny does): the Dictionary as one any-key blob, decoded and converted
+        // by the generated bridge's setPropertyDictionary. Object values stay borrowed for the call.
+        if (g_variant_to_dictionary == NULL || g_dictionary_destructor == NULL) {
+            kanama_ios_fault(__func__, "api-unresolved", "variant_to_dictionary");
+            return 0;
+        }
+        uint64_t dict = 0;
+        g_variant_to_dictionary(&dict, (GDExtensionVariantPtr)(intptr_t)value);
+        KanamaIosBlob b = { NULL, 0, 0, 0 };
+        int encoded = kanama_ios_blob_encode_dictionary_any(&b, &dict);
+        g_dictionary_destructor(&dict);
+        if (!encoded) {
+            // Reported by the encoder; the property keeps its value rather than being cleared.
+            free(b.buf);
+            return 0;
+        }
+        if (b.oom || b.buf == NULL) {
+            free(b.buf);
+            kanama_ios_fault(__func__, "encode-failed", "Dictionary property");
+            return 0;
+        }
+        int32_t ok = kanama_ios_runtime_script_instance_set_property_dictionary(
+            instance->runtime_handle, property_index, (const uint8_t *)b.buf, b.len);
+        free(b.buf);
         return (GDExtensionBool)ok;
     } else {
         return 0;

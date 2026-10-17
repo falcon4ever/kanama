@@ -584,6 +584,39 @@ private fun runVariantTypeRows(
     val got = obj.get("inverse_binds")
     (got == listOf(xform3)) to "got=${show(got)}"
   }
+
+  // The generic Map -> Dictionary path is String-key-only in every direction, with desktop's
+  // message (BuiltinTypes.variantFromDictionaryInto): a script's Map<Long, V> return, a Map
+  // inside a List return and a Map argument with a Long or Vector2i key are refused, never sent
+  // to Godot with "1"-style String keys.
+  val keyRefusals =
+    listOf<Pair<String, () -> Unit>>(
+      "kotlin.Long" to
+        {
+          net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(mapOf(1L to "a"))
+        },
+      "kotlin.Long" to
+        {
+          net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(listOf(mapOf(2L to "b")))
+        },
+      "net.multigesture.kanama.types.Vector2i" to
+        {
+          net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(mapOf(Vector2i(1, 2) to 3L))
+        },
+      "kotlin.Long" to
+        {
+          ObjectCalls.callWithVariantArgs(
+            callBind,
+            callNode,
+            listOf("set_meta", "kanama_key_probe", mapOf(4L to "d")),
+          )
+        },
+    )
+  val keyMessages = keyRefusals.map { (_, body) -> runCatching(body).exceptionOrNull()?.message }
+  check(
+    "dictionary-keys(generic Map with non-String keys refused like desktop) got=$keyMessages",
+    keyMessages == keyRefusals.map { (type, _) -> "Unsupported Dictionary key type: $type" },
+  )
 }
 
 @OptIn(ExperimentalNativeApi::class)
@@ -3065,6 +3098,115 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       }
     } finally {
       OwnedReleases.enabled = enabledBefore
+    }
+  }
+
+  // Map @Export properties (desktop: initVariantDictionaryAny / readVariantDictionaryAny): a
+  // Map<Int, String> and a Map<Vector2i, Long> of a built-in probe script, set by the engine
+  // (Object.set from an Expression, as a scene or GDScript sets them) and read back by the engine
+  // (Object.get compared with the literal engine-side), so the generic String-keyed Dictionary
+  // decode cannot stand in for them. Keys and values of another type drop, as on desktop.
+  run {
+    val scriptObject =
+      net.multigesture.kanama.ios.cinterop.kanama_ios_godot_create_script_object(
+        net.multigesture.kanama.ios.DICTIONARY_PROBE_SCRIPT_PATH
+      )
+    val ownerHandle = ObjectCalls.constructObject("Node")
+    if (scriptObject == 0L || ownerHandle.address() == 0L) {
+      check("map-export(probe script and owner created)", false)
+    } else {
+      net.multigesture.kanama.ios.DictionaryProbeScript.last = null
+      val owner = GodotObject(GodotHandle(ownerHandle))
+      owner.setScript(
+        net.multigesture.kanama.api.Resource.fromHandle(
+          GodotHandle(MemorySegment.ofAddress(scriptObject))
+        )
+      )
+      val probe = net.multigesture.kanama.ios.DictionaryProbeScript.last
+      val expressionHandle = ObjectCalls.constructObject("Expression")
+      val expression =
+        net.multigesture.kanama.api.Expression.fromHandle(GodotHandle(expressionHandle))!!
+      fun eval(code: String): Any? {
+        if (expression.parse(code, emptyList()) != net.multigesture.kanama.api.GodotError.OK) {
+          return "parse-failed"
+        }
+        return expression.execute(emptyList(), owner)
+      }
+      try {
+        eval("set(\"names\", {1: \"one\", 2: \"two\"})")
+        eval("set(\"cells\", {Vector2i(1, 2): 3, Vector2i(-4, 5): 6})")
+        val namesSet = probe?.names
+        val cellsSet = probe?.cells
+        check(
+          "map-export(Map<Int, String> set by the engine keeps its int keys) got=$namesSet",
+          namesSet == mapOf(1 to "one", 2 to "two"),
+        )
+        check(
+          "map-export(Map<Vector2i, Long> set by the engine keeps its Vector2i keys) got=$cellsSet",
+          cellsSet == mapOf(Vector2i(1, 2) to 3L, Vector2i(-4, 5) to 6L),
+        )
+        probe?.names = mapOf(7 to "seven")
+        probe?.cells = mapOf(Vector2i(0, -1) to 9L)
+        val readBack =
+          eval("get(\"names\") == {7: \"seven\"} and get(\"cells\") == {Vector2i(0, -1): 9}")
+        check(
+          "map-export(both Maps read back by the engine with their keys) got=$readBack",
+          readBack == true,
+        )
+        eval("set(\"names\", {1: \"one\", \"x\": \"bad key\", 3: 4})")
+        check(
+          "map-export(a key or value of another type drops its entry) got=${probe?.names}",
+          probe?.names == mapOf(1 to "one"),
+        )
+        // An enum key (stored as its ordinal) and a nullable value, whose nil keeps its key.
+        eval("set(\"tiers\", {0: 0.5, 1: null, \"x\": 1.0})")
+        val tiersSet = probe?.tiers
+        check(
+          "map-export(Map<Enum, Double?> keeps an enum key and a nil value) got=$tiersSet",
+          tiersSet ==
+            mapOf(
+              net.multigesture.kanama.ios.DictionaryProbeTier.LOW to 0.5,
+              net.multigesture.kanama.ios.DictionaryProbeTier.HIGH to null,
+            ),
+        )
+        probe?.tiers = mapOf(net.multigesture.kanama.ios.DictionaryProbeTier.HIGH to 2.5)
+        val tierRead = eval("get(\"tiers\") == {1: 2.5}")
+        probe?.tiers = mapOf(net.multigesture.kanama.ios.DictionaryProbeTier.LOW to null)
+        val nilRead = eval("get(\"tiers\") == {0: null}")
+        check(
+          "map-export(Map<Enum, Double?> reads back ordinals and a nil value) got=$tierRead/$nilRead",
+          tierRead == true && nilRead == true,
+        )
+        // An object-valued Map (Map<String, Texture2D>): the texture stays alive while only the
+        // property holds it (the Kotlin wrapper is closed right after the set), reads back as the
+        // same object, and is released when the property is set again, as desktop's retained
+        // Dictionary read (readVariantDictionaryObjectValuesRetained) does.
+        val resource =
+          net.multigesture.kanama.api.ClassDB.instantiate("PlaceholderTexture2D")
+            as net.multigesture.kanama.api.RefCounted
+        val resourceId = resource.instanceId
+        val resourceAddress = resource.handle.segment.address()
+        owner.set("textures", mapOf("a" to resource))
+        resource.close()
+        val heldAlive = IosGodot.isInstanceIdValid(resourceId)
+        val heldValue = probe?.textures?.get("a")?.handle?.segment?.address()
+        val readValue =
+          ((owner.get("textures") as? Map<*, *>)?.get("a") as? GodotObject)?.segment?.address()
+        owner.set("textures", emptyMap<String, Any?>())
+        val releasedAfterReset = !IosGodot.isInstanceIdValid(resourceId)
+        check(
+          "map-export(Map<String, Texture2D> holds its texture, reads it back, releases it on reset) " +
+            "alive=$heldAlive held=${heldValue == resourceAddress} read=${readValue == resourceAddress} " +
+            "released=$releasedAfterReset",
+          heldAlive &&
+            heldValue == resourceAddress &&
+            readValue == resourceAddress &&
+            releasedAfterReset,
+        )
+      } finally {
+        ObjectCalls.destroyObject(expressionHandle)
+        ObjectCalls.destroyObject(ownerHandle)
+      }
     }
   }
 
