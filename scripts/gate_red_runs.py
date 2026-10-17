@@ -294,6 +294,10 @@ case("check_android_remap_sources.py (string literal)", py("check_android_remap_
 case("check_android_remap_sources.py (nested template)", py("check_android_remap_sources.py"),
      [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt", 'package net.multigesture.kanama\nval zzText: String = "${"/*"}"\nfun zz() = Files.readString(x)\n')],
      "ZzRedRun.kt:3: forbidden after the Android remap", "a template whose inner literal holds a block-comment opener no longer hides the following lines (task 138 item 28)")
+case("check_android_remap_sources.py (reflective Method.invoke)", py("check_android_remap_sources.py"),
+     [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt",
+             'package net.multigesture.kanama\nfun zz(flag: Boolean) {\n  val entry =\n    Class.forName("x")\n      .getMethod("y", Boolean::class.javaPrimitiveType)\n  entry.invoke(null, flag)\n}\n')],
+     "ZzRedRun.kt:6: `.invoke(` on the reflective Method `entry`", "a reflective `Method.invoke` in the runtime sources: the Android remap makes it `invokeWithArguments`, which Method lacks, and the runtime AAR stops compiling (the API exercise hook)")
 case("check_android_remap_sources.py (invokeExact)", py("check_android_remap_sources.py"),
      [Edit("android/godot-plugin/buildSrc/src/main/kotlin/KanamaAndroidRemap.kt",
            'needle = ".invokeExact(",', 'needle = ".invokeExactDisabled(",')],

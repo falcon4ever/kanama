@@ -21,6 +21,12 @@ native heap pointer is tagged (top byte `0xB4`), negative as a signed `long`, so
 `IndexOutOfBoundsException` on the device while every desktop run passes. Address native memory
 through a segment derived from the pointer (`ptr.reinterpret(size)`, offsets relative to it).
 
+It also fails on `.invoke(` on a reflective receiver (a `java.lang.reflect.Method`: a value typed
+`Method`, a `val`/`var` bound from `getMethod(...)` / `getDeclaredMethod(...)`, or a chained
+`.getMethod(...).invoke(`): the remap turns it into `.invokeWithArguments(`, which `Method` does not
+have, and the Android copy stops compiling (task 125: the API exercise hook). Call it through a
+`MethodHandle` (`MethodHandles.lookup().unreflect(method)`), whose `invokeWithArguments` exists.
+
 Usage:
     python3 scripts/check_android_remap_sources.py
 """
@@ -178,6 +184,35 @@ def address_space_segments(text: str) -> list[int]:
     return sorted({text.count("\n", 0, start) + 1 for start in starts})
 
 
+_GET_METHOD = r"\.\s*get(?:Declared)?Method\s*\("
+# A value typed `Method` (a parameter, a property, a local).
+METHOD_TYPED = re.compile(r"\b(\w+)\s*:\s*(?:java\.lang\.reflect\.)?Method\b\??")
+# A `val`/`var` whose initializer (up to the next declaration) calls getMethod and does not hand it to
+# `unreflect` (a MethodHandle, which takes `.invoke(` fine).
+METHOD_BOUND = re.compile(r"\b(?:val|var)\s+(\w+)\b((?:(?!\b(?:val|var|fun)\b).){0,600}?)" + _GET_METHOD, re.DOTALL)
+CHAINED_INVOKE = re.compile(
+    _GET_METHOD + r"(?:[^()]|\((?:[^()]|\([^()]*\))*\))*\)\s*\??\.\s*invokeWithArguments\s*\("
+)
+
+
+def reflective_invokes(original: str, remapped: str) -> list[tuple[int, str]]:
+    """(line, receiver) of every call on a reflective `Method` of [original] (comment-stripped) that
+    reads `.invokeWithArguments(` in [remapped] (the same file after the remap, whose undo rules put
+    the known sites such as `registerAll.invoke` back): `Method` has no such member."""
+    names = set(METHOD_TYPED.findall(original))
+    for match in METHOD_BOUND.finditer(original):
+        if "unreflect" not in match.group(2):
+            names.add(match.group(1))
+    text = remapped
+    out = []
+    for name in sorted(names):
+        for call in re.finditer(r"\b" + re.escape(name) + r"\s*\??\.\s*invokeWithArguments\s*\(", text):
+            out.append((text.count("\n", 0, call.start()) + 1, name))
+    for call in CHAINED_INVOKE.finditer(text):
+        out.append((text.count("\n", 0, call.start()) + 1, "getMethod(...)"))
+    return out
+
+
 def main() -> int:
     rules, fragments = parse_remap(REMAP.read_text(encoding="utf-8"))
     failures: list[str] = []
@@ -194,6 +229,13 @@ def main() -> int:
                     line = line.replace(needle, replacement)
                 remapped.append(line)
             original = strip_comments(path.read_text(encoding="utf-8").splitlines())
+            for number, receiver in reflective_invokes("\n".join(original), "\n".join(strip_comments(remapped))):
+                failures.append(
+                    f"{path.relative_to(ROOT)}:{number}: `.invoke(` on the reflective Method `{receiver}`: the "
+                    "Android remap rewrites it to `.invokeWithArguments(`, which java.lang.reflect.Method does "
+                    "not have, so the Android copy does not compile -- call it through a MethodHandle "
+                    "(MethodHandles.lookup().unreflect(method).invokeWithArguments(...))"
+                )
             for number in address_space_segments("\n".join(original)):
                 failures.append(
                     f"{path.relative_to(ROOT)}:{number}: whole-address-space segment: an Android heap "
