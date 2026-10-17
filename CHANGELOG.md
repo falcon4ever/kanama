@@ -190,7 +190,8 @@ factories make the RID arguments of those servers' B and D rows, `RID_ARG_SOURCE
 font a `TextServer` row uses is freed again). Methods whose call aborts the engine on a fresh object (a
 physics shape index the server does not bounds-check) are excluded in `METHOD_OVERRIDES` with that reason.
 `runtime_smoke.sh` runs the exercise with its row trace on (`KANAMA_API_EXERCISE_TRACE=1` now also prints
-each row's verdict) and names the row a crash happened in.
+each row's verdict) and names the row a crash happened in. Each run writes under its own `user://kanama-api-exercise/<pid>-<random>/`,
+so two runs of the example project at once (two worktrees) no longer delete each other's fixtures.
 
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 

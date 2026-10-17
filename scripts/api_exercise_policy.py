@@ -240,11 +240,13 @@ PAIR_OVERRIDES: dict[tuple[str, str], tuple[str | None, str]] = {
 
 # ---- static rows -------------------------------------------------------------------------------------
 
-SCRATCH_DIR = "user://kanama-api-exercise/"
+SCRATCH_DIR = "user://kanama-api-exercise/<run>/"
 SCRATCH_POLICY = (
-    "The exercise runner creates `user://kanama-api-exercise/` before its first row (with the fixture "
+    "The exercise runner creates its own directory `user://kanama-api-exercise/<pid>-<random>/` before its "
+    "first row (with the fixture "
     "files the rows read: `fixture.txt` with an extended attribute, `fixture.mp3`, `fixture.wav`, and the "
-    "directory `sub/`) and removes it after its last. Every row whose method takes a path, of any case, "
+    "directory `sub/`) and removes it after its last (and the shared parent once it is empty), so two runs "
+    "of one project at once never touch each other's files. Every row whose method takes a path, of any case, "
     "takes one under that directory: the `FileAccess` and `DirAccess` statics (`open*`, `make_dir*`, "
     "`rename*`, `copy*`, `set_*attribute`, `set_unix_permissions`, `get_file_as_*`) and the instance and "
     "singleton rows listed below (`Image.save_*`, `GLTFDocument.write_to_filesystem`, ...). The one "

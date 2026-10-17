@@ -3,12 +3,14 @@ package net.multigesture.kanama.exercise
 import kotlin.jvm.JvmStatic
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.random.Random
 import kotlin.time.TimeSource
 import net.multigesture.kanama.api.DirAccess
 import net.multigesture.kanama.api.FileAccess
 import net.multigesture.kanama.api.GodotEnumValue
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.OS
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.AABB
@@ -52,11 +54,13 @@ import net.multigesture.kanama.types.Vector4
  * **weak** row cannot tell a working call from a no-op by its value (an argument-free static, or a
  * B/D result equal to its type's zero): it checks the two paths agree and is counted apart.
  *
- * Every path a row touches is under [SCRATCH], which [run] creates (with the fixture files the rows
- * read) before the first row and removes after the last.
+ * Every path a row touches is under the run's own directory below [SCRATCH_ROOT]
+ * (`<pid>-<random>/`, [ApiExerciseRunner.scratchDir]), which [run] creates (with the fixture files
+ * the rows read) before the first row and removes after the last: two runs of one project at once
+ * (two worktrees of the example project share its `user://`) never touch each other's files.
  */
 internal object ApiExercise {
-  const val SCRATCH: String = "user://kanama-api-exercise/"
+  const val SCRATCH_ROOT: String = "user://kanama-api-exercise/"
 
   /**
    * The verdict of one run. [reach] counts reach-only rows (none yet), [excluded] listed helpers.
@@ -173,7 +177,12 @@ internal constructor(
 
   // ---- the scratch directory and its fixtures --------------------------------------------------
 
-  fun scratch(name: String): String = ApiExercise.SCRATCH + name
+  /** This run's scratch directory: [ApiExercise.SCRATCH_ROOT] + `<pid>-<random>/`. */
+  val scratchDir: String =
+    ApiExercise.SCRATCH_ROOT +
+      "${runCatching { OS.getProcessId() }.getOrDefault(0)}-${Random.nextInt(0, Int.MAX_VALUE).toString(36)}/"
+
+  fun scratch(name: String): String = scratchDir + name
 
   fun fixtureBytes(name: String): ByteArray =
     when (name) {
@@ -193,7 +202,7 @@ internal constructor(
   internal fun setUp() {
     begin('S', "-", "setup(scratch directory and fixtures)")
     try {
-      removeTree(ApiExercise.SCRATCH)
+      removeTree(scratchDir)
       check(DirAccess.makeDirRecursiveAbsolute(scratch("sub")).value == 0L) {
         "cannot create ${scratch("sub")}"
       }
@@ -213,12 +222,15 @@ internal constructor(
   internal fun tearDown() {
     begin('S', "-", "teardown(scratch directory removed)")
     try {
-      removeTree(ApiExercise.SCRATCH)
-      if (DirAccess.dirExistsAbsolute(ApiExercise.SCRATCH)) {
-        fail("${ApiExercise.SCRATCH} still exists after the run removed it")
+      removeTree(scratchDir)
+      if (DirAccess.dirExistsAbsolute(scratchDir)) {
+        fail("$scratchDir still exists after the run removed it")
       } else {
         verdict = 'S'
       }
+      // The shared root goes too once it is empty; a run still going elsewhere keeps it (the call
+      // then returns an error, which is not this run's failure).
+      DirAccess.removeAbsolute(ApiExercise.SCRATCH_ROOT)
     } catch (t: Throwable) {
       threw(t)
     }

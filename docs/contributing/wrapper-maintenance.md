@@ -1115,9 +1115,11 @@ script would, with the Kotlin signature read from the committed tree, and report
   `FACTORY_RESULTS` lists the factories that return the invalid RID on a host for a reason of the host
   (the headless dummy renderer makes no lights, skies or particles), where that counts weak.
 
-Every path a row touches is under `user://kanama-api-exercise/`, which the runner creates with its
-fixtures (`fixture.txt` with an extended attribute, `fixture.mp3`, `fixture.wav`, `sub/`) before the
-first row and removes after the last. `FileAccess.create_temp` and `DirAccess.create_temp` take no path;
+Every path a row touches is under the run's own directory, `user://kanama-api-exercise/<pid>-<random>/`,
+which the runner creates with its fixtures (`fixture.txt` with an extended attribute, `fixture.mp3`,
+`fixture.wav`, `sub/`) before the first row and removes after the last (teardown fails when it is still
+there; the shared parent is removed once empty). Every worktree's example project shares one `user://`,
+so a per-run directory is what lets two smokes run at once without deleting each other's fixtures. `FileAccess.create_temp` and `DirAccess.create_temp` take no path;
 they create a `kanama-api-exercise-*` entry in the OS temp directory that is removed when the row frees
 the result. A static returning `Error` is given arguments that make it fail (an existing directory, a
 missing file, a copy onto itself), and three of those print the engine's own error line on purpose.
