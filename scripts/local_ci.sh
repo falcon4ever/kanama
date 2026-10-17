@@ -684,7 +684,8 @@ if ! grep -Eq 'fun callLocalReplaceSmokeScene\(instance: HelloScript\)' "$hello_
 fi
 
 stage "external addon install"
-install_check_dir="${TMPDIR:-/tmp}/kanama_local_ci_install"
+# A directory of this run's own: a fixed one was shared by concurrent local_ci runs (installAddonJar into one project).
+install_check_dir="$(mktemp -d "${TMPDIR:-/tmp}/kanama_local_ci_install.XXXXXX")"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAddonJar \
   "-PkanamaProjectDir=$install_check_dir" \
   "-PkanamaProjectScriptsDir=$ROOT_DIR/example_project"
@@ -732,6 +733,7 @@ if ! grep -Eq '^res://addons/kanama/kanama\.gdextension$' "$install_check_dir/.g
   echo "[local_ci] installAddonJar did not enable the Kanama gdextension" >&2
   exit 1
 fi
+rm -rf "$install_check_dir"
 
 stage "publish to mavenLocal"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" publishKanamaToMavenLocal

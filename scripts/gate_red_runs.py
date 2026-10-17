@@ -762,6 +762,8 @@ portability_case("rg probe", "if command -v rg >/dev/null; then :; fi\n", "[bann
 portability_case("gsed", "gsed -n 1p file\n", "[banned-tool] `gsed`", "a script calls the Homebrew GNU tool name")
 portability_case("unlisted command", "sha256sum file\n", "[unlisted-command] `sha256sum`", "a script calls a command outside the portable list (not on a stock macOS)")
 portability_case("grep -P", "grep -oP 'a\\K.*' file\n", "[grep-P]", "a script uses PCRE grep, which BSD grep lacks")
+portability_case("mktemp suffix", 'f="$(mktemp /tmp/kanama_x.XXXXXX.kt)"\n', "[mktemp-suffix]", "a mktemp template has a suffix after its X's: BSD/macOS mktemp then creates one fixed path that concurrent runs share")
+portability_case("fixed /tmp default", 'LOG="${KANAMA_X_LOG:-/tmp/kanama_x.log}"\n', "[fixed-tmp]", "a script defaults a log to a fixed /tmp path: two concurrent runs interleave one file (two runtime smokes did)")
 portability_case("sed -i", "sed -i 's/a/b/' file\n", "[sed-i] `sed -i` differs", "a script edits in place with GNU-only sed -i (outside scripts/portable.sh)")
 portability_case("sed -i ''", "sed -i '' 's/a/b/' file\n", "[sed-i] `sed -i ''` is the BSD spelling", "a script edits in place with the BSD-only spelling")
 portability_case("declare -A", "declare -A map\n", "[bash4] `declare -A`", "a script uses an associative array (bash 4; macOS ships 3.2)")

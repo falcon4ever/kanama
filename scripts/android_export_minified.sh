@@ -55,8 +55,11 @@ fi
 GODOT_BIN="$1"
 DEMO_DIR="$2"
 PACKAGE_NAME="$3"
-APK_PATH="${4:-/tmp/kanama-android-minified.apk}"
-LOG_FILE="${KANAMA_ANDROID_LOG:-/tmp/kanama_android_minified.log}"
+# The APK and logcat default to a directory of this run's own (mktemp): a fixed /tmp path was shared by concurrent runs.
+RUN_DIR="$(mktemp -d "${TMPDIR:-/tmp}/kanama_android_minified.XXXXXX")"
+APK_PATH="${4:-$RUN_DIR/kanama-android-minified.apk}"
+LOG_FILE="${KANAMA_ANDROID_LOG:-$RUN_DIR/kanama_android_minified.log}"
+echo "[android_export_minified] output: $RUN_DIR"
 LAUNCH_WAIT="${KANAMA_ANDROID_LAUNCH_WAIT:-30}"
 PANAMAPORT_MAVEN_REPO="${KANAMA_PANAMAPORT_MAVEN_REPO:-file://$HOME/.m2/repository}"
 

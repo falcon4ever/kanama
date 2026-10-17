@@ -204,6 +204,15 @@ BASH4_COMMANDS = frozenset("mapfile readarray coproc".split())
 BASH4_DECLARE_FLAGS = frozenset("Ang")  # declare -A (assoc array), -n (nameref), -g (global from a function)
 BASH4_SHOPT = frozenset("globstar checkjobs lastpipe autocd dirspell direxpand assoc_expand_once".split())
 
+# A fixed default path in the shared temp dir (`${LOG:-/tmp/kanama_x.log}`, `${4:-/tmp/x.apk}`): two concurrent runs
+# write the same file (two runtime smokes once interleaved one log and failed a pattern check). A default comes from
+# `mktemp` (a per-run file or directory under ${TMPDIR:-/tmp}) instead.
+FIXED_TMP_DEFAULT_RE = re.compile(r"\$\{[A-Za-z0-9_]+:-/tmp/[^}]*\}")
+# BSD/macOS mktemp randomizes trailing X's only: `mktemp /tmp/x.XXXXXX.kt` creates the literal path, so concurrent runs
+# collide and a leftover file fails every later run with "File exists". GNU mktemp accepts the suffix, so only the Mac
+# would break. Keep the X's last.
+MKTEMP_SUFFIX_RE = re.compile(r"XXX+[^X/]")
+
 # GNU-only options of otherwise portable commands: (command, predicate on its argv, message)
 GNU_ONLY_OPTION_MESSAGES = {
     ("date", "d"): "`date -d` is GNU-only (BSD date has no -d); compute the time in python3",
@@ -937,9 +946,15 @@ class ShellCheck:
             self.add(line, "gnu-only", GNU_ONLY_OPTION_MESSAGES[("find", "printf")])
         if base == "sort" and "h" in letters:
             self.add(line, "gnu-only", GNU_ONLY_OPTION_MESSAGES[("sort", "h")])
+        if base == "mktemp":
+            for w in args:
+                if not w.text.startswith("-") and MKTEMP_SUFFIX_RE.search(w.text):
+                    self.add(line, "mktemp-suffix", f"`mktemp {w.text}`: BSD/macOS mktemp only randomizes trailing X's, so this creates one fixed path; end the template with the X's")
 
     def check_bash4_text(self, scanner: ShellScanner) -> None:
         for line, raw in scanner.raw_code:
+            if FIXED_TMP_DEFAULT_RE.search(raw):
+                self.add(line, "fixed-tmp", "a fixed default path under /tmp is shared by concurrent runs; default to a `mktemp` file or directory under ${TMPDIR:-/tmp} instead")
             if BASH4_PARAM_RE.search(raw):
                 self.add(line, "bash4", "case-modifying / transform parameter expansion (`${x,,}`, `${x^^}`, `${x@U}`) needs bash 4+; use tr")
             if BASH4_VARS_RE.search(raw):
@@ -1229,6 +1244,11 @@ SELF_TESTS: list[tuple[str, str, str, list[str]]] = [
     ("date -d", "scripts/x.sh", "date -d yesterday\n", ["gnu-only"]),
     ("xargs -r", "scripts/x.sh", "ls | xargs -r rm\n", ["gnu-only"]),
     ("readlink -f", "scripts/x.sh", "readlink -f f\n", ["gnu-only"]),
+    ("mktemp with a suffix after the X's", "scripts/x.sh", "f=$(mktemp /tmp/x.XXXXXX.kt)\n", ["mktemp-suffix"]),
+    ("mktemp with trailing X's is fine", "scripts/x.sh", 'f=$(mktemp "${TMPDIR:-/tmp}/x.XXXXXX")\nd=$(mktemp -d /tmp/y.XXXXXX)\n', []),
+    ("fixed /tmp default", "scripts/x.sh", 'LOG="${KANAMA_LOG:-/tmp/kanama_x.log}"\n', ["fixed-tmp"]),
+    ("fixed /tmp positional default", "scripts/x.sh", 'APK="${4:-/tmp/x.apk}"\n', ["fixed-tmp"]),
+    ("a TMPDIR default is fine", "scripts/x.sh", 'root="${TMPDIR:-/tmp}"\n', []),
     ("stat -c", "scripts/x.sh", "stat -c %s f\n", ["gnu-only"]),
     ("xcrun in a device script, before its marker", "scripts/ios_visual_smoke.sh", "xcrun simctl list\n" + SELFTEST_BLOCK + "# portability: device-only below\n", ["macos-only"]),
     ("xcrun in a device script, after its marker", "scripts/ios_visual_smoke.sh", SELFTEST_BLOCK + "# portability: device-only below\nxcrun simctl list\n", []),

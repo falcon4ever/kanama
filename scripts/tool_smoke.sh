@@ -3,12 +3,17 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_DIR="${KANAMA_PROJECT_DIR:-$ROOT_DIR/example_project}"
-LOG_FILE="${KANAMA_TOOL_SMOKE_LOG:-/tmp/kanama_tool_smoke.log}"
-
 if [[ $# -lt 1 ]]; then
   echo "usage: $0 /absolute/path/to/godot_binary"
   exit 2
 fi
+
+# Logs default to a directory of this run's own (mktemp): a fixed /tmp path was shared by concurrent runs.
+LOG_FILE="${KANAMA_TOOL_SMOKE_LOG:-}"
+if [[ -z "$LOG_FILE" ]]; then
+  LOG_FILE="$(mktemp -d "${TMPDIR:-/tmp}/kanama_tool_smoke.XXXXXX")/tool_smoke.log"
+fi
+echo "[tool_smoke] log: $LOG_FILE"
 
 GODOT_BIN="$1"
 PROJECT_DIR_FOR_GODOT="$PROJECT_DIR"

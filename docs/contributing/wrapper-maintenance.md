@@ -1144,8 +1144,9 @@ entries may not call one at all; the generator fails on either (the generator al
 needs for each engine-backed method). A pure method whose Godot counterpart has a `MATH_CHECKS`
 guard lists the guard's formula in `ENGINE_FALLBACK`: it returns null for exactly the inputs the
 guard rejects, and the generated member then calls the engine; after a
-change to the probe, record them from a runtime smoke log with
-`python3 scripts/generate_builtin_ops.py --record-parity /tmp/kanama_runtime_smoke.log`, then
+change to the probe, record them from a runtime smoke log (the smoke prints its path first; pin it
+with `KANAMA_SMOKE_LOG=/path/to/log`) with
+`python3 scripts/generate_builtin_ops.py --record-parity /path/to/log`, then
 `--write` (the runtime smoke re-checks the recording with `--verify-recorded`).
 `scripts/check_builtin_coverage.py` fails when an API operator or method has neither a Kotlin
 member nor a recorded reason.

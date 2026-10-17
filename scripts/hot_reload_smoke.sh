@@ -4,13 +4,20 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_DIR="$ROOT_DIR/example_project"
 SCRIPT_FILE="$PROJECT_DIR/HelloScript.kt"
-LOG1="${KANAMA_HOTRELOAD_LOG1:-/tmp/kanama_hot_reload_1.log}"
-LOG2="${KANAMA_HOTRELOAD_LOG2:-/tmp/kanama_hot_reload_2.log}"
-
 if [[ $# -lt 1 ]]; then
   echo "usage: $0 /absolute/path/to/godot_binary"
   exit 2
 fi
+
+# Logs default to a directory of this run's own (mktemp): a fixed /tmp path was shared by concurrent runs.
+LOG1="${KANAMA_HOTRELOAD_LOG1:-}"
+LOG2="${KANAMA_HOTRELOAD_LOG2:-}"
+if [[ -z "$LOG1" || -z "$LOG2" ]]; then
+  RUN_LOG_DIR="$(mktemp -d "${TMPDIR:-/tmp}/kanama_hot_reload.XXXXXX")"
+  LOG1="${LOG1:-$RUN_LOG_DIR/hot_reload_1.log}"
+  LOG2="${LOG2:-$RUN_LOG_DIR/hot_reload_2.log}"
+fi
+echo "[hot_reload_smoke] logs: $LOG1 $LOG2"
 
 GODOT_BIN="$1"
 PROJECT_DIR_FOR_GODOT="$PROJECT_DIR"
@@ -28,7 +35,7 @@ esac
 # a fixed literal path that collides between concurrent runs and is left behind
 # by an interrupted run, poisoning every later run with "File exists". The
 # backup is only cp'd back and removed, so it needs no extension.
-BACKUP="$(mktemp /tmp/kanama_hello_backup.XXXXXX)"
+BACKUP="$(mktemp "${TMPDIR:-/tmp}/kanama_hello_backup.XXXXXX")"
 cp "$SCRIPT_FILE" "$BACKUP"
 
 restore() {
