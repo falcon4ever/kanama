@@ -724,7 +724,9 @@ internal object KanamaIosRuntime {
 
   private fun descriptorForPath(path: String): KanamaIosScriptDescriptor? {
     ensureProjectRegistryLoaded()
-    return KanamaIosProjectRegistry.descriptor(path) ?: builtInProbeDescriptor(path)
+    return KanamaIosProjectRegistry.descriptor(path)
+      ?: builtInProbeDescriptor(path)
+      ?: dictionaryProbeDescriptor(path)
   }
 
   private fun ensureProjectRegistryLoaded() {

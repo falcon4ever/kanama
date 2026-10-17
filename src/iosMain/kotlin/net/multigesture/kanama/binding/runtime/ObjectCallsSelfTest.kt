@@ -3101,6 +3101,70 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     }
   }
 
+  // Map @Export properties (desktop: initVariantDictionaryAny / readVariantDictionaryAny): a
+  // Map<Int, String> and a Map<Vector2i, Long> of a built-in probe script, set by the engine
+  // (Object.set from an Expression, as a scene or GDScript sets them) and read back by the engine
+  // (Object.get compared with the literal engine-side), so the generic String-keyed Dictionary
+  // decode cannot stand in for them. Keys and values of another type drop, as on desktop.
+  run {
+    val scriptObject =
+      net.multigesture.kanama.ios.cinterop.kanama_ios_godot_create_script_object(
+        net.multigesture.kanama.ios.DICTIONARY_PROBE_SCRIPT_PATH
+      )
+    val ownerHandle = ObjectCalls.constructObject("Node")
+    if (scriptObject == 0L || ownerHandle.address() == 0L) {
+      check("map-export(probe script and owner created)", false)
+    } else {
+      net.multigesture.kanama.ios.DictionaryProbeScript.last = null
+      val owner = GodotObject(GodotHandle(ownerHandle))
+      owner.setScript(
+        net.multigesture.kanama.api.Resource.fromHandle(
+          GodotHandle(MemorySegment.ofAddress(scriptObject))
+        )
+      )
+      val probe = net.multigesture.kanama.ios.DictionaryProbeScript.last
+      val expressionHandle = ObjectCalls.constructObject("Expression")
+      val expression =
+        net.multigesture.kanama.api.Expression.fromHandle(GodotHandle(expressionHandle))!!
+      fun eval(code: String): Any? {
+        if (expression.parse(code, emptyList()) != net.multigesture.kanama.api.GodotError.OK) {
+          return "parse-failed"
+        }
+        return expression.execute(emptyList(), owner)
+      }
+      try {
+        eval("set(\"names\", {1: \"one\", 2: \"two\"})")
+        eval("set(\"cells\", {Vector2i(1, 2): 3, Vector2i(-4, 5): 6})")
+        val namesSet = probe?.names
+        val cellsSet = probe?.cells
+        check(
+          "map-export(Map<Int, String> set by the engine keeps its int keys) got=$namesSet",
+          namesSet == mapOf(1 to "one", 2 to "two"),
+        )
+        check(
+          "map-export(Map<Vector2i, Long> set by the engine keeps its Vector2i keys) got=$cellsSet",
+          cellsSet == mapOf(Vector2i(1, 2) to 3L, Vector2i(-4, 5) to 6L),
+        )
+        probe?.names = mapOf(7 to "seven")
+        probe?.cells = mapOf(Vector2i(0, -1) to 9L)
+        val readBack =
+          eval("get(\"names\") == {7: \"seven\"} and get(\"cells\") == {Vector2i(0, -1): 9}")
+        check(
+          "map-export(both Maps read back by the engine with their keys) got=$readBack",
+          readBack == true,
+        )
+        eval("set(\"names\", {1: \"one\", \"x\": \"bad key\", 3: 4})")
+        check(
+          "map-export(a key or value of another type drops its entry) got=${probe?.names}",
+          probe?.names == mapOf(1 to "one"),
+        )
+      } finally {
+        ObjectCalls.destroyObject(expressionHandle)
+        ObjectCalls.destroyObject(ownerHandle)
+      }
+    }
+  }
+
   // Task 132 review: the shim's property set path. A Node (or List<Node>) set into a script
   // property takes no reference -- before, the shim called RefCounted.reference on every object,
   // and
