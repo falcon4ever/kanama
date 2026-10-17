@@ -324,6 +324,11 @@ python3 "$ROOT_DIR/scripts/check_ios_no_silent_stubs.py"
 stage "Godot version pin consistency"
 python3 "$ROOT_DIR/scripts/check_godot_version_pin.py"
 
+stage "Kotlin/KSP pin consistency"
+# The release kit, the KSP processor, the Android plugin build and version-support.md restate the
+# root build.gradle.kts Kotlin/KSP versions; a bump that misses one fails here.
+python3 "$ROOT_DIR/scripts/check_kotlin_pins.py"
+
 stage "GDExtension modernization + backend convergence"
 python3 "$ROOT_DIR/scripts/check_gdextension_modernization.py"
 

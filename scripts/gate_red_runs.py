@@ -322,6 +322,18 @@ case("check_gate_evidence.py", py("check_gate_evidence.py"),
 case("check_godot_version_pin.py", py("check_godot_version_pin.py"),
      [Edit("gradle.properties", "kanamaGodotVersion=4.7.2.stable", "kanamaGodotVersion=4.7.1.stable")],
      "Godot version pins drifted", "gradle.properties pins a different Godot than CI")
+case("check_kotlin_pins.py", py("check_kotlin_pins.py"),
+     [Edit("templates/release-kit/build.gradle.kts", 'id("com.google.devtools.ksp") version "', 'id("com.google.devtools.ksp") version "0.')],
+     "templates/release-kit/build.gradle.kts:3: ksp 0.2", "the release kit pins a KSP version the root build does not use")
+case("check_kotlin_pins.py (unlisted pin)", py("check_kotlin_pins.py"),
+     [Append("buildSrc/build.gradle.kts", '\nplugins { kotlin("plugin.serialization") version "2.0.0" }\n')],
+     "kotlin 2.0.0 but the root build.gradle.kts pins", "a Gradle script the check does not list pins an older Kotlin plugin: the scan covers every tracked script")
+case("check_kotlin_pins.py (doc version)", py("check_kotlin_pins.py"),
+     [Edit("docs/reference/version-support.md", "The current source build uses Kotlin `", "The current source build uses Kotlin `9")],
+     "docs/reference/version-support.md: kotlin 9", "version-support.md states a Kotlin version the build does not use")
+case("check_kotlin_pins.py (doc line reworded)", py("check_kotlin_pins.py"),
+     [Edit("docs/reference/version-support.md", "The current source build uses Kotlin `", "The current source build is on Kotlin `")],
+     "docs/reference/version-support.md: the kotlin pin is gone or reworded", "the version-support toolchain line is reworded: the check must fail, not pass on nothing")
 case("check_ios_no_silent_stubs.py", py("check_ios_no_silent_stubs.py"),
      [Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nclass ZzRedRun {\n    fun redRun(): Boolean = false\n}\n")],
      "un-annotated silent stub", "a shared wrapper function whose whole body is a bare default, without a marker")
