@@ -66,7 +66,13 @@ is read once per handle. New on Web: `CollisionObject3D.getRid()`, `Resource.get
 `RayCast3D.addExceptionRid` / `removeExceptionRid` / `getColliderRid`, `SpringArm3D.addExcludedObject(RID)`
 / `removeExcludedObject`, `KinematicCollision3D.getColliderRid`, and every `PhysicsRayQueryParameters3D`
 property (`collideWithAreas`, `collideWithBodies`, `hitFromInside`, `hitBackFaces`, `exclude` with any
-number of RIDs). The bridge protocol is 39: re-export every Web game.
+number of RIDs). Also new on Web, for the same shared sources: `GodotObject.get(property)`,
+`InputEventMouseMotion.getScreenRelative()`, `CanvasItem.modulate` reads on any handle (the first read
+of a node that came without the canvas mirror, an exported `Control` for example, asks the engine once
+instead of failing), and the single-player session's `Node.getMultiplayer()` as a member,
+`MultiplayerAPI.hasMultiplayerPeer()` and `MultiplayerPeer.getConnectionStatus()` / `isClass()`.
+tps-demo's raycasting scripts (`RedRobot`, `PlayerInputSynchronizer`, `TpsScenes`) now run on Web from
+their shared sources. The bridge protocol is 39: re-export every Web game.
 
 - **Source break:** (Web) `RayHit` `PhysicsDirectSpaceState3D` `PhysicsRayQueryParameters3D` `World3D` `SpringArm3D` `top-level`:
   `RayHit` is removed and `intersectRay(query)` answers `Map<String, Any?>` (read `hit["position"] as?
@@ -74,6 +80,16 @@ number of RIDs). The bridge protocol is 39: re-export every Web game.
   `Node3D.getWorld3d()` and `World3D.directSpaceState` are nullable, as on desktop (write `?.`);
   `PhysicsRayQueryParameters3D.create`'s `exclude` is a `List<RID>` (`listOf(body.getRid())`) instead
   of a `List<GodotObject>`; `SpringArm3D.addExcludedObject(body)` is `addExcludedObject(body.getRid())`.
+
+  | Before (Web only) | Now (every platform) |
+  | --- | --- |
+  | `PhysicsRayQueryParameters3D.create(from, to, mask, listOf(body))` | `PhysicsRayQueryParameters3D.create(from, to, mask, listOf(body.getRid()))` |
+  | `node.getWorld3d().directSpaceState.intersectRay(query)` | `node.getWorld3d()?.directSpaceState?.intersectRay(query)` |
+  | `val hit: RayHit? = ...; if (hit != null)` | `val hit: Map<String, Any?> = ... ?: emptyMap(); if (hit.isNotEmpty())` |
+  | `hit.position` | `hit["position"] as? Vector3` |
+  | `hit.collider` | `hit["collider"] as? GodotObject` |
+  | `springArm.addExcludedObject(body)` | `springArm.addExcludedObject(body.getRid())` |
+  | at most one exclusion, no flags | any number of RIDs; `collideWithAreas`, `collideWithBodies`, `hitFromInside`, `hitBackFaces` |
 
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 

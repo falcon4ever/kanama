@@ -906,6 +906,28 @@ The notes below are written against those `main` builds.
   a second `close()` does nothing, `close()` ends only that wrapper's reference,
   and `ResourceLoader.loadThreadedGet` removes the finished load.
 - `KanamaScript.self` is public. Layer and collision masks take all 32 bits.
+- **Ray queries and RIDs** take desktop's API. A `RID` is the same value class as
+  on desktop (`body.getRid()`), the query's `exclude` is a `List<RID>`,
+  `getWorld3d()` and `directSpaceState` are nullable, and `intersectRay` answers
+  desktop's `Map` (empty on a miss) instead of a `RayHit?`:
+
+  ```kotlin
+  // builds of main between 0.4 and 0.5 (Web)
+  val query = PhysicsRayQueryParameters3D.create(from, to, 0xffffffffL, listOf(self))!!
+  val hit = self.getWorld3d().directSpaceState.intersectRay(query)
+  if (hit != null) target = hit.position
+  springArm.addExcludedObject(body)
+
+  // 0.5 (Web, as on desktop)
+  val query = PhysicsRayQueryParameters3D.create(from, to, 0xffffffffL, listOf(self.getRid()))!!
+  val hit = self.getWorld3d()?.directSpaceState?.intersectRay(query) ?: emptyMap()
+  if (hit.isNotEmpty()) target = hit["position"] as Vector3
+  springArm.addExcludedObject(body.getRid())
+  ```
+
+  A ray is still one engine crossing on Web. `RayCast3D.addExceptionRid`,
+  `getColliderRid` and the query flags (`collideWithAreas`, `hitFromInside`, ...)
+  are new there.
 - `Texture2D.close()` and friends come from `RefCounted` (nothing to migrate).
 
 Script: none; the compiler lists the sites. The enum script's rewrites apply to
@@ -1155,40 +1177,41 @@ table.
 
 | # | Changelog entry | Owner named by the marker | Guide section |
 | --- | --- | --- | --- |
-| 1 | Web `set("position:x", ...)` does what it does on desktop: nothing | `GodotObject.set` (Web) | [Web](#web) |
-| 2 | Web: a RefCounted lives while Kotlin holds it, and every RefCounted has `close()` | Web `Texture2D`, `AudioStream`, `PackedScene`, ... `close()` | [Changes that need no edit](#changes-that-need-no-edit) |
-| 3 | iOS: a lambda connection's closure lives as long as any Callable of it | `top-level` `kanamaIosRuntimeReleaseCallable` | [Changes that need no edit](#changes-that-need-no-edit) |
-| 4 | `GodotObject.set` returns `Unit` | `GodotObject.set` | [Node, SceneTree, Viewport and Resource](#node-scenetree-viewport-and-resource) |
-| 5 | Web compiles the shared `GD`, `Mathf` and `GodotCallable` | `GD`, `Mathf` (Web) | [Web](#web) |
-| 6 | Web compiles the shared `GD`, `Mathf` and `GodotCallable` | `GodotObject` and top-level `call` / `callDeferred` (Web) | [Web](#web) |
-| 7 | `FileAccess` and `DirAccess` are RefCounted classes | `FileAccessHandle`, `DirAccessHandle` | [FileAccess and DirAccess](#fileaccess-and-diraccess) |
-| 8 | `FileAccess` and `DirAccess` are RefCounted classes | the 38 `FileAccess` path helpers | [FileAccess and DirAccess](#fileaccess-and-diraccess) |
-| 9 | `FileAccess` and `DirAccess` are RefCounted classes | the 23 `DirAccess` per-call helpers | [FileAccess and DirAccess](#fileaccess-and-diraccess) |
-| 10 | `FileAccess` and `DirAccess` are RefCounted classes | generated `FileAccess` / `DirAccess` signatures | [FileAccess and DirAccess](#fileaccess-and-diraccess) |
-| 11 | `FileAccess` and `DirAccess` are RefCounted classes | iOS `ShapeCast3D.getCollisionPoint`, `PhysicsRayQueryParameters3D.create` | [Engine, BoxMesh, ... generated once](#engine-boxmesh-audiostreamplayer-resourceloader-and-other-classes-generated-once) |
-| 12 | `FileAccess` and `DirAccess` are RefCounted classes | `top-level` `kotlinScriptInstance<T>()` | [Changes that need no edit](#changes-that-need-no-edit) (a call on a node compiles unchanged) |
-| 13 | 20 more per-platform classes generated once | `Engine` | [Engine, BoxMesh, ... generated once](#engine-boxmesh-audiostreamplayer-resourceloader-and-other-classes-generated-once) |
-| 14 | 20 more per-platform classes generated once | `BoxMesh`, `AudioStreamPlayer` | [Engine, BoxMesh, ... generated once](#engine-boxmesh-audiostreamplayer-resourceloader-and-other-classes-generated-once) |
-| 15 | 20 more per-platform classes generated once | `ResourceLoader` | [Engine, BoxMesh, ... generated once](#engine-boxmesh-audiostreamplayer-resourceloader-and-other-classes-generated-once) |
-| 16 | 20 more per-platform classes generated once | `ShaderMaterial`, `ParticleProcessMaterial`, `ProceduralSkyMaterial` (iOS) | [Engine, BoxMesh, ... generated once](#engine-boxmesh-audiostreamplayer-resourceloader-and-other-classes-generated-once) |
-| 17 | 20 more per-platform classes generated once | `NoiseTexture2D`, `ProjectSettings`, `SurfaceTool` (iOS) | [Engine, BoxMesh, ... generated once](#engine-boxmesh-audiostreamplayer-resourceloader-and-other-classes-generated-once) |
-| 18 | iOS: no silent method skips; script errors name the Kotlin line | iOS builds | [iOS](#ios) |
-| 19 | `GD` generated once, `Mathf` written once | `GD` | [`GD` and `Mathf`](#gd-and-mathf) |
-| 20 | `GD` generated once, `Mathf` written once | `Mathf` (iOS) | [`GD` and `Mathf`](#gd-and-mathf) |
-| 21 | `Tween` and `InputEventMouseButton` generated once | `InputEventMouseButton` | [`InputEventMouseButton`](#inputeventmousebutton) |
-| 22 | `Tween` and `InputEventMouseButton` generated once | `top-level` `createTween`, `getProcessedTweens`, `setExclude` | [Tween and tweeners](#tween-and-tweeners) |
-| 23 | `Tween` and `InputEventMouseButton` generated once | `Tween` | [Tween and tweeners](#tween-and-tweeners) |
-| 24 | Web parity for signals and value types | `Basis`, `Transform3D`, `Vector2`, `Vector3` (Web) | [Web](#web) |
-| 25 | Typed engine signals | `TypedSignal`, `Signal0` ... `Signal5`, `Area2D`, ... | [Changes that need no edit](#changes-that-need-no-edit) |
-| 26 | StringName values decoded as nil | `top-level` `kanamaIosRuntimeDispatchCallable` | [Changes that need no edit](#changes-that-need-no-edit) |
-| 27 | Typed export hints, generated autoloads, script inheritance | `Export` | [Script annotations and export hints](#script-annotations-and-export-hints) |
-| 28 | Typed export hints, generated autoloads, script inheritance | `KanamaScript.self` (Web) | [Changes that need no edit](#changes-that-need-no-edit) |
-| 29 | Value-type methods follow Godot exactly | `Vector3.maxAxisIndex()` | [Decimal values are `Double`](#decimal-values-are-double) |
-| 30 | Value-type methods follow Godot exactly | `Vector2`, `Vector3`, `Transform3D` parameter names | [Decimal values are `Double`](#decimal-values-are-double) |
-| 31 | Removed: `KanamaCoroutineOwner` | `KanamaCoroutineOwner`, `KanamaScope` | [Coroutines](#coroutines-kanamacoroutineowner) |
-| 32 | Removed: `KanamaCoroutineOwner` | `KanamaScript` moved to common code | [Coroutines](#coroutines-kanamacoroutineowner) |
-| 33 | Every decimal value is `Double` | `Vector2`, `Vector3`, `Vector4`, `Quaternion`, `Plane`, `Color` | [Decimal values are `Double`](#decimal-values-are-double) |
-| 34 | One annotation set, public functions registered automatically, typed input handlers | script annotations and lifecycle input handlers | [Script annotations and export hints](#script-annotations-and-export-hints) |
+| 1 | Web ray queries and RIDs use desktop's API | Web `RayHit`, `PhysicsDirectSpaceState3D`, `PhysicsRayQueryParameters3D`, `World3D`, `SpringArm3D`, `top-level` | [Web](#web) |
+| 2 | Web `set("position:x", ...)` does what it does on desktop: nothing | `GodotObject.set` (Web) | [Web](#web) |
+| 3 | Web: a RefCounted lives while Kotlin holds it, and every RefCounted has `close()` | Web `Texture2D`, `AudioStream`, `PackedScene`, ... `close()` | [Changes that need no edit](#changes-that-need-no-edit) |
+| 4 | iOS: a lambda connection's closure lives as long as any Callable of it | `top-level` `kanamaIosRuntimeReleaseCallable` | [Changes that need no edit](#changes-that-need-no-edit) |
+| 5 | `GodotObject.set` returns `Unit` | `GodotObject.set` | [Node, SceneTree, Viewport and Resource](#node-scenetree-viewport-and-resource) |
+| 6 | Web compiles the shared `GD`, `Mathf` and `GodotCallable` | `GD`, `Mathf` (Web) | [Web](#web) |
+| 7 | Web compiles the shared `GD`, `Mathf` and `GodotCallable` | `GodotObject` and top-level `call` / `callDeferred` (Web) | [Web](#web) |
+| 8 | `FileAccess` and `DirAccess` are RefCounted classes | `FileAccessHandle`, `DirAccessHandle` | [FileAccess and DirAccess](#fileaccess-and-diraccess) |
+| 9 | `FileAccess` and `DirAccess` are RefCounted classes | the 38 `FileAccess` path helpers | [FileAccess and DirAccess](#fileaccess-and-diraccess) |
+| 10 | `FileAccess` and `DirAccess` are RefCounted classes | the 23 `DirAccess` per-call helpers | [FileAccess and DirAccess](#fileaccess-and-diraccess) |
+| 11 | `FileAccess` and `DirAccess` are RefCounted classes | generated `FileAccess` / `DirAccess` signatures | [FileAccess and DirAccess](#fileaccess-and-diraccess) |
+| 12 | `FileAccess` and `DirAccess` are RefCounted classes | iOS `ShapeCast3D.getCollisionPoint`, `PhysicsRayQueryParameters3D.create` | [Engine, BoxMesh, ... generated once](#engine-boxmesh-audiostreamplayer-resourceloader-and-other-classes-generated-once) |
+| 13 | `FileAccess` and `DirAccess` are RefCounted classes | `top-level` `kotlinScriptInstance<T>()` | [Changes that need no edit](#changes-that-need-no-edit) (a call on a node compiles unchanged) |
+| 14 | 20 more per-platform classes generated once | `Engine` | [Engine, BoxMesh, ... generated once](#engine-boxmesh-audiostreamplayer-resourceloader-and-other-classes-generated-once) |
+| 15 | 20 more per-platform classes generated once | `BoxMesh`, `AudioStreamPlayer` | [Engine, BoxMesh, ... generated once](#engine-boxmesh-audiostreamplayer-resourceloader-and-other-classes-generated-once) |
+| 16 | 20 more per-platform classes generated once | `ResourceLoader` | [Engine, BoxMesh, ... generated once](#engine-boxmesh-audiostreamplayer-resourceloader-and-other-classes-generated-once) |
+| 17 | 20 more per-platform classes generated once | `ShaderMaterial`, `ParticleProcessMaterial`, `ProceduralSkyMaterial` (iOS) | [Engine, BoxMesh, ... generated once](#engine-boxmesh-audiostreamplayer-resourceloader-and-other-classes-generated-once) |
+| 18 | 20 more per-platform classes generated once | `NoiseTexture2D`, `ProjectSettings`, `SurfaceTool` (iOS) | [Engine, BoxMesh, ... generated once](#engine-boxmesh-audiostreamplayer-resourceloader-and-other-classes-generated-once) |
+| 19 | iOS: no silent method skips; script errors name the Kotlin line | iOS builds | [iOS](#ios) |
+| 20 | `GD` generated once, `Mathf` written once | `GD` | [`GD` and `Mathf`](#gd-and-mathf) |
+| 21 | `GD` generated once, `Mathf` written once | `Mathf` (iOS) | [`GD` and `Mathf`](#gd-and-mathf) |
+| 22 | `Tween` and `InputEventMouseButton` generated once | `InputEventMouseButton` | [`InputEventMouseButton`](#inputeventmousebutton) |
+| 23 | `Tween` and `InputEventMouseButton` generated once | `top-level` `createTween`, `getProcessedTweens`, `setExclude` | [Tween and tweeners](#tween-and-tweeners) |
+| 24 | `Tween` and `InputEventMouseButton` generated once | `Tween` | [Tween and tweeners](#tween-and-tweeners) |
+| 25 | Web parity for signals and value types | `Basis`, `Transform3D`, `Vector2`, `Vector3` (Web) | [Web](#web) |
+| 26 | Typed engine signals | `TypedSignal`, `Signal0` ... `Signal5`, `Area2D`, ... | [Changes that need no edit](#changes-that-need-no-edit) |
+| 27 | StringName values decoded as nil | `top-level` `kanamaIosRuntimeDispatchCallable` | [Changes that need no edit](#changes-that-need-no-edit) |
+| 28 | Typed export hints, generated autoloads, script inheritance | `Export` | [Script annotations and export hints](#script-annotations-and-export-hints) |
+| 29 | Typed export hints, generated autoloads, script inheritance | `KanamaScript.self` (Web) | [Changes that need no edit](#changes-that-need-no-edit) |
+| 30 | Value-type methods follow Godot exactly | `Vector3.maxAxisIndex()` | [Decimal values are `Double`](#decimal-values-are-double) |
+| 31 | Value-type methods follow Godot exactly | `Vector2`, `Vector3`, `Transform3D` parameter names | [Decimal values are `Double`](#decimal-values-are-double) |
+| 32 | Removed: `KanamaCoroutineOwner` | `KanamaCoroutineOwner`, `KanamaScope` | [Coroutines](#coroutines-kanamacoroutineowner) |
+| 33 | Removed: `KanamaCoroutineOwner` | `KanamaScript` moved to common code | [Coroutines](#coroutines-kanamacoroutineowner) |
+| 34 | Every decimal value is `Double` | `Vector2`, `Vector3`, `Vector4`, `Quaternion`, `Plane`, `Color` | [Decimal values are `Double`](#decimal-values-are-double) |
+| 35 | One annotation set, public functions registered automatically, typed input handlers | script annotations and lifecycle input handlers | [Script annotations and export hints](#script-annotations-and-export-hints) |
 
 Breaking entries that predate the marker gate (no `Source break` line, covered
 here as well):

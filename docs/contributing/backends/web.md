@@ -227,12 +227,30 @@ and the property table:
   composed `basis`/`transform`, `getChildren`, `setStreamFromPath`, factories),
   so a regen is lossless. Every `RefCounted` gets the one `close()` and
   `AutoCloseable` from the generated `RefCounted` itself (see "RefCounted
-  handles" below), so no class carries a release policy of its own. `WEB_HANDSHAPED` names the two
-  facades that stay hand-written under `api/` and dispatch opcodes directly:
-  the handle-less `Window` mirror (`Node.getWindow()`) and the owner-bound
-  `PhysicsDirectSpaceState3D` ray query. Everything else under `api/`
-  (`WebSignals.kt`, `WebCoroutines.kt`, `WebMath.kt`, `WebFacades.kt`,
-  `WebScriptResources.kt`, `WebFrameScheduler.kt`) is glue with no opcode.
+  handles" below), so no class carries a release policy of its own. `WEB_HANDSHAPED` names the one
+  facade that stays hand-written under `api/` and dispatches an opcode directly: the ray query
+  (`WebPhysicsQuery.kt`), the owner-bound `World3D` / `PhysicsDirectSpaceState3D` with desktop's
+  signatures (`Node3D.getWorld3d(): World3D?`, `directSpaceState`, `intersectRay(query): Map`). The
+  query parameters are a Kotlin value with desktop's whole `PhysicsRayQueryParameters3D` surface
+  (a `WEB_INERT_FACADES` entry), and the applier builds the engine object from them in the querying
+  node's world, so a ray is one crossing and makes no handle (a generated path would make four
+  crossings and a RefCounted handle per ray). The other hand facades are listed in
+  `WEB_INERT_FACADES` (`WebFacades.kt`, the single-player session in `WebMultiplayer.kt`); the rest of
+  `api/` (`WebSignals.kt`, `WebCoroutines.kt`, `WebMath.kt`, `WebScriptResources.kt`,
+  `WebFrameScheduler.kt`) is glue with no opcode.
+- **RIDs are values.** A `RID` crosses the bridge as its 64-bit id in text (the Variant codec's
+  `23:<id>`, or a packed query string such as the ray query's), never in an int32 or double slot:
+  ids pass 2^53 after about two million RID allocations, which a double rounds and an int32 cuts.
+  The bridge keeps no table of RIDs (they have no lifetime signal); a stale RID is the engine's to
+  judge, as on desktop (excluded, it excludes nothing; handed to a server method, Godot prints its
+  own error). So every RID member is a `WEB_GENERIC_METHODS` row (`getRid()` is `cached_fun`: one
+  read per handle, kept in `WebHandleCache`), and the generator's `--check` refuses a contract entry
+  that binds a RID to a typed slot.
+- **Retired opcodes.** Opcode numbers are append-only. An opcode the Web no longer dispatches keeps
+  its number as a tombstone in `platform_backend_calls.json` (`{"opcode": N, "retired": "<why>"}`):
+  nothing describes, dispatches or wraps it, and no later entry takes its number. Opcode 170
+  (`SpringArm3D.add_excluded_object`, which took the body's handle and derived the RID
+  applier-side) is the first.
 
 Regenerate with `./gradlew :web-runtime:generateWebWrappers` (or
 `python3 scripts/generate_web_wrappers.py`). The gate,
@@ -337,7 +355,8 @@ a `getConnections()` answer does not keep it (or its Kotlin callback) alive.
 `1`/`0`, an int as a decimal, a float (and every decimal value-type component) as its IEEE-754
 bits, an int64 decimal (`WebPackedFloats`; the proxy converts through a `PackedByteArray`, so NaN, -0
 and denormals survive and nothing is rounded; review S1), text
-%-escaped, an object as its bridge handle id, a RID as its id, a value type as its components in
+%-escaped, an object as its bridge handle id, a RID as its id (the one way a RID crosses: text, never
+an int32 or double slot), a value type as its components in
 Godot's memory layout (a Basis as its rows; the processor's `WebValueTypes.LAYOUTS`). Signal
 arguments, builtin calls, generic-call value arguments (`v:`) and results use it.
 
