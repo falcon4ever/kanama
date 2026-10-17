@@ -126,6 +126,14 @@ object KanamaIosNoReturn
  */
 object KanamaIosNoProperty
 
+/**
+ * A typed `Map<K, V>` @Export read back by the generated bridge's getProperty: its [entries] keep
+ * their int, enum (already ordinals) and value-type keys, so they leave as the any-key Dictionary
+ * (KANAMA_IOS_PT_DICTIONARY_ANY) instead of the generic String-keyed one — the iOS twin of
+ * desktop's `BuiltinTypes.initVariantDictionaryAny`.
+ */
+class KanamaIosTypedDictionary(val entries: Map<*, *>)
+
 internal interface KanamaIosScriptBridge {
   // Generic per-signature inbound dispatch (Phase 3.3): [args] are the already-decoded Kotlin
   // values (one per method param, in order); the generated branch casts/wraps each to its
@@ -160,6 +168,17 @@ internal interface KanamaIosScriptBridge {
   // already-decoded Kotlin value; the generated branch casts it to the field's type. See
   // the C set-property value path + setScriptInstancePropertyValue's tag decode.
   fun setPropertyValue(propertyIndex: Int, value: Any): Boolean = false
+
+  // Map @Export delivery (a typed `Map<K, V>` or `Map<String, Any?>`): [entries] is the Dictionary
+  // with its keys and values decoded as they are (desktop: readVariantDictionaryAny); the generated
+  // branch converts them to the field's key and value types and drops what does not fit.
+  fun setPropertyDictionary(propertyIndex: Int, entries: Map<Any?, Any?>): Boolean = false
+
+  // For a Map property whose values are Resources: the values the field holds after the set (the
+  // converted Map, so an entry dropped for its key or class is not kept), on which the runtime
+  // takes one reference each ([KanamaIosRuntime.retainScriptInstancePropertyObjects]), as desktop's
+  // retained Dictionary read does; null for any other property.
+  fun dictionaryRetainedValues(propertyIndex: Int): Collection<Any?>? = null
 
   val scriptInstance: Any?
     get() = null
@@ -642,6 +661,39 @@ internal object KanamaIosRuntime {
     return ok
   }
 
+  fun setScriptInstancePropertyDictionary(
+    handle: Long,
+    propertyIndex: Int,
+    entries: Map<Any?, Any?>,
+  ): Boolean {
+    val instance = scriptInstances[handle]
+    if (instance == null) {
+      log("property dictionary set skipped for missing script instance handle=$handle")
+      return false
+    }
+    val ok = instance.bridge.setPropertyDictionary(propertyIndex, entries)
+    val retained = if (ok) instance.bridge.dictionaryRetainedValues(propertyIndex) else null
+    if (retained != null) {
+      val objects =
+        retained
+          .mapNotNull {
+            when (it) {
+              is net.multigesture.kanama.api.GodotObject -> it.segment.address()
+              is net.multigesture.kanama.api.KanamaScript<*> -> scriptValueAddress(it)
+              else -> null
+            }
+          }
+          .toLongArray()
+      retainScriptInstancePropertyObjects(handle, propertyIndex, objects)
+    }
+    if (ok) {
+      log(
+        "property dictionary set handle=$handle index=$propertyIndex count=${entries.size} path=${instance.resource.path}"
+      )
+    }
+    return ok
+  }
+
   fun setScriptInstancePropertyValue(handle: Long, propertyIndex: Int, value: Any): Boolean {
     val instance = scriptInstances[handle]
     if (instance == null) {
@@ -724,7 +776,9 @@ internal object KanamaIosRuntime {
 
   private fun descriptorForPath(path: String): KanamaIosScriptDescriptor? {
     ensureProjectRegistryLoaded()
-    return KanamaIosProjectRegistry.descriptor(path) ?: builtInProbeDescriptor(path)
+    return KanamaIosProjectRegistry.descriptor(path)
+      ?: builtInProbeDescriptor(path)
+      ?: dictionaryProbeDescriptor(path)
   }
 
   private fun ensureProjectRegistryLoaded() {
@@ -1628,6 +1682,25 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyStringArray(
   }
 }
 
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_set_property_dictionary")
+fun kanamaIosRuntimeScriptInstanceSetPropertyDictionary(
+  instanceHandle: Long,
+  propertyIndex: Int,
+  blob: CPointer<ByteVar>?,
+  len: Long,
+): Int {
+  return containPropertySet(instanceHandle, propertyIndex) {
+    val entries =
+      if (blob == null || len < 4L) emptyMap()
+      else
+        net.multigesture.kanama.binding.runtime.ObjectCalls.decodeDictionaryAnyBlob(
+          blob.readBytes(len.toInt())
+        )
+    KanamaIosRuntime.setScriptInstancePropertyDictionary(instanceHandle, propertyIndex, entries)
+  }
+}
+
 // PT_* tags — must match the KANAMA_IOS_PT_* enum in kanama_ios_shim.c. NODE_PATH/STRING ship a
 // null-terminated utf8 cstring; Vector2/3/Color ship contiguous float32, Vector2i contiguous
 // int32; INT64/BOOL/FLOAT64/OBJECT ship their scalar in the buffer.
@@ -1684,6 +1757,8 @@ private const val IOS_PT_ARRAY = 30
 internal const val IOS_PT_VARIANT = 38
 // Inbound-only container argument cell, one blob record (task 122 item 4).
 private const val IOS_PT_VARIANT_RECORD = 42
+// Return-only any-key Dictionary (a typed Map @Export read): see KanamaIosTypedDictionary.
+private const val IOS_PT_DICTIONARY_ANY = 43
 private const val IOS_PT_PACKED_BYTE_ARRAY = 31
 private const val IOS_PT_PACKED_INT32_ARRAY = 32
 private const val IOS_PT_PACKED_INT64_ARRAY = 33
@@ -2284,6 +2359,12 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
         IosReturnContainerScratch.encodeDictionary(value)
       retTag[0] = IOS_PT_DICTIONARY
     }
+    // A typed Map<K, V> @Export: its keys keep their type (KANAMA_IOS_PT_DICTIONARY_ANY).
+    is KanamaIosTypedDictionary -> {
+      retBuf.reinterpret<CPointerVar<ByteVar>>()[0] =
+        IosReturnContainerScratch.encodeDictionaryAny(value.entries)
+      retTag[0] = IOS_PT_DICTIONARY_ANY
+    }
     // List returns dispatch on the element type: String -> PackedStringArray (task 13 blob),
     // Vector2/Vector3/Color -> the matching Packed*Array desc (task 29), anything else
     // (including the empty list, which converts to any packed/typed array engine-side) -> a
@@ -2610,19 +2691,13 @@ internal object IosReturnContainerScratch {
   /**
    * PT tag + payload bytes for one container value. A Kotlin object without a Variant shape throws,
    * naming its type, in both directions (an argument and a script's container return), as desktop's
-   * initVariantFromAny does: it never silently becomes nil. [strict] (the argument direction, task
-   * 100 parcel 7) also refuses a non-String Dictionary key, which the return direction still
-   * stringifies. Nested List / Map recurse (task 122).
+   * initVariantFromAny does: it never silently becomes nil. Nested List / Map recurse (task 122).
    */
   // Nested containers recurse at most this deep (the C boxer recurses without its own bound; a
   // self-containing List would otherwise overflow the Kotlin/Native stack — no StackOverflowError).
   internal const val MAX_CONTAINER_DEPTH = 8
 
-  internal fun taggedValue(
-    value: Any?,
-    strict: Boolean = false,
-    depth: Int = 0,
-  ): Pair<Int, ByteArray> =
+  internal fun taggedValue(value: Any?, depth: Int = 0): Pair<Int, ByteArray> =
     when (value) {
       null -> Pair(IOS_PT_VOID, ByteArray(0))
       is Boolean -> Pair(IOS_PT_BOOL, byteArrayOf(if (value) 1 else 0))
@@ -2655,8 +2730,8 @@ internal object IosReturnContainerScratch {
       is NodePath -> Pair(IOS_PT_NODE_PATH, value.path.encodeToByteArray())
       // task 122 — nested containers recurse (the C boxer's PT_ARRAY / PT_DICTIONARY element cases
       // rebuild them), so Object.set / call take the same List / Map shapes desktop boxes.
-      is List<*> -> Pair(IOS_PT_ARRAY, encodeArrayBytes(value, strict, depth + 1))
-      is Map<*, *> -> Pair(IOS_PT_DICTIONARY, encodeDictionaryBytes(value, strict, depth + 1))
+      is List<*> -> Pair(IOS_PT_ARRAY, encodeArrayBytes(value, depth + 1))
+      is Map<*, *> -> Pair(IOS_PT_DICTIONARY, encodeDictionaryBytes(value, depth + 1))
       else ->
         // The value types Vector3i ... Projection (task 133 layout) as their Godot bytes, boxed by
         // kanama_ios_pt_blob_value_to_variant: a Transform3D inside an Array argument
@@ -2691,38 +2766,62 @@ internal object IosReturnContainerScratch {
   fun encodeDictionary(
     map: Map<*, *>,
     alloc: (Int) -> CPointer<ByteVar> = ::ensure,
-    strict: Boolean = false,
-  ): CPointer<ByteVar> = copyOut(encodeDictionaryBytes(map, strict), alloc)
+  ): CPointer<ByteVar> = copyOut(encodeDictionaryBytes(map), alloc)
+
+  /**
+   * The any-key entry blob of a typed Map @Export read (KANAMA_IOS_PT_DICTIONARY_ANY):
+   * [int32 count]([int32 keyTag][int32 keyLen][key][int32 valTag][int32 valLen][value])*, keys
+   * encoded like values. Same persistent scratch as [encodeDictionary].
+   */
+  fun encodeDictionaryAny(map: Map<*, *>): CPointer<ByteVar> {
+    val entries = map.entries.map { (k, v) -> Pair(taggedValue(k), taggedValue(v)) }
+    var needed = 4
+    for ((key, value) in entries) needed += 8 + key.second.size + 8 + value.second.size
+    val out = ByteArray(needed)
+    var off = 0
+    fun putInt32(v: Int) {
+      putInt32LE(out, off, v)
+      off += 4
+    }
+    fun putTagged(tagged: Pair<Int, ByteArray>) {
+      putInt32(tagged.first)
+      putInt32(tagged.second.size)
+      tagged.second.copyInto(out, off)
+      off += tagged.second.size
+    }
+    putInt32(entries.size)
+    for ((key, value) in entries) {
+      putTagged(key)
+      putTagged(value)
+    }
+    return copyOut(out, ::ensure)
+  }
 
   fun encodeArray(
     values: List<*>,
     alloc: (Int) -> CPointer<ByteVar> = ::ensure,
-    strict: Boolean = false,
-  ): CPointer<ByteVar> = copyOut(encodeArrayBytes(values, strict), alloc)
+  ): CPointer<ByteVar> = copyOut(encodeArrayBytes(values), alloc)
 
   /**
    * The entry blob as bytes (task 100 parcel 10): a Dictionary element of a typed-Array argument is
    * written into the outer record as a whole nested blob, so the encoder has to hand the bytes back
    * rather than a scratch pointer.
    */
-  fun encodeDictionaryBytes(map: Map<*, *>, strict: Boolean = false, depth: Int = 0): ByteArray {
+  fun encodeDictionaryBytes(map: Map<*, *>, depth: Int = 0): ByteArray {
     if (depth > MAX_CONTAINER_DEPTH) {
       error("iOS: container argument nested deeper than $MAX_CONTAINER_DEPTH levels (cyclic?)")
     }
     val entries =
       map.entries.map { (k, v) ->
-        // Desktop's variantFromDictionaryInto rejects non-String keys; strict (the argument
-        // direction) does the same instead of silently stringifying (task 122 review).
+        // The generic Map -> Dictionary path is String-key-only in every direction, with
+        // desktop's variantFromDictionaryInto message: a script's `Map<Int, V>` return used to
+        // reach Godot with "1"-style String keys.
         val key =
           k as? String
-            ?: if (strict) {
-              error(
-                "iOS: Dictionary argument key must be a String, got ${k?.let { it::class.simpleName }}"
-              )
-            } else {
-              k.toString()
-            }
-        Pair(key.encodeToByteArray(), taggedValue(v, strict, depth))
+            ?: error(
+              "Unsupported Dictionary key type: ${k?.let { it::class.qualifiedName } ?: "null"}"
+            )
+        Pair(key.encodeToByteArray(), taggedValue(v, depth))
       }
     var needed = 4
     for ((key, tagged) in entries) needed += 4 + key.size + 8 + tagged.second.size
@@ -2747,11 +2846,11 @@ internal object IosReturnContainerScratch {
     return out
   }
 
-  fun encodeArrayBytes(values: List<*>, strict: Boolean = false, depth: Int = 0): ByteArray {
+  fun encodeArrayBytes(values: List<*>, depth: Int = 0): ByteArray {
     if (depth > MAX_CONTAINER_DEPTH) {
       error("iOS: container argument nested deeper than $MAX_CONTAINER_DEPTH levels (cyclic?)")
     }
-    val elements = values.map { taggedValue(it, strict, depth) }
+    val elements = values.map { taggedValue(it, depth) }
     var needed = 4
     for (tagged in elements) needed += 8 + tagged.second.size
     val out = ByteArray(needed)

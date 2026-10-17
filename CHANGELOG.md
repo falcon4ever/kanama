@@ -50,6 +50,20 @@ still build against this release. The Android plugin
 now compiles with Kotlin 2.4.21 too: until now the Android Gradle plugin's built-in Kotlin (2.2.10)
 compiled it, whatever version the root build named.
 
+### Fixed — iOS: `Map` exports keep their keys, and a non-String key is refused like desktop
+
+On iOS a script method returning a `Map<Int, V>` (or a list holding one) reached Godot with its keys
+turned into Strings (`"1"`), and a `Map` argument with such keys failed with an iOS-only message.
+Both now fail with desktop's `Unsupported Dictionary key type: <class>`: the generic `Map` to
+`Dictionary` conversion takes String keys only, on every backend.
+
+Typed `Map<K, V>` `@Export` properties now work on iOS. Before, every `Map` export failed the iOS
+build (or, with `-PkanamaIosAllowSkips=true`, kept its Kotlin default). A `Map<Int, String>`,
+`Map<Vector2i, Long>`, enum-keyed or enum-valued Map, and a plain `Map<String, Any?>`, is set from
+the scene, the inspector or GDScript and read back with its keys as they are, like on desktop;
+a Map with object or script values (`Map<String, Texture2D>`, `Map<Int, Node3D>`) too, its
+Resource values held while the property holds them; a key or value of another type drops its entry.
+
 ### Fixed — iOS: `get`, `call` and `callv` with RID, PackedByteArray and value types in arrays
 
 On iOS the generic Variant path (`GodotObject.get`, `call`, `callv`, `getMeta`, signal arguments)
