@@ -208,13 +208,13 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row (
 
 | static | arguments | note |
 |---|---|---|
-| `AudioStreamMP3.load_from_buffer` | `fixture("mp3")` | — |
-| `AudioStreamMP3.load_from_file` | `scratch("fixture.mp3")` | — |
-| `AudioStreamWAV.load_from_buffer` | `fixture("wav")`, `{}` | — |
-| `AudioStreamWAV.load_from_file` | `scratch("fixture.wav")`, `{}` | — |
-| `DPITexture.create_from_string` | `fixture("svg")`, `1.0`, `1.0`, `{}` | — |
+| `AudioStreamMP3.load_from_buffer` | `fixture("mp3")` | reads back `data` from both results |
+| `AudioStreamMP3.load_from_file` | `scratch("fixture.mp3")` | reads back `data` from both results |
+| `AudioStreamWAV.load_from_buffer` | `fixture("wav")`, `{}` | reads back `mix_rate`, `stereo`, `format` from both results |
+| `AudioStreamWAV.load_from_file` | `scratch("fixture.wav")`, `{}` | reads back `mix_rate`, `stereo`, `format` from both results |
+| `DPITexture.create_from_string` | `fixture("svg")`, `2.0`, `0.5`, `{}` | argument 2 is not the API default: a scale unlike the default, so STATIC_OBJECT_CHECKS can tell it from the saturation; argument 3 is not the API default: a saturation unlike the default and the scale; reads back `base_scale`, `saturation` from both results |
 | `DirAccess.copy_absolute` | `scratch("fixture.txt")`, `scratch("fixture.txt")`, `-1` | returns `Error`: arguments must make it fail |
-| `DirAccess.create_temp` | `"kanama-api-exercise"`, `false` | argument 1 is not the API default: a recognisable name for the OS temp directory the call creates (removed on free) |
+| `DirAccess.create_temp` | `"kanama-api-exercise"`, `false` | argument 1 is not the API default: a recognisable name for the OS temp directory the call creates (removed on free); reads nothing back: a new temporary name per call: nothing the two results share besides their class |
 | `DirAccess.dir_exists_absolute` | `scratch("sub")` | — |
 | `DirAccess.get_directories_at` | `scratch("")` | — |
 | `DirAccess.get_drive_count` | (none) | weak; backed by A `AnimatedTexture.get_frames` |
@@ -222,36 +222,36 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row (
 | `DirAccess.get_open_error` | (none) | weak; backed by A `AStarGrid2D.get_cell_shape` |
 | `DirAccess.make_dir_absolute` | `scratch("sub")` | returns `Error`: arguments must make it fail |
 | `DirAccess.rename_absolute` | `scratch("missing")`, `scratch("renamed")` | returns `Error`: arguments must make it fail |
-| `FileAccess.create_temp` | `FileAccess.WRITE`, `"kanama-api-exercise"`, `""`, `false` | argument 2 is not the API default: a recognisable name for the OS temp file the call creates (removed on free) |
+| `FileAccess.create_temp` | `FileAccess.WRITE`, `"kanama-api-exercise"`, `""`, `false` | argument 2 is not the API default: a recognisable name for the OS temp file the call creates (removed on free); reads nothing back: a new temporary name per call: nothing the two results share besides their class |
 | `FileAccess.get_extended_attribute` | `scratch("fixture.txt")`, `"kanama"` | — |
 | `FileAccess.get_extended_attribute_string` | `scratch("fixture.txt")`, `"kanama"` | — |
 | `FileAccess.get_file_as_bytes` | `scratch("fixture.txt")` | — |
 | `FileAccess.get_file_as_string` | `scratch("fixture.txt")` | — |
-| `FileAccess.open` | `scratch("fixture.txt")`, `FileAccess.READ` | — |
-| `FileAccess.open_compressed` | `scratch("compressed.bin")`, `FileAccess.WRITE`, `0` | — |
-| `FileAccess.open_encrypted` | `scratch("encrypted.bin")`, `FileAccess.WRITE`, `fixture("key32")`, `PackedByteArray()` | — |
-| `FileAccess.open_encrypted_with_pass` | `scratch("encrypted_pass.bin")`, `FileAccess.WRITE`, `"kanama125"` | — |
+| `FileAccess.open` | `scratch("fixture.txt")`, `FileAccess.READ` | reads back `get_path()`, `get_length()` from both results |
+| `FileAccess.open_compressed` | `scratch("compressed.bin")`, `FileAccess.WRITE`, `0` | reads back `get_path()` from both results |
+| `FileAccess.open_encrypted` | `scratch("encrypted.bin")`, `FileAccess.WRITE`, `fixture("key32")`, `PackedByteArray()` | reads back `get_path()` from both results |
+| `FileAccess.open_encrypted_with_pass` | `scratch("encrypted_pass.bin")`, `FileAccess.WRITE`, `"kanama125"` | reads back `get_path()` from both results |
 | `FileAccess.set_extended_attribute` | `scratch("missing")`, `"kanama"`, `PackedByteArray(1, 2, 3)` | returns `Error`: arguments must make it fail |
 | `FileAccess.set_extended_attribute_string` | `scratch("missing")`, `"kanama"`, `"kanama125"` | returns `Error`: arguments must make it fail |
 | `FileAccess.set_hidden_attribute` | `scratch("missing")`, `true` | returns `Error`: arguments must make it fail |
 | `FileAccess.set_unix_permissions` | `scratch("missing")`, `FileAccess.UNIX_READ_OWNER` | returns `Error`: arguments must make it fail |
-| `GLTFAccessor.from_dictionary` | `{"type": "SCALAR", "componentType": 5126, "count": 3}` | — |
-| `GLTFCamera.from_node` | `Camera3D.new()` | — |
+| `GLTFAccessor.from_dictionary` | `{"type": "SCALAR", "componentType": 5126, "count": 3}` | reads back `count`, `component_type` from both results |
+| `GLTFCamera.from_node` | `Camera3D.new()` | reads back `fov`, `depth_far`, `depth_near` from both results |
 | `GLTFDocument.get_supported_gltf_extensions` | (none) | weak; backed by A `SystemFont.get_font_names` |
-| `GLTFDocument.import_object_model_property` | `GLTFState.new()`, `"/nodes/0/translation"` | — |
-| `Image.create` | `4`, `4`, `false`, `Image.FORMAT_RGBA8` | — |
-| `Image.create_from_data` | `4`, `4`, `false`, `Image.FORMAT_RGBA8`, `fixture("rgba8_4x4")` | — |
-| `ImporterMesh.merge_importer_meshes` | `[ImporterMesh.new()]`, `[Transform3D()]`, `true` | — |
+| `GLTFDocument.import_object_model_property` | `GLTFState.new()`, `"/nodes/0/translation"` | reads back `json_pointers` from both results |
+| `Image.create` | `4`, `2`, `false`, `Image.FORMAT_RGBA8` | reads back `get_width()`, `get_height()`, `get_format()` from both results |
+| `Image.create_from_data` | `4`, `2`, `false`, `Image.FORMAT_RGBA8`, `fixture("rgba8_4x2")` | reads back `get_width()`, `get_height()`, `get_data()` from both results |
+| `ImporterMesh.merge_importer_meshes` | `[ImporterMesh.new()]`, `[Transform3D()]`, `true` | reads back `get_surface_count()` from both results |
 | `JSON.from_native` | `Vector2(1, 2)`, `false` | — |
 | `JSON.parse_string` | `"{\"kanama\": 125}"` | — |
 | `JSON.stringify` | `{"kanama": 125}`, `""`, `true`, `false` | — |
 | `Node.get_orphan_node_ids` | (none) | weak; backed by A `CodeEdit.get_line_length_guidelines` |
-| `PathFollow3D.correct_posture` | `Transform3D()`, `PathFollow3D.ROTATION_ORIENTED` | — |
-| `PhysicsRayQueryParameters2D.create` | `Vector2(1, 2)`, `Vector2(3, 4)`, `4294967295`, `Array[RID]([])` | — |
-| `PhysicsRayQueryParameters3D.create` | `Vector3(1, 2, 3)`, `Vector3(4, 5, 6)`, `4294967295`, `Array[RID]([])` | — |
+| `PathFollow3D.correct_posture` | `Transform3D(Vector3(0, 1, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(1, 2, 3))`, `PathFollow3D.ROTATION_ORIENTED` | — |
+| `PhysicsRayQueryParameters2D.create` | `Vector2(1, 2)`, `Vector2(3, 4)`, `5`, `Array[RID]([])` | argument 3 is not the API default: a mask unlike the default, so STATIC_OBJECT_CHECKS reads back a value the call chose; reads back `from`, `to`, `collision_mask` from both results |
+| `PhysicsRayQueryParameters3D.create` | `Vector3(1, 2, 3)`, `Vector3(4, 5, 6)`, `5`, `Array[RID]([])` | argument 3 is not the API default: a mask unlike the default, so STATIC_OBJECT_CHECKS reads back a value the call chose; reads back `from`, `to`, `collision_mask` from both results |
 | `PortableCompressedTexture2D.is_keeping_all_compressed_buffers` | (none) | weak; backed by A `AStar2D.is_neighbor_filter_enabled` |
 | `Resource.generate_scene_unique_id` | (none) | fresh result: a new random id per call (both paths non-zero, not compared) |
-| `TLSOptions.server` | `CryptoKey.new()`, `X509Certificate.new()` | — |
+| `TLSOptions.server` | `CryptoKey.new()`, `X509Certificate.new()` | reads back `is_server()` from both results |
 | `Tween.interpolate_value` | `0.0`, `10.0`, `0.5`, `1.0`, `Tween.TRANS_LINEAR`, `Tween.EASE_IN` | — |
 
 `STATIC_RESULTS` (statics whose result cannot be held to equal-and-not-zero):

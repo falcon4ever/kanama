@@ -86,7 +86,8 @@ internal object SignalSelfTest {
       else -> setting() && debugBuild() && !editorHint()
     }
 
-  private fun boolSetting(name: String): Boolean {
+  /** Whether the project setting [name] exists and is `true` (the self-test hooks' opt-in). */
+  internal fun boolSetting(name: String): Boolean {
     val settings = GodotObject(GodotHandle(ObjectCalls.getSingleton("ProjectSettings")))
     return settings.call("has_setting", name) == true && settings.call("get_setting", name) == true
   }

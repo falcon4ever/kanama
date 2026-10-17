@@ -1138,18 +1138,19 @@ val ktfmtFormatApiExercise by
 tasks.named("ktfmtCheck") { dependsOn(ktfmtCheckApiExercise) }
 tasks.named("ktfmtFormat") { dependsOn(ktfmtFormatApiExercise) }
 
-// A -PkanamaApiExercise=true build carries the API exercise rows: it is for the smokes only. Every
-// task that ships or installs kanama.jar refuses it, at graph time (so `--dry-run` shows it too).
+// A -PkanamaApiExercise=true build carries the API exercise rows (in kanama.jar and, through
+// commonMain, in the iOS runtime): it is for the smokes only. Every task that publishes, packages or
+// installs Kanama refuses it, at graph time (so `--dry-run` shows it too).
 gradle.taskGraph.whenReady {
   if (!kanamaApiExercise.get()) return@whenReady
   val refused =
     allTasks
       .map { it.name }
       .filter {
-        it == "packageDistributions" ||
-          it == "installAddonJar" ||
+        it == "installAddonJar" ||
+          it == "installIosAddon" ||
           it.startsWith("publish") ||
-          (it.startsWith("package") && (it.contains("Kit") || it.contains("Store")))
+          it.startsWith("package")
       }
       .distinct()
   if (refused.isNotEmpty()) {

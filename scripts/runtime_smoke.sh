@@ -219,6 +219,13 @@ check_absent() {
   fi
 }
 
+# The API exercise first: a wrong helper usually breaks a hand smoke line too, and the exercise's FAIL
+# line names the helper and the row. No FAIL line (printed when there is one), then the pass line.
+if grep -q "API EXERCISE FAIL" "$API_EXERCISE_LOG"; then
+  grep "API EXERCISE FAIL" "$API_EXERCISE_LOG" >&2
+  smoke_fail "unexpected pattern" "API EXERCISE FAIL"
+fi
+check "\[kanama\] API EXERCISE: [1-9][0-9]* passed, 0 failed, [0-9]+ weak, [0-9]+ reach, [0-9]+ excluded in [0-9]+ ms"
 check "ResourceFormatLoader\\._load path=res://HelloScript\\.kt"
 check "HelloScript\\(file\\)\\._ready health=99 speed=5\\.1 label=from_tscn difficulty=HARD"
 check "ResourceOwnerSmoke payload=from_tscn present=true"
@@ -466,10 +473,7 @@ fi
 if grep -q "SIGNAL SELFTEST" "$SIGNAL_SETTING_OFF_LOG"; then
   smoke_fail "the self-test ran without the setting or the environment override" "$SIGNAL_SETTING_OFF_LOG"
 fi
-# The API exercise: a pass line with no failed row, no FAIL line, nothing leaked by its own run, and no
-# exercise in a run that did not ask for one (the setting-off log above: users pay nothing).
-check "\[kanama\] API EXERCISE: [1-9][0-9]* passed, 0 failed, [0-9]+ weak, [0-9]+ reach, [0-9]+ excluded in [0-9]+ ms"
-check_absent "API EXERCISE FAIL"
+# The API exercise's leak and setting-off checks (its FAIL and pass lines are checked first, above).
 if grep -Eq "Leaked instance|ObjectDB instances leaked|Resources still in use at exit|RID allocations .* were leaked" "$API_EXERCISE_LOG"; then
   grep -E "Leaked instance|leaked|still in use" "$API_EXERCISE_LOG" >&2
   smoke_fail "the API exercise run leaked" "$API_EXERCISE_LOG"

@@ -424,7 +424,7 @@ correctly failed. They are fault probes, so they now live with the probes and sa
 so. Their producers, and the non-default assertions that proved those producers worked, stayed
 where they were.
 
-Both summary lines therefore end with `faults=<count> expected=7`:
+The three ObjectCalls summary lines therefore end with `faults=<count> expected=7 in <ms> ms`:
 
 ```
 [kanama][ios][kn] OBJECTCALLS SELFTEST: <N> passed, 0 failed faults=7 expected=7 in <ms> ms
@@ -435,14 +435,15 @@ Both summary lines therefore end with `faults=<count> expected=7`:
 The third line is the generated API exercise (`ApiExerciseSelfTest.kt`, after the frame-1 rows): one
 row per `ObjectCalls` helper whose best row is a static or a property pair, the same rows the desktop
 smoke runs (see "The exercise rows" in `wrapper-maintenance.md`). A static the shim refused shows as a
-`FAULT` line and as `faults` above `expected`.
+`FAULT` line and as `faults` above `expected`; the demos' `ios_device_run.sh` fails on both, while
+`ios_visual_smoke.sh` fails on `FAIL` lines and failed rows but does not compare the fault counts.
 
-(The counter is never reset, so the frame-1 phase — which raises no faults of its own — reprints
-the same total.) `expected` is the constant `SELFTEST_EXPECTED_FAULTS`, declared immediately
+(The counter is never reset, so the frame-1 phase and the API exercise, which raise no faults of
+their own, reprint the same total.) `expected` is the constant `SELFTEST_EXPECTED_FAULTS`, declared immediately
 above `runFaultProbes` with a comment listing the seven, so the number and the things it counts
 are one screen apart and cannot drift. Change it only when you change the probes. Only a debug
 build made with `-PkanamaIosSelfTest=true` runs the self-test (see below); every other build prints
-neither summary line.
+none of the summary lines.
 
 **The sink marks the probes, not the lines around them.** `runFaultProbes` calls
 `kanama_ios_fault_set_probe(1)` before the first probe and `kanama_ios_fault_set_probe(0)` after the

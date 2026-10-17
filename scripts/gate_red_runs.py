@@ -530,6 +530,20 @@ case("generate_api_exercise.py --check (static argument off its default)", API_E
 case("generate_api_exercise.py --check (rows hand-edited)", API_EXERCISE_CHECK,
      [Edit("src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt", "r.staticError(got.value, oracle)", "r.staticValue(got.value, oracle, weak = true)")],
      "ApiExercise.generated.kt is stale or hand-edited", "a generated API exercise row is edited by hand (an Error static made weak): the committed rows must be the generator's")
+# --check-jar over a jar built from scripts/fixtures/api_exercise/jar/ (zipped by the command): a shipped jar that
+# carries an exercise class (a build made with -PkanamaApiExercise=true) must fail the check.
+API_EXERCISE_JAR = ["python3", "-c",
+    "import pathlib, subprocess, sys, tempfile, zipfile\n"
+    "root = pathlib.Path('scripts/fixtures/api_exercise/jar')\n"
+    "with tempfile.TemporaryDirectory() as tmp:\n"
+    "    jar = pathlib.Path(tmp) / 'kanama.jar'\n"
+    "    with zipfile.ZipFile(jar, 'w') as z:\n"
+    "        [z.write(f, f.relative_to(root).as_posix()) for f in sorted(root.rglob('*')) if f.is_file()]\n"
+    "    code = subprocess.run([sys.executable, 'scripts/generate_api_exercise.py', '--check-jar', str(jar)]).returncode\n"
+    "sys.exit(code)\n"]
+case("generate_api_exercise.py --check-jar (exercise class in a jar)", API_EXERCISE_JAR,
+     [Create("scripts/fixtures/api_exercise/jar/net/multigesture/kanama/exercise/ApiExerciseRows.class", "placeholder\n")],
+     "carries 1 API exercise class(es)", "a jar with an `exercise/` class (a -PkanamaApiExercise=true build) is published or installed: the check must fail it")
 case("generate_api_exercise.py --check (rule order)", API_EXERCISE_CHECK,
      [Edit("scripts/generate_api_exercise.py", 'ORDER = "CABDFE"', 'ORDER = "ACBDFE"')],
      "does not match the rules run on the fixture API", "the case ranking puts property pairs before statics: the toy-API fixture and the committed page both catch it")
@@ -939,12 +953,10 @@ case("runtime_smoke.sh (self-test setting)", ["bash", "scripts/runtime_smoke.sh"
      [Edit("src/jvmMain/kotlin/binding/runtime/SignalSelfTest.kt", "setting = { boolSetting(SETTING) },", "setting = { false },")],
      "did not run the self-test", "the kanama/debug/signal_self_test project setting stops opting a run in (the Android smoke can only use the setting)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
-# The API exercise's property-pair rows hold the Vector3 argument shape: two component writes swapped in the
-# desktop helper (the defect class the rows exist for) must turn its rows red in the smoke. The smoke fails first on
-# an earlier check that reads a Vector3 back, so the case also prints the exercise's own FAIL lines and expects them.
-SMOKE_THEN_EXERCISE_FAILS = ["bash", "-c", f'scripts/runtime_smoke.sh "{GODOT}"; rc=$?; '
-                             'grep -h "API EXERCISE FAIL" "${KANAMA_SMOKE_LOG:-/tmp/kanama_runtime_smoke.log}.api_exercise"; exit $rc']
-case("runtime_smoke.sh (API exercise pair rows)", SMOKE_THEN_EXERCISE_FAILS,
+# The API exercise's rows hold the argument shapes: two component writes swapped in the desktop Vector3 helper (a
+# property-pair row) and the two Vector2 arguments of a static swapped (a static row reading its result back)
+# must each turn the exercise's own check red, the first one the smoke makes, naming the helper.
+case("runtime_smoke.sh (API exercise pair rows)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit(JVM_OBJECT_CALLS,
            "    value: Vector3,\n  ) {\n    Arena.ofConfined().use { arena ->\n      val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)\n"
            "      GodotRealSegment.writeRaw(vec, 0, value.rawX)\n      GodotRealSegment.writeRaw(vec, 1, value.rawY)\n",
@@ -952,10 +964,27 @@ case("runtime_smoke.sh (API exercise pair rows)", SMOKE_THEN_EXERCISE_FAILS,
            "      GodotRealSegment.writeRaw(vec, 0, value.rawY)\n      GodotRealSegment.writeRaw(vec, 1, value.rawX)\n")],
      "API EXERCISE FAIL: ptrcallNoArgsRetVector3 ptrcallWithVector3Arg", "ptrcallWithVector3Arg writes x and y into each other's slot: the API exercise's Vector3 property-pair row must fail, not pass",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+RAY_ARGS = ("        GodotRealSegment.writeRaw(toCell, 1, to.rawY)\n        maskCell.set(JAVA_INT, 0, checkedMask)\n"
+            "        BuiltinTypes.initArrayOfRids(excludeCell, exclude)\n        val args = arena.allocate(ADDRESS, 4)\n")
+case("runtime_smoke.sh (API exercise static arguments)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit(JVM_OBJECT_CALLS, RAY_ARGS + "        args.setAtIndex(ADDRESS, 0, fromCell)\n        args.setAtIndex(ADDRESS, 1, toCell)\n",
+           RAY_ARGS + "        args.setAtIndex(ADDRESS, 0, toCell)\n        args.setAtIndex(ADDRESS, 1, fromCell)\n")],
+     "API EXERCISE FAIL: ptrcallWithTwoVector2UInt32RIDListArgsRetObject", "PhysicsRayQueryParameters2D.create's helper passes `to` as `from` and back: the static row must read the swap back from its result",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (API exercise setting)", ["bash", "scripts/runtime_smoke.sh", GODOT],
-     [Edit("src/jvmMain/kotlin/binding/runtime/ApiExerciseHook.kt", "setting = { boolSetting(SETTING) },", "setting = { false },")],
+     [Edit("src/jvmMain/kotlin/binding/runtime/ApiExerciseHook.kt", "setting = { SignalSelfTest.boolSetting(SETTING) },", "setting = { false },")],
      "API EXERCISE: [1-9][0-9]* passed, 0 failed", "the kanama/debug/api_exercise project setting stops opting a run in (the smoke and the Android build can only use the setting)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+# The publish guard: a flagged build must not publish, package or install. The command passes when Gradle refuses
+# a flagged `publishKanamaToMavenLocal --dry-run`; with the guard's publish clause gone, the dry run succeeds.
+API_EXERCISE_GUARD = ["bash", "-c",
+    'out="$(./gradlew -p . publishKanamaToMavenLocal packageMobileAddonIos -PkanamaApiExercise=true --dry-run 2>&1)"; '
+    'if printf "%s" "$out" | grep -q "refusing to publish, package or install"; then echo "guard refused the flagged build"; exit 0; fi; '
+    'printf "%s\\n" "$out" | tail -n 20; echo "API EXERCISE GUARD MISSING: a flagged build was allowed to publish"; exit 1']
+case("build.gradle.kts API exercise publish guard", API_EXERCISE_GUARD,
+     [Edit("build.gradle.kts", '          it.startsWith("publish") ||\n          it.startsWith("package")', "          false")],
+     "API EXERCISE GUARD MISSING", "the -PkanamaApiExercise=true guard stops refusing the publish and package tasks: the rows would ship",
+     timeout=1800, slow=True)
 case("hot_reload_smoke.sh", ["bash", "scripts/hot_reload_smoke.sh", GODOT],
      [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(f)._ready health=")],
      "missing marker", "the reloadable script line the smoke rewrites is gone, so no marker can reach the log",

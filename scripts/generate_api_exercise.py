@@ -563,6 +563,42 @@ def check_policy(inv: Inventory, rules: Rules, api: dict[str, ApiClass], singlet
                 parse_literal(value)
             except LiteralError as error:
                 inv.failures.append(f"PAIR_OVERRIDES[{cls}.{prop}]: {error}")
+    object_statics = {
+        (r.site.cls, r.site.method): rules.method(r.site.cls, r.site.method).return_type
+        for r in inv.rows.values()
+        if r.case == "C" and r.site is not None and rules.method(r.site.cls, r.site.method).return_type in api
+    }
+    checks = getattr(policy, "STATIC_OBJECT_CHECKS", {})
+    for key in sorted(set(object_statics) - set(checks)):
+        inv.failures.append(
+            f"static row {key[0]}.{key[1]} returns a {object_statics[key]} but STATIC_OBJECT_CHECKS names nothing to read "
+            "back from it; add the one to three properties or `method()`s its arguments show in"
+        )
+    for key, (names, reason) in checks.items():
+        returned = object_statics.get(key)
+        if returned is None:
+            inv.failures.append(f"STATIC_OBJECT_CHECKS names {key[0]}.{key[1]}, which is not a static row returning an object; delete the entry")
+            continue
+        if not names and not reason:
+            inv.failures.append(f"STATIC_OBJECT_CHECKS[{key[0]}.{key[1]}] reads nothing and gives no reason")
+        if len(names) > 3:
+            inv.failures.append(f"STATIC_OBJECT_CHECKS[{key[0]}.{key[1]}] reads {len(names)} values; name one to three")
+        for name in names:
+            chain = rules.chain(returned)
+            if name.endswith("()"):
+                found = any(
+                    name[:-2] in api[c].methods
+                    and not api[c].methods[name[:-2]][0].argument_types
+                    and api[c].methods[name[:-2]][0].return_type != "void"
+                    for c in chain
+                )
+            else:
+                found = any(name in {str(x["name"]) for x in api[c].properties} for c in chain)
+            if not found:
+                inv.failures.append(
+                    f"STATIC_OBJECT_CHECKS[{key[0]}.{key[1]}] reads `{name}`, which is not a property or argument-free "
+                    f"non-void method of {returned}"
+                )
     for key, (kind, reason) in getattr(policy, "STATIC_RESULTS", {}).items():
         if key not in {(site.cls, site.method) for _, site in inv.sites if site.kind == "static"}:
             inv.failures.append(f"STATIC_RESULTS names {key[0]}.{key[1]}, which the shared tree never calls as a static; delete the entry")
@@ -724,6 +760,12 @@ def render(inv: Inventory, policy=policy_module) -> str:
         for index, arg in enumerate(args or ()):
             if isinstance(arg, policy.Arg):
                 note.append(f"argument {index + 1} is not the API default: {md(arg.reason)}")
+        object_check = getattr(policy, "STATIC_OBJECT_CHECKS", {}).get(key)
+        if object_check is not None:
+            if object_check[0]:
+                note.append("reads back " + ", ".join(f"`{n}`" for n in object_check[0]) + " from both results")
+            else:
+                note.append(f"reads nothing back: {md(object_check[1])}")
         result = getattr(policy, "STATIC_RESULTS", {}).get(key)
         if result is not None and result[0] == "fresh":
             note.append(f"fresh result: {md(result[1])} (both paths non-zero, not compared)")
@@ -1234,6 +1276,9 @@ class RowGenerator:
             return self.literal(args[0], base, ctx)
         if name == "Transform3D" and not args:
             return "Transform3D.IDENTITY"
+        if name == "Transform3D" and len(args) == 4:
+            axes = [self.literal(a, "Vector3", ctx) for a in args]
+            return f"Transform3D(Basis({axes[0]}, {axes[1]}, {axes[2]}), {axes[3]})"
         if name == "Transform2D" and not args:
             return "Transform2D.IDENTITY"
         if name in ("Vector2", "Vector3", "Vector4", "Color", "Quaternion", "Plane"):
@@ -1381,7 +1426,9 @@ class RowGenerator:
         if ret == "enum::Error" and not verdict.weak:
             lines.append("r.staticError(got.value, oracle)")
         elif ret in self.rules.api:
-            lines.append(f'r.staticObject(got, oracle, "{ret}")')
+            names, _ = getattr(self.policy, "STATIC_OBJECT_CHECKS", {}).get((site.cls, site.method), ((), ""))
+            reads = "".join(f', "{n}"' for n in names)
+            lines.append(f'r.staticObject(got, oracle, "{ret}"{reads})')
         elif result is not None and result[0] == "fresh":
             lines.append("r.staticFresh(got, oracle)")
         elif ret == "enum::Error":

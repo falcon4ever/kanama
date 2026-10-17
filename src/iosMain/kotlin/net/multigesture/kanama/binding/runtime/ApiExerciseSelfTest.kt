@@ -9,16 +9,15 @@ import net.multigesture.kanama.exercise.ApiExercise
 // -PkanamaIosSelfTest=true build (build.gradle.kts), which the device runners make.
 //
 // Prints one summary line the device runners REQUIRE (scripts/ios_visual_smoke.sh, kanama-demos
-// scripts/ios_device_run.sh):
+// scripts/ios_device_run.sh), in one line:
 //
-//   [kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): <n> passed, <m> failed, <w> weak, <r>
-// reach
-//     faults=<f> expected=<e> in <ms> ms
+//   [kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): <n> passed, <m> failed, <w> weak,
+//   <r> reach faults=<f> expected=<e> in <ms> ms
 //
 // and one `OBJECTCALLS SELFTEST (api exercise) FAIL: <helpers> <row> <what>` line per failed row.
-// The
-// fault count is the process-wide one, so a row whose call the shim refused (a FAULT line) shows as
-// faults above the deliberate probes' [expectedFaults], which the runners fail on.
+// The fault count is the process-wide one, so a row whose call the shim refused shows as a FAULT
+// line and as faults above the deliberate probes' [expectedFaults]. The demos runner fails on both;
+// ios_visual_smoke.sh does not compare the counts (it fails on FAIL lines and failed rows).
 internal fun apiExerciseSelfTestRows(expectedFaults: Int) {
   val result =
     ApiExercise.run(

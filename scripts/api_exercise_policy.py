@@ -265,7 +265,9 @@ STATIC_ARGS: dict[tuple[str, str], tuple[str, ...]] = {
     ),
     ("DirAccess", "dir_exists_absolute"): ('scratch("sub")',),
     ("DirAccess", "get_directories_at"): ('scratch("")',),
-    ("DirAccess", "get_drive_name"): ("0",),  # the first volume: never "" on a host with a filesystem
+    # The first volume: never "" on a desktop or iOS host. Android (P4) needs a look: DirAccessJAndroid can
+    # report no drive at all, and then the row reads "" and fails.
+    ("DirAccess", "get_drive_name"): ("0",),
     ("DirAccess", "make_dir_absolute"): ('scratch("sub")',),  # exists: ERR_ALREADY_EXISTS (32)
     ("DirAccess", "rename_absolute"): ('scratch("missing")', 'scratch("renamed")'),  # FAILED (1)
     ("FileAccess", "create_temp"): (
@@ -292,24 +294,73 @@ STATIC_ARGS: dict[tuple[str, str], tuple[str, ...]] = {
     ("AudioStreamMP3", "load_from_file"): ('scratch("fixture.mp3")',),
     ("AudioStreamWAV", "load_from_buffer"): ('fixture("wav")', "{}"),
     ("AudioStreamWAV", "load_from_file"): ('scratch("fixture.wav")', "{}"),
-    ("DPITexture", "create_from_string"): ('fixture("svg")', "1.0", "1.0", "{}"),
+    ("DPITexture", "create_from_string"): (
+        'fixture("svg")',
+        Arg("2.0", "a scale unlike the default, so STATIC_OBJECT_CHECKS can tell it from the saturation"),
+        Arg("0.5", "a saturation unlike the default and the scale"),
+        "{}",
+    ),
     ("GLTFAccessor", "from_dictionary"): ('{"type": "SCALAR", "componentType": 5126, "count": 3}',),
     ("GLTFCamera", "from_node"): ("Camera3D.new()",),
     # A node pointer: the property object is made before the (empty) state's node lookup fails and is
     # returned with the error printed; a pointer outside the core object model returns null.
     ("GLTFDocument", "import_object_model_property"): ("GLTFState.new()", '"/nodes/0/translation"'),
-    ("Image", "create"): ("4", "4", "false", "Image.FORMAT_RGBA8"),
-    ("Image", "create_from_data"): ("4", "4", "false", "Image.FORMAT_RGBA8", 'fixture("rgba8_4x4")'),
+    # 4 x 2, not square: a helper that swaps width and height reads back 2 x 4.
+    ("Image", "create"): ("4", "2", "false", "Image.FORMAT_RGBA8"),
+    ("Image", "create_from_data"): ("4", "2", "false", "Image.FORMAT_RGBA8", 'fixture("rgba8_4x2")'),
     ("ImporterMesh", "merge_importer_meshes"): ("[ImporterMesh.new()]", "[Transform3D()]", "true"),
     ("JSON", "from_native"): ("Vector2(1, 2)", "false"),
     ("JSON", "parse_string"): ('"{\\"kanama\\": 125}"',),
     ("JSON", "stringify"): ('{"kanama": 125}', '""', "true", "false"),
     ("TLSOptions", "server"): ("CryptoKey.new()", "X509Certificate.new()"),
     # Pure functions of their arguments.
-    ("PathFollow3D", "correct_posture"): ("Transform3D()", "PathFollow3D.ROTATION_ORIENTED"),
-    ("PhysicsRayQueryParameters2D", "create"): ("Vector2(1, 2)", "Vector2(3, 4)", "4294967295", "Array[RID]([])"),
-    ("PhysicsRayQueryParameters3D", "create"): ("Vector3(1, 2, 3)", "Vector3(4, 5, 6)", "4294967295", "Array[RID]([])"),
+    # A quarter turn about Z with an origin: no axis or component equals another, so a swapped cell shows.
+    ("PathFollow3D", "correct_posture"): (
+        "Transform3D(Vector3(0, 1, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(1, 2, 3))",
+        "PathFollow3D.ROTATION_ORIENTED",
+    ),
+    ("PhysicsRayQueryParameters2D", "create"): (
+        "Vector2(1, 2)",
+        "Vector2(3, 4)",
+        Arg("5", "a mask unlike the default, so STATIC_OBJECT_CHECKS reads back a value the call chose"),
+        "Array[RID]([])",
+    ),
+    ("PhysicsRayQueryParameters3D", "create"): (
+        "Vector3(1, 2, 3)",
+        "Vector3(4, 5, 6)",
+        Arg("5", "a mask unlike the default, so STATIC_OBJECT_CHECKS reads back a value the call chose"),
+        "Array[RID]([])",
+    ),
     ("Tween", "interpolate_value"): ("0.0", "10.0", "0.5", "1.0", "Tween.TRANS_LINEAR", "Tween.EASE_IN"),
+}
+
+# (class, method) -> (names, reason) for every static row that returns an object. A new object per call
+# cannot be compared with the Variant path's object, so the row reads one to three of its properties
+# (`name`) or argument-free const methods (`name()`) through `Object.get` / `Object.call` on both results
+# and requires them equal: the arguments the call was given show in them (a swapped `from`/`to`, a 2 x 4
+# image for a 4 x 2 one). An empty tuple says why nothing can be read (the reason is then required).
+_FRESH_PATH = "a new temporary name per call: nothing the two results share besides their class"
+STATIC_OBJECT_CHECKS: dict[tuple[str, str], tuple[tuple[str, ...], str]] = {
+    ("AudioStreamMP3", "load_from_buffer"): (("data",), "the decoded stream keeps the bytes it was given"),
+    ("AudioStreamMP3", "load_from_file"): (("data",), "the bytes of the fixture file"),
+    ("AudioStreamWAV", "load_from_buffer"): (("mix_rate", "stereo", "format"), "the fixture's header: 8 kHz mono 16-bit"),
+    ("AudioStreamWAV", "load_from_file"): (("mix_rate", "stereo", "format"), "the fixture's header: 8 kHz mono 16-bit"),
+    ("DPITexture", "create_from_string"): (("base_scale", "saturation"), "the scale and saturation it was given"),
+    ("DirAccess", "create_temp"): ((), _FRESH_PATH),
+    ("FileAccess", "create_temp"): ((), _FRESH_PATH),
+    ("FileAccess", "open"): (("get_path()", "get_length()"), "the fixture file it opened"),
+    ("FileAccess", "open_compressed"): (("get_path()",), "the path it opened"),
+    ("FileAccess", "open_encrypted"): (("get_path()",), "the path it opened"),
+    ("FileAccess", "open_encrypted_with_pass"): (("get_path()",), "the path it opened"),
+    ("GLTFAccessor", "from_dictionary"): (("count", "component_type"), "the dictionary's count and component type"),
+    ("GLTFCamera", "from_node"): (("fov", "depth_far", "depth_near"), "the camera node's projection"),
+    ("GLTFDocument", "import_object_model_property"): (("json_pointers",), "the pointer it was given"),
+    ("Image", "create"): (("get_width()", "get_height()", "get_format()"), "the size and format it was given"),
+    ("Image", "create_from_data"): (("get_width()", "get_height()", "get_data()"), "the size and bytes it was given"),
+    ("ImporterMesh", "merge_importer_meshes"): (("get_surface_count()",), "the surfaces of the merged meshes"),
+    ("PhysicsRayQueryParameters2D", "create"): (("from", "to", "collision_mask"), "the ray it was given"),
+    ("PhysicsRayQueryParameters3D", "create"): (("from", "to", "collision_mask"), "the ray it was given"),
+    ("TLSOptions", "server"): (("is_server()",), "a server configuration"),
 }
 
 # (class, method) -> (kind, reason) for a static row whose result cannot be held to "equals the Variant

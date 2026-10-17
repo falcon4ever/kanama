@@ -1,8 +1,6 @@
 package net.multigesture.kanama.binding.runtime
 
 import net.multigesture.kanama.api.Engine
-import net.multigesture.kanama.api.GodotHandle
-import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.OS
 
 /**
@@ -28,11 +26,6 @@ internal object ApiExerciseHook {
 
   @Volatile private var done = false
 
-  private fun boolSetting(name: String): Boolean {
-    val settings = GodotObject(GodotHandle(ObjectCalls.getSingleton("ProjectSettings")))
-    return settings.call("has_setting", name) == true && settings.call("get_setting", name) == true
-  }
-
   /** Called on every main-loop frame; does its work on the first one only. */
   fun onFrame() {
     if (done) return
@@ -41,7 +34,7 @@ internal object ApiExerciseHook {
       runCatching {
           SignalSelfTest.decide(
             OS.getEnvironment(ENVIRONMENT_VARIABLE),
-            setting = { boolSetting(SETTING) },
+            setting = { SignalSelfTest.boolSetting(SETTING) },
             debugBuild = { OS.isDebugBuild() },
             editorHint = { Engine.isEditorHint() },
           )

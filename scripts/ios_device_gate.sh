@@ -368,6 +368,12 @@ if [[ "$RUN_DEMOS" -eq 1 ]] &&
   echo "[ios_device_gate] the demos checkout's scripts/ios_device_run.sh does not build the runtime self-tests (-PkanamaIosSelfTest=true, kanama task 138 item 24); update kanama-demos." >&2
   exit 2
 fi
+# The generated API exercise prints its own summary after the frame-1 rows; a demos runner that does not
+# require it would pass a build whose exercise never ran.
+if [[ "$RUN_DEMOS" -eq 1 ]] && ! grep -q 'api exercise' "$DEMOS_ROOT/scripts/ios_device_run.sh"; then
+  echo "[ios_device_gate] the demos checkout's scripts/ios_device_run.sh does not require the API exercise summary ('OBJECTCALLS SELFTEST (api exercise)'); update kanama-demos." >&2
+  exit 2
+fi
 if [[ "$BUILD_JOBS" -gt 1 && "$RUN_DEMOS" -eq 1 ]]; then
   if ! grep -q "KANAMA_IOS_RUN_STAGE" "$DEMOS_ROOT/scripts/ios_device_run.sh"; then
     echo "[ios_device_gate] --build-jobs > 1 needs a demos checkout whose scripts/ios_device_run.sh supports KANAMA_IOS_RUN_STAGE." >&2

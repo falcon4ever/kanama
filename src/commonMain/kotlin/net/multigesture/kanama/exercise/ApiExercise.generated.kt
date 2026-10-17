@@ -203,7 +203,7 @@ internal object ApiExerciseRows {
       val a1: Map<String, Any?> = emptyMap()
       val got = r.track(AudioStreamWAV.loadFromBuffer(a0, a1))
       val oracle = r.track(ClassDB.classCallStatic("AudioStreamWAV", "load_from_buffer", a0, a1))
-      r.staticObject(got, oracle, "AudioStreamWAV")
+      r.staticObject(got, oracle, "AudioStreamWAV", "mix_rate", "stereo", "format")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -217,7 +217,7 @@ internal object ApiExerciseRows {
       val a0: ByteArray = r.fixtureBytes("mp3")
       val got = r.track(AudioStreamMP3.loadFromBuffer(a0))
       val oracle = r.track(ClassDB.classCallStatic("AudioStreamMP3", "load_from_buffer", a0))
-      r.staticObject(got, oracle, "AudioStreamMP3")
+      r.staticObject(got, oracle, "AudioStreamMP3", "data")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -231,7 +231,7 @@ internal object ApiExerciseRows {
       val a0: Map<String, Any?> = mapOf<String, Any?>("type" to "SCALAR", "componentType" to 5126L, "count" to 3L)
       val got = r.track(GLTFAccessor.fromDictionary(a0))
       val oracle = r.track(ClassDB.classCallStatic("GLTFAccessor", "from_dictionary", a0))
-      r.staticObject(got, oracle, "GLTFAccessor")
+      r.staticObject(got, oracle, "GLTFAccessor", "count", "component_type")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -277,7 +277,7 @@ internal object ApiExerciseRows {
       val a0: Camera3D = f0
       val got = r.track(GLTFCamera.fromNode(a0))
       val oracle = r.track(ClassDB.classCallStatic("GLTFCamera", "from_node", a0))
-      r.staticObject(got, oracle, "GLTFCamera")
+      r.staticObject(got, oracle, "GLTFCamera", "fov", "depth_far", "depth_near")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -294,7 +294,7 @@ internal object ApiExerciseRows {
       val a2: Boolean = true
       val got = r.track(ImporterMesh.mergeImporterMeshes(a0, a1, a2))
       val oracle = r.track(ClassDB.classCallStatic("ImporterMesh", "merge_importer_meshes", a0, a1, a2))
-      r.staticObject(got, oracle, "ImporterMesh")
+      r.staticObject(got, oracle, "ImporterMesh", "get_surface_count()")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -310,7 +310,7 @@ internal object ApiExerciseRows {
       val a1: String = "/nodes/0/translation"
       val got = r.track(GLTFDocument.importObjectModelProperty(a0, a1))
       val oracle = r.track(ClassDB.classCallStatic("GLTFDocument", "import_object_model_property", a0, a1))
-      r.staticObject(got, oracle, "GLTFObjectModelProperty")
+      r.staticObject(got, oracle, "GLTFObjectModelProperty", "json_pointers")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -355,7 +355,7 @@ internal object ApiExerciseRows {
       val a1: Map<String, Any?> = emptyMap()
       val got = r.track(AudioStreamWAV.loadFromFile(a0, a1))
       val oracle = r.track(ClassDB.classCallStatic("AudioStreamWAV", "load_from_file", a0, a1))
-      r.staticObject(got, oracle, "AudioStreamWAV")
+      r.staticObject(got, oracle, "AudioStreamWAV", "mix_rate", "stereo", "format")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -385,7 +385,7 @@ internal object ApiExerciseRows {
       val a1: FileAccess.ModeFlags = FileAccess.ModeFlags(1L) /* READ */
       val got = r.track(FileAccess.open(a0, a1))
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "open", a0, a1))
-      r.staticObject(got, oracle, "FileAccess")
+      r.staticObject(got, oracle, "FileAccess", "get_path()", "get_length()")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -441,7 +441,7 @@ internal object ApiExerciseRows {
       val a0: String = r.scratch("fixture.mp3")
       val got = r.track(AudioStreamMP3.loadFromFile(a0))
       val oracle = r.track(ClassDB.classCallStatic("AudioStreamMP3", "load_from_file", a0))
-      r.staticObject(got, oracle, "AudioStreamMP3")
+      r.staticObject(got, oracle, "AudioStreamMP3", "data")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -500,7 +500,7 @@ internal object ApiExerciseRows {
       val a3: ByteArray = ByteArray(0)
       val got = r.track(FileAccess.openEncrypted(a0, a1, a2, a3))
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "open_encrypted", a0, a1, a2, a3))
-      r.staticObject(got, oracle, "FileAccess")
+      r.staticObject(got, oracle, "FileAccess", "get_path()")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -516,7 +516,7 @@ internal object ApiExerciseRows {
       val a2: String = "kanama125"
       val got = r.track(FileAccess.openEncryptedWithPass(a0, a1, a2))
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "open_encrypted_with_pass", a0, a1, a2))
-      r.staticObject(got, oracle, "FileAccess")
+      r.staticObject(got, oracle, "FileAccess", "get_path()")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -528,12 +528,12 @@ internal object ApiExerciseRows {
     r.begin('C', "ptrcallWithStringTwoDoubleDictionaryArgsRetObject", "DPITexture.create_from_string")
     try {
       val a0: String = r.fixtureText("svg")
-      val a1: Double = 1.0
-      val a2: Double = 1.0
+      val a1: Double = 2.0
+      val a2: Double = 0.5
       val a3: Map<String, Any?> = emptyMap()
       val got = r.track(DPITexture.createFromString(a0, a1, a2, a3))
       val oracle = r.track(ClassDB.classCallStatic("DPITexture", "create_from_string", a0, a1, a2, a3))
-      r.staticObject(got, oracle, "DPITexture")
+      r.staticObject(got, oracle, "DPITexture", "base_scale", "saturation")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -549,7 +549,7 @@ internal object ApiExerciseRows {
       val a2: FileAccess.CompressionMode = FileAccess.CompressionMode(0L)
       val got = r.track(FileAccess.openCompressed(a0, a1, a2))
       val oracle = r.track(ClassDB.classCallStatic("FileAccess", "open_compressed", a0, a1, a2))
-      r.staticObject(got, oracle, "FileAccess")
+      r.staticObject(got, oracle, "FileAccess", "get_path()")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -576,7 +576,7 @@ internal object ApiExerciseRows {
   private fun c031(r: ApiExerciseRunner) {
     r.begin('C', "ptrcallWithTransform3DAndLongArgsRetTransform3D", "PathFollow3D.correct_posture")
     try {
-      val a0: Transform3D = Transform3D.IDENTITY
+      val a0: Transform3D = Transform3D(Basis(Vector3(0.0, 1.0, 0.0), Vector3(-1.0, 0.0, 0.0), Vector3(0.0, 0.0, 1.0)), Vector3(1.0, 2.0, 3.0))
       val a1: PathFollow3D.RotationMode = PathFollow3D.RotationMode(4L) /* ROTATION_ORIENTED */
       val got = r.track(PathFollow3D.correctPosture(a0, a1))
       val oracle = r.track(ClassDB.classCallStatic("PathFollow3D", "correct_posture", a0, a1))
@@ -592,12 +592,12 @@ internal object ApiExerciseRows {
     r.begin('C', "ptrcallWithTwoIntBoolLongArgsRetObject", "Image.create")
     try {
       val a0: Int = 4
-      val a1: Int = 4
+      val a1: Int = 2
       val a2: Boolean = false
       val a3: Image.Format = Image.Format(5L) /* FORMAT_RGBA8 */
       val got = r.track(Image.create(a0, a1, a2, a3))
       val oracle = r.track(ClassDB.classCallStatic("Image", "create", a0, a1, a2, a3))
-      r.staticObject(got, oracle, "Image")
+      r.staticObject(got, oracle, "Image", "get_width()", "get_height()", "get_format()")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -609,13 +609,13 @@ internal object ApiExerciseRows {
     r.begin('C', "ptrcallWithTwoIntBoolLongByteArrayArgsRetObject", "Image.create_from_data")
     try {
       val a0: Int = 4
-      val a1: Int = 4
+      val a1: Int = 2
       val a2: Boolean = false
       val a3: Image.Format = Image.Format(5L) /* FORMAT_RGBA8 */
-      val a4: ByteArray = r.fixtureBytes("rgba8_4x4")
+      val a4: ByteArray = r.fixtureBytes("rgba8_4x2")
       val got = r.track(Image.createFromData(a0, a1, a2, a3, a4))
       val oracle = r.track(ClassDB.classCallStatic("Image", "create_from_data", a0, a1, a2, a3, a4))
-      r.staticObject(got, oracle, "Image")
+      r.staticObject(got, oracle, "Image", "get_width()", "get_height()", "get_data()")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -632,7 +632,7 @@ internal object ApiExerciseRows {
       val a1: X509Certificate? = f1
       val got = r.track(TLSOptions.server(a0, a1))
       val oracle = r.track(ClassDB.classCallStatic("TLSOptions", "server", a0, a1))
-      r.staticObject(got, oracle, "TLSOptions")
+      r.staticObject(got, oracle, "TLSOptions", "is_server()")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -741,11 +741,11 @@ internal object ApiExerciseRows {
     try {
       val a0: Vector2 = Vector2(1.0, 2.0)
       val a1: Vector2 = Vector2(3.0, 4.0)
-      val a2: Long = 4294967295L
+      val a2: Long = 5L
       val a3: List<RID> = emptyList()
       val got = r.track(PhysicsRayQueryParameters2D.create(a0, a1, a2, a3))
       val oracle = r.track(ClassDB.classCallStatic("PhysicsRayQueryParameters2D", "create", a0, a1, a2, a3))
-      r.staticObject(got, oracle, "PhysicsRayQueryParameters2D")
+      r.staticObject(got, oracle, "PhysicsRayQueryParameters2D", "from", "to", "collision_mask")
     } catch (t: Throwable) {
       r.threw(t)
     }
@@ -758,11 +758,11 @@ internal object ApiExerciseRows {
     try {
       val a0: Vector3 = Vector3(1.0, 2.0, 3.0)
       val a1: Vector3 = Vector3(4.0, 5.0, 6.0)
-      val a2: Long = 4294967295L
+      val a2: Long = 5L
       val a3: List<RID> = emptyList()
       val got = r.track(PhysicsRayQueryParameters3D.create(a0, a1, a2, a3))
       val oracle = r.track(ClassDB.classCallStatic("PhysicsRayQueryParameters3D", "create", a0, a1, a2, a3))
-      r.staticObject(got, oracle, "PhysicsRayQueryParameters3D")
+      r.staticObject(got, oracle, "PhysicsRayQueryParameters3D", "from", "to", "collision_mask")
     } catch (t: Throwable) {
       r.threw(t)
     }

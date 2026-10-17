@@ -154,7 +154,7 @@ internal constructor(
       "mp3" -> mp3()
       "wav" -> wav()
       "key32" -> ByteArray(32) { it.toByte() }
-      "rgba8_4x4" -> ByteArray(64) { (it * 4).toByte() }
+      "rgba8_4x2" -> ByteArray(32) { (it * 7).toByte() }
       else -> error("no byte fixture '$name'")
     }
 
@@ -185,7 +185,18 @@ internal constructor(
   }
 
   internal fun tearDown() {
-    removeTree(ApiExercise.SCRATCH)
+    begin('S', "-", "teardown(scratch directory removed)")
+    try {
+      removeTree(ApiExercise.SCRATCH)
+      if (DirAccess.dirExistsAbsolute(ApiExercise.SCRATCH)) {
+        fail("${ApiExercise.SCRATCH} still exists after the run removed it")
+      } else {
+        verdict = 'S'
+      }
+    } catch (t: Throwable) {
+      threw(t)
+    }
+    end()
   }
 
   private fun writeFile(name: String, bytes: ByteArray) {
@@ -338,15 +349,31 @@ internal constructor(
   /**
    * C row returning an object: a non-null [className] from the wrapper and from the Variant path.
    */
-  fun staticObject(got: GodotObject?, oracle: Any?, className: String) {
+  fun staticObject(got: GodotObject?, oracle: Any?, className: String, vararg reads: String) {
     when {
       got == null -> fail("expected a $className got null")
       !got.isClass(className) -> fail("expected a $className got a ${got.getClassName()}")
       oracle !is GodotObject || !oracle.isClass(className) ->
         fail("expected a $className from ClassDB.class_call_static got ${show(oracle)}")
-      else -> pass()
+      else -> {
+        // A new object per call: what the arguments made of it (STATIC_OBJECT_CHECKS) must agree.
+        for (name in reads) {
+          val mine = track(read(got, name))
+          val theirs = track(read(oracle, name))
+          if (!same(mine, theirs)) {
+            fail(
+              "expected $name ${show(theirs)} (ClassDB.class_call_static's result) got ${show(mine)}"
+            )
+            return
+          }
+        }
+        pass()
+      }
     }
   }
+
+  private fun read(value: GodotObject, name: String): Any? =
+    if (name.endsWith("()")) value.call(name.dropLast(2)) else value.get(name)
 
   /**
    * C row returning `Error`: the same non-OK value from both paths (OK is what a no-op returns).
