@@ -135,7 +135,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: EditorPlugin.add_control_to_dock
      */
-    fun addControlToDock(slot: EditorPlugin.DockSlot, control: Control, shortcut: Shortcut?) {
+    fun addControlToDock(slot: EditorPlugin.DockSlot, control: Control, shortcut: Shortcut? = null) {
         ObjectCalls.ptrcallWithLongAndTwoObjectArgs(Binds.addControlToDockBind, segment, slot.value, control.segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(control)
         ObjectCalls.keepReachable(shortcut)
@@ -173,7 +173,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: EditorPlugin.add_control_to_bottom_panel
      */
-    fun addControlToBottomPanel(control: Control, title: String, shortcut: Shortcut?): Button? {
+    fun addControlToBottomPanel(control: Control, title: String, shortcut: Shortcut? = null): Button? {
         val ret = Button.wrap(ObjectCalls.ptrcallWithObjectStringObjectArgsRetObject(Binds.addControlToBottomPanelBind, segment, control.segment, title, shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(control)
         ObjectCalls.keepReachable(shortcut)

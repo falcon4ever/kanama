@@ -47,7 +47,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      *
      * Generated from Godot docs: StreamPeerTLS.connect_to_stream
      */
-    fun connectToStream(stream: StreamPeer?, commonName: String, clientOptions: TLSOptions?): GodotError {
+    fun connectToStream(stream: StreamPeer?, commonName: String, clientOptions: TLSOptions? = null): GodotError {
         checkOpen()
         val ret = GodotError(ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(Binds.connectToStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, commonName, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(this)

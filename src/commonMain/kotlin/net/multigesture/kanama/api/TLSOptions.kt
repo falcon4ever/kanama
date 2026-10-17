@@ -96,7 +96,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
          *
          * Generated from Godot docs: TLSOptions.client
          */
-        fun client(trustedChain: X509Certificate?, commonNameOverride: String = ""): TLSOptions? {
+        fun client(trustedChain: X509Certificate? = null, commonNameOverride: String = ""): TLSOptions? {
             val ret = TLSOptions.wrapOwned(ObjectCalls.ptrcallWithObjectStringArgRetObject(Binds.clientBind, NULL_SEGMENT, trustedChain?.requireOpenHandle() ?: NULL_SEGMENT, commonNameOverride))
             ObjectCalls.keepReachable(trustedChain)
             return ret
@@ -111,7 +111,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
          *
          * Generated from Godot docs: TLSOptions.client_unsafe
          */
-        fun clientUnsafe(trustedChain: X509Certificate?): TLSOptions? {
+        fun clientUnsafe(trustedChain: X509Certificate? = null): TLSOptions? {
             val ret = TLSOptions.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.clientUnsafeBind, NULL_SEGMENT, trustedChain?.requireOpenHandle() ?: NULL_SEGMENT))
             ObjectCalls.keepReachable(trustedChain)
             return ret

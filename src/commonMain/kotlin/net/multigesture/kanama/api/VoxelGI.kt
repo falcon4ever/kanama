@@ -140,8 +140,8 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: VoxelGI.bake
      */
-    fun bake(fromNode: Node, createVisualDebug: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.bakeBind, segment, fromNode.segment, createVisualDebug)
+    fun bake(fromNode: Node? = null, createVisualDebug: Boolean = false) {
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.bakeBind, segment, fromNode?.segment ?: NULL_SEGMENT, createVisualDebug)
         ObjectCalls.keepReachable(fromNode)
     }
 

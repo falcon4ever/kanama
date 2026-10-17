@@ -480,7 +480,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
          *
          * Generated from Godot docs: EditorExportPlatform.get_forced_export_files
          */
-        fun getForcedExportFiles(preset: EditorExportPreset?): List<String> {
+        fun getForcedExportFiles(preset: EditorExportPreset? = null): List<String> {
             val ret = ObjectCalls.ptrcallWithObjectArgRetPackedStringList(Binds.getForcedExportFilesBind, NULL_SEGMENT, preset?.requireOpenHandle() ?: NULL_SEGMENT)
             ObjectCalls.keepReachable(preset)
             return ret

@@ -21,7 +21,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      *
      * Generated from Godot docs: ImmediateMesh.surface_begin
      */
-    fun surfaceBegin(primitive: Mesh.PrimitiveType, material: Material?) {
+    fun surfaceBegin(primitive: Mesh.PrimitiveType, material: Material? = null) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndObjectArg(Binds.surfaceBeginBind, segment, primitive.value, material?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(this)

@@ -66,7 +66,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
      *
      * Generated from Godot docs: WebSocketPeer.connect_to_url
      */
-    fun connectToUrl(url: String, tlsClientOptions: TLSOptions?): GodotError {
+    fun connectToUrl(url: String, tlsClientOptions: TLSOptions? = null): GodotError {
         checkOpen()
         val ret = GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(Binds.connectToUrlBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(this)

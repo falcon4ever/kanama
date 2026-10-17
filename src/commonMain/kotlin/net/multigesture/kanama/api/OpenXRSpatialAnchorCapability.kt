@@ -99,7 +99,7 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
      *
      * Generated from Godot docs: OpenXRSpatialAnchorCapability.create_new_anchor
      */
-    fun createNewAnchor(transform: Transform3D, spatialContext: RID, next: OpenXRStructureBase?): OpenXRAnchorTracker? {
+    fun createNewAnchor(transform: Transform3D, spatialContext: RID, next: OpenXRStructureBase? = null): OpenXRAnchorTracker? {
         val ret = OpenXRAnchorTracker.wrapOwned(ObjectCalls.ptrcallWithTransform3DRIDObjectArgsRetObject(Binds.createNewAnchorBind, segment, transform, spatialContext, next?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(next)
         return ret
@@ -170,7 +170,7 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
      *
      * Generated from Godot docs: OpenXRSpatialAnchorCapability.start_entity_discovery
      */
-    fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
+    fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase? = null, nextSnapshotQuery: OpenXRStructureBase? = null, userCallback: GodotCallable): OpenXRFutureResult? {
         val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(Binds.startEntityDiscoveryBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: NULL_SEGMENT, nextSnapshotQuery?.requireOpenHandle() ?: NULL_SEGMENT, userCallback.target.segment, userCallback.method))
         ObjectCalls.keepReachable(nextSnapshotCreate)
         ObjectCalls.keepReachable(nextSnapshotQuery)
@@ -188,7 +188,7 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
      *
      * Generated from Godot docs: OpenXRSpatialAnchorCapability.do_entity_update
      */
-    fun doEntityUpdate(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?) {
+    fun doEntityUpdate(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase? = null, nextSnapshotQuery: OpenXRStructureBase? = null) {
         ObjectCalls.ptrcallWithRIDObjectListTwoObjectArgs(Binds.doEntityUpdateBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: NULL_SEGMENT, nextSnapshotQuery?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(nextSnapshotCreate)
         ObjectCalls.keepReachable(nextSnapshotQuery)

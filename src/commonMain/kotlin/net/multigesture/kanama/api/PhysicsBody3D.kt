@@ -84,7 +84,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      *
      * Generated from Godot docs: PhysicsBody3D.test_move
      */
-    fun testMove(from: Transform3D, motion: Vector3, collision: KinematicCollision3D?, safeMargin: Double = 0.001, recoveryAsCollision: Boolean = false, maxCollisions: Int = 1): Boolean {
+    fun testMove(from: Transform3D, motion: Vector3, collision: KinematicCollision3D? = null, safeMargin: Double = 0.001, recoveryAsCollision: Boolean = false, maxCollisions: Int = 1): Boolean {
         val ret = ObjectCalls.ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(Binds.testMoveBind, segment, from, motion, collision?.requireOpenHandle() ?: NULL_SEGMENT, safeMargin, recoveryAsCollision, maxCollisions)
         ObjectCalls.keepReachable(collision)
         return ret

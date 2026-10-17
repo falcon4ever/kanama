@@ -32,7 +32,7 @@ class InstancePlaceholder(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: InstancePlaceholder.create_instance
      */
-    fun createInstance(replace: Boolean = false, customScene: PackedScene?): Node? {
+    fun createInstance(replace: Boolean = false, customScene: PackedScene? = null): Node? {
         val ret = Node.wrap(ObjectCalls.ptrcallWithBoolObjectArgsRetObject(Binds.createInstanceBind, segment, replace, customScene?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(customScene)
         return ret

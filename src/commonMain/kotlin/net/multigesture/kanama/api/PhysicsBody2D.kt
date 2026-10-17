@@ -44,7 +44,7 @@ open class PhysicsBody2D(handle: GodotHandle) : CollisionObject2D(handle) {
      *
      * Generated from Godot docs: PhysicsBody2D.test_move
      */
-    fun testMove(from: Transform2D, motion: Vector2, collision: KinematicCollision2D?, safeMargin: Double = 0.08, recoveryAsCollision: Boolean = false): Boolean {
+    fun testMove(from: Transform2D, motion: Vector2, collision: KinematicCollision2D? = null, safeMargin: Double = 0.08, recoveryAsCollision: Boolean = false): Boolean {
         val ret = ObjectCalls.ptrcallWithTransform2DVector2ObjectDoubleBoolArgsRetBool(Binds.testMoveBind, segment, from, motion, collision?.requireOpenHandle() ?: NULL_SEGMENT, safeMargin, recoveryAsCollision)
         ObjectCalls.keepReachable(collision)
         return ret

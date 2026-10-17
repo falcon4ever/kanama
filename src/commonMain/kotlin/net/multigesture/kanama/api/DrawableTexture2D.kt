@@ -68,7 +68,7 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: DrawableTexture2D.blit_rect
      */
-    fun blitRect(rect: Rect2i, source: Texture2D?, modulate: Color, mipmap: Int = 0, material: Material?) {
+    fun blitRect(rect: Rect2i, source: Texture2D?, modulate: Color, mipmap: Int = 0, material: Material? = null) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2iObjectColorIntObjectArgs(Binds.blitRectBind, segment, rect, source?.requireOpenHandle() ?: NULL_SEGMENT, modulate, mipmap, material?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(this)
@@ -84,7 +84,7 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: DrawableTexture2D.blit_rect_multi
      */
-    fun blitRectMulti(rect: Rect2i, sources: List<Texture2D>, extraTargets: List<DrawableTexture2D>, modulate: Color, mipmap: Int = 0, material: Material?) {
+    fun blitRectMulti(rect: Rect2i, sources: List<Texture2D>, extraTargets: List<DrawableTexture2D>, modulate: Color, mipmap: Int = 0, material: Material? = null) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2iTwoObjectListColorIntObjectArgs(Binds.blitRectMultiBind, segment, rect, sources, extraTargets, modulate, mipmap, material?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(this)

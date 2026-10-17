@@ -80,7 +80,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      *
      * Generated from Godot docs: GraphNode.set_slot
      */
-    fun setSlot(slotIndex: Int, enableLeftPort: Boolean, typeLeft: Int, colorLeft: Color, enableRightPort: Boolean, typeRight: Int, colorRight: Color, customIconLeft: Texture2D?, customIconRight: Texture2D?, drawStylebox: Boolean = true) {
+    fun setSlot(slotIndex: Int, enableLeftPort: Boolean, typeLeft: Int, colorLeft: Color, enableRightPort: Boolean, typeRight: Int, colorRight: Color, customIconLeft: Texture2D? = null, customIconRight: Texture2D? = null, drawStylebox: Boolean = true) {
         ObjectCalls.ptrcallWithIntBoolIntColorBoolIntColorTwoObjectBoolArgs(Binds.setSlotBind, segment, slotIndex, enableLeftPort, typeLeft, colorLeft, enableRightPort, typeRight, colorRight, customIconLeft?.requireOpenHandle() ?: NULL_SEGMENT, customIconRight?.requireOpenHandle() ?: NULL_SEGMENT, drawStylebox)
         ObjectCalls.keepReachable(customIconLeft)
         ObjectCalls.keepReachable(customIconRight)

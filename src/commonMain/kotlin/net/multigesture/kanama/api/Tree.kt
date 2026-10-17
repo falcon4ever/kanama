@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.RID
@@ -132,8 +133,8 @@ class Tree(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Tree.create_item
      */
-    fun createItem(parent: TreeItem, index: Int = -1): TreeItem? {
-        val ret = TreeItem.wrap(ObjectCalls.ptrcallWithObjectAndIntArgRetObject(Binds.createItemBind, segment, parent.segment, index))
+    fun createItem(parent: TreeItem? = null, index: Int = -1): TreeItem? {
+        val ret = TreeItem.wrap(ObjectCalls.ptrcallWithObjectAndIntArgRetObject(Binds.createItemBind, segment, parent?.segment ?: NULL_SEGMENT, index))
         ObjectCalls.keepReachable(parent)
         return ret
     }

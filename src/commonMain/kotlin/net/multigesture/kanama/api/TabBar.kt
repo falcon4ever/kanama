@@ -374,7 +374,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TabBar.add_tab
      */
-    fun addTab(title: String = "", icon: Texture2D?) {
+    fun addTab(title: String = "", icon: Texture2D? = null) {
         ObjectCalls.ptrcallWithStringAndObjectArg(Binds.addTabBind, segment, title, icon?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(icon)
     }

@@ -684,7 +684,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.draw_primitive
      */
-    fun drawPrimitive(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D?) {
+    fun drawPrimitive(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D? = null) {
         ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(Binds.drawPrimitiveBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(texture)
     }
@@ -704,7 +704,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.draw_polygon
      */
-    fun drawPolygon(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D?) {
+    fun drawPolygon(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D? = null) {
         ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(Binds.drawPolygonBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(texture)
     }
@@ -722,7 +722,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.draw_colored_polygon
      */
-    fun drawColoredPolygon(points: List<Vector2>, color: Color, uvs: List<Vector2>, texture: Texture2D?) {
+    fun drawColoredPolygon(points: List<Vector2>, color: Color, uvs: List<Vector2>, texture: Texture2D? = null) {
         ObjectCalls.ptrcallWithPackedVector2ListColorPackedVector2ListAndObjectArgs(Binds.drawColoredPolygonBind, segment, points, color, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(texture)
     }

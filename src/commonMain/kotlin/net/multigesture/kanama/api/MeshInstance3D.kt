@@ -185,7 +185,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: MeshInstance3D.create_multiple_convex_collisions
      */
-    fun createMultipleConvexCollisions(settings: MeshConvexDecompositionSettings?) {
+    fun createMultipleConvexCollisions(settings: MeshConvexDecompositionSettings? = null) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.createMultipleConvexCollisionsBind, segment, listOf(settings?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(settings)
     }
@@ -248,7 +248,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: MeshInstance3D.bake_mesh_from_current_blend_shape_mix
      */
-    fun bakeMeshFromCurrentBlendShapeMix(existing: ArrayMesh?): ArrayMesh? {
+    fun bakeMeshFromCurrentBlendShapeMix(existing: ArrayMesh? = null): ArrayMesh? {
         val ret = ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.bakeMeshFromCurrentBlendShapeMixBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(existing)
         return ret
@@ -263,7 +263,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: MeshInstance3D.bake_mesh_from_current_skeleton_pose
      */
-    fun bakeMeshFromCurrentSkeletonPose(existing: ArrayMesh?): ArrayMesh? {
+    fun bakeMeshFromCurrentSkeletonPose(existing: ArrayMesh? = null): ArrayMesh? {
         val ret = ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.bakeMeshFromCurrentSkeletonPoseBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(existing)
         return ret

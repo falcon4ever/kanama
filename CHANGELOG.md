@@ -212,6 +212,20 @@ refuses a release variant or publication with the flag, `packageMobileAddonAndro
 with exercise classes, and `generate_api_exercise.py --check-jar` (which now reads an AAR's jars) runs
 on the runtime AAR in CI's Android lane and in `android_export_minified.sh`.
 
+### Fixed — an object parameter Godot defaults to `null` can be left out, or passed `null`
+
+`Tree.createItem()` could not make a tree's root item: its `parent` was a required, non-null `TreeItem`,
+where GDScript's `create_item()` passes `null`. The same held for `Expression.execute` (`baseInstance`),
+`VoxelGI.bake` (`fromNode`), `EditorInspector.createDefaultInspector`, `EditorInterface.popupNodeSelector`
+and `EditorUndoRedoManager.createAction`. Every object parameter whose Godot default is `null` is now
+nullable and defaults to `null` (`tree.createItem()`, `expression.execute(baseInstance = node)`), including
+the 55 that were already nullable but had to be passed (`ItemList.addItem(text)`, `CanvasItem.drawPolygon(
+points, colors)`). Found by the API exercise's reach rows, which could not write the call.
+
+- **Source break:** `Tree` `Expression` `VoxelGI` `EditorInspector` `EditorInterface` `EditorUndoRedoManager`
+  — the parameter above is `T? = null` instead of `T`. Calls compile unchanged; only a function reference
+  typed with the old non-null parameter needs the `?`.
+
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 
 The control (a plain GDScript visibility-notifier export, `visibility-control` in `web.yml`) handed the

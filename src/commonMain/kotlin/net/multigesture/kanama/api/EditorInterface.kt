@@ -428,8 +428,8 @@ object EditorInterface {
      * Generated from Godot docs: EditorInterface.popup_node_selector
      */
     @JvmStatic
-    fun popupNodeSelector(callback: GodotCallable, validTypes: List<String>, currentValue: Node) {
-        ObjectCalls.ptrcallWithCallableStringNameListObjectArgs(Binds.popupNodeSelectorBind, singleton, callback.target.segment, callback.method, validTypes, currentValue.segment)
+    fun popupNodeSelector(callback: GodotCallable, validTypes: List<String>, currentValue: Node? = null) {
+        ObjectCalls.ptrcallWithCallableStringNameListObjectArgs(Binds.popupNodeSelectorBind, singleton, callback.target.segment, callback.method, validTypes, currentValue?.segment ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(callback)
         ObjectCalls.keepReachable(currentValue)
     }

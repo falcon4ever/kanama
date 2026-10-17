@@ -174,7 +174,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: ENetConnection.dtls_client_setup
      */
-    fun dtlsClientSetup(hostname: String, clientOptions: TLSOptions?): GodotError {
+    fun dtlsClientSetup(hostname: String, clientOptions: TLSOptions? = null): GodotError {
         checkOpen()
         val ret = GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(Binds.dtlsClientSetupBind, segment, hostname, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(this)

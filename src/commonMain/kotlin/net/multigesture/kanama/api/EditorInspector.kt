@@ -147,8 +147,8 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
          *
          * Generated from Godot docs: EditorInspector.create_default_inspector
          */
-        fun createDefaultInspector(filterLineEdit: LineEdit): EditorInspector? {
-            val ret = EditorInspector.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.createDefaultInspectorBind, NULL_SEGMENT, filterLineEdit.segment))
+        fun createDefaultInspector(filterLineEdit: LineEdit? = null): EditorInspector? {
+            val ret = EditorInspector.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.createDefaultInspectorBind, NULL_SEGMENT, filterLineEdit?.segment ?: NULL_SEGMENT))
             ObjectCalls.keepReachable(filterLineEdit)
             return ret
         }

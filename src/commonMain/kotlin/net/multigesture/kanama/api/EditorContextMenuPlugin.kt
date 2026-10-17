@@ -36,7 +36,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorContextMenuPlugin.add_context_menu_item
      */
-    fun addContextMenuItem(name: String, callback: GodotCallable, icon: Texture2D?) {
+    fun addContextMenuItem(name: String, callback: GodotCallable, icon: Texture2D? = null) {
         checkOpen()
         ObjectCalls.ptrcallWithStringCallableObjectArgs(Binds.addContextMenuItemBind, segment, name, callback.target.segment, callback.method, icon?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(this)
@@ -51,7 +51,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorContextMenuPlugin.add_context_menu_item_from_shortcut
      */
-    fun addContextMenuItemFromShortcut(name: String, shortcut: Shortcut?, icon: Texture2D?) {
+    fun addContextMenuItemFromShortcut(name: String, shortcut: Shortcut?, icon: Texture2D? = null) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndTwoObjectArgs(Binds.addContextMenuItemFromShortcutBind, segment, name, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, icon?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(this)
@@ -66,7 +66,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorContextMenuPlugin.add_context_submenu_item
      */
-    fun addContextSubmenuItem(name: String, menu: PopupMenu, icon: Texture2D?) {
+    fun addContextSubmenuItem(name: String, menu: PopupMenu, icon: Texture2D? = null) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndTwoObjectArgs(Binds.addContextSubmenuItemBind, segment, name, menu.segment, icon?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(this)
