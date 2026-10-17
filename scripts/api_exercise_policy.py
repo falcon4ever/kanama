@@ -13,6 +13,10 @@ lives here, and only here:
     classes) is derived and needs no entry.
   * STATELESS_SINGLETONS -- singletons whose every non-void method is a pure function of its
     arguments, so a non-const method can still be compared against the Variant path.
+  * RECEIVER_SOURCES -- abstract classes whose rows use the engine's own instance (TextServer from
+    TextServerManager) instead of constructing a descendant.
+  * METHOD_OVERRIDES -- methods the class-level rules would give a value row but whose result cannot
+    be compared (a clock read, a new object per call: F) or which must not run (E), each with its reason.
   * NON_BIND_HELPERS -- the referenced `ObjectCalls` helpers that no generated method calls with a
     MethodBind: the runtime plumbing every row uses implicitly. A new one is unclassified until it
     is listed here.
@@ -23,7 +27,8 @@ lives here, and only here:
   * SCRATCH_DIR / SCRATCH_POLICY -- the one place an exercise row may touch the filesystem.
 
 `generate_api_exercise.py --check` fails when an entry here names a class or method the API lacks,
-when an entry matches nothing, and when a referenced helper is classified by nothing.
+when an entry matches nothing or no longer applies, when a STATIC_ARGS default differs from
+extension_api.json, and when a referenced helper (or one call of it) is classified by nothing.
 """
 
 from __future__ import annotations
@@ -44,9 +49,7 @@ EXCLUDE_EXACT: dict[str, str] = {
     "StatusIndicator": "an OS tray icon",
     "Input": "process-wide input state backed by the host's input devices",
     "InputMap": "the running project's process-wide action map",
-    "AcceptDialog": _WINDOW,
-    "ConfirmationDialog": _WINDOW,
-    "FileDialog": _WINDOW + "; browses the host filesystem",
+    # (AcceptDialog, ConfirmationDialog, FileDialog and every other dialog inherit Window.)
     "CameraServer": "camera hardware",
     "CameraFeed": "camera hardware",
     # host / process
@@ -77,7 +80,6 @@ EXCLUDE_EXACT: dict[str, str] = {
 
 EXCLUDE_SUBSTRING: dict[str, str] = {
     "HTTP": _NETWORK,
-    "TCP": _NETWORK,
     "UDP": _NETWORK,
     "ENet": _NETWORK,
     "WebRTC": _NETWORK,
@@ -93,7 +95,6 @@ EXCLUDE_SUBSTRING: dict[str, str] = {
     "RenderSceneBuffers": _FRAME,
     "RenderData": _FRAME,
     "RenderSceneData": _FRAME,
-    "Compositor": _FRAME,
     "Popup": _WINDOW,
     "GDScript": "GDScript language internals",
     "ScriptLanguage": "script-language plumbing the running languages own",
@@ -101,8 +102,11 @@ EXCLUDE_SUBSTRING: dict[str, str] = {
     "Extension": "a base a script or extension implements (TextServerExtension, PhysicsServer3DExtension, ...): its methods are hooks, not engine behaviour",
 }
 
+# (No `RD` prefix and no `Compositor` substring: the `RD*` descriptions, `Compositor` and
+# `CompositorEffect` are plain data resources, safe to construct and set headless; the
+# RenderingDevice itself and the per-frame render objects stay excluded above. The `TCP` substring
+# also matched `WebRTCPeerConnection`; the TCP classes are named exactly instead.)
 EXCLUDE_PREFIX: dict[str, str] = {
-    "RD": "RenderingDevice descriptions; " + _RD,
     "Editor": "editor-only classes",
 }
 
@@ -112,6 +116,51 @@ STATELESS_SINGLETONS: dict[str, str] = {
     "Geometry2D": "pure 2D geometry functions of their arguments",
     "Geometry3D": "pure 3D geometry functions of their arguments",
     "Marshalls": "pure encoders and decoders of their arguments",
+}
+
+# ---- where a row gets its receiver ------------------------------------------------------------------
+
+# An abstract class whose instances come from an engine factory rather than construction:
+# class -> (singleton, method returning the instance, reason). Without an entry, an abstract class's
+# rows construct its nearest instantiable non-excluded descendant.
+RECEIVER_SOURCES: dict[str, tuple[str, str, str]] = {
+    "TextServer": (
+        "TextServerManager",
+        "get_primary_interface",
+        "the running text server (TextServerAdvanced or TextServerDummy inherit TextServerExtension, which "
+        "`*Extension*` excludes as a construction target, but the engine's own instance is the class under test)",
+    ),
+}
+
+# ---- method-level cases --------------------------------------------------------------------------------
+
+_CLOCK = "reads the clock: two reads an oracle compares can differ"
+_NEW_OBJECT = "returns a new object per call: an oracle would compare two different objects"
+
+# (class, method) -> (case, reason): a method the class-level rules would give a value row, but whose
+# result cannot be compared (F) or which must not run at all (E).
+METHOD_OVERRIDES: dict[tuple[str, str], tuple[str, str]] = {
+    ("Time", "get_datetime_dict_from_system"): ("F", _CLOCK),
+    ("Time", "get_date_dict_from_system"): ("F", _CLOCK),
+    ("Time", "get_time_dict_from_system"): ("F", _CLOCK),
+    ("Time", "get_datetime_string_from_system"): ("F", _CLOCK),
+    ("Time", "get_date_string_from_system"): ("F", _CLOCK),
+    ("Time", "get_time_string_from_system"): ("F", _CLOCK),
+    ("Time", "get_unix_time_from_system"): ("F", _CLOCK),
+    ("Time", "get_ticks_msec"): ("F", _CLOCK),
+    ("Time", "get_ticks_usec"): ("F", _CLOCK),
+    ("ClassDB", "instantiate"): ("F", _NEW_OBJECT),
+    ("Resource", "duplicate"): ("F", _NEW_OBJECT),
+    ("Mesh", "create_outline"): ("F", _NEW_OBJECT),
+    ("Mesh", "create_convex_shape"): ("F", _NEW_OBJECT),
+    ("Image", "get_region"): ("F", _NEW_OBJECT),
+    ("Noise", "get_image"): ("F", _NEW_OBJECT),
+    ("Noise", "get_seamless_image"): ("F", _NEW_OBJECT),
+    ("Noise", "get_image_3d"): ("F", _NEW_OBJECT),
+    ("Noise", "get_seamless_image_3d"): ("F", _NEW_OBJECT),
+    ("RenderingServer", "texture_2d_get"): ("F", _NEW_OBJECT),
+    ("RenderingServer", "texture_2d_layer_get"): ("F", _NEW_OBJECT),
+    ("ProjectSettings", "load_resource_pack"): ("E", "mounts a resource pack into res:// for the rest of the process"),
 }
 
 # ---- referenced helpers outside the generated MethodBind calls ----------------------------------------
@@ -129,14 +178,22 @@ NON_BIND_HELPERS: dict[str, str] = {
 SCRATCH_DIR = "user://kanama-api-exercise/"
 SCRATCH_POLICY = (
     "The exercise runner creates `user://kanama-api-exercise/` before its first row and removes it after "
-    "its last. A row that takes a path (the `FileAccess` and `DirAccess` statics: `open*`, `create_temp`, "
-    "`make_dir*`, `rename*`, `copy*`, `set_*attribute`, `set_unix_permissions`, `get_file_as_*`) takes one "
-    "under that directory, and no row reads or writes anywhere else."
+    "its last. Every row whose method takes a path, of any case, takes one under that directory: the "
+    "`FileAccess` and `DirAccess` statics (`open*`, `create_temp`, `make_dir*`, `rename*`, `copy*`, "
+    "`set_*attribute`, `set_unix_permissions`, `get_file_as_*`) and the instance and singleton rows listed "
+    "below (`Image.save_*`, `GLTFDocument.write_to_filesystem`, ...). No row reads or writes anywhere else; "
+    "a method that cannot be pointed there is excluded in `METHOD_OVERRIDES`."
 )
 
 # (class, method) -> one Godot-literal string per argument, or None where a value is still to be chosen.
-# The skeleton: extension_api.json's default where the argument has one, None where a value is
-# still to be chosen. A static row without arguments needs no entry.
+# The skeleton: extension_api.json's default where the argument has one (--check compares it, so an
+# API refresh that changes a default fails here), None where a value is still to be chosen. A static
+# row without arguments needs no entry.
+#
+# A static returning `Error` (make_dir_absolute, rename_absolute, copy_absolute, set_unix_permissions,
+# set_hidden_attribute, set_extended_attribute*, ...) returns OK = 0 on success, which a no-op also
+# returns: its arguments must make it FAIL with a known non-OK Error (a missing source path, a
+# directory that already exists), so the row asserts a value a silent no-op cannot produce.
 STATIC_ARGS: dict[tuple[str, str], tuple[str | None, ...]] = {
     # FileAccess / DirAccess: every path is under SCRATCH_DIR (see SCRATCH_POLICY).
     ("DirAccess", "copy_absolute"): (None, None, "-1"),

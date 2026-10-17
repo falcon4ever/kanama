@@ -1046,12 +1046,17 @@ reason) and writes the [API Exercise Inventory](../reference/generated/api-exerc
 each call back to its Godot method through the generator's own `method_function_name`, so a rename
 table cannot fool it. The judgement calls live in one hand-kept file, `scripts/api_exercise_policy.py`:
 the exclusion list (exact class names and substrings, each with a reason), the stateless singletons,
-the runtime helpers that take no MethodBind, the static rows' arguments and the `user://` scratch
-directory rule.
+where an abstract class's rows get their instance (`TextServer` from `TextServerManager`), the methods
+whose result cannot be compared (a clock read, a new object per call), the runtime helpers that take
+no MethodBind, the static rows' arguments and the `user://` scratch directory rule, which covers every
+row that takes a path. An argument-free static that can return its type's zero on a healthy host is
+marked weak, and the page names the helper's next-best row; a static returning `Error` needs arguments
+that make it fail.
 
 `--check` (the local_ci stage "API exercise inventory drift") fails when the page is stale, when a
-policy entry names a class or method the API lacks or matches nothing, and when a helper the tree
-calls is classified by nothing. After a generator change or a Godot API refresh, run
+policy entry names a class or method the API lacks or matches nothing, when a `STATIC_ARGS` default
+differs from `extension_api.json`, when a helper the tree calls is classified by nothing, and when one
+call of a helper is spelled in a way the scanner does not read (with its `file:line`). After a generator change or a Godot API refresh, run
 `python3 scripts/generate_api_exercise.py --report` and review the page's diff. A new static with
 arguments needs a `STATIC_ARGS` entry; the failure prints the line to add. The rules are also checked
 against a small made-up API in `scripts/fixtures/api_exercise/` (`--write-fixture` rewrites the

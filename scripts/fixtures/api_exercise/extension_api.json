@@ -108,6 +108,34 @@
      "return_value": {
       "type": "Array"
      }
+    },
+    {
+     "name": "generate_unique_id",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": true,
+     "is_virtual": false,
+     "hash": 2001,
+     "return_value": {
+      "type": "String"
+     }
+    },
+    {
+     "name": "make_dir",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": true,
+     "is_virtual": false,
+     "hash": 2002,
+     "return_value": {
+      "type": "enum::Error"
+     },
+     "arguments": [
+      {
+       "name": "a0",
+       "type": "String"
+      }
+     ]
     }
    ],
    "inherits": "Object",
@@ -341,6 +369,17 @@
      "return_value": {
       "type": "float"
      }
+    },
+    {
+     "name": "get_ticks",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 2003,
+     "return_value": {
+      "type": "int"
+     }
     }
    ],
    "inherits": "Object"
@@ -374,6 +413,54 @@
     }
    ],
    "inherits": "Object"
+  },
+  {
+   "name": "TextServerManager",
+   "is_refcounted": false,
+   "is_instantiable": false,
+   "api_type": "core",
+   "inherits": "Object",
+   "methods": [
+    {
+     "name": "get_primary_interface",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 2004,
+     "return_value": {
+      "type": "TextServer"
+     }
+    }
+   ]
+  },
+  {
+   "name": "PhysicsBase",
+   "is_refcounted": false,
+   "is_instantiable": false,
+   "api_type": "core",
+   "inherits": "Object",
+   "methods": [
+    {
+     "name": "get_gravity",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 2005,
+     "return_value": {
+      "type": "float"
+     }
+    }
+   ]
+  },
+  {
+   "name": "PhysicsBaseExtension",
+   "is_refcounted": false,
+   "is_instantiable": true,
+   "api_type": "core",
+   "inherits": "PhysicsBase",
+   "methods": []
   }
  ],
  "singletons": [
@@ -388,6 +475,10 @@
   {
    "name": "Input",
    "type": "Input"
+  },
+  {
+   "name": "TextServerManager",
+   "type": "TextServerManager"
   }
  ]
 }

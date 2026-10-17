@@ -12,6 +12,19 @@
   },
   "stateless_singletons": {
    "Geometry2D": "pure"
+  },
+  "receiver_sources": {
+   "TextServer": [
+    "TextServerManager",
+    "get_primary_interface",
+    "the running text server"
+   ]
+  },
+  "method_overrides": {
+   "Engine.get_ticks": [
+    "F",
+    "reads the clock"
+   ]
   }
  },
  "sites": [
@@ -64,13 +77,13 @@
    "instance"
   ],
   [
-   "noDescendant",
+   "abstractRoots",
    "LonelyAbstract",
    "get_x",
    "instance"
   ],
   [
-   "noDescendant",
+   "abstractRoots",
    "TextServer",
    "get_name",
    "instance"
@@ -127,6 +140,30 @@
    "stateless",
    "Geometry2D",
    "is_point_in_polygon",
+   "singleton"
+  ],
+  [
+   "stringStatic",
+   "Node",
+   "generate_unique_id",
+   "static"
+  ],
+  [
+   "errorStatic",
+   "Node",
+   "make_dir",
+   "static"
+  ],
+  [
+   "excludedDescendant",
+   "PhysicsBase",
+   "get_gravity",
+   "instance"
+  ],
+  [
+   "override",
+   "Engine",
+   "get_ticks",
    "singleton"
   ]
  ]

@@ -463,6 +463,9 @@ API_EXERCISE_CHECK = py("generate_api_exercise.py", "--check")
 case("generate_api_exercise.py --check (unclassified helper)", API_EXERCISE_CHECK,
      [Create(f"{COMMON}/binding/runtime/ZzRedRun.kt", "package net.multigesture.kanama.binding.runtime\n\ninternal fun zzRedRun() = ObjectCalls.redRunUnclassifiedHelper()\n")],
      "unclassified referenced helper redRunUnclassifiedHelper", "the shared sources call an `ObjectCalls` helper that no generated method calls with a MethodBind and `NON_BIND_HELPERS` does not list")
+case("generate_api_exercise.py --check (call the scanner misses)", API_EXERCISE_CHECK,
+     [Edit(f"{COMMON}/api/AnimationMixer.kt", "ObjectCalls.ptrcallWithBoolArg(Binds.setActiveBind, segment, active)", "ObjectCalls.ptrcallWithBoolArg(Binds.setActiveBind, (segment), active)")],
+     "AnimationMixer.kt:172: `ObjectCalls.ptrcallWithBoolArg(` is a call the site scanner did not read", "a generated call spells its receiver in a way the site scanner does not read: the call must fail with its file:line, not drop out of the inventory")
 case("generate_api_exercise.py --check (exclusion names no class)", API_EXERCISE_CHECK,
      [Edit("scripts/api_exercise_policy.py", '    "Window": _WINDOW,\n', '    "Window": _WINDOW,\n    "WindowRedRun": _WINDOW,\n')],
      "EXCLUDE_EXACT names WindowRedRun, a class the API lacks", "an exclusion entry names a class the API lacks (as a Godot bump that renames or drops a class leaves it)")

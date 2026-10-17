@@ -7,33 +7,37 @@ Every generated wrapper member reaches the engine through one `ObjectCalls.<help
 call, and each backend implements each helper once, so a defect in a helper is shared by every call site
 of it. This page classifies every helper the shared wrapper tree calls by how a generated exercise row can
 observe it, from `extension_api.json`, the generator's tables and the committed tree; the judgement calls
-(exclusions, stateless singletons, runtime helpers, static arguments, the scratch directory) are hand-kept
-in `scripts/api_exercise_policy.py`. It is an inventory: no row runs yet.
+(exclusions, stateless singletons, receivers, method-level cases, runtime helpers, static arguments, the
+scratch directory) are hand-kept in `scripts/api_exercise_policy.py`. It is an inventory: no row runs yet.
 
-**Referenced helpers:** 1492 (1487 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15335 generated (12998 instance, 2223 singleton, 114 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 892 helpers have exactly one call site. **Value-asserting rows possible:** 515; reach-only 565; excluded 407.
+**Referenced helpers:** 1492 (1487 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15335 generated (12998 instance, 2223 singleton, 114 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 892 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 544 (of the 544 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 605; excluded 338.
 
 ## Cases
 
-Each helper gets the best case any of its call sites qualifies for, in the order of the table.
+Each helper gets the best case any of its call sites qualifies for, in the order of the table (within a case,
+a non-weak row before a weak one). When the best case is C, the helper's best other row is listed too: a
+static row is what guards the static dispatch path, but an argument-free static can return its type's zero
+on a healthy host (**weak**), and then the second row is the one that can tell a no-op apart.
 
 | case | a site qualifies when | a row would assert | helpers |
 |---|---|---|---|
-| C static | `is_static` with a return value, class not excluded | the wrapper's result equals `ClassDB.class_call_static` with the same arguments, and is not the type's zero | 46 |
-| A property pair | setter or getter of a non-indexed property of an instantiable class (or its nearest instantiable non-excluded descendant) | a value set through the wrapper reads back through the getter and `Object.get` | 89 |
-| B const oracle | const non-void instance method on such a class | the wrapper's result equals `Object.callv` on the same fresh object | 267 |
-| D singleton | const non-void method of a non-excluded singleton, or any non-void method of a stateless singleton | the wrapper's result equals `Object.callv` on the singleton | 113 |
-| F reach only | void or non-const methods, void statics | the call returns without an exception or a backend fault | 565 |
-| E excluded | every site is on an excluded or editor class, or on an abstract class without an instantiable descendant | nothing; listed below with the reason | 407 |
+| C static | `is_static` with a return value, class not excluded | the wrapper's result equals `ClassDB.class_call_static` with the same arguments, and is not the type's zero (an `Error` static: a known non-OK `Error`) | 46 |
+| A property pair | setter or getter of a non-indexed property of an instantiable class (or its receiver below) | a value set through the wrapper reads back through the getter and `Object.get` | 89 |
+| B const oracle | const non-void instance method on such a class | the wrapper's result equals `Object.callv` on the same object | 314 |
+| D singleton | const non-void method of a non-excluded singleton, or any non-void method of a stateless singleton | the wrapper's result equals `Object.callv` on the singleton | 95 |
+| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 605 |
+| E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 338 |
 | N runtime helper | no generated method calls it with a MethodBind | nothing of its own: every row uses it | 5 |
 
-99 of the A/B/F rows construct a descendant of the declaring class (the declaring class is abstract).
+179 of the rows get their receiver elsewhere than a fresh instance of the declaring class (a descendant,
+or the factory `RECEIVER_SOURCES` names, because the declaring class is abstract).
 
 ## Where the rows are
 
 - **C static** by class: `FileAccess` 13, `DirAccess` 9, `GLTFDocument` 3, `JSON` 3, `AudioStreamMP3` 2, `AudioStreamWAV` 2, `Image` 2, `DPITexture` 1, `GLTFAccessor` 1, `GLTFCamera` 1, `ImporterMesh` 1, `Node` 1, `PathFollow3D` 1, `PhysicsRayQueryParameters2D` 1, `PhysicsRayQueryParameters3D` 1, `PortableCompressedTexture2D` 1, `Resource` 1, `TLSOptions` 1, `Tween` 1.
-- **D singleton** by class: `RenderingServer` 22, `Geometry2D` 16, `NavigationServer2D` 15, `Geometry3D` 13, `ClassDB` 12, `NavigationServer3D` 10, `Time` 8, `PhysicsServer2D` 5, `PhysicsServer3D` 4, `Marshalls` 3, `ProjectSettings` 2, `TranslationServer` 2.
-- **B const** through a descendant, by declaring class: `CollisionObject2D` 8, `Font` 7, `Noise` 6, `InputEvent` 5, `IterateIK3D` 2, `TileSetSource` 2, `AnimationMixer` 1, `BaseMaterial3D` 1, `CanvasItem` 1, `CollisionObject3D` 1.
-- **F reach only**, largest classes: `RenderingServer` 91, `CanvasItem` 28, `AccessibilityServer` 22, `Animation` 19, `FontFile` 14, `RichTextLabel` 14, `PhysicsServer2D` 13, `Image` 11, `AnimationPlayer` 9, `AStar2D` 8, `PhysicsServer3D` 8, `TextEdit` 8.
+- **D singleton** by class: `Geometry2D` 16, `RenderingServer` 16, `Geometry3D` 13, `ClassDB` 11, `NavigationServer2D` 10, `NavigationServer3D` 10, `Time` 5, `PhysicsServer3D` 4, `Marshalls` 3, `PhysicsServer2D` 2, `ProjectSettings` 2, `TranslationServer` 2.
+- **B const** through a descendant, by declaring class: `TextServer` 55, `CollisionObject2D` 8, `Font` 7, `InputEvent` 5, `IterateIK3D` 2, `Noise` 2, `TileSetSource` 2, `AnimationMixer` 1, `BaseMaterial3D` 1, `CanvasItem` 1, `CollisionObject3D` 1.
+- **F reach only**, largest classes: `RenderingServer` 91, `CanvasItem` 28, `TextServer` 28, `AccessibilityServer` 22, `Animation` 19, `FontFile` 14, `PhysicsServer2D` 14, `RichTextLabel` 14, `Image` 12, `AnimationPlayer` 9, `AStar2D` 8, `PhysicsServer3D` 8.
 
 ## By iOS ptrcall tag
 
@@ -41,36 +45,36 @@ The generated iOS helpers by the type tags their bodies pack (a helper counts on
 
 | tag | helpers | sites | C | A | B | D | F | E |
 |---|---|---|---|---|---|---|---|---|
-| `PT_INT64` | 827 | 3440 | 20 | 2 | 164 | 35 | 325 | 281 |
-| `PT_VOID` | 573 | 2921 | – | 33 | – | – | 408 | 132 |
-| `PT_RID` | 365 | 1750 | – | 2 | 6 | 55 | 149 | 153 |
-| `PT_BOOL` | 350 | 1250 | 9 | – | 65 | 29 | 161 | 86 |
-| `PT_OBJECT` | 270 | 677 | 21 | – | 33 | 4 | 112 | 100 |
-| `PT_STRING` | 263 | 1006 | 25 | 1 | 23 | 12 | 64 | 138 |
-| `PT_FLOAT64` | 232 | 696 | 2 | – | 51 | 11 | 140 | 28 |
-| `PT_STRING_NAME` | 134 | 479 | – | 1 | 32 | 14 | 58 | 29 |
-| `PT_VECTOR2` | 133 | 252 | 1 | – | 33 | 13 | 65 | 21 |
-| `PT_VECTOR2I` | 101 | 186 | – | – | 37 | 1 | 37 | 26 |
-| `PT_COLOR` | 97 | 167 | – | – | 8 | 1 | 75 | 13 |
-| `PT_VARIANT` | 77 | 157 | 3 | 1 | 8 | 3 | 35 | 27 |
-| `PT_TYPED_ARRAY_BLOB` | 66 | 112 | 3 | 11 | – | 3 | 19 | 30 |
+| `PT_INT64` | 827 | 3440 | 20 | 2 | 198 | 30 | 347 | 230 |
+| `PT_VOID` | 573 | 2921 | – | 33 | – | – | 431 | 109 |
+| `PT_RID` | 365 | 1750 | – | 2 | 54 | 41 | 178 | 90 |
+| `PT_BOOL` | 350 | 1250 | 9 | – | 64 | 25 | 172 | 80 |
+| `PT_OBJECT` | 270 | 677 | 21 | – | 29 | 2 | 121 | 97 |
+| `PT_STRING` | 263 | 1006 | 25 | 1 | 30 | 9 | 66 | 132 |
+| `PT_FLOAT64` | 232 | 696 | 2 | – | 52 | 9 | 152 | 17 |
+| `PT_STRING_NAME` | 134 | 479 | – | 1 | 32 | 14 | 59 | 28 |
+| `PT_VECTOR2` | 133 | 252 | 1 | – | 39 | 12 | 75 | 6 |
+| `PT_VECTOR2I` | 101 | 186 | – | – | 48 | 1 | 46 | 6 |
+| `PT_COLOR` | 97 | 167 | – | – | 8 | 1 | 80 | 8 |
+| `PT_VARIANT` | 77 | 157 | 3 | 1 | 12 | 3 | 38 | 20 |
+| `PT_TYPED_ARRAY_BLOB` | 66 | 112 | 3 | 11 | – | 3 | 21 | 28 |
 | `PT_VECTOR3` | 60 | 184 | 1 | – | 18 | 16 | 20 | 5 |
 | `PT_CALLABLE` | 55 | 122 | – | – | 1 | – | 14 | 40 |
-| `PT_PACKED_BYTE_ARRAY` | 47 | 64 | 5 | 1 | – | 1 | 19 | 21 |
-| `PT_RECT2` | 45 | 56 | – | – | 8 | 1 | 27 | 9 |
+| `PT_PACKED_BYTE_ARRAY` | 47 | 64 | 5 | 1 | – | 1 | 21 | 19 |
+| `PT_RECT2` | 45 | 56 | – | – | 10 | 1 | 28 | 6 |
 | `PT_TRANSFORM3D` | 34 | 114 | 1 | 2 | 3 | 2 | 18 | 8 |
-| `PT_PACKED_STRING_ARRAY` | 28 | 44 | – | 1 | – | 1 | 3 | 23 |
-| `PT_TRANSFORM2D` | 25 | 82 | – | 2 | 6 | 2 | 15 | – |
-| `PT_ARRAY` | 24 | 47 | – | 1 | – | – | 10 | 13 |
+| `PT_PACKED_STRING_ARRAY` | 28 | 44 | – | 1 | 1 | 1 | 2 | 23 |
+| `PT_TRANSFORM2D` | 25 | 82 | – | 2 | 7 | 1 | 15 | – |
+| `PT_ARRAY` | 24 | 47 | – | 1 | 1 | – | 11 | 11 |
 | `PT_NODE_PATH` | 24 | 110 | 1 | 1 | 7 | – | 14 | 1 |
 | `PT_PACKED_VECTOR2_ARRAY` | 23 | 33 | – | – | – | 9 | 12 | 2 |
-| `PT_DICTIONARY` | 22 | 63 | 4 | 1 | 1 | 2 | 6 | 8 |
-| `PT_RECT2I` | 19 | 40 | – | 2 | 5 | – | 9 | 3 |
-| `PT_PACKED_INT32_ARRAY` | 16 | 36 | – | 1 | – | – | 10 | 5 |
-| `PT_PACKED_FLOAT32_ARRAY` | 15 | 16 | – | – | – | – | 11 | 4 |
+| `PT_DICTIONARY` | 22 | 63 | 4 | 1 | 1 | 2 | 8 | 6 |
+| `PT_RECT2I` | 19 | 40 | – | 2 | 4 | – | 10 | 3 |
+| `PT_PACKED_INT32_ARRAY` | 16 | 36 | – | 1 | – | – | 11 | 4 |
+| `PT_PACKED_FLOAT32_ARRAY` | 15 | 16 | – | – | 1 | – | 12 | 2 |
 | `PT_PACKED_VECTOR3_ARRAY` | 14 | 22 | – | 1 | – | 2 | 9 | 2 |
 | `PT_VECTOR3I` | 12 | 13 | – | – | 7 | 1 | 2 | 2 |
-| `PT_PACKED_COLOR_ARRAY` | 9 | 11 | – | – | 1 | – | 5 | 3 |
+| `PT_PACKED_COLOR_ARRAY` | 9 | 11 | – | – | 1 | – | 6 | 2 |
 | `PT_QUATERNION` | 9 | 21 | – | 2 | 3 | – | 3 | 1 |
 | `PT_AABB` | 8 | 44 | – | 2 | 1 | 2 | 3 | – |
 | `PT_BASIS` | 6 | 13 | – | 2 | 3 | – | 1 | – |
@@ -81,25 +85,23 @@ The generated iOS helpers by the type tags their bodies pack (a helper counts on
 | `PT_PACKED_FLOAT64_ARRAY` | 1 | 2 | – | 1 | – | – | – | – |
 | `PT_SIGNAL` | 1 | 1 | – | – | – | – | 1 | – |
 
-Tags with no value-asserting row among generated helpers: `PT_PACKED_FLOAT32_ARRAY`, `PT_SIGNAL`.
+Tags with no value-asserting row among generated helpers: `PT_SIGNAL`.
 
 ## Exclusions
 
 Matched against the class and each of its ancestors, so an entry excludes its subtree. `helpers` counts
-the helpers whose best case is E because of the entry.
+the helpers whose best case is E because of the entry, including the abstract classes whose every
+instantiable descendant it excludes.
 
 | entry | kind | reason | API classes matched | helpers |
 |---|---|---|---|---|
-| `api_type=editor` | derived | not a core class (editor) | — | 72 |
-| `Window` | exact | needs a window or the display server (headless has a dummy one that errors or no-ops) | 1 | 0 |
+| `api_type=editor` | derived | not a core class (editor) | — | 71 |
+| `Window` | exact | needs a window or the display server (headless has a dummy one that errors or no-ops) | 1 | 4 |
 | `DisplayServer` | exact | needs a window or the display server (headless has a dummy one that errors or no-ops) | 1 | 42 |
-| `NativeMenu` | exact | the host OS menu bar | 1 | 19 |
+| `NativeMenu` | exact | the host OS menu bar | 1 | 18 |
 | `StatusIndicator` | exact | an OS tray icon | 1 | 0 |
 | `Input` | exact | process-wide input state backed by the host's input devices | 1 | 5 |
 | `InputMap` | exact | the running project's process-wide action map | 1 | 3 |
-| `AcceptDialog` | exact | needs a window or the display server (headless has a dummy one that errors or no-ops) | 1 | 1 |
-| `ConfirmationDialog` | exact | needs a window or the display server (headless has a dummy one that errors or no-ops) | 1 | 0 |
-| `FileDialog` | exact | needs a window or the display server (headless has a dummy one that errors or no-ops); browses the host filesystem | 1 | 3 |
 | `CameraServer` | exact | camera hardware | 1 | 0 |
 | `CameraFeed` | exact | camera hardware | 1 | 1 |
 | `OS` | exact | host process control (execute, kill, shell_open, environment) | 1 | 7 |
@@ -123,33 +125,63 @@ the helpers whose best case is E because of the entry.
 | `FramebufferCacheRD` | exact | needs a RenderingDevice (the headless and Compatibility renderers have none) | 1 | 1 |
 | `UniformSetCacheRD` | exact | needs a RenderingDevice (the headless and Compatibility renderers have none) | 1 | 1 |
 | `*HTTP*` | substring | opens sockets or talks to the network | 2 | 6 |
-| `*TCP*` | substring | opens sockets or talks to the network | 4 | 1 |
 | `*UDP*` | substring | opens sockets or talks to the network | 2 | 0 |
 | `*ENet*` | substring | opens sockets or talks to the network | 3 | 9 |
-| `*WebRTC*` | substring | opens sockets or talks to the network | 5 | 3 |
+| `*WebRTC*` | substring | opens sockets or talks to the network | 5 | 4 |
 | `*WebSocket*` | substring | opens sockets or talks to the network | 2 | 2 |
 | `*UPNP*` | substring | opens sockets or talks to the network | 2 | 3 |
 | `*Multiplayer*` | substring | opens sockets or talks to the network | 11 | 5 |
-| `*XR*` | substring | an XR runtime and its devices | 83 | 44 |
+| `*XR*` | substring | an XR runtime and its devices | 83 | 41 |
 | `*MobileVR*` | substring | an XR interface | 1 | 0 |
 | `*JavaClass*` | substring | the Android Java bridge | 2 | 2 |
 | `*JavaScript*` | substring | the browser JavaScript bridge | 2 | 1 |
 | `*JNI*` | substring | the Android Java bridge | 1 | 0 |
-| `*RenderingDevice*` | substring | needs a RenderingDevice (the headless and Compatibility renderers have none) | 1 | 58 |
+| `*RenderingDevice*` | substring | needs a RenderingDevice (the headless and Compatibility renderers have none) | 1 | 57 |
 | `*RenderSceneBuffers*` | substring | only meaningful inside a frame being rendered by a RenderingDevice renderer | 4 | 9 |
 | `*RenderData*` | substring | only meaningful inside a frame being rendered by a RenderingDevice renderer | 3 | 0 |
 | `*RenderSceneData*` | substring | only meaningful inside a frame being rendered by a RenderingDevice renderer | 3 | 2 |
-| `*Compositor*` | substring | only meaningful inside a frame being rendered by a RenderingDevice renderer | 2 | 0 |
 | `*Popup*` | substring | needs a window or the display server (headless has a dummy one that errors or no-ops) | 3 | 9 |
 | `*GDScript*` | substring | GDScript language internals | 5 | 0 |
 | `*ScriptLanguage*` | substring | script-language plumbing the running languages own | 3 | 0 |
 | `*ScriptExtension*` | substring | script-language plumbing the running languages own | 1 | 0 |
-| `*Extension*` | substring | a base a script or extension implements (TextServerExtension, PhysicsServer3DExtension, ...): its methods are hooks, not engine behaviour | 34 | 2 |
-| `RD*` | prefix | RenderingDevice descriptions; needs a RenderingDevice (the headless and Compatibility renderers have none) | 20 | 1 |
+| `*Extension*` | substring | a base a script or extension implements (TextServerExtension, PhysicsServer3DExtension, ...): its methods are hooks, not engine behaviour | 34 | 7 |
 | `Editor*` | prefix | editor-only classes | 54 | 0 |
-| — | derived | abstract, and no instantiable non-excluded descendant | — | 80 |
+| — | derived | abstract, and no instantiable descendant (and no `RECEIVER_SOURCES` entry) | — | 12 |
+| `METHOD_OVERRIDES` | method | see below | — | 1 |
 
 Stateless singletons (`STATELESS_SINGLETONS`, every non-void method is a D row): `Geometry2D` (pure 2D geometry functions of their arguments), `Geometry3D` (pure 3D geometry functions of their arguments), `Marshalls` (pure encoders and decoders of their arguments).
+
+## Receivers and method-level cases
+
+`RECEIVER_SOURCES` (an abstract class's rows use the engine's own instance):
+
+- `TextServer` from `TextServerManager.get_primary_interface()`: the running text server (TextServerAdvanced or TextServerDummy inherit TextServerExtension, which `*Extension*` excludes as a construction target, but the engine's own instance is the class under test).
+
+`METHOD_OVERRIDES` (methods the class rules would give a value row):
+
+| method | case | reason |
+|---|---|---|
+| `Time.get_datetime_dict_from_system` | F | reads the clock: two reads an oracle compares can differ |
+| `Time.get_date_dict_from_system` | F | reads the clock: two reads an oracle compares can differ |
+| `Time.get_time_dict_from_system` | F | reads the clock: two reads an oracle compares can differ |
+| `Time.get_datetime_string_from_system` | F | reads the clock: two reads an oracle compares can differ |
+| `Time.get_date_string_from_system` | F | reads the clock: two reads an oracle compares can differ |
+| `Time.get_time_string_from_system` | F | reads the clock: two reads an oracle compares can differ |
+| `Time.get_unix_time_from_system` | F | reads the clock: two reads an oracle compares can differ |
+| `Time.get_ticks_msec` | F | reads the clock: two reads an oracle compares can differ |
+| `Time.get_ticks_usec` | F | reads the clock: two reads an oracle compares can differ |
+| `ClassDB.instantiate` | F | returns a new object per call: an oracle would compare two different objects |
+| `Resource.duplicate` | F | returns a new object per call: an oracle would compare two different objects |
+| `Mesh.create_outline` | F | returns a new object per call: an oracle would compare two different objects |
+| `Mesh.create_convex_shape` | F | returns a new object per call: an oracle would compare two different objects |
+| `Image.get_region` | F | returns a new object per call: an oracle would compare two different objects |
+| `Noise.get_image` | F | returns a new object per call: an oracle would compare two different objects |
+| `Noise.get_seamless_image` | F | returns a new object per call: an oracle would compare two different objects |
+| `Noise.get_image_3d` | F | returns a new object per call: an oracle would compare two different objects |
+| `Noise.get_seamless_image_3d` | F | returns a new object per call: an oracle would compare two different objects |
+| `RenderingServer.texture_2d_get` | F | returns a new object per call: an oracle would compare two different objects |
+| `RenderingServer.texture_2d_layer_get` | F | returns a new object per call: an oracle would compare two different objects |
+| `ProjectSettings.load_resource_pack` | E | mounts a resource pack into res:// for the rest of the process |
 
 ## Runtime helpers
 
@@ -163,60 +195,85 @@ Referenced by the shared sources, but never with a generated MethodBind (`NON_BI
 | `getSingleton` | `AccessibilityServer`, `AudioServer`, `CameraServer`, `ClassDB`, … (42 files) | resolves the singleton handle every D row calls |
 | `keepReachable` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (685 files) | the reachability fence after each call (empty on iOS); it has no result to observe |
 
-## Static rows: arguments and the scratch directory
+## Static rows and the scratch directory
 
-46 static rows; 6 take no argument. The other 40 take their arguments from `STATIC_ARGS` (39 of them still have an argument to choose, shown as `?`).
+46 static rows; 6 take no argument (5 of them weak). The other 40 take their arguments from `STATIC_ARGS` (39 of them still have an argument to choose, shown as `?`). A static returning `Error` must be given arguments that make it fail with a known non-OK `Error`: OK is 0, which a no-op returns too.
 
-The exercise runner creates `user://kanama-api-exercise/` before its first row and removes it after its last. A row that takes a path (the `FileAccess` and `DirAccess` statics: `open*`, `create_temp`, `make_dir*`, `rename*`, `copy*`, `set_*attribute`, `set_unix_permissions`, `get_file_as_*`) takes one under that directory, and no row reads or writes anywhere else.
+The exercise runner creates `user://kanama-api-exercise/` before its first row and removes it after its last. Every row whose method takes a path, of any case, takes one under that directory: the `FileAccess` and `DirAccess` statics (`open*`, `create_temp`, `make_dir*`, `rename*`, `copy*`, `set_*attribute`, `set_unix_permissions`, `get_file_as_*`) and the instance and singleton rows listed below (`Image.save_*`, `GLTFDocument.write_to_filesystem`, ...). No row reads or writes anywhere else; a method that cannot be pointed there is excluded in `METHOD_OVERRIDES`.
 
-| static | arguments |
-|---|---|
-| `AudioStreamMP3.load_from_buffer` | ? |
-| `AudioStreamMP3.load_from_file` | ? |
-| `AudioStreamWAV.load_from_buffer` | ?, `{}` |
-| `AudioStreamWAV.load_from_file` | ?, `{}` |
-| `DPITexture.create_from_string` | ?, `1.0`, `1.0`, `{}` |
-| `DirAccess.copy_absolute` | ?, ?, `-1` |
-| `DirAccess.create_temp` | `""`, `false` |
-| `DirAccess.dir_exists_absolute` | ? |
-| `DirAccess.get_directories_at` | ? |
-| `DirAccess.get_drive_count` | (none) |
-| `DirAccess.get_drive_label` | ? |
-| `DirAccess.get_open_error` | (none) |
-| `DirAccess.make_dir_absolute` | ? |
-| `DirAccess.rename_absolute` | ?, ? |
-| `FileAccess.create_temp` | ?, `""`, `""`, `false` |
-| `FileAccess.get_extended_attribute` | ?, ? |
-| `FileAccess.get_extended_attribute_string` | ?, ? |
-| `FileAccess.get_file_as_bytes` | ? |
-| `FileAccess.get_file_as_string` | ? |
-| `FileAccess.open` | ?, ? |
-| `FileAccess.open_compressed` | ?, ?, `0` |
-| `FileAccess.open_encrypted` | ?, ?, ?, `PackedByteArray()` |
-| `FileAccess.open_encrypted_with_pass` | ?, ?, ? |
-| `FileAccess.set_extended_attribute` | ?, ?, ? |
-| `FileAccess.set_extended_attribute_string` | ?, ?, ? |
-| `FileAccess.set_hidden_attribute` | ?, ? |
-| `FileAccess.set_unix_permissions` | ?, ? |
-| `GLTFAccessor.from_dictionary` | ? |
-| `GLTFCamera.from_node` | ? |
-| `GLTFDocument.export_object_model_property` | ?, ?, ?, ? |
-| `GLTFDocument.get_supported_gltf_extensions` | (none) |
-| `GLTFDocument.import_object_model_property` | ?, ? |
-| `Image.create` | ?, ?, ?, ? |
-| `Image.create_from_data` | ?, ?, ?, ?, ? |
-| `ImporterMesh.merge_importer_meshes` | ?, ?, `true` |
-| `JSON.from_native` | ?, `false` |
-| `JSON.parse_string` | ? |
-| `JSON.stringify` | ?, `""`, `true`, `false` |
-| `Node.get_orphan_node_ids` | (none) |
-| `PathFollow3D.correct_posture` | ?, ? |
-| `PhysicsRayQueryParameters2D.create` | ?, ?, `4294967295`, `Array[RID]([])` |
-| `PhysicsRayQueryParameters3D.create` | ?, ?, `4294967295`, `Array[RID]([])` |
-| `PortableCompressedTexture2D.is_keeping_all_compressed_buffers` | (none) |
-| `Resource.generate_scene_unique_id` | (none) |
-| `TLSOptions.server` | ?, ? |
-| `Tween.interpolate_value` | ?, ?, ?, ?, ?, ? |
+| static | arguments | note |
+|---|---|---|
+| `AudioStreamMP3.load_from_buffer` | ? | — |
+| `AudioStreamMP3.load_from_file` | ? | — |
+| `AudioStreamWAV.load_from_buffer` | ?, `{}` | — |
+| `AudioStreamWAV.load_from_file` | ?, `{}` | — |
+| `DPITexture.create_from_string` | ?, `1.0`, `1.0`, `{}` | — |
+| `DirAccess.copy_absolute` | ?, ?, `-1` | returns `Error`: arguments must make it fail |
+| `DirAccess.create_temp` | `""`, `false` | — |
+| `DirAccess.dir_exists_absolute` | ? | — |
+| `DirAccess.get_directories_at` | ? | — |
+| `DirAccess.get_drive_count` | (none) | weak; backed by A `AnimatedSprite2D.get_frame` |
+| `DirAccess.get_drive_label` | ? | — |
+| `DirAccess.get_open_error` | (none) | weak; backed by A `AStarGrid2D.get_cell_shape` |
+| `DirAccess.make_dir_absolute` | ? | returns `Error`: arguments must make it fail |
+| `DirAccess.rename_absolute` | ?, ? | returns `Error`: arguments must make it fail |
+| `FileAccess.create_temp` | ?, `""`, `""`, `false` | — |
+| `FileAccess.get_extended_attribute` | ?, ? | — |
+| `FileAccess.get_extended_attribute_string` | ?, ? | — |
+| `FileAccess.get_file_as_bytes` | ? | — |
+| `FileAccess.get_file_as_string` | ? | — |
+| `FileAccess.open` | ?, ? | — |
+| `FileAccess.open_compressed` | ?, ?, `0` | — |
+| `FileAccess.open_encrypted` | ?, ?, ?, `PackedByteArray()` | — |
+| `FileAccess.open_encrypted_with_pass` | ?, ?, ? | — |
+| `FileAccess.set_extended_attribute` | ?, ?, ? | returns `Error`: arguments must make it fail |
+| `FileAccess.set_extended_attribute_string` | ?, ?, ? | returns `Error`: arguments must make it fail |
+| `FileAccess.set_hidden_attribute` | ?, ? | returns `Error`: arguments must make it fail |
+| `FileAccess.set_unix_permissions` | ?, ? | returns `Error`: arguments must make it fail |
+| `GLTFAccessor.from_dictionary` | ? | — |
+| `GLTFCamera.from_node` | ? | — |
+| `GLTFDocument.export_object_model_property` | ?, ?, ?, ? | — |
+| `GLTFDocument.get_supported_gltf_extensions` | (none) | weak; backed by A `SystemFont.get_font_names` |
+| `GLTFDocument.import_object_model_property` | ?, ? | — |
+| `Image.create` | ?, ?, ?, ? | — |
+| `Image.create_from_data` | ?, ?, ?, ?, ? | — |
+| `ImporterMesh.merge_importer_meshes` | ?, ?, `true` | — |
+| `JSON.from_native` | ?, `false` | — |
+| `JSON.parse_string` | ? | — |
+| `JSON.stringify` | ?, `""`, `true`, `false` | — |
+| `Node.get_orphan_node_ids` | (none) | weak; backed by A `CodeEdit.get_line_length_guidelines` |
+| `PathFollow3D.correct_posture` | ?, ? | — |
+| `PhysicsRayQueryParameters2D.create` | ?, ?, `4294967295`, `Array[RID]([])` | — |
+| `PhysicsRayQueryParameters3D.create` | ?, ?, `4294967295`, `Array[RID]([])` | — |
+| `PortableCompressedTexture2D.is_keeping_all_compressed_buffers` | (none) | weak; backed by A `AStar2D.is_neighbor_filter_enabled` |
+| `Resource.generate_scene_unique_id` | (none) | — |
+| `TLSOptions.server` | ?, ? | — |
+| `Tween.interpolate_value` | ?, ?, ?, ?, ?, ? | — |
+
+Rows of other cases whose method takes a path (20): each takes one under the scratch directory.
+
+| row | case | path arguments |
+|---|---|---|
+| `CompressedTexture2D.load` | A | `path` |
+| `ConfigFile.load_encrypted` | F | `path` |
+| `ConfigFile.load_encrypted_pass` | F | `path` |
+| `CryptoKey.load` | F | `path` |
+| `GLTFDocument.append_from_buffer` | F | `base_path` |
+| `GLTFDocument.append_from_file` | F | `path`, `base_path` |
+| `GLTFDocument.write_to_filesystem` | F | `path` |
+| `Image.save_exr` | B | `path` |
+| `Image.save_jpg` | B | `path` |
+| `Image.save_webp` | B | `path` |
+| `PCKPacker.add_file` | F | `target_path`, `source_path` |
+| `PCKPacker.add_file_from_buffer` | F | `target_path` |
+| `PCKPacker.pck_start` | F | `pck_path` |
+| `ResourceLoader.load` | F | `path` |
+| `ResourceLoader.load_threaded_get_status` | F | `path` |
+| `ResourceLoader.load_threaded_request` | F | `path` |
+| `ZIPPacker.add_directory` | F | `path` |
+| `ZIPPacker.open` | F | `path` |
+| `ZIPReader.get_compression_level` | F | `path` |
+| `ZIPReader.read_file` | F | `path` |
 
 ## Every helper
 
@@ -237,7 +294,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallNoArgsRetArray` | A | `Label.get_structured_text_bidi_override_options` (getter of `structured_text_bidi_override_options`) | 36 | hand |
 | `ptrcallNoArgsRetArrayList` | A | `OggPacketSequence.get_packet_data` (getter of `packet_data`) | 1 | (no tag) |
 | `ptrcallNoArgsRetBasis` | A | `GLTFPhysicsBody.get_inertia_tensor` (getter of `inertia_tensor`) | 6 | PT_BASIS |
-| `ptrcallNoArgsRetBool` | C | `PortableCompressedTexture2D.is_keeping_all_compressed_buffers` (static with a return value) | 1166 | hand |
+| `ptrcallNoArgsRetBool` | C | `PortableCompressedTexture2D.is_keeping_all_compressed_buffers` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `AStar2D.is_neighbor_filter_enabled` (getter of `neighbor_filter_enabled`) | 1166 | hand |
 | `ptrcallNoArgsRetByteArray` | A | `AudioStreamMP3.get_data` (getter of `data`) | 17 | hand |
 | `ptrcallNoArgsRetByteArrayList` | A | `GLTFState.get_buffers` (getter of `buffers`) | 1 | (no tag) |
 | `ptrcallNoArgsRetCallable` | E | `MultiplayerSpawner.get_spawn_function` (*Multiplayer*: opens sockets or talks to the network) | 2 | (no tag) |
@@ -245,9 +302,9 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallNoArgsRetDictionary` | A | `AudioStreamOggVorbis.get_tags` (getter of `tags`) | 39 | (no tag) |
 | `ptrcallNoArgsRetDictionaryList` | A | `GraphEdit.get_connection_list` (getter of `connections`) | 16 | (no tag) |
 | `ptrcallNoArgsRetDouble` | A | `AnimatedSprite2D.get_frame_progress` (getter of `frame_progress`) | 913 | hand |
-| `ptrcallNoArgsRetInt` | C | `DirAccess.get_drive_count` (static with a return value) | 562 | hand |
-| `ptrcallNoArgsRetLong` | C | `DirAccess.get_open_error` (static with a return value) | 697 | hand |
-| `ptrcallNoArgsRetLongList` | C | `Node.get_orphan_node_ids` (static with a return value) | 7 | hand |
+| `ptrcallNoArgsRetInt` | C | `DirAccess.get_drive_count` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `AnimatedSprite2D.get_frame` (getter of `frame`) | 562 | hand |
+| `ptrcallNoArgsRetLong` | C | `DirAccess.get_open_error` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `AStarGrid2D.get_cell_shape` (getter of `cell_shape`) | 697 | hand |
+| `ptrcallNoArgsRetLongList` | C | `Node.get_orphan_node_ids` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `CodeEdit.get_line_length_guidelines` (getter of `line_length_guidelines`) | 7 | hand |
 | `ptrcallNoArgsRetNodePath` | A | `AnimationMixer.get_root_motion_track` on `AnimationPlayer` (getter of `root_motion_track`) | 47 | hand |
 | `ptrcallNoArgsRetNodePathList` | A | `Control.get_accessibility_controls_nodes` (getter of `accessibility_controls_nodes`) | 6 | hand |
 | `ptrcallNoArgsRetObject` | A | `AnimatedSprite2D.get_sprite_frames` (getter of `sprite_frames`) | 422 | hand |
@@ -256,7 +313,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallNoArgsRetPackedFloat64List` | A | `GLTFAccessor.get_max` (getter of `max`) | 2 | (no tag) |
 | `ptrcallNoArgsRetPackedInt32List` | A | `GLTFNode.get_children` (getter of `children`) | 34 | hand |
 | `ptrcallNoArgsRetPackedInt64List` | A | `NavigationPathQueryResult2D.get_path_owner_ids` (getter of `path_owner_ids`) | 12 | (no tag) |
-| `ptrcallNoArgsRetPackedStringList` | C | `GLTFDocument.get_supported_gltf_extensions` (static with a return value) | 65 | hand |
+| `ptrcallNoArgsRetPackedStringList` | C | `GLTFDocument.get_supported_gltf_extensions` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `SystemFont.get_font_names` (getter of `font_names`) | 65 | hand |
 | `ptrcallNoArgsRetPackedStringListList` | A | `GLTFObjectModelProperty.get_json_pointers` (getter of `json_pointers`) | 1 | (no tag) |
 | `ptrcallNoArgsRetPackedVector2List` | A | `CPUParticles2D.get_emission_normals` (getter of `emission_normals`) | 18 | hand |
 | `ptrcallNoArgsRetPackedVector2ListList` | A | `NavigationMeshSourceGeometryData2D.get_obstruction_outlines` (getter of `obstruction_outlines`) | 2 | (no tag) |
@@ -270,13 +327,13 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallNoArgsRetRect2` | A | `AtlasTexture.get_margin` (getter of `margin`) | 24 | hand |
 | `ptrcallNoArgsRetRect2List` | E | `DisplayServer.get_display_cutouts` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | (no tag) |
 | `ptrcallNoArgsRetRect2i` | A | `AStarGrid2D.get_region` (getter of `region`) | 8 | PT_RECT2I |
-| `ptrcallNoArgsRetString` | C | `Resource.generate_scene_unique_id` (static with a return value) | 262 | hand |
+| `ptrcallNoArgsRetString` | C | `Resource.generate_scene_unique_id` (static with a return value); then A `AnimatedSprite2D.get_autoplay` (getter of `autoplay`) | 262 | hand |
 | `ptrcallNoArgsRetStringName` | A | `AnimatedSprite2D.get_animation` (getter of `animation`) | 47 | hand |
 | `ptrcallNoArgsRetStringNameList` | B | `AnimationLibrary.get_animation_list` (const non-void method) | 12 | hand |
 | `ptrcallNoArgsRetTransform2D` | A | `Bone2D.get_rest` (getter of `rest`) | 21 | PT_TRANSFORM2D |
 | `ptrcallNoArgsRetTransform3D` | A | `GLTFNode.get_xform` (getter of `xform`) | 23 | PT_TRANSFORM3D |
 | `ptrcallNoArgsRetTransform3DList` | A | `GLTFSkin.get_inverse_binds` (getter of `inverse_binds`) | 1 | (no tag) |
-| `ptrcallNoArgsRetTypedObjectList` | A | `Font.get_fallbacks` on `FontFile` (getter of `fallbacks`) | 47 | hand |
+| `ptrcallNoArgsRetTypedObjectList` | A | `Compositor.get_compositor_effects` (getter of `compositor_effects`) | 47 | hand |
 | `ptrcallNoArgsRetTypedStringList` | A | `CodeEdit.get_auto_indent_prefixes` (getter of `indent_automatic_prefixes`) | 7 | (no tag) |
 | `ptrcallNoArgsRetUInt32` | A | `AudioStreamPlayer2D.get_area_mask` (getter of `area_mask`) | 114 | PT_INT64 |
 | `ptrcallNoArgsRetVariantScalar` | A | `JSON.get_data` (getter of `data`) | 11 | hand |
@@ -308,16 +365,16 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithBoolArg` | A | `AStar2D.set_neighbor_filter_enabled` (setter of `neighbor_filter_enabled`) | 955 | hand |
 | `ptrcallWithBoolArgRetArray` | F | `Shader.get_shader_uniform_list` (non-const method) | 1 | PT_BOOL |
 | `ptrcallWithBoolArgRetBool` | B | `Control.has_focus` (const non-void method) | 4 | PT_BOOL |
-| `ptrcallWithBoolArgRetDictionary` | D | `Time.get_date_dict_from_system` (const non-void singleton method) | 4 | PT_BOOL |
+| `ptrcallWithBoolArgRetDictionary` | F | `Time.get_date_dict_from_system` (reads the clock: two reads an oracle compares can differ (METHOD_OVERRIDES)) | 4 | PT_BOOL |
 | `ptrcallWithBoolArgRetInt` | B | `Node.get_child_count` (const non-void method) | 3 | PT_BOOL PT_INT64 |
 | `ptrcallWithBoolArgRetLong` | F | `AudioServer.set_input_device_active` (non-const singleton method) | 4 | PT_BOOL PT_INT64 |
-| `ptrcallWithBoolArgRetObject` | B | `Resource.duplicate` (const non-void method) | 10 | PT_BOOL PT_OBJECT |
+| `ptrcallWithBoolArgRetObject` | F | `BoxContainer.add_spacer` (non-const method) | 10 | PT_BOOL PT_OBJECT |
 | `ptrcallWithBoolArgRetPackedInt32List` | B | `TextEdit.get_sorted_carets` (const non-void method) | 1 | PT_BOOL |
 | `ptrcallWithBoolArgRetRID` | E | `RenderSceneBuffersRD.get_color_texture` (*RenderSceneBuffers*: only meaningful inside a frame being rendered by a RenderingDevice renderer) | 3 | PT_BOOL PT_RID |
-| `ptrcallWithBoolArgRetString` | D | `Time.get_date_string_from_system` (const non-void singleton method) | 4 | PT_BOOL PT_STRING |
+| `ptrcallWithBoolArgRetString` | F | `CryptoKey.save_to_string` (non-const method) | 4 | PT_BOOL PT_STRING |
 | `ptrcallWithBoolArgRetTypedObjectList` | B | `Node.get_children` (const non-void method) | 2 | hand |
 | `ptrcallWithBoolArgRetVariantScalar` | F | `PacketPeer.get_var` on `PacketPeerStream` (non-const method) | 3 | PT_BOOL |
-| `ptrcallWithBoolObjectArgsRetObject` | E | `InstancePlaceholder.create_instance` (abstract, and no instantiable non-excluded descendant) | 1 | PT_BOOL PT_OBJECT |
+| `ptrcallWithBoolObjectArgsRetObject` | E | `InstancePlaceholder.create_instance` (abstract, and no instantiable descendant) | 1 | PT_BOOL PT_OBJECT |
 | `ptrcallWithBoolTwoDoubleArgs` | F | `RenderingServer.screen_space_roughness_limiter_set_active` (void singleton method) | 1 | PT_BOOL PT_FLOAT64 PT_VOID |
 | `ptrcallWithByteArrayAndBoolArgRetInt` | F | `GLTFState.append_data_to_buffers` (non-const method) | 1 | PT_BOOL PT_INT64 PT_PACKED_BYTE_ARRAY |
 | `ptrcallWithByteArrayAndDictionaryArgRetObject` | C | `AudioStreamWAV.load_from_buffer` (static with a return value) | 1 | PT_DICTIONARY PT_OBJECT PT_PACKED_BYTE_ARRAY |
@@ -326,10 +383,10 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithByteArrayAndRIDArgRetRID` | E | `RenderingDevice.shader_create_from_bytecode` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_PACKED_BYTE_ARRAY PT_RID |
 | `ptrcallWithByteArrayArg` | A | `AudioStreamMP3.set_data` (setter of `data`) | 6 | PT_PACKED_BYTE_ARRAY PT_VOID |
 | `ptrcallWithByteArrayArgRetArray` | F | `StreamPeer.put_partial_data` on `StreamPeerBuffer` (non-const method) | 1 | PT_PACKED_BYTE_ARRAY |
-| `ptrcallWithByteArrayArgRetBool` | E | `FileAccess.store_buffer` (abstract, and no instantiable non-excluded descendant) | 1 | PT_BOOL PT_PACKED_BYTE_ARRAY |
+| `ptrcallWithByteArrayArgRetBool` | E | `FileAccess.store_buffer` (abstract, and no instantiable descendant) | 1 | PT_BOOL PT_PACKED_BYTE_ARRAY |
 | `ptrcallWithByteArrayArgRetByteArray` | F | `AESContext.update` (non-const method) | 1 | PT_PACKED_BYTE_ARRAY |
 | `ptrcallWithByteArrayArgRetLong` | F | `HMACContext.update` (non-const method) | 14 | hand |
-| `ptrcallWithByteArrayArgRetObject` | C | `AudioStreamMP3.load_from_buffer` (static with a return value) | 3 | PT_OBJECT PT_PACKED_BYTE_ARRAY |
+| `ptrcallWithByteArrayArgRetObject` | C | `AudioStreamMP3.load_from_buffer` (static with a return value); then E `ResourceImporterOggVorbis.load_from_buffer` (api_type=editor: `api_type` is `editor` in extension_api.json) | 3 | PT_OBJECT PT_PACKED_BYTE_ARRAY |
 | `ptrcallWithByteArrayArgRetString` | D | `Marshalls.raw_to_base64` (non-void method of a stateless singleton) | 1 | PT_PACKED_BYTE_ARRAY PT_STRING |
 | `ptrcallWithByteArrayIntLongIntArgsRetLong` | E | `SceneMultiplayer.send_bytes` (*Multiplayer*: opens sockets or talks to the network) | 1 | PT_INT64 PT_PACKED_BYTE_ARRAY |
 | `ptrcallWithByteArrayListArg` | A | `GLTFState.set_buffers` (setter of `buffers`) | 1 | PT_TYPED_ARRAY_BLOB PT_VOID |
@@ -373,7 +430,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithDoubleArgRetByteArray` | B | `Image.save_jpg_to_buffer` (const non-void method) | 1 | PT_FLOAT64 |
 | `ptrcallWithDoubleArgRetColor` | F | `Gradient.sample` (non-const method) | 1 | PT_COLOR PT_FLOAT64 |
 | `ptrcallWithDoubleArgRetInt` | B | `TextLine.hit_test` (const non-void method) | 1 | PT_FLOAT64 PT_INT64 |
-| `ptrcallWithDoubleArgRetObject` | B | `Mesh.create_outline` (const non-void method) | 9 | PT_FLOAT64 PT_OBJECT |
+| `ptrcallWithDoubleArgRetObject` | F | `AwaitTweener.set_timeout` (non-const method) | 9 | PT_FLOAT64 PT_OBJECT |
 | `ptrcallWithDoubleArgRetVector2` | B | `Curve2D.samplef` (const non-void method) | 1 | PT_FLOAT64 PT_VECTOR2 |
 | `ptrcallWithDoubleArgRetVector3` | B | `Curve3D.samplef` (const non-void method) | 1 | PT_FLOAT64 PT_VECTOR3 |
 | `ptrcallWithDoubleVector2TwoDoubleArgs` | F | `Camera3D.set_frustum` (void method) | 1 | PT_FLOAT64 PT_VECTOR2 PT_VOID |
@@ -398,7 +455,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithFourVector3ArgsRetVector3` | D | `Geometry3D.get_triangle_barycentric_coords` (non-void method of a stateless singleton) | 1 | PT_VECTOR3 |
 | `ptrcallWithIntAndArrayArg` | F | `MeshLibrary.set_item_shapes` (void method) | 2 | PT_ARRAY PT_INT64 PT_VOID |
 | `ptrcallWithIntAndArrayArgRetLong` | E | `WebRTCMultiplayerPeer.create_client` (*WebRTC*: opens sockets or talks to the network) | 2 | PT_ARRAY PT_INT64 |
-| `ptrcallWithIntAndBoolArgRetNodePath` | E | `SceneState.get_node_path` (abstract, and no instantiable non-excluded descendant) | 1 | PT_BOOL PT_INT64 PT_NODE_PATH |
+| `ptrcallWithIntAndBoolArgRetNodePath` | E | `SceneState.get_node_path` (abstract, and no instantiable descendant) | 1 | PT_BOOL PT_INT64 PT_NODE_PATH |
 | `ptrcallWithIntAndBoolArgRetRect2` | B | `ItemList.get_item_rect` (const non-void method) | 1 | PT_BOOL PT_INT64 PT_RECT2 |
 | `ptrcallWithIntAndBoolArgs` | F | `AccessibilityServer.set_window_focused` (void singleton method) | 130 | PT_BOOL PT_INT64 PT_VOID |
 | `ptrcallWithIntAndBoolArgsRetBool` | F | `RichTextLabel.remove_paragraph` (non-const method) | 1 | PT_BOOL PT_INT64 |
@@ -424,7 +481,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithIntAndObjectArgRetLong` | E | `ENetMultiplayerPeer.add_mesh_peer` (*ENet*: opens sockets or talks to the network) | 1 | PT_INT64 PT_OBJECT |
 | `ptrcallWithIntAndPackedFloat32ListArgs` | F | `MeshDataTool.set_vertex_weights` (void method) | 2 | PT_INT64 PT_PACKED_FLOAT32_ARRAY PT_VOID |
 | `ptrcallWithIntAndPackedInt32ListArgs` | F | `MeshDataTool.set_vertex_bones` (void method) | 1 | PT_INT64 PT_PACKED_INT32_ARRAY PT_VOID |
-| `ptrcallWithIntAndPackedStringListArg` | E | `FileDialog.set_option_values` (FileDialog: needs a window or the display server (headless has a dummy one that errors or no-ops); browses the host filesystem) | 1 | PT_INT64 PT_PACKED_STRING_ARRAY PT_VOID |
+| `ptrcallWithIntAndPackedStringListArg` | E | `FileDialog.set_option_values` (Window: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_INT64 PT_PACKED_STRING_ARRAY PT_VOID |
 | `ptrcallWithIntAndPackedVector2ListArgs` | F | `NavigationPolygon.set_outline` (void method) | 1 | PT_INT64 PT_PACKED_VECTOR2_ARRAY PT_VOID |
 | `ptrcallWithIntAndPlaneArg` | F | `MeshDataTool.set_vertex_tangent` (void method) | 1 | PT_INT64 PT_PLANE PT_VOID |
 | `ptrcallWithIntAndQuaternionArg` | F | `BoneTwistDisperser3D.set_twist_from` (void method) | 2 | PT_INT64 PT_QUATERNION PT_VOID |
@@ -459,7 +516,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithIntArgRetBasis` | B | `GridMap.get_basis_with_orthogonal_index` (const non-void method) | 1 | PT_BASIS PT_INT64 |
 | `ptrcallWithIntArgRetBool` | B | `AimModifier3D.is_relative` (const non-void method) | 165 | PT_BOOL PT_INT64 |
 | `ptrcallWithIntArgRetByteArray` | F | `Crypto.generate_random_bytes` (non-const method) | 2 | PT_INT64 |
-| `ptrcallWithIntArgRetCallable` | E | `TreeItem.get_custom_draw_callback` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 |
+| `ptrcallWithIntArgRetCallable` | E | `TreeItem.get_custom_draw_callback` (abstract, and no instantiable descendant) | 1 | PT_INT64 |
 | `ptrcallWithIntArgRetColor` | B | `GraphNode.get_slot_color_left` (const non-void method) | 19 | PT_COLOR PT_INT64 |
 | `ptrcallWithIntArgRetDictionary` | B | `CodeEdit.get_code_completion_option` (const non-void method) | 8 | PT_INT64 |
 | `ptrcallWithIntArgRetDouble` | B | `AnimatedTexture.get_frame_duration` (const non-void method) | 66 | PT_FLOAT64 PT_INT64 |
@@ -476,7 +533,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithIntArgRetRID` | B | `KinematicCollision3D.get_collider_rid` (const non-void method) | 12 | PT_INT64 PT_RID |
 | `ptrcallWithIntArgRetRect2` | B | `ItemList.get_item_icon_region` (const non-void method) | 5 | PT_INT64 PT_RECT2 |
 | `ptrcallWithIntArgRetRect2i` | E | `DisplayServer.screen_get_usable_rect` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 2 | PT_INT64 PT_RECT2I |
-| `ptrcallWithIntArgRetString` | C | `DirAccess.get_drive_label` (static with a return value) | 81 | PT_INT64 PT_STRING |
+| `ptrcallWithIntArgRetString` | C | `DirAccess.get_drive_label` (static with a return value); then B `AnimationNode.get_input_name` (const non-void method) | 81 | PT_INT64 PT_STRING |
 | `ptrcallWithIntArgRetStringName` | B | `AnimationNodeBlendSpace1D.get_blend_point_name` (const non-void method) | 18 | PT_INT64 PT_STRING_NAME |
 | `ptrcallWithIntArgRetStringNameList` | B | `Skeleton3D.get_bone_meta_list` (const non-void method) | 1 | PT_INT64 |
 | `ptrcallWithIntArgRetTransform2D` | B | `FontFile.get_transform` (const non-void method) | 3 | PT_INT64 PT_TRANSFORM2D |
@@ -498,7 +555,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithIntByteArrayIntArgsRetLong` | E | `ENetPacketPeer.send` (*ENet*: opens sockets or talks to the network) | 1 | PT_INT64 PT_PACKED_BYTE_ARRAY |
 | `ptrcallWithIntCallableArgs` | F | `TextEdit.set_gutter_custom_draw` (void method) | 3 | PT_CALLABLE PT_INT64 PT_VOID |
 | `ptrcallWithIntColorArgsRetLong` | E | `RenderingDevice.draw_list_begin_for_screen` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_COLOR PT_INT64 |
-| `ptrcallWithIntColorBoolArgs` | E | `TreeItem.set_custom_bg_color` (abstract, and no instantiable non-excluded descendant) | 1 | PT_BOOL PT_COLOR PT_INT64 PT_VOID |
+| `ptrcallWithIntColorBoolArgs` | E | `TreeItem.set_custom_bg_color` (abstract, and no instantiable descendant) | 1 | PT_BOOL PT_COLOR PT_INT64 PT_VOID |
 | `ptrcallWithIntDoubleBoolArgsRetDouble` | B | `Animation.blend_shape_track_interpolate` (const non-void method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 |
 | `ptrcallWithIntDoubleBoolArgsRetQuaternion` | B | `Animation.rotation_track_interpolate` (const non-void method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_QUATERNION |
 | `ptrcallWithIntDoubleBoolArgsRetVariantScalar` | B | `Animation.value_track_interpolate` (const non-void method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 |
@@ -515,8 +572,8 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithIntObjectAndIntArgs` | F | `AudioServer.add_bus_effect` (void singleton method) | 1 | PT_INT64 PT_OBJECT PT_VOID |
 | `ptrcallWithIntObjectBoolArgs` | E | `PopupMenu.set_item_shortcut` (*Popup*: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_INT64 PT_OBJECT PT_VOID |
 | `ptrcallWithIntObjectDoubleArgs` | F | `AudioStreamRandomizer.add_stream` (void method) | 1 | PT_FLOAT64 PT_INT64 PT_OBJECT PT_VOID |
-| `ptrcallWithIntObjectIntBoolTwoStringArgs` | E | `TreeItem.add_button` (abstract, and no instantiable non-excluded descendant) | 1 | PT_BOOL PT_INT64 PT_OBJECT PT_STRING PT_VOID |
-| `ptrcallWithIntObjectStringNameArgs` | E | `TreeItem.set_custom_draw` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_OBJECT PT_STRING_NAME PT_VOID |
+| `ptrcallWithIntObjectIntBoolTwoStringArgs` | E | `TreeItem.add_button` (abstract, and no instantiable descendant) | 1 | PT_BOOL PT_INT64 PT_OBJECT PT_STRING PT_VOID |
+| `ptrcallWithIntObjectStringNameArgs` | E | `TreeItem.set_custom_draw` (abstract, and no instantiable descendant) | 1 | PT_INT64 PT_OBJECT PT_STRING_NAME PT_VOID |
 | `ptrcallWithIntObjectStringNameArrayArgsRetLong` | E | `MultiplayerAPI.rpc` (*Multiplayer*: opens sockets or talks to the network) | 1 | PT_ARRAY PT_INT64 PT_OBJECT PT_STRING_NAME |
 | `ptrcallWithIntPackedFloat32ListAndIntArgsRetInt` | F | `VideoStreamPlayback.mix_audio` (non-const method) | 1 | PT_INT64 PT_PACKED_FLOAT32_ARRAY |
 | `ptrcallWithIntRect2Rect2Args` | F | `AccessibilityServer.set_window_rect` (void singleton method) | 2 | PT_INT64 PT_RECT2 PT_VOID |
@@ -524,7 +581,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithIntStringNameAndVariantArg` | F | `Skeleton3D.set_bone_meta` (void method) | 1 | PT_INT64 PT_STRING_NAME PT_VARIANT PT_VOID |
 | `ptrcallWithIntStringObjectArgsRetLong` | E | `WebSocketMultiplayerPeer.create_server` (*WebSocket*: opens sockets or talks to the network) | 1 | PT_INT64 PT_OBJECT PT_STRING |
 | `ptrcallWithIntStringVariantArgsRetDictionary` | B | `JSONRPC.make_response_error` (const non-void method) | 1 | PT_INT64 PT_STRING PT_VARIANT |
-| `ptrcallWithIntThreeDoubleBoolArgs` | E | `TreeItem.set_range_config` (abstract, and no instantiable non-excluded descendant) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_VOID |
+| `ptrcallWithIntThreeDoubleBoolArgs` | E | `TreeItem.set_range_config` (abstract, and no instantiable descendant) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_VOID |
 | `ptrcallWithIntTransform2DDoubleBoolArgs` | F | `Skeleton2D.set_bone_local_pose_override` (void method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_TRANSFORM2D PT_VOID |
 | `ptrcallWithIntTransform3DDoubleBoolArgs` | F | `Skeleton3D.set_bone_global_pose_override` (void method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_TRANSFORM3D PT_VOID |
 | `ptrcallWithIntTwoBoolTwoIntArgs` | F | `TextEdit.set_caret_line` (void method) | 1 | PT_BOOL PT_INT64 PT_VOID |
@@ -558,7 +615,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithIntVector3ArgsRetDouble` | B | `KinematicCollision3D.get_angle` (const non-void method) | 1 | PT_FLOAT64 PT_INT64 PT_VECTOR3 |
 | `ptrcallWithLongAndBoolArgRetString` | D | `Time.get_datetime_string_from_unix_time` (const non-void singleton method) | 2 | PT_BOOL PT_INT64 PT_STRING |
 | `ptrcallWithLongAndBoolArgs` | F | `AStar2D.set_point_disabled` (void method) | 20 | PT_BOOL PT_INT64 PT_VOID |
-| `ptrcallWithLongAndByteArrayArg` | E | `RDShaderSPIRV.set_stage_bytecode` (RD*: RenderingDevice descriptions; needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_PACKED_BYTE_ARRAY PT_VOID |
+| `ptrcallWithLongAndByteArrayArg` | F | `RDShaderSPIRV.set_stage_bytecode` (void method) | 1 | PT_INT64 PT_PACKED_BYTE_ARRAY PT_VOID |
 | `ptrcallWithLongAndByteArrayArgRetLong` | F | `HMACContext.start` (non-const method) | 1 | PT_INT64 PT_PACKED_BYTE_ARRAY |
 | `ptrcallWithLongAndColorArg` | E | `RenderingDevice.draw_list_set_blend_constants` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_COLOR PT_INT64 PT_VOID |
 | `ptrcallWithLongAndDoubleArg` | F | `AStar2D.set_point_weight_scale` (void method) | 26 | PT_FLOAT64 PT_INT64 PT_VOID |
@@ -575,7 +632,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithLongAndNodePathArg` | F | `Control.set_focus_neighbor` (void method) | 1 | PT_INT64 PT_NODE_PATH PT_VOID |
 | `ptrcallWithLongAndObjectArg` | F | `BaseMaterial3D.set_texture` on `ORMMaterial3D` (void method) | 9 | PT_INT64 PT_OBJECT PT_VOID |
 | `ptrcallWithLongAndRIDArg` | E | `RenderingDevice.compute_list_bind_compute_pipeline` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 5 | PT_INT64 PT_RID PT_VOID |
-| `ptrcallWithLongAndStringArg` | F | `ResourceUID.add_id` (void singleton method) | 5 | PT_INT64 PT_STRING PT_VOID |
+| `ptrcallWithLongAndStringArg` | F | `RDShaderSPIRV.set_stage_compile_error` (void method) | 5 | PT_INT64 PT_STRING PT_VOID |
 | `ptrcallWithLongAndStringArgRetPackedStringList` | B | `Theme.get_theme_item_list` (const non-void method) | 1 | PT_INT64 PT_STRING |
 | `ptrcallWithLongAndThreeStringNameArgs` | F | `Theme.rename_theme_item` (void method) | 1 | PT_INT64 PT_STRING_NAME PT_VOID |
 | `ptrcallWithLongAndThreeUInt32Args` | E | `RenderingDevice.compute_list_dispatch` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_VOID |
@@ -596,7 +653,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithLongAndVector3Arg` | F | `AStar3D.set_point_position` (void method) | 3 | PT_INT64 PT_VECTOR3 PT_VOID |
 | `ptrcallWithLongArg` | A | `AStarGrid2D.set_cell_shape` (setter of `cell_shape`) | 595 | hand |
 | `ptrcallWithLongArgRetBool` | B | `AStar2D.has_point` (const non-void method) | 43 | PT_BOOL PT_INT64 |
-| `ptrcallWithLongArgRetByteArray` | E | `FileAccess.get_buffer` (abstract, and no instantiable non-excluded descendant) | 3 | PT_INT64 |
+| `ptrcallWithLongArgRetByteArray` | B | `RDShaderSPIRV.get_stage_bytecode` (const non-void method) | 3 | PT_INT64 |
 | `ptrcallWithLongArgRetDictionary` | D | `Time.get_date_dict_from_unix_time` (const non-void singleton method) | 3 | PT_INT64 |
 | `ptrcallWithLongArgRetDictionaryList` | B | `VisualShader.get_node_connections` (const non-void method) | 1 | PT_INT64 |
 | `ptrcallWithLongArgRetDouble` | B | `AStar2D.get_point_weight_scale` (const non-void method) | 29 | PT_FLOAT64 PT_INT64 |
@@ -616,7 +673,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithLongArgRetVector3` | B | `AStar3D.get_point_position` (const non-void method) | 4 | PT_INT64 PT_VECTOR3 |
 | `ptrcallWithLongArrayArrayListDictionaryLongArgs` | F | `ArrayMesh.add_surface_from_arrays` (void method) | 1 | PT_ARRAY PT_DICTIONARY PT_INT64 PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs` | F | `ImporterMesh.add_surface` (void method) | 1 | PT_ARRAY PT_DICTIONARY PT_INT64 PT_OBJECT PT_STRING PT_TYPED_ARRAY_BLOB PT_VOID |
-| `ptrcallWithLongArrayStringArgsRetVector3iList` | E | `TextServer.parse_structured_text` (abstract, and no instantiable non-excluded descendant) | 1 | PT_ARRAY PT_INT64 PT_STRING |
+| `ptrcallWithLongArrayStringArgsRetVector3iList` | B | `TextServer.parse_structured_text` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_ARRAY PT_INT64 PT_STRING |
 | `ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs` | F | `RenderingServer.environment_set_ssao_quality` (void singleton method) | 2 | PT_BOOL PT_FLOAT64 PT_INT64 PT_VOID |
 | `ptrcallWithLongBoolIntArgs` | E | `DisplayServer.window_set_flag` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_INT64 PT_VOID |
 | `ptrcallWithLongBoolRIDThreeUInt32Args` | E | `RenderingDevice.draw_list_draw_indirect` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_BOOL PT_INT64 PT_RID PT_VOID |
@@ -671,12 +728,12 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithObjectAndDictionaryArg` | F | `RichTextLabel.push_customfx` (void method) | 1 | PT_DICTIONARY PT_OBJECT PT_VOID |
 | `ptrcallWithObjectAndDoubleArg` | F | `BitMap.create_from_image_alpha` (void method) | 3 | PT_FLOAT64 PT_OBJECT PT_VOID |
 | `ptrcallWithObjectAndIntArg` | F | `ImageTextureLayered.update_layer` on `Cubemap` (void method) | 6 | PT_INT64 PT_OBJECT PT_VOID |
-| `ptrcallWithObjectAndIntArgRetDictionaryList` | E | `PhysicsDirectSpaceState2D.intersect_point` (abstract, and no instantiable non-excluded descendant) | 4 | PT_INT64 PT_OBJECT |
+| `ptrcallWithObjectAndIntArgRetDictionaryList` | E | `PhysicsDirectSpaceState2D.intersect_point` (*Extension*: abstract; every instantiable descendant is excluded by it) | 4 | PT_INT64 PT_OBJECT |
 | `ptrcallWithObjectAndIntArgRetInt` | F | `TileSet.add_pattern` (non-const method) | 3 | PT_INT64 PT_OBJECT |
 | `ptrcallWithObjectAndIntArgRetLong` | F | `MeshDataTool.create_from_surface` (non-const method) | 1 | PT_INT64 PT_OBJECT |
 | `ptrcallWithObjectAndIntArgRetObject` | F | `Tree.create_item` (non-const method) | 1 | PT_INT64 PT_OBJECT |
-| `ptrcallWithObjectAndIntArgRetVector2List` | E | `PhysicsDirectSpaceState2D.collide_shape` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_OBJECT |
-| `ptrcallWithObjectAndIntArgRetVector3List` | E | `PhysicsDirectSpaceState3D.collide_shape` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_OBJECT |
+| `ptrcallWithObjectAndIntArgRetVector2List` | E | `PhysicsDirectSpaceState2D.collide_shape` (*Extension*: abstract; every instantiable descendant is excluded by it) | 1 | PT_INT64 PT_OBJECT |
+| `ptrcallWithObjectAndIntArgRetVector3List` | E | `PhysicsDirectSpaceState3D.collide_shape` (*Extension*: abstract; every instantiable descendant is excluded by it) | 1 | PT_INT64 PT_OBJECT |
 | `ptrcallWithObjectAndLongArgRetLong` | F | `MeshDataTool.commit_to_surface` (non-const method) | 1 | PT_INT64 PT_OBJECT |
 | `ptrcallWithObjectAndLongArgsRetObject` | F | `SurfaceTool.commit` (non-const method) | 1 | PT_INT64 PT_OBJECT |
 | `ptrcallWithObjectAndNodePathArg` | F | `SceneTree.set_multiplayer` (void method) | 1 | PT_NODE_PATH PT_OBJECT PT_VOID |
@@ -686,7 +743,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithObjectAndStringArg` | E | `EditorFileDialog.add_side_menu` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_OBJECT PT_STRING PT_VOID |
 | `ptrcallWithObjectAndStringArgRetByteArray` | E | `RenderingDevice.shader_compile_binary_from_spirv` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_OBJECT PT_STRING |
 | `ptrcallWithObjectAndStringArgRetLong` | F | `GLTFDocument.write_to_filesystem` (non-const method) | 1 | PT_INT64 PT_OBJECT PT_STRING |
-| `ptrcallWithObjectAndStringNameArg` | E | `EditorProperty.set_object_and_property` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_OBJECT PT_STRING_NAME PT_VOID |
+| `ptrcallWithObjectAndStringNameArg` | F | `RDShaderFile.set_bytecode` (void method) | 2 | PT_OBJECT PT_STRING_NAME PT_VOID |
 | `ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List` | F | `TileSetAtlasSource.get_tiles_to_be_removed_on_change` (non-const method) | 1 | PT_OBJECT PT_VECTOR2I |
 | `ptrcallWithObjectAndTransform3DArg` | F | `NavigationMeshSourceGeometryData3D.add_mesh` (void method) | 1 | PT_OBJECT PT_TRANSFORM3D PT_VOID |
 | `ptrcallWithObjectAndTwoBoolArgs` | E | `EngineDebugger.script_debug` (EngineDebugger: the debugger connection of the running engine) | 1 | PT_BOOL PT_OBJECT PT_VOID |
@@ -695,11 +752,11 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithObjectAndVector2iArg` | E | `EditorInterface.popup_dialog_centered` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_OBJECT PT_VECTOR2I PT_VOID |
 | `ptrcallWithObjectArgRetBool` | B | `Area2D.overlaps_area` (const non-void method) | 18 | PT_BOOL PT_OBJECT |
 | `ptrcallWithObjectArgRetByteArray` | B | `GLTFBufferView.load_buffer_view_data` (const non-void method) | 3 | PT_OBJECT |
-| `ptrcallWithObjectArgRetDictionary` | E | `PhysicsDirectSpaceState2D.get_rest_info` (abstract, and no instantiable non-excluded descendant) | 4 | PT_OBJECT |
+| `ptrcallWithObjectArgRetDictionary` | E | `PhysicsDirectSpaceState2D.get_rest_info` (*Extension*: abstract; every instantiable descendant is excluded by it) | 4 | PT_OBJECT |
 | `ptrcallWithObjectArgRetInt` | B | `GLTFState.get_node_index` (const non-void method) | 3 | PT_INT64 PT_OBJECT |
 | `ptrcallWithObjectArgRetLong` | F | `Engine.register_script_language` (non-const singleton method) | 9 | PT_INT64 PT_OBJECT |
-| `ptrcallWithObjectArgRetObject` | C | `GLTFCamera.from_node` (static with a return value) | 18 | PT_OBJECT |
-| `ptrcallWithObjectArgRetPackedFloat32List` | E | `PhysicsDirectSpaceState2D.cast_motion` (abstract, and no instantiable non-excluded descendant) | 2 | PT_OBJECT |
+| `ptrcallWithObjectArgRetObject` | C | `GLTFCamera.from_node` (static with a return value); then B `CanvasItem.make_input_local` on `Control` (const non-void method) | 18 | PT_OBJECT |
+| `ptrcallWithObjectArgRetPackedFloat32List` | E | `PhysicsDirectSpaceState2D.cast_motion` (*Extension*: abstract; every instantiable descendant is excluded by it) | 2 | PT_OBJECT |
 | `ptrcallWithObjectArgRetPackedStringList` | E | `EditorExportPlatform.get_forced_export_files` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_OBJECT |
 | `ptrcallWithObjectArgRetRID` | F | `RenderingServer.texture_2d_create` (non-const singleton method) | 2 | PT_OBJECT PT_RID |
 | `ptrcallWithObjectArgRetStringName` | B | `AnimationMixer.find_animation` on `AnimationPlayer` (const non-void method) | 3 | PT_OBJECT PT_STRING_NAME |
@@ -725,7 +782,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithObjectIntStringArgs` | F | `SurfaceTool.create_from_blend_shape` (void method) | 1 | PT_INT64 PT_OBJECT PT_STRING PT_VOID |
 | `ptrcallWithObjectIntTransform3DArgs` | F | `Node3D.set_subgizmo_selection` (void method) | 2 | PT_INT64 PT_OBJECT PT_TRANSFORM3D PT_VOID |
 | `ptrcallWithObjectIntTwoBoolArgs` | E | `PopupMenu.add_shortcut` (*Popup*: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_INT64 PT_OBJECT PT_VOID |
-| `ptrcallWithObjectListArg` | A | `Font.set_fallbacks` on `FontFile` (setter of `fallbacks`) | 19 | PT_TYPED_ARRAY_BLOB PT_VOID |
+| `ptrcallWithObjectListArg` | A | `Compositor.set_compositor_effects` (setter of `compositor_effects`) | 19 | PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithObjectListArgRetLong` | F | `ImageTextureLayered.create_from_images` on `Cubemap` (non-const method) | 2 | PT_INT64 PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithObjectListIntArgsRetTypedObjectList` | E | `EditorInterface.make_mesh_previews` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_INT64 PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithObjectListLongArgsRetRID` | F | `RenderingServer.texture_2d_layered_create` (non-const singleton method) | 2 | PT_INT64 PT_RID PT_TYPED_ARRAY_BLOB |
@@ -759,7 +816,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithObjectStringNameAndVariantArgRetLong` | D | `ClassDB.class_set_property` (const non-void singleton method) | 1 | PT_INT64 PT_OBJECT PT_STRING_NAME PT_VARIANT |
 | `ptrcallWithObjectStringNameArgRetVariantScalar` | D | `ClassDB.class_get_property` (const non-void singleton method) | 1 | PT_OBJECT PT_STRING_NAME |
 | `ptrcallWithObjectStringObjectArgsRetObject` | E | `EditorPlugin.add_control_to_bottom_panel` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_OBJECT PT_STRING |
-| `ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong` | E | `AudioStreamPlaybackPolyphonic.play_stream` (abstract, and no instantiable non-excluded descendant) | 1 | PT_FLOAT64 PT_INT64 PT_OBJECT PT_STRING_NAME |
+| `ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong` | E | `AudioStreamPlaybackPolyphonic.play_stream` (abstract, and no instantiable descendant) | 1 | PT_FLOAT64 PT_INT64 PT_OBJECT PT_STRING_NAME |
 | `ptrcallWithObjectThreeStringArgsRetObject` | F | `Crypto.generate_self_signed_certificate` (non-const method) | 1 | PT_OBJECT PT_STRING |
 | `ptrcallWithObjectTwoDoubleArgs` | F | `HeightMapShape3D.update_map_data_from_image` (void method) | 1 | PT_FLOAT64 PT_OBJECT PT_VOID |
 | `ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs` | F | `RichTextLabel.add_image` (void method) | 1 | PT_BOOL PT_COLOR PT_FLOAT64 PT_INT64 PT_OBJECT PT_RECT2 PT_STRING PT_VARIANT PT_VOID |
@@ -787,7 +844,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithPackedFloat64ListArg` | A | `GLTFAccessor.set_max` (setter of `max`) | 2 | PT_PACKED_FLOAT64_ARRAY PT_VOID |
 | `ptrcallWithPackedInt32ListArg` | A | `ArrayOccluder3D.set_indices` (setter of `indices`) | 21 | PT_PACKED_INT32_ARRAY PT_VOID |
 | `ptrcallWithPackedInt64ListArg` | A | `NavigationPathQueryResult2D.set_path_owner_ids` (setter of `path_owner_ids`) | 3 | PT_PACKED_INT64_ARRAY PT_VOID |
-| `ptrcallWithPackedStringListAndStringArgsRetBool` | E | `FileAccess.store_csv_line` (abstract, and no instantiable non-excluded descendant) | 1 | PT_BOOL PT_PACKED_STRING_ARRAY PT_STRING |
+| `ptrcallWithPackedStringListAndStringArgsRetBool` | E | `FileAccess.store_csv_line` (abstract, and no instantiable descendant) | 1 | PT_BOOL PT_PACKED_STRING_ARRAY PT_STRING |
 | `ptrcallWithPackedStringListArg` | A | `SystemFont.set_font_names` (setter of `font_names`) | 14 | PT_PACKED_STRING_ARRAY PT_VOID |
 | `ptrcallWithPackedStringListArgRetDictionary` | F | `RichTextLabel.parse_expressions_for_values` (non-const method) | 1 | PT_PACKED_STRING_ARRAY |
 | `ptrcallWithPackedStringListArgRetInt` | E | `OS.create_instance` (OS: host process control (execute, kill, shell_open, environment)) | 1 | PT_INT64 PT_PACKED_STRING_ARRAY |
@@ -825,16 +882,16 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithPlaneListArgRetPackedVector3List` | D | `Geometry3D.compute_convex_mesh_points` (non-void method of a stateless singleton) | 1 | PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithQuaternionArg` | A | `GLTFNode.set_rotation` (setter of `rotation`) | 5 | PT_QUATERNION PT_VOID |
 | `ptrcallWithRIDAndAABBArg` | F | `RenderingServer.instance_set_custom_aabb` (void singleton method) | 6 | PT_AABB PT_RID PT_VOID |
-| `ptrcallWithRIDAndArrayArg` | E | `TextServer.shaped_text_set_bidi_override` (abstract, and no instantiable non-excluded descendant) | 1 | PT_ARRAY PT_RID PT_VOID |
+| `ptrcallWithRIDAndArrayArg` | F | `TextServer.shaped_text_set_bidi_override` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_ARRAY PT_RID PT_VOID |
 | `ptrcallWithRIDAndBasisArg` | F | `RenderingServer.environment_set_sky_orientation` (void singleton method) | 1 | PT_BASIS PT_RID PT_VOID |
 | `ptrcallWithRIDAndBoolArg` | F | `AccessibilityServer.update_set_checked` (void singleton method) | 109 | PT_BOOL PT_RID PT_VOID |
 | `ptrcallWithRIDAndBoolArgRetLong` | D | `RenderingServer.texture_get_native_handle` (const non-void singleton method) | 1 | PT_BOOL PT_INT64 PT_RID |
 | `ptrcallWithRIDAndBoolArgRetRID` | D | `RenderingServer.texture_get_rd_texture` (const non-void singleton method) | 1 | PT_BOOL PT_RID |
-| `ptrcallWithRIDAndByteArrayArg` | E | `TextServer.font_set_data` (abstract, and no instantiable non-excluded descendant) | 1 | PT_PACKED_BYTE_ARRAY PT_RID PT_VOID |
+| `ptrcallWithRIDAndByteArrayArg` | F | `TextServer.font_set_data` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_PACKED_BYTE_ARRAY PT_RID PT_VOID |
 | `ptrcallWithRIDAndColorArg` | F | `AccessibilityServer.update_set_background_color` (void singleton method) | 16 | PT_COLOR PT_RID PT_VOID |
 | `ptrcallWithRIDAndDictionaryArg` | F | `RenderingServer.mesh_add_surface` (void singleton method) | 3 | PT_DICTIONARY PT_RID PT_VOID |
 | `ptrcallWithRIDAndDoubleArg` | F | `AccessibilityServer.update_set_num_jump` (void singleton method) | 99 | PT_FLOAT64 PT_RID PT_VOID |
-| `ptrcallWithRIDAndDoubleArgRetLong` | E | `TextServer.shaped_text_hit_test_grapheme` (abstract, and no instantiable non-excluded descendant) | 2 | PT_FLOAT64 PT_INT64 PT_RID |
+| `ptrcallWithRIDAndDoubleArgRetLong` | B | `TextServer.shaped_text_hit_test_grapheme` on `TextServerManager.get_primary_interface()` (const non-void method) | 2 | PT_FLOAT64 PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArg` | F | `AccessibilityServer.update_set_list_item_count` (void singleton method) | 42 | PT_INT64 PT_RID PT_VOID |
 | `ptrcallWithRIDAndIntArgRetArray` | D | `RenderingServer.mesh_surface_get_arrays` (const non-void singleton method) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetArrayList` | D | `RenderingServer.mesh_surface_get_blend_shape_arrays` (const non-void singleton method) | 1 | PT_INT64 PT_RID |
@@ -843,7 +900,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithRIDAndIntArgRetDictionary` | F | `RenderingServer.mesh_get_surface` (non-const singleton method) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetInt` | E | `NativeMenu.add_separator` (NativeMenu: the host OS menu bar) | 4 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetLong` | E | `NativeMenu.get_item_accelerator` (NativeMenu: the host OS menu bar) | 1 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndIntArgRetObject` | D | `RenderingServer.texture_2d_layer_get` (const non-void singleton method) | 2 | PT_INT64 PT_OBJECT PT_RID |
+| `ptrcallWithRIDAndIntArgRetObject` | F | `RenderingServer.texture_2d_layer_get` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 2 | PT_INT64 PT_OBJECT PT_RID |
 | `ptrcallWithRIDAndIntArgRetRID` | D | `PhysicsServer2D.area_get_shape` (const non-void singleton method) | 6 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetString` | E | `NativeMenu.get_item_text` (NativeMenu: the host OS menu bar) | 2 | PT_INT64 PT_RID PT_STRING |
 | `ptrcallWithRIDAndIntArgRetTransform2D` | D | `PhysicsServer2D.area_get_shape_transform` (const non-void singleton method) | 4 | PT_INT64 PT_RID PT_TRANSFORM2D |
@@ -852,41 +909,41 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithRIDAndIntArgRetVector2` | D | `NavigationServer2D.region_get_connection_pathway_end` (const non-void singleton method) | 2 | PT_INT64 PT_RID PT_VECTOR2 |
 | `ptrcallWithRIDAndIntArgRetVector3` | D | `NavigationServer3D.region_get_connection_pathway_end` (const non-void singleton method) | 3 | PT_INT64 PT_RID PT_VECTOR3 |
 | `ptrcallWithRIDAndLongArg` | F | `AccessibilityServer.update_set_live` (void singleton method) | 78 | PT_INT64 PT_RID PT_VOID |
-| `ptrcallWithRIDAndLongArgRetBool` | D | `PhysicsServer2D.pin_joint_get_flag` (const non-void singleton method) | 4 | PT_BOOL PT_INT64 PT_RID |
+| `ptrcallWithRIDAndLongArgRetBool` | B | `TextServer.font_has_char` on `TextServerManager.get_primary_interface()` (const non-void method) | 4 | PT_BOOL PT_INT64 PT_RID |
 | `ptrcallWithRIDAndLongArgRetByteArray` | E | `OpenXRSpatialEntityExtension.get_uint8_buffer` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndLongArgRetDictionary` | E | `TextServer.shaped_text_get_carets` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndLongArgRetDouble` | D | `PhysicsServer2D.damped_spring_joint_get_param` (const non-void singleton method) | 14 | PT_FLOAT64 PT_INT64 PT_RID |
-| `ptrcallWithRIDAndLongArgRetInt` | E | `TextServer.shaped_get_run_font_size` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndLongArgRetLong` | E | `RenderingDevice.hit_sbt_range_free` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 9 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndLongArgRetPackedColorList` | E | `TextServer.font_get_palette_colors` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndLongArgRetDictionary` | B | `TextServer.shaped_text_get_carets` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndLongArgRetDouble` | B | `TextServer.font_get_ascent` on `TextServerManager.get_primary_interface()` (const non-void method) | 14 | PT_FLOAT64 PT_INT64 PT_RID |
+| `ptrcallWithRIDAndLongArgRetInt` | B | `TextServer.shaped_get_run_font_size` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndLongArgRetLong` | B | `TextServer.font_get_spacing` on `TextServerManager.get_primary_interface()` (const non-void method) | 9 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndLongArgRetPackedColorList` | B | `TextServer.font_get_palette_colors` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndLongArgRetPackedFloat32List` | E | `OpenXRSpatialEntityExtension.get_float_buffer` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndLongArgRetPackedInt32List` | E | `OpenXRSpatialComponentMesh2DList.get_indices` (*XR*: an XR runtime and its devices) | 3 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndLongArgRetPackedVector2List` | E | `OpenXRSpatialComponentMesh2DList.get_vertices` (*XR*: an XR runtime and its devices) | 3 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndLongArgRetPackedVector3List` | E | `OpenXRSpatialEntityExtension.get_vector3_buffer` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndLongArgRetRID` | F | `RenderingServer.texture_rd_create` (non-const singleton method) | 3 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndLongArgRetString` | E | `OpenXRSpatialEntityExtension.get_string` (*XR*: an XR runtime and its devices) | 5 | PT_INT64 PT_RID PT_STRING |
-| `ptrcallWithRIDAndLongArgRetVariantScalar` | D | `PhysicsServer2D.area_get_param` (const non-void singleton method) | 12 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndLongArgRetVector2` | E | `TextServer.shaped_text_get_grapheme_bounds` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID PT_VECTOR2 |
-| `ptrcallWithRIDAndLongArgRetVector2i` | E | `TextServer.shaped_get_run_glyph_range` (abstract, and no instantiable non-excluded descendant) | 2 | PT_INT64 PT_RID PT_VECTOR2I |
-| `ptrcallWithRIDAndLongArgRetVector2iList` | E | `TextServer.font_get_kerning_list` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndLongArgRetRID` | B | `TextServer.shaped_get_run_font_rid` on `TextServerManager.get_primary_interface()` (const non-void method) | 3 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndLongArgRetString` | B | `TextServer.font_get_palette_name` on `TextServerManager.get_primary_interface()` (const non-void method) | 5 | PT_INT64 PT_RID PT_STRING |
+| `ptrcallWithRIDAndLongArgRetVariantScalar` | B | `TextServer.shaped_get_run_object` on `TextServerManager.get_primary_interface()` (const non-void method) | 12 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndLongArgRetVector2` | B | `TextServer.shaped_text_get_grapheme_bounds` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID PT_VECTOR2 |
+| `ptrcallWithRIDAndLongArgRetVector2i` | B | `TextServer.shaped_get_run_glyph_range` on `TextServerManager.get_primary_interface()` (const non-void method) | 2 | PT_INT64 PT_RID PT_VECTOR2I |
+| `ptrcallWithRIDAndLongArgRetVector2iList` | B | `TextServer.font_get_kerning_list` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndObjectArg` | F | `NavigationServer2D.region_set_navigation_polygon` (void singleton method) | 3 | PT_OBJECT PT_RID PT_VOID |
 | `ptrcallWithRIDAndObjectListArgs` | F | `RenderingServer.texture_3d_update` (void singleton method) | 1 | PT_RID PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithRIDAndObjectListArgsRetLong` | E | `RenderingDevice.tlas_build` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_RID PT_TYPED_ARRAY_BLOB |
-| `ptrcallWithRIDAndPackedColorListArgs` | E | `TextServer.font_set_palette_custom_colors` (abstract, and no instantiable non-excluded descendant) | 1 | PT_PACKED_COLOR_ARRAY PT_RID PT_VOID |
+| `ptrcallWithRIDAndPackedColorListArgs` | F | `TextServer.font_set_palette_custom_colors` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_PACKED_COLOR_ARRAY PT_RID PT_VOID |
 | `ptrcallWithRIDAndPackedFloat32ListArg` | F | `RenderingServer.multimesh_set_buffer` (void singleton method) | 1 | PT_PACKED_FLOAT32_ARRAY PT_RID PT_VOID |
-| `ptrcallWithRIDAndPackedFloat32ListArgRetDouble` | E | `TextServer.shaped_text_tab_align` (abstract, and no instantiable non-excluded descendant) | 1 | PT_FLOAT64 PT_PACKED_FLOAT32_ARRAY PT_RID |
+| `ptrcallWithRIDAndPackedFloat32ListArgRetDouble` | F | `TextServer.shaped_text_tab_align` on `TextServerManager.get_primary_interface()` (non-const method) | 1 | PT_FLOAT64 PT_PACKED_FLOAT32_ARRAY PT_RID |
 | `ptrcallWithRIDAndPackedVector2ListArg` | F | `NavigationServer2D.obstacle_set_vertices` (void singleton method) | 1 | PT_PACKED_VECTOR2_ARRAY PT_RID PT_VOID |
 | `ptrcallWithRIDAndPackedVector3ListArg` | F | `NavigationServer3D.obstacle_set_vertices` (void singleton method) | 1 | PT_PACKED_VECTOR3_ARRAY PT_RID PT_VOID |
 | `ptrcallWithRIDAndRIDListArgs` | F | `RenderingServer.compositor_set_compositor_effects` (void singleton method) | 1 | PT_RID PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithRIDAndRect2Arg` | F | `AccessibilityServer.update_set_bounds` (void singleton method) | 3 | PT_RECT2 PT_RID PT_VOID |
 | `ptrcallWithRIDAndStringArg` | F | `AccessibilityServer.update_set_braille_label` (void singleton method) | 35 | PT_RID PT_STRING PT_VOID |
-| `ptrcallWithRIDAndStringArgRetBool` | E | `TextServer.font_get_language_support_override` (abstract, and no instantiable non-excluded descendant) | 4 | PT_BOOL PT_RID PT_STRING |
+| `ptrcallWithRIDAndStringArgRetBool` | B | `TextServer.font_is_language_supported` on `TextServerManager.get_primary_interface()` (const non-void method) | 4 | PT_BOOL PT_RID PT_STRING |
 | `ptrcallWithRIDAndStringArgRetInt` | E | `NativeMenu.find_item_index_with_text` (NativeMenu: the host OS menu bar) | 1 | PT_INT64 PT_RID PT_STRING |
 | `ptrcallWithRIDAndStringNameArgRetVariantScalar` | D | `RenderingServer.canvas_item_get_instance_shader_parameter` (const non-void singleton method) | 6 | PT_RID PT_STRING_NAME |
 | `ptrcallWithRIDAndThreeBoolArgs` | E | `DisplayServer.accessibility_update_set_text_decorations` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_RID PT_VOID |
 | `ptrcallWithRIDAndThreeDoubleArgs` | F | `RenderingServer.camera_set_orthogonal` (void singleton method) | 3 | PT_FLOAT64 PT_RID PT_VOID |
 | `ptrcallWithRIDAndThreeIntArgs` | F | `RenderingServer.viewport_set_size` (void singleton method) | 1 | PT_INT64 PT_RID PT_VOID |
-| `ptrcallWithRIDAndThreeLongArgsRetLong` | E | `TextServer.font_get_glyph_index` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndThreeLongArgsRetLong` | B | `TextServer.font_get_glyph_index` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndTransform2DArg` | F | `AccessibilityServer.update_set_transform` (void singleton method) | 14 | PT_RID PT_TRANSFORM2D PT_VOID |
 | `ptrcallWithRIDAndTransform3DArg` | F | `NavigationServer3D.region_set_transform` (void singleton method) | 6 | PT_RID PT_TRANSFORM3D PT_VOID |
 | `ptrcallWithRIDAndTransform3DListArgs` | F | `RenderingServer.particles_set_trail_bind_poses` (void singleton method) | 1 | PT_RID PT_TYPED_ARRAY_BLOB PT_VOID |
@@ -894,13 +951,13 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithRIDAndTwoIntArgs` | F | `AccessibilityServer.update_set_table_cell_position` (void singleton method) | 11 | PT_INT64 PT_RID PT_VOID |
 | `ptrcallWithRIDAndTwoIntArgsRetInt` | E | `NativeMenu.set_item_index` (NativeMenu: the host OS menu bar) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndTwoLongArgs` | F | `RenderingServer.viewport_set_sdf_oversize_and_scale` (void singleton method) | 3 | PT_INT64 PT_RID PT_VOID |
-| `ptrcallWithRIDAndTwoLongArgsRetDictionary` | E | `TextServer.font_get_glyph_contours` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndTwoLongArgsRetDictionary` | B | `TextServer.font_get_glyph_contours` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndTwoLongArgsRetInt` | F | `RenderingServer.viewport_get_render_info` (non-const singleton method) | 1 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndTwoLongArgsRetLong` | E | `TextServer.font_get_char_from_glyph_index` (abstract, and no instantiable non-excluded descendant) | 2 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndTwoLongArgsRetPackedInt32List` | E | `TextServer.shaped_text_get_word_breaks` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndTwoLongArgsRetPackedVector2List` | E | `TextServer.shaped_text_get_selection` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndTwoLongArgsRetRID` | E | `OpenXRSpatialEntityExtension.add_spatial_entity` (*XR*: an XR runtime and its devices) | 2 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndTwoLongArgsRetVector2` | E | `TextServer.font_get_glyph_advance` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID PT_VECTOR2 |
+| `ptrcallWithRIDAndTwoLongArgsRetLong` | B | `TextServer.font_get_char_from_glyph_index` on `TextServerManager.get_primary_interface()` (const non-void method) | 2 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndTwoLongArgsRetPackedInt32List` | B | `TextServer.shaped_text_get_word_breaks` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndTwoLongArgsRetPackedVector2List` | B | `TextServer.shaped_text_get_selection` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndTwoLongArgsRetRID` | B | `TextServer.shaped_text_substr` on `TextServerManager.get_primary_interface()` (const non-void method) | 2 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndTwoLongArgsRetVector2` | B | `TextServer.font_get_glyph_advance` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID PT_VECTOR2 |
 | `ptrcallWithRIDAndTwoObjectArgsRetBool` | F | `PhysicsServer2D.body_test_motion` (non-const singleton method) | 2 | PT_BOOL PT_OBJECT PT_RID |
 | `ptrcallWithRIDAndTwoPackedFloat32ListArgs` | F | `RenderingServer.multimesh_set_buffer_interpolated` (void singleton method) | 1 | PT_PACKED_FLOAT32_ARRAY PT_RID PT_VOID |
 | `ptrcallWithRIDAndTwoUInt32ArgsRetByteArray` | E | `RenderingDevice.buffer_get_data` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_RID |
@@ -916,52 +973,52 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithRIDAndUInt32ArgRetString` | E | `OpenXRRenderModelExtension.render_model_get_animatable_node_name` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 PT_RID PT_STRING |
 | `ptrcallWithRIDAndUInt32ArgRetTransform3D` | E | `OpenXRRenderModelExtension.render_model_get_animatable_node_transform` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 PT_RID PT_TRANSFORM3D |
 | `ptrcallWithRIDAndVariantArg` | F | `AccessibilityServer.element_set_meta` (void singleton method) | 4 | PT_RID PT_VARIANT PT_VOID |
-| `ptrcallWithRIDAndVariantArgRetBool` | E | `TextServer.shaped_text_has_object` (abstract, and no instantiable non-excluded descendant) | 1 | PT_BOOL PT_RID PT_VARIANT |
+| `ptrcallWithRIDAndVariantArgRetBool` | B | `TextServer.shaped_text_has_object` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_BOOL PT_RID PT_VARIANT |
 | `ptrcallWithRIDAndVariantArgRetInt` | E | `NativeMenu.find_item_index_with_tag` (NativeMenu: the host OS menu bar) | 1 | PT_INT64 PT_RID PT_VARIANT |
-| `ptrcallWithRIDAndVariantArgRetLong` | E | `TextServer.shaped_text_get_object_glyph` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID PT_VARIANT |
-| `ptrcallWithRIDAndVariantArgRetRect2` | E | `TextServer.shaped_text_get_object_rect` (abstract, and no instantiable non-excluded descendant) | 1 | PT_RECT2 PT_RID PT_VARIANT |
-| `ptrcallWithRIDAndVariantArgRetVector2i` | E | `TextServer.shaped_text_get_object_range` (abstract, and no instantiable non-excluded descendant) | 1 | PT_RID PT_VARIANT PT_VECTOR2I |
+| `ptrcallWithRIDAndVariantArgRetLong` | B | `TextServer.shaped_text_get_object_glyph` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID PT_VARIANT |
+| `ptrcallWithRIDAndVariantArgRetRect2` | B | `TextServer.shaped_text_get_object_rect` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_RECT2 PT_RID PT_VARIANT |
+| `ptrcallWithRIDAndVariantArgRetVector2i` | B | `TextServer.shaped_text_get_object_range` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_RID PT_VARIANT PT_VECTOR2I |
 | `ptrcallWithRIDAndVector2Arg` | F | `NavigationServer2D.agent_set_position` (void singleton method) | 14 | PT_RID PT_VECTOR2 PT_VOID |
 | `ptrcallWithRIDAndVector2ArgRetBool` | D | `NavigationServer2D.region_owns_point` (const non-void singleton method) | 1 | PT_BOOL PT_RID PT_VECTOR2 |
 | `ptrcallWithRIDAndVector2ArgRetRID` | D | `NavigationServer2D.map_get_closest_point_owner` (const non-void singleton method) | 1 | PT_RID PT_VECTOR2 |
 | `ptrcallWithRIDAndVector2ArgRetVector2` | D | `NavigationServer2D.map_get_closest_point` (const non-void singleton method) | 2 | PT_RID PT_VECTOR2 |
-| `ptrcallWithRIDAndVector2iArg` | E | `NativeMenu.popup` (NativeMenu: the host OS menu bar) | 4 | PT_RID PT_VECTOR2I PT_VOID |
-| `ptrcallWithRIDAndVector2iArgRetLong` | E | `TextServer.font_get_texture_count` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID PT_VECTOR2I |
-| `ptrcallWithRIDAndVector2iArgRetPackedInt32List` | E | `TextServer.font_get_glyph_list` (abstract, and no instantiable non-excluded descendant) | 1 | PT_RID PT_VECTOR2I |
+| `ptrcallWithRIDAndVector2iArg` | F | `TextServer.font_clear_glyphs` on `TextServerManager.get_primary_interface()` (void method) | 4 | PT_RID PT_VECTOR2I PT_VOID |
+| `ptrcallWithRIDAndVector2iArgRetLong` | B | `TextServer.font_get_texture_count` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID PT_VECTOR2I |
+| `ptrcallWithRIDAndVector2iArgRetPackedInt32List` | B | `TextServer.font_get_glyph_list` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_RID PT_VECTOR2I |
 | `ptrcallWithRIDAndVector3Arg` | F | `NavigationServer3D.agent_set_position` (void singleton method) | 27 | PT_RID PT_VECTOR3 PT_VOID |
 | `ptrcallWithRIDAndVector3ArgRetBool` | D | `NavigationServer3D.region_owns_point` (const non-void singleton method) | 1 | PT_BOOL PT_RID PT_VECTOR3 |
 | `ptrcallWithRIDAndVector3ArgRetRID` | D | `NavigationServer3D.map_get_closest_point_owner` (const non-void singleton method) | 1 | PT_RID PT_VECTOR3 |
 | `ptrcallWithRIDAndVector3ArgRetVector3` | D | `NavigationServer3D.map_get_closest_point` (const non-void singleton method) | 4 | PT_RID PT_VECTOR3 |
 | `ptrcallWithRIDArg` | A | `CharFXTransform.set_font` (setter of `font`) | 88 | PT_RID PT_VOID |
 | `ptrcallWithRIDArgRetAABB` | D | `NavigationServer3D.region_get_bounds` (const non-void singleton method) | 6 | PT_AABB PT_RID |
-| `ptrcallWithRIDArgRetArray` | E | `TextServer.shaped_text_get_objects` (abstract, and no instantiable non-excluded descendant) | 1 | PT_RID |
-| `ptrcallWithRIDArgRetBool` | B | `TileMapLayer.has_body_rid` (const non-void method) | 72 | PT_BOOL PT_RID |
+| `ptrcallWithRIDArgRetArray` | B | `TextServer.shaped_text_get_objects` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_RID |
+| `ptrcallWithRIDArgRetBool` | B | `TextServer.font_get_disable_embedded_bitmaps` on `TextServerManager.get_primary_interface()` (const non-void method) | 72 | PT_BOOL PT_RID |
 | `ptrcallWithRIDArgRetByteArray` | D | `RenderingServer.voxel_gi_get_data_cells` (const non-void singleton method) | 3 | PT_RID |
 | `ptrcallWithRIDArgRetCallable` | E | `NativeMenu.get_popup_close_callback` (NativeMenu: the host OS menu bar) | 2 | PT_RID |
-| `ptrcallWithRIDArgRetDictionary` | E | `TextServer.font_get_opentype_feature_overrides` (abstract, and no instantiable non-excluded descendant) | 5 | PT_RID |
-| `ptrcallWithRIDArgRetDictionaryList` | D | `RenderingServer.canvas_item_get_instance_shader_parameter_list` (const non-void singleton method) | 7 | PT_RID |
-| `ptrcallWithRIDArgRetDouble` | D | `NavigationServer2D.agent_get_avoidance_priority` (const non-void singleton method) | 54 | PT_FLOAT64 PT_RID |
+| `ptrcallWithRIDArgRetDictionary` | B | `TextServer.font_get_opentype_feature_overrides` on `TextServerManager.get_primary_interface()` (const non-void method) | 5 | PT_RID |
+| `ptrcallWithRIDArgRetDictionaryList` | B | `TextServer.font_get_size_cache_info` on `TextServerManager.get_primary_interface()` (const non-void method) | 7 | PT_RID |
+| `ptrcallWithRIDArgRetDouble` | B | `TextServer.font_get_baseline_offset` on `TextServerManager.get_primary_interface()` (const non-void method) | 54 | PT_FLOAT64 PT_RID |
 | `ptrcallWithRIDArgRetInt` | D | `NavigationServer2D.agent_get_max_neighbors` (const non-void singleton method) | 19 | PT_INT64 PT_RID |
-| `ptrcallWithRIDArgRetLong` | D | `NavigationServer2D.link_get_owner_id` (const non-void singleton method) | 55 | PT_INT64 PT_RID |
-| `ptrcallWithRIDArgRetObject` | D | `RenderingServer.texture_2d_get` (const non-void singleton method) | 7 | PT_OBJECT PT_RID |
-| `ptrcallWithRIDArgRetPackedColorList` | D | `RenderingServer.lightmap_get_probe_capture_sh` (const non-void singleton method) | 2 | PT_RID |
+| `ptrcallWithRIDArgRetLong` | B | `TextServer.font_get_antialiasing` on `TextServerManager.get_primary_interface()` (const non-void method) | 55 | PT_INT64 PT_RID |
+| `ptrcallWithRIDArgRetObject` | F | `PhysicsServer2D.body_get_direct_state` (non-const singleton method) | 7 | PT_OBJECT PT_RID |
+| `ptrcallWithRIDArgRetPackedColorList` | B | `TextServer.font_get_palette_custom_colors` on `TextServerManager.get_primary_interface()` (const non-void method) | 2 | PT_RID |
 | `ptrcallWithRIDArgRetPackedFloat32List` | D | `RenderingServer.multimesh_get_buffer` (const non-void singleton method) | 1 | PT_RID |
-| `ptrcallWithRIDArgRetPackedInt32List` | D | `RenderingServer.lightmap_get_probe_capture_bsp_tree` (const non-void singleton method) | 5 | PT_RID |
-| `ptrcallWithRIDArgRetPackedStringList` | E | `OpenXRRenderModelExtension.render_model_get_subaction_paths` (*XR*: an XR runtime and its devices) | 3 | PT_RID |
+| `ptrcallWithRIDArgRetPackedInt32List` | B | `TextServer.font_get_supported_glyphs` on `TextServerManager.get_primary_interface()` (const non-void method) | 5 | PT_RID |
+| `ptrcallWithRIDArgRetPackedStringList` | F | `TextServer.font_get_language_support_overrides` on `TextServerManager.get_primary_interface()` (non-const method) | 3 | PT_RID |
 | `ptrcallWithRIDArgRetPackedVector2List` | D | `NavigationServer2D.obstacle_get_vertices` (const non-void singleton method) | 1 | PT_RID |
 | `ptrcallWithRIDArgRetPackedVector3List` | D | `NavigationServer3D.obstacle_get_vertices` (const non-void singleton method) | 2 | PT_RID |
-| `ptrcallWithRIDArgRetRID` | D | `NavigationServer2D.agent_get_map` (const non-void singleton method) | 25 | PT_RID |
+| `ptrcallWithRIDArgRetRID` | B | `TextServer.shaped_text_get_parent` on `TextServerManager.get_primary_interface()` (const non-void method) | 25 | PT_RID |
 | `ptrcallWithRIDArgRetRIDList` | D | `NavigationServer2D.map_get_agents` (const non-void singleton method) | 8 | PT_RID |
 | `ptrcallWithRIDArgRetRect2` | D | `NavigationServer2D.region_get_bounds` (const non-void singleton method) | 2 | PT_RECT2 PT_RID |
-| `ptrcallWithRIDArgRetString` | D | `RenderingServer.shader_get_code` (const non-void singleton method) | 8 | PT_RID PT_STRING |
-| `ptrcallWithRIDArgRetTransform2D` | D | `NavigationServer2D.region_get_transform` (const non-void singleton method) | 3 | PT_RID PT_TRANSFORM2D |
+| `ptrcallWithRIDArgRetString` | B | `TextServer.font_get_name` on `TextServerManager.get_primary_interface()` (const non-void method) | 8 | PT_RID PT_STRING |
+| `ptrcallWithRIDArgRetTransform2D` | B | `TextServer.font_get_transform` on `TextServerManager.get_primary_interface()` (const non-void method) | 3 | PT_RID PT_TRANSFORM2D |
 | `ptrcallWithRIDArgRetTransform3D` | D | `NavigationServer3D.region_get_transform` (const non-void singleton method) | 4 | PT_RID PT_TRANSFORM3D |
 | `ptrcallWithRIDArgRetTypedObjectList` | D | `RenderingServer.texture_3d_get` (const non-void singleton method) | 1 | PT_RID |
 | `ptrcallWithRIDArgRetUInt32` | D | `NavigationServer2D.agent_get_avoidance_layers` (const non-void singleton method) | 27 | PT_INT64 PT_RID |
 | `ptrcallWithRIDArgRetVariantScalar` | D | `AccessibilityServer.element_get_meta` (const non-void singleton method) | 4 | PT_RID |
-| `ptrcallWithRIDArgRetVector2` | D | `NavigationServer2D.agent_get_position` (const non-void singleton method) | 9 | PT_RID PT_VECTOR2 |
-| `ptrcallWithRIDArgRetVector2i` | B | `TileMapLayer.get_coords_for_body_rid` (const non-void method) | 3 | PT_RID PT_VECTOR2I |
-| `ptrcallWithRIDArgRetVector2iList` | E | `TextServer.font_get_size_cache_list` (abstract, and no instantiable non-excluded descendant) | 1 | PT_RID |
+| `ptrcallWithRIDArgRetVector2` | B | `TextServer.shaped_text_get_size` on `TextServerManager.get_primary_interface()` (const non-void method) | 9 | PT_RID PT_VECTOR2 |
+| `ptrcallWithRIDArgRetVector2i` | B | `TextServer.shaped_text_get_range` on `TextServerManager.get_primary_interface()` (const non-void method) | 3 | PT_RID PT_VECTOR2I |
+| `ptrcallWithRIDArgRetVector2iList` | B | `TextServer.font_get_size_cache_list` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_RID |
 | `ptrcallWithRIDArgRetVector3` | D | `NavigationServer3D.agent_get_position` (const non-void singleton method) | 11 | PT_RID PT_VECTOR3 |
 | `ptrcallWithRIDArgRetVector3i` | D | `RenderingServer.voxel_gi_get_octree_size` (const non-void singleton method) | 1 | PT_RID PT_VECTOR3I |
 | `ptrcallWithRIDBoolColorDoubleDoubleDoubleDoubleDoubleDoubleDoubleLongArgs` | F | `RenderingServer.environment_set_fog` (void singleton method) | 1 | PT_BOOL PT_COLOR PT_FLOAT64 PT_INT64 PT_RID PT_VOID |
@@ -985,11 +1042,11 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithRIDColorDoubleArgs` | F | `RenderingServer.canvas_texture_set_shading_parameters` (void singleton method) | 1 | PT_COLOR PT_FLOAT64 PT_RID PT_VOID |
 | `ptrcallWithRIDColorFourUInt32ArgsRetLong` | E | `RenderingDevice.texture_clear` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_COLOR PT_INT64 PT_RID |
 | `ptrcallWithRIDColorLongTwoDoubleLongArgs` | F | `RenderingServer.environment_set_ambient_light` (void singleton method) | 1 | PT_COLOR PT_FLOAT64 PT_INT64 PT_RID PT_VOID |
-| `ptrcallWithRIDDoubleAndLongArgs` | E | `TextServer.shaped_text_overrun_trim_to_width` (abstract, and no instantiable non-excluded descendant) | 1 | PT_FLOAT64 PT_INT64 PT_RID PT_VOID |
-| `ptrcallWithRIDDoubleAndLongArgsRetDouble` | E | `TextServer.shaped_text_fit_to_width` (abstract, and no instantiable non-excluded descendant) | 1 | PT_FLOAT64 PT_INT64 PT_RID |
+| `ptrcallWithRIDDoubleAndLongArgs` | F | `TextServer.shaped_text_overrun_trim_to_width` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_FLOAT64 PT_INT64 PT_RID PT_VOID |
+| `ptrcallWithRIDDoubleAndLongArgsRetDouble` | F | `TextServer.shaped_text_fit_to_width` on `TextServerManager.get_primary_interface()` (non-const method) | 1 | PT_FLOAT64 PT_INT64 PT_RID |
 | `ptrcallWithRIDDoubleBoolArgs` | F | `RenderingServer.instance_set_pivot_data` (void singleton method) | 1 | PT_BOOL PT_FLOAT64 PT_RID PT_VOID |
 | `ptrcallWithRIDDoubleBoolVector2iArgsRetObject` | F | `RenderingServer.sky_bake_panorama` (non-const singleton method) | 1 | PT_BOOL PT_FLOAT64 PT_OBJECT PT_RID PT_VECTOR2I |
-| `ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List` | E | `TextServer.shaped_text_get_line_breaks` (abstract, and no instantiable non-excluded descendant) | 1 | PT_FLOAT64 PT_INT64 PT_RID |
+| `ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List` | B | `TextServer.shaped_text_get_line_breaks` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_FLOAT64 PT_INT64 PT_RID |
 | `ptrcallWithRIDDoubleVector2TwoDoubleArgs` | F | `RenderingServer.camera_set_frustum` (void singleton method) | 1 | PT_FLOAT64 PT_RID PT_VECTOR2 PT_VOID |
 | `ptrcallWithRIDFourDoubleArgs` | F | `RenderingServer.canvas_item_add_animation_slice` (void singleton method) | 1 | PT_FLOAT64 PT_RID PT_VOID |
 | `ptrcallWithRIDFourDoubleLongArgs` | F | `RenderingServer.instance_geometry_set_visibility_range` (void singleton method) | 1 | PT_FLOAT64 PT_INT64 PT_RID PT_VOID |
@@ -1022,14 +1079,14 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithRIDLongDoubleBoolDoubleBoolArgs` | F | `RenderingServer.canvas_item_set_canvas_group_mode` (void singleton method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_RID PT_VOID |
 | `ptrcallWithRIDLongIntArgsRetRID` | F | `AccessibilityServer.create_sub_element` (non-const singleton method) | 2 | PT_INT64 PT_RID |
 | `ptrcallWithRIDLongPackedColorListDoubleUInt32Rect2UInt32ArgsRetLong` | E | `RenderingDevice.draw_list_begin` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_FLOAT64 PT_INT64 PT_PACKED_COLOR_ARRAY PT_RECT2 PT_RID |
-| `ptrcallWithRIDLongRIDListLongDictionaryArgs` | E | `TextServer.shaped_set_span_update_font` (abstract, and no instantiable non-excluded descendant) | 1 | PT_DICTIONARY PT_INT64 PT_RID PT_TYPED_ARRAY_BLOB PT_VOID |
+| `ptrcallWithRIDLongRIDListLongDictionaryArgs` | F | `TextServer.shaped_set_span_update_font` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_DICTIONARY PT_INT64 PT_RID PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithRIDLongTwoArrayDictionaryLongArgs` | F | `RenderingServer.mesh_add_surface_from_arrays` (void singleton method) | 1 | PT_ARRAY PT_DICTIONARY PT_INT64 PT_RID PT_VOID |
 | `ptrcallWithRIDLongTwoDoubleArgs` | F | `RenderingServer.environment_set_tonemap` (void singleton method) | 1 | PT_FLOAT64 PT_INT64 PT_RID PT_VOID |
 | `ptrcallWithRIDLongUInt32AndPackedInt32ListArgRetLong` | E | `RenderingDevice.hit_sbt_range_update` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_PACKED_INT32_ARRAY PT_RID |
-| `ptrcallWithRIDLongVector2LongColorArgs` | E | `TextServer.draw_hex_code_box` (abstract, and no instantiable non-excluded descendant) | 1 | PT_COLOR PT_INT64 PT_RID PT_VECTOR2 PT_VOID |
-| `ptrcallWithRIDLongVector2iAndVector2Args` | E | `TextServer.font_set_kerning` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID PT_VECTOR2 PT_VECTOR2I PT_VOID |
-| `ptrcallWithRIDLongVector2iArgs` | E | `TextServer.font_remove_kerning` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID PT_VECTOR2I PT_VOID |
-| `ptrcallWithRIDLongVector2iArgsRetVector2` | E | `TextServer.font_get_kerning` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID PT_VECTOR2 PT_VECTOR2I |
+| `ptrcallWithRIDLongVector2LongColorArgs` | F | `TextServer.draw_hex_code_box` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_COLOR PT_INT64 PT_RID PT_VECTOR2 PT_VOID |
+| `ptrcallWithRIDLongVector2iAndVector2Args` | F | `TextServer.font_set_kerning` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_INT64 PT_RID PT_VECTOR2 PT_VECTOR2I PT_VOID |
+| `ptrcallWithRIDLongVector2iArgs` | F | `TextServer.font_remove_kerning` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_INT64 PT_RID PT_VECTOR2I PT_VOID |
+| `ptrcallWithRIDLongVector2iArgsRetVector2` | B | `TextServer.font_get_kerning` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID PT_VECTOR2 PT_VECTOR2I |
 | `ptrcallWithRIDObjectIntArgs` | F | `RenderingServer.texture_2d_update` (void singleton method) | 1 | PT_INT64 PT_OBJECT PT_RID PT_VOID |
 | `ptrcallWithRIDObjectListArgsRetRID` | E | `RenderingDevice.compute_pipeline_create` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_RID PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithRIDObjectListObjectArgsRetBool` | E | `OpenXRSpatialEntityExtension.query_snapshot` (*XR*: an XR runtime and its devices) | 1 | PT_BOOL PT_OBJECT PT_RID PT_TYPED_ARRAY_BLOB |
@@ -1037,7 +1094,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithRIDObjectListTwoObjectArgs` | E | `OpenXRSpatialAnchorCapability.do_entity_update` (*XR*: an XR runtime and its devices) | 2 | PT_OBJECT PT_RID PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject` | E | `OpenXRSpatialAnchorCapability.start_entity_discovery` (*XR*: an XR runtime and its devices) | 3 | PT_CALLABLE PT_OBJECT PT_RID PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt` | E | `NativeMenu.add_icon_check_item` (NativeMenu: the host OS menu bar) | 3 | PT_CALLABLE PT_INT64 PT_OBJECT PT_RID PT_STRING PT_VARIANT |
-| `ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List` | E | `TextServer.shaped_text_get_line_breaks_adv` (abstract, and no instantiable non-excluded descendant) | 1 | PT_BOOL PT_INT64 PT_PACKED_FLOAT32_ARRAY PT_RID |
+| `ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List` | B | `TextServer.shaped_text_get_line_breaks_adv` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_BOOL PT_INT64 PT_PACKED_FLOAT32_ARRAY PT_RID |
 | `ptrcallWithRIDPackedInt32ListPackedVector2ListPackedColorListPackedVector2ListPackedInt32ListPackedFloat32ListRIDIntArgs` | F | `RenderingServer.canvas_item_add_triangle_array` (void singleton method) | 1 | PT_INT64 PT_PACKED_COLOR_ARRAY PT_PACKED_FLOAT32_ARRAY PT_PACKED_INT32_ARRAY PT_PACKED_VECTOR2_ARRAY PT_RID PT_VOID |
 | `ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject` | E | `OpenXRSpatialEntityExtension.discover_spatial_entities` (*XR*: an XR runtime and its devices) | 1 | PT_CALLABLE PT_OBJECT PT_PACKED_INT64_ARRAY PT_RID |
 | `ptrcallWithRIDPackedVector2ListAndBoolArg` | F | `RenderingServer.canvas_occluder_polygon_set_shape` (void singleton method) | 1 | PT_BOOL PT_PACKED_VECTOR2_ARRAY PT_RID PT_VOID |
@@ -1056,11 +1113,11 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithRIDRect2RIDRect2ColorIntTwoDoubleArgs` | F | `RenderingServer.canvas_item_add_msdf_texture_rect_region` (void singleton method) | 1 | PT_COLOR PT_FLOAT64 PT_INT64 PT_RECT2 PT_RID PT_VOID |
 | `ptrcallWithRIDRect2RIDRect2ColorTwoBoolArgs` | F | `RenderingServer.canvas_item_add_texture_rect_region` (void singleton method) | 1 | PT_BOOL PT_COLOR PT_RECT2 PT_RID PT_VOID |
 | `ptrcallWithRIDRect2Rect2iBoolUInt32BoolVector2FourDoubleArgs` | E | `XRInterfaceExtension.add_blit` (*XR*: an XR runtime and its devices) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_RECT2 PT_RECT2I PT_RID PT_VECTOR2 PT_VOID |
-| `ptrcallWithRIDStringAndBoolArgs` | E | `TextServer.font_set_language_support_override` (abstract, and no instantiable non-excluded descendant) | 2 | PT_BOOL PT_RID PT_STRING PT_VOID |
+| `ptrcallWithRIDStringAndBoolArgs` | F | `TextServer.font_set_language_support_override` on `TextServerManager.get_primary_interface()` (void method) | 2 | PT_BOOL PT_RID PT_STRING PT_VOID |
 | `ptrcallWithRIDStringNameAndIntArgRetRID` | D | `RenderingServer.shader_get_default_texture_parameter` (const non-void singleton method) | 1 | PT_INT64 PT_RID PT_STRING_NAME |
 | `ptrcallWithRIDStringNameAndVariantArgs` | F | `RenderingServer.canvas_item_set_instance_shader_parameter` (void singleton method) | 3 | PT_RID PT_STRING_NAME PT_VARIANT PT_VOID |
 | `ptrcallWithRIDStringNameRIDIntArgs` | F | `RenderingServer.shader_set_default_texture_parameter` (void singleton method) | 1 | PT_INT64 PT_RID PT_STRING_NAME PT_VOID |
-| `ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool` | E | `TextServer.shaped_text_add_string` (abstract, and no instantiable non-excluded descendant) | 1 | PT_BOOL PT_DICTIONARY PT_INT64 PT_RID PT_STRING PT_TYPED_ARRAY_BLOB PT_VARIANT |
+| `ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool` | F | `TextServer.shaped_text_add_string` on `TextServerManager.get_primary_interface()` (non-const method) | 1 | PT_BOOL PT_DICTIONARY PT_INT64 PT_RID PT_STRING PT_TYPED_ARRAY_BLOB PT_VARIANT |
 | `ptrcallWithRIDStringRIDVariantIntArgsRetInt` | E | `NativeMenu.add_submenu_item` (NativeMenu: the host OS menu bar) | 1 | PT_INT64 PT_RID PT_STRING PT_VARIANT |
 | `ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt` | E | `NativeMenu.add_check_item` (NativeMenu: the host OS menu bar) | 3 | PT_CALLABLE PT_INT64 PT_RID PT_STRING PT_VARIANT |
 | `ptrcallWithRIDStringTwoIntTwoCallableVariantLongIntArgsRetInt` | E | `NativeMenu.add_multistate_item` (NativeMenu: the host OS menu bar) | 1 | PT_CALLABLE PT_INT64 PT_RID PT_STRING PT_VARIANT |
@@ -1070,7 +1127,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithRIDTransform3DAABBVector3iThreeByteArrayPackedInt32ListArgs` | F | `RenderingServer.voxel_gi_allocate_data` (void singleton method) | 1 | PT_AABB PT_PACKED_BYTE_ARRAY PT_PACKED_INT32_ARRAY PT_RID PT_TRANSFORM3D PT_VECTOR3I PT_VOID |
 | `ptrcallWithRIDTransform3DVector3TwoColorUInt32Args` | F | `RenderingServer.particles_emit` (void singleton method) | 1 | PT_COLOR PT_INT64 PT_RID PT_TRANSFORM3D PT_VECTOR3 PT_VOID |
 | `ptrcallWithRIDTwoCallableArgs` | F | `RenderingServer.visibility_notifier_set_callbacks` (void singleton method) | 1 | PT_CALLABLE PT_RID PT_VOID |
-| `ptrcallWithRIDTwoLongAndVector2Args` | E | `TextServer.font_set_glyph_advance` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID PT_VECTOR2 PT_VOID |
+| `ptrcallWithRIDTwoLongAndVector2Args` | F | `TextServer.font_set_glyph_advance` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_INT64 PT_RID PT_VECTOR2 PT_VOID |
 | `ptrcallWithRIDTwoLongArgsRetBool` | D | `PhysicsServer3D.generic_6dof_joint_get_flag` (const non-void singleton method) | 1 | PT_BOOL PT_INT64 PT_RID |
 | `ptrcallWithRIDTwoLongArgsRetDouble` | D | `PhysicsServer3D.generic_6dof_joint_get_param` (const non-void singleton method) | 1 | PT_FLOAT64 PT_INT64 PT_RID |
 | `ptrcallWithRIDTwoLongBoolArgs` | F | `PhysicsServer3D.generic_6dof_joint_set_flag` (void singleton method) | 1 | PT_BOOL PT_INT64 PT_RID PT_VOID |
@@ -1089,8 +1146,8 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithRIDUInt32CallableArgsRetLong` | E | `RenderingDevice.texture_get_data_async` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_CALLABLE PT_INT64 PT_RID |
 | `ptrcallWithRIDUInt32FourLongPackedColorListDoubleUInt32Rect2RIDListArgsRetPackedInt64List` | E | `RenderingDevice.draw_list_begin_split` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_FLOAT64 PT_INT64 PT_PACKED_COLOR_ARRAY PT_RECT2 PT_RID PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithRIDUInt32ObjectListArgsRetRID` | E | `UniformSetCacheRD.get_cache` (UniformSetCacheRD: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_RID PT_TYPED_ARRAY_BLOB |
-| `ptrcallWithRIDVariantVector2LongDoubleArgsRetBool` | E | `TextServer.shaped_text_resize_object` (abstract, and no instantiable non-excluded descendant) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_RID PT_VARIANT PT_VECTOR2 |
-| `ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool` | E | `TextServer.shaped_text_add_object` (abstract, and no instantiable non-excluded descendant) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_RID PT_VARIANT PT_VECTOR2 |
+| `ptrcallWithRIDVariantVector2LongDoubleArgsRetBool` | F | `TextServer.shaped_text_resize_object` on `TextServerManager.get_primary_interface()` (non-const method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_RID PT_VARIANT PT_VECTOR2 |
+| `ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool` | F | `TextServer.shaped_text_add_object` on `TextServerManager.get_primary_interface()` (non-const method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_RID PT_VARIANT PT_VECTOR2 |
 | `ptrcallWithRIDVector2ColorBoolArgs` | F | `Texture2D.draw` (void method) | 1 | PT_BOOL PT_COLOR PT_RID PT_VECTOR2 PT_VOID |
 | `ptrcallWithRIDVector2ColorDoubleArgs` | F | `TextLine.draw` (void method) | 2 | PT_COLOR PT_FLOAT64 PT_RID PT_VECTOR2 PT_VOID |
 | `ptrcallWithRIDVector2DoubleColorBoolArgs` | F | `RenderingServer.canvas_item_add_circle` (void singleton method) | 1 | PT_BOOL PT_COLOR PT_FLOAT64 PT_RID PT_VECTOR2 PT_VOID |
@@ -1107,18 +1164,18 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithRIDVector2TwoIntColorDoubleArgs` | F | `TextParagraph.draw_line_outline` (void method) | 1 | PT_COLOR PT_FLOAT64 PT_INT64 PT_RID PT_VECTOR2 PT_VOID |
 | `ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble` | B | `Font.draw_char` on `FontFile` (const non-void method) | 1 | PT_COLOR PT_FLOAT64 PT_INT64 PT_RID PT_VECTOR2 |
 | `ptrcallWithRIDVector2TwoRIDArgs` | F | `PhysicsServer2D.joint_make_pin` (void singleton method) | 1 | PT_RID PT_VECTOR2 PT_VOID |
-| `ptrcallWithRIDVector2iLongArgs` | E | `TextServer.font_remove_glyph` (abstract, and no instantiable non-excluded descendant) | 3 | PT_INT64 PT_RID PT_VECTOR2I PT_VOID |
-| `ptrcallWithRIDVector2iLongArgsRetLong` | E | `TextServer.font_get_glyph_texture_idx` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID PT_VECTOR2I |
-| `ptrcallWithRIDVector2iLongArgsRetObject` | E | `TextServer.font_get_texture_image` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_OBJECT PT_RID PT_VECTOR2I |
-| `ptrcallWithRIDVector2iLongArgsRetPackedInt32List` | E | `TextServer.font_get_texture_offsets` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID PT_VECTOR2I |
-| `ptrcallWithRIDVector2iLongArgsRetRID` | E | `TextServer.font_get_glyph_texture_rid` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID PT_VECTOR2I |
-| `ptrcallWithRIDVector2iLongArgsRetRect2` | E | `TextServer.font_get_glyph_uv_rect` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RECT2 PT_RID PT_VECTOR2I |
-| `ptrcallWithRIDVector2iLongArgsRetVector2` | E | `TextServer.font_get_glyph_offset` (abstract, and no instantiable non-excluded descendant) | 3 | PT_INT64 PT_RID PT_VECTOR2 PT_VECTOR2I |
-| `ptrcallWithRIDVector2iLongObjectArgs` | E | `TextServer.font_set_texture_image` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_OBJECT PT_RID PT_VECTOR2I PT_VOID |
-| `ptrcallWithRIDVector2iLongPackedInt32ListArgs` | E | `TextServer.font_set_texture_offsets` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_PACKED_INT32_ARRAY PT_RID PT_VECTOR2I PT_VOID |
-| `ptrcallWithRIDVector2iLongRect2Args` | E | `TextServer.font_set_glyph_uv_rect` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RECT2 PT_RID PT_VECTOR2I PT_VOID |
-| `ptrcallWithRIDVector2iLongVector2Args` | E | `TextServer.font_set_glyph_offset` (abstract, and no instantiable non-excluded descendant) | 2 | PT_INT64 PT_RID PT_VECTOR2 PT_VECTOR2I PT_VOID |
-| `ptrcallWithRIDVector2iTwoLongArgs` | E | `TextServer.font_render_range` (abstract, and no instantiable non-excluded descendant) | 2 | PT_INT64 PT_RID PT_VECTOR2I PT_VOID |
+| `ptrcallWithRIDVector2iLongArgs` | F | `TextServer.font_remove_glyph` on `TextServerManager.get_primary_interface()` (void method) | 3 | PT_INT64 PT_RID PT_VECTOR2I PT_VOID |
+| `ptrcallWithRIDVector2iLongArgsRetLong` | B | `TextServer.font_get_glyph_texture_idx` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID PT_VECTOR2I |
+| `ptrcallWithRIDVector2iLongArgsRetObject` | B | `TextServer.font_get_texture_image` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_OBJECT PT_RID PT_VECTOR2I |
+| `ptrcallWithRIDVector2iLongArgsRetPackedInt32List` | B | `TextServer.font_get_texture_offsets` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID PT_VECTOR2I |
+| `ptrcallWithRIDVector2iLongArgsRetRID` | B | `TextServer.font_get_glyph_texture_rid` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RID PT_VECTOR2I |
+| `ptrcallWithRIDVector2iLongArgsRetRect2` | B | `TextServer.font_get_glyph_uv_rect` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_RECT2 PT_RID PT_VECTOR2I |
+| `ptrcallWithRIDVector2iLongArgsRetVector2` | B | `TextServer.font_get_glyph_offset` on `TextServerManager.get_primary_interface()` (const non-void method) | 3 | PT_INT64 PT_RID PT_VECTOR2 PT_VECTOR2I |
+| `ptrcallWithRIDVector2iLongObjectArgs` | F | `TextServer.font_set_texture_image` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_INT64 PT_OBJECT PT_RID PT_VECTOR2I PT_VOID |
+| `ptrcallWithRIDVector2iLongPackedInt32ListArgs` | F | `TextServer.font_set_texture_offsets` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_INT64 PT_PACKED_INT32_ARRAY PT_RID PT_VECTOR2I PT_VOID |
+| `ptrcallWithRIDVector2iLongRect2Args` | F | `TextServer.font_set_glyph_uv_rect` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_INT64 PT_RECT2 PT_RID PT_VECTOR2I PT_VOID |
+| `ptrcallWithRIDVector2iLongVector2Args` | F | `TextServer.font_set_glyph_offset` on `TextServerManager.get_primary_interface()` (void method) | 2 | PT_INT64 PT_RID PT_VECTOR2 PT_VECTOR2I PT_VOID |
+| `ptrcallWithRIDVector2iTwoLongArgs` | F | `TextServer.font_render_range` on `TextServerManager.get_primary_interface()` (void method) | 2 | PT_INT64 PT_RID PT_VECTOR2I PT_VOID |
 | `ptrcallWithRect2Arg` | A | `AtlasTexture.set_margin` (setter of `margin`) | 12 | hand |
 | `ptrcallWithRect2ArgRetDictionaryList` | B | `GraphEdit.get_connections_intersecting_with_rect` (const non-void method) | 1 | PT_RECT2 |
 | `ptrcallWithRect2ArgRetInt` | E | `DisplayServer.get_screen_from_rect` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_INT64 PT_RECT2 |
@@ -1129,7 +1186,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList` | B | `BitMap.opaque_to_polygons` (const non-void method) | 1 | PT_FLOAT64 PT_RECT2I |
 | `ptrcallWithRect2iArg` | A | `AStarGrid2D.set_region` (setter of `region`) | 6 | PT_RECT2I PT_VOID |
 | `ptrcallWithRect2iArgRetDictionaryList` | B | `AStarGrid2D.get_point_data_in_region` (const non-void method) | 1 | PT_RECT2I |
-| `ptrcallWithRect2iArgRetObject` | B | `Image.get_region` (const non-void method) | 2 | PT_OBJECT PT_RECT2I |
+| `ptrcallWithRect2iArgRetObject` | F | `Image.get_region` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 2 | PT_OBJECT PT_RECT2I |
 | `ptrcallWithRect2iObjectColorIntObjectArgs` | F | `DrawableTexture2D.blit_rect` (void method) | 1 | PT_COLOR PT_INT64 PT_OBJECT PT_RECT2I PT_VOID |
 | `ptrcallWithRect2iTwoObjectListColorIntObjectArgs` | F | `DrawableTexture2D.blit_rect_multi` (void method) | 1 | PT_COLOR PT_INT64 PT_OBJECT PT_RECT2I PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithSignalArgRetObject` | F | `Tween.tween_await` (non-const method) | 1 | PT_OBJECT PT_SIGNAL |
@@ -1141,14 +1198,14 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithStringAndBoolArgRetByteArray` | F | `ZIPReader.read_file` (non-const method) | 1 | PT_BOOL PT_STRING |
 | `ptrcallWithStringAndBoolArgRetDictionary` | D | `Time.get_datetime_dict_from_datetime_string` (const non-void singleton method) | 1 | PT_BOOL PT_STRING |
 | `ptrcallWithStringAndBoolArgRetInt` | F | `ZIPReader.get_compression_level` (non-const method) | 1 | PT_BOOL PT_INT64 PT_STRING |
-| `ptrcallWithStringAndBoolArgRetLong` | C | `FileAccess.set_hidden_attribute` (static with a return value) | 9 | PT_BOOL PT_INT64 PT_STRING |
+| `ptrcallWithStringAndBoolArgRetLong` | C | `FileAccess.set_hidden_attribute` (static returning Error: its arguments must make it fail); then F `CryptoKey.load` (non-const method) | 9 | PT_BOOL PT_INT64 PT_STRING |
 | `ptrcallWithStringAndBoolArgRetObject` | C | `DirAccess.create_temp` (static with a return value) | 2 | PT_BOOL PT_OBJECT PT_STRING |
 | `ptrcallWithStringAndBoolArgRetString` | D | `TranslationServer.standardize_locale` (const non-void singleton method) | 1 | PT_BOOL PT_STRING |
 | `ptrcallWithStringAndBoolArgRetTypedObjectList` | B | `TranslationDomain.find_translations` (const non-void method) | 2 | PT_BOOL PT_STRING |
 | `ptrcallWithStringAndBoolArgRetVariantScalar` | D | `Marshalls.base64_to_variant` (non-void method of a stateless singleton) | 2 | PT_BOOL PT_STRING |
 | `ptrcallWithStringAndByteArrayArgRetLong` | F | `ConfigFile.load_encrypted` (non-const method) | 2 | PT_INT64 PT_PACKED_BYTE_ARRAY PT_STRING |
 | `ptrcallWithStringAndColorArg` | F | `CodeHighlighter.add_keyword_color` (void method) | 4 | PT_COLOR PT_STRING PT_VOID |
-| `ptrcallWithStringAndDictionaryArgRetObject` | C | `AudioStreamWAV.load_from_file` (static with a return value) | 2 | PT_DICTIONARY PT_OBJECT PT_STRING |
+| `ptrcallWithStringAndDictionaryArgRetObject` | C | `AudioStreamWAV.load_from_file` (static with a return value); then E `WebRTCPeerConnection.create_data_channel` (*WebRTC*: opens sockets or talks to the network) | 2 | PT_DICTIONARY PT_OBJECT PT_STRING |
 | `ptrcallWithStringAndDoubleArgRetLong` | B | `Image.save_jpg` (const non-void method) | 2 | PT_FLOAT64 PT_INT64 PT_STRING |
 | `ptrcallWithStringAndFiveIntArgsRetLong` | E | `ENetConnection.create_host_bound` (*ENet*: opens sockets or talks to the network) | 2 | PT_INT64 PT_STRING |
 | `ptrcallWithStringAndIntArg` | F | `NavigationServer2DManager.set_default_server` (void singleton method) | 14 | PT_INT64 PT_STRING PT_VOID |
@@ -1160,7 +1217,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithStringAndIntArgRetVariantScalar` | E | `DisplayServer.global_menu_get_item_tag` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_INT64 PT_STRING |
 | `ptrcallWithStringAndIntArgRetVector2i` | E | `DisplayServer.window_get_title_size` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_INT64 PT_STRING PT_VECTOR2I |
 | `ptrcallWithStringAndLongArgRetInt` | E | `IP.resolve_hostname_queue_item` (IP: DNS resolution against the host network) | 1 | PT_INT64 PT_STRING |
-| `ptrcallWithStringAndLongArgRetLong` | C | `FileAccess.set_unix_permissions` (static with a return value) | 4 | PT_INT64 PT_STRING |
+| `ptrcallWithStringAndLongArgRetLong` | C | `FileAccess.set_unix_permissions` (static returning Error: its arguments must make it fail); then F `ZIPPacker.open` (non-const method) | 4 | PT_INT64 PT_STRING |
 | `ptrcallWithStringAndLongArgRetPackedStringList` | E | `IP.resolve_hostname_addresses` (IP: DNS resolution against the host network) | 1 | PT_INT64 PT_STRING |
 | `ptrcallWithStringAndLongArgRetString` | E | `IP.resolve_hostname` (IP: DNS resolution against the host network) | 1 | PT_INT64 PT_STRING |
 | `ptrcallWithStringAndLongArgsRetObject` | C | `FileAccess.open` (static with a return value) | 1 | PT_INT64 PT_OBJECT PT_STRING |
@@ -1169,7 +1226,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithStringAndObjectArgRetLong` | E | `ENetConnection.dtls_client_setup` (*ENet*: opens sockets or talks to the network) | 3 | PT_INT64 PT_OBJECT PT_STRING |
 | `ptrcallWithStringAndObjectArgRetObject` | E | `EditorNode3DGizmoPlugin.get_material` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_OBJECT PT_STRING |
 | `ptrcallWithStringAndObjectListArgs` | E | `EditorSettings.set_builtin_action_override` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_STRING PT_TYPED_ARRAY_BLOB PT_VOID |
-| `ptrcallWithStringAndPackedStringListArgRetLong` | F | `Expression.parse` (non-const method) | 3 | PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING |
+| `ptrcallWithStringAndPackedStringListArgRetLong` | B | `TextServer.is_confusable` on `TextServerManager.get_primary_interface()` (const non-void method) | 3 | PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING |
 | `ptrcallWithStringAndRIDArgRetRID` | E | `OpenXRAPIExtension.find_action` (*XR*: an XR runtime and its devices) | 1 | PT_RID PT_STRING |
 | `ptrcallWithStringAndStringNameArgRetString` | B | `Node.atr` (const non-void method) | 1 | hand |
 | `ptrcallWithStringAndThreeIntArgsRetObject` | E | `ENetConnection.connect_to_host` (*ENet*: opens sockets or talks to the network) | 1 | PT_INT64 PT_OBJECT PT_STRING |
@@ -1183,21 +1240,21 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithStringAndVariantArgRetInt` | E | `DisplayServer.global_menu_get_item_index_from_tag` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_INT64 PT_STRING PT_VARIANT |
 | `ptrcallWithStringAndVariantArgRetVariantScalar` | D | `ProjectSettings.get_setting` (const non-void singleton method) | 1 | PT_STRING PT_VARIANT |
 | `ptrcallWithStringArg` | A | `AnimatedSprite2D.set_autoplay` (setter of `autoplay`) | 213 | PT_STRING PT_VOID |
-| `ptrcallWithStringArgRetBool` | C | `DirAccess.dir_exists_absolute` (static with a return value) | 53 | PT_BOOL PT_STRING |
-| `ptrcallWithStringArgRetByteArray` | C | `FileAccess.get_file_as_bytes` (static with a return value) | 2 | PT_STRING |
+| `ptrcallWithStringArgRetBool` | C | `DirAccess.dir_exists_absolute` (static with a return value); then B `CodeEdit.has_auto_brace_completion_close_key` (const non-void method) | 53 | PT_BOOL PT_STRING |
+| `ptrcallWithStringArgRetByteArray` | C | `FileAccess.get_file_as_bytes` (static with a return value); then D `Marshalls.base64_to_raw` (non-void method of a stateless singleton) | 2 | PT_STRING |
 | `ptrcallWithStringArgRetColor` | B | `CodeHighlighter.get_keyword_color` (const non-void method) | 2 | PT_COLOR PT_STRING |
 | `ptrcallWithStringArgRetDictionary` | E | `EditorExportPlatform.find_export_template` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_STRING |
 | `ptrcallWithStringArgRetInt` | B | `AnimationNode.find_input` (const non-void method) | 10 | PT_INT64 PT_STRING |
-| `ptrcallWithStringArgRetLong` | C | `DirAccess.make_dir_absolute` (static with a return value) | 52 | PT_INT64 PT_STRING |
-| `ptrcallWithStringArgRetObject` | C | `AudioStreamMP3.load_from_file` (static with a return value) | 21 | PT_OBJECT PT_STRING |
-| `ptrcallWithStringArgRetPackedStringList` | C | `DirAccess.get_directories_at` (static with a return value) | 15 | PT_STRING |
-| `ptrcallWithStringArgRetString` | C | `FileAccess.get_file_as_string` (static with a return value) | 29 | hand |
-| `ptrcallWithStringArgRetVariantScalar` | C | `JSON.parse_string` (static with a return value) | 3 | PT_STRING |
+| `ptrcallWithStringArgRetLong` | C | `DirAccess.make_dir_absolute` (static returning Error: its arguments must make it fail); then A `CompressedTexture2D.load` (setter of `load_path`) | 52 | PT_INT64 PT_STRING |
+| `ptrcallWithStringArgRetObject` | C | `AudioStreamMP3.load_from_file` (static with a return value); then B `Node.find_parent` (const non-void method) | 21 | PT_OBJECT PT_STRING |
+| `ptrcallWithStringArgRetPackedStringList` | C | `DirAccess.get_directories_at` (static with a return value); then B `ConfigFile.get_section_keys` (const non-void method) | 15 | PT_STRING |
+| `ptrcallWithStringArgRetString` | C | `FileAccess.get_file_as_string` (static with a return value); then B `CodeEdit.get_auto_brace_completion_close_key` (const non-void method) | 29 | hand |
+| `ptrcallWithStringArgRetVariantScalar` | C | `JSON.parse_string` (static with a return value); then B `TileData.get_custom_data` (const non-void method) | 3 | PT_STRING |
 | `ptrcallWithStringBoolArrayArgs` | E | `EditorDebuggerSession.toggle_profiler` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_ARRAY PT_BOOL PT_STRING PT_VOID |
 | `ptrcallWithStringBoolDoubleArgsRetLong` | B | `Image.save_webp` (const non-void method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_STRING |
-| `ptrcallWithStringBoolIntArgsRetBool` | F | `ProjectSettings.load_resource_pack` (non-const singleton method) | 1 | PT_BOOL PT_INT64 PT_STRING |
+| `ptrcallWithStringBoolIntArgsRetBool` | E | `ProjectSettings.load_resource_pack` (mounts a resource pack into res:// for the rest of the process (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_INT64 PT_STRING |
 | `ptrcallWithStringBoolObjectArgs` | E | `EditorNode3DGizmoPlugin.create_handle_material` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_BOOL PT_OBJECT PT_STRING PT_VOID |
-| `ptrcallWithStringBoolStringArgsRetObject` | E | `AcceptDialog.add_button` (AcceptDialog: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_OBJECT PT_STRING |
+| `ptrcallWithStringBoolStringArgsRetObject` | E | `AcceptDialog.add_button` (Window: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_OBJECT PT_STRING |
 | `ptrcallWithStringByteArrayAndBoolArgRetLong` | F | `PCKPacker.add_file_from_buffer` (non-const method) | 1 | PT_BOOL PT_INT64 PT_PACKED_BYTE_ARRAY PT_STRING |
 | `ptrcallWithStringByteArrayBoolArgs` | E | `EditorExportPlugin.add_file` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_BOOL PT_PACKED_BYTE_ARRAY PT_STRING PT_VOID |
 | `ptrcallWithStringCallableArgs` | F | `JSONRPC.set_method` (void method) | 6 | PT_CALLABLE PT_STRING PT_VOID |
@@ -1216,7 +1273,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithStringIntByteArrayArgs` | E | `ENetConnection.socket_send` (*ENet*: opens sockets or talks to the network) | 1 | PT_INT64 PT_PACKED_BYTE_ARRAY PT_STRING PT_VOID |
 | `ptrcallWithStringIntCallableArgs` | E | `DisplayServer.global_menu_set_item_callback` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 3 | PT_CALLABLE PT_INT64 PT_STRING PT_VOID |
 | `ptrcallWithStringIntObjectArgsRetLong` | E | `HTTPClient.connect_to_host` (*HTTP*: opens sockets or talks to the network) | 1 | PT_INT64 PT_OBJECT PT_STRING |
-| `ptrcallWithStringIntStringArgsRetLong` | E | `WebRTCPeerConnection.add_ice_candidate` (*TCP*: opens sockets or talks to the network) | 1 | PT_INT64 PT_STRING |
+| `ptrcallWithStringIntStringArgsRetLong` | E | `WebRTCPeerConnection.add_ice_candidate` (*WebRTC*: opens sockets or talks to the network) | 1 | PT_INT64 PT_STRING |
 | `ptrcallWithStringIntStringBoolArgsRetLong` | F | `PCKPacker.pck_start` (non-const method) | 1 | PT_BOOL PT_INT64 PT_STRING |
 | `ptrcallWithStringLongBoolArgs` | F | `UndoRedo.create_action` (void method) | 1 | PT_BOOL PT_INT64 PT_STRING PT_VOID |
 | `ptrcallWithStringLongByteArrayByteArrayArgsRetObject` | C | `FileAccess.open_encrypted` (static with a return value) | 1 | PT_INT64 PT_OBJECT PT_PACKED_BYTE_ARRAY PT_STRING |
@@ -1264,7 +1321,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithStringNameArgRetStringNameList` | F | `GraphEdit.get_attached_nodes_of_frame` (non-const method) | 1 | PT_STRING_NAME |
 | `ptrcallWithStringNameArgRetTypedObjectList` | F | `SceneTree.get_nodes_in_group` (non-const method) | 2 | PT_STRING_NAME |
 | `ptrcallWithStringNameArgRetVariantScalar` | B | `AnimationNode.get_parameter` (const non-void method) | 20 | hand |
-| `ptrcallWithStringNameArgRetVariantScalarOwned` | D | `ClassDB.instantiate` (const non-void singleton method) | 1 | hand |
+| `ptrcallWithStringNameArgRetVariantScalarOwned` | F | `ClassDB.instantiate` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | hand |
 | `ptrcallWithStringNameArgRetVector2` | B | `AnimationNodeBlendTree.get_node_position` (const non-void method) | 3 | PT_STRING_NAME PT_VECTOR2 |
 | `ptrcallWithStringNameArrayArgs` | E | `EngineDebugger.profiler_add_frame_data` (EngineDebugger: the debugger connection of the running engine) | 1 | PT_ARRAY PT_STRING_NAME PT_VOID |
 | `ptrcallWithStringNameArrayBoolArgs` | F | `Node.propagate_call` (void method) | 1 | PT_ARRAY PT_BOOL PT_STRING_NAME PT_VOID |
@@ -1307,7 +1364,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithStringObjectStringNameVariantArgs` | E | `EditorResourcePreview.queue_resource_preview` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_OBJECT PT_STRING PT_STRING_NAME PT_VARIANT PT_VOID |
 | `ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt` | E | `DisplayServer.global_menu_add_icon_check_item` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 3 | PT_CALLABLE PT_INT64 PT_OBJECT PT_STRING PT_VARIANT |
 | `ptrcallWithStringObjectUInt32StringArgsRetLong` | F | `GLTFDocument.append_from_file` (non-const method) | 1 | PT_INT64 PT_OBJECT PT_STRING |
-| `ptrcallWithStringPackedStringListAndIntArgs` | E | `FileDialog.add_option` (FileDialog: needs a window or the display server (headless has a dummy one that errors or no-ops); browses the host filesystem) | 1 | PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING PT_VOID |
+| `ptrcallWithStringPackedStringListAndIntArgs` | E | `FileDialog.add_option` (Window: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING PT_VOID |
 | `ptrcallWithStringPackedStringListAndObjectArgs` | E | `EditorInspectorPlugin.add_property_editor_for_multiple_properties` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_OBJECT PT_PACKED_STRING_ARRAY PT_STRING PT_VOID |
 | `ptrcallWithStringPackedStringListAndStringArgs` | E | `EditorExportPlugin.add_shared_object` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_PACKED_STRING_ARRAY PT_STRING PT_VOID |
 | `ptrcallWithStringPackedStringListArrayTwoBoolArgsRetInt` | E | `OS.execute` (OS: host process control (execute, kill, shell_open, environment)) | 1 | PT_ARRAY PT_BOOL PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING |
@@ -1342,8 +1399,8 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithThreeIntArgsRetObject` | F | `AudioServer.get_bus_effect_instance` (non-const singleton method) | 1 | PT_INT64 PT_OBJECT |
 | `ptrcallWithThreeIntArgsRetVector2` | B | `FontFile.get_glyph_advance` (const non-void method) | 1 | PT_INT64 PT_VECTOR2 |
 | `ptrcallWithThreeIntArgsRetVector2i` | B | `TextEdit.get_next_visible_line_index_offset_from` (const non-void method) | 1 | PT_INT64 PT_VECTOR2I |
-| `ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList` | B | `Noise.get_seamless_image_3d` on `FastNoiseLite` (const non-void method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 |
-| `ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList` | B | `Noise.get_image_3d` on `FastNoiseLite` (const non-void method) | 1 | PT_BOOL PT_INT64 |
+| `ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList` | F | `Noise.get_seamless_image_3d` on `FastNoiseLite` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 |
+| `ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList` | F | `Noise.get_image_3d` on `FastNoiseLite` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_INT64 |
 | `ptrcallWithThreeLongArgsRetLong` | F | `Image.compress` (non-const method) | 2 | PT_INT64 |
 | `ptrcallWithThreeLongFourIntLongArgsRetRID` | F | `RenderingServer.texture_create_from_native_handle` (non-const singleton method) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithThreeLongFourUInt32ArgsRetLong` | E | `OpenXRAPIExtension.openxr_swapchain_create` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 |
@@ -1351,8 +1408,8 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithThreeObjectListUInt32ArgsRetRID` | E | `RenderingDevice.raytracing_pipeline_create` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_RID PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithThreeRIDArgs` | F | `RenderingServer.canvas_item_add_multimesh` (void singleton method) | 2 | PT_RID PT_VOID |
 | `ptrcallWithThreeStringAndIntArgRetInt` | E | `DisplayServer.global_menu_add_submenu_item` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_INT64 PT_STRING |
-| `ptrcallWithThreeStringArgs` | E | `FileDialog.add_filter` (FileDialog: needs a window or the display server (headless has a dummy one that errors or no-ops); browses the host filesystem) | 3 | PT_STRING PT_VOID |
-| `ptrcallWithThreeStringArgsRetLong` | C | `FileAccess.set_extended_attribute_string` (static with a return value) | 1 | PT_INT64 PT_STRING |
+| `ptrcallWithThreeStringArgs` | E | `FileDialog.add_filter` (Window: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 3 | PT_STRING PT_VOID |
+| `ptrcallWithThreeStringArgsRetLong` | C | `FileAccess.set_extended_attribute_string` (static returning Error: its arguments must make it fail) | 1 | PT_INT64 PT_STRING |
 | `ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong` | E | `DisplayServer.file_dialog_show` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_CALLABLE PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING |
 | `ptrcallWithThreeStringCallableArgsRetLong` | E | `DisplayServer.dialog_input_text` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_CALLABLE PT_INT64 PT_STRING |
 | `ptrcallWithThreeStringNameAndDoubleArg` | F | `AnimationPlayer.play_section_with_markers_backwards` (void method) | 1 | PT_FLOAT64 PT_STRING_NAME PT_VOID |
@@ -1387,14 +1444,14 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithTransform3DVector3TwoColorUInt32Args` | F | `GPUParticles3D.emit_particle` (void method) | 1 | PT_COLOR PT_INT64 PT_TRANSFORM3D PT_VECTOR3 PT_VOID |
 | `ptrcallWithTwoBoolAndDoubleArgRetByteArray` | B | `Image.save_exr_to_buffer` (const non-void method) | 1 | PT_BOOL PT_FLOAT64 |
 | `ptrcallWithTwoBoolArgs` | F | `ItemList.center_on_current` (void method) | 3 | PT_BOOL PT_VOID |
-| `ptrcallWithTwoBoolArgsRetObject` | B | `Mesh.create_convex_shape` (const non-void method) | 1 | PT_BOOL PT_OBJECT |
-| `ptrcallWithTwoBoolArgsRetString` | D | `Time.get_datetime_string_from_system` (const non-void singleton method) | 1 | PT_BOOL PT_STRING |
+| `ptrcallWithTwoBoolArgsRetObject` | F | `Mesh.create_convex_shape` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_OBJECT |
+| `ptrcallWithTwoBoolArgsRetString` | F | `Time.get_datetime_string_from_system` (reads the clock: two reads an oracle compares can differ (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_STRING |
 | `ptrcallWithTwoBoolArgsRetVector2iList` | B | `TextEdit.get_line_ranges_from_carets` (const non-void method) | 1 | PT_BOOL |
 | `ptrcallWithTwoByteArrayArgsRetBool` | F | `Crypto.constant_time_compare` (non-const method) | 1 | PT_BOOL PT_PACKED_BYTE_ARRAY |
 | `ptrcallWithTwoCallableArgs` | E | `DisplayServer.help_set_search_callbacks` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_CALLABLE PT_VOID |
 | `ptrcallWithTwoColorArgs` | F | `RichTextLabel.set_cell_row_background_color` (void method) | 1 | PT_COLOR PT_VOID |
 | `ptrcallWithTwoDoubleAndIntArgs` | F | `Animation.optimize` (void method) | 1 | PT_FLOAT64 PT_INT64 PT_VOID |
-| `ptrcallWithTwoDoubleAndLongArgsRetVector2` | E | `AudioEffectSpectrumAnalyzerInstance.get_magnitude_for_frequency_range` (abstract, and no instantiable non-excluded descendant) | 1 | PT_FLOAT64 PT_INT64 PT_VECTOR2 |
+| `ptrcallWithTwoDoubleAndLongArgsRetVector2` | E | `AudioEffectSpectrumAnalyzerInstance.get_magnitude_for_frequency_range` (abstract, and no instantiable descendant) | 1 | PT_FLOAT64 PT_INT64 PT_VECTOR2 |
 | `ptrcallWithTwoDoubleArgs` | F | `AnimationPlayer.set_section` (void method) | 6 | PT_FLOAT64 PT_VOID |
 | `ptrcallWithTwoDoubleArgsRetDouble` | B | `Noise.get_noise_2d` on `FastNoiseLite` (const non-void method) | 3 | PT_FLOAT64 |
 | `ptrcallWithTwoDoubleArrayArgs` | F | `ImporterMesh.generate_lods` (void method) | 1 | PT_ARRAY PT_FLOAT64 PT_VOID |
@@ -1411,7 +1468,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithTwoIntAndQuaternionArg` | F | `IterateIK3D.set_joint_limitation_rotation_offset` on `CCDIK3D` (void method) | 1 | PT_INT64 PT_QUATERNION PT_VOID |
 | `ptrcallWithTwoIntAndStringArgs` | F | `TextEdit.set_line_gutter_text` (void method) | 6 | PT_INT64 PT_STRING PT_VOID |
 | `ptrcallWithTwoIntAndStringNameArg` | F | `Animation.animation_track_set_key_animation` (void method) | 1 | PT_INT64 PT_STRING_NAME PT_VOID |
-| `ptrcallWithTwoIntAndThreeBoolArgsRetObject` | B | `Noise.get_image` on `FastNoiseLite` (const non-void method) | 2 | PT_BOOL PT_INT64 PT_OBJECT |
+| `ptrcallWithTwoIntAndThreeBoolArgsRetObject` | B | `TileData.get_occluder_polygon` (const non-void method) | 2 | PT_BOOL PT_INT64 PT_OBJECT |
 | `ptrcallWithTwoIntAndVariantArg` | F | `Animation.track_set_key_value` (void method) | 2 | PT_INT64 PT_VARIANT PT_VOID |
 | `ptrcallWithTwoIntAndVector2iArg` | F | `FontFile.remove_kerning` (void method) | 1 | PT_INT64 PT_VECTOR2I PT_VOID |
 | `ptrcallWithTwoIntAndVector3Arg` | F | `IterateIK3D.set_joint_limitation_right_axis_vector` on `CCDIK3D` (void method) | 4 | PT_INT64 PT_VECTOR3 PT_VOID |
@@ -1445,7 +1502,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithTwoIntStringArgsRetInt` | E | `UPNP.discover` (*UPNP*: opens sockets or talks to the network) | 1 | PT_INT64 PT_STRING |
 | `ptrcallWithTwoIntThreeLongDoubleBoolIntBoolArgs` | F | `AudioStreamInteractive.add_transition` (void method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_VOID |
 | `ptrcallWithTwoIntTwoBoolArgsRetInt` | B | `TextEdit.get_selection_at_line_column` (const non-void method) | 1 | PT_BOOL PT_INT64 |
-| `ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject` | B | `Noise.get_seamless_image` on `FastNoiseLite` (const non-void method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_OBJECT |
+| `ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject` | F | `Noise.get_seamless_image` on `FastNoiseLite` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_OBJECT |
 | `ptrcallWithTwoIntTwoStringAndIntArgsRetInt` | E | `UPNP.add_port_mapping` (*UPNP*: opens sockets or talks to the network) | 2 | PT_INT64 PT_STRING |
 | `ptrcallWithTwoIntTwoStringArgsRetDictionary` | E | `EditorVCSInterface.create_diff_line` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_INT64 PT_STRING |
 | `ptrcallWithTwoIntVector2DoubleArgs` | F | `Animation.bezier_track_set_key_in_handle` (void method) | 2 | PT_FLOAT64 PT_INT64 PT_VECTOR2 PT_VOID |
@@ -1464,8 +1521,8 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithTwoLongArgsRetInt` | F | `Viewport.get_render_info` on `SubViewport` (non-const method) | 1 | PT_INT64 |
 | `ptrcallWithTwoLongArgsRetLong` | E | `OpenXRInterface.get_hand_joint_flags` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 |
 | `ptrcallWithTwoLongArgsRetQuaternion` | E | `OpenXRInterface.get_hand_joint_rotation` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 PT_QUATERNION |
-| `ptrcallWithTwoLongArgsRetRID` | E | `TextServer.create_shaped_text` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_RID |
-| `ptrcallWithTwoLongArgsRetVector2` | E | `TextServer.get_hex_code_box_size` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_VECTOR2 |
+| `ptrcallWithTwoLongArgsRetRID` | F | `TextServer.create_shaped_text` on `TextServerManager.get_primary_interface()` (non-const method) | 1 | PT_INT64 PT_RID |
+| `ptrcallWithTwoLongArgsRetVector2` | B | `TextServer.get_hex_code_box_size` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_VECTOR2 |
 | `ptrcallWithTwoLongArgsRetVector3` | E | `OpenXRInterface.get_hand_joint_angular_velocity` (*XR*: an XR runtime and its devices) | 3 | PT_INT64 PT_VECTOR3 |
 | `ptrcallWithTwoLongStringArgs` | E | `OpenXRAPIExtension.set_object_name` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 PT_STRING PT_VOID |
 | `ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs` | F | `RichTextLabel.push_paragraph` (void method) | 1 | PT_INT64 PT_PACKED_FLOAT32_ARRAY PT_STRING PT_VOID |
@@ -1493,7 +1550,7 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithTwoRIDBoolArgs` | F | `RenderingServer.lightmap_set_textures` (void singleton method) | 1 | PT_BOOL PT_RID PT_VOID |
 | `ptrcallWithTwoRIDDoubleIntBoolArgsRetRID` | F | `AccessibilityServer.create_sub_text_edit_elements` (non-const singleton method) | 2 | PT_BOOL PT_FLOAT64 PT_INT64 PT_RID |
 | `ptrcallWithTwoRIDIntRIDIntArgs` | F | `AccessibilityServer.update_set_text_selection` (void singleton method) | 2 | PT_INT64 PT_RID PT_VOID |
-| `ptrcallWithTwoRIDLongVector2LongColorDoubleArgs` | E | `TextServer.font_draw_glyph` (abstract, and no instantiable non-excluded descendant) | 1 | PT_COLOR PT_FLOAT64 PT_INT64 PT_RID PT_VECTOR2 PT_VOID |
+| `ptrcallWithTwoRIDLongVector2LongColorDoubleArgs` | F | `TextServer.font_draw_glyph` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_COLOR PT_FLOAT64 PT_INT64 PT_RID PT_VECTOR2 PT_VOID |
 | `ptrcallWithTwoRIDRect2IntArgs` | F | `RenderingServer.instance_geometry_set_lightmap` (void singleton method) | 1 | PT_INT64 PT_RECT2 PT_RID PT_VOID |
 | `ptrcallWithTwoRIDThreeUInt32ArgsRetLong` | E | `RenderingDevice.buffer_copy` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithTwoRIDThreeVector3FourUInt32ArgsRetLong` | E | `RenderingDevice.texture_copy` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_RID PT_VECTOR3 |
@@ -1501,15 +1558,15 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithTwoRIDTransform2DColorRIDArgs` | F | `RenderingServer.canvas_item_add_mesh` (void singleton method) | 1 | PT_COLOR PT_RID PT_TRANSFORM2D PT_VOID |
 | `ptrcallWithTwoRIDTransform3DBoolArgs` | F | `PhysicsServer3D.area_add_shape` (void singleton method) | 2 | PT_BOOL PT_RID PT_TRANSFORM3D PT_VOID |
 | `ptrcallWithTwoRIDTwoIntArgs` | F | `RenderingServer.viewport_set_canvas_stacking` (void singleton method) | 1 | PT_INT64 PT_RID PT_VOID |
-| `ptrcallWithTwoRIDTwoLongVector2LongColorDoubleArgs` | E | `TextServer.font_draw_glyph_outline` (abstract, and no instantiable non-excluded descendant) | 1 | PT_COLOR PT_FLOAT64 PT_INT64 PT_RID PT_VECTOR2 PT_VOID |
-| `ptrcallWithTwoRIDVector2TwoDoubleColorDoubleArgs` | E | `TextServer.shaped_text_draw` (abstract, and no instantiable non-excluded descendant) | 1 | PT_COLOR PT_FLOAT64 PT_RID PT_VECTOR2 PT_VOID |
-| `ptrcallWithTwoRIDVector2TwoDoubleLongColorDoubleArgs` | E | `TextServer.shaped_text_draw_outline` (abstract, and no instantiable non-excluded descendant) | 1 | PT_COLOR PT_FLOAT64 PT_INT64 PT_RID PT_VECTOR2 PT_VOID |
+| `ptrcallWithTwoRIDTwoLongVector2LongColorDoubleArgs` | F | `TextServer.font_draw_glyph_outline` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_COLOR PT_FLOAT64 PT_INT64 PT_RID PT_VECTOR2 PT_VOID |
+| `ptrcallWithTwoRIDVector2TwoDoubleColorDoubleArgs` | F | `TextServer.shaped_text_draw` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_COLOR PT_FLOAT64 PT_RID PT_VECTOR2 PT_VOID |
+| `ptrcallWithTwoRIDVector2TwoDoubleLongColorDoubleArgs` | F | `TextServer.shaped_text_draw_outline` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_COLOR PT_FLOAT64 PT_INT64 PT_RID PT_VECTOR2 PT_VOID |
 | `ptrcallWithTwoRIDVector3RIDVector3Args` | F | `PhysicsServer3D.joint_make_pin` (void singleton method) | 1 | PT_RID PT_VECTOR3 PT_VOID |
 | `ptrcallWithTwoStringAndBoolArgs` | F | `CodeEdit.add_comment_delimiter` (void method) | 2 | PT_BOOL PT_STRING PT_VOID |
-| `ptrcallWithTwoStringAndByteArrayArgsRetLong` | C | `FileAccess.set_extended_attribute` (static with a return value) | 1 | PT_INT64 PT_PACKED_BYTE_ARRAY PT_STRING |
+| `ptrcallWithTwoStringAndByteArrayArgsRetLong` | C | `FileAccess.set_extended_attribute` (static returning Error: its arguments must make it fail) | 1 | PT_INT64 PT_PACKED_BYTE_ARRAY PT_STRING |
 | `ptrcallWithTwoStringAndIntArgs` | E | `PopupMenu.add_submenu_item` (*Popup*: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_INT64 PT_STRING PT_VOID |
-| `ptrcallWithTwoStringAndIntArgsRetLong` | C | `DirAccess.copy_absolute` (static with a return value) | 2 | PT_INT64 PT_STRING |
-| `ptrcallWithTwoStringAndLongArgRetPackedInt32List` | E | `TextServer.string_get_word_breaks` (abstract, and no instantiable non-excluded descendant) | 1 | PT_INT64 PT_STRING |
+| `ptrcallWithTwoStringAndIntArgsRetLong` | C | `DirAccess.copy_absolute` (static returning Error: its arguments must make it fail); then E `DirAccess.copy` (abstract, and no instantiable descendant) | 2 | PT_INT64 PT_STRING |
+| `ptrcallWithTwoStringAndLongArgRetPackedInt32List` | B | `TextServer.string_get_word_breaks` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_STRING |
 | `ptrcallWithTwoStringAndLongArgsRetObject` | F | `ResourceLoader.load` (non-const singleton method) | 5 | PT_INT64 PT_OBJECT PT_STRING |
 | `ptrcallWithTwoStringAndTwoBoolArgs` | E | `ScriptCreateDialog.config` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_BOOL PT_STRING PT_VOID |
 | `ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList` | B | `Node.find_children` (const non-void method) | 1 | hand |
@@ -1520,9 +1577,9 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithTwoStringArgsRetByteArray` | C | `FileAccess.get_extended_attribute` (static with a return value) | 1 | PT_STRING |
 | `ptrcallWithTwoStringArgsRetDictionary` | E | `EditorVCSInterface.create_diff_file` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_STRING |
 | `ptrcallWithTwoStringArgsRetInt` | D | `TranslationServer.compare_locales` (const non-void singleton method) | 2 | PT_INT64 PT_STRING |
-| `ptrcallWithTwoStringArgsRetLong` | C | `DirAccess.rename_absolute` (static with a return value) | 11 | PT_INT64 PT_STRING |
-| `ptrcallWithTwoStringArgsRetPackedInt32List` | E | `TextServer.string_get_character_breaks` (abstract, and no instantiable non-excluded descendant) | 1 | PT_STRING |
-| `ptrcallWithTwoStringArgsRetString` | C | `FileAccess.get_extended_attribute_string` (static with a return value) | 8 | PT_STRING |
+| `ptrcallWithTwoStringArgsRetLong` | C | `DirAccess.rename_absolute` (static returning Error: its arguments must make it fail); then F `ConfigFile.load_encrypted_pass` (non-const method) | 11 | PT_INT64 PT_STRING |
+| `ptrcallWithTwoStringArgsRetPackedInt32List` | B | `TextServer.string_get_character_breaks` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_STRING |
+| `ptrcallWithTwoStringArgsRetString` | C | `FileAccess.get_extended_attribute_string` (static with a return value); then B `TextServer.format_number` on `TextServerManager.get_primary_interface()` (const non-void method) | 8 | PT_STRING |
 | `ptrcallWithTwoStringBoolArgsRetLong` | F | `PCKPacker.add_file` (non-const method) | 1 | PT_BOOL PT_INT64 PT_STRING |
 | `ptrcallWithTwoStringBoolLongArgsRetLong` | F | `ResourceLoader.load_threaded_request` (non-const singleton method) | 1 | PT_BOOL PT_INT64 PT_STRING |
 | `ptrcallWithTwoStringBoolTwoIntArgsRetString` | B | `RegEx.sub` (const non-void method) | 1 | PT_BOOL PT_INT64 PT_STRING |
@@ -1625,10 +1682,10 @@ The exercise runner creates `user://kanama-api-exercise/` before its first row a
 | `ptrcallWithUInt32ThreeDoubleArgsRetProjection` | E | `XRInterface.get_projection_for_view` (*XR*: an XR runtime and its devices) | 1 | PT_FLOAT64 PT_INT64 PT_PROJECTION |
 | `ptrcallWithUInt32Transform3DArgsRetTransform3D` | E | `XRInterface.get_transform_for_view` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 PT_TRANSFORM3D |
 | `ptrcallWithVariantAndBoolArg` | F | `StreamPeer.put_var` on `StreamPeerBuffer` (void method) | 1 | PT_BOOL PT_VARIANT PT_VOID |
-| `ptrcallWithVariantAndBoolArgRetBool` | E | `FileAccess.store_var` (abstract, and no instantiable non-excluded descendant) | 1 | PT_BOOL PT_VARIANT |
+| `ptrcallWithVariantAndBoolArgRetBool` | E | `FileAccess.store_var` (abstract, and no instantiable descendant) | 1 | PT_BOOL PT_VARIANT |
 | `ptrcallWithVariantAndBoolArgRetLong` | F | `PacketPeer.put_var` on `PacketPeerStream` (non-const method) | 1 | PT_BOOL PT_INT64 PT_VARIANT |
 | `ptrcallWithVariantAndBoolArgRetString` | D | `Marshalls.variant_to_base64` (non-void method of a stateless singleton) | 1 | PT_BOOL PT_STRING PT_VARIANT |
-| `ptrcallWithVariantAndBoolArgRetVariantScalar` | C | `JSON.from_native` (static with a return value) | 3 | PT_BOOL PT_VARIANT |
+| `ptrcallWithVariantAndBoolArgRetVariantScalar` | C | `JSON.from_native` (static with a return value); then F `JSONRPC.process_action` (non-const method) | 3 | PT_BOOL PT_VARIANT |
 | `ptrcallWithVariantAndObjectArg` | F | `Control.force_drag` (void method) | 1 | PT_OBJECT PT_VARIANT PT_VOID |
 | `ptrcallWithVariantArg` | A | `JSON.set_data` (setter of `data`) | 12 | PT_VARIANT PT_VOID |
 | `ptrcallWithVariantArgRetBool` | B | `TextLine.has_object` (const non-void method) | 2 | PT_BOOL PT_VARIANT |
