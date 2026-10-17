@@ -17,6 +17,8 @@ val sharedApiFiles = setOf("GD.kt", "Mathf.kt", "GodotCallable.kt")
 
 tasks.withType<com.ncorti.ktfmt.gradle.tasks.KtfmtBaseTask>().configureEach {
     exclude { element -> element.file.parentFile == sharedApiDir }
+    // Task 125 P5: the generated Web API exercise is drift-gated (generate_web_exercise.py --check).
+    exclude("**/ApiExerciseProbe.kt")
 }
 
 val webScriptSourceRoot =
@@ -475,6 +477,25 @@ tasks.register<Exec>("checkWebWrappers") {
 }
 
 tasks.named("check") { dependsOn("checkWebWrappers") }
+
+// Task 125 P5: the Web API exercise (one generated row per Web call shape, in the web3d fixture's
+// ApiExerciseProbe.kt, and its report page) is generated from the same contract;
+// `checkWebExercise` fails when a shape has no row or a committed output is stale.
+tasks.register<Exec>("checkWebExercise") {
+    group = "verification"
+    description = "Fails if the generated Web API exercise drifts from the Web call contract."
+    inputs.file(rootProject.file("scripts/generate_web_exercise.py"))
+    inputs.file(webBackendDispatchGenerator)
+    inputs.file(webWrapperGenerator)
+    inputs.file(rootProject.file("scripts/platform_backend_contract.py"))
+    inputs.file(webBackendPolicy)
+    inputs.file(rootProject.file("extension_api.json"))
+    inputs.file(layout.projectDirectory.file("src/web3dSmoke/web/kotlin-src/ApiExerciseProbe.kt"))
+    inputs.file(rootProject.file("docs/reference/generated/web-api-exercise.md"))
+    commandLine("python3", rootProject.file("scripts/generate_web_exercise.py").absolutePath, "--check")
+}
+
+tasks.named("check") { dependsOn("checkWebExercise") }
 
 tasks.register("stageWebSpikeGodotProject") {
     group = "verification"
@@ -1378,6 +1399,7 @@ tasks.register("stageWebWeb3dProject") {
                 "res://kotlin-src/LentProbe.kt",
                 "res://kotlin-src/LentKeeper.kt",
                 "res://kotlin-src/OwnProbe.kt",
+                "res://kotlin-src/ApiExerciseProbe.kt",
             )
         val mappings =
             manifest

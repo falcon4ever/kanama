@@ -99,6 +99,32 @@ lost or refused values that work on desktop:
 alike. On iOS only, a signal or script-method argument of either type fails with an error naming
 the type, where desktop passes `null`.
 
+### Fixed — Web: an object argument is accepted however the object was obtained
+
+On Web, passing an object to a wrapper member threw `Kanama Web browser handle=... has kind=NODE,
+expected=RESOURCE` (or `expected=NODE`, `expected=OBJECT`) when the object came another way than the
+one the member's first demo used: a resource from `duplicate()` or from a getter given to
+`Sprite2D.texture` (which took only a loaded one), a loaded `MeshLibrary` given to
+`GridMap.meshLibrary` or a loaded `ButtonGroup` to `BaseButton.buttonGroup` (which took only a
+`create()`d one). The members now accept any live object of the declared type, as desktop and iOS do (`Sprite2D.texture`, `TextureRect.texture`,
+`AudioStreamPlayer.stream`, `GridMap.meshLibrary`, `Material.nextPass`, `BaseButton.buttonGroup`,
+`LightmapGI.lightData`, `MeshLibrary.setItemMesh`, `Mesh.surfaceSetMaterial`,
+`Input.setCustomMouseCursor`, `CanvasItem.drawTexture`).
+
+### Fixed — Web: a generic call that returns a PackedStringArray
+
+`WebExperimentalGenericCall.callImmediate(...).asAny()` of a `PackedStringArray` result threw
+`IndexOutOfBoundsException`; it returns the `List<String>`.
+
+### Added — tooling: the Web API exercise, one generated row per Web call shape
+
+Contributors: `scripts/generate_web_exercise.py` writes one row per call shape of
+`scripts/platform_backend_calls.json` into the web3d fixture (`ApiExerciseProbe.kt`) and the
+[Web API Exercise](docs/reference/generated/web-api-exercise.md) page; each row calls its shape and
+checks it against the generic tier on the same object, and the web3d driver requires every row to
+pass (`checks.apiExercise`) in Chrome and Firefox. `--check` (local_ci, `:web-runtime:check`) fails
+when a contract shape has no row.
+
 ### Added — tooling: an inventory of every `ObjectCalls` helper and how a generated exercise can check it
 
 Contributors: `scripts/generate_api_exercise.py` classifies each of the 1,492 helpers the shared tree calls (static, property pair, const oracle, singleton, reach only, excluded with a reason) into [API Exercise Inventory](docs/reference/generated/api-exercise.md); the local_ci stage "API exercise inventory drift" fails when the page is stale, when `scripts/api_exercise_policy.py` names a class or method the API lacks, or when a helper is classified by nothing.

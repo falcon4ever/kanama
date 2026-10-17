@@ -534,6 +534,13 @@ case("generate_api_exercise.py --check (static argument off its default)", API_E
 case("generate_api_exercise.py --check (rows hand-edited)", API_EXERCISE_CHECK,
      [Edit("src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt", "r.staticError(got.value, oracle)", "r.staticValue(got.value, oracle, weak = true)")],
      "ApiExercise.generated.kt is stale or hand-edited", "a generated API exercise row is edited by hand (an Error static made weak): the committed rows must be the generator's")
+WEB_EXERCISE_CHECK = py("generate_web_exercise.py", "--check")
+case("generate_web_exercise.py --check (shape without a row)", WEB_EXERCISE_CHECK,
+     [Edit("scripts/generate_web_exercise.py", 'dict(shape="UTILITY_NOARGS_VOID", op=9,', 'dict(shape="UTILITY_NOARGS_VOID_RED_RUN", op=9,')],
+     "UTILITY_NOARGS_VOID: the contract shape has no exercise row", "a Web call shape of the contract has no exercise row (here: the row names a shape the contract lacks)")
+case("generate_web_exercise.py --check (rows hand-edited)", WEB_EXERCISE_CHECK,
+     [Edit("web-runtime/src/web3dSmoke/web/kotlin-src/ApiExerciseProbe.kt", 'same(result, oracle(singleton("OS"), "get_name"))', "reach()")],
+     "stale: web-runtime/src/web3dSmoke/web/kotlin-src/ApiExerciseProbe.kt", "a generated Web exercise row is edited by hand (an oracle row made a reach row): the committed probe must be the generator's")
 # --check-jar over a jar built from scripts/fixtures/api_exercise/jar/ (zipped by the command): a shipped jar that
 # carries an exercise class (a build made with -PkanamaApiExercise=true) must fail the check.
 API_EXERCISE_JAR = ["python3", "-c",

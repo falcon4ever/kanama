@@ -66,6 +66,7 @@ nav:
           - iOS Backend Hand-written Registry: reference/generated/ios-backend-handwritten.md
           - iOS Shape Gap: reference/generated/ios-shape-gap.md
           - API Exercise Inventory: reference/generated/api-exercise.md
+          - Web API Exercise: reference/generated/web-api-exercise.md
           - Enum Constant Migration: reference/generated/enum-migration.md
   - Contributing:
       - Contributor Guide: contributing/index.md

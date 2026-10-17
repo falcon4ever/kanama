@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3]
+[gd_scene load_steps=30 format=3]
 
 [ext_resource type="Script" path="res://kotlin-src/Main.kt" id="1_main"]
 [ext_resource type="Script" path="res://kotlin-src/SmokeQuit.kt" id="2_smoke"]
@@ -22,6 +22,8 @@
 [ext_resource type="Script" path="res://kotlin-src/LentKeeper.kt" id="20_lentkeeper"]
 [ext_resource type="Script" path="res://own_twin.gd" id="21_owntwin"]
 [ext_resource type="Script" path="res://kotlin-src/OwnProbe.kt" id="22_ownprobe"]
+[ext_resource type="Script" path="res://kotlin-src/ApiExerciseProbe.kt" id="23_apiexercise"]
+[ext_resource type="Script" path="res://api_twin.gd" id="24_apitwin"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_1"]
 
@@ -230,6 +232,12 @@ script = ExtResource("21_owntwin")
 
 [node name="OwnProbe" type="Node" parent="."]
 script = ExtResource("22_ownprobe")
+
+[node name="ApiTwin" type="Node" parent="."]
+script = ExtResource("24_apitwin")
+
+[node name="ApiExerciseProbe" type="Node2D" parent="."]
+script = ExtResource("23_apiexercise")
 
 [node name="ThrowingConstructor" type="Node" parent="."]
 script = ExtResource("12_tctor")
