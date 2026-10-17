@@ -221,13 +221,10 @@
       "reason": "Web-only import-compat names the replaced Web GD/Mathf copies had (task 129 E): Basis alias, five GD extensions"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebMultiplayer.kt": {
-      "category": "decided",
-      "decision": "Ray-query design, decision D3 (a') (Laurence, 2026-10-16): the single-player session answers the members the shared tps-demo sources call (hasMultiplayerPeer, getConnectionStatus, isClass) as inert WEB_INERT_FACADES stand-ins; Web has no sockets, so there is nothing to generate",
+      "category": "transitional",
       "lines": 171,
-      "raises": [
-        "170 -> 171: desktop's defaults on Web: the session starts with an offline peer; getWorld3d documents that it is never null on Web"
-      ],
-      "reason": "the single-player session behind Node.getMultiplayer; most of its lines are the stand-ins that were transitional in WebFacades.kt before the decision, the rest the members the decision added"
+      "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
+      "reason": "per-platform hand file the generator should emit: the single-player session behind Node.getMultiplayer (inert stand-ins split out of WebFacades.kt, which shrank from 243 to 106 lines)"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebPhysicsQuery.kt": {
       "category": "decided",
@@ -371,7 +368,7 @@
       "lines": 62,
       "raises": [
         "53 -> 60: desktop's ray-query API on Web: the hand-shaped ray facade takes desktop's whole parameters surface, Node3D gains the getWorld3d member and its import-compat alias",
-        "60 -> 62: desktop's defaults on Web: the session starts with an offline peer; getWorld3d documents that it is never null on Web"
+        "60 -> 62: getWorld3d documents that it is never null on Web"
       ]
     },
     "generate_web_wrappers.CLASS_POLICY[Node3D].top_level": {
