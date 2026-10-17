@@ -302,7 +302,16 @@
       ]
     },
     "tpsdemo": {
-      "required": [],
+      "required": [
+        {
+          "member": "PlayerInputSynchronizer._process",
+          "reason": "The player's input script runs from the shared kotlin-src (its aim ray: getRid, a List<RID> exclude, the Map result); measured 7 dispatches on Chrome and 116 on Firefox, 2026-10-16."
+        },
+        {
+          "member": "RedRobot._physics_process",
+          "reason": "The robots run from the shared kotlin-src (their laser and line-of-sight rays, AnimationTree.get); measured 228 dispatches on Chrome and 1072 on Firefox, 2026-10-16."
+        }
+      ],
       "todo": [
         {
           "member": "RedRobot.hit",

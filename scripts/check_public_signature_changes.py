@@ -1325,8 +1325,6 @@ WEB_GODOT_OBJECT_DRIFT: dict[str, str] = {
             "fun trN(message: String, pluralMessage: String, n: Int, context: String = ...): String",
         )
     },
-    "desktop-only GodotObject: fun get(property: String): Any?":
-        "Web has no Variant get(property): only the typed reads (getVector2, getObjectProperty)",
     "desktop-only GodotObject: fun setDeferred(property: String, value: Any?)": _WEB_SET_DEFERRED,
     "web-only GodotObject: fun setDeferred(property: String, value: Boolean)": _WEB_SET_DEFERRED,
     **{f"web-only GodotObject: fun emitSignal({params})": _WEB_EMIT

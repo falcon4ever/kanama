@@ -1863,17 +1863,6 @@ object InitialGodotCallDescriptors {
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 
-  val SPRINGARM3D_ADD_EXCLUDED_OBJECT =
-    GodotCallDescriptor(
-      opcode = 170,
-      className = "SpringArm3D",
-      methodName = "add_excluded_object",
-      hash = 2722037293L,
-      shape = GodotCallShape.OBJECT_ARG,
-      executionMode = GodotExecutionMode.QUEUED_MUTATION,
-      returnOwnership = GodotReturnOwnership.BORROWED,
-    )
-
   val RAYCAST3D_ADD_EXCEPTION =
     GodotCallDescriptor(
       opcode = 171,
@@ -2518,7 +2507,7 @@ object InitialGodotCallDescriptors {
       className = "PhysicsDirectSpaceState3D",
       methodName = "intersect_ray",
       hash = 3957970750L,
-      shape = GodotCallShape.VECTOR3_VECTOR3_LONG_OBJECT_RET_STRING,
+      shape = GodotCallShape.STRING_LIST_RET_STRING,
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )

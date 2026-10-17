@@ -45,6 +45,12 @@ def _load_backend_calls(path: Path = MANIFEST_PATH) -> tuple[BackendCallPolicy, 
     if payload.get("protocolVersion") != 1:
         raise ValueError(f"Unsupported platform backend protocol: {payload.get('protocolVersion')}")
 
+    # A retired opcode keeps its number as a tombstone (`{"opcode": N, "retired": "<why>"}`): the
+    # numbers stay append-only, and nothing dispatches, wraps or describes it any more.
+    entries = payload["calls"]
+    for entry in entries:
+        if "retired" in entry and (set(entry) != {"opcode", "retired"} or not entry["retired"]):
+            raise ValueError(f"Retired opcode {entry['opcode']} carries only its number and a reason")
     calls = tuple(
         BackendCallPolicy(
             opcode=entry["opcode"],
@@ -62,10 +68,11 @@ def _load_backend_calls(path: Path = MANIFEST_PATH) -> tuple[BackendCallPolicy, 
             typed_vararg_tail=tuple(entry.get("typedVarargTail", ())),
             introduced_by=entry.get("introducedBy", ""),
         )
-        for entry in payload["calls"]
+        for entry in entries
+        if "retired" not in entry
     )
-    opcodes = tuple(call.opcode for call in calls)
-    if opcodes != tuple(range(1, len(calls) + 1)):
+    opcodes = tuple(entry["opcode"] for entry in entries)
+    if opcodes != tuple(range(1, len(entries) + 1)):
         raise ValueError(f"Platform backend opcodes must be append-only and contiguous: {opcodes}")
     identities = tuple(
         (

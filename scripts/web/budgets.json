@@ -377,19 +377,19 @@
         "chrome": {
           "maxCrossingsPerTick": 3.5,
           "measured": {
-            "crossingsPerTick": 1.74,
-            "ticksObserved": 555,
-            "startupMs": 2368,
-            "on": "macOS arm64, Chrome 150 headless"
+            "crossingsPerTick": 1.69,
+            "ticksObserved": 468,
+            "startupMs": 5361,
+            "on": "macOS arm64, Chrome 155 headless, protocol 39, the three raycasting scripts from the shared kotlin-src (re-measured 2026-10-16 when their Web overrides went: 1.69 over 468 ticks before and after; 1.74 over 555 at protocol 15)"
           }
         },
         "firefox": {
           "maxCrossingsPerTick": 2,
           "measured": {
-            "crossingsPerTick": 1,
-            "ticksObserved": 3827,
-            "startupMs": 25095,
-            "on": "macOS arm64, Firefox 153 headless"
+            "crossingsPerTick": 1.09,
+            "ticksObserved": 3166,
+            "startupMs": 25331,
+            "on": "macOS arm64, Firefox 157 headless, protocol 39, the three raycasting scripts from the shared kotlin-src (re-measured 2026-10-16 when their Web overrides went: 1.08 over 3232 ticks before, 1.09 over 3166 after; 1.0 over 3827 at protocol 15)"
           }
         }
       }

@@ -3,12 +3,14 @@
 package net.multigesture.kanama.web
 
 import kotlin.js.ExperimentalWasmJsInterop
+import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.backend.GodotColor
 import net.multigesture.kanama.backend.GodotHandle
 import net.multigesture.kanama.backend.GodotRect2
 import net.multigesture.kanama.backend.GodotVector2
 import net.multigesture.kanama.backend.GodotVector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
+import net.multigesture.kanama.types.Color
 
 /**
  * Hand-written Web-only backend bookkeeping (Task 60a, "Option A").
@@ -111,6 +113,20 @@ internal fun loadWebRenderingMethodSnapshot(objectId: Int, value: String) {
 }
 
 internal fun webModulateSnapshot(objectId: Int): GodotColor? = modulateSnapshots[objectId]
+
+/**
+ * `CanvasItem.modulate` of a handle no snapshot was pushed for (an exported Control or a generic
+ * call's node: only lookups and dispatches seed the canvas mirror): one immediate engine read, kept
+ * as the snapshot so later reads cost nothing and see this script's own writes.
+ */
+internal fun webSeedModulateSnapshot(objectId: Int): GodotColor {
+  val color =
+    WebExperimentalGenericCall.callImmediate(GodotObject(WebObjectId(objectId)), "get_modulate")
+      .asAny()
+  check(color is Color) { "Kanama Web CanvasItem.get_modulate answered $color" }
+  return GodotColor(color.r.toFloat(), color.g.toFloat(), color.b.toFloat(), color.a.toFloat())
+    .also { modulateSnapshots[objectId] = it }
+}
 
 internal fun webEmittingSnapshot(objectId: Int): Boolean? = particlesEmittingSnapshots[objectId]
 

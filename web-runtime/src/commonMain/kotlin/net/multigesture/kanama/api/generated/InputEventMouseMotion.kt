@@ -20,6 +20,13 @@ class InputEventMouseMotion(godotObject: GodotHandle) : InputEventMouse(godotObj
   val relative: Vector2
     get() = getRelative()
 
+  /**
+   * Desktop's `getScreenRelative`: the motion in screen pixels, unscaled by the viewport's
+   * stretch (camera look). One immediate generic call.
+   */
+  fun getScreenRelative(): Vector2 =
+    webGenericCall(this, "get_screen_relative", listOf()) as Vector2
+
   companion object {
     /** Engine-side class check: null when [value] is not a InputEventMouseMotion. */
     fun from(value: GodotObject): InputEventMouseMotion? =

@@ -214,7 +214,6 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     167: {},
     168: {},
     169: {},
-    170: {},
     171: {},
     172: {},
     173: {},
@@ -1121,7 +1120,7 @@ def body_OBJECT_ARG(calls):
                 "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }",
                 "}",
             ]
-        elif op in (165, 170, 171):
+        elif op in (165, 171):
             lines += [
                 f"{op} -> {{",
                 f"require(descriptor.executionMode == {_QUEUED})",
@@ -1627,8 +1626,9 @@ def body_STRINGNAME_VECTOR2I_RET_INT(calls):
 def body_NOARGS_RET_COLOR(calls):
     return [
         f"require(descriptor.executionMode == {_SNAPSHOT})",
-        "return webModulateSnapshot(receiver.webId())",
-        '?: error("Missing Web CanvasItem.get_modulate snapshot for object handle=${receiver.webId()}")',
+        "// A handle that arrived without the canvas mirror (an exported Control) reads the engine",
+        "// once and seeds it; read-your-write from then on.",
+        "return webModulateSnapshot(receiver.webId()) ?: webSeedModulateSnapshot(receiver.webId())",
     ]
 
 
@@ -2094,32 +2094,17 @@ def body_DOUBLE_RET_DOUBLE(calls):
     ]
 
 
-def body_VECTOR3_VECTOR3_LONG_OBJECT_RET_STRING(calls):
+def body_STRING_LIST_RET_STRING(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
         f"require({_opcode_guard(calls)})",
-        # PhysicsRayQueryParameters3D.collision_mask is a uint32 (its default 0xffffffff).
-        "require(collisionMask in 0L..0xffffffffL) {",
-        '"Kanama Web ray query collision mask must fit Godot\'s uint32 ABI (0..0xffffffff), '
-        'got $collisionMask"',
+        "require(parts.none { '\u001f' in it }) {",
+        '"Kanama Web ${descriptor.className}.${descriptor.methodName} parts must not hold the unit separator"',
         "}",
         "commands.flush()",
-        "// Ray endpoints, mask, and the optional exclusion handle ride one query string",
-        "// (unit separator). The applier resolves the receiver's world, builds the query",
-        "// parameters, and turns the exclusion handle into an RID on its own side.",
-        "val packed =",
-        "listOf(",
-        "from.x.toString(),",
-        "from.y.toString(),",
-        "from.z.toString(),",
-        "to.x.toString(),",
-        "to.y.toString(),",
-        "to.z.toString(),",
-        "collisionMask.toString(),",
-        "(exclude?.webId() ?: 0).toString(),",
-        ")",
-        '.joinToString("\u001f")',
-        "return immediateWebStringQuery(descriptor.opcode, receiver.webId(), packed)",
+        "// The parts ride one query string (unit separator); the applier unpacks them (a RID",
+        "// among them as its decimal id: text carries all 64 bits) and answers one string.",
+        'return immediateWebStringQuery(descriptor.opcode, receiver.webId(), parts.joinToString("\u001f"))',
     ]
 
 
@@ -2387,16 +2372,7 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
     "NOARGS_RET_STRING": (["receiver: GodotHandle"], "String"),
     "STRINGNAME_RET_STRING": (["receiver: GodotHandle", "name: String"], "String"),
     "DOUBLE_RET_DOUBLE": (["receiver: GodotHandle", "value: Double"], "Double"),
-    "VECTOR3_VECTOR3_LONG_OBJECT_RET_STRING": (
-        [
-            "receiver: GodotHandle",
-            "from: GodotVector3",
-            "to: GodotVector3",
-            "collisionMask: Long",
-            "exclude: GodotHandle?",
-        ],
-        "String",
-    ),
+    "STRING_LIST_RET_STRING": (["receiver: GodotHandle", "parts: List<String>"], "String"),
     "STRING_STRING_BOOL_BOOL_RET_HANDLE_LIST": (
         [
             "receiver: GodotHandle",
@@ -2543,7 +2519,7 @@ EMIT_ORDER = [
     "NOARGS_RET_STRING",
     "STRINGNAME_RET_STRING",
     "DOUBLE_RET_DOUBLE",
-    "VECTOR3_VECTOR3_LONG_OBJECT_RET_STRING",
+    "STRING_LIST_RET_STRING",
 ]
 
 

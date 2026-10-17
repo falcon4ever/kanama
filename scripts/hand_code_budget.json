@@ -200,7 +200,7 @@
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt": {
       "category": "transitional",
-      "lines": 243,
+      "lines": 106,
       "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
       "reason": "per-platform hand file the generator should emit"
     },
@@ -220,11 +220,20 @@
       "lines": 20,
       "reason": "Web-only import-compat names the replaced Web GD/Mathf copies had (task 129 E): Basis alias, five GD extensions"
     },
-    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebPhysicsQuery.kt": {
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebMultiplayer.kt": {
       "category": "transitional",
-      "lines": 86,
+      "lines": 171,
       "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
-      "reason": "per-platform hand file the generator should emit"
+      "reason": "per-platform hand file the generator should emit: the single-player session behind Node.getMultiplayer (inert stand-ins split out of WebFacades.kt, which shrank from 243 to 106 lines)"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebPhysicsQuery.kt": {
+      "category": "decided",
+      "decision": "Ray-query design, decisions D2 (a) and D3 (a') (Laurence, 2026-10-16): the ray stays one crossing with no handle, so the PhysicsRayQueryParameters3D facade and the owner-bound World3D / PhysicsDirectSpaceState3D stay hand-kept and gate-listed (WEB_HANDSHAPED, WEB_INERT_FACADES)",
+      "lines": 182,
+      "raises": [
+        "86 -> 182 (was transitional): desktop's whole PhysicsRayQueryParameters3D surface and the Map result (the ray-query decisions)"
+      ],
+      "reason": "desktop's ray-query API on Web over the one-crossing opcode 229; a generated path would cost four crossings and a RefCounted handle per ray"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebRefCountedHolds.kt": {
       "category": "runtime-core",
@@ -356,16 +365,29 @@
       "lines": 2
     },
     "generate_web_wrappers.CLASS_POLICY[Node3D].custom": {
-      "lines": 53
+      "lines": 62,
+      "raises": [
+        "53 -> 60: desktop's ray-query API on Web: the hand-shaped ray facade takes desktop's whole parameters surface, Node3D gains the getWorld3d member and its import-compat alias",
+        "60 -> 62: getWorld3d documents that it is never null on Web"
+      ]
     },
     "generate_web_wrappers.CLASS_POLICY[Node3D].top_level": {
-      "lines": 50
+      "lines": 52,
+      "raises": [
+        "50 -> 52: desktop's ray-query API on Web: the hand-shaped ray facade takes desktop's whole parameters surface, Node3D gains the getWorld3d member and its import-compat alias"
+      ]
     },
     "generate_web_wrappers.CLASS_POLICY[Node].custom": {
-      "lines": 47
+      "lines": 53,
+      "raises": [
+        "47 -> 53: desktop's multiplayer members on the Web session stand-in: Node.getMultiplayer becomes a member (with its import-compat alias) so shared sources compile without the Web import"
+      ]
     },
     "generate_web_wrappers.CLASS_POLICY[Node].top_level": {
-      "lines": 17
+      "lines": 19,
+      "raises": [
+        "17 -> 19: desktop's multiplayer members on the Web session stand-in: Node.getMultiplayer becomes a member (with its import-compat alias) so shared sources compile without the Web import"
+      ]
     },
     "generate_web_wrappers.CLASS_POLICY[OS].custom": {
       "lines": 2

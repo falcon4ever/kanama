@@ -6,6 +6,7 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
@@ -26,6 +27,10 @@ class KinematicCollision3D(godotObject: GodotHandle) : RefCounted(godotObject) {
       requireOpenHandle(),
     ).toApi()
   }
+
+  /** The RID of the collision's [collisionIndex]th collider. One immediate call. */
+  fun getColliderRid(collisionIndex: Int = 0): RID =
+    webGenericCall(this, "get_collider_rid", listOf(collisionIndex)) as RID
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

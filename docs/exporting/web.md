@@ -2,7 +2,7 @@
 
 The Web backend compiles Kanama project scripts to **Kotlin/Wasm** and runs
 them against a Godot Web export through a generated per-call proxy and a
-versioned JavaScript bridge (protocol 38). <!-- kanama-claim: protocol --> This page is the reproducible export
+versioned JavaScript bridge (protocol 39). <!-- kanama-claim: protocol --> This page is the reproducible export
 workflow: prerequisites, the build/export/serve/smoke/publish commands, the
 browser matrix and budgets you run, and the limitations you meet while
 shipping. The tier, the twelve-demo corpus evidence, the browser floors and
@@ -647,7 +647,11 @@ commits, per-demo checksums, payload sizes, protocol version and driver results.
 - **No multiplayer** — ENet is unavailable in browsers, and Godot's
   WebSocket/WebRTC multiplayer peers are not wired into the Kanama Web backend.
   Web builds are single-player (tps-demo's online lobby is deliberately inert
-  for this reason).
+  for this reason). The multiplayer API answers a local session as desktop's
+  does before a game sets a network peer: it starts with a connected
+  `OfflineMultiplayerPeer` (`hasMultiplayerPeer()` is true), this is peer 1 and
+  the server, and an ENet peer never connects, so shared scripts that read it
+  compile and run unchanged.
 - No Web editor, no compiler, no hot reload, no Web GDExtension, and no TeaVM or
   Kotlin/JS production path. Gameplay is AOT-compiled into the Wasm payload, so
   a script edit means rebuild + re-export.

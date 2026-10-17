@@ -2,25 +2,35 @@ package web3d
 
 import net.multigesture.kanama.annotations.OnInput
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.Area3D
 import net.multigesture.kanama.api.Button
 import net.multigesture.kanama.api.ButtonGroup
+import net.multigesture.kanama.api.CollisionObject3D
+import net.multigesture.kanama.api.ColorRect
+import net.multigesture.kanama.api.ENetMultiplayerPeer
 import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.InputEvent
+import net.multigesture.kanama.api.InputEventMouseMotion
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.Node3D
 import net.multigesture.kanama.api.PhysicsRayQueryParameters3D
+import net.multigesture.kanama.api.RayCast3D
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.api.Resource
 import net.multigesture.kanama.api.MeshInstance3D
+import net.multigesture.kanama.api.MultiplayerPeer
 import net.multigesture.kanama.api.Signal2
 import net.multigesture.kanama.api.SignalArgType
+import net.multigesture.kanama.api.SpringArm3D
 import net.multigesture.kanama.api.StaticBody3D
-import net.multigesture.kanama.api.getWorld3d
 import net.multigesture.kanama.api.newScriptInstance
+import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.RID
+import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebExperimentalGenericCall
 import net.multigesture.kanama.web.WebGenericCallResult
@@ -83,6 +93,47 @@ import net.multigesture.kanama.web.WebGenericCallResult
  * [cost] (O10 `rcDispatchCost`): the lending's GDScript->JS calls plus the wrapper registrations, and
  * the microseconds, per 1000 dispatches of an already-seen InputEvent (0, 2) and plain Node (1, 3);
  * (4) the frames O2 / O6 waited for the collection.
+ *
+ * [rayMask] (the R and N rows: ray queries and RIDs with desktop's API, and the other members a
+ * shared raycasting file needs; 2097151 when healthy). A RID is a
+ * value that crosses as its id in text, the query parameters stay a Kotlin value the applier builds
+ * the engine object from, and a ray is one engine crossing that mints no handle:
+ * - R1 `rayHitIsDictionary`: 1 = `intersectRay` answers a Map with exactly `position, normal,
+ *   face_index, collider_id, collider, shape, rid`, `position` / `normal` Vector3, `face_index` /
+ *   `collider_id` / `shape` Long, and `collider_id` the collider's `instanceId`.
+ * - R2 `rayExcludesByRid`: 2 = a ray over OwnRayBody (A) and OwnRayBody2 (B) hits A, and with
+ *   `exclude = listOf(a.getRid())` hits B.
+ * - R3 `rayMissIsEmptyMap`: 4 = a ray into empty space answers `emptyMap()` (desktop parity).
+ * - R4 `rayRidMatchesCollider`: 8 = `hit["rid"]` is a RID equal to the collider's `getRid()`, and
+ *   the collider `==` its lookup (O9's identity).
+ * - R5 `ridIsCachedPerHandle`: 16 = 1000 `getRid()` from two wrappers of one node cross once; 32 =
+ *   10 000 rays leave the live browser handles where they were (no handle per ray).
+ * - R6 `staleRidIsHarmless`: 64 = excluding a freed body's RID still hits, reports no error and
+ *   mints no handle (Godot's own validator answers a stale RID).
+ * - R7 `rayIsOneCrossing`: 128 = 100 rays are 100 engine crossings and no builtin call.
+ * - R8 `rayFlags`: 256 = `collideWithAreas` hits OwnRayArea; 512 = `collisionMask = 0b10` misses
+ *   the layer-1 bodies; 1024 = `hitFromInside` toggles the hit on the body the ray starts in;
+ *   2048 = `collideWithBodies = false` misses.
+ * - R9 `rayCastExceptionRid`: 4096 = `RayCast3D.addExceptionRid(body.getRid())` stops the cast
+ *   colliding; 8192 = `SpringArm3D.addExcludedObject(body.getRid())` applies with no error reported
+ *   and lets the arm reach its full length.
+ * - R10 `ridSignalIsSameCodec`: 16384 = `Area3D.bodyShapeEntered`'s RID argument `==`
+ *   `body.getRid()`.
+ * - N1 `objectGetIsGeneric`: 32768 = `GodotObject.get(property)` answers the engine's value.
+ * - N2 `modulateReadsWithoutSnapshot`: 65536 = a ColorRect whose handle came without the canvas
+ *   mirror reads its `modulate` from the engine once, then its own writes.
+ * - N3 `multiplayerFacadeMembers`: 131072 = `getMultiplayer()` is a member with desktop's defaults
+ *   (`hasMultiplayerPeer()`, a connected `OfflineMultiplayerPeer`, peer 1, the server); ENet never
+ *   connects.
+ * - N4 `screenRelativeReads`: 262144 = `InputEventMouseMotion.getScreenRelative()` reads the event.
+ * - R11 `ridPast2To53RoundTrips`: 524288 = the RID `0x7fffffff12345678` (past 2^53) comes back from
+ *   a generic call and goes back as a generic argument with its id whole.
+ * - R8b `rayHitBackFaces`: 1048576 = on a one-quad concave shape `hitBackFaces = false` leaves one
+ *   of the two sides hitting, `true` (the default) both.
+ *
+ * [rayCost]: (0) engine crossings of 1000 `getRid()`, (1) of 100 rays, (2) live browser handles
+ * gained by 10 000 rays at once and (3) a sweep later (reported only: other rows run meanwhile),
+ * (4) builtin calls of 100 rays, (5) the microseconds of 10 000 rays.
  */
 @ScriptClass(attachTo = "Node")
 class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
@@ -112,6 +163,10 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
   private var ringBase = 0L
   private var ringHeld: WebGenericCallResult? = null
 
+  private var rayMask = 0L
+  private var rayDone = 0L
+  private val rayCost = LongArray(6)
+
   @OnInput
   fun onInput(event: InputEvent) {
     if (recording) inputArg = event
@@ -122,6 +177,12 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
   fun ownDone(value: Long): Long = done
 
   fun ownCost(value: Long): Long = cost[value.toInt()]
+
+  fun ownRayMask(value: Long): Long = rayMask
+
+  fun ownRayDone(value: Long): Long = rayDone
+
+  fun ownRayCost(value: Long): Long = rayCost[value.toInt()]
 
   private fun twin(): Node = self.requireAs("../OwnTwin", ::Node)
 
@@ -152,6 +213,7 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     // O9 first: the body it hands over stays lent (it lives), so O2's baseline comes after it.
     rayRow()
     uint32Rows()
+    rayRows()
     orphanWindowRow()
     lentBase = counter("liveLent")
     pinnedBase = counter("rcPinned")
@@ -336,7 +398,7 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     val from = twin.requireAs("OwnRayFrom", ::Node3D)
     val hit = answers("u32 default mask") {
       val query = checkNotNull(PhysicsRayQueryParameters3D.create(Vector3(500.0, 510.0, 500.0), Vector3(500.0, 490.0, 500.0)))
-      from.getWorld3d().directSpaceState.intersectRay(query) != null
+      ray(from, query).isNotEmpty()
     }
     if (hit) mask = mask or 1048576L
     val written = answers("u32 writes") {
@@ -349,6 +411,232 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     MainThread.postAfterFrames(1) {
       if (written && twinLong("uint32_masks") == 1L) mask = mask or 2097152L
       else note("u32 written=$written read back ${twinLong("uint32_masks")}")
+    }
+  }
+
+  /** Desktop's spelling, so this is the same code on every platform. */
+  private fun ray(from: Node3D, query: PhysicsRayQueryParameters3D): Map<String, Any?> =
+    from.getWorld3d()?.directSpaceState?.intersectRay(query) ?: emptyMap()
+
+  /** A vertical ray at ([x], 500) from [fromY] down to [toY]. */
+  private fun down(
+    x: Double,
+    fromY: Double = 510.0,
+    toY: Double = 490.0,
+    mask: Long = 0xffffffffL,
+    exclude: List<RID> = emptyList(),
+  ): PhysicsRayQueryParameters3D =
+    checkNotNull(PhysicsRayQueryParameters3D.create(Vector3(x, fromY, 500.0), Vector3(x, toY, 500.0), mask, exclude))
+
+  /** The bridge's synchronous engine crossings so far (this read is one of them). */
+  private fun queries(twin: Node): Long = twin.call("counter", "immediateCrossings") as Long
+
+  private fun body(twin: Node, name: String): CollisionObject3D =
+    CollisionObject3D(checkNotNull(twin.getNodeOrNull(name)) { "no $name" }.handle)
+
+  /** The R rows (see [rayMask]). */
+  private fun rayRows() {
+    val twin = twin()
+    val from = twin.requireAs("OwnRayFrom", ::Node3D)
+    // R5 first: the cached getRid of a body nobody asked yet.
+    ridCacheRow(twin, from)
+    val a = body(twin, "OwnRayBody")
+    val b = body(twin, "OwnRayBody2")
+    val keys = setOf("position", "normal", "face_index", "collider_id", "collider", "shape", "rid")
+    if (answers("R1 dictionary") {
+        val hit = ray(from, down(500.0))
+        val collider = hit["collider"] as? GodotObject
+        (hit.keys == keys && hit["position"] is Vector3 && hit["normal"] is Vector3 &&
+          hit["face_index"] is Long && hit["collider_id"] is Long && hit["shape"] is Long &&
+          collider != null && hit["collider_id"] == collider.instanceId).also {
+          if (!it) note("R1 $hit")
+        }
+      }) rayMask = rayMask or 1L
+    if (answers("R2 exclude") {
+        val plain = ray(from, down(500.0))["collider"]
+        val excluded = ray(from, down(500.0, exclude = listOf(a.getRid())))["collider"]
+        (plain == a && excluded == b).also { if (!it) note("R2 plain=$plain excluded=$excluded") }
+      }) rayMask = rayMask or 2L
+    if (answers("R3 miss") {
+        val miss = ray(from, down(700.0))
+        miss.isEmpty() && miss == emptyMap<String, Any?>()
+      }) rayMask = rayMask or 4L
+    if (answers("R4 rid") {
+        val hit = ray(from, down(500.0))
+        val collider = hit["collider"] as? GodotObject
+        val rid = hit["rid"]
+        (rid is RID && collider != null && rid == CollisionObject3D(collider.handle).getRid() &&
+          collider == twin.getNodeOrNull("OwnRayBody")).also { if (!it) note("R4 rid=$rid collider=$collider") }
+      }) rayMask = rayMask or 8L
+    staleRidRow(twin, from)
+    if (answers("R11 big rid") {
+        // An id past 2^53 (a double would round it) crosses whole both ways.
+        val big = twin.call("big_rid")
+        (big is RID && big.value == 0x7fffffff12345678L && twinLong("rid_is_big", big) == 1L).also {
+          if (!it) note("R11 big=$big")
+        }
+      }) rayMask = rayMask or 524288L
+    crossingRow(twin, from, a)
+    flagRows(from, a, b, twin)
+    exceptionRows(twin)
+    if (answers("R10 signal") {
+        val area = twin.requireAs("OwnRidArea", ::Area3D)
+        var got: RID? = null
+        area.bodyShapeEntered.connect(self, GodotObject.ConnectFlags.ONE_SHOT) { rid, _, _, _ -> got = rid }
+        twinLong("emit_rid_signal")
+        (got != null && got == a.getRid()).also { if (!it) note("R10 got=$got rid=${a.getRid()}") }
+      }) rayMask = rayMask or 16384L
+    parityRows(twin)
+  }
+
+  /** N1-N4: the other members a shared raycasting file needs (see [rayMask]). */
+  private fun parityRows(twin: Node) {
+    if (answers("N1 get") {
+        val target = twin.requireAs("OwnRayCast", ::RayCast3D).get("target_position")
+        (target == Vector3(0.0, -20.0, 0.0)).also { if (!it) note("N1 get=$target") }
+      }) rayMask = rayMask or 32768L
+    if (answers("N2 modulate") {
+        // A generic call's node carries no canvas mirror: the first read asks the engine.
+        val rect = ColorRect((twin.call("fade_rect") as GodotObject).handle)
+        val first = rect.modulate.a
+        rect.modulate = Color(1.0, 1.0, 1.0, 0.5)
+        val written = rect.modulate.a
+        (first == 0.25 && written == 0.5 && twinLong("fade_rect_alpha_x100") == 50L).also {
+          if (!it) note("N2 modulate $first -> $written")
+        }
+      }) rayMask = rayMask or 65536L
+    if (answers("N3 multiplayer") {
+        // Desktop's defaults before a game sets a peer: a connected offline peer, peer 1, the server.
+        val api = checkNotNull(self.getMultiplayer()) { "no multiplayer" }
+        val peer = api.getMultiplayerPeer()
+        val enet: MultiplayerPeer = ENetMultiplayerPeer.create()
+        (api.hasMultiplayerPeer() && peer != null && peer.isClass("OfflineMultiplayerPeer") &&
+          peer.isClass("MultiplayerPeer") && !peer.isClass("ENetMultiplayerPeer") &&
+          peer.getConnectionStatus() == MultiplayerPeer.ConnectionStatus.CONNECTED &&
+          api.getUniqueId() == 1 && api.isServer() && enet.isClass("ENetMultiplayerPeer") &&
+          enet.getConnectionStatus() == MultiplayerPeer.ConnectionStatus.DISCONNECTED).also {
+          if (!it) note("N3 has=${api.hasMultiplayerPeer()} peer=$peer")
+        }
+      }) rayMask = rayMask or 131072L
+    if (answers("N4 screen relative") {
+        var motion: Vector2? = null
+        twin.signal("own_motion").connectObject(self, GodotObject.ConnectFlags.ONE_SHOT) {
+          motion = InputEventMouseMotion(it.handle).getScreenRelative()
+        }
+        twinLong("emit_motion")
+        (motion == Vector2(3.0, 4.0)).also { if (!it) note("N4 screen relative=$motion") }
+      }) rayMask = rayMask or 262144L
+  }
+
+  /** R5: `getRid()` crosses once per handle; 10 000 rays mint no handle. */
+  private fun ridCacheRow(twin: Node, from: Node3D) {
+    val node = checkNotNull(twin.getNodeOrNull("OwnRidBody")) { "no OwnRidBody" }
+    val one = CollisionObject3D(node.handle)
+    val two = CollisionObject3D(node.handle)
+    val cached = answers("R5 cached") {
+      val before = queries(twin)
+      val first = one.getRid()
+      var same = first.isValid()
+      for (index in 0 until 1000) {
+        if ((if (index % 2 == 0) one else two).getRid() != first) same = false
+      }
+      rayCost[0] = queries(twin) - before - 1
+      (same && rayCost[0] == 1L).also { if (!it) note("R5 same=$same crossings=${rayCost[0]}") }
+    }
+    if (cached) rayMask = rayMask or 16L
+    val liveBefore = counter("liveBrowserHandleCount")
+    val started = WebExperimentalGenericCall.nowMillis()
+    val swept = answers("R5 rays") {
+      val query = down(500.0)
+      var hits = 0
+      repeat(10_000) { if (ray(from, query).isNotEmpty()) hits += 1 }
+      hits == 10_000
+    }
+    rayCost[5] = ((WebExperimentalGenericCall.nowMillis() - started) * 1000.0).toLong()
+    rayCost[2] = counter("liveBrowserHandleCount") - liveBefore
+    if (swept && rayCost[2] <= 0L) rayMask = rayMask or 32L else note("R5 live +${rayCost[2]}")
+    // Reported only: the other rows run in the same frames and make handles of their own.
+    MainThread.postAfterFrames(SWEEP_FRAMES) { rayCost[3] = counter("liveBrowserHandleCount") - liveBefore }
+  }
+
+  /** R6: a freed body's RID in `exclude` is Godot's to judge: the ray still hits, nothing fails. */
+  private fun staleRidRow(twin: Node, from: Node3D) {
+    if (answers("R6 stale") {
+        val stale = twinLong("stale_rid")
+        val errors = counter("callbackErrors")
+        val live = counter("liveBrowserHandleCount")
+        val hit = ray(from, down(500.0, exclude = listOf(RID(stale))))
+        (stale != 0L && hit["collider"] == twin.getNodeOrNull("OwnRayBody") &&
+          counter("callbackErrors") == errors && counter("liveBrowserHandleCount") == live).also {
+          if (!it) note("R6 stale=$stale collider=${hit["collider"]}")
+        }
+      }) rayMask = rayMask or 64L
+  }
+
+  /** R7: a ray is one engine crossing (the cached getRid aside) and no builtin call. */
+  private fun crossingRow(twin: Node, from: Node3D, a: CollisionObject3D) {
+    if (answers("R7 crossings") {
+        val query = down(500.0, exclude = listOf(a.getRid()))
+        val builtins = counter("builtinCalls")
+        val before = queries(twin)
+        repeat(100) { ray(from, query) }
+        rayCost[1] = queries(twin) - before - 1
+        rayCost[4] = counter("builtinCalls") - builtins
+        (rayCost[1] == 100L && rayCost[4] == 0L).also { if (!it) note("R7 ${rayCost[1]} crossings, ${rayCost[4]} builtin") }
+      }) rayMask = rayMask or 128L
+  }
+
+  /** R8: the four query flags reach the engine. */
+  private fun flagRows(from: Node3D, a: CollisionObject3D, b: CollisionObject3D, twin: Node) {
+    if (answers("R8 areas") {
+        val query = down(500.0).also { it.collideWithAreas = true }
+        ray(from, query)["collider"] == twin.getNodeOrNull("OwnRayArea")
+      }) rayMask = rayMask or 256L
+    if (answers("R8 mask") { ray(from, down(500.0, mask = 0b10L)).isEmpty() }) rayMask = rayMask or 512L
+    if (answers("R8 inside") {
+        val outside = ray(from, down(500.0, fromY = 500.5))["collider"]
+        val inside = ray(from, down(500.0, fromY = 500.5).also { it.hitFromInside = true })["collider"]
+        (outside == b && inside == a).also { if (!it) note("R8 inside: off=$outside on=$inside") }
+      }) rayMask = rayMask or 1024L
+    if (answers("R8 bodies") {
+        ray(from, down(500.0).also { it.collideWithBodies = false }).isEmpty()
+      }) rayMask = rayMask or 2048L
+    if (answers("R8 back faces") {
+        // OwnBackFaceBody is one concave (trimesh) quad with back-face collision: whichever side is
+        // its back face, a ray from that side hits it only with hitBackFaces (Godot's default, true).
+        val q = { fromY: Double, toY: Double, back: Boolean ->
+          ray(from, down(620.0, fromY = fromY, toY = toY).also { it.hitBackFaces = back }).isNotEmpty()
+        }
+        val withBack = q(510.0, 490.0, true) && q(490.0, 510.0, true)
+        val without = listOf(q(510.0, 490.0, false), q(490.0, 510.0, false)).count { it }
+        (withBack && without == 1).also { if (!it) note("R8 back faces: both=$withBack one-sided hits=$without") }
+      }) rayMask = rayMask or 1048576L
+  }
+
+  /** R9: the RID members of RayCast3D and SpringArm3D. */
+  private fun exceptionRows(twin: Node) {
+    if (answers("R9 raycast") {
+        val cast = twin.requireAs("OwnRayCast", ::RayCast3D)
+        cast.forceRaycastUpdate()
+        val before = cast.isColliding()
+        cast.addExceptionRid(body(twin, "OwnCastBody").getRid())
+        cast.forceRaycastUpdate()
+        val after = cast.isColliding()
+        (before && !after).also { if (!it) note("R9 raycast colliding $before -> $after") }
+      }) rayMask = rayMask or 4096L
+    val arm = twin.requireAs("OwnSpringArm", ::SpringArm3D)
+    val reached = twinLong("spring_hit_length_mm")
+    val rid = body(twin, "OwnSpringBody").getRid()
+    val errors = counter("callbackErrors")
+    // The queued exclusion applies with the next immediate call (the read below): no error then.
+    arm.addExcludedObject(rid)
+    twinLong("spring_hit_length_mm")
+    val clean = counter("callbackErrors") == errors
+    MainThread.postAfterFrames(4) {
+      val length = twinLong("spring_hit_length_mm")
+      if (clean && reached < 15_000L && length > 19_000L) rayMask = rayMask or 8192L
+      else note("R9 spring $reached -> $length mm, clean=$clean")
+      rayDone = 1L
     }
   }
 
@@ -403,8 +691,9 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     val from = twin.requireAs("OwnRayFrom", ::Node3D)
     val query = PhysicsRayQueryParameters3D.create(Vector3(500.0, 510.0, 500.0), Vector3(500.0, 490.0, 500.0), 1L)
     val hit = answers("O9 query") {
-      val result = from.getWorld3d().directSpaceState.intersectRay(checkNotNull(query))
-      val collider = checkNotNull(result) { "the ray missed" }.collider
+      val result = ray(from, checkNotNull(query))
+      check(result.isNotEmpty()) { "the ray missed" }
+      val collider = result["collider"]
       val body = twin.getNodeOrNull("OwnRayBody")
       (collider != null && collider == body).also { if (!it) note("O9 collider=$collider body=$body") }
     }
