@@ -176,7 +176,12 @@ Four rules of the bridge (three about ownership), each with its self-test rows:
   ... unknown-tag variant-type=<n>` instead of encoding silently. The one remaining limit: a
   container nested more than `KANAMA_IOS_BLOB_MAX_DEPTH` (8) levels arrives as `null`.
   Rows: `lambda-args(...)` (scene init: String, Vector3, Color, Array, Dictionary, Vector3i).
-- **Every Variant type round-trips the generic path like desktop.** The scalar return decode
+- **Every Variant type round-trips the generic path like desktop, with one difference.** A
+  Callable or Signal reads back as `null` on both backends, but as an inbound signal or
+  script-method argument iOS refuses it with an error naming the type (above), where desktop's
+  `variantToScalar` passes `null`. A container element or script container return value with no
+  Variant shape throws naming its type, as desktop's `initVariantFromAny` does; an element with
+  fewer bytes than its type needs reports `FAULT ... short-payload`. The scalar return decode
   (`kanama_ios_decode_variant_scalar`) answers a RID (`Object.get` of a RID property) and a NodePath
   as a `NodePath`; the outbound encoders take a `ByteArray` (`PT_PACKED_BYTE_ARRAY`, boxed by
   `kanama_ios_pt_arg_to_variant`) and the value types inside a `List`/`Map` argument
@@ -343,9 +348,10 @@ that caller is in scope and reports (`unknown-tag`, `api-unresolved`, …) with 
 helper could not name. They are not silent paths; they are the inside of a path whose exit
 reports.
 
-The reason token is one of ten fixed spellings — `api-unresolved`, `null-bind`,
+The reason token is one of fourteen fixed spellings — `api-unresolved`, `null-bind`,
 `bind-lookup-failed`, `null-instance`, `null-handle`, `null-arg`, `pending-protocol`,
-`callable-build`, `unknown-tag`, `encode-failed` — and the detail names the specific thing:
+`callable-build`, `unknown-tag`, `encode-failed`, `short-payload`, `alloc-failed`,
+`too-many-args`, `progress-readback` — and the detail names the specific thing:
 the missing interface pointer, the parameter, `Class.method hash=<hash>`, the tag number.
 They are documented for users in `docs/exporting/ios.md`.
 

@@ -447,10 +447,9 @@ private fun runVariantTypeRows(
     }
 
   val expressionHandle = ObjectCalls.constructObject("Expression")
+  // A raw construct this function destroys itself: the typed view is the borrowed one.
   val expression =
-    net.multigesture.kanama.api.Expression(
-      net.multigesture.kanama.api.GodotHandle(expressionHandle)
-    )
+    net.multigesture.kanama.api.Expression.fromHandle(GodotHandle(expressionHandle))!!
   fun eval(code: String): Any? {
     // A literal the Expression cannot parse fails its row here, not as a wrong value.
     val parsed = expression.parse(code, emptyList())
@@ -459,20 +458,6 @@ private fun runVariantTypeRows(
     if (expression.hasExecuteFailed()) error("Expression failed: $code")
     return result
   }
-  ObjectCalls.callWithVariantArgs(
-    ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
-    callNode,
-    listOf("kanamaVariantIn"),
-  )
-  val received = mutableListOf<Any?>()
-  val inbound =
-    net.multigesture.kanama.api.Signal1(
-      node,
-      "kanamaVariantIn",
-      net.multigesture.kanama.api.SignalArgType.VARIANT,
-    )
-  val connection = inbound.connect(node) { received.add(it) }
-
   val failed =
     linkedMapOf(
       "ret" to mutableListOf<String>(),
@@ -486,48 +471,79 @@ private fun runVariantTypeRows(
     if (!ok) failed.getValue(path).add(case.type)
     check("variant-type(${case.type}) $path $detail", ok)
   }
-  for (case in cases) {
-    val v = case.value
-    val l = case.literal
-    row("ret", case) {
-      val got = eval(l)
-      same(got, v) to "got=${show(got)}"
-    }
-    row("elem", case) {
-      val array = eval("[$l]")
-      val dictionary = eval("{\"k\": $l}")
-      (same(array, listOf(v)) && same(dictionary, mapOf("k" to v))) to
-        "array=${show(array)} dictionary=${show(dictionary)}"
-    }
-    if (case.arg) {
-      row("arg", case) {
-        ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "t140", v))
-        ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "t140a", listOf(v)))
-        ObjectCalls.callWithVariantArgs(
-          callBind,
-          callNode,
-          listOf("set_meta", "t140d", mapOf("k" to v)),
-        )
-        val equal =
-          eval(
-            "get_meta(\"t140\") == $l and get_meta(\"t140a\") == [$l] and " +
-              "get_meta(\"t140d\") == {\"k\": $l}"
+  // The Expression, the signal connection and the probe metas are released even when a setup
+  // call throws outside a row (that failure is its own FAIL line).
+  var connection: net.multigesture.kanama.api.SignalConnection? = null
+  try {
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
+      callNode,
+      listOf("kanamaVariantIn"),
+    )
+    val received = mutableListOf<Any?>()
+    val inbound =
+      net.multigesture.kanama.api.Signal1(
+        node,
+        "kanamaVariantIn",
+        net.multigesture.kanama.api.SignalArgType.VARIANT,
+      )
+    connection = inbound.connect(node) { received.add(it) }
+
+    for (case in cases) {
+      val v = case.value
+      val l = case.literal
+      row("ret", case) {
+        val got = eval(l)
+        same(got, v) to "got=${show(got)}"
+      }
+      row("elem", case) {
+        val array = eval("[$l]")
+        val dictionary = eval("{\"k\": $l}")
+        (same(array, listOf(v)) && same(dictionary, mapOf("k" to v))) to
+          "array=${show(array)} dictionary=${show(dictionary)}"
+      }
+      if (case.arg) {
+        row("arg", case) {
+          ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "t140", v))
+          ObjectCalls.callWithVariantArgs(
+            callBind,
+            callNode,
+            listOf("set_meta", "t140a", listOf(v)),
           )
-        (equal == true) to "engine-equal=$equal"
+          ObjectCalls.callWithVariantArgs(
+            callBind,
+            callNode,
+            listOf("set_meta", "t140d", mapOf("k" to v)),
+          )
+          val equal =
+            eval(
+              "get_meta(\"t140\") == $l and get_meta(\"t140a\") == [$l] and " +
+                "get_meta(\"t140d\") == {\"k\": $l}"
+            )
+          (equal == true) to "engine-equal=$equal"
+        }
+      }
+      if (case.type != "Callable" && case.type != "Signal") {
+        row("in", case) {
+          received.clear()
+          eval("emit_signal(\"kanamaVariantIn\", $l)")
+          eval("emit_signal(\"kanamaVariantIn\", [$l])")
+          eval("emit_signal(\"kanamaVariantIn\", {\"k\": $l})")
+          same(received, listOf(v, listOf(v), mapOf("k" to v))) to "got=${show(received)}"
+        }
       }
     }
-    if (case.type != "Callable" && case.type != "Signal") {
-      row("in", case) {
-        received.clear()
-        eval("emit_signal(\"kanamaVariantIn\", $l)")
-        eval("emit_signal(\"kanamaVariantIn\", [$l])")
-        eval("emit_signal(\"kanamaVariantIn\", {\"k\": $l})")
-        same(received, listOf(v, listOf(v), mapOf("k" to v))) to "got=${show(received)}"
+  } catch (e: Throwable) {
+    check("variant-types(setup) threw ${e::class.simpleName}: ${e.message}", false)
+  } finally {
+    runCatching { connection?.close() }
+    for (key in listOf("t140", "t140a", "t140d")) {
+      runCatching {
+        ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("remove_meta", key))
       }
     }
+    ObjectCalls.destroyObject(expressionHandle)
   }
-  connection.close()
-  ObjectCalls.destroyObject(expressionHandle)
   println(
     "[kanama][ios][kn] OBJECTCALLS SELFTEST variant-types " +
       failed.entries.joinToString(" ") { (path, types) -> "$path-failed=${types.size}$types" }

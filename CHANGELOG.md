@@ -69,8 +69,13 @@ lost or refused values that work on desktop:
 - `get` of a `NodePath` property answered the path as a `String`; it answers a `NodePath`, as on
   desktop. Code that cast the result to `String` on iOS reads `(value as NodePath).path` instead.
 
-`Callable` and `Signal` values still read back as `null` through this path, on every backend, and a
-signal argument of either type still fails with an error naming the type.
+- A script method returning a `List` or `Map` that holds a value with no Godot type (any other
+  Kotlin object) handed Godot `nil` for it; it now fails with an error naming the type, as on
+  desktop.
+
+`Callable` and `Signal` values still read back as `null` through this path, on desktop and iOS
+alike. On iOS only, a signal or script-method argument of either type fails with an error naming
+the type, where desktop passes `null`.
 
 ### Added — tooling: an inventory of every `ObjectCalls` helper and how a generated exercise can check it
 
