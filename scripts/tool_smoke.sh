@@ -119,7 +119,12 @@ for plugin_file in plugin.gd kanama_export_guard.gd; do
   fi
 done
 JDK_SCRATCH="$(mktemp -d "${TMPDIR:-/tmp}/kanama_jdk_resolution_gd.XXXXXX")"
-trap 'st=$?; rm -rf "$JDK_SCRATCH"; run_logs_finish "$st" tool_smoke' EXIT
+exit_jdk_scratch() {
+  local status=$?
+  rm -rf "$JDK_SCRATCH"
+  run_logs_finish "$status" tool_smoke
+}
+trap exit_jdk_scratch EXIT
 mkdir -p "$JDK_SCRATCH/project/addons" "$JDK_SCRATCH/jdks"
 cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$JDK_SCRATCH/project/addons/"
 cp "$ROOT_DIR/scripts/check_editor_jdk_resolution.gd" "$JDK_SCRATCH/project/"
