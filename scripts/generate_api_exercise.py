@@ -57,6 +57,7 @@ from generate_api_wrapper import (
     SHARED_TREES,
     ios_generated_region,
     method_function_name,
+    objectcalls_helpers_in,
     strip_comments,
     tree_universe,
 )
@@ -286,8 +287,8 @@ class SourceCache:
                 self.text[path] = strip_comments(path.read_text(encoding="utf-8"))
 
     def referenced(self) -> set[str]:
-        """The generator's `referenced_objectcalls_helpers`: its regex over its trees, comments stripped."""
-        return {h for text in self.text.values() for h in OBJECTCALLS_REFERENCE_RE.findall(text)}
+        """The generator's `referenced_objectcalls_helpers` over the text this cache already stripped."""
+        return objectcalls_helpers_in(self.text.values())
 
 
 def tree_sites(api: dict[str, ApiClass], singletons: set[str], failures: list[str], cache: SourceCache, starts: set):
@@ -483,6 +484,15 @@ def check_policy(inv: Inventory, rules: Rules, api: dict[str, ApiClass], singlet
             inv.failures.append(f"METHOD_OVERRIDES[{cls}.{method}] sets case {case!r}; only F and E are overrides")
         elif (cls, method) not in called:
             inv.failures.append(f"METHOD_OVERRIDES names {cls}.{method}, which the shared tree never calls; delete the entry")
+        else:
+            # The override must change what the class-level rules decide for at least one call site:
+            # an entry whose rule-given case is already its own case (or E) no longer applies.
+            ruled = {rules._site(site).case for _, site in inv.sites if (site.cls, site.method) == (cls, method)}
+            if not ruled - {case, "E"}:
+                inv.failures.append(
+                    f"METHOD_OVERRIDES[{cls}.{method}] sets case {case}, which the class rules already give it "
+                    f"({'/'.join(sorted(ruled))}): the entry no longer applies; delete it"
+                )
     for row in inv.rows.values():
         if row.case == "E" and row.verdict is not None:
             reason = row.verdict.reason

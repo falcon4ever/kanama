@@ -27,7 +27,8 @@ lives here, and only here:
   * SCRATCH_DIR / SCRATCH_POLICY -- the one place an exercise row may touch the filesystem.
 
 `generate_api_exercise.py --check` fails when an entry here names a class or method the API lacks,
-when an entry matches nothing or no longer applies, when a STATIC_ARGS default differs from
+when an entry matches nothing or no longer applies (a METHOD_OVERRIDES entry whose case the class
+rules already give every call of the method), when a STATIC_ARGS default differs from
 extension_api.json, and when a referenced helper (or one call of it) is classified by nothing.
 """
 
@@ -160,6 +161,8 @@ METHOD_OVERRIDES: dict[tuple[str, str], tuple[str, str]] = {
     ("Noise", "get_seamless_image_3d"): ("F", _NEW_OBJECT),
     ("RenderingServer", "texture_2d_get"): ("F", _NEW_OBJECT),
     ("RenderingServer", "texture_2d_layer_get"): ("F", _NEW_OBJECT),
+    ("InputEvent", "xformed_by"): ("F", _NEW_OBJECT),
+    ("RegEx", "search"): ("F", _NEW_OBJECT),
     ("ProjectSettings", "load_resource_pack"): ("E", "mounts a resource pack into res:// for the rest of the process"),
 }
 

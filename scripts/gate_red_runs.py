@@ -514,6 +514,9 @@ case("generate_api_exercise.py --check (exclusion names no class)", API_EXERCISE
 case("generate_api_exercise.py --check (static args name no method)", API_EXERCISE_CHECK,
      [Edit("scripts/api_exercise_policy.py", '    ("FileAccess", "open"): (None, None),\n', '    ("FileAccess", "open_red_run"): (None, None),\n')],
      "STATIC_ARGS names FileAccess.open_red_run, a method the API lacks", "a `STATIC_ARGS` entry names a method the API lacks (and the static it was for is left without arguments)")
+case("generate_api_exercise.py --check (override no longer applies)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '    ("RegEx", "search"): ("F", _NEW_OBJECT),\n', '    ("RegEx", "search"): ("F", _NEW_OBJECT),\n    ("RegEx", "clear"): ("F", _NEW_OBJECT),\n')],
+     "METHOD_OVERRIDES[RegEx.clear] sets case F, which the class rules already give it", "a `METHOD_OVERRIDES` entry sets the case the class rules already give the method (a void method made F): the entry changes nothing")
 case("generate_api_exercise.py --check (rule order)", API_EXERCISE_CHECK,
      [Edit("scripts/generate_api_exercise.py", 'ORDER = "CABDFE"', 'ORDER = "ACBDFE"')],
      "does not match the rules run on the fixture API", "the case ranking puts property pairs before statics: the toy-API fixture and the committed page both catch it")

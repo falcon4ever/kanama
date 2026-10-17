@@ -10,7 +10,7 @@ observe it, from `extension_api.json`, the generator's tables and the committed 
 (exclusions, stateless singletons, receivers, method-level cases, runtime helpers, static arguments, the
 scratch directory) are hand-kept in `scripts/api_exercise_policy.py`. It is an inventory: no row runs yet.
 
-**Referenced helpers:** 1492 (1487 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15335 generated (12998 instance, 2223 singleton, 114 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 892 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 544 (of the 544 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 605; excluded 338.
+**Referenced helpers:** 1492 (1487 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15335 generated (12998 instance, 2223 singleton, 114 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 892 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 542 (of the 542 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 607; excluded 338.
 
 ## Cases
 
@@ -23,9 +23,9 @@ on a healthy host (**weak**), and then the second row is the one that can tell a
 |---|---|---|---|
 | C static | `is_static` with a return value, class not excluded | the wrapper's result equals `ClassDB.class_call_static` with the same arguments, and is not the type's zero (an `Error` static: a known non-OK `Error`) | 46 |
 | A property pair | setter or getter of a non-indexed property of an instantiable class (or its receiver below) | a value set through the wrapper reads back through the getter and `Object.get` | 89 |
-| B const oracle | const non-void instance method on such a class | the wrapper's result equals `Object.callv` on the same object | 314 |
+| B const oracle | const non-void instance method on such a class | the wrapper's result equals `Object.callv` on the same object | 312 |
 | D singleton | const non-void method of a non-excluded singleton, or any non-void method of a stateless singleton | the wrapper's result equals `Object.callv` on the singleton | 95 |
-| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 605 |
+| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 607 |
 | E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 338 |
 | N runtime helper | no generated method calls it with a MethodBind | nothing of its own: every row uses it | 5 |
 
@@ -36,7 +36,7 @@ or the factory `RECEIVER_SOURCES` names, because the declaring class is abstract
 
 - **C static** by class: `FileAccess` 13, `DirAccess` 9, `GLTFDocument` 3, `JSON` 3, `AudioStreamMP3` 2, `AudioStreamWAV` 2, `Image` 2, `DPITexture` 1, `GLTFAccessor` 1, `GLTFCamera` 1, `ImporterMesh` 1, `Node` 1, `PathFollow3D` 1, `PhysicsRayQueryParameters2D` 1, `PhysicsRayQueryParameters3D` 1, `PortableCompressedTexture2D` 1, `Resource` 1, `TLSOptions` 1, `Tween` 1.
 - **D singleton** by class: `Geometry2D` 16, `RenderingServer` 16, `Geometry3D` 13, `ClassDB` 11, `NavigationServer2D` 10, `NavigationServer3D` 10, `Time` 5, `PhysicsServer3D` 4, `Marshalls` 3, `PhysicsServer2D` 2, `ProjectSettings` 2, `TranslationServer` 2.
-- **B const** through a descendant, by declaring class: `TextServer` 55, `CollisionObject2D` 8, `Font` 7, `InputEvent` 5, `IterateIK3D` 2, `Noise` 2, `TileSetSource` 2, `AnimationMixer` 1, `BaseMaterial3D` 1, `CanvasItem` 1, `CollisionObject3D` 1.
+- **B const** through a descendant, by declaring class: `TextServer` 55, `CollisionObject2D` 8, `Font` 7, `InputEvent` 4, `IterateIK3D` 2, `Noise` 2, `TileSetSource` 2, `AnimationMixer` 1, `BaseMaterial3D` 1, `CanvasItem` 1, `CollisionObject3D` 1.
 - **F reach only**, largest classes: `RenderingServer` 91, `CanvasItem` 28, `TextServer` 28, `AccessibilityServer` 22, `Animation` 19, `FontFile` 14, `PhysicsServer2D` 14, `RichTextLabel` 14, `Image` 12, `AnimationPlayer` 9, `AStar2D` 8, `PhysicsServer3D` 8.
 
 ## By iOS ptrcall tag
@@ -45,15 +45,15 @@ The generated iOS helpers by the type tags their bodies pack (a helper counts on
 
 | tag | helpers | sites | C | A | B | D | F | E |
 |---|---|---|---|---|---|---|---|---|
-| `PT_INT64` | 827 | 3440 | 20 | 2 | 198 | 30 | 347 | 230 |
+| `PT_INT64` | 827 | 3440 | 20 | 2 | 197 | 30 | 348 | 230 |
 | `PT_VOID` | 573 | 2921 | – | 33 | – | – | 431 | 109 |
 | `PT_RID` | 365 | 1750 | – | 2 | 54 | 41 | 178 | 90 |
 | `PT_BOOL` | 350 | 1250 | 9 | – | 64 | 25 | 172 | 80 |
-| `PT_OBJECT` | 270 | 677 | 21 | – | 29 | 2 | 121 | 97 |
-| `PT_STRING` | 263 | 1006 | 25 | 1 | 30 | 9 | 66 | 132 |
+| `PT_OBJECT` | 270 | 677 | 21 | – | 27 | 2 | 123 | 97 |
+| `PT_STRING` | 263 | 1006 | 25 | 1 | 29 | 9 | 67 | 132 |
 | `PT_FLOAT64` | 232 | 696 | 2 | – | 52 | 9 | 152 | 17 |
 | `PT_STRING_NAME` | 134 | 479 | – | 1 | 32 | 14 | 59 | 28 |
-| `PT_VECTOR2` | 133 | 252 | 1 | – | 39 | 12 | 75 | 6 |
+| `PT_VECTOR2` | 133 | 252 | 1 | – | 38 | 12 | 76 | 6 |
 | `PT_VECTOR2I` | 101 | 186 | – | – | 48 | 1 | 46 | 6 |
 | `PT_COLOR` | 97 | 167 | – | – | 8 | 1 | 80 | 8 |
 | `PT_VARIANT` | 77 | 157 | 3 | 1 | 12 | 3 | 38 | 20 |
@@ -64,7 +64,7 @@ The generated iOS helpers by the type tags their bodies pack (a helper counts on
 | `PT_RECT2` | 45 | 56 | – | – | 10 | 1 | 28 | 6 |
 | `PT_TRANSFORM3D` | 34 | 114 | 1 | 2 | 3 | 2 | 18 | 8 |
 | `PT_PACKED_STRING_ARRAY` | 28 | 44 | – | 1 | 1 | 1 | 2 | 23 |
-| `PT_TRANSFORM2D` | 25 | 82 | – | 2 | 7 | 1 | 15 | – |
+| `PT_TRANSFORM2D` | 25 | 82 | – | 2 | 6 | 1 | 16 | – |
 | `PT_ARRAY` | 24 | 47 | – | 1 | 1 | – | 11 | 11 |
 | `PT_NODE_PATH` | 24 | 110 | 1 | 1 | 7 | – | 14 | 1 |
 | `PT_PACKED_VECTOR2_ARRAY` | 23 | 33 | – | – | – | 9 | 12 | 2 |
@@ -181,6 +181,8 @@ Stateless singletons (`STATELESS_SINGLETONS`, every non-void method is a D row):
 | `Noise.get_seamless_image_3d` | F | returns a new object per call: an oracle would compare two different objects |
 | `RenderingServer.texture_2d_get` | F | returns a new object per call: an oracle would compare two different objects |
 | `RenderingServer.texture_2d_layer_get` | F | returns a new object per call: an oracle would compare two different objects |
+| `InputEvent.xformed_by` | F | returns a new object per call: an oracle would compare two different objects |
+| `RegEx.search` | F | returns a new object per call: an oracle would compare two different objects |
 | `ProjectSettings.load_resource_pack` | E | mounts a resource pack into res:// for the rest of the process |
 
 ## Runtime helpers
@@ -1232,7 +1234,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithStringAndThreeIntArgsRetObject` | E | `ENetConnection.connect_to_host` (*ENet*: opens sockets or talks to the network) | 1 | PT_INT64 PT_OBJECT PT_STRING |
 | `ptrcallWithStringAndTransform3DArg` | F | `Skin.add_named_bind` (void method) | 1 | PT_STRING PT_TRANSFORM3D PT_VOID |
 | `ptrcallWithStringAndTwoBoolArgsRetObject` | B | `Node.find_child` (const non-void method) | 1 | PT_BOOL PT_OBJECT PT_STRING |
-| `ptrcallWithStringAndTwoIntArgsRetObject` | B | `RegEx.search` (const non-void method) | 1 | PT_INT64 PT_OBJECT PT_STRING |
+| `ptrcallWithStringAndTwoIntArgsRetObject` | F | `RegEx.search` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | PT_INT64 PT_OBJECT PT_STRING |
 | `ptrcallWithStringAndTwoObjectArgs` | E | `EditorContextMenuPlugin.add_context_menu_item_from_shortcut` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_OBJECT PT_STRING PT_VOID |
 | `ptrcallWithStringAndTwoVariantArgsRetDictionary` | F | `JSONRPC.make_request` (non-const method) | 1 | PT_STRING PT_VARIANT |
 | `ptrcallWithStringAndVariantArg` | F | `ProjectSettings.set_initial_value` (void singleton method) | 6 | PT_STRING PT_VARIANT PT_VOID |
@@ -1428,7 +1430,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithTransform2DArg` | A | `Bone2D.set_rest` (setter of `rest`) | 13 | PT_TRANSFORM2D PT_VOID |
 | `ptrcallWithTransform2DObjectTransform2DArgsRetBool` | F | `Shape2D.collide` on `CapsuleShape2D` (non-const method) | 1 | PT_BOOL PT_OBJECT PT_TRANSFORM2D |
 | `ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List` | F | `Shape2D.collide_and_get_contacts` on `CapsuleShape2D` (non-const method) | 1 | PT_OBJECT PT_TRANSFORM2D |
-| `ptrcallWithTransform2DVector2ArgsRetObject` | B | `InputEvent.xformed_by` on `InputEventAction` (const non-void method) | 1 | PT_OBJECT PT_TRANSFORM2D PT_VECTOR2 |
+| `ptrcallWithTransform2DVector2ArgsRetObject` | F | `InputEvent.xformed_by` on `InputEventAction` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | PT_OBJECT PT_TRANSFORM2D PT_VECTOR2 |
 | `ptrcallWithTransform2DVector2ObjectDoubleBoolArgsRetBool` | F | `PhysicsBody2D.test_move` on `CharacterBody2D` (non-const method) | 1 | PT_BOOL PT_FLOAT64 PT_OBJECT PT_TRANSFORM2D PT_VECTOR2 |
 | `ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool` | F | `Shape2D.collide_with_motion` on `CapsuleShape2D` (non-const method) | 1 | PT_BOOL PT_OBJECT PT_TRANSFORM2D PT_VECTOR2 |
 | `ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List` | F | `Shape2D.collide_with_motion_and_get_contacts` on `CapsuleShape2D` (non-const method) | 1 | PT_OBJECT PT_TRANSFORM2D PT_VECTOR2 |
