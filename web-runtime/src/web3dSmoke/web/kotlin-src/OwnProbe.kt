@@ -99,7 +99,7 @@ import net.multigesture.kanama.web.WebGenericCallResult
  * - R4 `rayRidMatchesCollider`: 8 = `hit["rid"]` is a RID equal to the collider's `getRid()`, and
  *   the collider `==` its lookup (O9's identity).
  * - R5 `ridIsCachedPerHandle`: 16 = 1000 `getRid()` from two wrappers of one node cross once; 32 =
- *   10 000 rays leave the live browser handles where they were, after the sweep too.
+ *   10 000 rays leave the live browser handles where they were (no handle per ray).
  * - R6 `staleRidIsHarmless`: 64 = excluding a freed body's RID still hits, reports no error and
  *   mints no handle (Godot's own validator answers a stale RID).
  * - R7 `rayIsOneCrossing`: 128 = 100 rays are 100 engine crossings and no builtin call.
@@ -107,14 +107,14 @@ import net.multigesture.kanama.web.WebGenericCallResult
  *   the layer-1 bodies; 1024 = `hitFromInside` toggles the hit on the body the ray starts in;
  *   2048 = `collideWithBodies = false` misses.
  * - R9 `rayCastExceptionRid`: 4096 = `RayCast3D.addExceptionRid(body.getRid())` stops the cast
- *   colliding; 8192 = `SpringArm3D.addExcludedObject(body.getRid())` lets the arm reach its full
- *   length, with no error reported.
+ *   colliding; 8192 = `SpringArm3D.addExcludedObject(body.getRid())` applies with no error reported
+ *   and lets the arm reach its full length.
  * - R10 `ridSignalIsSameCodec`: 16384 = `Area3D.bodyShapeEntered`'s RID argument `==`
  *   `body.getRid()`.
  *
  * [rayCost]: (0) engine crossings of 1000 `getRid()`, (1) of 100 rays, (2) live browser handles
- * gained by 10 000 rays at once and (3) after the sweep, (4) builtin calls of 100 rays, (5) the
- * microseconds of 10 000 rays.
+ * gained by 10 000 rays at once and (3) a sweep later (reported only: other rows run meanwhile),
+ * (4) builtin calls of 100 rays, (5) the microseconds of 10 000 rays.
  */
 @ScriptClass(attachTo = "Node")
 class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
@@ -485,11 +485,9 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     }
     rayCost[5] = ((WebExperimentalGenericCall.nowMillis() - started) * 1000.0).toLong()
     rayCost[2] = counter("liveBrowserHandleCount") - liveBefore
-    MainThread.postAfterFrames(SWEEP_FRAMES) {
-      rayCost[3] = counter("liveBrowserHandleCount") - liveBefore
-      if (swept && rayCost[2] <= 0L && rayCost[3] <= 0L) rayMask = rayMask or 32L
-      else note("R5 live +${rayCost[2]} then +${rayCost[3]}")
-    }
+    if (swept && rayCost[2] <= 0L) rayMask = rayMask or 32L else note("R5 live +${rayCost[2]}")
+    // Reported only: the other rows run in the same frames and make handles of their own.
+    MainThread.postAfterFrames(SWEEP_FRAMES) { rayCost[3] = counter("liveBrowserHandleCount") - liveBefore }
   }
 
   /** R6: a freed body's RID in `exclude` is Godot's to judge: the ray still hits, nothing fails. */
@@ -548,19 +546,17 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
         (before && !after).also { if (!it) note("R9 raycast colliding $before -> $after") }
       }) rayMask = rayMask or 4096L
     val arm = twin.requireAs("OwnSpringArm", ::SpringArm3D)
-    val errors = counter("callbackErrors")
     val reached = twinLong("spring_hit_length_mm")
-    val added = answers("R9 spring") {
-      arm.addExcludedObject(body(twin, "OwnSpringBody").getRid())
-      true
-    }
+    val rid = body(twin, "OwnSpringBody").getRid()
+    val errors = counter("callbackErrors")
+    // The queued exclusion applies with the next immediate call (the read below): no error then.
+    arm.addExcludedObject(rid)
+    twinLong("spring_hit_length_mm")
+    val clean = counter("callbackErrors") == errors
     MainThread.postAfterFrames(4) {
       val length = twinLong("spring_hit_length_mm")
-      if (added && reached < 15_000L && length > 19_000L && counter("callbackErrors") == errors) {
-        rayMask = rayMask or 8192L
-      } else {
-        note("R9 spring $reached -> $length mm, errors $errors -> ${counter("callbackErrors")}")
-      }
+      if (clean && reached < 15_000L && length > 19_000L) rayMask = rayMask or 8192L
+      else note("R9 spring $reached -> $length mm, clean=$clean")
       rayDone = 1L
     }
   }

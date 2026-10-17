@@ -174,9 +174,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * sweep's ring; `lendHandle` no longer takes a handle over, `kanamaWebIsNodeHandle` replaces
      * `kanamaWebSetLentHandle`, `mintGenericHandle` takes `tween`, `releaseHandleNow` leaves a
      * Node's or plain Object's handle alone); the shared-holder counting is gone. The uint32
-     * setters (`layers`, `collision_layer`, `collision_mask`) read their word unsigned.
+     * setters (`layers`, `collision_layer`, `collision_mask`) read their word unsigned. 39: a RID
+     * crosses as its id in text: opcode 229 (`intersect_ray`) takes the query flags and the
+     * excluded RIDs as decimal ids and answers the engine Dictionary through the Variant codec (its
+     * collider still lent); opcode 170 (`SpringArm3D.add_excluded_object` by handle) is retired.
      */
-    const val PROTOCOL_VERSION = 38
+    const val PROTOCOL_VERSION = 39
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -3163,16 +3166,6 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t(target_object as Node).set_process(bytes.decode_s32(offset + 8) != 0)")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
-    appendLine("\t\telif opcode == 170 and target_object is SpringArm3D:")
-    appendLine("\t\t\tvar excluded_handle := bytes.decode_s32(offset + 8)")
-    appendLine(
-      "\t\t\tvar excluded: CollisionObject3D = _kanama_live_object(excluded_handle) as CollisionObject3D"
-    )
-    appendLine("\t\t\tif excluded != null:")
-    appendLine("\t\t\t\t# The RID never crosses the boundary; it is derived applier-side.")
-    appendLine("\t\t\t\t(target_object as SpringArm3D).add_excluded_object(excluded.get_rid())")
-    appendLine("\t\t\tapplied += 1")
-    appendLine("\t\t\toffset += 12")
     appendLine("\t\telif opcode == 171 and target_object is RayCast3D:")
     appendLine("\t\t\tvar ray_exception_handle := bytes.decode_s32(offset + 8)")
     appendLine(
@@ -5243,6 +5236,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(\"\\u001f\".join(found_handles))")
     appendLine("\t\t\tresult = 1")
     appendLine("\t\telif opcode == 229 and value is Node3D:")
+    appendLine(
+      "\t\t\t# Desktop's intersect_ray: from, to, mask, the four flags, then the excluded RIDs as"
+    )
+    appendLine(
+      "\t\t\t# decimal ids (text carries all 64 bits; a stale RID is the engine's to judge)."
+    )
     appendLine("\t\t\tvar ray_parts := String(args[2]).split(\"\\u001f\")")
     appendLine(
       "\t\t\tvar ray_from := Vector3(float(ray_parts[0]), float(ray_parts[1]), float(ray_parts[2]))"
@@ -5250,27 +5249,33 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t\t\tvar ray_to := Vector3(float(ray_parts[3]), float(ray_parts[4]), float(ray_parts[5]))"
     )
-    appendLine("\t\t\tvar ray_exclude_handle := int(ray_parts[7])")
     appendLine(
       "\t\t\tvar ray_query := PhysicsRayQueryParameters3D.create(ray_from, ray_to, int(ray_parts[6]))"
     )
-    appendLine("\t\t\tif ray_exclude_handle != 0:")
-    appendLine("\t\t\t\tvar ray_excluded: Object = _kanama_live_object(ray_exclude_handle)")
-    appendLine("\t\t\t\tif ray_excluded is CollisionObject3D:")
-    appendLine("\t\t\t\t\tray_query.exclude = [(ray_excluded as CollisionObject3D).get_rid()]")
-    appendLine("\t\t\tvar ray_space := (value as Node3D).get_world_3d().direct_space_state")
-    appendLine("\t\t\tvar ray_hit: Dictionary = ray_space.intersect_ray(ray_query)")
-    appendLine("\t\t\tvar ray_result := PackedStringArray()")
+    appendLine("\t\t\tvar ray_flags := int(ray_parts[7])")
+    appendLine("\t\t\tray_query.collide_with_bodies = (ray_flags & 1) != 0")
+    appendLine("\t\t\tray_query.collide_with_areas = (ray_flags & 2) != 0")
+    appendLine("\t\t\tray_query.hit_from_inside = (ray_flags & 4) != 0")
+    appendLine("\t\t\tray_query.hit_back_faces = (ray_flags & 8) != 0")
+    appendLine("\t\t\tvar ray_rids: Array[RID] = []")
+    appendLine("\t\t\tfor ray_index in range(8, ray_parts.size()):")
+    appendLine("\t\t\t\tray_rids.append(rid_from_int64(int(ray_parts[ray_index])))")
+    appendLine("\t\t\tray_query.exclude = ray_rids")
+    appendLine("\t\t\tvar ray_world := (value as Node3D).get_world_3d()")
+    appendLine(
+      "\t\t\tvar ray_hit: Dictionary = {} if ray_world == null else ray_world.direct_space_state.intersect_ray(ray_query)"
+    )
     appendLine("\t\t\tif ray_hit.is_empty():")
-    appendLine("\t\t\t\tray_result.append(\"0\")")
-    appendLine("\t\t\t\tray_result.append_array([\"0\", \"0\", \"0\", \"0\"])")
+    appendLine("\t\t\t\t_kanama_bridge.recordImmediateStringResult(\"\")")
     appendLine("\t\t\telse:")
-    appendLine("\t\t\t\tvar ray_point: Vector3 = ray_hit[\"position\"]")
     appendLine(
       "\t\t\t\t# The collider is the body's one handle (its script's, else the tracked one, else one"
     )
     appendLine(
-      "\t\t\t\t# minted for the body's lifetime), as desktop's dictionary holds the body itself."
+      "\t\t\t\t# lent for the body's lifetime, which refreshes its transform snapshot), as desktop's"
+    )
+    appendLine(
+      "\t\t\t\t# dictionary holds the body itself. The other entries ride the Variant codec."
     )
     appendLine("\t\t\t\tvar ray_collider_handle := 0")
     appendLine("\t\t\t\tvar ray_collider: Object = ray_hit.get(\"collider\")")
@@ -5283,12 +5288,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t\t\t\tray_collider_handle = $TRACKED_HANDLE(ray_collider)")
     appendLine("\t\t\t\t\tif ray_collider_handle == 0:")
     appendLine("\t\t\t\t\t\tray_collider_handle = $LEND_HANDLE(ray_collider)")
-    appendLine("\t\t\t\tray_result.append(\"1\")")
-    appendLine("\t\t\t\tray_result.append(str(ray_point.x))")
-    appendLine("\t\t\t\tray_result.append(str(ray_point.y))")
-    appendLine("\t\t\t\tray_result.append(str(ray_point.z))")
-    appendLine("\t\t\t\tray_result.append(str(ray_collider_handle))")
-    appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(\"\\u001f\".join(ray_result))")
+    appendLine("\t\t\t\tvar ray_entries := ray_hit.duplicate()")
+    appendLine("\t\t\t\tray_entries.erase(\"collider\")")
+    appendLine(
+      "\t\t\t\t_kanama_bridge.recordImmediateStringResult(str(ray_collider_handle) + \"\\u001f\" + ${WebValueTypes.PACK_VARIANT}(ray_entries, true))"
+    )
     appendLine("\t\t\tresult = 1")
     appendLine("\t\telif opcode == 233:")
     appendLine("\t\t\tvar property_variant: Variant = value.get(StringName(String(args[2])))")

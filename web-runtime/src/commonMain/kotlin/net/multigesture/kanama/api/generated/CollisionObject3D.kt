@@ -6,6 +6,7 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
@@ -52,6 +53,15 @@ open class CollisionObject3D(godotObject: GodotHandle) : Node3D(godotObject) {
   var collisionMask: Long
     get() = unsupportedWebGameplayFamily("CollisionObject3D.get_collision_mask")
     set(newValue) = setCollisionMask(newValue)
+
+  /**
+   * The object's physics RID, read once per handle and then kept (it is fixed for the
+   * object's lifetime): exclude it from a ray with `PhysicsRayQueryParameters3D.create(from, to,
+   * mask, listOf(getRid()))`.
+   */
+  fun getRid(): RID = cachedGetRid ?: (net.multigesture.kanama.web.WebHandleCache.read(handle.value, "get_rid") { webGenericCall(this, "get_rid", emptyList()) } as RID).also { cachedGetRid = it }
+
+  private var cachedGetRid: RID? = null
 
   /** Signal `input_event`; see [TypedSignal]. */
   val inputEvent: Signal5<Node, InputEvent, Vector3, Vector3, Long>

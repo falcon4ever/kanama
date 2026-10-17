@@ -62,7 +62,7 @@ you write now.
 4. **Build and fix what the compiler still reports.** Use the table below to
    find the section for each message.
 5. **Re-export.** A Web game must be rebuilt and re-exported: the bridge is at
-   protocol 38 <!-- kanama-claim: protocol --> and a page built with an older
+   protocol 39 <!-- kanama-claim: protocol --> and a page built with an older
    protocol refuses to run, so never mix builds. Rebuild iOS and Android scripts
    too: the generated registrars changed.
 6. **Read [Silent changes to check](#silent-changes-to-check).** They compile
@@ -840,7 +840,7 @@ the `== 0L` result checks are by hand.
 ## Web
 
 Web is the area that changed most toward the other platforms. Rebuild and
-re-export every Web game (bridge protocol 38 <!-- kanama-claim: protocol -->). See the [Web export guide](../exporting/web.md).
+re-export every Web game (bridge protocol 39 <!-- kanama-claim: protocol -->). See the [Web export guide](../exporting/web.md).
 
 **A 0.4.0 Web project used the preview API.** 0.4.0 shipped Web as a two-demo
 preview (a small set of hand-written wrappers): it had no `GodotObject.set`,

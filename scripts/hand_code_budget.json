@@ -221,10 +221,12 @@
       "reason": "Web-only import-compat names the replaced Web GD/Mathf copies had (task 129 E): Basis alias, five GD extensions"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebPhysicsQuery.kt": {
-      "category": "transitional",
-      "lines": 86,
-      "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
-      "reason": "per-platform hand file the generator should emit"
+      "category": "seam",
+      "lines": 182,
+      "raises": [
+        "86 -> 182: desktop's ray-query API on Web: the hand-shaped ray facade takes desktop's whole parameters surface, Node3D gains the getWorld3d member and its import-compat alias"
+      ],
+      "reason": "the hand-shaped ray query (WEB_HANDSHAPED): desktop's PhysicsRayQueryParameters3D surface as a Kotlin value and the one-crossing intersect_ray it packs; a generated path would cost four crossings and a RefCounted handle per ray"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebRefCountedHolds.kt": {
       "category": "runtime-core",
@@ -356,10 +358,16 @@
       "lines": 2
     },
     "generate_web_wrappers.CLASS_POLICY[Node3D].custom": {
-      "lines": 53
+      "lines": 60,
+      "raises": [
+        "53 -> 60: desktop's ray-query API on Web: the hand-shaped ray facade takes desktop's whole parameters surface, Node3D gains the getWorld3d member and its import-compat alias"
+      ]
     },
     "generate_web_wrappers.CLASS_POLICY[Node3D].top_level": {
-      "lines": 50
+      "lines": 52,
+      "raises": [
+        "50 -> 52: desktop's ray-query API on Web: the hand-shaped ray facade takes desktop's whole parameters surface, Node3D gains the getWorld3d member and its import-compat alias"
+      ]
     },
     "generate_web_wrappers.CLASS_POLICY[Node].custom": {
       "lines": 47

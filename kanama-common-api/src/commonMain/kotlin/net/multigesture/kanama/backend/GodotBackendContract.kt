@@ -112,7 +112,7 @@ enum class GodotCallShape {
   NOARGS_RET_STRING,
   STRINGNAME_RET_STRING,
   DOUBLE_RET_DOUBLE,
-  VECTOR3_VECTOR3_LONG_OBJECT_RET_STRING,
+  STRING_LIST_RET_STRING,
   LONG_BOOL_DOUBLE_LONG_DOUBLE_DOUBLE_ARG_SINGLETON,
 }
 
@@ -907,17 +907,15 @@ interface GodotBackendSpi {
   ): Double
 
   /**
-   * Space-state ray query. The receiver is a node in the target world: the backend derives the
-   * space state and builds the query parameters on its own side, so RIDs never cross the seam.
+   * A query whose arguments ride one packed string and whose answer is one string (the space-state
+   * ray query: the receiver is a node in the target world, the applier builds the query parameters
+   * from the parts, a RID among them as its decimal id, and packs the engine's Dictionary).
    */
-  fun invokeVector3Vector3LongObjectRetString(
+  fun invokeStringListRetString(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
-    from: GodotVector3,
-    to: GodotVector3,
-    collisionMask: Long,
-    exclude: GodotHandle?,
+    parts: List<String>,
   ): String
 }
 
@@ -2083,25 +2081,19 @@ object GodotBackendCalls {
     )
   }
 
-  fun invokeVector3Vector3LongObjectRetString(
+  fun invokeStringListRetString(
     descriptor: GodotCallDescriptor,
     receiver: GodotHandle,
-    from: GodotVector3,
-    to: GodotVector3,
-    collisionMask: Long,
-    exclude: GodotHandle?,
+    parts: List<String>,
   ): String {
-    requireShape(descriptor, GodotCallShape.VECTOR3_VECTOR3_LONG_OBJECT_RET_STRING)
+    requireShape(descriptor, GodotCallShape.STRING_LIST_RET_STRING)
     val selected = requireBackend()
     selected.requireLive(receiver)
-    return selected.invokeVector3Vector3LongObjectRetString(
+    return selected.invokeStringListRetString(
       descriptor,
       resolve(selected, descriptor),
       receiver,
-      from,
-      to,
-      collisionMask,
-      exclude,
+      parts,
     )
   }
 

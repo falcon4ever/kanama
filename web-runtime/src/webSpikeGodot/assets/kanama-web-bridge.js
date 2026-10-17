@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 38;
+  const KANAMA_WEB_PROTOCOL_VERSION = 39;
   // Prefix of a contained script error's message (Main.kt WEB_SCRIPT_ERROR_MARKER).
   const SCRIPT_ERROR_MARKER = "Kanama Web script error (contained):";
   // Added after the marker when Godot's error log could not be reached (Main.kt

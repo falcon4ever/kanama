@@ -852,7 +852,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     rayMissIsEmptyMap: (rayMask & 4) === 4,
     // R4: the hit's `rid` is the collider's getRid(), and the collider is its lookup (O9).
     rayRidMatchesCollider: (rayMask & 8) === 8,
-    // R5: getRid() crosses once per handle; 10 000 rays mint no handle (after the sweep too).
+    // R5: getRid() crosses once per handle; 10 000 rays mint no handle.
     ridIsCachedPerHandle: (rayMask & 48) === 48,
     // R6: a freed body's RID in `exclude` still hits, reports nothing and mints nothing.
     staleRidIsHarmless: (rayMask & 64) === 64,
@@ -1074,7 +1074,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
       // O2: the frames until the browser collected the dropped wrappers (gc() on Chrome).
       ownCollectFrames: Math.max(0, ownCost[4]),
       // R5 / R7: engine crossings of 1000 getRid() and of 100 rays, live handles gained by 10 000
-      // rays (at once and after the sweep), builtin calls of 100 rays, microseconds of 10 000 rays.
+      // rays (at once, and a sweep later while other rows run), builtin calls of 100 rays, microseconds
+      // of 10 000 rays.
       ridCrossingsPer1000: Math.max(0, rayCost[0]),
       rayCrossingsPer100: Math.max(0, rayCost[1]),
       rayHandlesPer10000: Math.max(0, rayCost[2]),

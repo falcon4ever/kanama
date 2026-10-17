@@ -252,8 +252,9 @@ def api_param_type(tree: Tree, godot_type: str, meta: str, spi_type: str) -> str
         if spi_type.startswith("GodotHandle"):
             return "GodotObject" + ("?" if spi_type.endswith("?") else "")
         return SPI_TO_API[spi_type]
-    if godot_type == "RID":
-        return "GodotObject"  # Web adaptation: the applier derives the RID engine-side.
+    if godot_type in RID_TYPES:
+        # The transport rule (check_rid_transport): no typed slot carries a RID.
+        raise GenerationError("a RID crosses as its id in text: a WEB_GENERIC_METHODS row, not a typed opcode slot")
     if tree.is_object(godot_type):
         return tree.wrapper_for(godot_type) + ("?" if spi_type.endswith("?") else "")
     raise GenerationError(f"no Kotlin parameter type for Godot type {godot_type!r}")
@@ -790,8 +791,6 @@ WRAPPER_POLICY: dict[int, dict] = {
     172: {"ret": "Long"},
     173: {"param_types": {"index": "Long"}},
     174: {"param_types": {"index": "Long"}},
-    # RID never crosses the Web seam: the excluded body itself is the argument.
-    170: {"bind": [("body", "GodotObject", None, "body.requireOpenHandle()")], "doc": "Web adaptation: exclusion takes the collision OBJECT (the applier derives the RID engine-side)."},
     # Typed ProjectSettings read: the shape fixes Double, so the name says so.
     187: {"name": "getSettingDouble", "doc": "Float-valued setting read (x1000 integer transport; millis precision)."},
     # Camera getter: keep the corpus's `getCamera3D` spelling next to Godot's `getCamera3d`.
@@ -1062,6 +1061,13 @@ fun Node.setProcessUnhandledInput(enable: Boolean) = setProcessUnhandledInput(en
   fun orthonormalize() {
     basis = basis.orthonormalized()
   }
+
+  /**
+   * Desktop's `getWorld3d()` (nullable, so `getWorld3d()?.directSpaceState?.intersectRay(query)`
+   * compiles unchanged): the world this node is in, bound to this node (`WebPhysicsQuery.kt`), so a
+   * ray query is one crossing and no World3D handle.
+   */
+  fun getWorld3d(): World3D? = World3D(this)
 """,
         "top_level": """
 private fun composeBasis(rotation: Vector3, scale: Vector3): Basis {
@@ -1075,6 +1081,8 @@ private fun composeBasis(rotation: Vector3, scale: Vector3): Basis {
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun Node3D.hide() = hide()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun Node3D.getWorld3d(): World3D? = getWorld3d()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun Node3D.show() = show()
 
@@ -1464,11 +1472,15 @@ EXTRA_CLASSES: tuple[str, ...] = (
     "AnimationTree", "Area2D", "AudioStream", "BoneAttachment3D", "ButtonGroup", "CallbackTweener",
     "ColorRect", "MethodTweener",
     "LightmapGIData", "Marker2D", "Marker3D", "MultiMeshInstance3D", "OmniLight3D", "ProgressBar",
-    "SpinBox", "SpotLight3D", "StaticBody3D", "Texture2D", "TextureButton",
+    "SpinBox", "SpotLight3D", "SpringArm3D", "StaticBody3D", "Texture2D", "TextureButton",
 )
 # Bespoke facades that stay hand-written under api/ (name -> why the generator cannot emit it).
 WEB_HANDSHAPED: dict[str, str] = {
-    "PhysicsDirectSpaceState3D": "owner-bound facade; the ray query packs a Dictionary result into one string",
+    "PhysicsDirectSpaceState3D": (
+        "owner-bound facade with desktop's intersectRay: the query parameters ride one string (RIDs as "
+        "decimal ids) and the engine Dictionary comes back through the Variant codec, one crossing and no "
+        "handle per ray"
+    ),
 }
 # Inert Web stand-ins for engine classes the browser build does not host (task 129 E, inventory row
 # 10): name -> what it answers instead. They dispatch no opcode and hold no engine object. A
@@ -1484,8 +1496,15 @@ WEB_INERT_FACADES: dict[str, str] = {
     "ENetMultiplayerPeer": "ENet needs UDP sockets: create_server / create_client answer ERR_UNAVAILABLE",
     "SceneMultiplayer": "server-relay switch of the single-player session",
     "MultiplayerSynchronizer": "nothing to replicate with one local peer",
-    "World3D": "owner-bound accessor of the hand-shaped PhysicsDirectSpaceState3D",
-    "PhysicsRayQueryParameters3D": "inputs of the hand-shaped ray query, built engine-side by the applier",
+    "World3D": (
+        "owner-bound accessor of the hand-shaped PhysicsDirectSpaceState3D (desktop's nullable "
+        "directSpaceState); a real World3D handle would cost a crossing and a RefCounted handle per "
+        "query, and nothing reads anything else off it"
+    ),
+    "PhysicsRayQueryParameters3D": (
+        "desktop's whole surface as a Kotlin value (no crossing until the query); the applier builds "
+        "the engine object from it"
+    ),
 }
 # Opcodes a hand-written facade in WEB_HANDSHAPED may dispatch directly.
 HANDSHAPED_OPCODES: frozenset[str] = frozenset(
@@ -1931,7 +1950,9 @@ OBJECT_ROOT_INIT = [
 # decoded Variant); "immediate" -- the method itself as one immediate generic call; "queued" -- one
 # queued generic call (runs after the batch; answers null, as Godot's deferred call does);
 # "cached" -- a property read with one immediate call the first time per handle, then kept
-# (WebHandleCache; desktop captures it at construction, so it still answers after the object is freed).
+# (WebHandleCache; desktop captures it at construction, so it still answers after the object is freed);
+# "cached_fun" -- the same, spelled as desktop's function (`getRid()`). A RID crosses as its id in the
+# Variant codec's text, so every RID member is a row here (check_rid_transport).
 WEB_GENERIC_METHODS: dict[str, dict[str, tuple[str, str, dict[str, str], str]]] = {
     "Object": {
         "call": ("forward", "call", {}, "Desktop's Variant `call` (task 138 item 2): any arguments, the result decoded (an Array as\n   * a List, a Dictionary as a Map). An immediate generic call, so it flushes queued commands first."),
@@ -1942,13 +1963,34 @@ WEB_GENERIC_METHODS: dict[str, dict[str, tuple[str, str, dict[str, str], str]]] 
         "set_indexed": ("queued", "setIndexed", {}, "Desktop's `setIndexed` (Godot's `Object.set_indexed`): writes the property path\n   * [propertyPath], so `setIndexed(NodePath(\"position:x\"), 5.0)` sets the x component. Queued."),
         "get_instance_id": ("cached", "instanceId", {}, "The engine instance id, read once per handle and then kept (desktop captures it at\n   * construction): every wrapper of the handle answers without crossing again, also after the\n   * object is freed."),
     },
+    # RIDs (a value: its id crosses in text). A body's RID is fixed for its lifetime, so one read per handle.
+    "CollisionObject3D": {
+        "get_rid": ("cached_fun", "getRid", {}, "The object's physics RID, read once per handle and then kept (it is fixed for the\n   * object's lifetime): exclude it from a ray with `PhysicsRayQueryParameters3D.create(from, to,\n   * mask, listOf(getRid()))`."),
+    },
+    "Resource": {
+        "get_rid": ("cached_fun", "getRid", {}, "The resource's RID, read once per handle and then kept."),
+    },
+    "RayCast3D": {
+        "add_exception_rid": ("queued", "addExceptionRid", {}, "Desktop's `addExceptionRid`: the cast ignores the object of [rid]. Queued."),
+        "remove_exception_rid": ("queued", "removeExceptionRid", {}, "Desktop's `removeExceptionRid`. Queued."),
+        "get_collider_rid": ("immediate", "getColliderRid", {}, "The RID of the object the cast hits (an empty RID when none). One immediate call."),
+    },
+    "SpringArm3D": {
+        "add_excluded_object": ("queued", "addExcludedObject", {"RID": "rid"}, "Desktop's `addExcludedObject`: the arm's cast ignores the object of [rid]. Queued."),
+        "remove_excluded_object": ("immediate", "removeExcludedObject", {"RID": "rid"}, "Desktop's `removeExcludedObject`: true when [rid] was excluded. One immediate call."),
+    },
+    "KinematicCollision3D": {
+        "get_collider_rid": ("immediate", "getColliderRid", {}, "The RID of the collision's [collisionIndex]th collider. One immediate call."),
+    },
     # Review N2: Godot's own answer (a popup's window too), one immediate call.
     "Node": {
         "get_window": ("immediate", "getWindow", {}, ""),
     },
 }
 _GENERIC_TYPES = {"Variant": "Any?", "StringName": "String", "String": "String", "NodePath": "NodePath", "Array": "List<Any?>", "int": "Long",
-                  "float": "Double", "bool": "Boolean"}
+                  "float": "Double", "bool": "Boolean",
+                  # A RID is a value: its id crosses in the Variant codec's text (check_rid_transport).
+                  "RID": "RID", "typedarray::RID": "List<RID>"}
 
 
 def emit_generic_methods(api: Api, godot_name: str) -> list[str]:
@@ -1960,7 +2002,12 @@ def emit_generic_methods(api: Api, godot_name: str) -> list[str]:
         method = methods.get(godot)
         if method is None:
             raise GenerationError(f"WEB_GENERIC_METHODS[{godot_name}] {godot}: no such method in extension_api.json")
-        params = [(renames.get(a["name"], camel(a["name"])), _GENERIC_TYPES[a["type"]]) for a in method.get("arguments", [])]
+        # An int parameter takes desktop's width (int32 meta -> Int), so a shared call site compiles on both.
+        params = [
+            (renames.get(a["name"], camel(a["name"])), int_type(a.get("meta", "")) if a["type"] == "int" else _GENERIC_TYPES[a["type"]])
+            for a in method.get("arguments", [])
+        ]
+        defaults = [_generic_default(godot_name, godot, a) for a in method.get("arguments", [])]
         ret_godot = (method.get("return_value") or {}).get("type")
         wrap = ""
         if ret_godot in api.classes:
@@ -1969,7 +2016,7 @@ def emit_generic_methods(api: Api, godot_name: str) -> list[str]:
             wrap = f"(%s as GodotObject?)?.let {{ webRetyped(it, {kotlin_class_name(ret_godot)}(it.handle)) }}"
         else:
             ret = _GENERIC_TYPES[ret_godot] if ret_godot else "Unit"
-        decl = [f"{n}: {t}" for n, t in params] + (["vararg args: Any?"] if method.get("is_vararg") else [])
+        decl = [f"{n}: {t}{d}" for (n, t), d in zip(params, defaults)] + (["vararg args: Any?"] if method.get("is_vararg") else [])
         values = [n for n, _ in params] + (["*args"] if method.get("is_vararg") else [])
         cast = "" if ret in ("Any?", "Unit") or wrap else f" as {ret}"
         if lines:
@@ -2007,9 +2054,29 @@ def emit_generic_methods(api: Api, godot_name: str) -> list[str]:
             lines.append(f"    get() = {field} ?: ({read}{cast}).also {{ {field} = it }}")
             lines.append("")
             lines.append(f"  private var {field}: {ret}? = null")
+        elif mode == "cached_fun":
+            if params or method.get("is_vararg"):
+                raise GenerationError(f"WEB_GENERIC_METHODS[{godot_name}] {godot}: a cached function takes no arguments")
+            field = f"cached{kotlin[0].upper()}{kotlin[1:]}"
+            read = f'net.multigesture.kanama.web.WebHandleCache.read(handle.value, "{godot}") {{ webGenericCall(this, "{godot}", emptyList()) }}'
+            lines.append(f"  fun {kotlin}(): {ret} = {field} ?: ({read}{cast}).also {{ {field} = it }}")
+            lines.append("")
+            lines.append(f"  private var {field}: {ret}? = null")
         else:
             raise GenerationError(f"WEB_GENERIC_METHODS[{godot_name}] {godot}: unknown mode {mode}")
     return lines
+
+
+def _generic_default(godot_name: str, godot: str, argument: dict) -> str:
+    """` = <default>` for a WEB_GENERIC_METHODS argument Godot gives a scalar default, else ""."""
+    if "default_value" not in argument:
+        return ""
+    value = argument["default_value"]
+    if argument["type"] == "int" and re.fullmatch(r"-?[0-9]+", value):
+        return f" = {value}" if int_type(argument.get("meta", "")) == "Int" else f" = {value}L"
+    if argument["type"] == "bool" and value in ("true", "false"):
+        return f" = {value}"
+    raise GenerationError(f"WEB_GENERIC_METHODS[{godot_name}] {godot}: no Kotlin default for {argument['name']} = {value}")
 
 
 def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) -> str:

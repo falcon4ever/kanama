@@ -277,6 +277,7 @@ def load_contract_calls() -> set[str]:
     return {
         f"{call.get('className')}.{call.get('methodName')}"
         for call in data.get("calls", [])
+        if "retired" not in call
     }
 
 

@@ -479,8 +479,8 @@ case("check_property_coverage.py", py("check_property_coverage.py"),
      [Edit(f"{COMMON}/api/CanvasItem.kt", "    var visible: Boolean", "    var visibleRedRun: Boolean")],
      "silently dropped", "a generated wrapper property disappears")
 case("check_protocol_pins.py", py("check_protocol_pins.py"),
-     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 38", "KANAMA_WEB_PROTOCOL_VERSION = 37")],
-     "protocol version disagrees", "the bridge pins protocol 35 while the emitter says 36")
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 39", "KANAMA_WEB_PROTOCOL_VERSION = 38")],
+     "protocol version disagrees", "the bridge pins protocol 38 while the emitter says 39")
 case("check_protocol_pins.py (sentinel)", py("check_protocol_pins.py"),
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", 'scriptErrorResult: "\\u001fkanama-script-error\\u001f",', 'scriptErrorResult: "\\u001fkanama-script-errorX\\u001f",')],
      "script-error sentinel", "the bridge's script-error sentinel differs from the emitter's GDScript constant")
