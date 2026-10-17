@@ -864,6 +864,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     rayCastExceptionRid: (rayMask & 12288) === 12288,
     // R10: a signal's RID argument is the same value as getRid().
     ridSignalIsSameCodec: (rayMask & 16384) === 16384,
+    // R11: a RID past 2^53 crosses whole in both directions (text, never a double).
+    ridPast2To53RoundTrips: (rayMask & 524288) === 524288,
+    // R8b: hitBackFaces reaches the engine (a one-quad concave shape).
+    rayHitBackFaces: (rayMask & 1048576) === 1048576,
     // N1: GodotObject.get(property) answers the engine's value (one generic call).
     objectGetIsGeneric: (rayMask & 32768) === 32768,
     // N2: a CanvasItem handle without the canvas mirror reads modulate once from the engine.

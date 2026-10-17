@@ -197,7 +197,9 @@ open class Node3D(godotObject: GodotHandle) : Node(godotObject) {
   /**
    * Desktop's `getWorld3d()` (nullable, so `getWorld3d()?.directSpaceState?.intersectRay(query)`
    * compiles unchanged): the world this node is in, bound to this node (`WebPhysicsQuery.kt`), so a
-   * ray query is one crossing and no World3D handle.
+   * ray query is one crossing and no World3D handle. Web adaptation: never null, since knowing
+   * whether the node is in the tree would cost a crossing; outside the tree its `intersectRay`
+   * answers `emptyMap()`, what desktop's `?.` chain gives there.
    */
   fun getWorld3d(): World3D? = World3D(this)
 

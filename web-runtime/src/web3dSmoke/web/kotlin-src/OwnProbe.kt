@@ -23,7 +23,6 @@ import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.api.Resource
 import net.multigesture.kanama.api.MeshInstance3D
 import net.multigesture.kanama.api.MultiplayerPeer
-import net.multigesture.kanama.api.OfflineMultiplayerPeer
 import net.multigesture.kanama.api.Signal2
 import net.multigesture.kanama.api.SignalArgType
 import net.multigesture.kanama.api.SpringArm3D
@@ -96,11 +95,12 @@ import net.multigesture.kanama.web.WebGenericCallResult
  * (4) the frames O2 / O6 waited for the collection.
  *
  * [rayMask] (the R and N rows: ray queries and RIDs with desktop's API, and the other members a
- * shared raycasting file needs; 524287 when healthy). A RID is a
+ * shared raycasting file needs; 2097151 when healthy). A RID is a
  * value that crosses as its id in text, the query parameters stay a Kotlin value the applier builds
  * the engine object from, and a ray is one engine crossing that mints no handle:
  * - R1 `rayHitIsDictionary`: 1 = `intersectRay` answers a Map with exactly `position, normal,
- *   face_index, collider_id, collider, shape, rid`, `position` / `normal` Vector3.
+ *   face_index, collider_id, collider, shape, rid`, `position` / `normal` Vector3, `face_index` /
+ *   `collider_id` / `shape` Long, and `collider_id` the collider's `instanceId`.
  * - R2 `rayExcludesByRid`: 2 = a ray over OwnRayBody (A) and OwnRayBody2 (B) hits A, and with
  *   `exclude = listOf(a.getRid())` hits B.
  * - R3 `rayMissIsEmptyMap`: 4 = a ray into empty space answers `emptyMap()` (desktop parity).
@@ -122,9 +122,14 @@ import net.multigesture.kanama.web.WebGenericCallResult
  * - N1 `objectGetIsGeneric`: 32768 = `GodotObject.get(property)` answers the engine's value.
  * - N2 `modulateReadsWithoutSnapshot`: 65536 = a ColorRect whose handle came without the canvas
  *   mirror reads its `modulate` from the engine once, then its own writes.
- * - N3 `multiplayerFacadeMembers`: 131072 = `getMultiplayer()` is a member, `hasMultiplayerPeer`,
- *   and the peers answer `isClass` and `getConnectionStatus` (offline connected, ENet not).
+ * - N3 `multiplayerFacadeMembers`: 131072 = `getMultiplayer()` is a member with desktop's defaults
+ *   (`hasMultiplayerPeer()`, a connected `OfflineMultiplayerPeer`, peer 1, the server); ENet never
+ *   connects.
  * - N4 `screenRelativeReads`: 262144 = `InputEventMouseMotion.getScreenRelative()` reads the event.
+ * - R11 `ridPast2To53RoundTrips`: 524288 = the RID `0x7fffffff12345678` (past 2^53) comes back from
+ *   a generic call and goes back as a generic argument with its id whole.
+ * - R8b `rayHitBackFaces`: 1048576 = on a one-quad concave shape `hitBackFaces = false` leaves one
+ *   of the two sides hitting, `true` (the default) both.
  *
  * [rayCost]: (0) engine crossings of 1000 `getRid()`, (1) of 100 rays, (2) live browser handles
  * gained by 10 000 rays at once and (3) a sweep later (reported only: other rows run meanwhile),
@@ -424,7 +429,7 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     checkNotNull(PhysicsRayQueryParameters3D.create(Vector3(x, fromY, 500.0), Vector3(x, toY, 500.0), mask, exclude))
 
   /** The bridge's synchronous engine crossings so far (this read is one of them). */
-  private fun queries(twin: Node): Long = twin.call("counter", "objectQueries") as Long
+  private fun queries(twin: Node): Long = twin.call("counter", "immediateCrossings") as Long
 
   private fun body(twin: Node, name: String): CollisionObject3D =
     CollisionObject3D(checkNotNull(twin.getNodeOrNull(name)) { "no $name" }.handle)
@@ -440,8 +445,11 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     val keys = setOf("position", "normal", "face_index", "collider_id", "collider", "shape", "rid")
     if (answers("R1 dictionary") {
         val hit = ray(from, down(500.0))
-        (hit.keys == keys && hit["position"] is Vector3 && hit["normal"] is Vector3).also {
-          if (!it) note("R1 keys=${hit.keys} position=${hit["position"]}")
+        val collider = hit["collider"] as? GodotObject
+        (hit.keys == keys && hit["position"] is Vector3 && hit["normal"] is Vector3 &&
+          hit["face_index"] is Long && hit["collider_id"] is Long && hit["shape"] is Long &&
+          collider != null && hit["collider_id"] == collider.instanceId).also {
+          if (!it) note("R1 $hit")
         }
       }) rayMask = rayMask or 1L
     if (answers("R2 exclude") {
@@ -461,6 +469,13 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
           collider == twin.getNodeOrNull("OwnRayBody")).also { if (!it) note("R4 rid=$rid collider=$collider") }
       }) rayMask = rayMask or 8L
     staleRidRow(twin, from)
+    if (answers("R11 big rid") {
+        // An id past 2^53 (a double would round it) crosses whole both ways.
+        val big = twin.call("big_rid")
+        (big is RID && big.value == 0x7fffffff12345678L && twinLong("rid_is_big", big) == 1L).also {
+          if (!it) note("R11 big=$big")
+        }
+      }) rayMask = rayMask or 524288L
     crossingRow(twin, from, a)
     flagRows(from, a, b, twin)
     exceptionRows(twin)
@@ -491,14 +506,17 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
         }
       }) rayMask = rayMask or 65536L
     if (answers("N3 multiplayer") {
+        // Desktop's defaults before a game sets a peer: a connected offline peer, peer 1, the server.
         val api = checkNotNull(self.getMultiplayer()) { "no multiplayer" }
-        val offline: MultiplayerPeer = OfflineMultiplayerPeer.create()
+        val peer = api.getMultiplayerPeer()
         val enet: MultiplayerPeer = ENetMultiplayerPeer.create()
-        api.hasMultiplayerPeer() == (api.getMultiplayerPeer() != null) &&
-          offline.isClass("OfflineMultiplayerPeer") && offline.isClass("MultiplayerPeer") &&
-          !offline.isClass("ENetMultiplayerPeer") &&
-          offline.getConnectionStatus() == MultiplayerPeer.ConnectionStatus.CONNECTED &&
-          enet.getConnectionStatus() == MultiplayerPeer.ConnectionStatus.DISCONNECTED
+        (api.hasMultiplayerPeer() && peer != null && peer.isClass("OfflineMultiplayerPeer") &&
+          peer.isClass("MultiplayerPeer") && !peer.isClass("ENetMultiplayerPeer") &&
+          peer.getConnectionStatus() == MultiplayerPeer.ConnectionStatus.CONNECTED &&
+          api.getUniqueId() == 1 && api.isServer() && enet.isClass("ENetMultiplayerPeer") &&
+          enet.getConnectionStatus() == MultiplayerPeer.ConnectionStatus.DISCONNECTED).also {
+          if (!it) note("N3 has=${api.hasMultiplayerPeer()} peer=$peer")
+        }
       }) rayMask = rayMask or 131072L
     if (answers("N4 screen relative") {
         var motion: Vector2? = null
@@ -583,6 +601,16 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     if (answers("R8 bodies") {
         ray(from, down(500.0).also { it.collideWithBodies = false }).isEmpty()
       }) rayMask = rayMask or 2048L
+    if (answers("R8 back faces") {
+        // OwnBackFaceBody is one concave (trimesh) quad with back-face collision: whichever side is
+        // its back face, a ray from that side hits it only with hitBackFaces (Godot's default, true).
+        val q = { fromY: Double, toY: Double, back: Boolean ->
+          ray(from, down(620.0, fromY = fromY, toY = toY).also { it.hitBackFaces = back }).isNotEmpty()
+        }
+        val withBack = q(510.0, 490.0, true) && q(490.0, 510.0, true)
+        val without = listOf(q(510.0, 490.0, false), q(490.0, 510.0, false)).count { it }
+        (withBack && without == 1).also { if (!it) note("R8 back faces: both=$withBack one-sided hits=$without") }
+      }) rayMask = rayMask or 1048576L
   }
 
   /** R9: the RID members of RayCast3D and SpringArm3D. */

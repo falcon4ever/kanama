@@ -342,6 +342,9 @@ case("check_hand_code_budget.py (fake GENERATED markers)", py("check_hand_code_b
      [Append(f"{COMMON}/api/KanamaScript.kt", "\n// ===== BEGIN GENERATED ENUMS: RedRun (red run) =====\nfun redRunHidden(): Int = 1\n// ===== END GENERATED ENUMS: RedRun =====\n")],
      "carries a BEGIN/END GENERATED marker, but no generator owns a region in it",
      "hand code in a sugar file is wrapped in a GENERATED marker pair to hide it from the count")
+case("check_hand_code_budget.py (decided without a decision)", py("check_hand_code_budget.py"),
+     [Edit("scripts/hand_code_budget.json", '"decision": "Ray-query design, decisions D2', '"decisionX": "Ray-query design, decisions D2')],
+     "decided without the `decision` field", "a decided (hand-shaped by decision) file loses the decision it cites")
 case("check_hand_code_budget.py (sugar ratchet)", py("check_hand_code_budget.py"),
      [Append(f"{COMMON}/api/KanamaScript.kt", "\n// red run: a sugar file grows\nfun redRunSugar(): Int = 1\n")],
      "sugar file grew", "a sugar file (KanamaScript.kt) grows past its line ratchet")
@@ -692,6 +695,9 @@ case("api_wrapper_generator_report.py --check (dropped default)", py("api_wrappe
 case("generate_web_wrappers.py --check (inert facades)", py("generate_web_wrappers.py", "--check"),
      [Append("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt", "\nobject Marshalls\n")],
      "declares Godot class Marshalls", "a hand-written Web file declares a Godot class WEB_INERT_FACADES does not list (task 129 E)")
+case("generate_web_wrappers.py --check (RID transport)", py("generate_web_wrappers.py", "--check"),
+     [Edit("scripts/generate_web_wrappers.py", '"RID": "RID", "typedarray::RID": "List<RID>"}', '"RID": "GodotObject", "typedarray::RID": "List<RID>"}')],
+     "the generic tier does not render a RID slot as RID", "the generic tier renders a RID slot as an object handle again (the old never-cross adaptation)")
 case("generate_web_wrappers.py --check (Web-local utilities)", py("generate_web_wrappers.py", "--check"),
      [Edit("scripts/web_local_utilities.py", '"sin": (1, "sin: " + LIBM,', '"sin": (0, "sin: " + LIBM + "",')],
      "bound 0 on a body that calls a libm transcendental", "a Web-local transcendental utility claims bit equality (task 129 E review B1)")

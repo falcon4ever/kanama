@@ -2311,6 +2311,8 @@ class WebScriptCodeEmitterTest {
     // A RID crosses as its decimal id (text, never an int32 or double slot) and is rebuilt here.
     assertTrue(arm.contains("ray_rids.append(rid_from_int64(int(ray_parts[ray_index])))"), arm)
     assertTrue(arm.contains("ray_query.exclude = ray_rids"), arm)
+    // A node outside the tree has no world: the arm answers empty instead of an engine error.
+    assertTrue(arm.contains("if (value as Node3D).is_inside_tree():"), arm)
     // The four flags reach the engine's parameters object.
     for (flag in
       listOf("collide_with_bodies", "collide_with_areas", "hit_from_inside", "hit_back_faces")) {

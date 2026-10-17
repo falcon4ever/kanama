@@ -98,7 +98,7 @@ class MultiplayerAPI internal constructor() {
 
   fun getMultiplayerPeer(): MultiplayerPeer? = peer
 
-  /** True once a peer was set (the shared sources set the offline peer at startup). */
+  /** True unless a script set the peer to null: the session starts with the offline peer, as desktop's. */
   fun hasMultiplayerPeer(): Boolean = peer != null
 
   var multiplayerPeer: MultiplayerPeer?
@@ -135,7 +135,8 @@ class MultiplayerAPI internal constructor() {
   }
 
   private companion object {
-    var peer: MultiplayerPeer? = null
+    // Desktop's SceneMultiplayer starts with an OfflineMultiplayerPeer, so this one does too.
+    var peer: MultiplayerPeer? = OfflineMultiplayerPeer()
   }
 
   // ===== BEGIN GENERATED ENUMS: MultiplayerAPI (scripts/generate_web_wrappers.py — do not edit) =====

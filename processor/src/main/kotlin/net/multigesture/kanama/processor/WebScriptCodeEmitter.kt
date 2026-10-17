@@ -5261,9 +5261,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tfor ray_index in range(8, ray_parts.size()):")
     appendLine("\t\t\t\tray_rids.append(rid_from_int64(int(ray_parts[ray_index])))")
     appendLine("\t\t\tray_query.exclude = ray_rids")
-    appendLine("\t\t\tvar ray_world := (value as Node3D).get_world_3d()")
     appendLine(
-      "\t\t\tvar ray_hit: Dictionary = {} if ray_world == null else ray_world.direct_space_state.intersect_ray(ray_query)"
+      "\t\t\t# Outside the tree a node has no world (desktop's get_world_3d() answers null, and the"
+    )
+    appendLine("\t\t\t# shared ?. chain an empty Map): no engine error, an empty answer.")
+    appendLine("\t\t\tvar ray_hit: Dictionary = {}")
+    appendLine("\t\t\tif (value as Node3D).is_inside_tree():")
+    appendLine(
+      "\t\t\t\tray_hit = (value as Node3D).get_world_3d().direct_space_state.intersect_ray(ray_query)"
     )
     appendLine("\t\t\tif ray_hit.is_empty():")
     appendLine("\t\t\t\t_kanama_bridge.recordImmediateStringResult(\"\")")

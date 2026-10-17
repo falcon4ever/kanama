@@ -77,7 +77,9 @@ their shared sources. The bridge protocol is 39: re-export every Web game.
 - **Source break:** (Web) `RayHit` `PhysicsDirectSpaceState3D` `PhysicsRayQueryParameters3D` `World3D` `SpringArm3D` `top-level`:
   `RayHit` is removed and `intersectRay(query)` answers `Map<String, Any?>` (read `hit["position"] as?
   Vector3` and `hit["collider"] as? GodotObject`; a miss is `emptyMap()`, not `null`);
-  `Node3D.getWorld3d()` and `World3D.directSpaceState` are nullable, as on desktop (write `?.`);
+  `intersectRay`'s parameter is named `parameters`, desktop's name (a named `query =` argument
+  needs the new name); `Node3D.getWorld3d()` and `World3D.directSpaceState` are nullable, as on
+  desktop (write `?.`);
   `PhysicsRayQueryParameters3D.create`'s `exclude` is a `List<RID>` (`listOf(body.getRid())`) instead
   of a `List<GodotObject>`; `SpringArm3D.addExcludedObject(body)` is `addExcludedObject(body.getRid())`.
 

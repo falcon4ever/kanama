@@ -76,6 +76,20 @@ func _ready() -> void:
 	arm.global_position = Vector3(540.0, 510.0, 500.0)
 	# The arm casts along its +Z: turned to point down.
 	arm.rotation_degrees = Vector3(90.0, 0.0, 0.0)
+	# R8b: one concave quad (two triangles) at x = 620, so a ray from either side meets one face.
+	var back := StaticBody3D.new()
+	back.name = "OwnBackFaceBody"
+	var quad := ConcavePolygonShape3D.new()
+	# A ray meets a back face only when the shape has back-face collision (Godot 4.7, either engine).
+	quad.backface_collision = true
+	quad.set_faces(PackedVector3Array([
+		Vector3(-1, 0, -1), Vector3(1, 0, -1), Vector3(1, 0, 1),
+		Vector3(-1, 0, -1), Vector3(1, 0, 1), Vector3(-1, 0, 1)]))
+	var quad_shape := CollisionShape3D.new()
+	quad_shape.shape = quad
+	back.add_child(quad_shape)
+	add_child(back)
+	back.global_position = Vector3(620.0, 500.0, 500.0)
 	var rid_area := Area3D.new()
 	rid_area.name = "OwnRidArea"
 	add_child(rid_area)
@@ -121,6 +135,16 @@ func stale_rid(_unused: int) -> int:
 	var id := body.get_rid().get_id()
 	body.free()
 	return id
+
+
+## R11: a RID whose id is past 2^53 (it never names a live object).
+func big_rid() -> RID:
+	return rid_from_int64(0x7fffffff12345678)
+
+
+## R11: 1 when the RID Kotlin handed back has the same id.
+func rid_is_big(rid: RID) -> int:
+	return 1 if rid.get_id() == 0x7fffffff12345678 else 0
 
 
 ## R10: OwnRidArea's body_shape_entered with OwnRayBody's RID, as the physics server would emit it.
