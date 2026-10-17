@@ -159,8 +159,9 @@ class IosMapExportEmitTest {
     // Retained like desktop: resource wrappers and Resource scripts, not nodes or node scripts.
     assertTrue(
       source.contains(
-        "override fun retainsDictionaryValues(propertyIndex: Int): Boolean = " +
-          "propertyIndex == 0 || propertyIndex == 2"
+        "override fun dictionaryRetainedValues(propertyIndex: Int): Collection<Any?>? = " +
+          "when (propertyIndex) {\n        0 -> script.textures.values\n" +
+          "        2 -> script.items.values\n        else -> null"
       ),
       source,
     )
@@ -180,9 +181,9 @@ class IosMapExportEmitTest {
       source.lines().filter { line ->
         val t = line.trim()
         (Regex("^[0-3] -> ").containsMatchIn(t) && "script." in t) ||
-          t.startsWith("override fun retainsDictionaryValues")
+          t.startsWith("override fun dictionaryRetainedValues")
       }
-    assertEquals(9, generated.size, source)
+    assertEquals(10, generated.size, source)
     val probe =
       squash(
         File(ROOT, "src/iosMain/kotlin/net/multigesture/kanama/ios/DictionaryProbe.kt").readText()

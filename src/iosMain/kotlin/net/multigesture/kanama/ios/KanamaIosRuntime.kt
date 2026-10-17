@@ -174,10 +174,11 @@ internal interface KanamaIosScriptBridge {
   // branch converts them to the field's key and value types and drops what does not fit.
   fun setPropertyDictionary(propertyIndex: Int, entries: Map<Any?, Any?>): Boolean = false
 
-  // True for a Map property whose values are Resources: after the set the runtime takes one
-  // reference per value object ([KanamaIosRuntime.retainScriptInstancePropertyObjects]), as
-  // desktop's retained Dictionary read does, so a Resource only the Dictionary held stays alive.
-  fun retainsDictionaryValues(propertyIndex: Int): Boolean = false
+  // For a Map property whose values are Resources: the values the field holds after the set (the
+  // converted Map, so an entry dropped for its key or class is not kept), on which the runtime
+  // takes one reference each ([KanamaIosRuntime.retainScriptInstancePropertyObjects]), as desktop's
+  // retained Dictionary read does; null for any other property.
+  fun dictionaryRetainedValues(propertyIndex: Int): Collection<Any?>? = null
 
   val scriptInstance: Any?
     get() = null
@@ -671,10 +672,17 @@ internal object KanamaIosRuntime {
       return false
     }
     val ok = instance.bridge.setPropertyDictionary(propertyIndex, entries)
-    if (ok && instance.bridge.retainsDictionaryValues(propertyIndex)) {
+    val retained = if (ok) instance.bridge.dictionaryRetainedValues(propertyIndex) else null
+    if (retained != null) {
       val objects =
-        entries.values
-          .mapNotNull { (it as? net.multigesture.kanama.api.GodotObject)?.segment?.address() }
+        retained
+          .mapNotNull {
+            when (it) {
+              is net.multigesture.kanama.api.GodotObject -> it.segment.address()
+              is net.multigesture.kanama.api.KanamaScript<*> -> scriptValueAddress(it)
+              else -> null
+            }
+          }
           .toLongArray()
       retainScriptInstancePropertyObjects(handle, propertyIndex, objects)
     }

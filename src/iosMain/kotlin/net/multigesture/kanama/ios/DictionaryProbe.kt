@@ -129,5 +129,9 @@ private class DictionaryProbeBridge(private val script: DictionaryProbeScript) :
       else -> false
     }
 
-  override fun retainsDictionaryValues(propertyIndex: Int): Boolean = propertyIndex == 3
+  override fun dictionaryRetainedValues(propertyIndex: Int): Collection<Any?>? =
+    when (propertyIndex) {
+      3 -> script.textures.values
+      else -> null
+    }
 }

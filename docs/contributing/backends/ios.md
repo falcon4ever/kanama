@@ -201,8 +201,10 @@ Four rules of the bridge (three about ownership), each with its self-test rows:
   `kanama_ios_build_dictionary_any_from_blob`. `Map<String, Any?>` keeps the generic String-keyed
   read. Object values are wrapped like desktop wraps them (`fromHandle` for a resource wrapper,
   the constructor for another, `iosScriptInstanceForOwner` for a script), and a Map of Resource
-  values (`retainsDictionaryValues`) records one reference per value in `ScriptPropertyRetains`
-  after the set, as desktop's `readVariantDictionaryObjectValuesRetained` does. Rows: `map-export(...)` (built-in
+  values (`dictionaryRetainedValues`, the converted Map's values) records one reference per value
+  in `ScriptPropertyRetains` after the set, as desktop's `readVariantDictionaryObjectValuesRetained`
+  does. One difference: a script value whose owner has no live Kotlin instance is dropped on iOS
+  (as in a `List<UserScript>`), where desktop builds a new script instance over the handle. Rows: `map-export(...)` (built-in
   probe `DictionaryProbe.kt`, whose bridge `IosMapExportEmitTest` holds to the emitter's output).
 - **A script property's default is its initializer (task 138 item 8).** The iOS registry carries
   `KanamaIosScriptProperty.defaultValue`, emitted by KSP from the literal desktop's registrar

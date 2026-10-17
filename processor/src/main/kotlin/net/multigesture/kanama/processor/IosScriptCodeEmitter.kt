@@ -585,9 +585,13 @@ internal class IosScriptCodeEmitter(
         if (retaining.isNotEmpty()) {
           builder.appendLine()
           builder.appendLine(
-            "    override fun retainsDictionaryValues(propertyIndex: Int): Boolean = " +
-              retaining.joinToString(" || ") { "propertyIndex == ${it.index}" }
+            "    override fun dictionaryRetainedValues(propertyIndex: Int): Collection<Any?>? = when (propertyIndex) {"
           )
+          retaining.forEach {
+            builder.appendLine("        ${it.index} -> script.${it.value.kotlinName}.values")
+          }
+          builder.appendLine("        else -> null")
+          builder.appendLine("    }")
         }
       }
       val valueProperties = script.properties.filter { it.valueTypeClassName.isNotEmpty() }
