@@ -1548,6 +1548,16 @@ class Main(godotObject: GodotHandle) :
    */
   fun ownCost(value: Long): Long = ownSays("own_cost", value)
 
+  /**
+   * The ray-query rows (see OwnProbe's R rows), armed by [ownProbe]: [ownRayMask] (2097151), 1 from
+   * [ownRayDone] once their frames have passed, and [ownRayCost].
+   */
+  fun ownRayMask(value: Long): Long = ownSays("own_ray_mask", 0L)
+
+  fun ownRayDone(value: Long): Long = ownSays("own_ray_done", 0L)
+
+  fun ownRayCost(value: Long): Long = ownSays("own_ray_cost", value)
+
   private fun ownSays(method: String, value: Long): Long =
     WebExperimentalGenericCall.callImmediate(self.requireAs("OwnProbe", ::Node), method, listOf(value))
       .asLong()

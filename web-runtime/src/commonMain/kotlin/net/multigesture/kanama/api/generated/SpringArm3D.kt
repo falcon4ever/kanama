@@ -3,23 +3,18 @@
 
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
-import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class SpringArm3D(godotObject: GodotHandle) : Node3D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
-  /** Web adaptation: exclusion takes the collision OBJECT (the applier derives the RID engine-side). */
-  fun addExcludedObject(body: GodotObject) {
-    GodotBackendCalls.invokeObjectArg(
-      D.SPRINGARM3D_ADD_EXCLUDED_OBJECT,
-      requireOpenHandle(),
-      body.requireOpenHandle(),
-    )
+  /** Desktop's `addExcludedObject`: the arm's cast ignores the object of [rid]. Queued. */
+  fun addExcludedObject(rid: RID): Unit {
+    webGenericQueue(this, "add_excluded_object", listOf<Any?>(rid))
   }
-}
 
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun SpringArm3D.addExcludedObject(body: GodotObject) = addExcludedObject(body)
+  /** Desktop's `removeExcludedObject`: true when [rid] was excluded. One immediate call. */
+  fun removeExcludedObject(rid: RID): Boolean =
+    webGenericCall(this, "remove_excluded_object", listOf(rid)) as Boolean
+}

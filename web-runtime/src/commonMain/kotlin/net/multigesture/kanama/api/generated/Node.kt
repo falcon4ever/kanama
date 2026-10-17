@@ -181,6 +181,12 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
   /** Web adaptation: the corpus runs the default 60 Hz fixed physics tick. */
   fun getPhysicsProcessDeltaTime(): Double = 1.0 / 60.0
 
+  /**
+   * The page's single-player session (`WEB_INERT_FACADES`' MultiplayerAPI): nullable as on desktop,
+   * so the shared sources' `getMultiplayer()?.` chains compile unchanged.
+   */
+  fun getMultiplayer(): MultiplayerAPI? = webMultiplayerApi
+
   /** Web no-ops: generated proxies dispatch input only to scripts that declare handlers. */
   fun setProcessInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
 
@@ -434,6 +440,8 @@ fun Node.propagateCall(method: String, args: List<Any?> = emptyList(), parentFir
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Node.getPhysicsProcessDeltaTime(): Double = getPhysicsProcessDeltaTime()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun Node.getMultiplayer(): MultiplayerAPI? = getMultiplayer()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Node.setProcessInput(enable: Boolean) = setProcessInput(enable)

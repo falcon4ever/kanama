@@ -6,6 +6,7 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class Resource(godotObject: GodotHandle) : RefCounted(godotObject) {
@@ -16,6 +17,11 @@ open class Resource(godotObject: GodotHandle) : RefCounted(godotObject) {
       requireOpenHandle(),
       deep,
     )?.let { Resource(it.toWebId()) }
+
+  /** The resource's RID, read once per handle and then kept. */
+  fun getRid(): RID = cachedGetRid ?: (net.multigesture.kanama.web.WebHandleCache.read(handle.value, "get_rid") { webGenericCall(this, "get_rid", emptyList()) } as RID).also { cachedGetRid = it }
+
+  private var cachedGetRid: RID? = null
 
   /** Signal `changed`; see [TypedSignal]. */
   val changed: Signal0

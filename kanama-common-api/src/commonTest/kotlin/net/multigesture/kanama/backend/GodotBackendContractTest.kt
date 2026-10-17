@@ -1635,14 +1635,11 @@ class GodotBackendContractTest {
       value: Double,
     ): Double = unexercised(descriptor)
 
-    override fun invokeVector3Vector3LongObjectRetString(
+    override fun invokeStringListRetString(
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,
       receiver: GodotHandle,
-      from: GodotVector3,
-      to: GodotVector3,
-      collisionMask: Long,
-      exclude: GodotHandle?,
+      parts: List<String>,
     ): String = unexercised(descriptor)
   }
 }

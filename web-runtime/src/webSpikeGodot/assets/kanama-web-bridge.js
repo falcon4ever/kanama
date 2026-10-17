@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 38;
+  const KANAMA_WEB_PROTOCOL_VERSION = 39;
   // Prefix of a contained script error's message (Main.kt WEB_SCRIPT_ERROR_MARKER).
   const SCRIPT_ERROR_MARKER = "Kanama Web script error (contained):";
   // Added after the marker when Godot's error log could not be reached (Main.kt
@@ -429,6 +429,11 @@
     kotlinToGodotCalls: 0,
     snapshotBatchLoads: 0,
     immediateCalls: 0,
+    // Synchronous Kotlin -> Godot crossings: every immediate entry point resolves its proxy callback
+    // through callbackFor, which counts it (a ray query, a generic or builtin call, a lookup, a
+    // connect, ...); queued commands are kotlinToGodotCalls. The web3d ray rows count a ray's engine
+    // crossings with it.
+    immediateCrossings: 0,
     commandBufferGrowths: 0,
     latestSnapshotX: 0,
     latestSnapshotY: 0,
@@ -1431,6 +1436,7 @@
       const owner = this.ownerForHandle(handle);
       const callback = callbacks.get(owner);
       if (!callback) throw new Error(`${label} callback is not installed for owner=${owner}`);
+      this.immediateCrossings += 1;
       return callback;
     },
     allocateBrowserHandle(kind, owner = this.activeOwnerHandle) {

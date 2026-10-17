@@ -311,7 +311,7 @@ case("check_android_remap_sources.py (address space, NULL_SEGMENT)", py("check_a
              "package net.multigesture.kanama\nval zz = NULL_SEGMENT.reinterpret(Long.MAX_VALUE)\n")],
      "ZzRedRun.kt:2: whole-address-space segment", "Kanama's `NULL_SEGMENT` reinterpreted as the whole address space")
 case("check_doc_claims.py", py("check_doc_claims.py"),
-     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 38)", "versioned JavaScript bridge (protocol 21)")],
+     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 39)", "versioned JavaScript bridge (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
 case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
      [Create(f"{COMMON}/api/ZzRedRun.expect.kt", "package net.multigesture.kanama.api\n\nexpect fun redRun(a: Int = 1)\n")],
@@ -342,6 +342,9 @@ case("check_hand_code_budget.py (fake GENERATED markers)", py("check_hand_code_b
      [Append(f"{COMMON}/api/KanamaScript.kt", "\n// ===== BEGIN GENERATED ENUMS: RedRun (red run) =====\nfun redRunHidden(): Int = 1\n// ===== END GENERATED ENUMS: RedRun =====\n")],
      "carries a BEGIN/END GENERATED marker, but no generator owns a region in it",
      "hand code in a sugar file is wrapped in a GENERATED marker pair to hide it from the count")
+case("check_hand_code_budget.py (decided without a decision)", py("check_hand_code_budget.py"),
+     [Edit("scripts/hand_code_budget.json", '"decision": "Ray-query design, decisions D2', '"decisionX": "Ray-query design, decisions D2')],
+     "decided without the `decision` field", "a decided (hand-shaped by decision) file loses the decision it cites")
 case("check_hand_code_budget.py (sugar ratchet)", py("check_hand_code_budget.py"),
      [Append(f"{COMMON}/api/KanamaScript.kt", "\n// red run: a sugar file grows\nfun redRunSugar(): Int = 1\n")],
      "sugar file grew", "a sugar file (KanamaScript.kt) grows past its line ratchet")
@@ -479,8 +482,8 @@ case("check_property_coverage.py", py("check_property_coverage.py"),
      [Edit(f"{COMMON}/api/CanvasItem.kt", "    var visible: Boolean", "    var visibleRedRun: Boolean")],
      "silently dropped", "a generated wrapper property disappears")
 case("check_protocol_pins.py", py("check_protocol_pins.py"),
-     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 38", "KANAMA_WEB_PROTOCOL_VERSION = 37")],
-     "protocol version disagrees", "the bridge pins protocol 35 while the emitter says 36")
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 39", "KANAMA_WEB_PROTOCOL_VERSION = 38")],
+     "protocol version disagrees", "the bridge pins protocol 38 while the emitter says 39")
 case("check_protocol_pins.py (sentinel)", py("check_protocol_pins.py"),
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", 'scriptErrorResult: "\\u001fkanama-script-error\\u001f",', 'scriptErrorResult: "\\u001fkanama-script-errorX\\u001f",')],
      "script-error sentinel", "the bridge's script-error sentinel differs from the emitter's GDScript constant")
@@ -692,6 +695,9 @@ case("api_wrapper_generator_report.py --check (dropped default)", py("api_wrappe
 case("generate_web_wrappers.py --check (inert facades)", py("generate_web_wrappers.py", "--check"),
      [Append("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt", "\nobject Marshalls\n")],
      "declares Godot class Marshalls", "a hand-written Web file declares a Godot class WEB_INERT_FACADES does not list (task 129 E)")
+case("generate_web_wrappers.py --check (RID transport)", py("generate_web_wrappers.py", "--check"),
+     [Edit("scripts/generate_web_wrappers.py", '"RID": "RID", "typedarray::RID": "List<RID>"}', '"RID": "GodotObject", "typedarray::RID": "List<RID>"}')],
+     "the generic tier does not render a RID slot as RID", "the generic tier renders a RID slot as an object handle again (the old never-cross adaptation)")
 case("generate_web_wrappers.py --check (Web-local utilities)", py("generate_web_wrappers.py", "--check"),
      [Edit("scripts/web_local_utilities.py", '"sin": (1, "sin: " + LIBM,', '"sin": (0, "sin: " + LIBM + "",')],
      "bound 0 on a body that calls a libm transcendental", "a Web-local transcendental utility claims bit equality (task 129 E review B1)")

@@ -2639,19 +2639,7 @@
     },
     {
       "opcode": 170,
-      "className": "SpringArm3D",
-      "methodName": "add_excluded_object",
-      "hash": 2722037293,
-      "arguments": [
-        "RID"
-      ],
-      "shape": "OBJECT_ARG",
-      "executionMode": "QUEUED_MUTATION",
-      "semantics": "Queue excluding a collision object from the spring-arm probe; the RID never crosses the boundary — the applier derives it from the passed object handle.",
-      "scope": "class",
-      "returnType": "void",
-      "returnOwnership": "BORROWED",
-      "introducedBy": "60f-third-person"
+      "retired": "SpringArm3D.add_excluded_object took the excluded body's handle and derived its RID applier-side; a RID now crosses as its id in text, so the method is a generic row with desktop's (RID) signature (protocol 39)."
     },
     {
       "opcode": 171,
@@ -3593,10 +3581,10 @@
         "PhysicsRayQueryParameters3D"
       ],
       "returnType": "Dictionary",
-      "shape": "VECTOR3_VECTOR3_LONG_OBJECT_RET_STRING",
+      "shape": "STRING_LIST_RET_STRING",
       "executionMode": "IMMEDIATE_RESULT",
       "returnOwnership": "BORROWED",
-      "semantics": "Space-state ray query adapted to the Web seam: receiver is a node in the target world, the applier builds the ray parameters engine-side (handles resolve to RIDs there), and the packed result carries hit/position/tracked-collider.",
+      "semantics": "Space-state ray query, desktop's API on the Web seam: the receiver is a node in the target world; the query parameters ride the packed string (from, to, mask, the four flags, then the excluded RIDs as decimal ids) and the applier builds the engine's PhysicsRayQueryParameters3D from them; the engine Dictionary rides back through the Variant codec, its collider as the body's one handle. One crossing, no handle per ray.",
       "introducedBy": "60i-tpsdemo"
     },
     {

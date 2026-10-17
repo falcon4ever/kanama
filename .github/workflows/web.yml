@@ -52,7 +52,10 @@ env:
   # Task 64: thirdperson single-source slice 2 (kanama-demos#34 merge).
   # Task 64: adds the converged Icone (demos#40), which calls PropertyTweener.from -- an arm
   # that only exists from kanama#204 onward. Both sides pin together or neither is green.
-  DEMOS_REF: 236d7f2e6c1f1c167405d63c949cf9cd2526d05e
+  # Web ray queries: tps-demo's RedRobot, PlayerInputSynchronizer and TpsScenes run from the shared
+  # kotlin-src (their Web overrides, which called RayHit, are deleted) and third-person excludes its
+  # camera anchor by RID. Both sides pin together or neither is green.
+  DEMOS_REF: f5c079ee02d60e3262628750cf62b127cdbedb54
 
 jobs:
   # Skip the whole matrix for PRs that cannot affect a Web build. A skipped job

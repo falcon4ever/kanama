@@ -328,6 +328,15 @@ asks the engine, so it fails on a freed target instead of answering its old id, 
 `getConnections()` a Kotlin lambda connection's `callable` is its own guard object's `fire`
 method (each lambda connection has its own callable, so two lambdas can connect one signal).
 
+A `RID` is the same value class on Web and crosses the bridge as its id. Physics queries are the
+same code there: `body.getRid()`, `PhysicsRayQueryParameters3D.create(from, to, mask,
+listOf(body.getRid()))` with every query property (`collideWithAreas`, `hitFromInside`, ...), and
+`node.getWorld3d()?.directSpaceState?.intersectRay(query)`, which answers the engine's `Map`
+(`hit["position"] as? Vector3`, `hit["collider"] as? GodotObject`, `hit["rid"] as? RID`; empty when
+the ray hits nothing). A ray is one engine crossing on Web and makes no handle; `getRid()` crosses
+once per object. `RayCast3D.addExceptionRid` and `SpringArm3D.addExcludedObject(rid)` take the RID
+too.
+
 ## Collections
 
 Godot collections only matter when data crosses the engine boundary. For pure

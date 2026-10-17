@@ -11,6 +11,7 @@ signal own_keep(obj: Object)
 signal own_cost(obj: Object)
 signal own_ignored(obj: Object, round: int)
 signal own_doomed(obj: Object)
+signal own_motion(event: Object)
 
 ## Weak references to the objects a row emitted, by row name.
 var weak: Dictionary = {}
@@ -21,6 +22,7 @@ var button: Button
 var doomed: Node
 var bumps := 0
 var orphan: Window
+var fade: ColorRect
 
 
 func _ready() -> void:
@@ -48,6 +50,50 @@ func _ready() -> void:
 	var from := Node3D.new()
 	from.name = "OwnRayFrom"
 	add_child(from)
+	# The R rows: a second body below OwnRayBody (a ray that excludes the first hits it), an area
+	# above it (hit only with collide_with_areas), a body only the RID cache row asks, a RayCast3D
+	# and a SpringArm3D over a body each, and an area whose body_shape_entered carries a RID.
+	_box_body("OwnRayBody2", Vector3(500.0, 496.0, 500.0))
+	var area := Area3D.new()
+	area.name = "OwnRayArea"
+	area.add_child(_box_shape())
+	add_child(area)
+	area.global_position = Vector3(500.0, 504.0, 500.0)
+	var rid_body := StaticBody3D.new()
+	rid_body.name = "OwnRidBody"
+	add_child(rid_body)
+	_box_body("OwnCastBody", Vector3(520.0, 500.0, 500.0))
+	var cast := RayCast3D.new()
+	cast.name = "OwnRayCast"
+	cast.target_position = Vector3(0.0, -20.0, 0.0)
+	add_child(cast)
+	cast.global_position = Vector3(520.0, 510.0, 500.0)
+	_box_body("OwnSpringBody", Vector3(540.0, 500.0, 500.0))
+	var arm := SpringArm3D.new()
+	arm.name = "OwnSpringArm"
+	arm.spring_length = 20.0
+	add_child(arm)
+	arm.global_position = Vector3(540.0, 510.0, 500.0)
+	# The arm casts along its +Z: turned to point down.
+	arm.rotation_degrees = Vector3(90.0, 0.0, 0.0)
+	# R8b: one concave quad (two triangles) at x = 620, so a ray from either side meets one face.
+	var back := StaticBody3D.new()
+	back.name = "OwnBackFaceBody"
+	var quad := ConcavePolygonShape3D.new()
+	# A ray meets a back face only when the shape has back-face collision (Godot 4.7, either engine).
+	quad.backface_collision = true
+	quad.set_faces(PackedVector3Array([
+		Vector3(-1, 0, -1), Vector3(1, 0, -1), Vector3(1, 0, 1),
+		Vector3(-1, 0, -1), Vector3(1, 0, 1), Vector3(-1, 0, 1)]))
+	var quad_shape := CollisionShape3D.new()
+	quad_shape.shape = quad
+	back.add_child(quad_shape)
+	add_child(back)
+	back.global_position = Vector3(620.0, 500.0, 500.0)
+	var rid_area := Area3D.new()
+	rid_area.name = "OwnRidArea"
+	add_child(rid_area)
+	rid_area.global_position = Vector3(580.0, 500.0, 500.0)
 	# uint32Masks: a body and a visual instance OwnProbe writes uint32 masks to (no shape: it
 	# collides with nothing).
 	var mask_body := StaticBody3D.new()
@@ -64,6 +110,77 @@ func _ready() -> void:
 	var ringed := Node.new()
 	ringed.name = "OwnRingNode"
 	add_child(ringed)
+
+
+func _box_shape() -> CollisionShape3D:
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(2.0, 2.0, 2.0)
+	shape.shape = box
+	return shape
+
+
+func _box_body(body_name: String, at: Vector3) -> StaticBody3D:
+	var body := StaticBody3D.new()
+	body.name = body_name
+	body.add_child(_box_shape())
+	add_child(body)
+	body.global_position = at
+	return body
+
+
+## R6: the RID of a body made and freed here (a stale RID: its validator no longer matches).
+func stale_rid(_unused: int) -> int:
+	var body := _box_body("OwnStaleBody", Vector3(600.0, 500.0, 500.0))
+	var id := body.get_rid().get_id()
+	body.free()
+	return id
+
+
+## R11: a RID whose id is past 2^53 (it never names a live object).
+func big_rid() -> RID:
+	return rid_from_int64(0x7fffffff12345678)
+
+
+## R11: 1 when the RID Kotlin handed back has the same id.
+func rid_is_big(rid: RID) -> int:
+	return 1 if rid.get_id() == 0x7fffffff12345678 else 0
+
+
+## R10: OwnRidArea's body_shape_entered with OwnRayBody's RID, as the physics server would emit it.
+func emit_rid_signal(_unused: int) -> int:
+	var body := get_node("OwnRayBody") as StaticBody3D
+	(get_node("OwnRidArea") as Area3D).body_shape_entered.emit(body.get_rid(), body, 0, 0)
+	return 1
+
+
+## R9: how far OwnSpringArm reaches, in millimetres (its full length is 20 m).
+func spring_hit_length_mm(_unused: int) -> int:
+	return int((get_node("OwnSpringArm") as SpringArm3D).get_hit_length() * 1000.0)
+
+
+## N2: a ColorRect handed back by a generic call (no canvas mirror), authored at alpha 0.25.
+func fade_rect() -> ColorRect:
+	if fade == null:
+		fade = ColorRect.new()
+		fade.name = "OwnFadeRect"
+		fade.modulate = Color(1.0, 1.0, 1.0, 0.25)
+		add_child(fade)
+	return fade
+
+
+## N2: the rect's alpha as the engine has it, x100.
+func fade_rect_alpha_x100(_unused: int) -> int:
+	return roundi(fade.modulate.a * 100.0)
+
+
+## N4: a mouse motion whose screen_relative differs from its relative.
+func emit_motion(_unused: int) -> int:
+	var event := InputEventMouseMotion.new()
+	event.relative = Vector2(1.0, 2.0)
+	event.screen_relative = Vector2(3.0, 4.0)
+	own_motion.emit(event)
+	return 1
 
 
 ## Why an OwnProbe row failed, for the driver's trace.

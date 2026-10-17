@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 38"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 39"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -875,7 +875,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 38"))
+    assertTrue(protocol.contains("\"protocolVersion\": 39"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -886,7 +886,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=38\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=39\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -2077,7 +2077,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 38"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 39"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(
@@ -2296,5 +2296,38 @@ class WebScriptCodeEmitterTest {
       )
     )
     assertTrue(proxy.contains("Invalid Kanama Web command opcode/object"))
+  }
+
+  @Test
+  fun rayQueryArmTakesRidsAndPacksDesktopsDictionary() {
+    val proxy =
+      WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))
+        .proxySources()
+        .single { it.sourceResourcePath.isNotEmpty() }
+        .source
+    val arm =
+      proxy.substringAfter("elif opcode == 229 and value is Node3D:").substringBefore("\n\t\telif ")
+
+    // A RID crosses as its decimal id (text, never an int32 or double slot) and is rebuilt here.
+    assertTrue(arm.contains("ray_rids.append(rid_from_int64(int(ray_parts[ray_index])))"), arm)
+    assertTrue(arm.contains("ray_query.exclude = ray_rids"), arm)
+    // A node outside the tree has no world: the arm answers empty instead of an engine error.
+    assertTrue(arm.contains("if (value as Node3D).is_inside_tree():"), arm)
+    // The four flags reach the engine's parameters object.
+    for (flag in
+      listOf("collide_with_bodies", "collide_with_areas", "hit_from_inside", "hit_back_faces")) {
+      assertTrue(arm.contains("ray_query.$flag = "), "missing $flag")
+    }
+    // Every entry of the engine Dictionary rides the Variant codec, except the collider, which
+    // keeps
+    // the lent path (its script handle, else the tracked one, else a lend that refreshes its
+    // snapshot).
+    assertTrue(arm.contains("ray_entries.erase(\"collider\")"), arm)
+    assertTrue(arm.contains("_kanama_web_pack_variant(ray_entries, true)"), arm)
+    assertTrue(arm.contains("ray_collider_handle = _kanama_lend(ray_collider)"), arm)
+    // No exclusion handle crosses any more, and the RID-from-handle SpringArm3D arm is gone.
+    assertFalse(arm.contains("get_rid()"), arm)
+    assertFalse(proxy.contains("opcode == 170"))
+    assertFalse(proxy.contains("add_excluded_object"))
   }
 }

@@ -464,10 +464,6 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
           checkNotNull(value)
         }
-        170 -> {
-          require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-          checkNotNull(value)
-        }
         171 -> {
           require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
           checkNotNull(value)
@@ -1074,10 +1070,9 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     return webFreedAware {
       require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-      return webModulateSnapshot(receiver.webId())
-        ?: error(
-          "Missing Web CanvasItem.get_modulate snapshot for object handle=${receiver.webId()}"
-        )
+      // A handle that arrived without the canvas mirror (an exported Control) reads the engine
+      // once and seeds it; read-your-write from then on.
+      return webModulateSnapshot(receiver.webId()) ?: webSeedModulateSnapshot(receiver.webId())
     }
   }
 
@@ -2129,39 +2124,23 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     }
   }
 
-  override fun invokeVector3Vector3LongObjectRetString(
+  override fun invokeStringListRetString(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
-    from: GodotVector3,
-    to: GodotVector3,
-    collisionMask: Long,
-    exclude: GodotHandle?,
+    parts: List<String>,
   ): String {
     requireOpcode(descriptor, callSite)
     return webFreedAware {
       require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
       require(descriptor.opcode == 229)
-      require(collisionMask in 0L..0xffffffffL) {
-        "Kanama Web ray query collision mask must fit Godot's uint32 ABI (0..0xffffffff), got $collisionMask"
+      require(parts.none { '' in it }) {
+        "Kanama Web ${descriptor.className}.${descriptor.methodName} parts must not hold the unit separator"
       }
       commands.flush()
-      // Ray endpoints, mask, and the optional exclusion handle ride one query string
-      // (unit separator). The applier resolves the receiver's world, builds the query
-      // parameters, and turns the exclusion handle into an RID on its own side.
-      val packed =
-        listOf(
-            from.x.toString(),
-            from.y.toString(),
-            from.z.toString(),
-            to.x.toString(),
-            to.y.toString(),
-            to.z.toString(),
-            collisionMask.toString(),
-            (exclude?.webId() ?: 0).toString(),
-          )
-          .joinToString("")
-      return immediateWebStringQuery(descriptor.opcode, receiver.webId(), packed)
+      // The parts ride one query string (unit separator); the applier unpacks them (a RID
+      // among them as its decimal id: text carries all 64 bits) and answers one string.
+      return immediateWebStringQuery(descriptor.opcode, receiver.webId(), parts.joinToString(""))
     }
   }
 

@@ -54,6 +54,45 @@ compiled it, whatever version the root build named.
 
 Contributors: `scripts/generate_api_exercise.py` classifies each of the 1,492 helpers the shared tree calls (static, property pair, const oracle, singleton, reach only, excluded with a reason) into [API Exercise Inventory](docs/reference/generated/api-exercise.md); the local_ci stage "API exercise inventory drift" fails when the page is stale, when `scripts/api_exercise_policy.py` names a class or method the API lacks, or when a helper is classified by nothing.
 
+### Changed — Web ray queries and RIDs use desktop's API
+
+A raycasting script is now the same code on Web as on every other platform:
+`PhysicsRayQueryParameters3D.create(from, to, mask, listOf(self.getRid()))` and
+`self.getWorld3d()?.directSpaceState?.intersectRay(query)`, which answers desktop's `Map` (`position`,
+`normal`, `face_index`, `collider_id`, `collider`, `shape`, `rid`; empty on a miss). A `RID` is the
+same value class as on desktop and crosses the Web bridge as its id in text, as signal arguments and
+generic calls already carried it. A ray is still one engine crossing and mints no handle; `getRid()`
+is read once per handle. New on Web: `CollisionObject3D.getRid()`, `Resource.getRid()`,
+`RayCast3D.addExceptionRid` / `removeExceptionRid` / `getColliderRid`, `SpringArm3D.addExcludedObject(RID)`
+/ `removeExcludedObject`, `KinematicCollision3D.getColliderRid`, and every `PhysicsRayQueryParameters3D`
+property (`collideWithAreas`, `collideWithBodies`, `hitFromInside`, `hitBackFaces`, `exclude` with any
+number of RIDs). Also new on Web, for the same shared sources: `GodotObject.get(property)`,
+`InputEventMouseMotion.getScreenRelative()`, `CanvasItem.modulate` reads on any handle (the first read
+of a node that came without the canvas mirror, an exported `Control` for example, asks the engine once
+instead of failing), and the single-player session's `Node.getMultiplayer()` as a member,
+`MultiplayerAPI.hasMultiplayerPeer()` and `MultiplayerPeer.getConnectionStatus()` / `isClass()`.
+tps-demo's raycasting scripts (`RedRobot`, `PlayerInputSynchronizer`, `TpsScenes`) now run on Web from
+their shared sources. The bridge protocol is 39: re-export every Web game.
+
+- **Source break:** (Web) `RayHit` `PhysicsDirectSpaceState3D` `PhysicsRayQueryParameters3D` `World3D` `SpringArm3D` `top-level`:
+  `RayHit` is removed and `intersectRay(query)` answers `Map<String, Any?>` (read `hit["position"] as?
+  Vector3` and `hit["collider"] as? GodotObject`; a miss is `emptyMap()`, not `null`);
+  `intersectRay`'s parameter is named `parameters`, desktop's name (a named `query =` argument
+  needs the new name); `Node3D.getWorld3d()` and `World3D.directSpaceState` are nullable, as on
+  desktop (write `?.`);
+  `PhysicsRayQueryParameters3D.create`'s `exclude` is a `List<RID>` (`listOf(body.getRid())`) instead
+  of a `List<GodotObject>`; `SpringArm3D.addExcludedObject(body)` is `addExcludedObject(body.getRid())`.
+
+  | Before (Web only) | Now (every platform) |
+  | --- | --- |
+  | `PhysicsRayQueryParameters3D.create(from, to, mask, listOf(body))` | `PhysicsRayQueryParameters3D.create(from, to, mask, listOf(body.getRid()))` |
+  | `node.getWorld3d().directSpaceState.intersectRay(query)` | `node.getWorld3d()?.directSpaceState?.intersectRay(query)` |
+  | `val hit: RayHit? = ...; if (hit != null)` | `val hit: Map<String, Any?> = ... ?: emptyMap(); if (hit.isNotEmpty())` |
+  | `hit.position` | `hit["position"] as? Vector3` |
+  | `hit.collider` | `hit["collider"] as? GodotObject` |
+  | `springArm.addExcludedObject(body)` | `springArm.addExcludedObject(body.getRid())` |
+  | at most one exclusion, no flags | any number of RIDs; `collideWithAreas`, `collideWithBodies`, `hitFromInside`, `hitBackFaces` |
+
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 
 The control (a plain GDScript visibility-notifier export, `visibility-control` in `web.yml`) handed the

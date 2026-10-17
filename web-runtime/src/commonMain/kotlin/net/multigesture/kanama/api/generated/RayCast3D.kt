@@ -6,6 +6,7 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
@@ -61,6 +62,20 @@ class RayCast3D(godotObject: GodotHandle) : Node3D(godotObject) {
   var targetPosition: Vector3
     get() = getTargetPosition()
     set(newValue) = setTargetPosition(newValue)
+
+  /** Desktop's `addExceptionRid`: the cast ignores the object of [rid]. Queued. */
+  fun addExceptionRid(rid: RID): Unit {
+    webGenericQueue(this, "add_exception_rid", listOf<Any?>(rid))
+  }
+
+  /** Desktop's `removeExceptionRid`. Queued. */
+  fun removeExceptionRid(rid: RID): Unit {
+    webGenericQueue(this, "remove_exception_rid", listOf<Any?>(rid))
+  }
+
+  /** The RID of the object the cast hits (an empty RID when none). One immediate call. */
+  fun getColliderRid(): RID =
+    webGenericCall(this, "get_collider_rid", listOf()) as RID
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

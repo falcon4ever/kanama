@@ -9,7 +9,12 @@ anywhere in `src/` or `web-runtime/src/`) is written by hand only when it is
                       plumbing, the main-thread queue, script resources);
   * `sugar`        -- GDScript-syntax sugar written once (`getNode<T>`, checked casts, `await`);
   * `transitional` -- a file that should be generated and is not yet, with the task-129 parcel that
-                      retires it.
+                      retires it;
+  * `decided`      -- hand-shaped by a recorded design decision (its mandatory `decision` field cites
+                      it): generating it would cost what the decision rejected (the Web ray query's
+                      parameters facade and owner-bound space state, one crossing and no handle per
+                      ray). It grows only with `--reason`, and the gate prints its total on its own
+                      line, so a decided file is never counted as transitional nor hidden in a seam.
 Every file carries a line ratchet. The list lives in `scripts/hand_code_budget.json`. The gate fails
 when
   1. a hand-written API file is not listed (a new hand file needs a category, and a reviewer sees
@@ -24,7 +29,7 @@ when
      `CLASS_POLICY` (plus its `SUPPORT_FILE`), has a line ratchet too, so hand code cannot move into
      Python strings unseen.
 
-A ratchet only goes down by itself. A seam, runtime-core or sugar file (or a generator section) that
+A ratchet only goes down by itself. A seam, runtime-core, sugar or decided file (or a generator section) that
 legitimately grows raises its ratchet with `--write --reason "<why>"`, which records the reason in
 the JSON next to the new count. A transitional file never grows: an API addition is generated.
 
@@ -59,8 +64,8 @@ import generate_web_wrappers as web  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 BUDGET = ROOT / "scripts/hand_code_budget.json"
-CATEGORIES = ("seam", "runtime-core", "sugar", "transitional")
-RAISABLE = ("seam", "runtime-core", "sugar")
+CATEGORIES = ("seam", "runtime-core", "sugar", "transitional", "decided")
+RAISABLE = ("seam", "runtime-core", "sugar", "decided")
 SCAN_ROOTS = (ROOT / "src", ROOT / "web-runtime/src")
 API_PACKAGE = re.compile(r"^package\s+net\.multigesture\.kanama\.api(\.|\s*$)", re.M)
 ENUM_REGION = re.compile(
@@ -178,7 +183,7 @@ def write(budget: dict, current: dict[str, int], sections_now: dict[str, int], g
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--write", action="store_true", help="lower ratchets to the current counts, drop gone entries")
-    parser.add_argument("--reason", help="with --write: raise the ratchet of every grown seam/runtime-core/sugar "
+    parser.add_argument("--reason", help="with --write: raise the ratchet of every grown seam/runtime-core/sugar/decided "
                         "file and generator section, recording this reason")
     args = parser.parse_args()
     if args.reason is not None and (not args.write or not args.reason.strip()):
@@ -194,7 +199,7 @@ def main() -> int:
     listed: dict[str, dict] = budget["files"]
     sections: dict[str, dict] = budget["sections"]
 
-    raise_hint = (f"if this is a legitimate seam/runtime-core/sugar change, raise the ratchet with "
+    raise_hint = (f"if this is a legitimate seam/runtime-core/sugar/decided change, raise the ratchet with "
                   f"`python3 scripts/check_hand_code_budget.py --write --reason \"<why>\"`; "
                   "an API addition is generated instead")
     lowerable: list[str] = []
@@ -209,6 +214,8 @@ def main() -> int:
             problems.append(f"{path}: category {category!r} is not one of {', '.join(CATEGORIES)}")
         if category == "transitional" and not entry.get("parcel"):
             problems.append(f"{path}: transitional without the parcel that retires it")
+        if category == "decided" and not str(entry.get("decision", "")).strip():
+            problems.append(f"{path}: decided without the `decision` field naming the design decision that keeps it hand-shaped")
         if not entry.get("reason"):
             problems.append(f"{path}: no reason recorded")
         if not isinstance(entry.get("lines"), int):
@@ -248,6 +255,9 @@ def main() -> int:
         return 1
     print(f"[hand_code_budget] PASS {len(current)} hand-written API files ({summary} lines); "
           f"{len(current_sections)} generator sections, {sum(current_sections.values())} lines")
+    decided = sorted(path for path in current if listed.get(path, {}).get("category") == "decided")
+    print(f"[hand_code_budget] decided (hand-shaped by decision): {sum(current[p] for p in decided)} lines in "
+          f"{len(decided)} file(s): {', '.join(Path(p).name for p in decided) or 'none'}")
     for item in lowerable:
         print(f"[hand_code_budget] note: ratchet can be lowered (--write): {item}")
     return 0

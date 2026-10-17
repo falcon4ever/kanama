@@ -139,7 +139,7 @@ function makeFakeBridge({
   const mobByHandle = new Map();
   const bridge = {
     mode: "dodge",
-    results: { protocolVersion: 38 },
+    results: { protocolVersion: 39 },
     dodgeMainHandle: MAIN_HANDLE,
     smokeHandle: SMOKE_HANDLE,
     readyCount: 4,
