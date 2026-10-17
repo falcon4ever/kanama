@@ -1036,7 +1036,9 @@ method whose C++ return type is `Vector<Variant>`, `Vector<RID>` or `Vector<Plan
 resizes the buffer's Array in place, and a zero-filled buffer is a null Array: the process crashes.
 Every desktop helper that reads an Array return constructs an empty one in the buffer first
 (`BuiltinTypes.constructEmptyArray`, in `callArrayReturn` and in the helpers that read their Array
-return directly). Packed arrays, `String`, `Dictionary` and `Variant` returns take a zero-filled buffer.
+return directly), and so does the iOS shim, in its typed-array return
+(`kanama_ios_godot_ptrcall_ret_array_blob`) and its container return
+(`kanama_ios_ptrcall_encode_container`). Packed arrays, `String`, `Dictionary` and `Variant` returns take a zero-filled buffer.
 
 The drift gate (`check_single_tree`) compares the region's MEMBER SET rather than its bytes,
 because the file is ktfmt-formatted outside the region and so the region gets reformatted
@@ -1094,15 +1096,20 @@ script would, with the Kotlin signature read from the committed tree, and report
   (a frame index clamped by a missing `SpriteFrames`); its setter and getter then get their method's own
   case and the helper's next pair row is used. On a `SINGLETON_PAIRS` singleton (`Engine`, `AudioServer`)
   every property the tree calls gets its row (not only where it is its helpers' best), and the row sets
-  process-wide state, so it sets the value it read first back in a `finally`, also when the row fails; `SINGLETON_KEYED_PAIRS` runs a keyed set/get pair the same way
-  (`ProjectSettings.set_setting`/`get_setting` on a key no project defines, erased again by the restore).
+  process-wide state, so it reads the original through `Object.get` and puts it back through
+  `Object.set` in a `finally`, also when the row fails: never through the setter and getter under test,
+  so a broken wrapper cannot leave `Engine.time_scale` wrong. `PAIR_GROW` makes a row only ever raise a
+  count (`AudioServer.bus_count`: fewer buses would delete the project's). `SINGLETON_KEYED_PAIRS` runs a
+  keyed set/get pair the same way (`ProjectSettings.set_setting`/`get_setting` on a key no project
+  defines, restored through `Object.call("set_setting", ...)`, which erases it again).
 - a **B row** calls a const method on a fresh instance (or the descendant or `RECEIVER_SOURCES` factory
   the inventory names) and a **D row** a const method of a singleton, or any method of a stateless one
   (`Geometry2D`, `Geometry3D`, `Marshalls`); both compare the result with `Object.call` of the same
   method with the same arguments on the same object. The arguments are the required ones (defaulted ones
-  take their defaults on both paths): a recognisable value per type that alternates by position (`7`/`3`,
-  `0.75`/`0.25`, two different vectors), so a helper that swaps two cells of one type passes different
-  values; a path under the scratch directory for a `String` path argument; a square, a tetrahedron or a
+  take their defaults on both paths): a recognisable value per type, and each further argument of the
+  same type in the call gets the next of three or more values (`7`/`3`/`5`/`2`, `0.75`/`0.25`/`0.5`,
+  different vectors), so a helper that swaps any two cells of one type passes different values (a bool
+  has only two); a path under the scratch directory for a `String` path argument; a square, a tetrahedron or a
   box's six planes for the geometry lists; a fresh object for an object argument. A result equal to its
   type's zero (what a fresh, empty object mostly answers) is **weak**: the two paths agreed, but a no-op
   could have produced it. The run counts those apart; they are not failures.
@@ -1113,13 +1120,17 @@ script would, with the Kotlin signature read from the committed tree, and report
   `x` takes the class's own `x_create`, or its `RID_ARG_SOURCES` entry, such as a shaped text or a
   font for `TextServer`), freed after the row; the leak check at exit holds the rows to that.
   `FACTORY_RESULTS` lists the factories that return the invalid RID on a host for a reason of the host
-  (the headless dummy renderer makes no lights, skies or particles), where that counts weak.
+  (the headless dummy renderer makes no lights, skies or particles), where that counts weak; a valid RID
+  there fails until the entry is removed. A RID argument is made inside the row's guarded block, so a
+  failing later one still frees the earlier ones.
 
 Every path a row touches is under the run's own directory, `user://kanama-api-exercise/<pid>-<random>/`,
 which the runner creates with its fixtures (`fixture.txt` with an extended attribute, `fixture.mp3`,
 `fixture.wav`, `sub/`) before the first row and removes after the last (teardown fails when it is still
 there; the shared parent is removed once empty). Every worktree's example project shares one `user://`,
-so a per-run directory is what lets two smokes run at once without deleting each other's fixtures. `FileAccess.create_temp` and `DirAccess.create_temp` take no path;
+so a per-run directory is what lets two smokes run at once without deleting each other's fixtures. Setup
+also removes the directories of earlier runs that crashed before their teardown (their process is
+gone, or, where the host cannot say, their fixture is older than an hour). `FileAccess.create_temp` and `DirAccess.create_temp` take no path;
 they create a `kanama-api-exercise-*` entry in the OS temp directory that is removed when the row frees
 the result. A static returning `Error` is given arguments that make it fail (an existing directory, a
 missing file, a copy onto itself), and three of those print the engine's own error line on purpose.

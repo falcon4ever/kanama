@@ -693,6 +693,41 @@ def check_singleton_policy(inv: Inventory, rules: Rules, api: dict[str, ApiClass
             fail(f"RID_ARG_SOURCES[{cls}.{arg}] makes its RID with {source}, but {server} is not in RID_FACTORIES (nothing frees it)")
         elif server not in api or factory not in api[server].methods or not rules.factory(server, rules.method(server, factory)):
             fail(f"RID_ARG_SOURCES[{cls}.{arg}] names {source}, which is not an argument-free RID factory of the API")
+    value_rows = {}
+    for _, site in inv.sites:
+        verdict = rules.site(site)
+        if verdict.case in "BD" and not verdict.row:
+            value_rows[(site.cls, site.method)] = verdict
+    for key, literals in getattr(policy, "ROW_ARGS", {}).items():
+        if key not in value_rows:
+            fail(f"ROW_ARGS names {key[0]}.{key[1]}, which is not a B or D row: delete the entry")
+            continue
+        required = sum(1 for d in rules.method(*key).argument_defaults if d is None)
+        if len(literals) != required:
+            fail(f"ROW_ARGS[{key[0]}.{key[1]}] gives {len(literals)} value(s); the method takes {required} required argument(s)")
+        for literal in literals:
+            try:
+                parse_literal(str(literal))
+            except LiteralError as error:
+                fail(f"ROW_ARGS[{key[0]}.{key[1]}]: {error}")
+    for key, sets in getattr(policy, "ROW_RECEIVER_SETS", {}).items():
+        verdict = value_rows.get(key)
+        if verdict is None or verdict.case != "B":
+            fail(f"ROW_RECEIVER_SETS names {key[0]}.{key[1]}, which is not a B row: delete the entry")
+            continue
+        receiver = verdict.target or key[0]
+        props = {str(p["name"]) for c in rules.chain(receiver) for p in api[c].properties}
+        for prop, literal in sets:
+            if prop not in props:
+                fail(f"ROW_RECEIVER_SETS[{key[0]}.{key[1]}] sets `{prop}`, which is not a property of {receiver}")
+            try:
+                parse_literal(literal)
+            except LiteralError as error:
+                fail(f"ROW_RECEIVER_SETS[{key[0]}.{key[1]}]: {error}")
+    for (cls, prop), reason in getattr(policy, "PAIR_GROW", {}).items():
+        types = {str(p["name"]): p.get("type") for p in api[cls].properties} if cls in api else {}
+        if cls not in getattr(policy, "SINGLETON_PAIRS", {}) or types.get(prop) != "int" or not reason:
+            fail(f"PAIR_GROW names {cls}.{prop}, which is not an int property of a SINGLETON_PAIRS singleton (with a reason)")
     for (server, factory), (platforms, reason) in getattr(policy, "FACTORY_RESULTS", {}).items():
         called = any(site.cls == server and site.method == factory and rules.site(site).row == "factory" for _, site in inv.sites)
         if not called:
@@ -964,7 +999,25 @@ def render_singleton_policy(inv: Inventory, policy) -> list[str]:
         lines.append(f"| `{cls}` `{arg}` | `{source}` |")
     lines += [
         "",
-        "`FACTORY_RESULTS` (factories that return the invalid RID on a host, where that counts weak):",
+        "B and D rows whose per-type arguments would leave them weak take chosen ones (`ROW_ARGS`, one per "
+        "required argument) or a receiver set up through `Object.set` first (`ROW_RECEIVER_SETS`):",
+        "",
+        "| row | arguments | receiver set |",
+        "|---|---|---|",
+    ]
+    sets = getattr(policy, "ROW_RECEIVER_SETS", {})
+    for key in sorted(set(getattr(policy, "ROW_ARGS", {})) | set(sets)):
+        args = ", ".join(f"`{md(str(a))}`" for a in getattr(policy, "ROW_ARGS", {}).get(key, ())) or "—"
+        recv = ", ".join(f"`{p} = {md(v)}`" for p, v in sets.get(key, ())) or "—"
+        lines.append(f"| `{key[0]}.{key[1]}` | {args} | {recv} |")
+    lines += [
+        "",
+        "`PAIR_GROW` (singleton properties a row only ever raises by one): "
+        + ", ".join(f"`{c}.{p}` ({md(r)})" for (c, p), r in getattr(policy, "PAIR_GROW", {}).items())
+        + ".",
+        "",
+        "`FACTORY_RESULTS` (factories that return the invalid RID on a host, where that counts weak and a valid "
+        "RID fails until the entry is removed):",
         "",
     ]
     for (server, factory), (platforms, reason) in getattr(policy, "FACTORY_RESULTS", {}).items():
@@ -1295,6 +1348,37 @@ def kotlin_string(value: str) -> str:
 VALUE_TYPES_3 = {"Vector3", "Vector3i"}
 # Required list arguments of B and D rows, by Godot type: a shape the geometry rows can compute something
 # from (a square, a tetrahedron's corners, the six planes of a box) rather than an empty list.
+# The required arguments of B and D rows by Kotlin type, one value per occurrence of the type in a call
+# (three or more, all different), so no two cells of one type carry the same value.
+ARG_SEQUENCES = {
+    "Int": ("7", "3", "5", "2"),
+    "Long": ("7L", "3L", "5L", "2L"),
+    "Double": ("0.75", "0.25", "0.5", "0.125"),
+    "Float": ("0.75f", "0.25f", "0.5f", "0.125f"),
+    "String": ('"kanama125"', '"kanama7"', '"kanama5"'),
+    "NodePath": ('NodePath("kanama/125")', 'NodePath("kanama/7")', 'NodePath("kanama/5")'),
+    "Vector2": ("Vector2(0.25, 0.5)", "Vector2(0.75, 1.0)", "Vector2(1.5, 0.125)", "Vector2(2.0, 0.375)"),
+    "Vector2i": ("Vector2i(7, 3)", "Vector2i(3, 7)", "Vector2i(5, 2)", "Vector2i(2, 5)"),
+    "Vector3": (
+        "Vector3(0.25, 0.5, 0.75)",
+        "Vector3(1.0, 0.5, 0.25)",
+        "Vector3(0.5, 1.5, 0.125)",
+        "Vector3(2.0, 0.375, 1.25)",
+        "Vector3(0.625, 2.5, 0.875)",
+    ),
+    "Vector3i": ("Vector3i(7, 3, 5)", "Vector3i(3, 7, 5)", "Vector3i(5, 2, 7)", "Vector3i(2, 5, 3)"),
+    "Color": ("Color(0.25, 0.5, 0.75, 1.0)", "Color(1.0, 0.75, 0.5, 0.25)", "Color(0.5, 0.25, 1.0, 0.75)"),
+    "Rect2": (
+        "Rect2(Vector2(1.0, 2.0), Vector2(3.0, 4.0))",
+        "Rect2(Vector2(4.0, 3.0), Vector2(2.0, 1.0))",
+        "Rect2(Vector2(0.5, 1.5), Vector2(2.5, 0.25))",
+    ),
+    "Rect2i": (
+        "Rect2i(Vector2i(1, 2), Vector2i(3, 4))",
+        "Rect2i(Vector2i(4, 3), Vector2i(2, 1))",
+        "Rect2i(Vector2i(5, 7), Vector2i(1, 6))",
+    ),
+}
 ARG_LISTS = {
     "PackedVector2Array": "listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))",
     "PackedVector3Array": "listOf(Vector3(0.0, 0.0, 0.0), Vector3(1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, 1.0))",
@@ -1445,6 +1529,13 @@ class RowGenerator:
         if name == "Transform3D" and len(args) == 4:
             axes = [self.literal(a, "Vector3", ctx) for a in args]
             return f"Transform3D(Basis({axes[0]}, {axes[1]}, {axes[2]}), {axes[3]})"
+        if name == "Basis" and len(args) == 3:
+            axes = [self.literal(a, "Vector3", ctx) for a in args]
+            return f"Basis({axes[0]}, {axes[1]}, {axes[2]})"
+        if name in ("Rect2i", "Rect2") and len(args) == 4:
+            vec, kind = ("Vector2i", "Int") if name == "Rect2i" else ("Vector2", "Double")
+            nums = [self.number(a[1], kind) for a in args]
+            return f"{name}({vec}({nums[0]}, {nums[1]}), {vec}({nums[2]}, {nums[3]}))"
         if name == "Transform2D" and not args:
             return "Transform2D.IDENTITY"
         if name in ("Vector2", "Vector3", "Vector4", "Color", "Quaternion", "Plane"):
@@ -1656,23 +1747,28 @@ class RowGenerator:
             return f"{cls}.{arg}_create"
         return None
 
-    def arg_value(self, godot_type: str, ktype: str, name: str, site: Site, ctx: RowContext, index: int = 0) -> str:
+    def arg_value(self, godot_type: str, ktype: str, name: str, site: Site, ctx: RowContext, occurrence: int = 0) -> str:
         """A recognisable argument for a required parameter (design 2: per type a small non-default
-        literal; a path under the scratch directory; a fresh instance for an object). Arguments of one
-        type alternate between two values by position, so a helper that swaps two cells of one type
-        passes different values and the oracle sees it."""
+        literal; a path under the scratch directory; a fresh instance for an object). [occurrence]
+        counts the earlier required arguments of the same type in the call: each occurrence gets its
+        own value (ARG_SEQUENCES, three or more per type), so a helper that swaps any two cells of one
+        type passes different values and the oracle sees it."""
         base = ktype.removesuffix("?")
         if godot_type == "String" and PATH_ARG_RE.search(name):
             return f'r.scratch("{site.cls}.{site.method}.{name}")'
         if godot_type.startswith(("enum::", "bitfield::")):
             spec = enum_spec(godot_type)
             values = [v for v in spec.values if not v.name.endswith("_MAX")]
-            chosen = next((v for v in values if v.value != 0), values[0] if values else None)
-            if chosen is None:
+            distinct = []
+            for value in [v for v in values if v.value != 0] + [v for v in values if v.value == 0]:
+                if value.value not in [d.value for d in distinct]:
+                    distinct.append(value)
+            if not distinct:
                 raise LiteralError(f"{godot_type} has no value")
+            chosen = distinct[occurrence % len(distinct)]
             return f"{base}({chosen.value}L) /* {chosen.name} */"
         if godot_type == "bool":
-            return "true"
+            return "true" if occurrence % 2 == 0 else "false"
         if godot_type == "RID":
             return "RID(0L)"
         rich = ARG_LISTS.get(godot_type)
@@ -1688,7 +1784,11 @@ class RowGenerator:
                     return "null"
                 raise LiteralError(f"no instance of {cls} for the non-null argument `{name}`")
             return ctx.fresh(cls)
-        return self.pair_candidates(ktype, godot_type, ctx)[index % 2]
+        sequence = ARG_SEQUENCES.get(base)
+        if sequence is not None:
+            return sequence[occurrence % len(sequence)]
+        candidates = self.pair_candidates(ktype, godot_type, ctx)
+        return candidates[occurrence % len(candidates)]
 
     def default_value(self, text: str, ktype: str, ctx: RowContext) -> str:
         """The extension_api.json default of a parameter the Kotlin declaration gives no default."""
@@ -1714,6 +1814,8 @@ class RowGenerator:
             if default is None or not kotlin_default:
                 needed = index + 1
         names = []
+        occurrences: collections.Counter = collections.Counter()
+        chosen = list(getattr(self.policy, "ROW_ARGS", {}).get((site.cls, site.method), ()))
         for index in range(needed):
             pname, ptype = fun.params[index]
             gtype = method.argument_types[index]
@@ -1721,15 +1823,23 @@ class RowGenerator:
             default = method.argument_defaults[index]
             if default is not None:
                 expr = self.default_value(default, ptype, ctx)
+            elif chosen:
+                expr = self.literal(parse_literal(str(chosen.pop(0))), ptype, ctx)
             elif gtype == "RID" and (source := self.rid_source(site.cls, aname)) is not None:
+                # Made inside the row's guarded block, freed in its finally once it was made.
                 server, factory = source.split(".")
                 free = self.policy.RID_FACTORIES[server][0]
-                lines.append(f"val x{index} = {self.server_call(server, factory, receiver_server, wrapper)}()")
-                frees.append(f"{self.server_call(server, free, receiver_server, wrapper)}(x{index})")
+                lines.append(f"var x{index} = RID(0L)")
+                frees.append(
+                    f"x{index} = {self.server_call(server, factory, receiver_server, wrapper)}()\0"
+                    f"if (x{index}.value != 0L) {self.server_call(server, free, receiver_server, wrapper)}(x{index})"
+                )
                 names.append(f"x{index}")
                 continue
             else:
-                expr = self.arg_value(gtype, ptype, aname, site, ctx, index)
+                base = ptype.removesuffix("?")
+                expr = self.arg_value(gtype, ptype, aname, site, ctx, occurrences[base])
+                occurrences[base] += 1
             lines.append(f"val a{index}: {ptype} = {expr}")
             names.append(f"a{index}")
         return names
@@ -1757,6 +1867,8 @@ class RowGenerator:
         method = self.rules.method(site.cls, site.method)
         ctx = RowContext(self)
         lines, wrapper, variant = self.receiver_lines(site, verdict)
+        for prop, literal in getattr(self.policy, "ROW_RECEIVER_SETS", {}).get((site.cls, site.method), ()):
+            lines.append(f'{variant}.set("{prop}", {self.literal(parse_literal(literal), "Any?", ctx)}) // ROW_RECEIVER_SETS')
         receiver_server = site.cls if wrapper == "o" else ""
         frees: list[str] = []
         args: list[str] = []
@@ -1776,9 +1888,19 @@ class RowGenerator:
 
     @staticmethod
     def guarded(body: list[str], frees: list[str]) -> list[str]:
+        """[body] in a try whose finally runs [frees] in reverse. A free spelled `make\\0free` makes
+        its resource first thing inside the try (so a failing later make still frees the earlier ones)."""
         if not frees:
             return body
-        return ["try {"] + [f"  {line}" for line in body] + ["} finally {"] + [f"  {f}" for f in reversed(frees)] + ["}"]
+        makes = [f.split("\0")[0] for f in frees if "\0" in f]
+        cleanup = [f.split("\0")[-1] for f in frees]
+        return (
+            ["try {"]
+            + [f"  {line}" for line in makes + body]
+            + ["} finally {"]
+            + [f"  {f}" for f in reversed(cleanup)]
+            + ["}"]
+        )
 
     def factory_row(self, helpers: list[str], site: Site, verdict: Verdict) -> ExerciseRow:
         fun = self.tree.function(site.cls, site.method, static=False)
@@ -1822,18 +1944,29 @@ class RowGenerator:
         return None
 
     def singleton_pair_lines(self, cls: str, setter: KotlinFun, getter: KotlinFun, key_expr: str, read_name: str,
-                             a: str, b: str, chosen: str | None, ptype: str) -> list[str]:
+                             a: str, b: str, chosen: str | None, ptype: str, restore: tuple[str, str],
+                             grow: bool = False) -> list[str]:
+        """A set/read-back row on process-wide singleton state. The original value is read and put back
+        through the Variant path ([restore]: the read and the write expression, `{}` the value), never
+        through the setter and getter under test, so a broken wrapper cannot leave the state wrong."""
         kotlin = self.kotlin_class(cls)
         key = f"{key_expr}, " if key_expr else ""
         get = f"{kotlin}.{getter.name}({key_expr})"
-        lines = [f'val s = r.singleton("{cls}")', f"val before = r.track({get})", "try {"]
+        lines = [
+            f'val s = r.singleton("{cls}")',
+            f"val original = r.track({restore[0]})",
+            f"val before = r.track({get})",
+            "try {",
+        ]
         if chosen is not None:
             lines.append(f"  val v: {ptype} = {chosen} // PAIR_OVERRIDES")
+        elif grow:
+            lines.append(f"  val v = before + 1 // PAIR_GROW")
         else:
             lines.append(f"  val v = r.pick(before, {a}, {b})")
         lines.append(f"  {kotlin}.{setter.name}({key}v)")
         lines.append(f"  r.pair(v, before, r.track({get}), r.track(s.get({read_name})))")
-        lines += ["} finally {", f"  {kotlin}.{setter.name}({key}before)", "}"]
+        lines += ["} finally {", f"  {restore[1].format('original')}", "}"]
         return lines
 
     def keyed_pair_row(self, helper: str, site: Site, verdict: Verdict, setter_name: str) -> ExerciseRow:
@@ -1847,7 +1980,10 @@ class RowGenerator:
         ptype = setter.params[1][1]
         a, b = self.pair_candidates(ptype, "Variant", ctx)
         lines = ctx.lines + [f"val key: {setter.params[0][1]} = {key}"]
-        lines += self.singleton_pair_lines(site.cls, setter, getter, "key", "key", a, b, None, ptype)
+        lines += self.singleton_pair_lines(
+            site.cls, setter, getter, "key", "key", a, b, None, ptype,
+            (f's.call("{getter_name}", key)', f's.call("{setter_name}", key, {{}})'),
+        )
         return ExerciseRow("A", [helper], site, verdict, f"{site.cls}.{setter_name}/{getter_name}", lines)
 
     def static_row(self, helper: str, site: Site, verdict: Verdict) -> ExerciseRow:
@@ -1917,8 +2053,11 @@ class RowGenerator:
         else:
             a, b = self.pair_candidates(ptype, godot_type, ctx)
         if kind == "singleton-pair":
+            name = f'"{prop["name"]}"'
+            grow = (site.cls, str(prop["name"])) in getattr(self.policy, "PAIR_GROW", {})
             lines = ctx.lines + self.singleton_pair_lines(
-                site.cls, setter, getter, "", f'"{prop["name"]}"', *(("", "") if chosen is not None else (a, b)), chosen, ptype
+                site.cls, setter, getter, "", name, *(("", "") if chosen is not None else (a, b)), chosen, ptype,
+                (f"s.get({name})", f"s.set({name}, {{}})"), grow,
             )
             return ExerciseRow("A", [helper], site, verdict, f"{site.cls}.{prop['name']}", lines)
         lines = [f"val o = {self.construct(receiver)}"]

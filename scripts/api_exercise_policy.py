@@ -21,6 +21,8 @@ lives here, and only here:
     read back and restore.
   * RID_FACTORIES / RID_ARG_SOURCES -- the servers whose RID factories run as create/read/free rows,
     and where a B or D row's RID argument comes from.
+  * PAIR_GROW / ROW_ARGS / ROW_RECEIVER_SETS -- a count a row may only raise, and the chosen arguments
+    and receiver set-up of the B and D rows the per-type values would leave weak.
   * NON_BIND_HELPERS -- the referenced `ObjectCalls` helpers that no generated method calls with a
     MethodBind: the runtime plumbing every row uses implicitly. A new one is unclassified until it
     is listed here.
@@ -399,6 +401,24 @@ STATIC_RESULTS: dict[tuple[str, str], tuple[str, str]] = {
     ("DirAccess", "get_drive_label"): ("weak", "a drive label exists only on Windows; every other host returns \"\""),
     ("Resource", "generate_scene_unique_id"): ("fresh", "a new random id per call"),
 }
+
+# (singleton, property) -> reason: an integer singleton property whose row sets `before + 1` instead of a
+# value of its own choosing, because a smaller value deletes state the project owns.
+PAIR_GROW: dict[tuple[str, str], str] = {
+    ("AudioServer", "bus_count"): "fewer buses than the project has deletes the project's buses; one more is removed again by the restore",
+}
+
+# ---- B and D row arguments ------------------------------------------------------------------------------
+
+# (class, method) -> one Godot literal per REQUIRED argument of a B or D row (the defaulted ones keep their
+# defaults), replacing the per-type values where those make the row weak: an empty answer that a no-op
+# could give too. The literals are those of STATIC_ARGS (`Class.new()` is a fresh instance). `--check`
+# requires each entry to name a generated B or D row and to give one value per required argument.
+ROW_ARGS: dict[tuple[str, str], tuple[str, ...]] = {}
+
+# (class, method) -> ((property, Godot literal), ...): set on a B row's fresh receiver through the Variant
+# path (`Object.set`) before the call, where a fresh object's empty state makes every answer zero.
+ROW_RECEIVER_SETS: dict[tuple[str, str], tuple[tuple[str, str], ...]] = {}
 
 # ---- singleton rows -------------------------------------------------------------------------------------
 

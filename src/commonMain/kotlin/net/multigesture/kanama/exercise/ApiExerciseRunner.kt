@@ -12,6 +12,7 @@ import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.OS
 import net.multigesture.kanama.api.RefCounted
+import net.multigesture.kanama.api.Time
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
@@ -203,6 +204,7 @@ internal constructor(
     begin('S', "-", "setup(scratch directory and fixtures)")
     try {
       removeTree(scratchDir)
+      removeStaleRuns()
       check(DirAccess.makeDirRecursiveAbsolute(scratch("sub")).value == 0L) {
         "cannot create ${scratch("sub")}"
       }
@@ -235,6 +237,31 @@ internal constructor(
       threw(t)
     }
     end()
+  }
+
+  /**
+   * Removes the directories of earlier runs that crashed before their teardown: a sibling whose
+   * process is gone, or, where the host cannot say (no process query), whose fixture is older than
+   * an hour. A run still going elsewhere keeps its directory.
+   */
+  private fun removeStaleRuns() {
+    val root = ApiExercise.SCRATCH_ROOT
+    if (!DirAccess.dirExistsAbsolute(root)) return
+    val own = runCatching { OS.getProcessId() }.getOrDefault(-1)
+    val now = runCatching { Time.getUnixTimeFromSystem().toLong() }.getOrDefault(0L)
+    for (sub in DirAccess.getDirectoriesAt(root)) {
+      val path = root + sub
+      if (path + "/" == scratchDir) continue
+      val pid = sub.substringBefore('-').toIntOrNull() ?: continue
+      val alive =
+        pid != own &&
+          runCatching { OS.isProcessRunning(pid) }
+            .getOrElse {
+              val modified = FileAccess.getModifiedTime("$path/fixture.txt")
+              modified != 0L && now - modified < 3600L
+            }
+      if (!alive) removeTree(path)
+    }
   }
 
   private fun writeFile(name: String, bytes: ByteArray) {
@@ -524,12 +551,19 @@ internal constructor(
   /**
    * RID factory row: the created RID is valid (a no-op returns the invalid RID 0). On the platforms
    * [invalidOn] lists (FACTORY_RESULTS: the host makes none, e.g. the headless dummy renderer) an
-   * invalid RID is weak instead.
+   * invalid RID is weak instead, and a valid one fails until the entry is removed (as a known
+   * finding that no longer reproduces does).
    */
   fun created(rid: RID, invalidOn: String = "") {
+    val excused = invalidOn.split(',').contains(platform)
     when {
+      rid.value != 0L && excused ->
+        fail(
+          "returns a valid RID on $platform now: remove its FACTORY_RESULTS entry in " +
+            "scripts/api_exercise_policy.py"
+        )
       rid.value != 0L -> pass()
-      invalidOn.split(',').contains(platform) -> if (verdict == ' ') verdict = 'W'
+      excused -> if (verdict == ' ') verdict = 'W'
       else -> fail("expected a valid RID got RID(0)")
     }
   }

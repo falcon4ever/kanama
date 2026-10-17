@@ -326,7 +326,14 @@ RID factories (`RID_FACTORIES`; 75 rows, one per factory method the tree calls):
 | `RenderingServer` `texture` | `RenderingServer.texture_2d_placeholder_create` |
 | `Font` `canvas_item` | `RenderingServer.canvas_item_create` |
 
-`FACTORY_RESULTS` (factories that return the invalid RID on a host, where that counts weak):
+B and D rows whose per-type arguments would leave them weak take chosen ones (`ROW_ARGS`, one per required argument) or a receiver set up through `Object.set` first (`ROW_RECEIVER_SETS`):
+
+| row | arguments | receiver set |
+|---|---|---|
+
+`PAIR_GROW` (singleton properties a row only ever raises by one): `AudioServer.bus_count` (fewer buses than the project has deletes the project's buses; one more is removed again by the restore).
+
+`FACTORY_RESULTS` (factories that return the invalid RID on a host, where that counts weak and a valid RID fails until the entry is removed):
 
 - `RenderingServer.area_light_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
 - `RenderingServer.canvas_texture_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
