@@ -1,0 +1,170 @@
+{
+ "_comment": "A toy API and its call sites: each rule of generate_api_exercise.py once. Expected output: rules.expected.txt (--write-fixture).",
+ "policy": {
+  "exclude_exact": {
+   "Input": "input devices"
+  },
+  "exclude_substring": {
+   "Extension": "an implemented base"
+  },
+  "exclude_prefix": {
+   "RD": "a RenderingDevice"
+  },
+  "stateless_singletons": {
+   "Geometry2D": "pure"
+  },
+  "receiver_sources": {
+   "TextServer": [
+    "TextServerManager",
+    "get_primary_interface",
+    "the running text server"
+   ]
+  },
+  "method_overrides": {
+   "Engine.get_ticks": [
+    "F",
+    "reads the clock"
+   ]
+  }
+ },
+ "sites": [
+  [
+   "staticFirst",
+   "Node",
+   "get_name",
+   "instance"
+  ],
+  [
+   "staticFirst",
+   "Node",
+   "get_orphan_node_ids",
+   "static"
+  ],
+  [
+   "voidStatic",
+   "Node",
+   "print_orphan_nodes",
+   "static"
+  ],
+  [
+   "voidStatic",
+   "Node",
+   "queue_free",
+   "instance"
+  ],
+  [
+   "pair",
+   "Node",
+   "set_name",
+   "instance"
+  ],
+  [
+   "constOnly",
+   "Node",
+   "move_child",
+   "instance"
+  ],
+  [
+   "constOnly",
+   "Node",
+   "get_child_count",
+   "instance"
+  ],
+  [
+   "descendant",
+   "AbstractBase",
+   "get_value",
+   "instance"
+  ],
+  [
+   "abstractRoots",
+   "LonelyAbstract",
+   "get_x",
+   "instance"
+  ],
+  [
+   "abstractRoots",
+   "TextServer",
+   "get_name",
+   "instance"
+  ],
+  [
+   "exactNotPrefix",
+   "Input",
+   "is_action_pressed",
+   "singleton"
+  ],
+  [
+   "exactNotPrefix",
+   "InputEventKey",
+   "is_pressed",
+   "instance"
+  ],
+  [
+   "prefixed",
+   "RDTextureFormat",
+   "get_width",
+   "instance"
+  ],
+  [
+   "prefixed",
+   "RDTextureFormat",
+   "make",
+   "static"
+  ],
+  [
+   "editor",
+   "EditorThing",
+   "get_size",
+   "instance"
+  ],
+  [
+   "singletonConst",
+   "Engine",
+   "get_frames_drawn",
+   "singleton"
+  ],
+  [
+   "singletonReach",
+   "Engine",
+   "set_time_scale",
+   "singleton"
+  ],
+  [
+   "singletonReach",
+   "Engine",
+   "get_ratio",
+   "singleton"
+  ],
+  [
+   "stateless",
+   "Geometry2D",
+   "is_point_in_polygon",
+   "singleton"
+  ],
+  [
+   "stringStatic",
+   "Node",
+   "generate_unique_id",
+   "static"
+  ],
+  [
+   "errorStatic",
+   "Node",
+   "make_dir",
+   "static"
+  ],
+  [
+   "excludedDescendant",
+   "PhysicsBase",
+   "get_gravity",
+   "instance"
+  ],
+  [
+   "override",
+   "Engine",
+   "get_ticks",
+   "singleton"
+  ]
+ ]
+}

@@ -383,6 +383,14 @@ python3 "$ROOT_DIR/scripts/check_builtin_coverage.py"
 stage "ObjectCalls member/name parity (desktop vs iOS)"
 python3 "$ROOT_DIR/scripts/check_objectcalls_parity.py"
 
+stage "API exercise inventory drift"
+# docs/reference/generated/api-exercise.md classifies every ObjectCalls helper the shared tree calls
+# by how a generated exercise row can observe it (static, property pair, const oracle, singleton,
+# reach only, excluded). Fails when the page is stale, when scripts/api_exercise_policy.py names a
+# class or method the API lacks, and when a referenced helper is classified by nothing; regenerate
+# with --report.
+python3 "$ROOT_DIR/scripts/generate_api_exercise.py" --check
+
 stage "no default argument on an expect declaration (task 117 D24)"
 # Android compiles a copy of the common + JVM sources with every *.expect.kt skipped and `actual`
 # stripped, so a default declared only on an `expect` does not exist on that lane: callers that

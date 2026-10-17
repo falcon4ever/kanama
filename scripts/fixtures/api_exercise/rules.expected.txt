@@ -1,0 +1,39 @@
+site Node.get_name [instance] -> A: getter of `name`
+site Node.get_orphan_node_ids [static] -> C: static with a return value [weak: argument-free static whose result can be its type's zero on a healthy host]
+site Node.print_orphan_nodes [static] -> F: void static: nothing to compare
+site Node.queue_free [instance] -> F: void method
+site Node.set_name [instance] -> A: setter of `name`
+site Node.move_child [instance] -> F: non-const method
+site Node.get_child_count [instance] -> B: const non-void method
+site AbstractBase.get_value [instance] -> B on ConcreteChild: const non-void method
+site LonelyAbstract.get_x [instance] -> E: abstract, and no instantiable descendant
+site TextServer.get_name [instance] -> B on TextServerManager.get_primary_interface(): const non-void method
+site Input.is_action_pressed [singleton] -> E: Input: input devices
+site InputEventKey.is_pressed [instance] -> B: const non-void method
+site RDTextureFormat.get_width [instance] -> E: RD*: a RenderingDevice
+site RDTextureFormat.make [static] -> E: RD*: a RenderingDevice
+site EditorThing.get_size [instance] -> E: api_type=editor: `api_type` is `editor` in extension_api.json
+site Engine.get_frames_drawn [singleton] -> D: const non-void singleton method
+site Engine.set_time_scale [singleton] -> F: void singleton method
+site Engine.get_ratio [singleton] -> F: non-const singleton method
+site Geometry2D.is_point_in_polygon [singleton] -> D: non-void method of a stateless singleton
+site Node.generate_unique_id [static] -> C: static with a return value
+site Node.make_dir [static] -> C: static returning Error: its arguments must make it fail
+site PhysicsBase.get_gravity [instance] -> E: *Extension*: abstract; every instantiable descendant is excluded by it
+site Engine.get_ticks [singleton] -> F: reads the clock (METHOD_OVERRIDES)
+helper abstractRoots -> B (TextServer.get_name)
+helper constOnly -> B (Node.get_child_count)
+helper descendant -> B (AbstractBase.get_value)
+helper editor -> E (EditorThing.get_size)
+helper errorStatic -> C (Node.make_dir)
+helper exactNotPrefix -> B (InputEventKey.is_pressed)
+helper excludedDescendant -> E (PhysicsBase.get_gravity)
+helper override -> F (Engine.get_ticks)
+helper pair -> A (Node.set_name)
+helper prefixed -> E (RDTextureFormat.get_width)
+helper singletonConst -> D (Engine.get_frames_drawn)
+helper singletonReach -> F (Engine.get_ratio)
+helper stateless -> D (Geometry2D.is_point_in_polygon)
+helper staticFirst -> C (Node.get_orphan_node_ids), then A (Node.get_name)
+helper stringStatic -> C (Node.generate_unique_id)
+helper voidStatic -> F (Node.print_orphan_nodes)
