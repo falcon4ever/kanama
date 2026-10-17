@@ -6,13 +6,23 @@ import kotlin.math.max
 import kotlin.random.Random
 import kotlin.time.TimeSource
 import net.multigesture.kanama.api.DirAccess
+import net.multigesture.kanama.api.Expression
 import net.multigesture.kanama.api.FileAccess
+import net.multigesture.kanama.api.GodotCallable
 import net.multigesture.kanama.api.GodotEnumValue
+import net.multigesture.kanama.api.GodotError
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.GodotSignal
+import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.OS
 import net.multigesture.kanama.api.RefCounted
+import net.multigesture.kanama.api.SceneTree
+import net.multigesture.kanama.api.Signal1
+import net.multigesture.kanama.api.SignalArgType
+import net.multigesture.kanama.api.SignalConnection
 import net.multigesture.kanama.api.Time
+import net.multigesture.kanama.api.Tween
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
@@ -53,7 +63,12 @@ import net.multigesture.kanama.types.Vector4
  * one): the wrapper's result equals `Object.call` on the same object, and B/D RID factories: a
  * `*_create` returns a valid RID, one read of it agrees on both paths, and the RID is freed. A
  * **weak** row cannot tell a working call from a no-op by its value (an argument-free static, or a
- * B/D result equal to its type's zero): it checks the two paths agree and is counted apart.
+ * B/D result equal to its type's zero): it checks the two paths agree and is counted apart. T (one
+ * value per Godot Variant type through each generic Variant path: a return, a container element, an
+ * argument, an inbound signal argument; against a value the engine built or compared) and F (reach
+ * only: the helper is called once on a valid receiver and must return without an exception or a
+ * backend fault, counted as `reach`). On every row, a backend fault (iOS: the shim's FAULT count,
+ * [ApiExercise.run]'s `faults`) raised during the row fails it.
  *
  * Every path a row touches is under the run's own directory below [SCRATCH_ROOT]
  * (`<pid>-<random>/`, [ApiExerciseRunner.scratchDir]), which [run] creates (with the fixture files
@@ -63,9 +78,7 @@ import net.multigesture.kanama.types.Vector4
 internal object ApiExercise {
   const val SCRATCH_ROOT: String = "user://kanama-api-exercise/"
 
-  /**
-   * The verdict of one run. [reach] counts reach-only rows (none yet), [excluded] listed helpers.
-   */
+  /** The verdict of one run. [reach] counts the reach-only rows, [excluded] the listed helpers. */
   class Result(
     val passed: Int,
     val failed: Int,
@@ -87,15 +100,19 @@ internal object ApiExercise {
     known: (String) -> Unit,
     trace: ((String) -> Unit)?,
     weak: (String) -> Unit = {},
+    faults: () -> Int = { 0 },
   ): Result {
     val started = TimeSource.Monotonic.markNow()
-    val runner = ApiExerciseRunner(platform, fail, known, trace, weak)
+    val runner = ApiExerciseRunner(platform, fail, known, trace, weak, faults)
     runner.setUp()
     try {
       ApiExerciseRows.runStatic(runner)
       ApiExerciseRows.runPairs(runner)
       ApiExerciseRows.runConst(runner)
       ApiExerciseRows.runSingletons(runner)
+      ApiExerciseRows.runTypes(runner)
+      // Last: a reach row may leave the state it touched changed (a singleton's, a server's).
+      ApiExerciseRows.runReach(runner)
     } finally {
       runner.tearDown()
     }
@@ -125,6 +142,8 @@ internal object ApiExercise {
           known = { print("[kanama] API EXERCISE KNOWN: $it") },
           weak = { print("[kanama] API EXERCISE WEAK: $it") },
           trace = if (trace) ({ print("[kanama] API EXERCISE row $it") }) else null,
+          // The JVM backends have no fault counter: a refused call throws, which fails its row.
+          faults = { 0 },
         )
       } catch (t: Throwable) {
         print(
@@ -144,6 +163,8 @@ internal object ApiExercise {
  * comparisons, and the tally. One verdict per row; a row that throws, or ends without a verdict,
  * fails.
  */
+private const val PROBE_SIGNAL = "kanama_api_exercise_probe"
+
 internal class ApiExerciseRunner
 internal constructor(
   private val platform: String,
@@ -151,6 +172,7 @@ internal constructor(
   private val onKnown: (String) -> Unit,
   private val onTrace: ((String) -> Unit)?,
   private val onWeak: (String) -> Unit = {},
+  private val faults: () -> Int = { 0 },
 ) {
   var passed: Int = 0
     private set
@@ -176,6 +198,7 @@ internal constructor(
   private var knownFailure = ""
   private var inOracle = false
   private var failureInOracle = false
+  private var faultsAtBegin = 0
   private val toClose = ArrayList<RefCounted>()
   private val toFree = ArrayList<GodotObject>()
 
@@ -229,6 +252,7 @@ internal constructor(
   internal fun tearDown() {
     begin('S', "-", "teardown(scratch directory removed)")
     try {
+      releaseTypeProbe()
       removeTree(scratchDir)
       if (DirAccess.dirExistsAbsolute(scratchDir)) {
         fail("$scratchDir still exists after the run removed it")
@@ -350,6 +374,7 @@ internal constructor(
     this.knownWhy = knownWhy
     this.knownFailure = knownFailure
     onTrace?.let { it(this.label) }
+    faultsAtBegin = faults()
   }
 
   /** A C, B or D row's wrapper half is done: what fails from here on is the Variant path's. */
@@ -359,13 +384,19 @@ internal constructor(
 
   fun end() {
     try {
+      for (tween in tweens) runCatching { tween.kill() }
       for (value in toClose.asReversed()) runCatching { value.close() }
       for (value in toFree.asReversed()) {
         runCatching { if (value.isInstanceLive()) ObjectCalls.destroyObject(value.segment) }
       }
     } finally {
+      tweens.clear()
       toClose.clear()
       toFree.clear()
+    }
+    val raised = faults() - faultsAtBegin
+    if (raised > 0) {
+      fail("the backend refused a call: $raised FAULT line(s) during the row (see the FAULT lines)")
     }
     if (verdict == ' ') fail("ended without a verdict")
     val asKnown =
@@ -395,8 +426,10 @@ internal constructor(
       }
       verdict == 'P' -> passed++
       verdict == 'W' -> weak++
+      verdict == 'R' -> reach++
     }
-    // The sweep reads each row's verdict back (P passed, W weak, F failed, S setup/teardown).
+    // The sweep reads each row's verdict back (P passed, W weak, R reach, F failed, S
+    // setup/teardown).
     onTrace?.let { it("$label = $verdict") }
   }
 
@@ -606,6 +639,169 @@ internal constructor(
 
   /** The candidate an A row sets: [a], unless the object already holds it. */
   fun <T> pick(before: Any?, a: T, b: T): T = if (same(before, a)) b else a
+
+  /**
+   * F row: the call returned. Owned RefCounted results are closed when the row ends, and a `Node`
+   * result outside any tree (a new node the call made, `GLTFDocument.generate_scene`) is freed.
+   */
+  fun reached(value: Any? = null) {
+    track(value)
+    if (value is Node && value.isInstanceLive() && toFree.none { it === value }) {
+      if (value.getParent() == null && !value.isInsideTree()) toFree.add(value)
+    }
+    if (verdict == ' ') verdict = 'R'
+  }
+
+  /** A Callable argument of an F row: a method of the run's probe node that takes no argument. */
+  fun noopCallable(): GodotCallable = GodotCallable(typeObject(), "get_instance_id")
+
+  private val tweens = ArrayList<Tween>()
+
+  /**
+   * A Tween of the running SceneTree (`create_tween()`, the only valid kind): killed when the row
+   * ends, so nothing it was given runs later.
+   */
+  fun tween(): Tween {
+    val tween = track(SceneTree.createTween())
+    tweens.add(tween)
+    return tween
+  }
+
+  /** A Signal argument of an F row: the run's probe node's user signal. */
+  fun probeSignal(): GodotSignal = typeObject().signal(PROBE_SIGNAL)
+
+  // ---- Variant type rows (T) -------------------------------------------------------------------
+
+  private var probeNode: Node? = null
+  private var probeExpression: Expression? = null
+  private var probeConnection: SignalConnection? = null
+  private val received = ArrayList<Any?>()
+
+  /** The run's probe node: the Expression's base instance (`self`), the type rows' meta holder. */
+  fun typeObject(): Node {
+    probeNode?.let {
+      return it
+    }
+    val node = Node(construct("Node"))
+    probeNode = node
+    val expression = Expression(construct("Expression"))
+    RefCounted.owned(expression)
+    probeExpression = expression
+    node.addUserSignal(PROBE_SIGNAL)
+    probeConnection =
+      Signal1(node, PROBE_SIGNAL, SignalArgType.VARIANT).connect(node) { received.add(it) }
+    return node
+  }
+
+  private fun releaseTypeProbe() {
+    runCatching { probeConnection?.close() }
+    runCatching { probeExpression?.close() }
+    runCatching {
+      probeNode?.let { if (it.isInstanceLive()) ObjectCalls.destroyObject(it.segment) }
+    }
+    probeConnection = null
+    probeExpression = null
+    probeNode = null
+  }
+
+  private fun eval(code: String): Any? {
+    val node = typeObject()
+    val expression = checkNotNull(probeExpression)
+    // A literal the Expression cannot parse fails its row here, not as a wrong value.
+    check(expression.parse(code, emptyList()) == GodotError.OK) { "Expression cannot parse $code" }
+    val result = track(expression.execute(emptyList(), node))
+    check(!expression.hasExecuteFailed()) { "Expression failed: $code" }
+    return result
+  }
+
+  /** T row `ret`: the literal the engine evaluated comes back as [value]. */
+  fun typeRet(literal: String, value: Any?) {
+    val got = eval(literal)
+    if (exact(got, value)) pass() else fail("expected ${shown(value)} got ${shown(got)}")
+  }
+
+  /** T row `elem`: the literal inside an Array and a Dictionary comes back as [value]. */
+  fun typeElem(literal: String, value: Any?) {
+    val array = eval("[$literal]")
+    val dictionary = eval("{\"k\": $literal}")
+    when {
+      !exact(array, listOf(value)) -> fail("expected [${shown(value)}] got ${shown(array)}")
+      !exact(dictionary, mapOf("k" to value)) ->
+        fail("expected {k=${shown(value)}} got ${shown(dictionary)}")
+      else -> pass()
+    }
+  }
+
+  /**
+   * T row `arg`: [value] passed through `Object.call("set_meta", …)` at the top level and inside an
+   * Array and a Dictionary equals the literal, by the engine's own comparison.
+   */
+  fun typeArg(literal: String, value: Any?) {
+    val node = typeObject()
+    try {
+      node.call("set_meta", "kanama_t", value)
+      node.call("set_meta", "kanama_ta", listOf(value))
+      node.call("set_meta", "kanama_td", mapOf("k" to value))
+      val equal =
+        eval(
+          "get_meta(\"kanama_t\") == $literal and get_meta(\"kanama_ta\") == [$literal] and " +
+            "get_meta(\"kanama_td\") == {\"k\": $literal}"
+        )
+      if (equal == true) pass()
+      else fail("the engine reads back what Kotlin passed as unequal to $literal")
+    } finally {
+      for (key in listOf("kanama_t", "kanama_ta", "kanama_td")) {
+        runCatching { node.removeMeta(key) }
+      }
+    }
+  }
+
+  /**
+   * T row `in`: the literal emitted by the engine to a Kotlin lambda's Variant argument, at the top
+   * level and inside an Array and a Dictionary, arrives as [value].
+   */
+  fun typeIn(literal: String, value: Any?) {
+    typeObject()
+    received.clear()
+    eval("emit_signal(\"$PROBE_SIGNAL\", $literal)")
+    eval("emit_signal(\"$PROBE_SIGNAL\", [$literal])")
+    eval("emit_signal(\"$PROBE_SIGNAL\", {\"k\": $literal})")
+    val expected = listOf(value, listOf(value), mapOf("k" to value))
+    val got = ArrayList(received)
+    received.clear()
+    track(got)
+    if (exact(got, expected)) pass() else fail("expected ${shown(expected)} got ${shown(got)}")
+  }
+
+  /**
+   * The type rows' comparison: the same Kotlin type and value (a PackedInt32Array element is an
+   * `Int`, a PackedFloat32Array one a `Float`), byte arrays by content, objects by instance id.
+   */
+  private fun exact(a: Any?, b: Any?): Boolean =
+    when {
+      a is ByteArray && b is ByteArray -> a.contentEquals(b)
+      a is GodotObject && b is GodotObject -> a.instanceId == b.instanceId
+      a is List<*> && b is List<*> -> a.size == b.size && a.indices.all { exact(a[it], b[it]) }
+      a is Map<*, *> && b is Map<*, *> ->
+        a.size == b.size && a.keys.all { b.containsKey(it) && exact(a[it], b[it]) }
+      a == null || b == null -> a == b
+      else -> a::class == b::class && a == b
+    }
+
+  private fun shown(value: Any?): String {
+    val text =
+      when (value) {
+        null -> "null"
+        is ByteArray -> value.toList().toString() + ":ByteArray"
+        is GodotObject -> "Object#${value.instanceId}"
+        is List<*> -> value.joinToString(prefix = "[", postfix = "]") { shown(it) }
+        is Map<*, *> ->
+          value.entries.joinToString(prefix = "{", postfix = "}") { "${it.key}=${shown(it.value)}" }
+        is String -> "\"$value\""
+        else -> "$value:${value::class.simpleName}"
+      }
+    return if (text.length > 200) text.take(197) + "..." else text
+  }
 
   // ---- comparison ------------------------------------------------------------------------------
 

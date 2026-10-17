@@ -1077,9 +1077,9 @@ expected output after an intended rule change).
 
 `--report` also writes the rows, `src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt`,
 and `--check` fails when that file differs from what the generator writes. The rows cover every helper
-whose best case is a static (C), a property pair (A), a const method (B) or a singleton method (D), and
-for a weak static the helper's next-best A, B or D row as well; only the reach-only (F) helpers have no
-row yet. A row is one function of straight-line code that calls the generated wrapper exactly as a
+whose best case is a static (C), a property pair (A), a const method (B), a singleton method (D) or
+reach only (F), for a weak static the helper's next-best A, B or D row as well, and one row per Godot
+Variant type per generic Variant path (T). A row is one function of straight-line code that calls the generated wrapper exactly as a
 script would, with the Kotlin signature read from the committed tree, and reports to the hand-written
 `ApiExerciseRunner.kt` beside it:
 
@@ -1128,6 +1128,31 @@ script would, with the Kotlin signature read from the committed tree, and report
   renderer no decals, fog volumes or VoxelGI) and counts weak, printed as a `WEAK:` line with that
   reason; an invalid RID from the wrapper alone fails. A RID argument is made inside the row's guarded block, so a
   failing later one still frees the earlier ones.
+- an **F row** (reach only) calls its helper once on a valid receiver with the arguments a B row would
+  get (a no-op `Callable` and the probe node's signal where one is needed) and passes when the call
+  returns without an exception or a backend fault; it proves the shape crosses into the engine and back,
+  not its value. Engine error prints for arguments a fresh object cannot use (an index past an empty
+  list, an invalid RID) are expected. A RID a server returns is freed, an owned result closed, a new
+  parentless `Node` freed. `REACH_RECEIVERS` names a valid receiver where a fresh instance is not one
+  (a `Tween` from `create_tween()`, killed when the row ends), `HAND_ROOT_REACH` spells the calls of the
+  hand-written `GodotObject` root (`connect`/`disconnect`/`isConnected`, whose Callable is split into a
+  target and a method), `REACH_AFTER` adds what the engine expects after a call (`load_threaded_get`
+  after `load_threaded_request`, or the token leaks), and `ROW_ARGS` gives an F row arguments too
+  (`receiver.create_item()` is an object the row's own receiver makes). A method whose call would change
+  what a running game shows or hears on a device, with no getter to restore it (a boot splash, the
+  microphone, process-wide rendering settings, a made-up native texture handle), is excluded in
+  `METHOD_OVERRIDES` with that reason: on iOS and Android the exercise runs inside the game.
+- a **T row** (`VARIANT_TYPE_VALUES`, one entry per `Variant.Type` of `extension_api.json`, so a type a
+  new Godot adds fails `--check` until it has one) runs one value through a generic Variant path against
+  a value the engine built or compared (an `Expression` evaluates the GDScript literal on the run's probe
+  node): `ret` (the literal comes back as the Kotlin value), `elem` (inside an Array and a Dictionary),
+  `arg` (the Kotlin value through `Object.call("set_meta", ...)`, alone and in containers, equal to the
+  literal by the engine's own `==`) and `in` (the literal emitted to a Kotlin lambda's Variant signal
+  argument). The comparison is exact: a PackedInt32Array element must arrive as an `Int`, a
+  PackedFloat32Array one as a `Float`. A path a type has no row on carries its reason in the entry (Kotlin
+  has no distinct value for a StringName or a packed array as an argument; a Callable or Signal decodes
+  to `null`). The inventory page also lists, per typed-Array argument kind the iOS generator emits, the
+  rows that pass such an array, and `--check` fails on a kind no row passes.
 
 Every path a row touches is under the run's own directory, `user://kanama-api-exercise/<pid>-<random>/`,
 which the runner creates with its fixtures (`fixture.txt` with an extended attribute, `fixture.mp3`,
@@ -1156,7 +1181,7 @@ AAR, and the Android plugin build refuses a release variant with the flag). Wher
   prints `[kanama] API EXERCISE: <n> passed, <m> failed, <w> weak, <k> known, <r> reach, <e> excluded in <ms> ms` and
   one `[kanama] API EXERCISE FAIL: <helpers> <row> <what>` per failure. `KANAMA_API_EXERCISE=1` forces a
   run without the setting and `KANAMA_API_EXERCISE_TRACE=1` prints a line before each row and its verdict
-  after it (`= P` passed, `= W` weak, `= F` failed), which is how a row that prints an engine error,
+  after it (`= P` passed, `= W` weak, `= R` reached, `= F` failed), which is how a row that prints an engine error,
   hangs or crashes is found (run every row headless before adding a device run of new rows). The smoke
   runs with the trace on, so a crash names the row it happened in. A method whose call aborts the engine
   itself (an index Godot does not bounds-check before a `CRASH_BAD_INDEX`) is excluded in
@@ -1168,7 +1193,8 @@ AAR, and the Android plugin build refuses a release variant with the flag). Wher
   [Android backend](backends/android.md).
 - **iOS:** `ApiExerciseSelfTest.kt` runs the same rows after the frame-1 self-test rows and prints
   `[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): ... faults=<f> expected=<e> in <ms> ms`, a line
-  both device runners require.
+  both device runners require. A FAULT the shim prints while a row runs fails that row by name (the
+  runner compares the shim's fault count before and after it), as well as the count.
 
 A row that fails on one platform for a gap already tracked is listed in `KNOWN_FINDINGS` (row, platforms,
 the failure text it excuses, reason, where it is tracked): it still runs there. A C row checks the
@@ -1178,7 +1204,7 @@ as `known`; any other failure fails, and when the row passes the run fails with 
 reproduces" until the entry is removed. `--check` fails on an entry that names no generated row.
 
 After a Godot bump, run the rows headless (`runtime_smoke.sh`) before any device run: a class the new
-version adds gets rows it has never run.
+version adds gets rows it has never run (see the upgrade runbook's "API exercise" step).
 
 ## Value-Type Audits
 

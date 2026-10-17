@@ -121,7 +121,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/audit_stale_blockers.py:171` | `except UnicodeDecodeError:` | justified: not text (a binary the suffix list does not know), so it carries no marker |
 | `scripts/audit_stale_blockers.py:173` | `except OSError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/audit_stale_blockers.py:249` | `except UnicodeDecodeError:` | justified: not text, so it declares no Kotlin symbol |
-| `scripts/audit_stale_blockers.py:489` | `except ValueError:` | justified: --list display of the marker age; the audit verdict is already decided |
+| `scripts/audit_stale_blockers.py:490` | `except ValueError:` | justified: --list display of the marker age; the audit verdict is already decided |
 | `scripts/audit_wrapper_abi_policy.py:84` | `except ValueError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/audit_wrapper_signatures.py:323` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_actual_public_surface.py:121` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
@@ -153,7 +153,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_pt_tag_tables.py:375` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
 | `scripts/check_public_signature_changes.py:1032` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_public_signature_changes.py:1041` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_public_signature_changes.py:1512` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_public_signature_changes.py:1510` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_script_portability.py:1136` | `except SyntaxError as error:` | justified: reported as a `parse` finding (the return value), the gate stays red |
 | `scripts/check_script_portability.py:1454` | `except UnicodeDecodeError:` | justified: a binary file is not a script; only text files are scanned |
 | `scripts/check_shell_lint.sh:27` | `if ! command -v shellcheck >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
@@ -169,24 +169,27 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:199` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:241` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:243` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1152` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/generate_api_exercise.py:592` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/generate_api_exercise.py:668` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/generate_api_exercise.py:711` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/generate_api_exercise.py:725` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/generate_api_exercise.py:1671` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/generate_api_exercise.py:1688` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/generate_api_exercise.py:1706` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/generate_api_exercise.py:1852` | `except LiteralError as first:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/generate_api_exercise.py:1858` | `except LiteralError:` | justified: the next site of the same case is tried; with none left, the first error is raised |
+| `scripts/gate_red_runs.py:1168` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:675` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:718` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:732` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:1798` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:1815` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:1833` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:1904` | `except LiteralError as first:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:1910` | `except LiteralError:` | justified: the next F site is tried; with none left, the first error is raised |
+| `scripts/generate_api_exercise.py:2085` | `except LiteralError:` | justified: a default this generator cannot write (`Transform3D(1, 0, ...)`, `Callable()`, |
+| `scripts/generate_api_exercise.py:2117` | `except LiteralError as first:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:2123` | `except LiteralError:` | justified: the next site of the same case is tried; with none left, the first error is raised |
 | `scripts/generate_api_wrapper.py:1900` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
 | `scripts/generate_api_wrapper.py:1905` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
 | `scripts/generate_api_wrapper.py:1910` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1945` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1946` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
 | `scripts/generate_gates_index.py:376` | `except ValueError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_gates_index.py:420` | `check=False,` | justified: a failed probe reads as "not shallow", and the full-history path then derives the dates itself |
 | `scripts/generate_gates_index.py:438` | `check=False,` | justified: a failed `git log` leaves the date as a dash, which --check reports as a stale page |
-| `scripts/generate_web_wrappers.py:1832` | `except GenerationError as error:` | justified: a signal whose argument Web cannot pack gets no typed handle (its name stays |
+| `scripts/generate_web_wrappers.py:1861` | `except GenerationError as error:` | justified: a signal whose argument Web cannot pack gets no typed handle (its name stays |
 | `scripts/hot_reload_in_process_smoke.sh:20` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/hot_reload_in_process_smoke.sh:39` | `if [[ -n "$GODOT_PID" ]] && kill -0 "$GODOT_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
 | `scripts/hot_reload_in_process_smoke.sh:41` | `kill "$GODOT_PID" 2>/dev/null \|\| true` | justified: cleanup of our own child after the verdict; it may already be gone. |
@@ -312,9 +315,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `.github/workflows/package.yml:313` | `chmod +x "$templates/${{ matrix.export_template }}" \|\| true` | justified: a template that is not executable is not an error (Windows); the smoke below fails if it cannot run. |
 | `.github/workflows/package.yml:330` | `chmod +x "$godot_bin" \|\| true` | justified: if the editor binary is not executable the smoke's own executable check on it fails the step. |
 | `.github/workflows/package.yml:420` | `gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \|\| \` | justified: `gh release view` is the existence probe; failing it means "create the release" on the next line. |
-| `.github/workflows/web.yml:233` | `continue-on-error: true` | justified: an experiment, not a gate (see the comment above the job); its failure must never block a merge. |
-| `.github/workflows/web.yml:286` | `"$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe --import \|\| true` | justified: the import only warms .godot/; the export on the next line fails loudly if it did not take. |
-| `.github/workflows/web.yml:314` | `set +e` | justified: `set +e` only reads the probe's exit status into $status, which the case below prints; the job is an experiment. |
+| `.github/workflows/web.yml:236` | `continue-on-error: true` | justified: an experiment, not a gate (see the comment above the job); its failure must never block a merge. |
+| `.github/workflows/web.yml:289` | `"$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe --import \|\| true` | justified: the import only warms .godot/; the export on the next line fails loudly if it did not take. |
+| `.github/workflows/web.yml:317` | `set +e` | justified: `set +e` only reads the probe's exit status into $status, which the case below prints; the job is an experiment. |
 
 <!-- audit-table:end -->
 

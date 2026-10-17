@@ -568,15 +568,21 @@ case("generate_api_exercise.py --check-jar (exercise class in a runtime AAR)", A
 case("generate_api_exercise.py --check (RID source no row takes)", API_EXERCISE_CHECK,
      [Edit("scripts/api_exercise_policy.py", '    ("TextServer", "shaped"): "TextServer.create_shaped_text",\n',
            '    ("TextServer", "shaped"): "TextServer.create_shaped_text",\n    ("TextServer", "red_run"): "TextServer.create_font",\n')],
-     "RID_ARG_SOURCES names TextServer argument `red_run`, which no B or D row of TextServer takes", "a `RID_ARG_SOURCES` entry names a RID argument no row passes (renamed or gone): it would make and free a RID for nothing")
+     "RID_ARG_SOURCES names TextServer argument `red_run`, which no B, D or F row of TextServer takes", "a `RID_ARG_SOURCES` entry names a RID argument no row passes (renamed or gone): it would make and free a RID for nothing")
 case("generate_api_exercise.py --check (row arguments of no row)", API_EXERCISE_CHECK,
      [Edit("scripts/api_exercise_policy.py", '    ("ClassDB", "class_get_enum_list"): (\'"Node"\',),\n',
            '    ("ClassDB", "class_get_enum_list"): (\'"Node"\',),\n    ("ClassDB", "class_get_enum_list_red_run"): (\'"Node"\',),\n')],
-     "ROW_ARGS names ClassDB.class_get_enum_list_red_run, which is not a B or D row", "a `ROW_ARGS` entry names a method that is no B or D row (renamed or gone): its arguments would silently go unused")
+     "ROW_ARGS names ClassDB.class_get_enum_list_red_run, which is not a B, D or F row", "a `ROW_ARGS` entry names a method that is no B or D row (renamed or gone): its arguments would silently go unused")
 case("generate_api_exercise.py --check (known finding names no row)", API_EXERCISE_CHECK,
      [Edit("scripts/api_exercise_policy.py", "tuple[tuple[str, ...], str, str, str]] = {}",
            'tuple[tuple[str, ...], str, str, str]] = {("A", "CharFXTransform.font_red_run"): (("ios",), "got null", "red run", "red run")}')],
      "KNOWN_FINDINGS names A CharFXTransform.font_red_run, which is not a generated row", "a KNOWN_FINDINGS entry names a row the generator does not write (renamed or gone): it would hide nothing and stay forever")
+case("generate_api_exercise.py --check (Variant type without a value)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '    "Vector3": ("Vector3(1, 2.5, -3)", "Vector3(1.0, 2.5, -3.0)", {}),\n', "")],
+     "Variant type Vector3 (Variant.Type in extension_api.json) has no VARIANT_TYPE_VALUES entry", "a Variant type (a new one in a Godot bump) without a value would run through no generic Variant path")
+case("generate_api_exercise.py --check (reach receiver of no row)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '    "Tween": ("r.tween()",', '    "TweenRedRun": ("r.tween()", "red run"),\n    "Tween": ("r.tween()",')],
+     "REACH_RECEIVERS names TweenRedRun, which is the receiver of no reach row", "a `REACH_RECEIVERS` entry for a class no reach row uses (renamed or gone) would stay forever")
 case("generate_api_exercise.py --check (rule order)", API_EXERCISE_CHECK,
      [Edit("scripts/generate_api_exercise.py", 'ORDER = "CABDFE"', 'ORDER = "ACBDFE"')],
      "does not match the rules run on the fixture API", "the case ranking puts property pairs before statics: the toy-API fixture and the committed page both catch it")

@@ -226,6 +226,21 @@ points, colors)`). Found by the API exercise's reach rows, which could not write
   — the parameter above is `T? = null` instead of `T`. Calls compile unchanged; only a function reference
   typed with the old non-null parameter needs the `?`.
 
+### Added — tooling: the API exercise runs every reach-only helper and one row per Variant type
+
+Contributors: the generated API exercise (`ApiExercise.generated.kt`) now runs a row for every helper the
+inventory could only reach (F, 603): the helper is called once on a valid receiver (a fresh instance, the
+singleton, a Tween made by `create_tween()` where a fresh one is invalid, `REACH_RECEIVERS`) and passes
+when it returns without an exception or a backend fault (`reach` in the summary line). On iOS a FAULT the
+shim prints while any row runs now fails that row by name. Rows that would change what a running game
+shows or hears on a device (a boot splash, the microphone, a made-up native texture handle, process-wide
+rendering settings) are excluded with that reason. And it runs one row per Godot Variant type (read from
+`Variant.Type`, values in `VARIANT_TYPE_VALUES`) through each generic Variant path — a return, a container
+element, an `Object.call` argument, an inbound signal argument — against a value the engine built or
+compared, on the desktop and on iOS; these replace the hand-written iOS `variant-type(...)` self-test rows.
+The inventory page lists which rows cover each typed-Array argument kind. The desktop run takes under a
+second (`in <ms>` in the summary).
+
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 
 The control (a plain GDScript visibility-notifier export, `visibility-control` in `web.yml`) handed the

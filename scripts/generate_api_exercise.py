@@ -51,6 +51,7 @@ from generate_api_wrapper import (
     IOS_HANDWRITTEN_HELPERS,
     IOS_OBJECTCALLS,
     IOS_PT_TAG_VALUES,
+    IOS_TYPED_ARRAY_ARGS,
     enum_spec,
     OBJECTCALLS_REFERENCE_RE,
     SHARED_HAND_ROOT_FILES,
@@ -62,7 +63,15 @@ from generate_api_wrapper import (
     strip_comments,
     tree_universe,
 )
-from wrapper_model import ROOT, WRAPPER_CLASS_ALIASES, ApiClass, ApiMethod, load_api_classes, load_api_singletons
+from wrapper_model import (
+    ROOT,
+    WRAPPER_CLASS_ALIASES,
+    ApiClass,
+    ApiMethod,
+    load_api_classes,
+    load_api_singletons,
+    logical_type,
+)
 
 TAG = "[api_exercise]"
 API_PATH = ROOT / "extension_api.json"
@@ -132,6 +141,7 @@ class Inventory:
     non_bind_files: dict[str, set[str]] = field(default_factory=dict)
     rules: "Rules | None" = None
     static_args_expected: dict[tuple[str, str], tuple[str | None, ...]] = field(default_factory=dict)
+    api_path: Path = API_PATH
 
 
 # ---- the classification rules (pure: the fixture drives them on a toy API) -------------------------------
@@ -478,7 +488,7 @@ def build(api_path: Path = API_PATH, policy=policy_module) -> Inventory:
     for helper in sorted(set(policy.NON_BIND_HELPERS) - referenced):
         failures.append(f"NON_BIND_HELPERS lists {helper}, which the shared sources no longer call; delete the entry")
 
-    inv = Inventory(rows=rows, sites=sites, receivers=receivers, failures=failures, rules=rules)
+    inv = Inventory(rows=rows, sites=sites, receivers=receivers, failures=failures, rules=rules, api_path=api_path)
     inv.non_bind_files = {h: refs.get(h, set()) for h, r in rows.items() if r.case == "N"}
     check_policy(inv, rules, api, singletons, policy)
     return inv
@@ -683,7 +693,7 @@ def check_singleton_policy(inv: Inventory, rules: Rules, api: dict[str, ApiClass
     used: set[tuple[str, str]] = set()
     for _, site in inv.sites:
         verdict = rules.site(site)
-        if verdict.case not in "BD" or verdict.row:
+        if verdict.case not in "BDF" or verdict.row:
             continue
         method = rules.method(site.cls, site.method)
         for arg, kind, default in zip(method.argument_names, method.argument_types, method.argument_defaults):
@@ -692,7 +702,7 @@ def check_singleton_policy(inv: Inventory, rules: Rules, api: dict[str, ApiClass
     for (cls, arg), source in getattr(policy, "RID_ARG_SOURCES", {}).items():
         server, _, factory = source.partition(".")
         if (cls, arg) not in used:
-            fail(f"RID_ARG_SOURCES names {cls} argument `{arg}`, which no B or D row of {cls} takes: delete the entry")
+            fail(f"RID_ARG_SOURCES names {cls} argument `{arg}`, which no B, D or F row of {cls} takes: delete the entry")
         elif server not in factories:
             fail(f"RID_ARG_SOURCES[{cls}.{arg}] makes its RID with {source}, but {server} is not in RID_FACTORIES (nothing frees it)")
         elif server not in api or factory not in api[server].methods or not rules.factory(server, rules.method(server, factory)):
@@ -700,11 +710,11 @@ def check_singleton_policy(inv: Inventory, rules: Rules, api: dict[str, ApiClass
     value_rows = {}
     for _, site in inv.sites:
         verdict = rules.site(site)
-        if verdict.case in "BD" and not verdict.row:
+        if verdict.case in "BDF" and not verdict.row:
             value_rows[(site.cls, site.method)] = verdict
     for key, literals in getattr(policy, "ROW_ARGS", {}).items():
         if key not in value_rows:
-            fail(f"ROW_ARGS names {key[0]}.{key[1]}, which is not a B or D row: delete the entry")
+            fail(f"ROW_ARGS names {key[0]}.{key[1]}, which is not a B, D or F row: delete the entry")
             continue
         required = sum(1 for d in rules.method(*key).argument_defaults if d is None)
         if len(literals) != required:
@@ -793,9 +803,10 @@ def render(inv: Inventory, policy=policy_module) -> str:
         "of it. This page classifies every helper the shared wrapper tree calls by how a generated exercise row can",
         "observe it, from `extension_api.json`, the generator's tables and the committed tree; the judgement calls",
         "(exclusions, stateless singletons, receivers, method-level cases, runtime helpers, static arguments, the",
-        "scratch directory, the singleton rows) are hand-kept in `scripts/api_exercise_policy.py`. The C, A, B and D",
-        "rows run: `ApiExercise.generated.kt` (the same script writes it) on the desktop smoke and in the iOS self-test",
-        "build; the F (reach-only) rows are listed here and run nowhere yet.",
+        "scratch directory, the singleton rows, the Variant type values) are hand-kept in",
+        "`scripts/api_exercise_policy.py`. Every row runs: `ApiExercise.generated.kt` (the same script writes it) on",
+        "the desktop smoke and in the iOS self-test build, the C, A, B and D rows asserting values, the F rows",
+        "reach only, and the T rows one value per Godot Variant type through each generic Variant path.",
         "",
         f"**Referenced helpers:** {len(rows)} ({bind_shaped} called by generated methods with a MethodBind, "
         f"{counts['N']} runtime helpers). **MethodBind call sites:** {generated_sites} generated "
@@ -949,6 +960,7 @@ def render(inv: Inventory, policy=policy_module) -> str:
         shown = "not a pair" if value is None else f"`{md(value)}`"
         lines.append(f"| `{cls}.{prop}` | {shown} | {md(reason)} |")
     lines += render_singleton_policy(inv, policy)
+    lines += render_types_and_reach(inv, policy)
     paths = [p for p in path_rows(inv) if p[1].case != "C"]
     lines += [
         "",
@@ -977,6 +989,69 @@ def render(inv: Inventory, policy=policy_module) -> str:
             where += f"; then {row.secondary[1].case} " + site_text(*row.secondary)
         lines.append(f"| `{helper}` | {row.case} | {where} | {row.sites} | {row.tags} |")
     return "\n".join(lines) + "\n"
+
+
+def render_types_and_reach(inv: Inventory, policy) -> list[str]:
+    types = variant_types(inv.api_path)
+    table = getattr(policy, "VARIANT_TYPE_VALUES", {})
+    lines = [
+        "",
+        "## Variant type rows",
+        "",
+        f"One row (case T) per Godot Variant type ({len(types)}, read from `Variant.Type` in extension_api.json) per",
+        "generic Variant path of the runtime, each against a value the engine built or compared (an `Expression`",
+        "evaluates the literal on the run's probe node), so an encode/decode pair wrong the same way both ways cannot",
+        "pass. The values are `VARIANT_TYPE_VALUES`; a type a later engine adds fails `--check` until it has one.",
+        "",
+    ]
+    for path, (_fn, what) in TYPE_PATHS.items():
+        lines.append(f"- `{path}`: {md(what)}.")
+    lines += ["", "| type | literal | Kotlin value | paths without a row |", "|---|---|---|---|"]
+    for _value, name in types:
+        if name not in table:
+            continue
+        literal, kotlin, skips = table[name]
+        skipped = "; ".join(f"`{p}`: {md(r)}" for p, r in skips.items()) or "—"
+        lines.append(f"| `{name}` | `{md(literal)}` | `{md(kotlin)}` | {skipped} |")
+    kinds = typed_array_kinds(inv)
+    lines += [
+        "",
+        "## Typed-array element kinds",
+        "",
+        "Each typed-Array argument kind the iOS generator emits (`IOS_TYPED_ARRAY_ARGS`) is boxed element by element",
+        "by the shim's per-tag switch; each kind's helpers and the case of their row (a kind with only reach rows",
+        "proves the call is accepted, not the element values):",
+        "",
+        "| kind | helpers (case) |",
+        "|---|---|",
+    ]
+    for kind, helpers in kinds.items():
+        cells = ", ".join(f"`{h}` ({inv.rows[h].case})" for h in helpers if h in inv.rows) or "none"
+        lines.append(f"| `{kind}` | {cells} |")
+    lines += [
+        "",
+        "## Reach rows",
+        "",
+        "An F row calls its helper once on a valid receiver (a fresh instance, the singleton, the policy's",
+        "`REACH_RECEIVERS` factory, or none for a static) with the per-type argument values, and passes when the",
+        "call returns without an exception or a backend fault (iOS: a FAULT line during the row fails it). Engine",
+        "error prints for arguments a fresh object cannot use (an index past an empty list) are expected: the call",
+        "crossed into the engine and came back. A RID a server returns is freed, an owned result closed, a new",
+        "parentless Node freed. Rows that would change what a running game shows or hears on a device are excluded",
+        "(`METHOD_OVERRIDES`).",
+        "",
+        "`REACH_RECEIVERS`:",
+        "",
+    ]
+    for name, (expr, reason) in getattr(policy, "REACH_RECEIVERS", {}).items():
+        lines.append(f"- `{name}`: `{md(expr)}` — {md(reason)}.")
+    lines += ["", "`HAND_ROOT_REACH` (helpers only the hand-written `GodotObject` root calls):", ""]
+    for helper, (_stmts, reason) in getattr(policy, "HAND_ROOT_REACH", {}).items():
+        lines.append(f"- `{helper}`: {md(reason)}.")
+    lines += ["", "`REACH_AFTER` (what a row does after its call):", ""]
+    for (cls, method), (stmt, reason) in getattr(policy, "REACH_AFTER", {}).items():
+        lines.append(f"- `{cls}.{method}`: `{md(stmt)}` — {md(reason)}.")
+    return lines
 
 
 def render_singleton_policy(inv: Inventory, policy) -> list[str]:
@@ -1166,15 +1241,55 @@ class _Policy:
 
 # ---- the rows: ApiExercise.generated.kt ----------------------------------------------------------------
 #
-# P1 emits the C (static) and A (property-pair) rows; the B/D/F rows come later. Each row is one private
-# function of straight-line code (no lambda per row) reporting into the hand-written ApiExerciseRunner.
+# One row per helper whose case is C, A, B, D or F, plus the T rows (one per Godot Variant type per generic
+# Variant path). Each row is one private function of straight-line code (no lambda per row) reporting into
+# the hand-written ApiExerciseRunner.
 # The Kotlin signatures are read from the committed shared tree (the generator wrote them), so a row
 # calls exactly what a user calls.
 
 ROWS_PATH = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt"
-ROW_CASES = "CABD"
+ROW_CASES = "CABDTF"
 # The runner calls one function per case, in this order (ApiExercise.run).
-ROW_RUNS = (("C", "static"), ("A", "pairs"), ("B", "const"), ("D", "singletons"))
+ROW_RUNS = (("C", "static"), ("A", "pairs"), ("B", "const"), ("D", "singletons"), ("T", "types"), ("F", "reach"))
+# The generic Variant paths each Variant type row (case T) runs through; see VARIANT_TYPE_VALUES.
+TYPE_PATHS = {
+    "ret": ("typeRet", "the literal the engine evaluated comes back as the Kotlin value (the Variant return decode)"),
+    "elem": ("typeElem", "the literal inside an Array and a Dictionary (the container return decode)"),
+    "arg": ("typeArg", "the Kotlin value through Object.call, alone and inside an Array and a Dictionary, equals the literal by the engine's comparison (the argument encoders)"),
+    "in": ("typeIn", "the literal emitted to a Kotlin lambda's Variant signal argument, alone and inside an Array and a Dictionary (the inbound decode)"),
+}
+
+
+def variant_types(api_path: Path) -> list[tuple[int, str]]:
+    """(value, Godot type name) of every `Variant.Type` but TYPE_MAX, named as the builtin classes are
+    (`TYPE_PACKED_VECTOR2_ARRAY` -> `PackedVector2Array`), `TYPE_OBJECT` -> `Object`."""
+    data = json.loads(api_path.read_text(encoding="utf-8"))
+    names = {b["name"].upper(): b["name"] for b in data.get("builtin_classes", [])}
+    names["OBJECT"] = "Object"
+    out = []
+    for enum in data.get("global_enums", []):
+        if enum["name"] != "Variant.Type":
+            continue
+        for value in enum["values"]:
+            if value["name"] == "TYPE_MAX":
+                continue
+            key = value["name"].removeprefix("TYPE_").replace("_", "")
+            out.append((int(value["value"]), names.get(key, value["name"])))
+    return sorted(out)
+
+
+def typed_array_kinds(inv: "Inventory") -> dict[str, list[str]]:
+    """The helpers whose generated sites take each typed-Array argument kind the iOS generator emits
+    (IOS_TYPED_ARRAY_ARGS): a kind's elements are boxed by the shim's per-tag switch, so every kind
+    needs a row that passes such an array."""
+    out: dict[str, set[str]] = {kind: set() for kind in IOS_TYPED_ARRAY_ARGS}
+    for helper, site in inv.sites:
+        method = inv.rules.method(site.cls, site.method)
+        for arg in method.argument_types:
+            kind = logical_type(arg)
+            if kind in out:
+                out[kind].add(helper)
+    return {kind: sorted(helpers) for kind, helpers in out.items()}
 
 
 @dataclass(frozen=True)
@@ -1197,7 +1312,12 @@ class ExerciseRow:
 
 def _split_top(text: str, sep: str = ",") -> list[str]:
     out, depth, start = [], 0, 0
+    quoted = False
     for i, ch in enumerate(text):
+        if ch == '"' and (i == 0 or text[i - 1] != "\\"):
+            quoted = not quoted
+        if quoted or ch == '"':
+            continue
         if ch in "(<[{":
             depth += 1
         elif ch in ")>]}":
@@ -1254,6 +1374,10 @@ class KotlinTree:
                 ktype = _split_top(rest, "=")[0] if "=" in rest else rest.strip()
                 params.append((name.strip(), ktype.strip()))
                 defaults.append("=" in rest)
+            # A vararg method's Kotlin function ends in one `vararg` parameter Godot does not list.
+            if api_method.is_vararg and params and params[-1][0].startswith("vararg "):
+                params = params[:-1]
+                defaults = defaults[:-1]
             if len(params) != len(api_method.argument_types):
                 continue
             tail = text[i : i + 300]
@@ -1406,6 +1530,7 @@ class RowContext:
         self.gen = gen
         self.lines: list[str] = []
         self.count = 0
+        self.receiver: tuple[str, str] | None = None  # (Kotlin variable, class) of the row's receiver
 
     def fresh(self, cls: str) -> str:
         receiver, why = self.gen.rules.receiver(cls)
@@ -1514,6 +1639,16 @@ class RowGenerator:
         raise LiteralError(f"a list for {base}")
 
     def call(self, name: str, args: list, base: str, ctx: RowContext) -> str:
+        if name.startswith("receiver."):
+            # `receiver.<method>()`: an argument only the row's own receiver can make (a Tree's item).
+            method = name.removeprefix("receiver.")
+            if ctx.receiver is None or args:
+                raise LiteralError(f"{name}(): no receiver, or arguments given")
+            var, cls = ctx.receiver
+            owner = next((c for c in self.rules.chain(cls) if method in self.rules.api[c].methods), None)
+            if owner is None:
+                raise LiteralError(f"{name}(): {cls} has no method {method}")
+            return f"checkNotNull({var}.{method_function_name(owner, method)}())"
         if name == "scratch":
             return f"r.scratch({kotlin_string(args[0][1])})"
         if name == "fixture":
@@ -1649,13 +1784,15 @@ class RowGenerator:
                 chosen.append((row.site, row.verdict))
                 if row.secondary is not None and row.secondary[1].case in "ABD":
                     chosen.append(row.secondary)
-            elif row.case in "ABD":
+            elif row.case in "ABDF":
                 chosen.append((row.site, row.verdict))
             for site, verdict in chosen:
                 if verdict.row == "factory":
                     continue  # every factory method gets its own row below
                 try:
-                    if verdict.case == "C":
+                    if verdict.case == "F":
+                        out.append(self.reach_row_for(helper, site, verdict, by_helper[helper]))
+                    elif verdict.case == "C":
                         out.append(self.static_row(helper, site, verdict))
                     elif verdict.case == "A":
                         prop_key = verdict.row or "instance"
@@ -1713,7 +1850,134 @@ class RowGenerator:
                 out.append(self.factory_row(sorted(factories[key]), site, verdict))
             except LiteralError as error:
                 self.failures.append(f"factory row {site.cls}.{site.method}: {error}")
+        out += self.type_rows()
+        receivers = {r.verdict.target or r.site.cls for r in out if r.case == "F"}
+        for kind, helpers in typed_array_kinds(self.inv).items():
+            if not any(self.inv.rows[h].case in ROW_CASES for h in helpers if h in self.inv.rows):
+                self.failures.append(
+                    f"typed-Array argument kind {kind} (IOS_TYPED_ARRAY_ARGS) has no generated row: no helper that "
+                    "takes it is C, A, B, D or F, so the shim's boxing of its elements runs nowhere"
+                )
+        reach_sites = {(r.site.cls, r.site.method) for r in out if r.case == "F"}
+        for key in getattr(self.policy, "REACH_AFTER", {}):
+            if key not in reach_sites:
+                self.failures.append(f"REACH_AFTER names {key[0]}.{key[1]}, which is no reach row: delete the entry")
+        for name in getattr(self.policy, "REACH_RECEIVERS", {}):
+            if name not in receivers:
+                self.failures.append(f"REACH_RECEIVERS names {name}, which is the receiver of no reach row: delete the entry")
+        for helper in getattr(self.policy, "HAND_ROOT_REACH", {}):
+            row = self.inv.rows.get(helper)
+            if row is None or row.case != "F":
+                self.failures.append(f"HAND_ROOT_REACH names {helper}, which is not a reach-only (F) helper: delete the entry")
         return out
+
+    # -- the Variant type rows (case T) --
+
+    def type_rows(self) -> list[ExerciseRow]:
+        """One row per Godot Variant type (read from extension_api.json) per generic Variant path, from
+        the policy's VARIANT_TYPE_VALUES; a type without an entry, or an entry naming no type, fails."""
+        table = getattr(self.policy, "VARIANT_TYPE_VALUES", {})
+        types = variant_types(self.inv.api_path)
+        names = [name for _, name in types]
+        for name in names:
+            if name not in table:
+                self.failures.append(
+                    f"Variant type {name} (Variant.Type in extension_api.json) has no VARIANT_TYPE_VALUES entry; add its "
+                    "GDScript literal, the Kotlin value the Variant path answers, and the paths it has no row on"
+                )
+        for name in table:
+            if name not in names:
+                self.failures.append(f"VARIANT_TYPE_VALUES names {name}, which is no Variant.Type of the API; delete the entry")
+        out = []
+        for value, name in types:
+            if name not in table:
+                continue
+            literal, kotlin, skips = table[name]
+            for path in skips:
+                if path not in TYPE_PATHS:
+                    self.failures.append(f"VARIANT_TYPE_VALUES[{name}] skips path {path!r}; the paths are {sorted(TYPE_PATHS)}")
+                elif not skips[path]:
+                    self.failures.append(f"VARIANT_TYPE_VALUES[{name}] skips {path} without a reason")
+            for path, (fn, what) in TYPE_PATHS.items():
+                if path in skips:
+                    continue
+                site = Site("Variant", name, "type")
+                verdict = Verdict("T", f"Variant type {name} (Variant.Type {value}), path {path}: {what}")
+                body = [f"r.{fn}({kotlin_string(literal)}, {kotlin})"]
+                out.append(ExerciseRow("T", [f"variant-{path}"], site, verdict, f"{name} {path}", body))
+        return out
+
+    # -- the reach rows (case F) --
+
+    def reach_row_for(self, helper: str, site: Site, verdict: Verdict, sites: list[Site]) -> ExerciseRow:
+        """The helper's F row, from its best site; when that site's arguments cannot be written, the
+        next F site."""
+        hand = getattr(self.policy, "HAND_ROOT_REACH", {})
+        if helper in hand:
+            if not site.hand:
+                raise LiteralError(f"HAND_ROOT_REACH names {helper}, whose row site {site.cls}.{site.method} is a generated one: delete the entry")
+            return self.hand_root_reach_row(helper, site, verdict)
+        try:
+            return self.reach_row(helper, site, verdict)
+        except LiteralError as first:
+            for other, other_verdict in _ranked(self.rules, sites):
+                if other == site or other_verdict.case != "F":
+                    continue
+                try:
+                    return self.reach_row(helper, other, other_verdict)
+                except LiteralError:
+                    # justified: the next F site is tried; with none left, the first error is raised
+                    continue
+            raise first
+
+    def hand_root_reach_row(self, helper: str, site: Site, verdict: Verdict) -> ExerciseRow:
+        statements, _reason = self.policy.HAND_ROOT_REACH[helper]
+        lines = [f"val o = {self.construct(site.cls)}"] + list(statements)
+        return ExerciseRow("F", [helper], site, verdict, f"{site.cls}.{site.method}", lines)
+
+    def reach_row(self, helper: str, site: Site, verdict: Verdict) -> ExerciseRow:
+        """Calls the helper once on a valid receiver (a fresh instance, the singleton, or none for a
+        static): the row passes when the call returns without an exception or a backend fault. A RID
+        result of a RID_FACTORIES server is freed; an owned result is closed, a new parentless Node freed."""
+        static = site.kind == "static"
+        fun = self.tree.function(site.cls, site.method, static=static)
+        if fun is None:
+            raise LiteralError(f"no Kotlin function {method_function_name(site.cls, site.method)} with Godot's arguments")
+        method = self.rules.method(site.cls, site.method)
+        ctx = RowContext(self)
+        made = getattr(self.policy, "REACH_RECEIVERS", {}).get(verdict.target or site.cls)
+        if static:
+            lines, wrapper, receiver_server = [], self.kotlin_class(site.cls), ""
+        elif made is not None:
+            lines, wrapper, receiver_server = [f"val o = r.track({made[0]}) // REACH_RECEIVERS"], "o", ""
+        else:
+            lines, wrapper, _variant = self.receiver_lines(site, verdict)
+            receiver_server = site.cls if wrapper == "o" else ""
+        frees: list[str] = []
+        args: list[str] = []
+        if wrapper == "o":
+            ctx.receiver = ("o", verdict.target or site.cls)
+        names = self.call_args(fun, method, site, ctx, args, frees, receiver_server, wrapper)
+        lines += ctx.lines + args
+        call = f"{wrapper}.{fun.name}({', '.join(names)})"
+        server = site.cls if site.cls in getattr(self.policy, "RID_FACTORIES", {}) else ""
+        if method.return_type == "void":
+            body = [call, "r.reached()"]
+        elif method.return_type == "RID" and server:
+            free = self.policy.RID_FACTORIES[server][0]
+            body = [
+                f"val got = {call}",
+                f"if (got.value != 0L) {self.server_call(server, free, receiver_server, wrapper)}(got)",
+                "r.reached()",
+            ]
+        else:
+            body = [f"r.reached({call})"]
+        after = getattr(self.policy, "REACH_AFTER", {}).get((site.cls, site.method))
+        if after is not None:
+            body.append(f"{after[0]} // REACH_AFTER")
+        lines += self.guarded(body, frees)
+        label = f"{site.cls}.{site.method}" + (f" on {verdict.target}" if verdict.target else "")
+        return ExerciseRow("F", [helper], site, verdict, label, lines)
 
     def keyed_setter(self, cls: str, method: str) -> str:
         for (owner, setter), (getter, _key, _reason) in self.policy.SINGLETON_KEYED_PAIRS.items():
@@ -1779,6 +2043,10 @@ class RowGenerator:
             return "true" if occurrence % 2 == 0 else "false"
         if godot_type == "RID":
             return "RID(0L)"
+        if godot_type == "Callable":
+            return "r.noopCallable()"
+        if godot_type == "Signal":
+            return "r.probeSignal()"
         rich = ARG_LISTS.get(godot_type)
         if rich is not None:
             return rich
@@ -1830,7 +2098,14 @@ class RowGenerator:
             aname = method.argument_names[index]
             default = method.argument_defaults[index]
             if default is not None:
-                expr = self.default_value(default, ptype, ctx)
+                try:
+                    expr = self.default_value(default, ptype, ctx)
+                except LiteralError:
+                    # justified: a default this generator cannot write (`Transform3D(1, 0, ...)`, `Callable()`,
+                    # null for a non-null Kotlin parameter) takes the per-type value instead
+                    base = ptype.removesuffix("?")
+                    expr = self.arg_value(gtype, ptype, aname, site, ctx, occurrences[base])
+                    occurrences[base] += 1
             elif chosen:
                 expr = self.literal(parse_literal(str(chosen.pop(0))), ptype, ctx)
             elif gtype == "RID" and (source := self.rid_source(site.cls, aname)) is not None:
@@ -2129,7 +2404,8 @@ def render_rows(inv: Inventory, policy=policy_module) -> tuple[str, list[str], l
         f"  const val EXCLUDED: Int = {counts['E']}",
         "",
         f"  /** Rows in this file: {sum(1 for r in rows if r.case == 'C')} static (C), {sum(1 for r in rows if r.case == 'A')} pair (A), "
-        f"{sum(1 for r in rows if r.case == 'B')} const (B), {sum(1 for r in rows if r.case == 'D')} singleton (D). */",
+        f"{sum(1 for r in rows if r.case == 'B')} const (B), {sum(1 for r in rows if r.case == 'D')} singleton (D), "
+        f"{sum(1 for r in rows if r.case == 'T')} Variant type (T), {sum(1 for r in rows if r.case == 'F')} reach (F). */",
         f"  const val ROWS: Int = {len(rows)}",
         "",
     ]
@@ -2222,11 +2498,13 @@ def row_summary(rows: list[ExerciseRow]) -> str:
     a = [r for r in rows if r.case == "A"]
     b = [r for r in rows if r.case == "B"]
     d = [r for r in rows if r.case == "D"]
+    t = [r for r in rows if r.case == "T"]
+    f = [r for r in rows if r.case == "F"]
     factories = sum(1 for r in rows if r.verdict.row == "factory")
     return (
         f"{len(c)} static rows ({sum(1 for r in c if r.verdict.weak)} weak), {len(a)} pair rows "
         f"covering {sum(len(r.helpers) for r in a)} helper rows, {len(b)} const rows, {len(d)} singleton rows "
-        f"({factories} of the B/D rows are RID factories)"
+        f"({factories} of the B/D rows are RID factories), {len(t)} Variant type rows, {len(f)} reach rows"
     )
 
 
