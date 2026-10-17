@@ -2148,6 +2148,7 @@ internal object ApiExerciseRows {
         r.pair(v, before, r.track(ProjectSettings.getSetting(key)), r.track(s.get(key)))
       } finally {
         s.call("set_setting", key, original)
+        r.restored(original, r.track(s.call("get_setting", key)))
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -2185,6 +2186,7 @@ internal object ApiExerciseRows {
         r.pair(v, before, r.track(AudioServer.getBusCount()), r.track(s.get("bus_count")))
       } finally {
         s.set("bus_count", original)
+        r.restored(original, r.track(s.get("bus_count")))
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -2205,6 +2207,7 @@ internal object ApiExerciseRows {
         r.pair(v, before, r.track(AudioServer.getPlaybackSpeedScale()), r.track(s.get("playback_speed_scale")))
       } finally {
         s.set("playback_speed_scale", original)
+        r.restored(original, r.track(s.get("playback_speed_scale")))
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -2225,6 +2228,7 @@ internal object ApiExerciseRows {
         r.pair(v, before, r.track(Engine.getMaxFps()), r.track(s.get("max_fps")))
       } finally {
         s.set("max_fps", original)
+        r.restored(original, r.track(s.get("max_fps")))
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -2245,6 +2249,7 @@ internal object ApiExerciseRows {
         r.pair(v, before, r.track(Engine.getMaxPhysicsStepsPerFrame()), r.track(s.get("max_physics_steps_per_frame")))
       } finally {
         s.set("max_physics_steps_per_frame", original)
+        r.restored(original, r.track(s.get("max_physics_steps_per_frame")))
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -2265,6 +2270,7 @@ internal object ApiExerciseRows {
         r.pair(v, before, r.track(Engine.getPhysicsJitterFix()), r.track(s.get("physics_jitter_fix")))
       } finally {
         s.set("physics_jitter_fix", original)
+        r.restored(original, r.track(s.get("physics_jitter_fix")))
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -2285,6 +2291,7 @@ internal object ApiExerciseRows {
         r.pair(v, before, r.track(Engine.getPhysicsTicksPerSecond()), r.track(s.get("physics_ticks_per_second")))
       } finally {
         s.set("physics_ticks_per_second", original)
+        r.restored(original, r.track(s.get("physics_ticks_per_second")))
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -2305,6 +2312,7 @@ internal object ApiExerciseRows {
         r.pair(v, before, r.track(Engine.getTimeScale()), r.track(s.get("time_scale")))
       } finally {
         s.set("time_scale", original)
+        r.restored(original, r.track(s.get("time_scale")))
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -2325,6 +2333,7 @@ internal object ApiExerciseRows {
         r.pair(v, before, r.track(Engine.isPrintingErrorMessages()), r.track(s.get("print_error_messages")))
       } finally {
         s.set("print_error_messages", original)
+        r.restored(original, r.track(s.get("print_error_messages")))
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -2345,6 +2354,7 @@ internal object ApiExerciseRows {
         r.pair(v, before, r.track(Engine.isPrintingToStdout()), r.track(s.get("print_to_stdout")))
       } finally {
         s.set("print_to_stdout", original)
+        r.restored(original, r.track(s.get("print_to_stdout")))
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -3158,8 +3168,8 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithIntArgRetPackedStringList", "TextEdit.get_line_wrapped_text")
     try {
       val o = r.obj(TextEdit(r.construct("TextEdit")))
-      o.set("text", "kanama125") // ROW_RECEIVER_SETS
-      val a0: Int = 0
+      o.set("text", "a\nkanama125") // ROW_RECEIVER_SETS
+      val a0: Int = 1
       val got = r.track(o.getLineWrappedText(a0))
       r.oracle()
       val oracle = r.track(o.call("get_line_wrapped_text", a0))
@@ -6314,7 +6324,7 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithTwoIntArgsRetBool", "AStarGrid2D.is_in_bounds")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
-      o.set("region", Rect2i(Vector2i(0, 0), Vector2i(8, 8))) // ROW_RECEIVER_SETS
+      o.set("region", Rect2i(Vector2i(0, 0), Vector2i(8, 4))) // ROW_RECEIVER_SETS
       val a0: Int = 7
       val a1: Int = 3
       val got = r.track(o.isInBounds(a0, a1))
@@ -7063,7 +7073,8 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithUInt32ArgRetBool", "CanvasItem.get_visibility_layer_bit on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
-      val a0: Long = 0L
+      o.set("visibility_layer", 8L) // ROW_RECEIVER_SETS
+      val a0: Long = 3L
       val got = r.track(o.getVisibilityLayerBit(a0))
       r.oracle()
       val oracle = r.track(o.call("get_visibility_layer_bit", a0))
@@ -7583,7 +7594,7 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithVector2iArgRetBool", "AStarGrid2D.is_in_boundsv")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
-      o.set("region", Rect2i(Vector2i(0, 0), Vector2i(8, 8))) // ROW_RECEIVER_SETS
+      o.set("region", Rect2i(Vector2i(0, 0), Vector2i(8, 4))) // ROW_RECEIVER_SETS
       val a0: Vector2i = Vector2i(7, 3)
       val got = r.track(o.isInBoundsv(a0))
       r.oracle()

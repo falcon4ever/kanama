@@ -330,9 +330,9 @@ B and D rows whose per-type arguments would leave them weak take chosen ones (`R
 
 | row | arguments | receiver set |
 |---|---|---|
-| `AStarGrid2D.is_in_bounds` | `7`, `3` | `region = Rect2i(0, 0, 8, 8)` |
-| `AStarGrid2D.is_in_boundsv` | `Vector2i(7, 3)` | `region = Rect2i(0, 0, 8, 8)` |
-| `CanvasItem.get_visibility_layer_bit` | `0` | — |
+| `AStarGrid2D.is_in_bounds` | `7`, `3` | `region = Rect2i(0, 0, 8, 4)` |
+| `AStarGrid2D.is_in_boundsv` | `Vector2i(7, 3)` | `region = Rect2i(0, 0, 8, 4)` |
+| `CanvasItem.get_visibility_layer_bit` | `3` | `visibility_layer = 8` |
 | `ClassDB.class_get_enum_constants` | `"Node"`, `"ProcessMode"` | — |
 | `ClassDB.class_get_enum_list` | `"Node"` | — |
 | `ClassDB.class_get_integer_constant` | `"Node"`, `"NOTIFICATION_READY"` | — |
@@ -361,7 +361,7 @@ B and D rows whose per-type arguments would leave them weak take chosen ones (`R
 | `InputEvent.is_action_pressed` | `"ui_accept"` | `action = "ui_accept"`, `pressed = true` |
 | `Marshalls.base64_to_raw` | `"a2FuYW1hMTI1"` | — |
 | `Marshalls.base64_to_variant` | `"AgAAAAcAAAA="` | — |
-| `TextEdit.get_line_wrapped_text` | `0` | `text = "kanama125"` |
+| `TextEdit.get_line_wrapped_text` | `1` | `text = "a\nkanama125"` |
 | `Time.get_unix_time_from_datetime_dict` | `{"year": 2026, "month": 10, "day": 17, "hour": 12, "minute": 30, "second": 15}` | — |
 | `Translation.get_message` | `"kanama"` | `messages = {"kanama": "125"}` |
 | `TranslationServer.compare_locales` | `"en_US"`, `"en"` | — |

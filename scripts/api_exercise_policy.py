@@ -459,11 +459,11 @@ ROW_ARGS: dict[tuple[str, str], tuple[str, ...]] = {
     ("GridMap", "get_orthogonal_index_from_basis"): ("Basis(Vector3(0, 1, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1))",),
     ("GridMap", "local_to_map"): ("Vector3(5, 7, -3)",),
     # Inside the region ROW_RECEIVER_SETS gives the grid.
-    ("AStarGrid2D", "is_in_bounds"): ("7", "3"),
+    ("AStarGrid2D", "is_in_bounds"): ("7", "3"),  # (3, 7) is outside the 8 x 4 region
     ("AStarGrid2D", "is_in_boundsv"): ("Vector2i(7, 3)",),
     ("Translation", "get_message"): ('"kanama"',),
-    ("TextEdit", "get_line_wrapped_text"): ("0",),
-    ("CanvasItem", "get_visibility_layer_bit"): ("0",),
+    ("TextEdit", "get_line_wrapped_text"): ("1",),  # the second line: a swapped index reads "a"
+    ("CanvasItem", "get_visibility_layer_bit"): ("3",),  # layer bit 3 of 8, not the default bit 0
 }
 
 # (class, method) -> ((property, Godot literal), ...): set on a B row's fresh receiver through the Variant
@@ -473,12 +473,13 @@ ROW_RECEIVER_SETS: dict[tuple[str, str], tuple[tuple[str, str], ...]] = {
     ("InputEvent", "is_action"): _UI_ACCEPT,
     ("InputEvent", "get_action_strength"): _UI_ACCEPT,
     ("InputEvent", "is_action_pressed"): _UI_ACCEPT,
-    ("AStarGrid2D", "is_in_bounds"): (("region", "Rect2i(0, 0, 8, 8)"),),
-    ("AStarGrid2D", "is_in_boundsv"): (("region", "Rect2i(0, 0, 8, 8)"),),
+    ("AStarGrid2D", "is_in_bounds"): (("region", "Rect2i(0, 0, 8, 4)"),),
+    ("AStarGrid2D", "is_in_boundsv"): (("region", "Rect2i(0, 0, 8, 4)"),),
     ("Translation", "get_message"): (("messages", '{"kanama": "125"}'),),
-    ("TextEdit", "get_line_wrapped_text"): (("text", '"kanama125"'),),
+    ("TextEdit", "get_line_wrapped_text"): (("text", '"a\\nkanama125"'),),
     ("Control", "get_cursor_shape"): (("mouse_default_cursor_shape", "Control.CURSOR_IBEAM"),),
     ("Control", "get_tooltip"): (("tooltip_text", '"kanama125"'),),
+    ("CanvasItem", "get_visibility_layer_bit"): (("visibility_layer", "8"),),
 }
 
 # ---- singleton rows -------------------------------------------------------------------------------------

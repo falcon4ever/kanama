@@ -1098,7 +1098,8 @@ script would, with the Kotlin signature read from the committed tree, and report
   every property the tree calls gets its row (not only where it is its helpers' best), and the row sets
   process-wide state, so it reads the original through `Object.get` and puts it back through
   `Object.set` in a `finally`, also when the row fails: never through the setter and getter under test,
-  so a broken wrapper cannot leave `Engine.time_scale` wrong. `PAIR_GROW` makes a row only ever raise a
+  so a broken wrapper cannot leave `Engine.time_scale` wrong; the finally reads the value back the same
+  way and fails the row when the restore did not take. `PAIR_GROW` makes a row only ever raise a
   count (`AudioServer.bus_count`: fewer buses would delete the project's). `SINGLETON_KEYED_PAIRS` runs a
   keyed set/get pair the same way (`ProjectSettings.set_setting`/`get_setting` on a key no project
   defines, restored through `Object.call("set_setting", ...)`, which erases it again).
@@ -1132,8 +1133,9 @@ which the runner creates with its fixtures (`fixture.txt` with an extended attri
 `fixture.wav`, `sub/`) before the first row and removes after the last (teardown fails when it is still
 there; the shared parent is removed once empty). Every worktree's example project shares one `user://`,
 so a per-run directory is what lets two smokes run at once without deleting each other's fixtures. Setup
-also removes the directories of earlier runs that crashed before their teardown (their process is
-gone, or, where the host cannot say, their fixture is older than an hour). `FileAccess.create_temp` and `DirAccess.create_temp` take no path;
+also removes the directories of earlier runs that crashed before their teardown: those whose fixture is
+older than an hour (by age alone; `OS.is_process_running` only knows the caller's own children, so it
+would call a concurrent run in another process dead). `FileAccess.create_temp` and `DirAccess.create_temp` take no path;
 they create a `kanama-api-exercise-*` entry in the OS temp directory that is removed when the row frees
 the result. A static returning `Error` is given arguments that make it fail (an existing directory, a
 missing file, a copy onto itself), and three of those print the engine's own error line on purpose.

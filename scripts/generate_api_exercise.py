@@ -1966,7 +1966,12 @@ class RowGenerator:
             lines.append(f"  val v = r.pick(before, {a}, {b})")
         lines.append(f"  {kotlin}.{setter.name}({key}v)")
         lines.append(f"  r.pair(v, before, r.track({get}), r.track(s.get({read_name})))")
-        lines += ["} finally {", f"  {restore[1].format('original')}", "}"]
+        lines += [
+            "} finally {",
+            f"  {restore[1].format('original')}",
+            f"  r.restored(original, r.track({restore[0]}))",
+            "}",
+        ]
         return lines
 
     def keyed_pair_row(self, helper: str, site: Site, verdict: Verdict, setter_name: str) -> ExerciseRow:

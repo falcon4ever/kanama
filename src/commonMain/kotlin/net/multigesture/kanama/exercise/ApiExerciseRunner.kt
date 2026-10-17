@@ -178,6 +178,8 @@ internal constructor(
 
   // ---- the scratch directory and its fixtures --------------------------------------------------
 
+  private val STALE_SECONDS = 3600L
+
   /** This run's scratch directory: [ApiExercise.SCRATCH_ROOT] + `<pid>-<random>/`. */
   val scratchDir: String =
     ApiExercise.SCRATCH_ROOT +
@@ -241,26 +243,22 @@ internal constructor(
 
   /**
    * Removes the directories of earlier runs that crashed before their teardown: a sibling whose
-   * process is gone, or, where the host cannot say (no process query), whose fixture is older than
-   * an hour. A run still going elsewhere keeps its directory.
+   * fixture was written more than an hour ago (no run lasts that long). Decided on age alone:
+   * Godot's `OS.is_process_running` only knows the caller's own child processes, so it would call a
+   * concurrent smoke in another process dead. A sibling without a fixture yet is still in its setup
+   * and is kept.
    */
   private fun removeStaleRuns() {
     val root = ApiExercise.SCRATCH_ROOT
     if (!DirAccess.dirExistsAbsolute(root)) return
-    val own = runCatching { OS.getProcessId() }.getOrDefault(-1)
-    val now = runCatching { Time.getUnixTimeFromSystem().toLong() }.getOrDefault(0L)
+    val now = Time.getUnixTimeFromSystem().toLong()
     for (sub in DirAccess.getDirectoriesAt(root)) {
       val path = root + sub
-      if (path + "/" == scratchDir) continue
-      val pid = sub.substringBefore('-').toIntOrNull() ?: continue
-      val alive =
-        pid != own &&
-          runCatching { OS.isProcessRunning(pid) }
-            .getOrElse {
-              val modified = FileAccess.getModifiedTime("$path/fixture.txt")
-              modified != 0L && now - modified < 3600L
-            }
-      if (!alive) removeTree(path)
+      if ("$path/" == scratchDir) continue
+      val fixture = "$path/fixture.txt"
+      if (!FileAccess.fileExists(fixture)) continue
+      val modified = FileAccess.getModifiedTime(fixture)
+      if (modified != 0L && now - modified > STALE_SECONDS) removeTree(path)
     }
   }
 
@@ -571,6 +569,16 @@ internal constructor(
   /** RID factory row: one read of the created RID agrees between the wrapper and `Object.call`. */
   fun readBack(got: Any?, oracle: Any?, method: String) {
     if (!same(got, oracle)) fail("expected $method ${show(oracle)} (Object.call) got ${show(got)}")
+  }
+
+  /**
+   * Singleton row, after its `finally` put [original] back through the Variant path: [now] (read
+   * back the same way) must equal it, or the row fails, since a silently failed restore would leave
+   * process-wide state changed.
+   */
+  fun restored(original: Any?, now: Any?) {
+    if (!same(original, now))
+      fail("the restore left ${show(now)}, not the original ${show(original)}")
   }
 
   /** A row: the value differs from [before] and reads back through the getter and `Object.get`. */
