@@ -41,6 +41,15 @@ only `--write`.
 
 Upgrading from 0.4? See [Upgrading from 0.4 to 0.5](docs/getting-started/upgrading-0.4-to-0.5.md).
 
+### Changed — Kotlin 2.4.21 and KSP 2.3.12
+
+Kanama builds with Kotlin 2.4.21 (was 2.3.21) and KSP 2.3.12 (was 2.3.9); the release kit and the
+starter use the same versions. Projects that build their scripts with their own Gradle build should
+move their `kotlin("jvm")` and `com.google.devtools.ksp` plugin versions to match; the old versions
+still build against this release. The Android plugin
+now compiles with Kotlin 2.4.21 too: until now the Android Gradle plugin's built-in Kotlin (2.2.10)
+compiled it, whatever version the root build named.
+
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 
 The control (a plain GDScript visibility-notifier export, `visibility-control` in `web.yml`) handed the

@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "2.3.21"
-    id("com.google.devtools.ksp") version "2.3.9"
+    kotlin("jvm") version "2.4.21"
+    id("com.google.devtools.ksp") version "2.3.12"
 }
 
 val kotlinSourcesDir = providers.gradleProperty("kanamaProjectScriptsDir")
