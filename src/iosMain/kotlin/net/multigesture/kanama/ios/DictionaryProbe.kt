@@ -10,10 +10,18 @@ import net.multigesture.kanama.types.Vector2i
  */
 internal const val DICTIONARY_PROBE_SCRIPT_PATH = "res://kanama_ios_dictionary_probe.kt"
 
-/** The probe's script object: the generated bridge reads and writes these two fields. */
+/** The enum key of the probe's `tiers` Map. */
+internal enum class DictionaryProbeTier {
+  LOW,
+  HIGH,
+}
+
+/** The probe's script object: the generated bridge reads and writes these fields. */
 internal class DictionaryProbeScript {
   var names: Map<Int, String> = emptyMap()
   var cells: Map<Vector2i, Long> = emptyMap()
+  var tiers: Map<DictionaryProbeTier, Double?> = emptyMap()
+  var textures: Map<String, net.multigesture.kanama.api.Texture2D> = emptyMap()
 
   companion object {
     /** The instance the latest script attach created (the self-test reads its fields). */
@@ -32,6 +40,8 @@ internal fun dictionaryProbeDescriptor(path: String): KanamaIosScriptDescriptor?
         listOf(
           KanamaIosScriptProperty("names", 27, 38, "2:;4:", 6),
           KanamaIosScriptProperty("cells", 27, 38, "6:;2:", 6),
+          KanamaIosScriptProperty("tiers", 27, 38, "2/2:LOW,HIGH;3:", 6),
+          KanamaIosScriptProperty("textures", 27, 38, "4:;24/17:Texture2D", 6),
         ),
       signals = emptyList(),
       rpcConfigs = emptyList(),
@@ -40,7 +50,10 @@ internal fun dictionaryProbeDescriptor(path: String): KanamaIosScriptDescriptor?
       },
     )
 
-/** The bridge IosScriptCodeEmitter generates for the two properties (IosMapExportEmitTest). */
+/**
+ * The bridge IosScriptCodeEmitter generates for these properties (IosMapExportEmitTest). Before an
+ * object-valued Map had an iOS path, `textures` had no case.
+ */
 private class DictionaryProbeBridge(private val script: DictionaryProbeScript) :
   KanamaIosScriptBridge {
   override val scriptInstance: Any
@@ -50,6 +63,12 @@ private class DictionaryProbeBridge(private val script: DictionaryProbeScript) :
     when (propertyIndex) {
       0 -> script.names.let { m -> net.multigesture.kanama.ios.KanamaIosTypedDictionary(m) }
       1 -> script.cells.let { m -> net.multigesture.kanama.ios.KanamaIosTypedDictionary(m) }
+      2 ->
+        script.tiers.let { m ->
+          net.multigesture.kanama.ios.KanamaIosTypedDictionary(
+            m.entries.associate { (k, v) -> k.ordinal.toLong() to v }
+          )
+        }
       else -> net.multigesture.kanama.ios.KanamaIosNoProperty
     }
 
@@ -74,6 +93,23 @@ private class DictionaryProbeBridge(private val script: DictionaryProbeScript) :
                 (entry.key as? net.multigesture.kanama.types.Vector2i) ?: return@mapNotNull null
               val v = ((entry.value as? Number)?.toLong()) ?: return@mapNotNull null
               k to v
+            }
+            .toMap()
+        true
+      }
+      2 -> {
+        script.tiers =
+          entries.entries
+            .mapNotNull { entry ->
+              val k =
+                ((entry.key as? Number)?.toInt()?.let {
+                  net.multigesture.kanama.ios.DictionaryProbeTier.entries[
+                      it.coerceIn(
+                        0,
+                        net.multigesture.kanama.ios.DictionaryProbeTier.entries.lastIndex,
+                      )]
+                }) ?: return@mapNotNull null
+              k to (((entry.value as? Number)?.toDouble()))
             }
             .toMap()
         true

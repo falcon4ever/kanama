@@ -3158,6 +3158,51 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
           "map-export(a key or value of another type drops its entry) got=${probe?.names}",
           probe?.names == mapOf(1 to "one"),
         )
+        // An enum key (stored as its ordinal) and a nullable value, whose nil keeps its key.
+        eval("set(\"tiers\", {0: 0.5, 1: null, \"x\": 1.0})")
+        val tiersSet = probe?.tiers
+        check(
+          "map-export(Map<Enum, Double?> keeps an enum key and a nil value) got=$tiersSet",
+          tiersSet ==
+            mapOf(
+              net.multigesture.kanama.ios.DictionaryProbeTier.LOW to 0.5,
+              net.multigesture.kanama.ios.DictionaryProbeTier.HIGH to null,
+            ),
+        )
+        probe?.tiers = mapOf(net.multigesture.kanama.ios.DictionaryProbeTier.HIGH to 2.5)
+        val tierRead = eval("get(\"tiers\") == {1: 2.5}")
+        probe?.tiers = mapOf(net.multigesture.kanama.ios.DictionaryProbeTier.LOW to null)
+        val nilRead = eval("get(\"tiers\") == {0: null}")
+        check(
+          "map-export(Map<Enum, Double?> reads back ordinals and a nil value) got=$tierRead/$nilRead",
+          tierRead == true && nilRead == true,
+        )
+        // An object-valued Map (Map<String, Texture2D>): the texture stays alive while only the
+        // property holds it (the Kotlin wrapper is closed right after the set), reads back as the
+        // same object, and is released when the property is set again, as desktop's retained
+        // Dictionary read (readVariantDictionaryObjectValuesRetained) does.
+        val resource =
+          net.multigesture.kanama.api.ClassDB.instantiate("PlaceholderTexture2D")
+            as net.multigesture.kanama.api.RefCounted
+        val resourceId = resource.instanceId
+        val resourceAddress = resource.handle.segment.address()
+        owner.set("textures", mapOf("a" to resource))
+        resource.close()
+        val heldAlive = IosGodot.isInstanceIdValid(resourceId)
+        val heldValue = probe?.textures?.get("a")?.handle?.segment?.address()
+        val readValue =
+          ((owner.get("textures") as? Map<*, *>)?.get("a") as? GodotObject)?.segment?.address()
+        owner.set("textures", emptyMap<String, Any?>())
+        val releasedAfterReset = !IosGodot.isInstanceIdValid(resourceId)
+        check(
+          "map-export(Map<String, Texture2D> holds its texture, reads it back, releases it on reset) " +
+            "alive=$heldAlive held=${heldValue == resourceAddress} read=${readValue == resourceAddress} " +
+            "released=$releasedAfterReset",
+          heldAlive &&
+            heldValue == resourceAddress &&
+            readValue == resourceAddress &&
+            releasedAfterReset,
+        )
       } finally {
         ObjectCalls.destroyObject(expressionHandle)
         ObjectCalls.destroyObject(ownerHandle)
