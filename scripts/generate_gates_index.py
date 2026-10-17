@@ -16,9 +16,11 @@ things themselves, so it cannot drift:
 "What it proves" is taken from each script's own docstring or header comment (first
 sentence), so the page says what the script says, not what someone remembered.
 
-"First landed" is `git log --diff-filter=A` for the script. CI's `local-ci` job checks out
-a shallow clone, where that date cannot be derived; `--check` there carries the dates from
-the committed page and SAYS SO, while write mode refuses to run on a shallow clone.
+"First landed" is `git log --diff-filter=A` for the script, taken once: a script the committed
+page already dates keeps that date (a squash merge would otherwise move it), and only a new one
+is looked up. CI's `local-ci` job checks out a shallow clone, where no date can be derived;
+`--check` there carries every date from the committed page and SAYS SO, while write mode
+refuses to run on a shallow clone.
 
 Usage:
     python3 scripts/generate_gates_index.py --markdown docs/reference/generated/gates.md
@@ -422,13 +424,18 @@ def is_shallow() -> bool:
     return out.stdout.strip() == "true"
 
 
-def first_landed(path: str, cache: dict[str, str], carried: dict[str, str] | None) -> str:
+def first_landed(path: str, cache: dict[str, str], carried: dict[str, str], shallow: bool) -> str:
     if path in cache:
         return cache[path]
     if not (ROOT / path).is_file():
         cache[path] = "—"
         return "—"
-    if carried is not None:
+    # A date the committed page already shows is kept, not re-derived: a PR that adds a script
+    # regenerates the page from its branch commit, and the squash on main is a different commit,
+    # possibly on a later day (281e4cf5 2026-10-16 23:22 -0400 vs its squash 0a9a2219 2026-10-17
+    # 01:43 -0400), so a re-derived date would leave main's page stale. Only a script the page has
+    # not dated yet is looked up in the history.
+    if carried.get(path, "—") != "—" or shallow:
         cache[path] = carried.get(path, "—")
         return cache[path]
     out = subprocess.run(
@@ -463,7 +470,7 @@ def ledger_rows() -> list[dict]:
     return [latest[gate] for gate in sorted(latest)]
 
 
-def render(carried: dict[str, str] | None) -> str:
+def render(carried: dict[str, str], shallow: bool) -> str:
     date_cache: dict[str, str] = {}
     stages = parse_stages()
     lines: list[str] = []
@@ -496,7 +503,7 @@ def render(carried: dict[str, str] | None) -> str:
             proves = STAGE_PROVES_FALLBACK.get(stage.name, "(inline check; see the stage command)")
         where = STAGE_WHERE_OVERRIDES.get(stage.name, CI_DEFAULT_WHERE)
         script_cell = code(stage.script) if stage.script else code(first_sentence(stage.command, 80))
-        landed = first_landed(stage.script, date_cache, carried) if stage.script else "—"
+        landed = first_landed(stage.script, date_cache, carried, shallow) if stage.script else "—"
         name = stage.name.replace("$godot_bin", "<godot>")
         out(f"| {index} | {code(name)} | {md_cell(proves)} | {md_cell(where)} | {script_cell} | {landed} |")
     out("")
@@ -522,7 +529,7 @@ def render(carried: dict[str, str] | None) -> str:
     out("| --- | --- | --- | --- | --- |")
     for gate in LOCAL_ONLY_GATES:
         proves = gate["proves"] or describe_script(ROOT / gate["script"]) or "(no header in the script)"
-        landed = first_landed(gate["script"], date_cache, carried)
+        landed = first_landed(gate["script"], date_cache, carried, shallow)
         out(f"| {md_cell(gate['gate'])} | {md_cell(proves)} | {md_cell(gate['where'])} | {code(gate['script'])} | {landed} |")
     out("")
 
@@ -577,15 +584,14 @@ def main() -> int:
     args = parser.parse_args()
 
     shallow = is_shallow()
-    carried: dict[str, str] | None = None
+    carried = carried_dates(args.markdown) if str(args.markdown) != "-" else {}
     if shallow:
         if not args.check or str(args.markdown) == "-":
             print(f"{TAG} FAIL shallow clone: first-landed dates cannot be derived; fetch full history to regenerate", file=sys.stderr)
             return 1
-        carried = carried_dates(args.markdown)
         print(f"{TAG} NOTE shallow clone: first-landed dates carried from the committed page ({len(carried)} scripts), not re-derived")
 
-    markdown = render(carried)
+    markdown = render(carried, shallow)
     if str(args.markdown) == "-":
         print(markdown, end="")
         return 0

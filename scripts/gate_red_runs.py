@@ -700,6 +700,9 @@ for name, args, target, expect, how in [
     ("generate_web_wrappers.py --check", ("generate_web_wrappers.py", "--check"), f"{WEBGEN}/Node.kt", "FAIL", "a generated Web wrapper is hand-edited"),
 ]:
     case(name, py(*args), [Append(target, "\nval redRunHandEdit = 1\n" if target.endswith(".kt") else "\nred run: hand edit\n")], expect, how)
+case("generate_gates_index.py --check (squash-merge dates)", py("generate_gates_index.py", "--markdown", f"{GEN}/gates.md", "--check"),
+     [Edit("scripts/generate_gates_index.py", '    if carried.get(path, "—") != "—" or shallow:\n', "    if shallow:\n")],
+     "FAIL stale gates index", "the generator re-derives every first-landed date instead of keeping the page's: #361's script dates 2026-10-16 on the page (its branch commit) but 2026-10-17 in main's history (the squash), so main goes stale")
 case("api_wrapper_generator_report.py --check (dropped default)", py("api_wrapper_generator_report.py", "--markdown", f"{GEN}/wrapper-generator-report.md", "--check"),
      [Edit("scripts/generate_api_wrapper.py", '    ("Node3D", "look_at", "up"): "Vector3.UP",\n', "")],
      "FAIL stale markdown", "a Godot default the generator expressed is dropped: the parameter turns required and the report's \"Godot Defaults Not Expressed\" list no longer matches")
