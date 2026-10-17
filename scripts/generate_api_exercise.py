@@ -99,6 +99,7 @@ class Verdict:
     reason: str
     target: str = ""  # where a row gets its receiver, when it is not a fresh instance of the declaring class
     weak: str = ""  # why the row's value may not tell a working call from a no-op ("" = it can)
+    row: str = ""  # the row's shape when the case alone does not say it: singleton-pair, keyed-pair, factory
 
 
 @dataclass
@@ -214,6 +215,23 @@ class Rules:
     def method(self, cls: str, name: str) -> ApiMethod:
         return self.api[cls].methods[name][0]
 
+    def factory(self, cls: str, method: ApiMethod) -> bool:
+        """An argument-free (or all-default) `*_create` / `create_*` method returning a RID, on a
+        RID_FACTORIES server: its row creates, checks and frees."""
+        return (
+            cls in getattr(self.policy, "RID_FACTORIES", {})
+            and method.return_type == "RID"
+            and (method.name.endswith("_create") or method.name.startswith("create_"))
+            and all(d is not None for d in method.argument_defaults)
+        )
+
+    def keyed_pair(self, cls: str, name: str) -> str | None:
+        """'setter/getter of keyed `key`' when [name] is either half of a SINGLETON_KEYED_PAIRS entry."""
+        for (owner, setter), (getter, key, _reason) in getattr(self.policy, "SINGLETON_KEYED_PAIRS", {}).items():
+            if owner == cls and name in (setter, getter):
+                return f"{'setter' if name == setter else 'getter'} of the keyed value {key}"
+        return None
+
     def site(self, site: Site) -> Verdict:
         verdict = self._site(site)
         override = self.policy.METHOD_OVERRIDES.get((site.cls, site.method))
@@ -240,6 +258,14 @@ class Rules:
                 return Verdict("C", "static returning Error: its arguments must make it fail", weak=weak)
             return Verdict("C", "static with a return value", weak=weak)
         if site.kind == "singleton" or site.cls in self.singletons:
+            pair = self.pairs.get((site.cls, site.method))
+            if pair is not None and site.cls in getattr(self.policy, "SINGLETON_PAIRS", {}):
+                return Verdict("A", f"{pair}, set and restored on the singleton (SINGLETON_PAIRS)", row="singleton-pair")
+            keyed = self.keyed_pair(site.cls, site.method)
+            if keyed is not None:
+                return Verdict("A", f"{keyed}, set and restored (SINGLETON_KEYED_PAIRS)", row="keyed-pair")
+            if self.factory(site.cls, method):
+                return Verdict("D", "RID factory: a valid RID, one read of it, freed (RID_FACTORIES)", row="factory")
             if not void and site.cls in self.policy.STATELESS_SINGLETONS:
                 return Verdict("D", "non-void method of a stateless singleton")
             if not void and method.is_const:
@@ -249,6 +275,8 @@ class Rules:
         if target is None:
             return Verdict("E", why_none)
         via = "" if target == site.cls else target
+        if self.factory(site.cls, method):
+            return Verdict("B", "RID factory: a valid RID, one read of it, freed (RID_FACTORIES)", via, row="factory")
         pair = self.pairs.get((site.cls, site.method))
         if pair is not None:
             return Verdict("A", pair, via)
@@ -604,11 +632,73 @@ def check_policy(inv: Inventory, rules: Rules, api: dict[str, ApiClass], singlet
             inv.failures.append(f"STATIC_RESULTS names {key[0]}.{key[1]}, which the shared tree never calls as a static; delete the entry")
         elif kind not in ("weak", "fresh") or not reason:
             inv.failures.append(f"STATIC_RESULTS[{key[0]}.{key[1]}] must be ('weak' | 'fresh', reason)")
+    check_singleton_policy(inv, rules, api, singletons, policy)
     for key in sorted(set(expected) - set(policy.STATIC_ARGS)):
         inv.failures.append(
             f"static row {key[0]}.{key[1]} has no STATIC_ARGS entry; add `{key!r}: {expected[key]!r},` "
             "(the extension_api.json defaults, None where a value must be chosen)"
         )
+
+
+PLATFORMS = {"ios", "android", "desktop"}
+
+
+def check_singleton_policy(inv: Inventory, rules: Rules, api: dict[str, ApiClass], singletons: set[str], policy) -> None:
+    """SINGLETON_PAIRS, SINGLETON_KEYED_PAIRS, RID_FACTORIES, RID_ARG_SOURCES and FACTORY_RESULTS name
+    what the API has and what a row uses."""
+    fail = inv.failures.append
+    for name in getattr(policy, "SINGLETON_PAIRS", {}):
+        if name not in singletons:
+            fail(f"SINGLETON_PAIRS names {name}, which is not a singleton of the API")
+        elif not any(cls == name for cls, _ in rules.pairs):
+            fail(f"SINGLETON_PAIRS names {name}, which has no set/get property: delete the entry")
+    for (owner, setter), (getter, key, reason) in getattr(policy, "SINGLETON_KEYED_PAIRS", {}).items():
+        if owner not in singletons:
+            fail(f"SINGLETON_KEYED_PAIRS names {owner}, which is not a singleton of the API")
+            continue
+        methods = api[owner].methods
+        if setter not in methods or getter not in methods:
+            fail(f"SINGLETON_KEYED_PAIRS[{owner}.{setter}] names {setter}/{getter}, which {owner} lacks")
+        elif len(methods[setter][0].argument_types) != 2 or not methods[getter][0].argument_types:
+            fail(f"SINGLETON_KEYED_PAIRS[{owner}.{setter}]: {setter} must take (key, value) and {getter} (key, ...)")
+        if not reason:
+            fail(f"SINGLETON_KEYED_PAIRS[{owner}.{setter}] needs its reason")
+        try:
+            parse_literal(key)
+        except LiteralError as error:
+            fail(f"SINGLETON_KEYED_PAIRS[{owner}.{setter}]: {error}")
+    factories = getattr(policy, "RID_FACTORIES", {})
+    for server, (free, reason) in factories.items():
+        if server not in api:
+            fail(f"RID_FACTORIES names {server}, a class the API lacks")
+        elif free not in api[server].methods or api[server].methods[free][0].argument_types != ("RID",):
+            fail(f"RID_FACTORIES[{server}] frees with {free}, which is not a {server} method taking one RID")
+        elif not reason:
+            fail(f"RID_FACTORIES[{server}] needs its reason")
+    # Every RID argument of a B/D row the rows give a source: the entries must be the ones they use.
+    used: set[tuple[str, str]] = set()
+    for _, site in inv.sites:
+        verdict = rules.site(site)
+        if verdict.case not in "BD" or verdict.row:
+            continue
+        method = rules.method(site.cls, site.method)
+        for arg, kind, default in zip(method.argument_names, method.argument_types, method.argument_defaults):
+            if kind == "RID" and default is None:
+                used.add((site.cls, arg))
+    for (cls, arg), source in getattr(policy, "RID_ARG_SOURCES", {}).items():
+        server, _, factory = source.partition(".")
+        if (cls, arg) not in used:
+            fail(f"RID_ARG_SOURCES names {cls} argument `{arg}`, which no B or D row of {cls} takes: delete the entry")
+        elif server not in factories:
+            fail(f"RID_ARG_SOURCES[{cls}.{arg}] makes its RID with {source}, but {server} is not in RID_FACTORIES (nothing frees it)")
+        elif server not in api or factory not in api[server].methods or not rules.factory(server, rules.method(server, factory)):
+            fail(f"RID_ARG_SOURCES[{cls}.{arg}] names {source}, which is not an argument-free RID factory of the API")
+    for (server, factory), (platforms, reason) in getattr(policy, "FACTORY_RESULTS", {}).items():
+        called = any(site.cls == server and site.method == factory and rules.site(site).row == "factory" for _, site in inv.sites)
+        if not called:
+            fail(f"FACTORY_RESULTS names {server}.{factory}, which is not a factory row: delete the entry")
+        if not platforms or set(platforms) - PLATFORMS or not reason:
+            fail(f"FACTORY_RESULTS[{server}.{factory}] must be ((platforms among {sorted(PLATFORMS)}), reason)")
 
 
 # ---- the report -------------------------------------------------------------------------------------------
@@ -669,9 +759,9 @@ def render(inv: Inventory, policy=policy_module) -> str:
         "of it. This page classifies every helper the shared wrapper tree calls by how a generated exercise row can",
         "observe it, from `extension_api.json`, the generator's tables and the committed tree; the judgement calls",
         "(exclusions, stateless singletons, receivers, method-level cases, runtime helpers, static arguments, the",
-        "scratch directory) are hand-kept in `scripts/api_exercise_policy.py`. The C (static) and A (property pair)",
+        "scratch directory, the singleton rows) are hand-kept in `scripts/api_exercise_policy.py`. The C, A, B and D",
         "rows run: `ApiExercise.generated.kt` (the same script writes it) on the desktop smoke and in the iOS self-test",
-        "build; the other cases are listed here and run nowhere yet.",
+        "build; the F (reach-only) rows are listed here and run nowhere yet.",
         "",
         f"**Referenced helpers:** {len(rows)} ({bind_shaped} called by generated methods with a MethodBind, "
         f"{counts['N']} runtime helpers). **MethodBind call sites:** {generated_sites} generated "
@@ -679,7 +769,9 @@ def render(inv: Inventory, policy=policy_module) -> str:
         f"the hand-written roots (`GodotObject`, `RefCounted`); {single} helpers have exactly one call site. "
         f"**Helpers with a row that asserts a value a no-op cannot produce:** {strong} "
         f"(of the {in_value_cases} whose best case is C/A/B/D: {weak_only} have only a weak row, and {rescued} weak "
-        f"C rows are backed by a non-weak A/B/D row of the same helper); reach-only {counts['F']}; excluded {counts['E']}.",
+        f"C rows are backed by a non-weak A/B/D row of the same helper); reach-only {counts['F']}; excluded {counts['E']}. "
+        "A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the "
+        "runs count those apart (`weak` in the summary line), so this count is an upper bound.",
         "",
         "## Cases",
         "",
@@ -691,9 +783,9 @@ def render(inv: Inventory, policy=policy_module) -> str:
         "| case | a site qualifies when | a row would assert | helpers |",
         "|---|---|---|---|",
         f"| C static | `is_static` with a return value, class not excluded | the wrapper's result equals `ClassDB.class_call_static` with the same arguments, and is not the type's zero (an `Error` static: a known non-OK `Error`) | {counts['C']} |",
-        f"| A property pair | setter or getter of a non-indexed property of an instantiable class (or its receiver below) | a value set through the wrapper reads back through the getter and `Object.get` | {counts['A']} |",
-        f"| B const oracle | const non-void instance method on such a class | the wrapper's result equals `Object.callv` on the same object | {counts['B']} |",
-        f"| D singleton | const non-void method of a non-excluded singleton, or any non-void method of a stateless singleton | the wrapper's result equals `Object.callv` on the singleton | {counts['D']} |",
+        f"| A property pair | setter or getter of a non-indexed property of an instantiable class (or its receiver below), or of a `SINGLETON_PAIRS` singleton, or a `SINGLETON_KEYED_PAIRS` method | a value set through the wrapper reads back through the getter and `Object.get` (on a singleton, the value read first is set back in a `finally`) | {counts['A']} |",
+        f"| B const oracle | const non-void instance method on such a class (or an argument-free RID factory of a `RID_FACTORIES` class) | the wrapper's result equals `Object.call` with the same arguments on the same object; a result equal to its type's zero is **weak** (counted apart, not failed) | {counts['B']} |",
+        f"| D singleton | const non-void method of a non-excluded singleton, any non-void method of a stateless singleton, or an argument-free RID factory of a `RID_FACTORIES` server | the wrapper's result equals `Object.call` on the singleton (weak as B); a factory returns a valid RID, one read of it agrees on both paths, and the RID is freed | {counts['D']} |",
         f"| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | {counts['F']} |",
         f"| E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | {counts['E']} |",
         f"| N runtime helper | no generated method calls it with a MethodBind | nothing of its own: every row uses it | {counts['N']} |",
@@ -811,6 +903,7 @@ def render(inv: Inventory, policy=policy_module) -> str:
     for (cls, prop), (value, reason) in getattr(policy, "PAIR_OVERRIDES", {}).items():
         shown = "not a pair" if value is None else f"`{md(value)}`"
         lines.append(f"| `{cls}.{prop}` | {shown} | {md(reason)} |")
+    lines += render_singleton_policy(inv, policy)
     paths = [p for p in path_rows(inv) if p[1].case != "C"]
     lines += [
         "",
@@ -839,6 +932,44 @@ def render(inv: Inventory, policy=policy_module) -> str:
             where += f"; then {row.secondary[1].case} " + site_text(*row.secondary)
         lines.append(f"| `{helper}` | {row.case} | {where} | {row.sites} | {row.tags} |")
     return "\n".join(lines) + "\n"
+
+
+def render_singleton_policy(inv: Inventory, policy) -> list[str]:
+    factories = sorted({(s.cls, s.method) for _, s in inv.sites if inv.rules.site(s).row == "factory"})
+    lines = [
+        "",
+        "## Singleton state and RID factories",
+        "",
+        "Singleton property pairs that set process-wide state and restore it (`SINGLETON_PAIRS`): "
+        + ", ".join(f"`{n}` ({md(r)})" for n, r in getattr(policy, "SINGLETON_PAIRS", {}).items())
+        + ". Keyed pairs (`SINGLETON_KEYED_PAIRS`): "
+        + ", ".join(
+            f"`{o}.{s}`/`{g}` on `{md(k)}` ({md(r)})" for (o, s), (g, k, r) in getattr(policy, "SINGLETON_KEYED_PAIRS", {}).items()
+        )
+        + ".",
+        "",
+        f"RID factories (`RID_FACTORIES`; {len(factories)} rows, one per factory method the tree calls): each creates, "
+        "requires a valid RID, reads one const `<prefix>_get_*`/`<prefix>_is_*` of it through the wrapper and the "
+        "Variant path where the server has one, and frees it in a `finally`. The same factories make the RID "
+        "arguments of the servers' B and D rows (an argument `x` takes the class's own `x_create`, or the "
+        "`RID_ARG_SOURCES` entry); any other RID argument is the invalid `RID()`.",
+        "",
+        "| server | frees with | reason |",
+        "|---|---|---|",
+    ]
+    for server, (free, reason) in getattr(policy, "RID_FACTORIES", {}).items():
+        lines.append(f"| `{server}` | `{free}` | {md(reason)} |")
+    lines += ["", "| RID argument | made by |", "|---|---|"]
+    for (cls, arg), source in getattr(policy, "RID_ARG_SOURCES", {}).items():
+        lines.append(f"| `{cls}` `{arg}` | `{source}` |")
+    lines += [
+        "",
+        "`FACTORY_RESULTS` (factories that return the invalid RID on a host, where that counts weak):",
+        "",
+    ]
+    for (server, factory), (platforms, reason) in getattr(policy, "FACTORY_RESULTS", {}).items():
+        lines.append(f"- `{server}.{factory}` on {', '.join(platforms)}: {md(reason)}.")
+    return lines
 
 
 def render_class_tops(rows: dict[str, HelperRow]) -> list[str]:
@@ -967,6 +1098,9 @@ class _Policy:
         self.STATELESS_SINGLETONS = spec.get("stateless_singletons", {})
         self.RECEIVER_SOURCES = {k: tuple(v) for k, v in spec.get("receiver_sources", {}).items()}
         self.METHOD_OVERRIDES = {tuple(k.split(".")): tuple(v) for k, v in spec.get("method_overrides", {}).items()}
+        self.SINGLETON_PAIRS = spec.get("singleton_pairs", {})
+        self.SINGLETON_KEYED_PAIRS = {tuple(k.split(".")): tuple(v) for k, v in spec.get("singleton_keyed_pairs", {}).items()}
+        self.RID_FACTORIES = {k: tuple(v) for k, v in spec.get("rid_factories", {}).items()}
 
 
 # ---- the rows: ApiExercise.generated.kt ----------------------------------------------------------------
@@ -977,7 +1111,9 @@ class _Policy:
 # calls exactly what a user calls.
 
 ROWS_PATH = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt"
-ROW_CASES = "CA"
+ROW_CASES = "CABD"
+# The runner calls one function per case, in this order (ApiExercise.run).
+ROW_RUNS = (("C", "static"), ("A", "pairs"), ("B", "const"), ("D", "singletons"))
 
 
 @dataclass(frozen=True)
@@ -985,6 +1121,7 @@ class KotlinFun:
     name: str
     params: tuple[tuple[str, str], ...]  # (name, Kotlin type), defaults dropped
     ret: str  # "" for Unit
+    defaults: tuple[bool, ...] = ()  # per parameter: True when the Kotlin declaration has a default
 
 
 @dataclass
@@ -1050,10 +1187,12 @@ class KotlinTree:
                 i += 1
             raw = text[start : i - 1]
             params = []
+            defaults = []
             for part in _split_top(" ".join(raw.split())):
                 name, _, rest = part.partition(":")
                 ktype = _split_top(rest, "=")[0] if "=" in rest else rest.strip()
                 params.append((name.strip(), ktype.strip()))
+                defaults.append("=" in rest)
             if len(params) != len(api_method.argument_types):
                 continue
             tail = text[i : i + 300]
@@ -1061,7 +1200,7 @@ class KotlinTree:
             ret_match = re.match(r"\s*:\s*([^{=\n]+?)\s*(?:\{|=|\n)", tail)
             if ret_match:
                 ret = ret_match.group(1).strip()
-            return KotlinFun(fn, tuple(params), ret)
+            return KotlinFun(fn, tuple(params), ret, tuple(defaults))
         return None
 
 
@@ -1154,6 +1293,16 @@ def kotlin_string(value: str) -> str:
 
 
 VALUE_TYPES_3 = {"Vector3", "Vector3i"}
+# Required list arguments of B and D rows, by Godot type: a shape the geometry rows can compute something
+# from (a square, a tetrahedron's corners, the six planes of a box) rather than an empty list.
+ARG_LISTS = {
+    "PackedVector2Array": "listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))",
+    "PackedVector3Array": "listOf(Vector3(0.0, 0.0, 0.0), Vector3(1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, 1.0))",
+    "typedarray::Plane": (
+        "listOf(Plane(1.0, 0.0, 0.0, 1.0), Plane(-1.0, 0.0, 0.0, 1.0), Plane(0.0, 1.0, 0.0, 1.0), "
+        "Plane(0.0, -1.0, 0.0, 1.0), Plane(0.0, 0.0, 1.0, 1.0), Plane(0.0, 0.0, -1.0, 1.0))"
+    ),
+}
 REAL_TYPES = {"Vector2", "Vector3", "Vector4", "Rect2", "Transform2D", "Transform3D", "Basis", "Quaternion", "Plane", "AABB", "Color"}
 ENUM_KOTLIN_RE = re.compile(r"^[A-Z]\w*(?:\.[A-Z]\w*)?$")
 
@@ -1285,6 +1434,8 @@ class RowGenerator:
             if not args:
                 return "ByteArray(0)"
             return "byteArrayOf(" + ", ".join(self.number(a[1], "Int") for a in args) + ")"
+        if re.fullmatch(r"Packed\w+Array", name) and not args:
+            return "emptyList()"
         if re.fullmatch(r"Array\[\w+\]", name):
             if args and args[0] == ("list", []):
                 return "emptyList()"
@@ -1390,31 +1541,314 @@ class RowGenerator:
     def rows(self) -> list[ExerciseRow]:
         out: list[ExerciseRow] = []
         pairs: dict[tuple[str, str, str], ExerciseRow] = {}
+        by_helper: dict[str, list[Site]] = collections.defaultdict(list)
+        for helper, site in self.inv.sites:
+            by_helper[helper].append(site)
         for helper, row in sorted(self.inv.rows.items()):
             chosen = []
             if row.case == "C":
                 chosen.append((row.site, row.verdict))
-                if row.secondary is not None and row.secondary[1].case == "A":
+                if row.secondary is not None and row.secondary[1].case in "ABD":
                     chosen.append(row.secondary)
-            elif row.case == "A":
+            elif row.case in "ABD":
                 chosen.append((row.site, row.verdict))
             for site, verdict in chosen:
+                if verdict.row == "factory":
+                    continue  # every factory method gets its own row below
                 try:
                     if verdict.case == "C":
                         out.append(self.static_row(helper, site, verdict))
-                    else:
-                        prop = self.rules.pair_props[(site.cls, site.method)]
-                        receiver = verdict.target or site.cls
-                        key = (receiver, site.cls, str(prop["name"]))
+                    elif verdict.case == "A":
+                        prop_key = verdict.row or "instance"
+                        if verdict.row == "keyed-pair":
+                            setter = self.keyed_setter(site.cls, site.method)
+                            key = ("keyed", site.cls, setter)
+                        else:
+                            prop = self.rules.pair_props[(site.cls, site.method)]
+                            key = (verdict.target or site.cls, site.cls, str(prop["name"]))
                         if key in pairs:
                             pairs[key].helpers.append(helper)
                             continue
-                        made = self.pair_row(helper, site, verdict, prop, receiver)
+                        if verdict.row == "keyed-pair":
+                            made = self.keyed_pair_row(helper, site, verdict, key[2])
+                        else:
+                            made = self.pair_row(helper, site, verdict, prop, verdict.target or site.cls, prop_key)
                         pairs[key] = made
                         out.append(made)
+                    else:
+                        out.append(self.oracle_row_for(helper, site, verdict, by_helper[helper]))
                 except LiteralError as error:
                     self.failures.append(f"row {helper} ({site.cls}.{site.method}): {error}")
+        # Every SINGLETON_PAIRS property gets its row, also where its helpers' best row is elsewhere (the
+        # setter's helper is usually shared with an instance setter that sorts first): each is process-wide
+        # state of its own, labelled with its helpers.
+        for helper, site in sorted(self.inv.sites, key=lambda hs: (hs[1].cls, hs[1].method, hs[0])):
+            verdict = self.rules.site(site)
+            if verdict.row != "singleton-pair":
+                continue
+            prop = self.rules.pair_props[(site.cls, site.method)]
+            key = (site.cls, site.cls, str(prop["name"]))
+            if key in pairs:
+                if helper not in pairs[key].helpers:
+                    pairs[key].helpers.append(helper)
+                continue
+            try:
+                made = self.pair_row(helper, site, verdict, prop, site.cls, "singleton-pair")
+            except LiteralError as error:
+                self.failures.append(f"singleton pair row {site.cls}.{prop['name']}: {error}")
+                continue
+            pairs[key] = made
+            out.append(made)
+        # One factory row per factory method the tree calls (several share a helper: each is its own
+        # create path through the server), labelled with its helper.
+        factories: dict[tuple[str, str], list[str]] = collections.defaultdict(list)
+        verdicts: dict[tuple[str, str], tuple[Site, Verdict]] = {}
+        for helper, site in self.inv.sites:
+            verdict = self.rules.site(site)
+            if verdict.row == "factory" and helper not in factories[(site.cls, site.method)]:
+                factories[(site.cls, site.method)].append(helper)
+                verdicts[(site.cls, site.method)] = (site, verdict)
+        for key in sorted(factories):
+            site, verdict = verdicts[key]
+            try:
+                out.append(self.factory_row(sorted(factories[key]), site, verdict))
+            except LiteralError as error:
+                self.failures.append(f"factory row {site.cls}.{site.method}: {error}")
         return out
+
+    def keyed_setter(self, cls: str, method: str) -> str:
+        for (owner, setter), (getter, _key, _reason) in self.policy.SINGLETON_KEYED_PAIRS.items():
+            if owner == cls and method in (setter, getter):
+                return setter
+        raise LiteralError(f"{cls}.{method} is no SINGLETON_KEYED_PAIRS half")
+
+    # -- receivers and arguments of the B and D rows --
+
+    def receiver_lines(self, site: Site, verdict: Verdict) -> tuple[list[str], str, str]:
+        """(statements, Kotlin receiver of the wrapper call, receiver of the Variant-path call)."""
+        if verdict.case == "D" or site.cls in self.rules.singletons:
+            return [f'val s = r.singleton("{site.cls}")'], self.kotlin_class(site.cls), "s"
+        target = verdict.target or site.cls
+        if "(" in target:
+            owner, method = target.removesuffix("()").split(".")
+            fn = method_function_name(owner, method)
+            return [f"val o = r.track(checkNotNull({self.kotlin_class(owner)}.{fn}()))"], "o", "o"
+        return [f"val o = {self.construct(target)}"], "o", "o"
+
+    def server_call(self, server: str, method: str, receiver_server: str, wrapper: str) -> str:
+        """The Kotlin call of [server].[method]: on the row's own receiver when it is that server (a
+        TextServer instance), else on the singleton object."""
+        fn = method_function_name(server, method)
+        if server == receiver_server and wrapper == "o":
+            return f"o.{fn}"
+        if server not in self.rules.singletons:
+            raise LiteralError(f"{server}.{method}: not a singleton and not the row's receiver")
+        return f"{self.kotlin_class(server)}.{fn}"
+
+    def rid_source(self, cls: str, arg: str) -> str | None:
+        """'Server.factory' for a RID argument [arg] of a [cls] row: RID_ARG_SOURCES, else the class's own
+        argument-free `<arg>_create`, else None (the row passes an invalid RID)."""
+        named = self.policy.RID_ARG_SOURCES.get((cls, arg))
+        if named is not None:
+            return named
+        own = self.rules.api[cls].methods.get(f"{arg}_create") if cls in self.rules.api else None
+        if own and self.rules.factory(cls, own[0]):
+            return f"{cls}.{arg}_create"
+        return None
+
+    def arg_value(self, godot_type: str, ktype: str, name: str, site: Site, ctx: RowContext, index: int = 0) -> str:
+        """A recognisable argument for a required parameter (design 2: per type a small non-default
+        literal; a path under the scratch directory; a fresh instance for an object). Arguments of one
+        type alternate between two values by position, so a helper that swaps two cells of one type
+        passes different values and the oracle sees it."""
+        base = ktype.removesuffix("?")
+        if godot_type == "String" and PATH_ARG_RE.search(name):
+            return f'r.scratch("{site.cls}.{site.method}.{name}")'
+        if godot_type.startswith(("enum::", "bitfield::")):
+            spec = enum_spec(godot_type)
+            values = [v for v in spec.values if not v.name.endswith("_MAX")]
+            chosen = next((v for v in values if v.value != 0), values[0] if values else None)
+            if chosen is None:
+                raise LiteralError(f"{godot_type} has no value")
+            return f"{base}({chosen.value}L) /* {chosen.name} */"
+        if godot_type == "bool":
+            return "true"
+        if godot_type == "RID":
+            return "RID(0L)"
+        rich = ARG_LISTS.get(godot_type)
+        if rich is not None:
+            return rich
+        if godot_type in ("Variant",):
+            return '"kanama125"'
+        if base in self.rules.api or base in WRAPPER_CLASS_ALIASES:
+            cls = WRAPPER_CLASS_ALIASES.get(base, base)
+            receiver, _ = self.rules.receiver(cls)
+            if receiver is None or "(" in receiver:
+                if ktype.endswith("?"):
+                    return "null"
+                raise LiteralError(f"no instance of {cls} for the non-null argument `{name}`")
+            return ctx.fresh(cls)
+        return self.pair_candidates(ktype, godot_type, ctx)[index % 2]
+
+    def default_value(self, text: str, ktype: str, ctx: RowContext) -> str:
+        """The extension_api.json default of a parameter the Kotlin declaration gives no default."""
+        text = text.strip()
+        if text.startswith(("&", "^")):
+            text = text[1:]
+        if text == "RID()":
+            return "RID(0L)"
+        match = re.fullmatch(r"Transform2D\((.*)\)", text)
+        if match:
+            nums = [n.strip() for n in match.group(1).split(",")]
+            vecs = [f"Vector2({self.number(nums[i], 'Double')}, {self.number(nums[i + 1], 'Double')})" for i in (0, 2, 4)]
+            return f"Transform2D({', '.join(vecs)})"
+        return self.literal(parse_literal(text), ktype, ctx)
+
+    def call_args(self, fun: KotlinFun, method: ApiMethod, site: Site, ctx: RowContext, lines: list[str],
+                  frees: list[str], receiver_server: str, wrapper: str) -> list[str]:
+        """The argument names of a B/D row's call: every required parameter, and the defaulted ones up to
+        the last whose Kotlin declaration has no default (the rest take their defaults on both paths)."""
+        needed = 0
+        for index, default in enumerate(method.argument_defaults):
+            kotlin_default = fun.defaults[index] if index < len(fun.defaults) else False
+            if default is None or not kotlin_default:
+                needed = index + 1
+        names = []
+        for index in range(needed):
+            pname, ptype = fun.params[index]
+            gtype = method.argument_types[index]
+            aname = method.argument_names[index]
+            default = method.argument_defaults[index]
+            if default is not None:
+                expr = self.default_value(default, ptype, ctx)
+            elif gtype == "RID" and (source := self.rid_source(site.cls, aname)) is not None:
+                server, factory = source.split(".")
+                free = self.policy.RID_FACTORIES[server][0]
+                lines.append(f"val x{index} = {self.server_call(server, factory, receiver_server, wrapper)}()")
+                frees.append(f"{self.server_call(server, free, receiver_server, wrapper)}(x{index})")
+                names.append(f"x{index}")
+                continue
+            else:
+                expr = self.arg_value(gtype, ptype, aname, site, ctx, index)
+            lines.append(f"val a{index}: {ptype} = {expr}")
+            names.append(f"a{index}")
+        return names
+
+    def oracle_row_for(self, helper: str, site: Site, verdict: Verdict, sites: list[Site]) -> ExerciseRow:
+        """The helper's B or D row, from its best site; when that site's arguments cannot be written,
+        the next site of the same case."""
+        try:
+            return self.oracle_row(helper, site, verdict)
+        except LiteralError as first:
+            for other, other_verdict in _ranked(self.rules, sites):
+                if other == site or other_verdict.case != verdict.case or other_verdict.row:
+                    continue
+                try:
+                    return self.oracle_row(helper, other, other_verdict)
+                except LiteralError:
+                    # justified: the next site of the same case is tried; with none left, the first error is raised
+                    continue
+            raise first
+
+    def oracle_row(self, helper: str, site: Site, verdict: Verdict) -> ExerciseRow:
+        fun = self.tree.function(site.cls, site.method, static=False)
+        if fun is None:
+            raise LiteralError(f"no Kotlin function {method_function_name(site.cls, site.method)} with Godot's arguments")
+        method = self.rules.method(site.cls, site.method)
+        ctx = RowContext(self)
+        lines, wrapper, variant = self.receiver_lines(site, verdict)
+        receiver_server = site.cls if wrapper == "o" else ""
+        frees: list[str] = []
+        args: list[str] = []
+        names = self.call_args(fun, method, site, ctx, args, frees, receiver_server, wrapper)
+        lines += ctx.lines + args
+        oracle_args = "".join(f", {n}" for n in names)
+        body = [
+            f"val got = r.track({wrapper}.{fun.name}({', '.join(names)}))",
+            "r.oracle()",
+            f'val oracle = r.track({variant}.call("{site.method}"{oracle_args}))',
+            "r.sameAsCall(got, oracle)",
+        ]
+        lines += self.guarded(body, frees)
+        target = verdict.target
+        label = f"{site.cls}.{site.method}" + (f" on {target}" if target else "")
+        return ExerciseRow(verdict.case, [helper], site, verdict, label, lines)
+
+    @staticmethod
+    def guarded(body: list[str], frees: list[str]) -> list[str]:
+        if not frees:
+            return body
+        return ["try {"] + [f"  {line}" for line in body] + ["} finally {"] + [f"  {f}" for f in reversed(frees)] + ["}"]
+
+    def factory_row(self, helpers: list[str], site: Site, verdict: Verdict) -> ExerciseRow:
+        fun = self.tree.function(site.cls, site.method, static=False)
+        if fun is None:
+            raise LiteralError(f"no Kotlin function {method_function_name(site.cls, site.method)}")
+        lines, wrapper, variant = self.receiver_lines(site, verdict)
+        receiver_server = site.cls
+        free = self.policy.RID_FACTORIES[site.cls][0]
+        lines.append(f"val rid = {self.server_call(site.cls, site.method, receiver_server, wrapper)}()")
+        result = getattr(self.policy, "FACTORY_RESULTS", {}).get((site.cls, site.method))
+        body = [f'r.created(rid, invalidOn = "{",".join(result[0])}")' if result else "r.created(rid)"]
+        read = self.factory_read(site.cls, site.method)
+        if read is not None:
+            body += [
+                f"val got = r.track({self.server_call(site.cls, read[0], receiver_server, wrapper)}(rid))",
+                "r.oracle()",
+                f'val oracle = r.track({variant}.call("{read[0]}", rid))',
+                f'r.readBack(got, oracle, "{read[0]}")',
+            ]
+        lines += self.guarded(body, [f"{self.server_call(site.cls, free, receiver_server, wrapper)}(rid)"])
+        target = verdict.target
+        label = f"{site.cls}.{site.method}" + (f" on {target}" if target else "")
+        return ExerciseRow(verdict.case, helpers, site, verdict, label, lines)
+
+    def factory_read(self, cls: str, factory: str) -> tuple[str] | None:
+        """The first const `<prefix>_get_*` / `<prefix>_is_*` of [cls] (in API order) that takes the
+        created RID and nothing else required, and has a Kotlin function: the row's one read."""
+        prefix = factory.removesuffix("_create") if factory.endswith("_create") else factory.removeprefix("create_")
+        for name, methods in self.rules.api[cls].methods.items():
+            m = methods[0]
+            if not (name.startswith(f"{prefix}_get_") or name.startswith(f"{prefix}_is_")):
+                continue
+            if not m.is_const or m.return_type == "void" or not m.argument_types or m.argument_types[0] != "RID":
+                continue
+            if any(d is None for d in m.argument_defaults[1:]):
+                continue
+            fun = self.tree.function(cls, name, static=False)
+            if fun is None or not all(fun.defaults[1:]):
+                continue
+            return (name,)
+        return None
+
+    def singleton_pair_lines(self, cls: str, setter: KotlinFun, getter: KotlinFun, key_expr: str, read_name: str,
+                             a: str, b: str, chosen: str | None, ptype: str) -> list[str]:
+        kotlin = self.kotlin_class(cls)
+        key = f"{key_expr}, " if key_expr else ""
+        get = f"{kotlin}.{getter.name}({key_expr})"
+        lines = [f'val s = r.singleton("{cls}")', f"val before = r.track({get})", "try {"]
+        if chosen is not None:
+            lines.append(f"  val v: {ptype} = {chosen} // PAIR_OVERRIDES")
+        else:
+            lines.append(f"  val v = r.pick(before, {a}, {b})")
+        lines.append(f"  {kotlin}.{setter.name}({key}v)")
+        lines.append(f"  r.pair(v, before, r.track({get}), r.track(s.get({read_name})))")
+        lines += ["} finally {", f"  {kotlin}.{setter.name}({key}before)", "}"]
+        return lines
+
+    def keyed_pair_row(self, helper: str, site: Site, verdict: Verdict, setter_name: str) -> ExerciseRow:
+        getter_name, key_literal, _reason = self.policy.SINGLETON_KEYED_PAIRS[(site.cls, setter_name)]
+        setter = self.tree.function(site.cls, setter_name, static=False)
+        getter = self.tree.function(site.cls, getter_name, static=False)
+        if setter is None or getter is None:
+            raise LiteralError(f"no Kotlin {setter_name}/{getter_name} on {site.cls}")
+        ctx = RowContext(self)
+        key = self.literal(parse_literal(key_literal), setter.params[0][1], ctx)
+        ptype = setter.params[1][1]
+        a, b = self.pair_candidates(ptype, "Variant", ctx)
+        lines = ctx.lines + [f"val key: {setter.params[0][1]} = {key}"]
+        lines += self.singleton_pair_lines(site.cls, setter, getter, "key", "key", a, b, None, ptype)
+        return ExerciseRow("A", [helper], site, verdict, f"{site.cls}.{setter_name}/{getter_name}", lines)
 
     def static_row(self, helper: str, site: Site, verdict: Verdict) -> ExerciseRow:
         fun = self.tree.function(site.cls, site.method, static=True)
@@ -1463,7 +1897,7 @@ class RowGenerator:
             lines.append(f"r.staticValue(got, oracle, weak = {'true' if verdict.weak else 'false'})")
         return ExerciseRow("C", [helper], site, verdict, f"{site.cls}.{site.method}", lines)
 
-    def pair_row(self, helper: str, site: Site, verdict: Verdict, prop: dict, receiver: str) -> ExerciseRow:
+    def pair_row(self, helper: str, site: Site, verdict: Verdict, prop: dict, receiver: str, kind: str = "instance") -> ExerciseRow:
         setter = self.tree.function(site.cls, str(prop["setter"]), static=False)
         getter = self.tree.function(site.cls, str(prop["getter"]), static=False)
         if setter is None or getter is None:
@@ -1482,6 +1916,11 @@ class RowGenerator:
             chosen = self.literal(parse_literal(override[0]), ptype, ctx)
         else:
             a, b = self.pair_candidates(ptype, godot_type, ctx)
+        if kind == "singleton-pair":
+            lines = ctx.lines + self.singleton_pair_lines(
+                site.cls, setter, getter, "", f'"{prop["name"]}"', *(("", "") if chosen is not None else (a, b)), chosen, ptype
+            )
+            return ExerciseRow("A", [helper], site, verdict, f"{site.cls}.{prop['name']}", lines)
         lines = [f"val o = {self.construct(receiver)}"]
         lines += ctx.lines
         lines.append(f"val before = r.track(o.{getter.name}())")
@@ -1520,11 +1959,12 @@ def render_rows(inv: Inventory, policy=policy_module) -> tuple[str, list[str], l
         f"  /** Referenced helpers the inventory excludes (case E): reported, never run. */",
         f"  const val EXCLUDED: Int = {counts['E']}",
         "",
-        f"  /** Rows in this file: {sum(1 for r in rows if r.case == 'C')} static (C), {sum(1 for r in rows if r.case == 'A')} property pair (A). */",
+        f"  /** Rows in this file: {sum(1 for r in rows if r.case == 'C')} static (C), {sum(1 for r in rows if r.case == 'A')} pair (A), "
+        f"{sum(1 for r in rows if r.case == 'B')} const (B), {sum(1 for r in rows if r.case == 'D')} singleton (D). */",
         f"  const val ROWS: Int = {len(rows)}",
         "",
     ]
-    for case, title in (("C", "static"), ("A", "pairs")):
+    for case, title in ROW_RUNS:
         out.append(f"  fun run{title[0].upper()}{title[1:]}(r: ApiExerciseRunner) {{")
         for index, row in enumerate(r for r in rows if r.case == case):
             out.append(f"    {case.lower()}{index:03d}(r)")
@@ -1541,7 +1981,7 @@ def render_rows(inv: Inventory, policy=policy_module) -> tuple[str, list[str], l
             gen.failures.append(
                 f"KNOWN_FINDINGS[{key[0]} {key[1]}] needs the failure text it excuses, its reason and where it is tracked"
             )
-    for case in "CA":
+    for case in ROW_CASES:
         for index, row in enumerate(r for r in rows if r.case == case):
             out.append(f"  // {row.verdict.reason}" + (f"; weak: {row.verdict.weak}" if row.verdict.weak else ""))
             out.append(f"  private fun {case.lower()}{index:03d}(r: ApiExerciseRunner) {{")
@@ -1597,9 +2037,13 @@ def check_jars(jars: list[Path]) -> int:
 def row_summary(rows: list[ExerciseRow]) -> str:
     c = [r for r in rows if r.case == "C"]
     a = [r for r in rows if r.case == "A"]
+    b = [r for r in rows if r.case == "B"]
+    d = [r for r in rows if r.case == "D"]
+    factories = sum(1 for r in rows if r.verdict.row == "factory")
     return (
-        f"{len(c)} static rows ({sum(1 for r in c if r.verdict.weak)} weak), {len(a)} property-pair rows "
-        f"covering {sum(len(r.helpers) for r in a)} helper rows"
+        f"{len(c)} static rows ({sum(1 for r in c if r.verdict.weak)} weak), {len(a)} pair rows "
+        f"covering {sum(len(r.helpers) for r in a)} helper rows, {len(b)} const rows, {len(d)} singleton rows "
+        f"({factories} of the B/D rows are RID factories)"
     )
 
 

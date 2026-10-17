@@ -41,12 +41,16 @@ import net.multigesture.kanama.types.Vector4
  * (project setting `kanama/debug/api_exercise` or `KANAMA_API_EXERCISE=1`, first frame) and the iOS
  * `ApiExerciseSelfTest` (frame-1 self-test phase).
  *
- * Row kinds so far: C (a static: the wrapper's result equals `ClassDB.class_call_static` and is not
- * its type's zero; an object result is a non-null object of the declared class from both paths; an
- * `Error` result is the same non-OK value from both) and A (a property pair: a value set through
- * the wrapper's setter reads back through its getter and through `Object.get`, and differs from the
- * value read before). A **weak** row cannot tell a working call from a no-op by its value (an
- * argument-free static that can return zero): it checks the two paths agree and is counted apart.
+ * Row kinds: C (a static: the wrapper's result equals `ClassDB.class_call_static` and is not its
+ * type's zero; an object result is a non-null object of the declared class from both paths; an
+ * `Error` result is the same non-OK value from both), A (a property pair: a value set through the
+ * wrapper's setter reads back through its getter and through `Object.get`, and differs from the
+ * value read before; on a singleton the value read first is set back in a `finally`), B (a const
+ * method of a fresh object) and D (a const method of a singleton, or any method of a stateless
+ * one): the wrapper's result equals `Object.call` on the same object, and B/D RID factories: a
+ * `*_create` returns a valid RID, one read of it agrees on both paths, and the RID is freed. A
+ * **weak** row cannot tell a working call from a no-op by its value (an argument-free static, or a
+ * B/D result equal to its type's zero): it checks the two paths agree and is counted apart.
  *
  * Every path a row touches is under [SCRATCH], which [run] creates (with the fixture files the rows
  * read) before the first row and removes after the last.
@@ -84,6 +88,8 @@ internal object ApiExercise {
     try {
       ApiExerciseRows.runStatic(runner)
       ApiExerciseRows.runPairs(runner)
+      ApiExerciseRows.runConst(runner)
+      ApiExerciseRows.runSingletons(runner)
     } finally {
       runner.tearDown()
     }
@@ -283,7 +289,8 @@ internal constructor(
    * scripts/api_exercise_policy.py, with [knownWhy]): there a failure whose message contains
    * [knownFailure], raised in the oracle half of the row, is reported as known; any other failure
    * fails, and a pass fails the run until the entry is removed. A C row's oracle half starts at
-   * [oracle] (after the wrapper's own result was checked); an A row's is the whole row.
+   * [oracle] (after the wrapper's own result was checked), and so do the B and D rows' (after the
+   * wrapper call); an A row's is the whole row.
    */
   fun begin(
     case: Char,
@@ -298,14 +305,14 @@ internal constructor(
     verdict = ' '
     failure = ""
     failureInOracle = false
-    inOracle = case != 'C'
+    inOracle = case == 'A'
     knownHere = known.split(',').contains(platform)
     this.knownWhy = knownWhy
     this.knownFailure = knownFailure
     onTrace?.let { it(this.label) }
   }
 
-  /** A C row's wrapper half is done: what fails from here on is the Variant path's (the oracle). */
+  /** A C, B or D row's wrapper half is done: what fails from here on is the Variant path's. */
   fun oracle() {
     inOracle = true
   }
@@ -349,6 +356,8 @@ internal constructor(
       verdict == 'P' -> passed++
       verdict == 'W' -> weak++
     }
+    // The sweep reads each row's verdict back (P passed, W weak, F failed, S setup/teardown).
+    onTrace?.let { it("$label = $verdict") }
   }
 
   /** A fresh object's handle (the constructing `+1` of a RefCounted goes to [ref]). */
@@ -357,6 +366,10 @@ internal constructor(
     check(raw.address() != 0L) { "could not construct $className" }
     return GodotHandle(raw)
   }
+
+  /** The engine singleton [name] as an object, for the Variant-path half of a singleton row. */
+  fun singleton(name: String): GodotObject =
+    checkNotNull(GodotObject.wrap(ObjectCalls.getSingleton(name))) { "no singleton $name" }
 
   /** A fresh RefCounted: owned (its constructing `+1`), released when the row ends. */
   fun <T : RefCounted> ref(value: T): T {
@@ -481,6 +494,37 @@ internal constructor(
         fail("expected one type from both paths, got ${show(got)} and ${show(oracle)}")
       else -> pass()
     }
+  }
+
+  /**
+   * B or D row: the wrapper's result equals `Object.call` of the same method with the same
+   * arguments on the same object; a result equal to its type's zero is **weak** (a no-op could
+   * produce it).
+   */
+  fun sameAsCall(got: Any?, oracle: Any?) {
+    when {
+      !same(got, oracle) -> fail("expected ${show(oracle)} (Object.call) got ${show(got)}")
+      isZero(got) -> if (verdict == ' ') verdict = 'W'
+      else -> pass()
+    }
+  }
+
+  /**
+   * RID factory row: the created RID is valid (a no-op returns the invalid RID 0). On the platforms
+   * [invalidOn] lists (FACTORY_RESULTS: the host makes none, e.g. the headless dummy renderer) an
+   * invalid RID is weak instead.
+   */
+  fun created(rid: RID, invalidOn: String = "") {
+    when {
+      rid.value != 0L -> pass()
+      invalidOn.split(',').contains(platform) -> if (verdict == ' ') verdict = 'W'
+      else -> fail("expected a valid RID got RID(0)")
+    }
+  }
+
+  /** RID factory row: one read of the created RID agrees between the wrapper and `Object.call`. */
+  fun readBack(got: Any?, oracle: Any?, method: String) {
+    if (!same(got, oracle)) fail("expected $method ${show(oracle)} (Object.call) got ${show(got)}")
   }
 
   /** A row: the value differs from [before] and reads back through the getter and `Object.get`. */

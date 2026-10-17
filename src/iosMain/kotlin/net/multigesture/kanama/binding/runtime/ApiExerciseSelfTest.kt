@@ -3,8 +3,9 @@ package net.multigesture.kanama.binding.runtime
 import net.multigesture.kanama.exercise.ApiExercise
 
 // The generated API exercise on iOS: the common rows (exercise/ApiExercise.generated.kt, one per
-// ObjectCalls helper with a static or property-pair row) run through the Kotlin/Native runtime and
-// the C shim, at the end of the frame-1 self-test phase (every class and singleton registered). A
+// ObjectCalls helper with a static, property-pair, const or singleton row, and the RID factory
+// rows) run through the Kotlin/Native runtime and the C shim, at the end of the frame-1 self-test
+// phase (every class and singleton registered). A
 // Kanama test hook like the other self-tests: this file and the rows are compiled only into a
 // -PkanamaIosSelfTest=true build (build.gradle.kts), which the device runners make.
 //

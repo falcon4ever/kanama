@@ -169,9 +169,14 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:199` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:241` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:243` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1069` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/generate_api_exercise.py:564` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/generate_api_exercise.py:1355` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1135` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/generate_api_exercise.py:592` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:668` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:1577` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:1594` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:1612` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:1739` | `except LiteralError as first:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_api_exercise.py:1745` | `except LiteralError:` | justified: the next site of the same case is tried; with none left, the first error is raised |
 | `scripts/generate_api_wrapper.py:1900` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
 | `scripts/generate_api_wrapper.py:1905` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
 | `scripts/generate_api_wrapper.py:1910` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
@@ -196,20 +201,20 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/hot_reload_smoke.sh:39` | `if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null; then` | justified: output dropped, the command's exit status is the condition of the `if` |
 | `scripts/hot_reload_smoke.sh:111` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/hot_reload_smoke.sh:117` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/ios_device_gate.sh:428` | `"$bundle_id" >/dev/null 2>&1 \|\| true` | justified: the bundle is usually not installed; the next install and launch are the checks |
-| `scripts/ios_device_gate.sh:516` | `git -C "$ROOT_DIR" worktree remove --force "$root" >/dev/null 2>&1 \|\| rm -rf "$root"` | justified: a throwaway worktree; if git cannot remove it the directory is deleted instead. |
-| `scripts/ios_device_gate.sh:520` | `git -C "$ROOT_DIR" worktree prune >/dev/null 2>&1 \|\| true` | justified: housekeeping of throwaway worktrees; a stale registration is cleared again before the next build phase. |
-| `scripts/ios_device_gate.sh:555` | `run_step "fresh-starter-project" "$OUTPUT_DIR/fresh-starter.log" "${fresh_args[@]}" \|\| true` | justified: run_step records the FAIL itself; keep going so the demo matrix still runs and the final aggregation below decides the overall exit status. |
-| `scripts/ios_device_gate.sh:568` | `continue` | justified: this demo was already recorded as a SKIP row (resumed after the --start-at demo). |
-| `scripts/ios_device_gate.sh:588` | `"$OUTPUT_DIR/${demo_apps[$i]}" \|\| true` | justified: run_step already recorded the FAIL row |
-| `scripts/ios_device_gate.sh:606` | `git -C "$ROOT_DIR" worktree prune >/dev/null 2>&1 \|\| true` | justified: housekeeping; a stale registration would make the `worktree add` below fail loudly. |
-| `scripts/ios_device_gate.sh:611` | `git -C "$ROOT_DIR" worktree remove --force "$root" >/dev/null 2>&1 \|\| rm -rf "$root"` | justified: a throwaway worktree; if git cannot remove it the directory is deleted instead. |
-| `scripts/ios_device_gate.sh:629` | `continue` | justified: this demo was already recorded as a SKIP row (resumed after the --start-at demo). |
-| `scripts/ios_device_gate.sh:638` | `prepare_demo_copy "$DEMOS_ROOT/${demo_dirs[$i]}" "${demo_apps[$i]}" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/ios_device_gate.sh:676` | `for pid in "${pids[@]}"; do wait "$pid" \|\| true; done` | justified: a build job's subshell status is not the result; success is the .build.ok marker it writes, and phase 2 records FAIL for every demo that has no .build.ok (a job that died writes neither marker). |
-| `scripts/ios_device_gate.sh:688` | `continue` | justified: the demo was just recorded as a FAIL row with its build log. |
-| `scripts/ios_device_gate.sh:694` | `continue` | justified: the demo was just recorded as a FAIL row (no build result at all). |
-| `scripts/ios_device_gate.sh:706` | `"$OUTPUT_DIR/$app" \|\| true` | justified: run_step already recorded the FAIL row |
+| `scripts/ios_device_gate.sh:434` | `"$bundle_id" >/dev/null 2>&1 \|\| true` | justified: the bundle is usually not installed; the next install and launch are the checks |
+| `scripts/ios_device_gate.sh:522` | `git -C "$ROOT_DIR" worktree remove --force "$root" >/dev/null 2>&1 \|\| rm -rf "$root"` | justified: a throwaway worktree; if git cannot remove it the directory is deleted instead. |
+| `scripts/ios_device_gate.sh:526` | `git -C "$ROOT_DIR" worktree prune >/dev/null 2>&1 \|\| true` | justified: housekeeping of throwaway worktrees; a stale registration is cleared again before the next build phase. |
+| `scripts/ios_device_gate.sh:561` | `run_step "fresh-starter-project" "$OUTPUT_DIR/fresh-starter.log" "${fresh_args[@]}" \|\| true` | justified: run_step records the FAIL itself; keep going so the demo matrix still runs and the final aggregation below decides the overall exit status. |
+| `scripts/ios_device_gate.sh:574` | `continue` | justified: this demo was already recorded as a SKIP row (resumed after the --start-at demo). |
+| `scripts/ios_device_gate.sh:594` | `"$OUTPUT_DIR/${demo_apps[$i]}" \|\| true` | justified: run_step already recorded the FAIL row |
+| `scripts/ios_device_gate.sh:612` | `git -C "$ROOT_DIR" worktree prune >/dev/null 2>&1 \|\| true` | justified: housekeeping; a stale registration would make the `worktree add` below fail loudly. |
+| `scripts/ios_device_gate.sh:617` | `git -C "$ROOT_DIR" worktree remove --force "$root" >/dev/null 2>&1 \|\| rm -rf "$root"` | justified: a throwaway worktree; if git cannot remove it the directory is deleted instead. |
+| `scripts/ios_device_gate.sh:635` | `continue` | justified: this demo was already recorded as a SKIP row (resumed after the --start-at demo). |
+| `scripts/ios_device_gate.sh:644` | `prepare_demo_copy "$DEMOS_ROOT/${demo_dirs[$i]}" "${demo_apps[$i]}" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/ios_device_gate.sh:682` | `for pid in "${pids[@]}"; do wait "$pid" \|\| true; done` | justified: a build job's subshell status is not the result; success is the .build.ok marker it writes, and phase 2 records FAIL for every demo that has no .build.ok (a job that died writes neither marker). |
+| `scripts/ios_device_gate.sh:694` | `continue` | justified: the demo was just recorded as a FAIL row with its build log. |
+| `scripts/ios_device_gate.sh:700` | `continue` | justified: the demo was just recorded as a FAIL row (no build result at all). |
+| `scripts/ios_device_gate.sh:712` | `"$OUTPUT_DIR/$app" \|\| true` | justified: run_step already recorded the FAIL row |
 | `scripts/ios_template_preflight.sh:92` | `if ! command -v unzip >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/ios_template_preflight.sh:107` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
 | `scripts/ios_visual_smoke.sh:110` | `grep -E 'SELFTEST( \([^)]*\))? FAIL:\|SELFTEST( MATRIX\| \([^)]*\))?: [0-9]+ passed, [0-9]+ failed' "$@" >&2 \|\| ` | justified: printing the evidence; the return 1 on the next line is the verdict. |
@@ -238,17 +243,18 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/record_gate_evidence.py:40` | `except (OSError, subprocess.CalledProcessError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/runtime_smoke.sh:20` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/runtime_smoke.sh:30` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar -PkanamaApiExercise=true >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/runtime_smoke.sh:574` | `wts_color_errors="$(grep -c 'Invalid color name: kanama_not_a_color' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
-| `scripts/runtime_smoke.sh:644` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
-| `scripts/runtime_smoke.sh:801` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/runtime_smoke.sh:805` | `kill -TERM "$sigterm_pid" 2>/dev/null \|\| true` | justified: it may have exited already; its exit status decides below |
-| `scripts/runtime_smoke.sh:807` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/runtime_smoke.sh:810` | `if kill -0 "$sigterm_pid" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/runtime_smoke.sh:811` | `kill -KILL "$sigterm_pid" 2>/dev/null \|\| true` | justified: the hang itself fails the leg (sigterm_rc=hang) |
-| `scripts/runtime_smoke.sh:814` | `set +e` | justified: the status of the wait below is the verdict, checked against 143 |
-| `scripts/runtime_smoke.sh:815` | `wait "$sigterm_pid" 2>/dev/null` | justified: its status is captured on the next line and checked |
-| `scripts/runtime_smoke.sh:824` | `elif compgen -G "$SIGTERM_ERR_DIR/hs_err_*" >/dev/null \|\| grep -q "A fatal error has been detected" "$SIGTERM_` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/runtime_smoke.sh:832` | `cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null \| head -n 40 >&2 \|\| true` | justified: diagnostics only; the leg fails just below |
+| `scripts/runtime_smoke.sh:205` | `grep -A 12 "Program crashed" "$API_EXERCISE_LOG" >&2 \|\| true` | justified: diagnostics before the verdict; a crash without Godot's crash banner still fails below |
+| `scripts/runtime_smoke.sh:587` | `wts_color_errors="$(grep -c 'Invalid color name: kanama_not_a_color' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
+| `scripts/runtime_smoke.sh:657` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
+| `scripts/runtime_smoke.sh:814` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/runtime_smoke.sh:818` | `kill -TERM "$sigterm_pid" 2>/dev/null \|\| true` | justified: it may have exited already; its exit status decides below |
+| `scripts/runtime_smoke.sh:820` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/runtime_smoke.sh:823` | `if kill -0 "$sigterm_pid" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/runtime_smoke.sh:824` | `kill -KILL "$sigterm_pid" 2>/dev/null \|\| true` | justified: the hang itself fails the leg (sigterm_rc=hang) |
+| `scripts/runtime_smoke.sh:827` | `set +e` | justified: the status of the wait below is the verdict, checked against 143 |
+| `scripts/runtime_smoke.sh:828` | `wait "$sigterm_pid" 2>/dev/null` | justified: its status is captured on the next line and checked |
+| `scripts/runtime_smoke.sh:837` | `elif compgen -G "$SIGTERM_ERR_DIR/hs_err_*" >/dev/null \|\| grep -q "A fatal error has been detected" "$SIGTERM_` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/runtime_smoke.sh:845` | `cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null \| head -n 40 >&2 \|\| true` | justified: diagnostics only; the leg fails just below |
 | `scripts/scene_connection_lint.py:103` | `except OSError:` | justified: an unreadable script registers no methods, so every connection to it is reported missing |
 | `scripts/tool_smoke.sh:19` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:27` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
@@ -478,6 +484,7 @@ parallel shards (`--shard 1/3` … `3/3`, every third case; about 10 minutes eac
 | `generate_api_exercise.py --check (rows hand-edited)` | a generated API exercise row is edited by hand (an Error static made weak): the committed rows must be the generator's | `[api_exercise] FAIL src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt is stale or hand-edited: regenerate with `python3 scripts/generate_api_exercise.py --report` and rev` | green |
 | `generate_api_exercise.py --check-jar (exercise class in a jar)` | a jar with an `exercise/` class (a -PkanamaApiExercise=true build) is published or installed: the check must fail it | `[api_exercise] FAIL /var/folders/ff/9rnnrh052dq9rcxspsmtvy100000gn/T/tmplnhk7quv/kanama.jar carries 1 API exercise class(es) (net/multigesture/kanama/exercise/ApiExerciseRows.class, ...): it was built` | green |
 | `generate_api_exercise.py --check (known finding names no row)` | a KNOWN_FINDINGS entry names a row the generator does not write (renamed or gone): it would hide nothing and stay forever | `[api_exercise] FAIL KNOWN_FINDINGS names A CharFXTransform.font_red_run, which is not a generated row; delete or fix the entry / [api_exercise] FAIL src/commonMain/kotlin/net/multigesture/kanama/exerc` | green |
+| `generate_api_exercise.py --check (RID source no row takes)` | a `RID_ARG_SOURCES` entry names a RID argument no row passes (renamed or gone): it would make and free a RID for nothing | `[api_exercise] FAIL RID_ARG_SOURCES names TextServer argument `red_run`, which no B or D row of TextServer takes: delete the entry / [api_exercise] FAIL docs/reference/generated/api-exercise.md is sta` | green |
 | `generate_api_exercise.py --check (rule order)` | the case ranking puts property pairs before statics: the toy-API fixture and the committed page both catch it | `[api_exercise] FAIL scripts/fixtures/api_exercise/rules.expected.txt does not match the rules run on the fixture API (a classification rule changed); review the diff of --write-fixture / [api_exercise` | green |
 | `check_property_coverage.py` | a generated wrapper property disappears | `[property_coverage] FAIL 1 generated property(ies) are silently dropped (no wrapper member, not private, not allow-listed): / CanvasItem.visible (getter=is_visible)` | green |
 | `check_protocol_pins.py` | the bridge pins protocol 35 while the emitter says 36 | `[protocol_pins] FAIL the protocol version disagrees across its pins: / 35  bridge constant  (web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js)` | green |

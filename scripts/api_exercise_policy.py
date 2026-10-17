@@ -17,6 +17,10 @@ lives here, and only here:
     TextServerManager) instead of constructing a descendant.
   * METHOD_OVERRIDES -- methods the class-level rules would give a value row but whose result cannot
     be compared (a clock read, a new object per call: F) or which must not run (E), each with its reason.
+  * SINGLETON_PAIRS / SINGLETON_KEYED_PAIRS -- the singletons whose process-wide state a row may set,
+    read back and restore.
+  * RID_FACTORIES / RID_ARG_SOURCES -- the servers whose RID factories run as create/read/free rows,
+    and where a B or D row's RID argument comes from.
   * NON_BIND_HELPERS -- the referenced `ObjectCalls` helpers that no generated method calls with a
     MethodBind: the runtime plumbing every row uses implicitly. A new one is unclassified until it
     is listed here.
@@ -137,6 +141,10 @@ RECEIVER_SOURCES: dict[str, tuple[str, str, str]] = {
 
 _CLOCK = "reads the clock: two reads an oracle compares can differ"
 _NEW_OBJECT = "returns a new object per call: an oracle would compare two different objects"
+_SHAPE_INDEX = (
+    "a shape index the area does not have aborts the process: the server indexes the area's shapes "
+    "with CRASH_BAD_INDEX and no bounds check before it (found by the headless sweep)"
+)
 
 # (class, method) -> (case, reason): a method the class-level rules would give a value row, but whose
 # result cannot be compared (F) or which must not run at all (E).
@@ -163,6 +171,20 @@ METHOD_OVERRIDES: dict[tuple[str, str], tuple[str, str]] = {
     ("RenderingServer", "texture_2d_layer_get"): ("F", _NEW_OBJECT),
     ("InputEvent", "xformed_by"): ("F", _NEW_OBJECT),
     ("RegEx", "search"): ("F", _NEW_OBJECT),
+    ("Tree", "get_item_area_rect"): ("F", "takes a TreeItem, which only a Tree's create_item makes: no fresh argument"),
+    ("Object", "is_connected"): (
+        "F",
+        "the hand-written root spells it isConnected(signal, target, method), not with Godot's Callable argument",
+    ),
+    ("PhysicsServer2D", "area_get_shape"): ("E", _SHAPE_INDEX),
+    ("PhysicsServer2D", "area_get_shape_transform"): ("E", _SHAPE_INDEX),
+    ("PhysicsServer2D", "body_get_shape"): ("E", _SHAPE_INDEX),
+    ("PhysicsServer2D", "body_get_shape_transform"): ("E", _SHAPE_INDEX),
+    ("PhysicsServer3D", "area_get_shape"): ("E", _SHAPE_INDEX),
+    ("PhysicsServer3D", "area_get_shape_transform"): ("E", _SHAPE_INDEX),
+    ("PhysicsServer3D", "body_get_shape"): ("E", _SHAPE_INDEX),
+    ("PhysicsServer3D", "body_get_shape_transform"): ("E", _SHAPE_INDEX),
+    ("PhysicsServer3D", "custom_shape_create"): ("F", "Godot Physics 3D has no custom shapes: it always returns RID() with an error"),
     ("ProjectSettings", "load_resource_pack"): ("E", "mounts a resource pack into res:// for the rest of the process"),
     ("GLTFDocument", "export_object_model_property"): (
         "E",
@@ -191,6 +213,7 @@ NON_BIND_HELPERS: dict[str, str] = {
 # read back as itself (it is clamped, normalised or validated against state a fresh object lacks),
 # and its setter and getter fall back to their method's own case (a setter is F, a const getter B).
 _LOADED_PATH = "set by load(path), which keeps the path only once the file loads"
+_HOST_DEVICE = "validated against the host's audio devices: a name the host lacks reads back as \"Default\""
 _CLAMPED_BY_FRAMES = "validated against the node's SpriteFrames, which a fresh node lacks: the set value is dropped"
 PAIR_OVERRIDES: dict[tuple[str, str], tuple[str | None, str]] = {
     ("AnimatedSprite2D", "animation"): (None, _CLAMPED_BY_FRAMES),
@@ -198,6 +221,8 @@ PAIR_OVERRIDES: dict[tuple[str, str], tuple[str | None, str]] = {
     ("AnimatedSprite3D", "animation"): (None, _CLAMPED_BY_FRAMES),
     ("AnimatedSprite3D", "frame"): (None, _CLAMPED_BY_FRAMES),
     ("AnimatedTexture", "current_frame"): (None, "clamped to the texture's frame count (1 on a fresh AnimatedTexture)"),
+    ("AudioServer", "input_device"): (None, _HOST_DEVICE),
+    ("AudioServer", "output_device"): (None, _HOST_DEVICE),
     ("AudioStreamMP3", "data"): ('fixture("mp3")', "keeps only bytes that decode as MP3"),
     ("CodeEdit", "indent_automatic_prefixes"): ('["@"]', "each prefix is one character (the setter keeps the first)"),
     ("CompressedTexture2D", "load_path"): (None, _LOADED_PATH),
@@ -371,6 +396,77 @@ STATIC_OBJECT_CHECKS: dict[tuple[str, str], tuple[tuple[str, ...], str]] = {
 STATIC_RESULTS: dict[tuple[str, str], tuple[str, str]] = {
     ("DirAccess", "get_drive_label"): ("weak", "a drive label exists only on Windows; every other host returns \"\""),
     ("Resource", "generate_scene_unique_id"): ("fresh", "a new random id per call"),
+}
+
+# ---- singleton rows -------------------------------------------------------------------------------------
+
+# Singletons whose property pairs run as set/restore rows (case A on the singleton): the row reads the
+# value, sets a recognisable other one, reads it back through the getter and `Object.get`, and sets the
+# value it read first back in a `finally`, so a failing row leaves the process as it found it. Every
+# other singleton's setters stay reach-only: their state is the running game's.
+SINGLETON_PAIRS: dict[str, str] = {
+    "Engine": "process-wide engine settings, restored by the row (frame rate caps, time scale, tick rate, ...)",
+    "AudioServer": "the audio mix settings, restored by the row (bus count, playback speed)",
+}
+
+# (singleton, setter) -> (getter, Godot literal of the key both take, reason): a keyed set/get method pair
+# of a singleton without properties, run like SINGLETON_PAIRS. The key is one no project defines, and the
+# row's restore (`null`) erases it again.
+SINGLETON_KEYED_PAIRS: dict[tuple[str, str], tuple[str, str, str]] = {
+    ("ProjectSettings", "set_setting"): (
+        "get_setting",
+        '"kanama/api_exercise/probe"',
+        "a project setting no project defines; setting it back to null erases it",
+    ),
+}
+
+# Servers whose argument-free `*_create` / `create_*` methods returning a RID run as factory rows: create,
+# require a valid (non-zero) RID, read one const `<prefix>_get_*` / `<prefix>_is_*` of it through the
+# wrapper and the Variant path where the server has one, and free the RID with the named method in a
+# `finally`. The same factories make the RID arguments of the server's B and D rows (RID_ARG_SOURCES), so
+# those rows read a live object instead of an invalid RID. server -> (free method, reason).
+RID_FACTORIES: dict[str, tuple[str, str]] = {
+    "RenderingServer": ("free_rid", "the rendering server's resources: meshes, textures, shaders, viewports, canvas items, ..."),
+    "NavigationServer2D": ("free_rid", "navigation maps, regions, links, agents and obstacles"),
+    "NavigationServer3D": ("free_rid", "navigation maps, regions, links, agents and obstacles"),
+    "PhysicsServer2D": ("free_rid", "physics spaces, shapes, bodies, areas and joints"),
+    "PhysicsServer3D": ("free_rid", "physics spaces, shapes, bodies, areas and joints"),
+    "TextServer": ("free_rid", "fonts and shaped texts of the running text server"),
+}
+
+# (server, factory) -> (platforms, reason): a factory that returns the invalid RID on those platforms for a
+# reason of the host, not of the call (the headless smoke runs the dummy renderer, which makes no lights,
+# skies, particles, ...). There its RID(0) counts weak; on every other platform it fails as usual.
+_DUMMY_RENDERER = "the headless dummy renderer (the desktop smoke) allocates none and returns RID()"
+FACTORY_RESULTS: dict[tuple[str, str], tuple[tuple[str, ...], str]] = {
+    ("RenderingServer", name): (("desktop",), _DUMMY_RENDERER)
+    for name in (
+        "area_light_create",
+        "canvas_texture_create",
+        "decal_create",
+        "directional_light_create",
+        "fog_volume_create",
+        "omni_light_create",
+        "particles_collision_create",
+        "particles_create",
+        "reflection_probe_create",
+        "skeleton_create",
+        "sky_create",
+        "spot_light_create",
+        "visibility_notifier_create",
+        "voxel_gi_create",
+    )
+}
+
+# (class, argument name) -> "Server.factory": the RID argument of a B or D row that the rule (an argument
+# `x` takes the class's own argument-free `x_create`) cannot name. The RID is freed after the row with the
+# server's RID_FACTORIES free method.
+RID_ARG_SOURCES: dict[tuple[str, str], str] = {
+    ("TextServer", "font_rid"): "TextServer.create_font",
+    ("TextServer", "font"): "TextServer.create_font",
+    ("TextServer", "shaped"): "TextServer.create_shaped_text",
+    ("RenderingServer", "texture"): "RenderingServer.texture_2d_placeholder_create",
+    ("Font", "canvas_item"): "RenderingServer.canvas_item_create",
 }
 
 # ---- known findings ------------------------------------------------------------------------------------

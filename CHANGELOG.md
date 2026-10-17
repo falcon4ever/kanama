@@ -174,6 +174,24 @@ Android: the return buffer Kanama handed the engine was zero-filled instead of h
 `Array`, and the engine resized a null `Array`. Every call that returns an `Array` or a typed array now
 passes a constructed one.
 
+### Added — tooling: the API exercise runs const, singleton and RID factory rows
+
+Contributors: the generated API exercise (`ApiExercise.generated.kt`, see
+[API Exercise Inventory](docs/reference/generated/api-exercise.md)) now also runs a row for every helper
+whose best case is a const method of a fresh object (B) or a singleton method (D): the wrapper's result
+must equal `Object.call` of the same method with the same arguments on the same object, and a result equal
+to its type's zero counts `weak` (the summary line's existing field) rather than failed. Arguments of one
+type alternate between two values by position, so a helper that swaps two cells shows. `Engine` and
+`AudioServer` property pairs and `ProjectSettings.set_setting`/`get_setting` run as set/read-back rows that
+restore the value they found in a `finally` (`SINGLETON_PAIRS`, `SINGLETON_KEYED_PAIRS`), and every
+argument-free `*_create` / `create_*` of the rendering, physics, navigation and text servers runs as a
+factory row: a valid RID, one read of it on both paths, then `free_rid` (`RID_FACTORIES`; the same
+factories make the RID arguments of those servers' B and D rows, `RID_ARG_SOURCES`, so a shaped text or a
+font a `TextServer` row uses is freed again). Methods whose call aborts the engine on a fresh object (a
+physics shape index the server does not bounds-check) are excluded in `METHOD_OVERRIDES` with that reason.
+`runtime_smoke.sh` runs the exercise with its row trace on (`KANAMA_API_EXERCISE_TRACE=1` now also prints
+each row's verdict) and names the row a crash happened in.
+
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 
 The control (a plain GDScript visibility-notifier export, `visibility-control` in `web.yml`) handed the

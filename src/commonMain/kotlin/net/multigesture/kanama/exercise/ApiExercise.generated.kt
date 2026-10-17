@@ -13,8 +13,8 @@ internal object ApiExerciseRows {
   /** Referenced helpers the inventory excludes (case E): reported, never run. */
   const val EXCLUDED: Int = 339
 
-  /** Rows in this file: 45 static (C), 50 property pair (A). */
-  const val ROWS: Int = 95
+  /** Rows in this file: 45 static (C), 60 pair (A), 321 const (B), 168 singleton (D). */
+  const val ROWS: Int = 594
 
   fun runStatic(r: ApiExerciseRunner) {
     c000(r)
@@ -115,6 +115,511 @@ internal object ApiExerciseRows {
     a047(r)
     a048(r)
     a049(r)
+    a050(r)
+    a051(r)
+    a052(r)
+    a053(r)
+    a054(r)
+    a055(r)
+    a056(r)
+    a057(r)
+    a058(r)
+    a059(r)
+  }
+
+  fun runConst(r: ApiExerciseRunner) {
+    b000(r)
+    b001(r)
+    b002(r)
+    b003(r)
+    b004(r)
+    b005(r)
+    b006(r)
+    b007(r)
+    b008(r)
+    b009(r)
+    b010(r)
+    b011(r)
+    b012(r)
+    b013(r)
+    b014(r)
+    b015(r)
+    b016(r)
+    b017(r)
+    b018(r)
+    b019(r)
+    b020(r)
+    b021(r)
+    b022(r)
+    b023(r)
+    b024(r)
+    b025(r)
+    b026(r)
+    b027(r)
+    b028(r)
+    b029(r)
+    b030(r)
+    b031(r)
+    b032(r)
+    b033(r)
+    b034(r)
+    b035(r)
+    b036(r)
+    b037(r)
+    b038(r)
+    b039(r)
+    b040(r)
+    b041(r)
+    b042(r)
+    b043(r)
+    b044(r)
+    b045(r)
+    b046(r)
+    b047(r)
+    b048(r)
+    b049(r)
+    b050(r)
+    b051(r)
+    b052(r)
+    b053(r)
+    b054(r)
+    b055(r)
+    b056(r)
+    b057(r)
+    b058(r)
+    b059(r)
+    b060(r)
+    b061(r)
+    b062(r)
+    b063(r)
+    b064(r)
+    b065(r)
+    b066(r)
+    b067(r)
+    b068(r)
+    b069(r)
+    b070(r)
+    b071(r)
+    b072(r)
+    b073(r)
+    b074(r)
+    b075(r)
+    b076(r)
+    b077(r)
+    b078(r)
+    b079(r)
+    b080(r)
+    b081(r)
+    b082(r)
+    b083(r)
+    b084(r)
+    b085(r)
+    b086(r)
+    b087(r)
+    b088(r)
+    b089(r)
+    b090(r)
+    b091(r)
+    b092(r)
+    b093(r)
+    b094(r)
+    b095(r)
+    b096(r)
+    b097(r)
+    b098(r)
+    b099(r)
+    b100(r)
+    b101(r)
+    b102(r)
+    b103(r)
+    b104(r)
+    b105(r)
+    b106(r)
+    b107(r)
+    b108(r)
+    b109(r)
+    b110(r)
+    b111(r)
+    b112(r)
+    b113(r)
+    b114(r)
+    b115(r)
+    b116(r)
+    b117(r)
+    b118(r)
+    b119(r)
+    b120(r)
+    b121(r)
+    b122(r)
+    b123(r)
+    b124(r)
+    b125(r)
+    b126(r)
+    b127(r)
+    b128(r)
+    b129(r)
+    b130(r)
+    b131(r)
+    b132(r)
+    b133(r)
+    b134(r)
+    b135(r)
+    b136(r)
+    b137(r)
+    b138(r)
+    b139(r)
+    b140(r)
+    b141(r)
+    b142(r)
+    b143(r)
+    b144(r)
+    b145(r)
+    b146(r)
+    b147(r)
+    b148(r)
+    b149(r)
+    b150(r)
+    b151(r)
+    b152(r)
+    b153(r)
+    b154(r)
+    b155(r)
+    b156(r)
+    b157(r)
+    b158(r)
+    b159(r)
+    b160(r)
+    b161(r)
+    b162(r)
+    b163(r)
+    b164(r)
+    b165(r)
+    b166(r)
+    b167(r)
+    b168(r)
+    b169(r)
+    b170(r)
+    b171(r)
+    b172(r)
+    b173(r)
+    b174(r)
+    b175(r)
+    b176(r)
+    b177(r)
+    b178(r)
+    b179(r)
+    b180(r)
+    b181(r)
+    b182(r)
+    b183(r)
+    b184(r)
+    b185(r)
+    b186(r)
+    b187(r)
+    b188(r)
+    b189(r)
+    b190(r)
+    b191(r)
+    b192(r)
+    b193(r)
+    b194(r)
+    b195(r)
+    b196(r)
+    b197(r)
+    b198(r)
+    b199(r)
+    b200(r)
+    b201(r)
+    b202(r)
+    b203(r)
+    b204(r)
+    b205(r)
+    b206(r)
+    b207(r)
+    b208(r)
+    b209(r)
+    b210(r)
+    b211(r)
+    b212(r)
+    b213(r)
+    b214(r)
+    b215(r)
+    b216(r)
+    b217(r)
+    b218(r)
+    b219(r)
+    b220(r)
+    b221(r)
+    b222(r)
+    b223(r)
+    b224(r)
+    b225(r)
+    b226(r)
+    b227(r)
+    b228(r)
+    b229(r)
+    b230(r)
+    b231(r)
+    b232(r)
+    b233(r)
+    b234(r)
+    b235(r)
+    b236(r)
+    b237(r)
+    b238(r)
+    b239(r)
+    b240(r)
+    b241(r)
+    b242(r)
+    b243(r)
+    b244(r)
+    b245(r)
+    b246(r)
+    b247(r)
+    b248(r)
+    b249(r)
+    b250(r)
+    b251(r)
+    b252(r)
+    b253(r)
+    b254(r)
+    b255(r)
+    b256(r)
+    b257(r)
+    b258(r)
+    b259(r)
+    b260(r)
+    b261(r)
+    b262(r)
+    b263(r)
+    b264(r)
+    b265(r)
+    b266(r)
+    b267(r)
+    b268(r)
+    b269(r)
+    b270(r)
+    b271(r)
+    b272(r)
+    b273(r)
+    b274(r)
+    b275(r)
+    b276(r)
+    b277(r)
+    b278(r)
+    b279(r)
+    b280(r)
+    b281(r)
+    b282(r)
+    b283(r)
+    b284(r)
+    b285(r)
+    b286(r)
+    b287(r)
+    b288(r)
+    b289(r)
+    b290(r)
+    b291(r)
+    b292(r)
+    b293(r)
+    b294(r)
+    b295(r)
+    b296(r)
+    b297(r)
+    b298(r)
+    b299(r)
+    b300(r)
+    b301(r)
+    b302(r)
+    b303(r)
+    b304(r)
+    b305(r)
+    b306(r)
+    b307(r)
+    b308(r)
+    b309(r)
+    b310(r)
+    b311(r)
+    b312(r)
+    b313(r)
+    b314(r)
+    b315(r)
+    b316(r)
+    b317(r)
+    b318(r)
+    b319(r)
+    b320(r)
+  }
+
+  fun runSingletons(r: ApiExerciseRunner) {
+    d000(r)
+    d001(r)
+    d002(r)
+    d003(r)
+    d004(r)
+    d005(r)
+    d006(r)
+    d007(r)
+    d008(r)
+    d009(r)
+    d010(r)
+    d011(r)
+    d012(r)
+    d013(r)
+    d014(r)
+    d015(r)
+    d016(r)
+    d017(r)
+    d018(r)
+    d019(r)
+    d020(r)
+    d021(r)
+    d022(r)
+    d023(r)
+    d024(r)
+    d025(r)
+    d026(r)
+    d027(r)
+    d028(r)
+    d029(r)
+    d030(r)
+    d031(r)
+    d032(r)
+    d033(r)
+    d034(r)
+    d035(r)
+    d036(r)
+    d037(r)
+    d038(r)
+    d039(r)
+    d040(r)
+    d041(r)
+    d042(r)
+    d043(r)
+    d044(r)
+    d045(r)
+    d046(r)
+    d047(r)
+    d048(r)
+    d049(r)
+    d050(r)
+    d051(r)
+    d052(r)
+    d053(r)
+    d054(r)
+    d055(r)
+    d056(r)
+    d057(r)
+    d058(r)
+    d059(r)
+    d060(r)
+    d061(r)
+    d062(r)
+    d063(r)
+    d064(r)
+    d065(r)
+    d066(r)
+    d067(r)
+    d068(r)
+    d069(r)
+    d070(r)
+    d071(r)
+    d072(r)
+    d073(r)
+    d074(r)
+    d075(r)
+    d076(r)
+    d077(r)
+    d078(r)
+    d079(r)
+    d080(r)
+    d081(r)
+    d082(r)
+    d083(r)
+    d084(r)
+    d085(r)
+    d086(r)
+    d087(r)
+    d088(r)
+    d089(r)
+    d090(r)
+    d091(r)
+    d092(r)
+    d093(r)
+    d094(r)
+    d095(r)
+    d096(r)
+    d097(r)
+    d098(r)
+    d099(r)
+    d100(r)
+    d101(r)
+    d102(r)
+    d103(r)
+    d104(r)
+    d105(r)
+    d106(r)
+    d107(r)
+    d108(r)
+    d109(r)
+    d110(r)
+    d111(r)
+    d112(r)
+    d113(r)
+    d114(r)
+    d115(r)
+    d116(r)
+    d117(r)
+    d118(r)
+    d119(r)
+    d120(r)
+    d121(r)
+    d122(r)
+    d123(r)
+    d124(r)
+    d125(r)
+    d126(r)
+    d127(r)
+    d128(r)
+    d129(r)
+    d130(r)
+    d131(r)
+    d132(r)
+    d133(r)
+    d134(r)
+    d135(r)
+    d136(r)
+    d137(r)
+    d138(r)
+    d139(r)
+    d140(r)
+    d141(r)
+    d142(r)
+    d143(r)
+    d144(r)
+    d145(r)
+    d146(r)
+    d147(r)
+    d148(r)
+    d149(r)
+    d150(r)
+    d151(r)
+    d152(r)
+    d153(r)
+    d154(r)
+    d155(r)
+    d156(r)
+    d157(r)
+    d158(r)
+    d159(r)
+    d160(r)
+    d161(r)
+    d162(r)
+    d163(r)
+    d164(r)
+    d165(r)
+    d166(r)
+    d167(r)
   }
 
   // static with a return value; weak: argument-free static whose result can be its type's zero on a healthy host
@@ -1629,8 +2134,28 @@ internal object ApiExerciseRows {
     r.end()
   }
 
-  // setter of `instance_materials`
+  // setter of the keyed value "kanama/api_exercise/probe", set and restored (SINGLETON_KEYED_PAIRS)
   private fun a049(r: ApiExerciseRunner) {
+    r.begin('A', "ptrcallWithStringAndVariantArg ptrcallWithStringAndVariantArgRetVariantScalar", "ProjectSettings.set_setting/get_setting")
+    try {
+      val key: String = "kanama/api_exercise/probe"
+      val s = r.singleton("ProjectSettings")
+      val before = r.track(ProjectSettings.getSetting(key))
+      try {
+        val v = r.pick(before, "kanama125", 7L)
+        ProjectSettings.setSetting(key, v)
+        r.pair(v, before, r.track(ProjectSettings.getSetting(key)), r.track(s.get(key)))
+      } finally {
+        ProjectSettings.setSetting(key, before)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // setter of `instance_materials`
+  private fun a050(r: ApiExerciseRunner) {
     r.begin('A', "ptrcallWithTypedMaterialListArg", "GLTFMesh.instance_materials")
     try {
       val o = r.ref(GLTFMesh(r.construct("GLTFMesh")))
@@ -1640,6 +2165,8817 @@ internal object ApiExerciseRows {
       val v = r.pick(before, listOf<Material>(f0), listOf<Material>(f1))
       o.setInstanceMaterials(v)
       r.pair(v, before, r.track(o.getInstanceMaterials()), r.track(o.get("instance_materials")))
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // getter of `bus_count`, set and restored on the singleton (SINGLETON_PAIRS)
+  private fun a051(r: ApiExerciseRunner) {
+    r.begin('A', "ptrcallNoArgsRetInt ptrcallWithIntArg", "AudioServer.bus_count")
+    try {
+      val s = r.singleton("AudioServer")
+      val before = r.track(AudioServer.getBusCount())
+      try {
+        val v = r.pick(before, 7, 3)
+        AudioServer.setBusCount(v)
+        r.pair(v, before, r.track(AudioServer.getBusCount()), r.track(s.get("bus_count")))
+      } finally {
+        AudioServer.setBusCount(before)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // getter of `playback_speed_scale`, set and restored on the singleton (SINGLETON_PAIRS)
+  private fun a052(r: ApiExerciseRunner) {
+    r.begin('A', "ptrcallNoArgsRetDouble ptrcallWithDoubleArg", "AudioServer.playback_speed_scale")
+    try {
+      val s = r.singleton("AudioServer")
+      val before = r.track(AudioServer.getPlaybackSpeedScale())
+      try {
+        val v = r.pick(before, 0.75, 0.25)
+        AudioServer.setPlaybackSpeedScale(v)
+        r.pair(v, before, r.track(AudioServer.getPlaybackSpeedScale()), r.track(s.get("playback_speed_scale")))
+      } finally {
+        AudioServer.setPlaybackSpeedScale(before)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // getter of `max_fps`, set and restored on the singleton (SINGLETON_PAIRS)
+  private fun a053(r: ApiExerciseRunner) {
+    r.begin('A', "ptrcallNoArgsRetInt ptrcallWithIntArg", "Engine.max_fps")
+    try {
+      val s = r.singleton("Engine")
+      val before = r.track(Engine.getMaxFps())
+      try {
+        val v = r.pick(before, 7, 3)
+        Engine.setMaxFps(v)
+        r.pair(v, before, r.track(Engine.getMaxFps()), r.track(s.get("max_fps")))
+      } finally {
+        Engine.setMaxFps(before)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // getter of `max_physics_steps_per_frame`, set and restored on the singleton (SINGLETON_PAIRS)
+  private fun a054(r: ApiExerciseRunner) {
+    r.begin('A', "ptrcallNoArgsRetInt ptrcallWithIntArg", "Engine.max_physics_steps_per_frame")
+    try {
+      val s = r.singleton("Engine")
+      val before = r.track(Engine.getMaxPhysicsStepsPerFrame())
+      try {
+        val v = r.pick(before, 7, 3)
+        Engine.setMaxPhysicsStepsPerFrame(v)
+        r.pair(v, before, r.track(Engine.getMaxPhysicsStepsPerFrame()), r.track(s.get("max_physics_steps_per_frame")))
+      } finally {
+        Engine.setMaxPhysicsStepsPerFrame(before)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // getter of `physics_jitter_fix`, set and restored on the singleton (SINGLETON_PAIRS)
+  private fun a055(r: ApiExerciseRunner) {
+    r.begin('A', "ptrcallNoArgsRetDouble ptrcallWithDoubleArg", "Engine.physics_jitter_fix")
+    try {
+      val s = r.singleton("Engine")
+      val before = r.track(Engine.getPhysicsJitterFix())
+      try {
+        val v = r.pick(before, 0.75, 0.25)
+        Engine.setPhysicsJitterFix(v)
+        r.pair(v, before, r.track(Engine.getPhysicsJitterFix()), r.track(s.get("physics_jitter_fix")))
+      } finally {
+        Engine.setPhysicsJitterFix(before)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // getter of `physics_ticks_per_second`, set and restored on the singleton (SINGLETON_PAIRS)
+  private fun a056(r: ApiExerciseRunner) {
+    r.begin('A', "ptrcallNoArgsRetInt ptrcallWithIntArg", "Engine.physics_ticks_per_second")
+    try {
+      val s = r.singleton("Engine")
+      val before = r.track(Engine.getPhysicsTicksPerSecond())
+      try {
+        val v = r.pick(before, 7, 3)
+        Engine.setPhysicsTicksPerSecond(v)
+        r.pair(v, before, r.track(Engine.getPhysicsTicksPerSecond()), r.track(s.get("physics_ticks_per_second")))
+      } finally {
+        Engine.setPhysicsTicksPerSecond(before)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // getter of `time_scale`, set and restored on the singleton (SINGLETON_PAIRS)
+  private fun a057(r: ApiExerciseRunner) {
+    r.begin('A', "ptrcallNoArgsRetDouble ptrcallWithDoubleArg", "Engine.time_scale")
+    try {
+      val s = r.singleton("Engine")
+      val before = r.track(Engine.getTimeScale())
+      try {
+        val v = r.pick(before, 0.75, 0.25)
+        Engine.setTimeScale(v)
+        r.pair(v, before, r.track(Engine.getTimeScale()), r.track(s.get("time_scale")))
+      } finally {
+        Engine.setTimeScale(before)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // getter of `print_error_messages`, set and restored on the singleton (SINGLETON_PAIRS)
+  private fun a058(r: ApiExerciseRunner) {
+    r.begin('A', "ptrcallNoArgsRetBool ptrcallWithBoolArg", "Engine.print_error_messages")
+    try {
+      val s = r.singleton("Engine")
+      val before = r.track(Engine.isPrintingErrorMessages())
+      try {
+        val v = r.pick(before, true, false)
+        Engine.setPrintErrorMessages(v)
+        r.pair(v, before, r.track(Engine.isPrintingErrorMessages()), r.track(s.get("print_error_messages")))
+      } finally {
+        Engine.setPrintErrorMessages(before)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // getter of `print_to_stdout`, set and restored on the singleton (SINGLETON_PAIRS)
+  private fun a059(r: ApiExerciseRunner) {
+    r.begin('A', "ptrcallNoArgsRetBool ptrcallWithBoolArg", "Engine.print_to_stdout")
+    try {
+      val s = r.singleton("Engine")
+      val before = r.track(Engine.isPrintingToStdout())
+      try {
+        val v = r.pick(before, true, false)
+        Engine.setPrintToStdout(v)
+        r.pair(v, before, r.track(Engine.isPrintingToStdout()), r.track(s.get("print_to_stdout")))
+      } finally {
+        Engine.setPrintToStdout(before)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b000(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallNoArgsRetPlaneList", "Camera3D.get_frustum")
+    try {
+      val o = r.obj(Camera3D(r.construct("Camera3D")))
+      val got = r.track(o.getFrustum())
+      r.oracle()
+      val oracle = r.track(o.call("get_frustum"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b001(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallNoArgsRetProjection", "Camera3D.get_camera_projection")
+    try {
+      val o = r.obj(Camera3D(r.construct("Camera3D")))
+      val got = r.track(o.getCameraProjection())
+      r.oracle()
+      val oracle = r.track(o.call("get_camera_projection"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b002(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallNoArgsRetStringNameList", "AnimationLibrary.get_animation_list")
+    try {
+      val o = r.ref(AnimationLibrary(r.construct("AnimationLibrary")))
+      val got = r.track(o.getAnimationList())
+      r.oracle()
+      val oracle = r.track(o.call("get_animation_list"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b003(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallNoArgsRetVector2iList", "TileMapLayer.get_used_cells")
+    try {
+      val o = r.obj(TileMapLayer(r.construct("TileMapLayer")))
+      val got = r.track(o.getUsedCells())
+      r.oracle()
+      val oracle = r.track(o.call("get_used_cells"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b004(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallNoArgsRetVector3iList", "GridMap.get_used_cells")
+    try {
+      val o = r.obj(GridMap(r.construct("GridMap")))
+      val got = r.track(o.getUsedCells())
+      r.oracle()
+      val oracle = r.track(o.call("get_used_cells"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b005(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithAABBArgRetVector3iList", "GridMap.get_octants_in_bounds")
+    try {
+      val o = r.obj(GridMap(r.construct("GridMap")))
+      val a0: AABB = AABB(Vector3(1.0, 2.0, 3.0), Vector3(4.0, 5.0, 6.0))
+      val got = r.track(o.getOctantsInBounds(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_octants_in_bounds", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b006(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithBasisArgRetInt", "GridMap.get_orthogonal_index_from_basis")
+    try {
+      val o = r.obj(GridMap(r.construct("GridMap")))
+      val a0: Basis = Basis(Vector3(2.0, 0.0, 0.0), Vector3(0.0, 3.0, 0.0), Vector3(0.0, 0.0, 4.0))
+      val got = r.track(o.getOrthogonalIndexFromBasis(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_orthogonal_index_from_basis", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b007(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithBoolAndDoubleArgRetByteArray", "Image.save_webp_to_buffer")
+    try {
+      val o = r.ref(Image(r.construct("Image")))
+      val got = r.track(o.saveWebpToBuffer())
+      r.oracle()
+      val oracle = r.track(o.call("save_webp_to_buffer"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b008(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithBoolAndIntArgsRetBool", "TextEdit.is_mouse_over_selection")
+    try {
+      val o = r.obj(TextEdit(r.construct("TextEdit")))
+      val a0: Boolean = true
+      val got = r.track(o.isMouseOverSelection(a0))
+      r.oracle()
+      val oracle = r.track(o.call("is_mouse_over_selection", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b009(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithBoolArgRetBool", "Control.has_focus")
+    try {
+      val o = r.obj(Control(r.construct("Control")))
+      val got = r.track(o.hasFocus())
+      r.oracle()
+      val oracle = r.track(o.call("has_focus"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b010(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithBoolArgRetInt", "Node.get_child_count")
+    try {
+      val o = r.obj(Node(r.construct("Node")))
+      val got = r.track(o.getChildCount())
+      r.oracle()
+      val oracle = r.track(o.call("get_child_count"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b011(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithBoolArgRetPackedInt32List", "TextEdit.get_sorted_carets")
+    try {
+      val o = r.obj(TextEdit(r.construct("TextEdit")))
+      val got = r.track(o.getSortedCarets())
+      r.oracle()
+      val oracle = r.track(o.call("get_sorted_carets"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b012(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithBoolArgRetTypedObjectList", "Node.get_children")
+    try {
+      val o = r.obj(Node(r.construct("Node")))
+      val got = r.track(o.getChildren())
+      r.oracle()
+      val oracle = r.track(o.call("get_children"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b013(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID", "Font.find_variation on FontFile")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Map<String, Any?> = mapOf<String, Any?>("kanama" to 125L)
+      val a1: Int = 0
+      val a2: Double = 0.0
+      val a3: Transform2D = Transform2D(Vector2(1.0, 0.0), Vector2(0.0, 1.0), Vector2(0.0, 0.0))
+      val a4: Int = 0
+      val a5: Int = 0
+      val a6: Int = 0
+      val a7: Int = 0
+      val a8: Double = 0.0
+      val a9: Long = 0L
+      val a10: List<Color> = emptyList()
+      val got = r.track(o.findVariation(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10))
+      r.oracle()
+      val oracle = r.track(o.call("find_variation", a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b014(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithDoubleAndBoolArgRetTransform2D", "Curve2D.sample_baked_with_rotation")
+    try {
+      val o = r.ref(Curve2D(r.construct("Curve2D")))
+      val got = r.track(o.sampleBakedWithRotation())
+      r.oracle()
+      val oracle = r.track(o.call("sample_baked_with_rotation"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b015(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithDoubleAndBoolArgRetVector2", "Curve2D.sample_baked")
+    try {
+      val o = r.ref(Curve2D(r.construct("Curve2D")))
+      val got = r.track(o.sampleBaked())
+      r.oracle()
+      val oracle = r.track(o.call("sample_baked"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b016(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithDoubleAndBoolArgRetVector3", "Curve3D.sample_baked")
+    try {
+      val o = r.ref(Curve3D(r.construct("Curve3D")))
+      val got = r.track(o.sampleBaked())
+      r.oracle()
+      val oracle = r.track(o.call("sample_baked"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b017(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithDoubleAndTwoBoolArgsRetTransform3D", "Curve3D.sample_baked_with_rotation")
+    try {
+      val o = r.ref(Curve3D(r.construct("Curve3D")))
+      val got = r.track(o.sampleBakedWithRotation())
+      r.oracle()
+      val oracle = r.track(o.call("sample_baked_with_rotation"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b018(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithDoubleArgRetByteArray", "Image.save_jpg_to_buffer")
+    try {
+      val o = r.ref(Image(r.construct("Image")))
+      val got = r.track(o.saveJpgToBuffer())
+      r.oracle()
+      val oracle = r.track(o.call("save_jpg_to_buffer"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b019(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithDoubleArgRetInt", "TextLine.hit_test")
+    try {
+      val o = r.ref(TextLine(r.construct("TextLine")))
+      val a0: Double = 0.75
+      val got = r.track(o.hitTest(a0))
+      r.oracle()
+      val oracle = r.track(o.call("hit_test", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b020(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithDoubleArgRetVector2", "Curve2D.samplef")
+    try {
+      val o = r.ref(Curve2D(r.construct("Curve2D")))
+      val a0: Double = 0.75
+      val got = r.track(o.samplef(a0))
+      r.oracle()
+      val oracle = r.track(o.call("samplef", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b021(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithDoubleArgRetVector3", "Curve3D.samplef")
+    try {
+      val o = r.ref(Curve3D(r.construct("Curve3D")))
+      val a0: Double = 0.75
+      val got = r.track(o.samplef(a0))
+      r.oracle()
+      val oracle = r.track(o.call("samplef", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b022(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithFloatArgRetFloat", "Curve.sample")
+    try {
+      val o = r.ref(Curve(r.construct("Curve")))
+      val a0: Double = 0.75
+      val got = r.track(o.sample(a0))
+      r.oracle()
+      val oracle = r.track(o.call("sample", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b023(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithFloatArgRetStringName", "Animation.get_marker_at_time")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Double = 0.75
+      val got = r.track(o.getMarkerAtTime(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_marker_at_time", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b024(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntAndBoolArgRetRect2", "ItemList.get_item_rect")
+    try {
+      val o = r.obj(ItemList(r.construct("ItemList")))
+      val a0: Int = 7
+      val got = r.track(o.getItemRect(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_item_rect", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b025(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntAndBoolArgsRetObject", "Node.get_child")
+    try {
+      val o = r.obj(Node(r.construct("Node")))
+      val a0: Int = 7
+      val got = r.track(o.getChild(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_child", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b026(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntAndDoubleArgRetDouble", "Animation.bezier_track_interpolate")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val a1: Double = 0.25
+      val got = r.track(o.bezierTrackInterpolate(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("bezier_track_interpolate", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b027(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntAndDoubleArgRetPackedVector2List", "Curve2D.tessellate")
+    try {
+      val o = r.ref(Curve2D(r.construct("Curve2D")))
+      val got = r.track(o.tessellate())
+      r.oracle()
+      val oracle = r.track(o.call("tessellate"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b028(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntAndDoubleArgRetPackedVector3List", "Curve3D.tessellate")
+    try {
+      val o = r.ref(Curve3D(r.construct("Curve3D")))
+      val got = r.track(o.tessellate())
+      r.oracle()
+      val oracle = r.track(o.call("tessellate"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b029(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntAndDoubleArgRetVector2", "Curve2D.sample")
+    try {
+      val o = r.ref(Curve2D(r.construct("Curve2D")))
+      val a0: Int = 7
+      val a1: Double = 0.25
+      val got = r.track(o.sample(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("sample", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b030(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntAndDoubleArgRetVector3", "Curve3D.sample")
+    try {
+      val o = r.ref(Curve3D(r.construct("Curve3D")))
+      val a0: Int = 7
+      val a1: Double = 0.25
+      val got = r.track(o.sample(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("sample", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b031(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntAndLongArgsRetLong", "FontFile.get_extra_spacing")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val a1: TextServer.SpacingType = TextServer.SpacingType(1L) /* SPACING_SPACE */
+      val got = r.track(o.getExtraSpacing(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_extra_spacing", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b032(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntAndStringNameArgRetBool", "Skeleton3D.has_bone_meta")
+    try {
+      val o = r.obj(Skeleton3D(r.construct("Skeleton3D")))
+      val a0: Int = 7
+      val a1: String = "kanama7"
+      val got = r.track(o.hasBoneMeta(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("has_bone_meta", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b033(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntAndStringNameArgRetVariantScalar", "Skeleton3D.get_bone_meta")
+    try {
+      val o = r.obj(Skeleton3D(r.construct("Skeleton3D")))
+      val a0: Int = 7
+      val a1: String = "kanama7"
+      val got = r.track(o.getBoneMeta(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_bone_meta", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b034(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntAndThreeBoolArgsRetObject", "TileData.get_navigation_polygon")
+    try {
+      val o = r.obj(TileData(r.construct("TileData")))
+      val a0: Int = 7
+      val got = r.track(o.getNavigationPolygon(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_navigation_polygon", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b035(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntAndVariantArgRetRect2", "TextParagraph.get_line_object_rect")
+    try {
+      val o = r.ref(TextParagraph(r.construct("TextParagraph")))
+      val a0: Int = 7
+      val a1: Any? = "kanama125"
+      val got = r.track(o.getLineObjectRect(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_line_object_rect", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b036(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntAndVector2iArgRetInt", "FontFile.get_texture_count")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val a1: Vector2i = Vector2i(3, 7)
+      val got = r.track(o.getTextureCount(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_texture_count", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b037(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetArray", "ImporterMesh.get_surface_arrays")
+    try {
+      val o = r.ref(ImporterMesh(r.construct("ImporterMesh")))
+      val a0: Int = 7
+      val got = r.track(o.getSurfaceArrays(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_surface_arrays", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b038(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetArrayList", "Mesh.surface_get_blend_shape_arrays")
+    try {
+      val o = r.ref(Mesh(r.construct("Mesh")))
+      val a0: Int = 7
+      val got = r.track(o.surfaceGetBlendShapeArrays(a0))
+      r.oracle()
+      val oracle = r.track(o.call("surface_get_blend_shape_arrays", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b039(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetBasis", "GridMap.get_basis_with_orthogonal_index")
+    try {
+      val o = r.obj(GridMap(r.construct("GridMap")))
+      val a0: Int = 7
+      val got = r.track(o.getBasisWithOrthogonalIndex(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_basis_with_orthogonal_index", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b040(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetBool", "AimModifier3D.is_relative")
+    try {
+      val o = r.obj(AimModifier3D(r.construct("AimModifier3D")))
+      val a0: Int = 7
+      val got = r.track(o.isRelative(a0))
+      r.oracle()
+      val oracle = r.track(o.call("is_relative", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b041(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetColor", "GraphNode.get_slot_color_left")
+    try {
+      val o = r.obj(GraphNode(r.construct("GraphNode")))
+      val a0: Int = 7
+      val got = r.track(o.getSlotColorLeft(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_slot_color_left", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b042(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetDictionary", "CodeEdit.get_code_completion_option")
+    try {
+      val o = r.obj(CodeEdit(r.construct("CodeEdit")))
+      val a0: Int = 7
+      val got = r.track(o.getCodeCompletionOption(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_code_completion_option", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b043(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetDouble", "AnimatedTexture.get_frame_duration")
+    try {
+      val o = r.ref(AnimatedTexture(r.construct("AnimatedTexture")))
+      val a0: Int = 7
+      val got = r.track(o.getFrameDuration(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_frame_duration", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b044(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetInt", "Animation.track_get_key_count")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val got = r.track(o.trackGetKeyCount(a0))
+      r.oracle()
+      val oracle = r.track(o.call("track_get_key_count", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b045(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetLong", "AimModifier3D.get_forward_axis")
+    try {
+      val o = r.obj(AimModifier3D(r.construct("AimModifier3D")))
+      val a0: Int = 7
+      val got = r.track(o.getForwardAxis(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_forward_axis", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b046(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetNodePath", "Animation.track_get_path")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val got = r.track(o.trackGetPath(a0))
+      r.oracle()
+      val oracle = r.track(o.call("track_get_path", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b047(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetObject", "AnimatedTexture.get_frame_texture")
+    try {
+      val o = r.ref(AnimatedTexture(r.construct("AnimatedTexture")))
+      val a0: Int = 7
+      val got = r.track(o.getFrameTexture(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_frame_texture", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b048(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetPackedFloat32List", "MeshDataTool.get_vertex_weights")
+    try {
+      val o = r.ref(MeshDataTool(r.construct("MeshDataTool")))
+      val a0: Int = 7
+      val got = r.track(o.getVertexWeights(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_vertex_weights", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b049(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetPackedInt32List", "MeshDataTool.get_edge_faces")
+    try {
+      val o = r.ref(MeshDataTool(r.construct("MeshDataTool")))
+      val a0: Int = 7
+      val got = r.track(o.getEdgeFaces(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_edge_faces", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b050(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetPackedStringList", "TextEdit.get_line_wrapped_text")
+    try {
+      val o = r.obj(TextEdit(r.construct("TextEdit")))
+      val a0: Int = 7
+      val got = r.track(o.getLineWrappedText(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_line_wrapped_text", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b051(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetPackedVector2List", "NavigationPolygon.get_outline")
+    try {
+      val o = r.ref(NavigationPolygon(r.construct("NavigationPolygon")))
+      val a0: Int = 7
+      val got = r.track(o.getOutline(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_outline", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b052(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetPlane", "MeshDataTool.get_vertex_tangent")
+    try {
+      val o = r.ref(MeshDataTool(r.construct("MeshDataTool")))
+      val a0: Int = 7
+      val got = r.track(o.getVertexTangent(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_vertex_tangent", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b053(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetQuaternion", "BoneTwistDisperser3D.get_twist_from")
+    try {
+      val o = r.obj(BoneTwistDisperser3D(r.construct("BoneTwistDisperser3D")))
+      val a0: Int = 7
+      val got = r.track(o.getTwistFrom(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_twist_from", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b054(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetRID", "KinematicCollision3D.get_collider_rid")
+    try {
+      val o = r.ref(KinematicCollision3D(r.construct("KinematicCollision3D")))
+      val got = r.track(o.getColliderRid())
+      r.oracle()
+      val oracle = r.track(o.call("get_collider_rid"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b055(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetRect2", "ItemList.get_item_icon_region")
+    try {
+      val o = r.obj(ItemList(r.construct("ItemList")))
+      val a0: Int = 7
+      val got = r.track(o.getItemIconRegion(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_item_icon_region", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b056(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetString", "AnimationNode.get_input_name")
+    try {
+      val o = r.ref(AnimationNode(r.construct("AnimationNode")))
+      val a0: Int = 7
+      val got = r.track(o.getInputName(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_input_name", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b057(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetStringName", "AnimationNodeBlendSpace1D.get_blend_point_name")
+    try {
+      val o = r.ref(AnimationNodeBlendSpace1D(r.construct("AnimationNodeBlendSpace1D")))
+      val a0: Int = 7
+      val got = r.track(o.getBlendPointName(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_blend_point_name", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b058(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetStringNameList", "Skeleton3D.get_bone_meta_list")
+    try {
+      val o = r.obj(Skeleton3D(r.construct("Skeleton3D")))
+      val a0: Int = 7
+      val got = r.track(o.getBoneMetaList(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_bone_meta_list", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b059(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetTransform2D", "FontFile.get_transform")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val got = r.track(o.getTransform(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_transform", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b060(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetTransform3D", "MeshLibrary.get_item_mesh_transform")
+    try {
+      val o = r.ref(MeshLibrary(r.construct("MeshLibrary")))
+      val a0: Int = 7
+      val got = r.track(o.getItemMeshTransform(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_item_mesh_transform", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b061(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetUInt32", "CollisionObject2D.shape_find_owner on Area2D")
+    try {
+      val o = r.obj(Area2D(r.construct("Area2D")))
+      val a0: Int = 7
+      val got = r.track(o.shapeFindOwner(a0))
+      r.oracle()
+      val oracle = r.track(o.call("shape_find_owner", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b062(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetVariantScalar", "GraphNode.get_slot_metadata_left")
+    try {
+      val o = r.obj(GraphNode(r.construct("GraphNode")))
+      val a0: Int = 7
+      val got = r.track(o.getSlotMetadataLeft(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_slot_metadata_left", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b063(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetVector2", "AnimationNodeBlendSpace2D.get_blend_point_position")
+    try {
+      val o = r.ref(AnimationNodeBlendSpace2D(r.construct("AnimationNodeBlendSpace2D")))
+      val a0: Int = 7
+      val got = r.track(o.getBlendPointPosition(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_blend_point_position", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b064(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetVector2i", "TextParagraph.get_line_range")
+    try {
+      val o = r.ref(TextParagraph(r.construct("TextParagraph")))
+      val a0: Int = 7
+      val got = r.track(o.getLineRange(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_line_range", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b065(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetVector2iList", "FontFile.get_size_cache_list")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val got = r.track(o.getSizeCacheList(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_size_cache_list", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b066(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetVector3", "Curve3D.get_point_in")
+    try {
+      val o = r.ref(Curve3D(r.construct("Curve3D")))
+      val a0: Int = 7
+      val got = r.track(o.getPointIn(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_point_in", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b067(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntArgRetVector3iList", "GridMap.get_used_cells_by_item")
+    try {
+      val o = r.obj(GridMap(r.construct("GridMap")))
+      val a0: Int = 7
+      val got = r.track(o.getUsedCellsByItem(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_used_cells_by_item", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b068(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntDoubleBoolArgsRetDouble", "Animation.blend_shape_track_interpolate")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val a1: Double = 0.25
+      val got = r.track(o.blendShapeTrackInterpolate(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("blend_shape_track_interpolate", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b069(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntDoubleBoolArgsRetQuaternion", "Animation.rotation_track_interpolate")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val a1: Double = 0.25
+      val got = r.track(o.rotationTrackInterpolate(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("rotation_track_interpolate", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b070(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntDoubleBoolArgsRetVariantScalar", "Animation.value_track_interpolate")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val a1: Double = 0.25
+      val got = r.track(o.valueTrackInterpolate(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("value_track_interpolate", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b071(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntDoubleBoolArgsRetVector3", "Animation.position_track_interpolate")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val a1: Double = 0.25
+      val got = r.track(o.positionTrackInterpolate(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("position_track_interpolate", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b072(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntDoubleLongTwoBoolArgsRetInt", "Animation.track_find_key")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val a1: Double = 0.25
+      val got = r.track(o.trackFindKey(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("track_find_key", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b073(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntStringVariantArgsRetDictionary", "JSONRPC.make_response_error")
+    try {
+      val o = r.obj(JSONRPC(r.construct("JSONRPC")))
+      val a0: Int = 7
+      val a1: String = "kanama7"
+      val got = r.track(o.makeResponseError(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("make_response_error", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b074(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntVector2iAndBoolArgRetBool", "TileMap.is_cell_flipped_h")
+    try {
+      val o = r.obj(TileMap(r.construct("TileMap")))
+      val a0: Int = 7
+      val a1: Vector2i = Vector2i(3, 7)
+      val got = r.track(o.isCellFlippedH(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("is_cell_flipped_h", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b075(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntVector2iAndBoolArgRetInt", "TileMap.get_cell_alternative_tile")
+    try {
+      val o = r.obj(TileMap(r.construct("TileMap")))
+      val a0: Int = 7
+      val a1: Vector2i = Vector2i(3, 7)
+      val got = r.track(o.getCellAlternativeTile(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_cell_alternative_tile", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b076(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntVector2iAndBoolArgRetObject", "TileMap.get_cell_tile_data")
+    try {
+      val o = r.obj(TileMap(r.construct("TileMap")))
+      val a0: Int = 7
+      val a1: Vector2i = Vector2i(3, 7)
+      val got = r.track(o.getCellTileData(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_cell_tile_data", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b077(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntVector2iAndBoolArgRetVector2i", "TileMap.get_cell_atlas_coords")
+    try {
+      val o = r.obj(TileMap(r.construct("TileMap")))
+      val a0: Int = 7
+      val a1: Vector2i = Vector2i(3, 7)
+      val got = r.track(o.getCellAtlasCoords(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_cell_atlas_coords", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b078(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntVector2iAndIntArgsRetVector2iList", "TileMapLayer.get_used_cells_by_id")
+    try {
+      val o = r.obj(TileMapLayer(r.construct("TileMapLayer")))
+      val a0: Int = -1
+      val a1: Vector2i = Vector2i(-1, -1)
+      val got = r.track(o.getUsedCellsById(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_used_cells_by_id", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b079(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntVector2iArgsRetPackedInt32List", "FontFile.get_glyph_list")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val a1: Vector2i = Vector2i(3, 7)
+      val got = r.track(o.getGlyphList(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_glyph_list", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b080(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntVector2iIntArgsRetArray", "TileSet.map_tile_proxy")
+    try {
+      val o = r.ref(TileSet(r.construct("TileSet")))
+      val a0: Int = 7
+      val a1: Vector2i = Vector2i(3, 7)
+      val a2: Int = 7
+      val got = r.track(o.mapTileProxy(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("map_tile_proxy", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b081(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntVector2iIntArgsRetInt", "FontFile.get_glyph_texture_idx")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val a1: Vector2i = Vector2i(3, 7)
+      val a2: Int = 7
+      val got = r.track(o.getGlyphTextureIdx(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("get_glyph_texture_idx", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b082(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntVector2iIntArgsRetObject", "FontFile.get_texture_image")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val a1: Vector2i = Vector2i(3, 7)
+      val a2: Int = 7
+      val got = r.track(o.getTextureImage(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("get_texture_image", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b083(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntVector2iIntArgsRetPackedInt32List", "FontFile.get_texture_offsets")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val a1: Vector2i = Vector2i(3, 7)
+      val a2: Int = 7
+      val got = r.track(o.getTextureOffsets(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("get_texture_offsets", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b084(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntVector2iIntArgsRetRect2", "FontFile.get_glyph_uv_rect")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val a1: Vector2i = Vector2i(3, 7)
+      val a2: Int = 7
+      val got = r.track(o.getGlyphUvRect(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("get_glyph_uv_rect", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b085(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntVector2iIntArgsRetVector2", "FontFile.get_glyph_offset")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val a1: Vector2i = Vector2i(3, 7)
+      val a2: Int = 7
+      val got = r.track(o.getGlyphOffset(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("get_glyph_offset", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b086(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithIntVector3ArgsRetDouble", "KinematicCollision3D.get_angle")
+    try {
+      val o = r.ref(KinematicCollision3D(r.construct("KinematicCollision3D")))
+      val a0: Int = 0
+      val a1: Vector3 = Vector3(0.0, 1.0, 0.0)
+      val got = r.track(o.getAngle(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_angle", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b087(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongAndFourIntArgsRetBool", "VisualShader.can_connect_nodes")
+    try {
+      val o = r.ref(VisualShader(r.construct("VisualShader")))
+      val a0: VisualShader.Type = VisualShader.Type(1L) /* TYPE_FRAGMENT */
+      val a1: Int = 3
+      val a2: Int = 7
+      val a3: Int = 3
+      val a4: Int = 7
+      val got = r.track(o.canConnectNodes(a0, a1, a2, a3, a4))
+      r.oracle()
+      val oracle = r.track(o.call("can_connect_nodes", a0, a1, a2, a3, a4))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b088(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongAndIntArgsRetObject", "VisualShader.get_node")
+    try {
+      val o = r.ref(VisualShader(r.construct("VisualShader")))
+      val a0: VisualShader.Type = VisualShader.Type(1L) /* TYPE_FRAGMENT */
+      val a1: Int = 3
+      val got = r.track(o.getNode(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_node", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b089(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongAndIntArgsRetVector2", "VisualShader.get_node_position")
+    try {
+      val o = r.ref(VisualShader(r.construct("VisualShader")))
+      val a0: VisualShader.Type = VisualShader.Type(1L) /* TYPE_FRAGMENT */
+      val a1: Int = 3
+      val got = r.track(o.getNodePosition(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_node_position", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b090(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongAndStringArgRetPackedStringList", "Theme.get_theme_item_list")
+    try {
+      val o = r.ref(Theme(r.construct("Theme")))
+      val a0: Theme.DataType = Theme.DataType(1L) /* DATA_TYPE_CONSTANT */
+      val a1: String = "kanama7"
+      val got = r.track(o.getThemeItemList(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_theme_item_list", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b091(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongAndTwoStringNameArgsRetBool", "Theme.has_theme_item")
+    try {
+      val o = r.ref(Theme(r.construct("Theme")))
+      val a0: Theme.DataType = Theme.DataType(1L) /* DATA_TYPE_CONSTANT */
+      val a1: String = "kanama7"
+      val a2: String = "kanama125"
+      val got = r.track(o.hasThemeItem(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("has_theme_item", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b092(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongAndTwoStringNameArgsRetVariantScalar", "Theme.get_theme_item")
+    try {
+      val o = r.ref(Theme(r.construct("Theme")))
+      val a0: Theme.DataType = Theme.DataType(1L) /* DATA_TYPE_CONSTANT */
+      val a1: String = "kanama7"
+      val a2: String = "kanama125"
+      val got = r.track(o.getThemeItem(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("get_theme_item", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b093(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetBool", "AStar2D.has_point")
+    try {
+      val o = r.ref(AStar2D(r.construct("AStar2D")))
+      val a0: Long = 7L
+      val got = r.track(o.hasPoint(a0))
+      r.oracle()
+      val oracle = r.track(o.call("has_point", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b094(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetByteArray", "RDShaderSPIRV.get_stage_bytecode")
+    try {
+      val o = r.ref(RDShaderSPIRV(r.construct("RDShaderSPIRV")))
+      val a0: RenderingDevice.ShaderStage = RenderingDevice.ShaderStage(1L) /* SHADER_STAGE_FRAGMENT */
+      val got = r.track(o.getStageBytecode(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_stage_bytecode", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b095(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetDictionaryList", "VisualShader.get_node_connections")
+    try {
+      val o = r.ref(VisualShader(r.construct("VisualShader")))
+      val a0: VisualShader.Type = VisualShader.Type(1L) /* TYPE_FRAGMENT */
+      val got = r.track(o.getNodeConnections(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_node_connections", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b096(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetDouble", "AStar2D.get_point_weight_scale")
+    try {
+      val o = r.ref(AStar2D(r.construct("AStar2D")))
+      val a0: Long = 7L
+      val got = r.track(o.getPointWeightScale(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_point_weight_scale", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b097(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetInt", "Camera2D.get_limit")
+    try {
+      val o = r.obj(Camera2D(r.construct("Camera2D")))
+      val a0: Side = Side(1L) /* SIDE_TOP */
+      val got = r.track(o.getLimit(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_limit", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b098(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetLong", "Image.detect_used_channels")
+    try {
+      val o = r.ref(Image(r.construct("Image")))
+      val got = r.track(o.detectUsedChannels())
+      r.oracle()
+      val oracle = r.track(o.call("detect_used_channels"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b099(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetNodePath", "Control.get_focus_neighbor")
+    try {
+      val o = r.obj(Control(r.construct("Control")))
+      val a0: Side = Side(1L) /* SIDE_TOP */
+      val got = r.track(o.getFocusNeighbor(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_focus_neighbor", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b100(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetObject", "BaseMaterial3D.get_texture on ORMMaterial3D")
+    try {
+      val o = r.ref(ORMMaterial3D(r.construct("ORMMaterial3D")))
+      val a0: BaseMaterial3D.TextureParam = BaseMaterial3D.TextureParam(1L) /* TEXTURE_METALLIC */
+      val got = r.track(o.getTexture(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_texture", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b101(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetPackedColorList", "Font.get_palette_colors on FontFile")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Long = 7L
+      val got = r.track(o.getPaletteColors(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_palette_colors", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b102(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetPackedInt32List", "VisualShader.get_node_list")
+    try {
+      val o = r.ref(VisualShader(r.construct("VisualShader")))
+      val a0: VisualShader.Type = VisualShader.Type(1L) /* TYPE_FRAGMENT */
+      val got = r.track(o.getNodeList(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_node_list", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b103(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetPackedStringList", "Theme.get_theme_item_type_list")
+    try {
+      val o = r.ref(Theme(r.construct("Theme")))
+      val a0: Theme.DataType = Theme.DataType(1L) /* DATA_TYPE_CONSTANT */
+      val got = r.track(o.getThemeItemTypeList(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_theme_item_type_list", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b104(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetString", "Font.get_palette_name on FontFile")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Long = 7L
+      val got = r.track(o.getPaletteName(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_palette_name", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b105(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetVector2", "AStar2D.get_point_position")
+    try {
+      val o = r.ref(AStar2D(r.construct("AStar2D")))
+      val a0: Long = 7L
+      val got = r.track(o.getPointPosition(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_point_position", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b106(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArgRetVector3", "AStar3D.get_point_position")
+    try {
+      val o = r.ref(AStar3D(r.construct("AStar3D")))
+      val a0: Long = 7L
+      val got = r.track(o.getPointPosition(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_point_position", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b107(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithLongArrayStringArgsRetVector3iList", "TextServer.parse_structured_text on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val a0: TextServer.StructuredTextParser = TextServer.StructuredTextParser(1L) /* STRUCTURED_TEXT_URI */
+      val a1: List<Any?> = listOf<Any?>(7L)
+      val a2: String = "kanama125"
+      val got = r.track(o.parseStructuredText(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("parse_structured_text", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b108(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithNodePathAndLongArgRetInt", "Animation.find_track")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: NodePath = NodePath("kanama/125")
+      val a1: Animation.TrackType = Animation.TrackType(1L) /* TYPE_POSITION_3D */
+      val got = r.track(o.findTrack(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("find_track", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b109(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithNodePathArgRetBool", "AnimationNode.is_path_filtered")
+    try {
+      val o = r.ref(AnimationNode(r.construct("AnimationNode")))
+      val a0: NodePath = NodePath("kanama/125")
+      val got = r.track(o.isPathFiltered(a0))
+      r.oracle()
+      val oracle = r.track(o.call("is_path_filtered", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b110(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithNodePathArgRetInt", "SceneReplicationConfig.property_get_index")
+    try {
+      val o = r.ref(SceneReplicationConfig(r.construct("SceneReplicationConfig")))
+      val a0: NodePath = NodePath("kanama/125")
+      val got = r.track(o.propertyGetIndex(a0))
+      r.oracle()
+      val oracle = r.track(o.call("property_get_index", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b111(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithNodePathArgRetObject", "Node.get_node")
+    try {
+      val o = r.obj(Node(r.construct("Node")))
+      val a0: NodePath = NodePath("kanama/125")
+      val got = r.track(o.getNode(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_node", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b112(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithNodePathArgRetVariantScalar", "Object.get_indexed")
+    try {
+      val o = r.obj(GodotObject(r.construct("Object")))
+      val a0: NodePath = NodePath("kanama/125")
+      val got = r.track(o.getIndexed(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_indexed", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b113(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithObjectAndBoolArgRetBool", "InputEvent.is_match on InputEventAction")
+    try {
+      val o = r.ref(InputEventAction(r.construct("InputEventAction")))
+      val f0 = r.ref(InputEventAction(r.construct("InputEventAction")))
+      val a0: InputEvent? = f0
+      val got = r.track(o.isMatch(a0))
+      r.oracle()
+      val oracle = r.track(o.call("is_match", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b114(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithObjectAndBoolArgRetNodePath", "Node.get_path_to")
+    try {
+      val o = r.obj(Node(r.construct("Node")))
+      val f0 = r.obj(Node(r.construct("Node")))
+      val a0: Node = f0
+      val got = r.track(o.getPathTo(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_path_to", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b115(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithObjectArgRetBool", "Area2D.overlaps_area")
+    try {
+      val o = r.obj(Area2D(r.construct("Area2D")))
+      val f0 = r.obj(Node(r.construct("Node")))
+      val a0: Node = f0
+      val got = r.track(o.overlapsArea(a0))
+      r.oracle()
+      val oracle = r.track(o.call("overlaps_area", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b116(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithObjectArgRetByteArray", "GLTFBufferView.load_buffer_view_data")
+    try {
+      val o = r.ref(GLTFBufferView(r.construct("GLTFBufferView")))
+      val f0 = r.ref(GLTFState(r.construct("GLTFState")))
+      val a0: GLTFState? = f0
+      val got = r.track(o.loadBufferViewData(a0))
+      r.oracle()
+      val oracle = r.track(o.call("load_buffer_view_data", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b117(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithObjectArgRetInt", "GLTFState.get_node_index")
+    try {
+      val o = r.ref(GLTFState(r.construct("GLTFState")))
+      val f0 = r.obj(Node(r.construct("Node")))
+      val a0: Node = f0
+      val got = r.track(o.getNodeIndex(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_node_index", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b118(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithObjectArgRetObject", "CanvasItem.make_input_local on Control")
+    try {
+      val o = r.obj(Control(r.construct("Control")))
+      val f0 = r.ref(InputEventAction(r.construct("InputEventAction")))
+      val a0: InputEvent = f0
+      val got = r.track(o.makeInputLocal(a0))
+      r.oracle()
+      val oracle = r.track(o.call("make_input_local", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b119(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithObjectArgRetStringName", "AnimationMixer.find_animation on AnimationPlayer")
+    try {
+      val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
+      val f0 = r.ref(Animation(r.construct("Animation")))
+      val a0: Animation? = f0
+      val got = r.track(o.findAnimation(a0))
+      r.oracle()
+      val oracle = r.track(o.call("find_animation", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b120(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithObjectArgRetTransform2D", "Node2D.get_relative_transform_to_parent")
+    try {
+      val o = r.obj(Node2D(r.construct("Node2D")))
+      val f0 = r.obj(Node(r.construct("Node")))
+      val a0: Node = f0
+      val got = r.track(o.getRelativeTransformToParent(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_relative_transform_to_parent", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b121(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndDoubleArgRetLong", "TextServer.shaped_text_hit_test_grapheme on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Double = 0.25
+      try {
+        val got = r.track(o.shapedTextHitTestGrapheme(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_hit_test_grapheme", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b122(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndLongArgRetBool", "TextServer.font_has_char on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Long = 3L
+      try {
+        val got = r.track(o.fontHasChar(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("font_has_char", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b123(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndLongArgRetDictionary", "TextServer.shaped_text_get_carets on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Long = 3L
+      try {
+        val got = r.track(o.shapedTextGetCarets(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_carets", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b124(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndLongArgRetDouble", "TextServer.font_get_ascent on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Long = 3L
+      try {
+        val got = r.track(o.fontGetAscent(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_ascent", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b125(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndLongArgRetInt", "TextServer.shaped_get_run_font_size on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Long = 3L
+      try {
+        val got = r.track(o.shapedGetRunFontSize(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_get_run_font_size", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b126(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndLongArgRetLong", "TextServer.font_get_spacing on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: TextServer.SpacingType = TextServer.SpacingType(1L) /* SPACING_SPACE */
+      try {
+        val got = r.track(o.fontGetSpacing(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_spacing", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b127(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndLongArgRetPackedColorList", "TextServer.font_get_palette_colors on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Long = 3L
+      try {
+        val got = r.track(o.fontGetPaletteColors(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_palette_colors", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b128(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndLongArgRetRID", "TextServer.shaped_get_run_font_rid on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Long = 3L
+      try {
+        val got = r.track(o.shapedGetRunFontRid(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_get_run_font_rid", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b129(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndLongArgRetString", "TextServer.font_get_palette_name on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Long = 3L
+      try {
+        val got = r.track(o.fontGetPaletteName(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_palette_name", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b130(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndLongArgRetVariantScalar", "TextServer.shaped_get_run_object on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Long = 3L
+      try {
+        val got = r.track(o.shapedGetRunObject(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_get_run_object", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b131(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndLongArgRetVector2", "TextServer.shaped_text_get_grapheme_bounds on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Long = 3L
+      try {
+        val got = r.track(o.shapedTextGetGraphemeBounds(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_grapheme_bounds", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b132(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndLongArgRetVector2i", "TextServer.shaped_get_run_glyph_range on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Long = 3L
+      try {
+        val got = r.track(o.shapedGetRunGlyphRange(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_get_run_glyph_range", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b133(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndLongArgRetVector2iList", "TextServer.font_get_kerning_list on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Long = 3L
+      try {
+        val got = r.track(o.fontGetKerningList(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_kerning_list", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b134(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndStringArgRetBool", "TextServer.font_is_language_supported on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: String = "kanama7"
+      try {
+        val got = r.track(o.fontIsLanguageSupported(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("font_is_language_supported", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b135(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndThreeLongArgsRetLong", "TextServer.font_get_glyph_index on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Long = 3L
+      val a2: Long = 7L
+      val a3: Long = 3L
+      try {
+        val got = r.track(o.fontGetGlyphIndex(x0, a1, a2, a3))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_glyph_index", x0, a1, a2, a3))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b136(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndTwoLongArgsRetDictionary", "TextServer.font_get_glyph_contours on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Long = 3L
+      val a2: Long = 7L
+      try {
+        val got = r.track(o.fontGetGlyphContours(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_glyph_contours", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b137(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndTwoLongArgsRetLong", "TextServer.font_get_char_from_glyph_index on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Long = 3L
+      val a2: Long = 7L
+      try {
+        val got = r.track(o.fontGetCharFromGlyphIndex(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_char_from_glyph_index", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b138(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndTwoLongArgsRetPackedInt32List", "TextServer.shaped_text_get_word_breaks on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      try {
+        val got = r.track(o.shapedTextGetWordBreaks(x0))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_word_breaks", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b139(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndTwoLongArgsRetPackedVector2List", "TextServer.shaped_text_get_selection on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Long = 3L
+      val a2: Long = 7L
+      try {
+        val got = r.track(o.shapedTextGetSelection(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_selection", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b140(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndTwoLongArgsRetRID", "TextServer.shaped_text_substr on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Long = 3L
+      val a2: Long = 7L
+      try {
+        val got = r.track(o.shapedTextSubstr(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_substr", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b141(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndTwoLongArgsRetVector2", "TextServer.font_get_glyph_advance on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Long = 3L
+      val a2: Long = 7L
+      try {
+        val got = r.track(o.fontGetGlyphAdvance(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_glyph_advance", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b142(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndVariantArgRetBool", "TextServer.shaped_text_has_object on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Any? = "kanama125"
+      try {
+        val got = r.track(o.shapedTextHasObject(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_has_object", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b143(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndVariantArgRetLong", "TextServer.shaped_text_get_object_glyph on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Any? = "kanama125"
+      try {
+        val got = r.track(o.shapedTextGetObjectGlyph(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_object_glyph", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b144(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndVariantArgRetRect2", "TextServer.shaped_text_get_object_rect on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Any? = "kanama125"
+      try {
+        val got = r.track(o.shapedTextGetObjectRect(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_object_rect", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b145(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndVariantArgRetVector2i", "TextServer.shaped_text_get_object_range on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Any? = "kanama125"
+      try {
+        val got = r.track(o.shapedTextGetObjectRange(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_object_range", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b146(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndVector2iArgRetLong", "TextServer.font_get_texture_count on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Vector2i = Vector2i(3, 7)
+      try {
+        val got = r.track(o.fontGetTextureCount(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_texture_count", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b147(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDAndVector2iArgRetPackedInt32List", "TextServer.font_get_glyph_list on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Vector2i = Vector2i(3, 7)
+      try {
+        val got = r.track(o.fontGetGlyphList(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_glyph_list", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b148(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetArray", "TextServer.shaped_text_get_objects on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      try {
+        val got = r.track(o.shapedTextGetObjects(x0))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_objects", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b149(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetBool", "TextServer.font_get_disable_embedded_bitmaps on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      try {
+        val got = r.track(o.fontGetDisableEmbeddedBitmaps(x0))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_disable_embedded_bitmaps", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b150(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetDictionary", "TextServer.font_get_opentype_feature_overrides on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      try {
+        val got = r.track(o.fontGetOpentypeFeatureOverrides(x0))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_opentype_feature_overrides", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b151(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetDictionaryList", "TextServer.font_get_size_cache_info on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      try {
+        val got = r.track(o.fontGetSizeCacheInfo(x0))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_size_cache_info", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b152(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetDouble", "TextServer.font_get_baseline_offset on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      try {
+        val got = r.track(o.fontGetBaselineOffset(x0))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_baseline_offset", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b153(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetLong", "TextServer.font_get_antialiasing on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      try {
+        val got = r.track(o.fontGetAntialiasing(x0))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_antialiasing", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b154(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetPackedColorList", "TextServer.font_get_palette_custom_colors on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      try {
+        val got = r.track(o.fontGetPaletteCustomColors(x0))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_palette_custom_colors", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b155(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetPackedInt32List", "TextServer.font_get_supported_glyphs on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      try {
+        val got = r.track(o.fontGetSupportedGlyphs(x0))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_supported_glyphs", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b156(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetRID", "TextServer.shaped_text_get_parent on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      try {
+        val got = r.track(o.shapedTextGetParent(x0))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_parent", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b157(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetString", "TextServer.font_get_name on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      try {
+        val got = r.track(o.fontGetName(x0))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_name", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b158(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetTransform2D", "TextServer.font_get_transform on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      try {
+        val got = r.track(o.fontGetTransform(x0))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_transform", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b159(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetVector2", "TextServer.shaped_text_get_size on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      try {
+        val got = r.track(o.shapedTextGetSize(x0))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_size", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b160(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetVector2i", "TextServer.shaped_text_get_range on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      try {
+        val got = r.track(o.shapedTextGetRange(x0))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_range", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b161(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDArgRetVector2iList", "TextServer.font_get_size_cache_list on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      try {
+        val got = r.track(o.fontGetSizeCacheList(x0))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_size_cache_list", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b162(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List", "TextServer.shaped_text_get_line_breaks on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: Double = 0.25
+      try {
+        val got = r.track(o.shapedTextGetLineBreaks(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_line_breaks", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b163(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDLongVector2iArgsRetVector2", "TextServer.font_get_kerning on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Long = 3L
+      val a2: Vector2i = Vector2i(7, 3)
+      try {
+        val got = r.track(o.fontGetKerning(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_kerning", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b164(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List", "TextServer.shaped_text_get_line_breaks_adv on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createShapedText()
+      val a1: List<Float> = listOf<Float>(0.25f)
+      try {
+        val got = r.track(o.shapedTextGetLineBreaksAdv(x0, a1))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_line_breaks_adv", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b165(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble", "Font.draw_char_outline on FontFile")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val x0 = RenderingServer.canvasItemCreate()
+      val a1: Vector2 = Vector2(0.75, 1.0)
+      val a2: Int = 7
+      val a3: Int = 3
+      val a4: Int = -1
+      val a5: Color = Color(1.0, 1.0, 1.0, 1.0)
+      try {
+        val got = r.track(o.drawCharOutline(x0, a1, a2, a3, a4, a5))
+        r.oracle()
+        val oracle = r.track(o.call("draw_char_outline", x0, a1, a2, a3, a4, a5))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b166(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble", "Font.draw_char on FontFile")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val x0 = RenderingServer.canvasItemCreate()
+      val a1: Vector2 = Vector2(0.75, 1.0)
+      val a2: Int = 7
+      val a3: Int = 3
+      val a4: Color = Color(1.0, 1.0, 1.0, 1.0)
+      try {
+        val got = r.track(o.drawChar(x0, a1, a2, a3, a4))
+        r.oracle()
+        val oracle = r.track(o.call("draw_char", x0, a1, a2, a3, a4))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b167(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDVector2iLongArgsRetLong", "TextServer.font_get_glyph_texture_idx on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Vector2i = Vector2i(3, 7)
+      val a2: Long = 7L
+      try {
+        val got = r.track(o.fontGetGlyphTextureIdx(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_glyph_texture_idx", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b168(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDVector2iLongArgsRetObject", "TextServer.font_get_texture_image on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Vector2i = Vector2i(3, 7)
+      val a2: Long = 7L
+      try {
+        val got = r.track(o.fontGetTextureImage(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_texture_image", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b169(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDVector2iLongArgsRetPackedInt32List", "TextServer.font_get_texture_offsets on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Vector2i = Vector2i(3, 7)
+      val a2: Long = 7L
+      try {
+        val got = r.track(o.fontGetTextureOffsets(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_texture_offsets", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b170(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDVector2iLongArgsRetRID", "TextServer.font_get_glyph_texture_rid on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Vector2i = Vector2i(3, 7)
+      val a2: Long = 7L
+      try {
+        val got = r.track(o.fontGetGlyphTextureRid(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_glyph_texture_rid", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b171(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDVector2iLongArgsRetRect2", "TextServer.font_get_glyph_uv_rect on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Vector2i = Vector2i(3, 7)
+      val a2: Long = 7L
+      try {
+        val got = r.track(o.fontGetGlyphUvRect(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_glyph_uv_rect", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b172(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRIDVector2iLongArgsRetVector2", "TextServer.font_get_glyph_offset on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val x0 = o.createFont()
+      val a1: Vector2i = Vector2i(3, 7)
+      val a2: Long = 7L
+      try {
+        val got = r.track(o.fontGetGlyphOffset(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_glyph_offset", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        o.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b173(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRect2ArgRetDictionaryList", "GraphEdit.get_connections_intersecting_with_rect")
+    try {
+      val o = r.obj(GraphEdit(r.construct("GraphEdit")))
+      val a0: Rect2 = Rect2(Vector2(1.0, 2.0), Vector2(3.0, 4.0))
+      val got = r.track(o.getConnectionsIntersectingWithRect(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_connections_intersecting_with_rect", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b174(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList", "BitMap.opaque_to_polygons")
+    try {
+      val o = r.ref(BitMap(r.construct("BitMap")))
+      val a0: Rect2i = Rect2i(Vector2i(1, 2), Vector2i(3, 4))
+      val got = r.track(o.opaqueToPolygons(a0))
+      r.oracle()
+      val oracle = r.track(o.call("opaque_to_polygons", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b175(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithRect2iArgRetDictionaryList", "AStarGrid2D.get_point_data_in_region")
+    try {
+      val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
+      val a0: Rect2i = Rect2i(Vector2i(1, 2), Vector2i(3, 4))
+      val got = r.track(o.getPointDataInRegion(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_point_data_in_region", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b176(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringAndBoolArgRetBool", "TranslationDomain.has_translation_for_locale")
+    try {
+      val o = r.ref(TranslationDomain(r.construct("TranslationDomain")))
+      val a0: String = "kanama125"
+      val a1: Boolean = true
+      val got = r.track(o.hasTranslationForLocale(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("has_translation_for_locale", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b177(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringAndBoolArgRetTypedObjectList", "TranslationDomain.find_translations")
+    try {
+      val o = r.ref(TranslationDomain(r.construct("TranslationDomain")))
+      val a0: String = "kanama125"
+      val a1: Boolean = true
+      val got = r.track(o.findTranslations(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("find_translations", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b178(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringAndDoubleArgRetLong", "Image.save_jpg")
+    try {
+      val o = r.ref(Image(r.construct("Image")))
+      val a0: String = r.scratch("Image.save_jpg.path")
+      val got = r.track(o.saveJpg(a0))
+      r.oracle()
+      val oracle = r.track(o.call("save_jpg", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b179(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringAndPackedStringListArgRetLong", "TextServer.is_confusable on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val a0: String = "kanama125"
+      val a1: List<String> = listOf<String>("kanama7")
+      val got = r.track(o.isConfusable(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("is_confusable", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b180(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringAndStringNameArgRetString", "Node.atr")
+    try {
+      val o = r.obj(Node(r.construct("Node")))
+      val a0: String = "kanama125"
+      val got = r.track(o.atr(a0))
+      r.oracle()
+      val oracle = r.track(o.call("atr", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b181(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringAndTwoBoolArgsRetObject", "Node.find_child")
+    try {
+      val o = r.obj(Node(r.construct("Node")))
+      val a0: String = "kanama125"
+      val got = r.track(o.findChild(a0))
+      r.oracle()
+      val oracle = r.track(o.call("find_child", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b182(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringArgRetBool", "CodeEdit.has_auto_brace_completion_close_key")
+    try {
+      val o = r.obj(CodeEdit(r.construct("CodeEdit")))
+      val a0: String = "kanama125"
+      val got = r.track(o.hasAutoBraceCompletionCloseKey(a0))
+      r.oracle()
+      val oracle = r.track(o.call("has_auto_brace_completion_close_key", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b183(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringArgRetColor", "CodeHighlighter.get_keyword_color")
+    try {
+      val o = r.ref(CodeHighlighter(r.construct("CodeHighlighter")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getKeywordColor(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_keyword_color", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b184(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringArgRetInt", "AnimationNode.find_input")
+    try {
+      val o = r.ref(AnimationNode(r.construct("AnimationNode")))
+      val a0: String = "kanama125"
+      val got = r.track(o.findInput(a0))
+      r.oracle()
+      val oracle = r.track(o.call("find_input", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b185(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringArgRetLong", "Image.save_dds")
+    try {
+      val o = r.ref(Image(r.construct("Image")))
+      val a0: String = r.scratch("Image.save_dds.path")
+      val got = r.track(o.saveDds(a0))
+      r.oracle()
+      val oracle = r.track(o.call("save_dds", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b186(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringArgRetObject", "Node.find_parent")
+    try {
+      val o = r.obj(Node(r.construct("Node")))
+      val a0: String = "kanama125"
+      val got = r.track(o.findParent(a0))
+      r.oracle()
+      val oracle = r.track(o.call("find_parent", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b187(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringArgRetPackedStringList", "ConfigFile.get_section_keys")
+    try {
+      val o = r.ref(ConfigFile(r.construct("ConfigFile")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getSectionKeys(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_section_keys", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b188(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringArgRetString", "CodeEdit.get_auto_brace_completion_close_key")
+    try {
+      val o = r.obj(CodeEdit(r.construct("CodeEdit")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getAutoBraceCompletionCloseKey(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_auto_brace_completion_close_key", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b189(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringArgRetVariantScalar", "TileData.get_custom_data")
+    try {
+      val o = r.obj(TileData(r.construct("TileData")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getCustomData(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_custom_data", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b190(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringBoolDoubleArgsRetLong", "Image.save_webp")
+    try {
+      val o = r.ref(Image(r.construct("Image")))
+      val a0: String = r.scratch("Image.save_webp.path")
+      val got = r.track(o.saveWebp(a0))
+      r.oracle()
+      val oracle = r.track(o.call("save_webp", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b191(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2", "Font.get_string_size on FontFile")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getStringSize(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_string_size", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b192(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2", "Font.get_multiline_string_size on FontFile")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getMultilineStringSize(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_multiline_string_size", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b193(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameAndBoolArgRetBool", "InputEvent.is_action on InputEventAction")
+    try {
+      val o = r.ref(InputEventAction(r.construct("InputEventAction")))
+      val a0: String = "kanama125"
+      val got = r.track(o.isAction(a0))
+      r.oracle()
+      val oracle = r.track(o.call("is_action", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b194(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameAndBoolArgRetDouble", "InputEvent.get_action_strength on InputEventAction")
+    try {
+      val o = r.ref(InputEventAction(r.construct("InputEventAction")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getActionStrength(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_action_strength", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b195(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameAndIntArgRetDouble", "SpriteFrames.get_frame_duration")
+    try {
+      val o = r.ref(SpriteFrames(r.construct("SpriteFrames")))
+      val a0: String = "kanama125"
+      val a1: Int = 3
+      val got = r.track(o.getFrameDuration(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_frame_duration", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b196(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameAndIntArgRetObject", "Shader.get_default_texture_parameter")
+    try {
+      val o = r.ref(Shader(r.construct("Shader")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getDefaultTextureParameter(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_default_texture_parameter", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b197(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameAndTwoBoolArgsRetBool", "InputEvent.is_action_pressed on InputEventAction")
+    try {
+      val o = r.ref(InputEventAction(r.construct("InputEventAction")))
+      val a0: String = "kanama125"
+      val got = r.track(o.isActionPressed(a0))
+      r.oracle()
+      val oracle = r.track(o.call("is_action_pressed", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b198(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameAndVariantArgRetVariantScalar", "Object.get_meta")
+    try {
+      val o = r.obj(GodotObject(r.construct("Object")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getMeta(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_meta", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b199(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameArgRetBool", "Animation.has_marker")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: String = "kanama125"
+      val got = r.track(o.hasMarker(a0))
+      r.oracle()
+      val oracle = r.track(o.call("has_marker", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b200(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameArgRetColor", "Animation.get_marker_color")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getMarkerColor(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_marker_color", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b201(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameArgRetDictionaryList", "GraphEdit.get_connection_list_from_node")
+    try {
+      val o = r.obj(GraphEdit(r.construct("GraphEdit")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getConnectionListFromNode(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_connection_list_from_node", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b202(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameArgRetDouble", "Animation.get_marker_time")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getMarkerTime(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_marker_time", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b203(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameArgRetInt", "AnimationNodeBlendSpace1D.find_blend_point_by_name")
+    try {
+      val o = r.ref(AnimationNodeBlendSpace1D(r.construct("AnimationNodeBlendSpace1D")))
+      val a0: String = "kanama125"
+      val got = r.track(o.findBlendPointByName(a0))
+      r.oracle()
+      val oracle = r.track(o.call("find_blend_point_by_name", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b204(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameArgRetLong", "SpriteFrames.get_animation_loop_mode")
+    try {
+      val o = r.ref(SpriteFrames(r.construct("SpriteFrames")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getAnimationLoopMode(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_animation_loop_mode", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b205(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameArgRetObject", "AnimationLibrary.get_animation")
+    try {
+      val o = r.ref(AnimationLibrary(r.construct("AnimationLibrary")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getAnimation(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_animation", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b206(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameArgRetPackedStringList", "Theme.get_type_variation_list")
+    try {
+      val o = r.ref(Theme(r.construct("Theme")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getTypeVariationList(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_type_variation_list", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b207(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameArgRetStringName", "AnimationPlayer.animation_get_next")
+    try {
+      val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
+      val a0: String = "kanama125"
+      val got = r.track(o.animationGetNext(a0))
+      r.oracle()
+      val oracle = r.track(o.call("animation_get_next", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b208(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameArgRetVariantScalar", "AnimationNode.get_parameter")
+    try {
+      val o = r.ref(AnimationNode(r.construct("AnimationNode")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getParameter(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_parameter", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b209(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameArgRetVector2", "AnimationNodeBlendTree.get_node_position")
+    try {
+      val o = r.ref(AnimationNodeBlendTree(r.construct("AnimationNodeBlendTree")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getNodePosition(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_node_position", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b210(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringStringNameIntStringNameArgsRetString", "Node.atr_n")
+    try {
+      val o = r.obj(Node(r.construct("Node")))
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val a2: Int = 7
+      val got = r.track(o.atrN(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("atr_n", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b211(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringTwoBoolAndDoubleArgRetLong", "Image.save_exr")
+    try {
+      val o = r.ref(Image(r.construct("Image")))
+      val a0: String = r.scratch("Image.save_exr.path")
+      val got = r.track(o.saveExr(a0))
+      r.oracle()
+      val oracle = r.track(o.call("save_exr", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b212(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringTwoIntArgsRetTypedObjectList", "RegEx.search_all")
+    try {
+      val o = r.ref(RegEx(r.construct("RegEx")))
+      val a0: String = "kanama125"
+      val got = r.track(o.searchAll(a0))
+      r.oracle()
+      val oracle = r.track(o.call("search_all", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b213(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringUInt32TwoIntArgsRetVector2i", "TextEdit.search")
+    try {
+      val o = r.obj(TextEdit(r.construct("TextEdit")))
+      val a0: String = "kanama125"
+      val a1: Long = 3L
+      val a2: Int = 7
+      val a3: Int = 3
+      val got = r.track(o.search(a0, a1, a2, a3))
+      r.oracle()
+      val oracle = r.track(o.call("search", a0, a1, a2, a3))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b214(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithThreeDoubleArgsRetDouble", "Noise.get_noise_3d on FastNoiseLite")
+    try {
+      val o = r.ref(FastNoiseLite(r.construct("FastNoiseLite")))
+      val a0: Double = 0.75
+      val a1: Double = 0.25
+      val a2: Double = 0.75
+      val got = r.track(o.getNoise3d(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("get_noise_3d", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b215(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithThreeIntArgsRetInt", "FontFile.get_glyph_index")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val a2: Int = 7
+      val got = r.track(o.getGlyphIndex(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("get_glyph_index", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b216(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithThreeIntArgsRetVector2", "FontFile.get_glyph_advance")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val a2: Int = 7
+      val got = r.track(o.getGlyphAdvance(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("get_glyph_advance", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b217(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithThreeIntArgsRetVector2i", "TextEdit.get_next_visible_line_index_offset_from")
+    try {
+      val o = r.obj(TextEdit(r.construct("TextEdit")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val a2: Int = 7
+      val got = r.track(o.getNextVisibleLineIndexOffsetFrom(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("get_next_visible_line_index_offset_from", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b218(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoBoolAndDoubleArgRetByteArray", "Image.save_exr_to_buffer")
+    try {
+      val o = r.ref(Image(r.construct("Image")))
+      val got = r.track(o.saveExrToBuffer())
+      r.oracle()
+      val oracle = r.track(o.call("save_exr_to_buffer"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b219(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoBoolArgsRetVector2iList", "TextEdit.get_line_ranges_from_carets")
+    try {
+      val o = r.obj(TextEdit(r.construct("TextEdit")))
+      val got = r.track(o.getLineRangesFromCarets())
+      r.oracle()
+      val oracle = r.track(o.call("get_line_ranges_from_carets"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b220(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoDoubleArgsRetDouble", "Noise.get_noise_2d on FastNoiseLite")
+    try {
+      val o = r.ref(FastNoiseLite(r.construct("FastNoiseLite")))
+      val a0: Double = 0.75
+      val a1: Double = 0.25
+      val got = r.track(o.getNoise2d(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_noise_2d", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b221(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntAndThreeBoolArgsRetObject", "TileData.get_occluder_polygon")
+    try {
+      val o = r.obj(TileData(r.construct("TileData")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getOccluderPolygon(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_occluder_polygon", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b222(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetArray", "Animation.method_track_get_params")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.methodTrackGetParams(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("method_track_get_params", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b223(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetBool", "AStarGrid2D.is_in_bounds")
+    try {
+      val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.isInBounds(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("is_in_bounds", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b224(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetColor", "Image.get_pixel")
+    try {
+      val o = r.ref(Image(r.construct("Image")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getPixel(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_pixel", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b225(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetDouble", "Animation.audio_track_get_key_end_offset")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.audioTrackGetKeyEndOffset(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("audio_track_get_key_end_offset", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b226(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetInt", "AudioStreamInteractive.get_transition_filler_clip")
+    try {
+      val o = r.ref(AudioStreamInteractive(r.construct("AudioStreamInteractive")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getTransitionFillerClip(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_transition_filler_clip", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b227(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetLong", "AudioStreamInteractive.get_transition_fade_mode")
+    try {
+      val o = r.ref(AudioStreamInteractive(r.construct("AudioStreamInteractive")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getTransitionFadeMode(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_transition_fade_mode", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b228(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetNodePath", "SpringBoneSimulator3D.get_collision_path")
+    try {
+      val o = r.obj(SpringBoneSimulator3D(r.construct("SpringBoneSimulator3D")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getCollisionPath(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_collision_path", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b229(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetObject", "Animation.audio_track_get_key_stream")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.audioTrackGetKeyStream(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("audio_track_get_key_stream", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b230(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetPackedInt32List", "ImporterMesh.get_surface_lod_indices")
+    try {
+      val o = r.ref(ImporterMesh(r.construct("ImporterMesh")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getSurfaceLodIndices(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_surface_lod_indices", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b231(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetPackedVector2List", "TileData.get_collision_polygon_points")
+    try {
+      val o = r.obj(TileData(r.construct("TileData")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getCollisionPolygonPoints(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_collision_polygon_points", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b232(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetQuaternion", "IterateIK3D.get_joint_limitation_rotation_offset on CCDIK3D")
+    try {
+      val o = r.obj(CCDIK3D(r.construct("CCDIK3D")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getJointLimitationRotationOffset(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_joint_limitation_rotation_offset", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b233(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetRect2i", "TextEdit.get_rect_at_line_column")
+    try {
+      val o = r.obj(TextEdit(r.construct("TextEdit")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getRectAtLineColumn(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_rect_at_line_column", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b234(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetString", "BoneTwistDisperser3D.get_joint_bone_name")
+    try {
+      val o = r.obj(BoneTwistDisperser3D(r.construct("BoneTwistDisperser3D")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getJointBoneName(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_joint_bone_name", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b235(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetStringName", "Animation.animation_track_get_key_animation")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.animationTrackGetKeyAnimation(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("animation_track_get_key_animation", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b236(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetVariantScalar", "Animation.track_get_key_value")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.trackGetKeyValue(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("track_get_key_value", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b237(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetVector2", "Animation.bezier_track_get_key_in_handle")
+    try {
+      val o = r.ref(Animation(r.construct("Animation")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.bezierTrackGetKeyInHandle(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("bezier_track_get_key_in_handle", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b238(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetVector2i", "TextEdit.get_pos_at_line_column")
+    try {
+      val o = r.obj(TextEdit(r.construct("TextEdit")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getPosAtLineColumn(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_pos_at_line_column", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b239(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetVector2iList", "FontFile.get_kerning_list")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getKerningList(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_kerning_list", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b240(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntArgsRetVector3", "IterateIK3D.get_joint_limitation_right_axis_vector on CCDIK3D")
+    try {
+      val o = r.obj(CCDIK3D(r.construct("CCDIK3D")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getJointLimitationRightAxisVector(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_joint_limitation_right_axis_vector", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b241(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntTwoBoolArgsRetInt", "TextEdit.get_selection_at_line_column")
+    try {
+      val o = r.obj(TextEdit(r.construct("TextEdit")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val got = r.track(o.getSelectionAtLineColumn(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_selection_at_line_column", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b242(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntVector2iAndIntArgsRetVector2iList", "TileMap.get_used_cells_by_id")
+    try {
+      val o = r.obj(TileMap(r.construct("TileMap")))
+      val a0: Int = 7
+      val a1: Int = -1
+      val a2: Vector2i = Vector2i(-1, -1)
+      val got = r.track(o.getUsedCellsById(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("get_used_cells_by_id", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b243(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoIntVector2iArgRetVector2", "FontFile.get_kerning")
+    try {
+      val o = r.ref(FontFile(r.construct("FontFile")))
+      val a0: Int = 7
+      val a1: Int = 3
+      val a2: Vector2i = Vector2i(7, 3)
+      val got = r.track(o.getKerning(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("get_kerning", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b244(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoLongAndBoolArgsRetBool", "AStar2D.are_points_connected")
+    try {
+      val o = r.ref(AStar2D(r.construct("AStar2D")))
+      val a0: Long = 7L
+      val a1: Long = 3L
+      val got = r.track(o.arePointsConnected(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("are_points_connected", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b245(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoLongArgsRetVector2", "TextServer.get_hex_code_box_size on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val a0: Long = 7L
+      val a1: Long = 3L
+      val got = r.track(o.getHexCodeBoxSize(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_hex_code_box_size", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b246(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringAndLongArgRetPackedInt32List", "TextServer.string_get_word_breaks on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val a0: String = "kanama125"
+      val got = r.track(o.stringGetWordBreaks(a0))
+      r.oracle()
+      val oracle = r.track(o.call("string_get_word_breaks", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b247(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList", "Node.find_children")
+    try {
+      val o = r.obj(Node(r.construct("Node")))
+      val a0: String = "kanama125"
+      val got = r.track(o.findChildren(a0))
+      r.oracle()
+      val oracle = r.track(o.call("find_children", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b248(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringAndVariantArgRetVariantScalar", "ConfigFile.get_value")
+    try {
+      val o = r.ref(ConfigFile(r.construct("ConfigFile")))
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val got = r.track(o.getValue(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_value", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b249(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringArgsRetBool", "ConfigFile.has_section_key")
+    try {
+      val o = r.ref(ConfigFile(r.construct("ConfigFile")))
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val got = r.track(o.hasSectionKey(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("has_section_key", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b250(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringArgsRetPackedInt32List", "TextServer.string_get_character_breaks on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val a0: String = "kanama125"
+      val got = r.track(o.stringGetCharacterBreaks(a0))
+      r.oracle()
+      val oracle = r.track(o.call("string_get_character_breaks", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b251(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringArgsRetString", "TextServer.format_number on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val a0: String = "kanama125"
+      val got = r.track(o.formatNumber(a0))
+      r.oracle()
+      val oracle = r.track(o.call("format_number", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b252(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringBoolTwoIntArgsRetString", "RegEx.sub")
+    try {
+      val o = r.ref(RegEx(r.construct("RegEx")))
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val got = r.track(o.sub(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("sub", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b253(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringNameArgsRetBool", "AnimationNodeStateMachine.has_transition")
+    try {
+      val o = r.ref(AnimationNodeStateMachine(r.construct("AnimationNodeStateMachine")))
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val got = r.track(o.hasTransition(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("has_transition", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b254(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringNameArgsRetColor", "Control.get_theme_color")
+    try {
+      val o = r.obj(Control(r.construct("Control")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getThemeColor(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_theme_color", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b255(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringNameArgsRetDouble", "AnimationPlayer.get_blend_time")
+    try {
+      val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val got = r.track(o.getBlendTime(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_blend_time", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b256(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringNameArgsRetInt", "Control.get_theme_constant")
+    try {
+      val o = r.obj(Control(r.construct("Control")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getThemeConstant(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_theme_constant", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b257(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringNameArgsRetObject", "Control.get_theme_font")
+    try {
+      val o = r.obj(Control(r.construct("Control")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getThemeFont(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_theme_font", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b258(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringNameArgsRetString", "Object.tr")
+    try {
+      val o = r.obj(GodotObject(r.construct("Object")))
+      val a0: String = "kanama125"
+      val got = r.track(o.tr(a0))
+      r.oracle()
+      val oracle = r.track(o.call("tr", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b259(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringNameArgsRetStringName", "Translation.get_message")
+    try {
+      val o = r.ref(Translation(r.construct("Translation")))
+      val a0: String = "kanama125"
+      val got = r.track(o.getMessage(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_message", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b260(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringNameIntStringNameArgsRetString", "Object.tr_n")
+    try {
+      val o = r.obj(GodotObject(r.construct("Object")))
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val a2: Int = 7
+      val got = r.track(o.trN(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("tr_n", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b261(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoStringNameIntStringNameArgsRetStringName", "Translation.get_plural_message")
+    try {
+      val o = r.ref(Translation(r.construct("Translation")))
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val a2: Int = 7
+      val got = r.track(o.getPluralMessage(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(o.call("get_plural_message", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b262(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoVector2ArgsRetPackedVector2List", "GraphEdit.get_connection_line")
+    try {
+      val o = r.obj(GraphEdit(r.construct("GraphEdit")))
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val a1: Vector2 = Vector2(0.75, 1.0)
+      val got = r.track(o.getConnectionLine(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_connection_line", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b263(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoVector2iIntVector2iIntVector2iArgsRetBool", "TileSetAtlasSource.has_room_for_tile")
+    try {
+      val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val a1: Vector2i = Vector2i(3, 7)
+      val a2: Int = 7
+      val a3: Vector2i = Vector2i(3, 7)
+      val a4: Int = 7
+      val a5: Vector2i = Vector2i(-1, -1)
+      val got = r.track(o.hasRoomForTile(a0, a1, a2, a3, a4, a5))
+      r.oracle()
+      val oracle = r.track(o.call("has_room_for_tile", a0, a1, a2, a3, a4, a5))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b264(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoVector3ArgsRetDictionary", "TriangleMesh.intersect_ray")
+    try {
+      val o = r.ref(TriangleMesh(r.construct("TriangleMesh")))
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
+      val got = r.track(o.intersectRay(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("intersect_ray", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b265(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithUInt32AndIntArgRetInt", "CollisionObject2D.shape_owner_get_shape_index on Area2D")
+    try {
+      val o = r.obj(Area2D(r.construct("Area2D")))
+      val a0: Long = 7L
+      val a1: Int = 3
+      val got = r.track(o.shapeOwnerGetShapeIndex(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("shape_owner_get_shape_index", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b266(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithUInt32AndIntArgRetObject", "CollisionObject2D.shape_owner_get_shape on Area2D")
+    try {
+      val o = r.obj(Area2D(r.construct("Area2D")))
+      val a0: Long = 7L
+      val a1: Int = 3
+      val got = r.track(o.shapeOwnerGetShape(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("shape_owner_get_shape", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b267(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithUInt32ArgRetBool", "CanvasItem.get_visibility_layer_bit on Control")
+    try {
+      val o = r.obj(Control(r.construct("Control")))
+      val a0: Long = 7L
+      val got = r.track(o.getVisibilityLayerBit(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_visibility_layer_bit", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b268(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithUInt32ArgRetDouble", "CollisionObject2D.get_shape_owner_one_way_collision_margin on Area2D")
+    try {
+      val o = r.obj(Area2D(r.construct("Area2D")))
+      val a0: Long = 7L
+      val got = r.track(o.getShapeOwnerOneWayCollisionMargin(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_shape_owner_one_way_collision_margin", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b269(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithUInt32ArgRetInt", "CollisionObject2D.shape_owner_get_shape_count on Area2D")
+    try {
+      val o = r.obj(Area2D(r.construct("Area2D")))
+      val a0: Long = 7L
+      val got = r.track(o.shapeOwnerGetShapeCount(a0))
+      r.oracle()
+      val oracle = r.track(o.call("shape_owner_get_shape_count", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b270(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithUInt32ArgRetObject", "CollisionObject2D.shape_owner_get_owner on Area2D")
+    try {
+      val o = r.obj(Area2D(r.construct("Area2D")))
+      val a0: Long = 7L
+      val got = r.track(o.shapeOwnerGetOwner(a0))
+      r.oracle()
+      val oracle = r.track(o.call("shape_owner_get_owner", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b271(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithUInt32ArgRetTransform2D", "CollisionObject2D.shape_owner_get_transform on Area2D")
+    try {
+      val o = r.obj(Area2D(r.construct("Area2D")))
+      val a0: Long = 7L
+      val got = r.track(o.shapeOwnerGetTransform(a0))
+      r.oracle()
+      val oracle = r.track(o.call("shape_owner_get_transform", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b272(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithUInt32ArgRetTransform3D", "CollisionObject3D.shape_owner_get_transform on Area3D")
+    try {
+      val o = r.obj(Area3D(r.construct("Area3D")))
+      val a0: Long = 7L
+      val got = r.track(o.shapeOwnerGetTransform(a0))
+      r.oracle()
+      val oracle = r.track(o.call("shape_owner_get_transform", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b273(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithUInt32ArgRetVector2", "CollisionObject2D.get_shape_owner_one_way_collision_direction on Area2D")
+    try {
+      val o = r.obj(Area2D(r.construct("Area2D")))
+      val a0: Long = 7L
+      val got = r.track(o.getShapeOwnerOneWayCollisionDirection(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_shape_owner_one_way_collision_direction", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b274(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVariantArgRetBool", "TextLine.has_object")
+    try {
+      val o = r.ref(TextLine(r.construct("TextLine")))
+      val a0: Any? = "kanama125"
+      val got = r.track(o.hasObject(a0))
+      r.oracle()
+      val oracle = r.track(o.call("has_object", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b275(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVariantArgRetInt", "RegExMatch.get_end")
+    try {
+      val o = r.ref(RegExMatch(r.construct("RegExMatch")))
+      val a0: Any? = 0L
+      val got = r.track(o.getEnd(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_end", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b276(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVariantArgRetRect2", "TextLine.get_object_rect")
+    try {
+      val o = r.ref(TextLine(r.construct("TextLine")))
+      val a0: Any? = "kanama125"
+      val got = r.track(o.getObjectRect(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_object_rect", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b277(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVariantArgRetString", "RegExMatch.get_string")
+    try {
+      val o = r.ref(RegExMatch(r.construct("RegExMatch")))
+      val a0: Any? = 0L
+      val got = r.track(o.getString(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_string", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b278(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2AndBoolArgRetInt", "ItemList.get_item_at_position")
+    try {
+      val o = r.obj(ItemList(r.construct("ItemList")))
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val got = r.track(o.getItemAtPosition(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_item_at_position", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b279(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2AndBoolArgRetLong", "AStar2D.get_closest_point")
+    try {
+      val o = r.ref(AStar2D(r.construct("AStar2D")))
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val got = r.track(o.getClosestPoint(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_closest_point", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b280(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2AndDoubleArgRetDictionary", "GraphEdit.get_closest_connection_at_point")
+    try {
+      val o = r.obj(GraphEdit(r.construct("GraphEdit")))
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val got = r.track(o.getClosestConnectionAtPoint(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_closest_connection_at_point", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b281(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2AndDoubleArgRetVector3", "Camera3D.project_position")
+    try {
+      val o = r.obj(Camera3D(r.construct("Camera3D")))
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val a1: Double = 0.25
+      val got = r.track(o.projectPosition(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("project_position", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b282(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2ArgRetBool", "PolygonPathFinder.is_point_inside")
+    try {
+      val o = r.ref(PolygonPathFinder(r.construct("PolygonPathFinder")))
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val got = r.track(o.isPointInside(a0))
+      r.oracle()
+      val oracle = r.track(o.call("is_point_inside", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b283(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2ArgRetDouble", "CharacterBody2D.get_floor_angle")
+    try {
+      val o = r.obj(CharacterBody2D(r.construct("CharacterBody2D")))
+      val a0: Vector2 = Vector2(0.0, -1.0)
+      val got = r.track(o.getFloorAngle(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_floor_angle", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b284(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2ArgRetInt", "TabBar.get_tab_idx_at_point")
+    try {
+      val o = r.obj(TabBar(r.construct("TabBar")))
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val got = r.track(o.getTabIdxAtPoint(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_tab_idx_at_point", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b285(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2ArgRetLong", "Control.get_cursor_shape")
+    try {
+      val o = r.obj(Control(r.construct("Control")))
+      val got = r.track(o.getCursorShape())
+      r.oracle()
+      val oracle = r.track(o.call("get_cursor_shape"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b286(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2ArgRetObject", "Tree.get_item_at_position")
+    try {
+      val o = r.obj(Tree(r.construct("Tree")))
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val got = r.track(o.getItemAtPosition(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_item_at_position", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b287(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2ArgRetString", "Control.get_tooltip")
+    try {
+      val o = r.obj(Control(r.construct("Control")))
+      val got = r.track(o.getTooltip())
+      r.oracle()
+      val oracle = r.track(o.call("get_tooltip"))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b288(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2ArgRetVector2", "AStar2D.get_closest_position_in_segment")
+    try {
+      val o = r.ref(AStar2D(r.construct("AStar2D")))
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val got = r.track(o.getClosestPositionInSegment(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_closest_position_in_segment", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b289(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2ArgRetVector2i", "TileMap.local_to_map")
+    try {
+      val o = r.obj(TileMap(r.construct("TileMap")))
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val got = r.track(o.localToMap(a0))
+      r.oracle()
+      val oracle = r.track(o.call("local_to_map", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b290(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2ArgRetVector3", "Camera3D.project_local_ray_normal")
+    try {
+      val o = r.obj(Camera3D(r.construct("Camera3D")))
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val got = r.track(o.projectLocalRayNormal(a0))
+      r.oracle()
+      val oracle = r.track(o.call("project_local_ray_normal", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b291(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2Rect2ArgsRetBool", "StyleBox.test_mask")
+    try {
+      val o = r.ref(StyleBox(r.construct("StyleBox")))
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val a1: Rect2 = Rect2(Vector2(4.0, 3.0), Vector2(2.0, 1.0))
+      val got = r.track(o.testMask(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("test_mask", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b292(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iAndIntArgRetBool", "TileSetSource.has_alternative_tile on TileSetAtlasSource")
+    try {
+      val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val a1: Int = 3
+      val got = r.track(o.hasAlternativeTile(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("has_alternative_tile", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b293(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iAndIntArgRetDouble", "TileSetAtlasSource.get_tile_animation_frame_duration")
+    try {
+      val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val a1: Int = 3
+      val got = r.track(o.getTileAnimationFrameDuration(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_tile_animation_frame_duration", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b294(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iAndIntArgRetInt", "TileSetSource.get_alternative_tile_id on TileSetAtlasSource")
+    try {
+      val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val a1: Int = 3
+      val got = r.track(o.getAlternativeTileId(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_alternative_tile_id", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b295(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iAndIntArgRetObject", "TileSetAtlasSource.get_tile_data")
+    try {
+      val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val a1: Int = 3
+      val got = r.track(o.getTileData(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_tile_data", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b296(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iAndIntArgRetRect2i", "TileSetAtlasSource.get_runtime_tile_texture_region")
+    try {
+      val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val a1: Int = 3
+      val got = r.track(o.getRuntimeTileTextureRegion(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_runtime_tile_texture_region", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b297(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iAndLongArgRetVector2i", "TileMap.get_neighbor_cell")
+    try {
+      val o = r.obj(TileMap(r.construct("TileMap")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val a1: TileSet.CellNeighbor = TileSet.CellNeighbor(1L) /* CELL_NEIGHBOR_RIGHT_CORNER */
+      val got = r.track(o.getNeighborCell(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_neighbor_cell", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b298(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iAndTwoBoolArgsRetVector2i", "TextEdit.get_line_column_at_pos")
+    try {
+      val o = r.obj(TextEdit(r.construct("TextEdit")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val got = r.track(o.getLineColumnAtPos(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_line_column_at_pos", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b299(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iArgRetBool", "AStarGrid2D.is_in_boundsv")
+    try {
+      val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val got = r.track(o.isInBoundsv(a0))
+      r.oracle()
+      val oracle = r.track(o.call("is_in_boundsv", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b300(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iArgRetColor", "Image.get_pixelv")
+    try {
+      val o = r.ref(Image(r.construct("Image")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val got = r.track(o.getPixelv(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_pixelv", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b301(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iArgRetDouble", "AStarGrid2D.get_point_weight_scale")
+    try {
+      val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val got = r.track(o.getPointWeightScale(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_point_weight_scale", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b302(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iArgRetInt", "TextEdit.get_minimap_line_at_pos")
+    try {
+      val o = r.obj(TextEdit(r.construct("TextEdit")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val got = r.track(o.getMinimapLineAtPos(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_minimap_line_at_pos", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b303(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iArgRetLong", "TileSetAtlasSource.get_tile_animation_mode")
+    try {
+      val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val got = r.track(o.getTileAnimationMode(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_tile_animation_mode", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b304(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iArgRetObject", "TileMapLayer.get_cell_tile_data")
+    try {
+      val o = r.obj(TileMapLayer(r.construct("TileMapLayer")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val got = r.track(o.getCellTileData(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_cell_tile_data", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b305(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iArgRetVector2", "AStarGrid2D.get_point_position")
+    try {
+      val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val got = r.track(o.getPointPosition(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_point_position", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b306(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector2iArgRetVector2i", "TileMapLayer.get_cell_atlas_coords")
+    try {
+      val o = r.obj(TileMapLayer(r.construct("TileMapLayer")))
+      val a0: Vector2i = Vector2i(7, 3)
+      val got = r.track(o.getCellAtlasCoords(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_cell_atlas_coords", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b307(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector3AndBoolArgRetLong", "AStar3D.get_closest_point")
+    try {
+      val o = r.ref(AStar3D(r.construct("AStar3D")))
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val got = r.track(o.getClosestPoint(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_closest_point", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b308(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector3ArgRetBool", "Camera3D.is_position_behind")
+    try {
+      val o = r.obj(Camera3D(r.construct("Camera3D")))
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val got = r.track(o.isPositionBehind(a0))
+      r.oracle()
+      val oracle = r.track(o.call("is_position_behind", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b309(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector3ArgRetDouble", "CharacterBody3D.get_floor_angle")
+    try {
+      val o = r.obj(CharacterBody3D(r.construct("CharacterBody3D")))
+      val a0: Vector3 = Vector3(0.0, 1.0, 0.0)
+      val got = r.track(o.getFloorAngle(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_floor_angle", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b310(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector3ArgRetVector2", "Camera3D.unproject_position")
+    try {
+      val o = r.obj(Camera3D(r.construct("Camera3D")))
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val got = r.track(o.unprojectPosition(a0))
+      r.oracle()
+      val oracle = r.track(o.call("unproject_position", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b311(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector3ArgRetVector3", "AStar3D.get_closest_position_in_segment")
+    try {
+      val o = r.ref(AStar3D(r.construct("AStar3D")))
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val got = r.track(o.getClosestPositionInSegment(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_closest_position_in_segment", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b312(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector3ArgRetVector3i", "GridMap.local_to_map")
+    try {
+      val o = r.obj(GridMap(r.construct("GridMap")))
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val got = r.track(o.localToMap(a0))
+      r.oracle()
+      val oracle = r.track(o.call("local_to_map", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b313(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector3iAndIntArgRetVector3iList", "GridMap.get_used_cells_in_octant_by_item")
+    try {
+      val o = r.obj(GridMap(r.construct("GridMap")))
+      val a0: Vector3i = Vector3i(7, 3, 5)
+      val a1: Int = 3
+      val got = r.track(o.getUsedCellsInOctantByItem(a0, a1))
+      r.oracle()
+      val oracle = r.track(o.call("get_used_cells_in_octant_by_item", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b314(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector3iArgRetBasis", "GridMap.get_cell_item_basis")
+    try {
+      val o = r.obj(GridMap(r.construct("GridMap")))
+      val a0: Vector3i = Vector3i(7, 3, 5)
+      val got = r.track(o.getCellItemBasis(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_cell_item_basis", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b315(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector3iArgRetInt", "GridMap.get_cell_item")
+    try {
+      val o = r.obj(GridMap(r.construct("GridMap")))
+      val a0: Vector3i = Vector3i(7, 3, 5)
+      val got = r.track(o.getCellItem(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_cell_item", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b316(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector3iArgRetVector3", "GridMap.map_to_local")
+    try {
+      val o = r.obj(GridMap(r.construct("GridMap")))
+      val a0: Vector3i = Vector3i(7, 3, 5)
+      val got = r.track(o.mapToLocal(a0))
+      r.oracle()
+      val oracle = r.track(o.call("map_to_local", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b317(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector3iArgRetVector3i", "GridMap.get_octant_coords_from_cell_coords")
+    try {
+      val o = r.obj(GridMap(r.construct("GridMap")))
+      val a0: Vector3i = Vector3i(7, 3, 5)
+      val got = r.track(o.getOctantCoordsFromCellCoords(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_octant_coords_from_cell_coords", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b318(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithVector3iArgRetVector3iList", "GridMap.get_used_cells_in_octant")
+    try {
+      val o = r.obj(GridMap(r.construct("GridMap")))
+      val a0: Vector3i = Vector3i(7, 3, 5)
+      val got = r.track(o.getUsedCellsInOctant(a0))
+      r.oracle()
+      val oracle = r.track(o.call("get_used_cells_in_octant", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun b319(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallNoArgsRetRID", "TextServer.create_font on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val rid = o.createFont()
+      try {
+        r.created(rid)
+        val got = r.track(o.fontGetFaceIndex(rid))
+        r.oracle()
+        val oracle = r.track(o.call("font_get_face_index", rid))
+        r.readBack(got, oracle, "font_get_face_index")
+      } finally {
+        o.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun b320(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoLongArgsRetRID", "TextServer.create_shaped_text on TextServerManager.get_primary_interface()")
+    try {
+      val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
+      val rid = o.createShapedText()
+      try {
+        r.created(rid)
+        val got = r.track(o.shapedTextGetDirection(rid))
+        r.oracle()
+        val oracle = r.track(o.call("shaped_text_get_direction", rid))
+        r.readBack(got, oracle, "shaped_text_get_direction")
+      } finally {
+        o.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d000(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithAABBRIDArgsRetPackedInt64List", "RenderingServer.instances_cull_aabb")
+    try {
+      val s = r.singleton("RenderingServer")
+      val a0: AABB = AABB(Vector3(1.0, 2.0, 3.0), Vector3(4.0, 5.0, 6.0))
+      val a1: RID = RID(0L)
+      val got = r.track(RenderingServer.instancesCullAabb(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("instances_cull_aabb", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d001(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithByteArrayArgRetString", "Marshalls.raw_to_base64")
+    try {
+      val s = r.singleton("Marshalls")
+      val a0: ByteArray = byteArrayOf(1, 2, 3)
+      val got = r.track(Marshalls.rawToBase64(a0))
+      r.oracle()
+      val oracle = r.track(s.call("raw_to_base64", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d002(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithDictionaryAndBoolArgRetString", "Time.get_datetime_string_from_datetime_dict")
+    try {
+      val s = r.singleton("Time")
+      val a0: Map<String, Any?> = mapOf<String, Any?>("kanama" to 125L)
+      val a1: Boolean = true
+      val got = r.track(Time.getDateTimeStringFromDateTimeDict(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("get_datetime_string_from_datetime_dict", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d003(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithDictionaryArgRetLong", "Time.get_unix_time_from_datetime_dict")
+    try {
+      val s = r.singleton("Time")
+      val a0: Map<String, Any?> = mapOf<String, Any?>("kanama" to 125L)
+      val got = r.track(Time.getUnixTimeFromDateTimeDict(a0))
+      r.oracle()
+      val oracle = r.track(s.call("get_unix_time_from_datetime_dict", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d004(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithFiveVector3ArgsRetVariantScalar", "Geometry3D.ray_intersects_triangle")
+    try {
+      val s = r.singleton("Geometry3D")
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
+      val a2: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a3: Vector3 = Vector3(1.0, 0.5, 0.25)
+      val a4: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val got = r.track(Geometry3D.rayIntersectsTriangle(a0, a1, a2, a3, a4))
+      r.oracle()
+      val oracle = r.track(s.call("ray_intersects_triangle", a0, a1, a2, a3, a4))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d005(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithFourVector2ArgsRetBool", "Geometry2D.point_is_inside_triangle")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val a1: Vector2 = Vector2(0.75, 1.0)
+      val a2: Vector2 = Vector2(0.25, 0.5)
+      val a3: Vector2 = Vector2(0.75, 1.0)
+      val got = r.track(Geometry2D.pointIsInsideTriangle(a0, a1, a2, a3))
+      r.oracle()
+      val oracle = r.track(s.call("point_is_inside_triangle", a0, a1, a2, a3))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d006(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithFourVector2ArgsRetPackedVector2List", "Geometry2D.get_closest_points_between_segments")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val a1: Vector2 = Vector2(0.75, 1.0)
+      val a2: Vector2 = Vector2(0.25, 0.5)
+      val a3: Vector2 = Vector2(0.75, 1.0)
+      val got = r.track(Geometry2D.getClosestPointsBetweenSegments(a0, a1, a2, a3))
+      r.oracle()
+      val oracle = r.track(s.call("get_closest_points_between_segments", a0, a1, a2, a3))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d007(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithFourVector2ArgsRetVariantScalar", "Geometry2D.line_intersects_line")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val a1: Vector2 = Vector2(0.75, 1.0)
+      val a2: Vector2 = Vector2(0.25, 0.5)
+      val a3: Vector2 = Vector2(0.75, 1.0)
+      val got = r.track(Geometry2D.lineIntersectsLine(a0, a1, a2, a3))
+      r.oracle()
+      val oracle = r.track(s.call("line_intersects_line", a0, a1, a2, a3))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d008(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithFourVector3ArgsRetPackedVector3List", "Geometry3D.get_closest_points_between_segments")
+    try {
+      val s = r.singleton("Geometry3D")
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
+      val a2: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a3: Vector3 = Vector3(1.0, 0.5, 0.25)
+      val got = r.track(Geometry3D.getClosestPointsBetweenSegments(a0, a1, a2, a3))
+      r.oracle()
+      val oracle = r.track(s.call("get_closest_points_between_segments", a0, a1, a2, a3))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d009(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithFourVector3ArgsRetVector3", "Geometry3D.get_triangle_barycentric_coords")
+    try {
+      val s = r.singleton("Geometry3D")
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
+      val a2: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a3: Vector3 = Vector3(1.0, 0.5, 0.25)
+      val got = r.track(Geometry3D.getTriangleBarycentricCoords(a0, a1, a2, a3))
+      r.oracle()
+      val oracle = r.track(s.call("get_triangle_barycentric_coords", a0, a1, a2, a3))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d010(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithLongAndBoolArgRetString", "Time.get_datetime_string_from_unix_time")
+    try {
+      val s = r.singleton("Time")
+      val a0: Long = 7L
+      val got = r.track(Time.getDateTimeStringFromUnixTime(a0))
+      r.oracle()
+      val oracle = r.track(s.call("get_datetime_string_from_unix_time", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d011(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithLongAndIntArgsRetUInt32", "RenderingServer.mesh_surface_get_format_attribute_stride")
+    try {
+      val s = r.singleton("RenderingServer")
+      val a0: RenderingServer.ArrayFormat = RenderingServer.ArrayFormat(1L) /* ARRAY_FORMAT_VERTEX */
+      val a1: Int = 3
+      val got = r.track(RenderingServer.meshSurfaceGetFormatAttributeStride(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("mesh_surface_get_format_attribute_stride", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d012(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithLongAndTwoIntArgsRetUInt32", "RenderingServer.mesh_surface_get_format_offset")
+    try {
+      val s = r.singleton("RenderingServer")
+      val a0: RenderingServer.ArrayFormat = RenderingServer.ArrayFormat(1L) /* ARRAY_FORMAT_VERTEX */
+      val a1: Int = 3
+      val a2: Int = 7
+      val got = r.track(RenderingServer.meshSurfaceGetFormatOffset(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(s.call("mesh_surface_get_format_offset", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d013(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithLongArgRetDictionary", "Time.get_date_dict_from_unix_time")
+    try {
+      val s = r.singleton("Time")
+      val a0: Long = 7L
+      val got = r.track(Time.getDateDictFromUnixTime(a0))
+      r.oracle()
+      val oracle = r.track(s.call("get_date_dict_from_unix_time", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d014(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithObjectStringNameAndVariantArgRetLong", "ClassDB.class_set_property")
+    try {
+      val s = r.singleton("ClassDB")
+      val f0 = r.obj(GodotObject(r.construct("Object")))
+      val a0: GodotObject = f0
+      val a1: String = "kanama7"
+      val a2: Any? = "kanama125"
+      val got = r.track(ClassDB.classSetProperty(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(s.call("class_set_property", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d015(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithObjectStringNameArgRetVariantScalar", "ClassDB.class_get_property")
+    try {
+      val s = r.singleton("ClassDB")
+      val f0 = r.obj(GodotObject(r.construct("Object")))
+      val a0: GodotObject = f0
+      val a1: String = "kanama7"
+      val got = r.track(ClassDB.classGetProperty(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("class_get_property", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d016(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithPackedVector2ListArgRetBool", "Geometry2D.is_polygon_clockwise")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: List<Vector2> = listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
+      val got = r.track(Geometry2D.isPolygonClockwise(a0))
+      r.oracle()
+      val oracle = r.track(s.call("is_polygon_clockwise", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d017(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithPackedVector2ListArgRetDictionary", "Geometry2D.make_atlas")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: List<Vector2> = listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
+      val got = r.track(Geometry2D.makeAtlas(a0))
+      r.oracle()
+      val oracle = r.track(s.call("make_atlas", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d018(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithPackedVector2ListArgRetPackedInt32List", "Geometry2D.triangulate_delaunay")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: List<Vector2> = listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
+      val got = r.track(Geometry2D.triangulateDelaunay(a0))
+      r.oracle()
+      val oracle = r.track(s.call("triangulate_delaunay", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d019(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithPackedVector2ListArgRetPackedVector2List", "Geometry2D.convex_hull")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: List<Vector2> = listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
+      val got = r.track(Geometry2D.convexHull(a0))
+      r.oracle()
+      val oracle = r.track(s.call("convex_hull", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d020(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithPackedVector2ListArgRetPackedVector2ListList", "Geometry2D.decompose_polygon_in_convex")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: List<Vector2> = listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
+      val got = r.track(Geometry2D.decomposePolygonInConvex(a0))
+      r.oracle()
+      val oracle = r.track(s.call("decompose_polygon_in_convex", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d021(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithPackedVector2ListDoubleAndLongArgsRetPackedVector2ListList", "Geometry2D.offset_polygon")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: List<Vector2> = listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
+      val a1: Double = 0.25
+      val got = r.track(Geometry2D.offsetPolygon(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("offset_polygon", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d022(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithPackedVector2ListDoubleAndTwoLongArgsRetPackedVector2ListList", "Geometry2D.offset_polyline")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: List<Vector2> = listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
+      val a1: Double = 0.25
+      val got = r.track(Geometry2D.offsetPolyline(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("offset_polyline", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d023(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithPackedVector3ListAndPlaneArgRetPackedVector3List", "Geometry3D.clip_polygon")
+    try {
+      val s = r.singleton("Geometry3D")
+      val a0: List<Vector3> = listOf(Vector3(0.0, 0.0, 0.0), Vector3(1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, 1.0))
+      val a1: Plane = Plane(1.0, 0.0, 0.0, 0.25)
+      val got = r.track(Geometry3D.clipPolygon(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("clip_polygon", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d024(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithPackedVector3ListArgRetPackedInt32List", "Geometry3D.tetrahedralize_delaunay")
+    try {
+      val s = r.singleton("Geometry3D")
+      val a0: List<Vector3> = listOf(Vector3(0.0, 0.0, 0.0), Vector3(1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, 1.0))
+      val got = r.track(Geometry3D.tetrahedralizeDelaunay(a0))
+      r.oracle()
+      val oracle = r.track(s.call("tetrahedralize_delaunay", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d025(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithPlaneListAndRIDArgsRetPackedInt64List", "RenderingServer.instances_cull_convex")
+    try {
+      val s = r.singleton("RenderingServer")
+      val a0: List<Plane> = listOf(Plane(1.0, 0.0, 0.0, 1.0), Plane(-1.0, 0.0, 0.0, 1.0), Plane(0.0, 1.0, 0.0, 1.0), Plane(0.0, -1.0, 0.0, 1.0), Plane(0.0, 0.0, 1.0, 1.0), Plane(0.0, 0.0, -1.0, 1.0))
+      val a1: RID = RID(0L)
+      val got = r.track(RenderingServer.instancesCullConvex(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("instances_cull_convex", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d026(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithPlaneListArgRetPackedVector3List", "Geometry3D.compute_convex_mesh_points")
+    try {
+      val s = r.singleton("Geometry3D")
+      val a0: List<Plane> = listOf(Plane(1.0, 0.0, 0.0, 1.0), Plane(-1.0, 0.0, 0.0, 1.0), Plane(0.0, 1.0, 0.0, 1.0), Plane(0.0, -1.0, 0.0, 1.0), Plane(0.0, 0.0, 1.0, 1.0), Plane(0.0, 0.0, -1.0, 1.0))
+      val got = r.track(Geometry3D.computeConvexMeshPoints(a0))
+      r.oracle()
+      val oracle = r.track(s.call("compute_convex_mesh_points", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d027(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndBoolArgRetLong", "RenderingServer.texture_get_native_handle")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.texture2dPlaceholderCreate()
+      try {
+        val got = r.track(RenderingServer.textureGetNativeHandle(x0))
+        r.oracle()
+        val oracle = r.track(s.call("texture_get_native_handle", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d028(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndBoolArgRetRID", "RenderingServer.texture_get_rd_texture")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.texture2dPlaceholderCreate()
+      try {
+        val got = r.track(RenderingServer.textureGetRdTexture(x0))
+        r.oracle()
+        val oracle = r.track(s.call("texture_get_rd_texture", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d029(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndIntArgRetArray", "RenderingServer.mesh_surface_get_arrays")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.meshCreate()
+      val a1: Int = 3
+      try {
+        val got = r.track(RenderingServer.meshSurfaceGetArrays(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("mesh_surface_get_arrays", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d030(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndIntArgRetArrayList", "RenderingServer.mesh_surface_get_blend_shape_arrays")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.meshCreate()
+      val a1: Int = 3
+      try {
+        val got = r.track(RenderingServer.meshSurfaceGetBlendShapeArrays(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("mesh_surface_get_blend_shape_arrays", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d031(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndIntArgRetBool", "PhysicsServer3D.soft_body_is_point_pinned")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val x0 = PhysicsServer3D.bodyCreate()
+      val a1: Int = 3
+      try {
+        val got = r.track(PhysicsServer3D.softBodyIsPointPinned(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("soft_body_is_point_pinned", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        PhysicsServer3D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d032(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndIntArgRetColor", "RenderingServer.multimesh_instance_get_color")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.multimeshCreate()
+      val a1: Int = 3
+      try {
+        val got = r.track(RenderingServer.multimeshInstanceGetColor(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("multimesh_instance_get_color", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d033(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndIntArgRetRID", "RenderingServer.mesh_surface_get_material")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.meshCreate()
+      val a1: Int = 3
+      try {
+        val got = r.track(RenderingServer.meshSurfaceGetMaterial(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("mesh_surface_get_material", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d034(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndIntArgRetTransform2D", "RenderingServer.multimesh_instance_get_transform_2d")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.multimeshCreate()
+      val a1: Int = 3
+      try {
+        val got = r.track(RenderingServer.multimeshInstanceGetTransform2d(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("multimesh_instance_get_transform_2d", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d035(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndIntArgRetTransform3D", "RenderingServer.multimesh_instance_get_transform")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.multimeshCreate()
+      val a1: Int = 3
+      try {
+        val got = r.track(RenderingServer.multimeshInstanceGetTransform(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("multimesh_instance_get_transform", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d036(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndIntArgRetVector2", "NavigationServer2D.region_get_connection_pathway_end")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val x0 = NavigationServer2D.regionCreate()
+      val a1: Int = 3
+      try {
+        val got = r.track(NavigationServer2D.regionGetConnectionPathwayEnd(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("region_get_connection_pathway_end", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer2D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d037(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndIntArgRetVector3", "NavigationServer3D.region_get_connection_pathway_end")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val x0 = NavigationServer3D.regionCreate()
+      val a1: Int = 3
+      try {
+        val got = r.track(NavigationServer3D.regionGetConnectionPathwayEnd(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("region_get_connection_pathway_end", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer3D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d038(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndStringNameArgRetVariantScalar", "RenderingServer.canvas_item_get_instance_shader_parameter")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.instanceCreate()
+      val a1: String = "kanama7"
+      try {
+        val got = r.track(RenderingServer.canvasItemGetInstanceShaderParameter(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("canvas_item_get_instance_shader_parameter", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d039(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndVector2ArgRetBool", "NavigationServer2D.region_owns_point")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val x0 = NavigationServer2D.regionCreate()
+      val a1: Vector2 = Vector2(0.75, 1.0)
+      try {
+        val got = r.track(NavigationServer2D.regionOwnsPoint(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("region_owns_point", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer2D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d040(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndVector2ArgRetRID", "NavigationServer2D.map_get_closest_point_owner")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val x0 = NavigationServer2D.mapCreate()
+      val a1: Vector2 = Vector2(0.75, 1.0)
+      try {
+        val got = r.track(NavigationServer2D.mapGetClosestPointOwner(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("map_get_closest_point_owner", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer2D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d041(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndVector2ArgRetVector2", "NavigationServer2D.map_get_closest_point")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val x0 = NavigationServer2D.mapCreate()
+      val a1: Vector2 = Vector2(0.75, 1.0)
+      try {
+        val got = r.track(NavigationServer2D.mapGetClosestPoint(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("map_get_closest_point", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer2D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d042(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndVector3ArgRetBool", "NavigationServer3D.region_owns_point")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val x0 = NavigationServer3D.regionCreate()
+      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
+      try {
+        val got = r.track(NavigationServer3D.regionOwnsPoint(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("region_owns_point", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer3D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d043(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndVector3ArgRetRID", "NavigationServer3D.map_get_closest_point_owner")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val x0 = NavigationServer3D.mapCreate()
+      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
+      try {
+        val got = r.track(NavigationServer3D.mapGetClosestPointOwner(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("map_get_closest_point_owner", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer3D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d044(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDAndVector3ArgRetVector3", "NavigationServer3D.map_get_closest_point")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val x0 = NavigationServer3D.mapCreate()
+      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
+      try {
+        val got = r.track(NavigationServer3D.mapGetClosestPoint(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("map_get_closest_point", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer3D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d045(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetAABB", "NavigationServer3D.region_get_bounds")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val x0 = NavigationServer3D.regionCreate()
+      try {
+        val got = r.track(NavigationServer3D.regionGetBounds(x0))
+        r.oracle()
+        val oracle = r.track(s.call("region_get_bounds", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer3D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d046(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetByteArray", "RenderingServer.voxel_gi_get_data_cells")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.voxelGiCreate()
+      try {
+        val got = r.track(RenderingServer.voxelGiGetDataCells(x0))
+        r.oracle()
+        val oracle = r.track(s.call("voxel_gi_get_data_cells", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d047(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetInt", "NavigationServer2D.agent_get_max_neighbors")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val x0 = NavigationServer2D.agentCreate()
+      try {
+        val got = r.track(NavigationServer2D.agentGetMaxNeighbors(x0))
+        r.oracle()
+        val oracle = r.track(s.call("agent_get_max_neighbors", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer2D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d048(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetPackedFloat32List", "RenderingServer.multimesh_get_buffer")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.multimeshCreate()
+      try {
+        val got = r.track(RenderingServer.multimeshGetBuffer(x0))
+        r.oracle()
+        val oracle = r.track(s.call("multimesh_get_buffer", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d049(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetPackedVector2List", "NavigationServer2D.obstacle_get_vertices")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val x0 = NavigationServer2D.obstacleCreate()
+      try {
+        val got = r.track(NavigationServer2D.obstacleGetVertices(x0))
+        r.oracle()
+        val oracle = r.track(s.call("obstacle_get_vertices", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer2D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d050(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetPackedVector3List", "NavigationServer3D.obstacle_get_vertices")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val x0 = NavigationServer3D.obstacleCreate()
+      try {
+        val got = r.track(NavigationServer3D.obstacleGetVertices(x0))
+        r.oracle()
+        val oracle = r.track(s.call("obstacle_get_vertices", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer3D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d051(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetRIDList", "NavigationServer2D.map_get_agents")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val x0 = NavigationServer2D.mapCreate()
+      try {
+        val got = r.track(NavigationServer2D.mapGetAgents(x0))
+        r.oracle()
+        val oracle = r.track(s.call("map_get_agents", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer2D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d052(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetRect2", "NavigationServer2D.region_get_bounds")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val x0 = NavigationServer2D.regionCreate()
+      try {
+        val got = r.track(NavigationServer2D.regionGetBounds(x0))
+        r.oracle()
+        val oracle = r.track(s.call("region_get_bounds", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer2D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d053(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetTransform3D", "NavigationServer3D.region_get_transform")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val x0 = NavigationServer3D.regionCreate()
+      try {
+        val got = r.track(NavigationServer3D.regionGetTransform(x0))
+        r.oracle()
+        val oracle = r.track(s.call("region_get_transform", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer3D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d054(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetTypedObjectList", "RenderingServer.texture_3d_get")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.texture2dPlaceholderCreate()
+      try {
+        val got = r.track(RenderingServer.texture3dGet(x0))
+        r.oracle()
+        val oracle = r.track(s.call("texture_3d_get", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d055(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetUInt32", "NavigationServer2D.agent_get_avoidance_layers")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val x0 = NavigationServer2D.agentCreate()
+      try {
+        val got = r.track(NavigationServer2D.agentGetAvoidanceLayers(x0))
+        r.oracle()
+        val oracle = r.track(s.call("agent_get_avoidance_layers", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer2D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d056(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetVariantScalar", "AccessibilityServer.element_get_meta")
+    try {
+      val s = r.singleton("AccessibilityServer")
+      val a0: RID = RID(0L)
+      val got = r.track(AccessibilityServer.elementGetMeta(a0))
+      r.oracle()
+      val oracle = r.track(s.call("element_get_meta", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d057(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetVector3", "NavigationServer3D.agent_get_position")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val x0 = NavigationServer3D.agentCreate()
+      try {
+        val got = r.track(NavigationServer3D.agentGetPosition(x0))
+        r.oracle()
+        val oracle = r.track(s.call("agent_get_position", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer3D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d058(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetVector3i", "RenderingServer.voxel_gi_get_octree_size")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.voxelGiCreate()
+      try {
+        val got = r.track(RenderingServer.voxelGiGetOctreeSize(x0))
+        r.oracle()
+        val oracle = r.track(s.call("voxel_gi_get_octree_size", x0))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d059(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDStringNameAndIntArgRetRID", "RenderingServer.shader_get_default_texture_parameter")
+    try {
+      val s = r.singleton("RenderingServer")
+      val x0 = RenderingServer.shaderCreate()
+      val a1: String = "kanama7"
+      try {
+        val got = r.track(RenderingServer.shaderGetDefaultTextureParameter(x0, a1))
+        r.oracle()
+        val oracle = r.track(s.call("shader_get_default_texture_parameter", x0, a1))
+        r.sameAsCall(got, oracle)
+      } finally {
+        RenderingServer.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d060(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDTwoLongArgsRetBool", "PhysicsServer3D.generic_6dof_joint_get_flag")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val x0 = PhysicsServer3D.jointCreate()
+      val a1: Vector3.Axis = Vector3.Axis(1L) /* AXIS_Y */
+      val a2: PhysicsServer3D.G6DOFJointAxisFlag = PhysicsServer3D.G6DOFJointAxisFlag(1L) /* G6DOF_JOINT_FLAG_ENABLE_ANGULAR_LIMIT */
+      try {
+        val got = r.track(PhysicsServer3D.generic6dofJointGetFlag(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(s.call("generic_6dof_joint_get_flag", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        PhysicsServer3D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d061(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDTwoLongArgsRetDouble", "PhysicsServer3D.generic_6dof_joint_get_param")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val x0 = PhysicsServer3D.jointCreate()
+      val a1: Vector3.Axis = Vector3.Axis(1L) /* AXIS_Y */
+      val a2: PhysicsServer3D.G6DOFJointAxisParam = PhysicsServer3D.G6DOFJointAxisParam(1L) /* G6DOF_JOINT_LINEAR_UPPER_LIMIT */
+      try {
+        val got = r.track(PhysicsServer3D.generic6dofJointGetParam(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(s.call("generic_6dof_joint_get_param", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        PhysicsServer3D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d062(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDTwoVector3BoolArgsRetVector3", "NavigationServer3D.map_get_closest_point_to_segment")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val x0 = NavigationServer3D.mapCreate()
+      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
+      val a2: Vector3 = Vector3(0.25, 0.5, 0.75)
+      try {
+        val got = r.track(NavigationServer3D.mapGetClosestPointToSegment(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(s.call("map_get_closest_point_to_segment", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer3D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d063(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDUInt32BoolArgsRetVector2", "NavigationServer2D.map_get_random_point")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val x0 = NavigationServer2D.mapCreate()
+      val a1: Long = 3L
+      val a2: Boolean = true
+      try {
+        val got = r.track(NavigationServer2D.mapGetRandomPoint(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(s.call("map_get_random_point", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer2D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d064(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDUInt32BoolArgsRetVector3", "NavigationServer3D.map_get_random_point")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val x0 = NavigationServer3D.mapCreate()
+      val a1: Long = 3L
+      val a2: Boolean = true
+      try {
+        val got = r.track(NavigationServer3D.mapGetRandomPoint(x0, a1, a2))
+        r.oracle()
+        val oracle = r.track(s.call("map_get_random_point", x0, a1, a2))
+        r.sameAsCall(got, oracle)
+      } finally {
+        NavigationServer3D.freeRid(x0)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d065(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithStringAndBoolArgRetDictionary", "Time.get_datetime_dict_from_datetime_string")
+    try {
+      val s = r.singleton("Time")
+      val a0: String = "kanama125"
+      val a1: Boolean = true
+      val got = r.track(Time.getDateTimeDictFromDateTimeString(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("get_datetime_dict_from_datetime_string", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d066(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithStringAndBoolArgRetString", "TranslationServer.standardize_locale")
+    try {
+      val s = r.singleton("TranslationServer")
+      val a0: String = "kanama125"
+      val got = r.track(TranslationServer.standardizeLocale(a0))
+      r.oracle()
+      val oracle = r.track(s.call("standardize_locale", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d067(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithStringAndBoolArgRetVariantScalar", "Marshalls.base64_to_variant")
+    try {
+      val s = r.singleton("Marshalls")
+      val a0: String = "kanama125"
+      val got = r.track(Marshalls.base64ToVariant(a0))
+      r.oracle()
+      val oracle = r.track(s.call("base64_to_variant", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d068(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithStringArgRetByteArray", "Marshalls.base64_to_raw")
+    try {
+      val s = r.singleton("Marshalls")
+      val a0: String = "kanama125"
+      val got = r.track(Marshalls.base64ToRaw(a0))
+      r.oracle()
+      val oracle = r.track(s.call("base64_to_raw", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d069(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithStringNameAndBoolArgRetDictionaryList", "ClassDB.class_get_method_list")
+    try {
+      val s = r.singleton("ClassDB")
+      val a0: String = "kanama125"
+      val got = r.track(ClassDB.classGetMethodList(a0))
+      r.oracle()
+      val oracle = r.track(s.call("class_get_method_list", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d070(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithStringNameAndBoolArgRetPackedStringList", "ClassDB.class_get_enum_list")
+    try {
+      val s = r.singleton("ClassDB")
+      val a0: String = "kanama125"
+      val got = r.track(ClassDB.classGetEnumList(a0))
+      r.oracle()
+      val oracle = r.track(s.call("class_get_enum_list", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d071(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithStringNamePackedStringListArgRetVariantScalar", "ProjectSettings.get_setting_with_override_and_custom_features")
+    try {
+      val s = r.singleton("ProjectSettings")
+      val a0: String = "kanama125"
+      val a1: List<String> = listOf<String>("kanama7")
+      val got = r.track(ProjectSettings.getSettingWithOverrideAndCustomFeatures(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("get_setting_with_override_and_custom_features", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d072(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithThreeVector2ArgsRetVector2", "Geometry2D.get_closest_point_to_segment")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val a1: Vector2 = Vector2(0.75, 1.0)
+      val a2: Vector2 = Vector2(0.25, 0.5)
+      val got = r.track(Geometry2D.getClosestPointToSegment(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(s.call("get_closest_point_to_segment", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d073(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithThreeVector2DoubleArgsRetDouble", "Geometry2D.segment_intersects_circle")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val a1: Vector2 = Vector2(0.75, 1.0)
+      val a2: Vector2 = Vector2(0.25, 0.5)
+      val a3: Double = 0.25
+      val got = r.track(Geometry2D.segmentIntersectsCircle(a0, a1, a2, a3))
+      r.oracle()
+      val oracle = r.track(s.call("segment_intersects_circle", a0, a1, a2, a3))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d074(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithThreeVector3ArgsRetVector3", "Geometry3D.get_closest_point_to_segment")
+    try {
+      val s = r.singleton("Geometry3D")
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
+      val a2: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val got = r.track(Geometry3D.getClosestPointToSegment(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(s.call("get_closest_point_to_segment", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d075(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithThreeVector3DoubleArgsRetPackedVector3List", "Geometry3D.segment_intersects_sphere")
+    try {
+      val s = r.singleton("Geometry3D")
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
+      val a2: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a3: Double = 0.25
+      val got = r.track(Geometry3D.segmentIntersectsSphere(a0, a1, a2, a3))
+      r.oracle()
+      val oracle = r.track(s.call("segment_intersects_sphere", a0, a1, a2, a3))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d076(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoDoubleIntLongArgsRetPlaneList", "Geometry3D.build_cylinder_planes")
+    try {
+      val s = r.singleton("Geometry3D")
+      val a0: Double = 0.75
+      val a1: Double = 0.25
+      val a2: Int = 7
+      val got = r.track(Geometry3D.buildCylinderPlanes(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(s.call("build_cylinder_planes", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d077(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList", "Geometry3D.build_capsule_planes")
+    try {
+      val s = r.singleton("Geometry3D")
+      val a0: Double = 0.75
+      val a1: Double = 0.25
+      val a2: Int = 7
+      val a3: Int = 3
+      val got = r.track(Geometry3D.buildCapsulePlanes(a0, a1, a2, a3))
+      r.oracle()
+      val oracle = r.track(s.call("build_capsule_planes", a0, a1, a2, a3))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d078(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoPackedVector2ListArgsRetPackedVector2ListList", "Geometry2D.clip_polygons")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: List<Vector2> = listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
+      val a1: List<Vector2> = listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
+      val got = r.track(Geometry2D.clipPolygons(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("clip_polygons", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d079(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoStringArgsRetInt", "TranslationServer.compare_locales")
+    try {
+      val s = r.singleton("TranslationServer")
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val got = r.track(TranslationServer.compareLocales(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("compare_locales", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d080(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoStringNameAndBoolArgsRetBool", "ClassDB.class_has_enum")
+    try {
+      val s = r.singleton("ClassDB")
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val got = r.track(ClassDB.classHasEnum(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("class_has_enum", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d081(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoStringNameAndBoolArgsRetInt", "ClassDB.class_get_method_argument_count")
+    try {
+      val s = r.singleton("ClassDB")
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val got = r.track(ClassDB.classGetMethodArgumentCount(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("class_get_method_argument_count", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d082(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoStringNameAndBoolArgsRetPackedStringList", "ClassDB.class_get_enum_constants")
+    try {
+      val s = r.singleton("ClassDB")
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val got = r.track(ClassDB.classGetEnumConstants(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("class_get_enum_constants", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d083(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoStringNameAndBoolArgsRetStringName", "ClassDB.class_get_integer_constant_enum")
+    try {
+      val s = r.singleton("ClassDB")
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val got = r.track(ClassDB.classGetIntegerConstantEnum(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("class_get_integer_constant_enum", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d084(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoStringNameArgsRetDictionary", "ClassDB.class_get_signal")
+    try {
+      val s = r.singleton("ClassDB")
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val got = r.track(ClassDB.classGetSignal(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("class_get_signal", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d085(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoStringNameArgsRetLong", "ClassDB.class_get_integer_constant")
+    try {
+      val s = r.singleton("ClassDB")
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val got = r.track(ClassDB.classGetIntegerConstant(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("class_get_integer_constant", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d086(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoStringNameArgsRetVariantScalar", "ClassDB.class_get_property_default_value")
+    try {
+      val s = r.singleton("ClassDB")
+      val a0: String = "kanama125"
+      val a1: String = "kanama7"
+      val got = r.track(ClassDB.classGetPropertyDefaultValue(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("class_get_property_default_value", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d087(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoVector2DoubleArgsRetBool", "Geometry2D.is_point_in_circle")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val a1: Vector2 = Vector2(0.75, 1.0)
+      val a2: Double = 0.75
+      val got = r.track(Geometry2D.isPointInCircle(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(s.call("is_point_in_circle", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d088(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoVector2iArgsRetVector2iList", "Geometry2D.bresenham_line")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: Vector2i = Vector2i(7, 3)
+      val a1: Vector2i = Vector2i(3, 7)
+      val got = r.track(Geometry2D.bresenhamLine(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("bresenham_line", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d089(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List", "Geometry3D.segment_intersects_convex")
+    try {
+      val s = r.singleton("Geometry3D")
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
+      val a2: List<Plane> = listOf(Plane(1.0, 0.0, 0.0, 1.0), Plane(-1.0, 0.0, 0.0, 1.0), Plane(0.0, 1.0, 0.0, 1.0), Plane(0.0, -1.0, 0.0, 1.0), Plane(0.0, 0.0, 1.0, 1.0), Plane(0.0, 0.0, -1.0, 1.0))
+      val got = r.track(Geometry3D.segmentIntersectsConvex(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(s.call("segment_intersects_convex", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void singleton method
+  private fun d090(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoVector3RIDArgsRetPackedInt64List", "RenderingServer.instances_cull_ray")
+    try {
+      val s = r.singleton("RenderingServer")
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
+      val a2: RID = RID(0L)
+      val got = r.track(RenderingServer.instancesCullRay(a0, a1, a2))
+      r.oracle()
+      val oracle = r.track(s.call("instances_cull_ray", a0, a1, a2))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d091(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithTwoVector3TwoDoubleArgsRetPackedVector3List", "Geometry3D.segment_intersects_cylinder")
+    try {
+      val s = r.singleton("Geometry3D")
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
+      val a2: Double = 0.75
+      val a3: Double = 0.25
+      val got = r.track(Geometry3D.segmentIntersectsCylinder(a0, a1, a2, a3))
+      r.oracle()
+      val oracle = r.track(s.call("segment_intersects_cylinder", a0, a1, a2, a3))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d092(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithVariantAndBoolArgRetString", "Marshalls.variant_to_base64")
+    try {
+      val s = r.singleton("Marshalls")
+      val a0: Any? = "kanama125"
+      val got = r.track(Marshalls.variantToBase64(a0))
+      r.oracle()
+      val oracle = r.track(s.call("variant_to_base64", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d093(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithVector2PackedVector2ListArgsRetBool", "Geometry2D.is_point_in_polygon")
+    try {
+      val s = r.singleton("Geometry2D")
+      val a0: Vector2 = Vector2(0.25, 0.5)
+      val a1: List<Vector2> = listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
+      val got = r.track(Geometry2D.isPointInPolygon(a0, a1))
+      r.oracle()
+      val oracle = r.track(s.call("is_point_in_polygon", a0, a1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // non-void method of a stateless singleton
+  private fun d094(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithVector3ArgRetPlaneList", "Geometry3D.build_box_planes")
+    try {
+      val s = r.singleton("Geometry3D")
+      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val got = r.track(Geometry3D.buildBoxPlanes(a0))
+      r.oracle()
+      val oracle = r.track(s.call("build_box_planes", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d095(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer2D.agent_create")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val rid = NavigationServer2D.agentCreate()
+      try {
+        r.created(rid)
+        val got = r.track(NavigationServer2D.agentGetAvoidanceEnabled(rid))
+        r.oracle()
+        val oracle = r.track(s.call("agent_get_avoidance_enabled", rid))
+        r.readBack(got, oracle, "agent_get_avoidance_enabled")
+      } finally {
+        NavigationServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d096(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer2D.link_create")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val rid = NavigationServer2D.linkCreate()
+      try {
+        r.created(rid)
+        val got = r.track(NavigationServer2D.linkGetIterationId(rid))
+        r.oracle()
+        val oracle = r.track(s.call("link_get_iteration_id", rid))
+        r.readBack(got, oracle, "link_get_iteration_id")
+      } finally {
+        NavigationServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d097(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer2D.map_create")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val rid = NavigationServer2D.mapCreate()
+      try {
+        r.created(rid)
+        val got = r.track(NavigationServer2D.mapIsActive(rid))
+        r.oracle()
+        val oracle = r.track(s.call("map_is_active", rid))
+        r.readBack(got, oracle, "map_is_active")
+      } finally {
+        NavigationServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d098(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer2D.obstacle_create")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val rid = NavigationServer2D.obstacleCreate()
+      try {
+        r.created(rid)
+        val got = r.track(NavigationServer2D.obstacleGetAvoidanceEnabled(rid))
+        r.oracle()
+        val oracle = r.track(s.call("obstacle_get_avoidance_enabled", rid))
+        r.readBack(got, oracle, "obstacle_get_avoidance_enabled")
+      } finally {
+        NavigationServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d099(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer2D.region_create")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val rid = NavigationServer2D.regionCreate()
+      try {
+        r.created(rid)
+        val got = r.track(NavigationServer2D.regionGetIterationId(rid))
+        r.oracle()
+        val oracle = r.track(s.call("region_get_iteration_id", rid))
+        r.readBack(got, oracle, "region_get_iteration_id")
+      } finally {
+        NavigationServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d100(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer2D.source_geometry_parser_create")
+    try {
+      val s = r.singleton("NavigationServer2D")
+      val rid = NavigationServer2D.sourceGeometryParserCreate()
+      try {
+        r.created(rid)
+      } finally {
+        NavigationServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d101(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer3D.agent_create")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val rid = NavigationServer3D.agentCreate()
+      try {
+        r.created(rid)
+        val got = r.track(NavigationServer3D.agentGetAvoidanceEnabled(rid))
+        r.oracle()
+        val oracle = r.track(s.call("agent_get_avoidance_enabled", rid))
+        r.readBack(got, oracle, "agent_get_avoidance_enabled")
+      } finally {
+        NavigationServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d102(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer3D.link_create")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val rid = NavigationServer3D.linkCreate()
+      try {
+        r.created(rid)
+        val got = r.track(NavigationServer3D.linkGetIterationId(rid))
+        r.oracle()
+        val oracle = r.track(s.call("link_get_iteration_id", rid))
+        r.readBack(got, oracle, "link_get_iteration_id")
+      } finally {
+        NavigationServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d103(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer3D.map_create")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val rid = NavigationServer3D.mapCreate()
+      try {
+        r.created(rid)
+        val got = r.track(NavigationServer3D.mapIsActive(rid))
+        r.oracle()
+        val oracle = r.track(s.call("map_is_active", rid))
+        r.readBack(got, oracle, "map_is_active")
+      } finally {
+        NavigationServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d104(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer3D.obstacle_create")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val rid = NavigationServer3D.obstacleCreate()
+      try {
+        r.created(rid)
+        val got = r.track(NavigationServer3D.obstacleGetAvoidanceEnabled(rid))
+        r.oracle()
+        val oracle = r.track(s.call("obstacle_get_avoidance_enabled", rid))
+        r.readBack(got, oracle, "obstacle_get_avoidance_enabled")
+      } finally {
+        NavigationServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d105(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer3D.region_create")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val rid = NavigationServer3D.regionCreate()
+      try {
+        r.created(rid)
+        val got = r.track(NavigationServer3D.regionGetIterationId(rid))
+        r.oracle()
+        val oracle = r.track(s.call("region_get_iteration_id", rid))
+        r.readBack(got, oracle, "region_get_iteration_id")
+      } finally {
+        NavigationServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d106(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer3D.source_geometry_parser_create")
+    try {
+      val s = r.singleton("NavigationServer3D")
+      val rid = NavigationServer3D.sourceGeometryParserCreate()
+      try {
+        r.created(rid)
+      } finally {
+        NavigationServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d107(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.area_create")
+    try {
+      val s = r.singleton("PhysicsServer2D")
+      val rid = PhysicsServer2D.areaCreate()
+      try {
+        r.created(rid)
+        val got = r.track(PhysicsServer2D.areaGetSpace(rid))
+        r.oracle()
+        val oracle = r.track(s.call("area_get_space", rid))
+        r.readBack(got, oracle, "area_get_space")
+      } finally {
+        PhysicsServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d108(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.body_create")
+    try {
+      val s = r.singleton("PhysicsServer2D")
+      val rid = PhysicsServer2D.bodyCreate()
+      try {
+        r.created(rid)
+        val got = r.track(PhysicsServer2D.bodyGetSpace(rid))
+        r.oracle()
+        val oracle = r.track(s.call("body_get_space", rid))
+        r.readBack(got, oracle, "body_get_space")
+      } finally {
+        PhysicsServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d109(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.capsule_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer2D")
+      val rid = PhysicsServer2D.capsuleShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d110(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.circle_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer2D")
+      val rid = PhysicsServer2D.circleShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d111(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.concave_polygon_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer2D")
+      val rid = PhysicsServer2D.concavePolygonShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d112(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.convex_polygon_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer2D")
+      val rid = PhysicsServer2D.convexPolygonShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d113(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.joint_create")
+    try {
+      val s = r.singleton("PhysicsServer2D")
+      val rid = PhysicsServer2D.jointCreate()
+      try {
+        r.created(rid)
+        val got = r.track(PhysicsServer2D.jointIsDisabledCollisionsBetweenBodies(rid))
+        r.oracle()
+        val oracle = r.track(s.call("joint_is_disabled_collisions_between_bodies", rid))
+        r.readBack(got, oracle, "joint_is_disabled_collisions_between_bodies")
+      } finally {
+        PhysicsServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d114(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.rectangle_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer2D")
+      val rid = PhysicsServer2D.rectangleShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d115(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.segment_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer2D")
+      val rid = PhysicsServer2D.segmentShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d116(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.separation_ray_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer2D")
+      val rid = PhysicsServer2D.separationRayShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d117(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.space_create")
+    try {
+      val s = r.singleton("PhysicsServer2D")
+      val rid = PhysicsServer2D.spaceCreate()
+      try {
+        r.created(rid)
+        val got = r.track(PhysicsServer2D.spaceIsActive(rid))
+        r.oracle()
+        val oracle = r.track(s.call("space_is_active", rid))
+        r.readBack(got, oracle, "space_is_active")
+      } finally {
+        PhysicsServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d118(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.world_boundary_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer2D")
+      val rid = PhysicsServer2D.worldBoundaryShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer2D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d119(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.area_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.areaCreate()
+      try {
+        r.created(rid)
+        val got = r.track(PhysicsServer3D.areaGetSpace(rid))
+        r.oracle()
+        val oracle = r.track(s.call("area_get_space", rid))
+        r.readBack(got, oracle, "area_get_space")
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d120(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.body_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.bodyCreate()
+      try {
+        r.created(rid)
+        val got = r.track(PhysicsServer3D.bodyGetSpace(rid))
+        r.oracle()
+        val oracle = r.track(s.call("body_get_space", rid))
+        r.readBack(got, oracle, "body_get_space")
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d121(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.box_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.boxShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d122(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.capsule_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.capsuleShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d123(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.concave_polygon_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.concavePolygonShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d124(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.convex_polygon_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.convexPolygonShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d125(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.cylinder_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.cylinderShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d126(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.heightmap_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.heightmapShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d127(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.joint_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.jointCreate()
+      try {
+        r.created(rid)
+        val got = r.track(PhysicsServer3D.jointGetType(rid))
+        r.oracle()
+        val oracle = r.track(s.call("joint_get_type", rid))
+        r.readBack(got, oracle, "joint_get_type")
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d128(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.separation_ray_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.separationRayShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d129(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.soft_body_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.softBodyCreate()
+      try {
+        r.created(rid)
+        val got = r.track(PhysicsServer3D.softBodyGetSpace(rid))
+        r.oracle()
+        val oracle = r.track(s.call("soft_body_get_space", rid))
+        r.readBack(got, oracle, "soft_body_get_space")
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d130(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.space_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.spaceCreate()
+      try {
+        r.created(rid)
+        val got = r.track(PhysicsServer3D.spaceIsActive(rid))
+        r.oracle()
+        val oracle = r.track(s.call("space_is_active", rid))
+        r.readBack(got, oracle, "space_is_active")
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d131(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.sphere_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.sphereShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d132(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.world_boundary_shape_create")
+    try {
+      val s = r.singleton("PhysicsServer3D")
+      val rid = PhysicsServer3D.worldBoundaryShapeCreate()
+      try {
+        r.created(rid)
+      } finally {
+        PhysicsServer3D.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d133(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.area_light_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.areaLightCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d134(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.camera_attributes_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.cameraAttributesCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d135(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.camera_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.cameraCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d136(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.canvas_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.canvasCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d137(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.canvas_item_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.canvasItemCreate()
+      try {
+        r.created(rid)
+        val got = r.track(RenderingServer.canvasItemGetInstanceShaderParameterList(rid))
+        r.oracle()
+        val oracle = r.track(s.call("canvas_item_get_instance_shader_parameter_list", rid))
+        r.readBack(got, oracle, "canvas_item_get_instance_shader_parameter_list")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d138(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.canvas_light_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.canvasLightCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d139(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.canvas_light_occluder_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.canvasLightOccluderCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d140(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.canvas_occluder_polygon_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.canvasOccluderPolygonCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d141(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.canvas_texture_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.canvasTextureCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d142(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.compositor_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.compositorCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d143(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.compositor_effect_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.compositorEffectCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d144(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.decal_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.decalCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d145(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.directional_light_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.directionalLightCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d146(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.environment_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.environmentCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d147(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.fog_volume_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.fogVolumeCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d148(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.instance_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.instanceCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d149(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.lightmap_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.lightmapCreate()
+      try {
+        r.created(rid)
+        val got = r.track(RenderingServer.lightmapGetProbeCapturePoints(rid))
+        r.oracle()
+        val oracle = r.track(s.call("lightmap_get_probe_capture_points", rid))
+        r.readBack(got, oracle, "lightmap_get_probe_capture_points")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d150(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.material_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.materialCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d151(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.mesh_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.meshCreate()
+      try {
+        r.created(rid)
+        val got = r.track(RenderingServer.meshGetBlendShapeCount(rid))
+        r.oracle()
+        val oracle = r.track(s.call("mesh_get_blend_shape_count", rid))
+        r.readBack(got, oracle, "mesh_get_blend_shape_count")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d152(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.multimesh_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.multimeshCreate()
+      try {
+        r.created(rid)
+        val got = r.track(RenderingServer.multimeshGetInstanceCount(rid))
+        r.oracle()
+        val oracle = r.track(s.call("multimesh_get_instance_count", rid))
+        r.readBack(got, oracle, "multimesh_get_instance_count")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d153(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.occluder_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.occluderCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d154(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.omni_light_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.omniLightCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d155(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.particles_collision_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.particlesCollisionCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d156(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.particles_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.particlesCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d157(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.reflection_probe_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.reflectionProbeCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d158(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.scenario_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.scenarioCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d159(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.shader_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.shaderCreate()
+      try {
+        r.created(rid)
+        val got = r.track(RenderingServer.shaderGetCode(rid))
+        r.oracle()
+        val oracle = r.track(s.call("shader_get_code", rid))
+        r.readBack(got, oracle, "shader_get_code")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d160(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.skeleton_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.skeletonCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+        val got = r.track(RenderingServer.skeletonGetBoneCount(rid))
+        r.oracle()
+        val oracle = r.track(s.call("skeleton_get_bone_count", rid))
+        r.readBack(got, oracle, "skeleton_get_bone_count")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d161(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.sky_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.skyCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d162(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.spot_light_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.spotLightCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d163(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.texture_2d_placeholder_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.texture2dPlaceholderCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d164(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.texture_3d_placeholder_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.texture3dPlaceholderCreate()
+      try {
+        r.created(rid)
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d165(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.viewport_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.viewportCreate()
+      try {
+        r.created(rid)
+        val got = r.track(RenderingServer.viewportGetUpdateMode(rid))
+        r.oracle()
+        val oracle = r.track(s.call("viewport_get_update_mode", rid))
+        r.readBack(got, oracle, "viewport_get_update_mode")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d166(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.visibility_notifier_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.visibilityNotifierCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+  private fun d167(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.voxel_gi_create")
+    try {
+      val s = r.singleton("RenderingServer")
+      val rid = RenderingServer.voxelGiCreate()
+      try {
+        r.created(rid, invalidOn = "desktop")
+        val got = r.track(RenderingServer.voxelGiGetOctreeSize(rid))
+        r.oracle()
+        val oracle = r.track(s.call("voxel_gi_get_octree_size", rid))
+        r.readBack(got, oracle, "voxel_gi_get_octree_size")
+      } finally {
+        RenderingServer.freeRid(rid)
+      }
     } catch (t: Throwable) {
       r.threw(t)
     }

@@ -544,6 +544,10 @@ API_EXERCISE_JAR = ["python3", "-c",
 case("generate_api_exercise.py --check-jar (exercise class in a jar)", API_EXERCISE_JAR,
      [Create("scripts/fixtures/api_exercise/jar/net/multigesture/kanama/exercise/ApiExerciseRows.class", "placeholder\n")],
      "carries 1 API exercise class(es)", "a jar with an `exercise/` class (a -PkanamaApiExercise=true build) is published or installed: the check must fail it")
+case("generate_api_exercise.py --check (RID source no row takes)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '    ("TextServer", "shaped"): "TextServer.create_shaped_text",\n',
+           '    ("TextServer", "shaped"): "TextServer.create_shaped_text",\n    ("TextServer", "red_run"): "TextServer.create_font",\n')],
+     "RID_ARG_SOURCES names TextServer argument `red_run`, which no B or D row of TextServer takes", "a `RID_ARG_SOURCES` entry names a RID argument no row passes (renamed or gone): it would make and free a RID for nothing")
 case("generate_api_exercise.py --check (known finding names no row)", API_EXERCISE_CHECK,
      [Edit("scripts/api_exercise_policy.py", "tuple[tuple[str, ...], str, str, str]] = {}",
            'tuple[tuple[str, ...], str, str, str]] = {("A", "CharFXTransform.font_red_run"): (("ios",), "got null", "red run", "red run")}')],
@@ -974,6 +978,28 @@ case("runtime_smoke.sh (API exercise static arguments)", ["bash", "scripts/runti
      [Edit(JVM_OBJECT_CALLS, RAY_ARGS + "        args.setAtIndex(ADDRESS, 0, fromCell)\n        args.setAtIndex(ADDRESS, 1, toCell)\n",
            RAY_ARGS + "        args.setAtIndex(ADDRESS, 0, toCell)\n        args.setAtIndex(ADDRESS, 1, fromCell)\n")],
      "API EXERCISE FAIL: ptrcallWithTwoVector2UInt32RIDListArgsRetObject", "PhysicsRayQueryParameters2D.create's helper passes `to` as `from` and back: the static row must read the swap back from its result",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# A const (B) row compares the wrapper with the Variant path on the same object: the second double argument of
+# Noise.get_noise_2d's helper written as a float32 into its float64 cell reaches the engine as another value, and
+# the row must name the helper.
+NOISE_ARGS = "      arg0.set(JAVA_DOUBLE, 0, first)\n      arg1.set(JAVA_DOUBLE, 0, second)\n"
+case("runtime_smoke.sh (API exercise const rows)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit(JVM_OBJECT_CALLS,
+           "    first: Double,\n    second: Double,\n  ): Double {\n    Arena.ofConfined().use { arena ->\n"
+           "      val arg0 = arena.allocate(JAVA_DOUBLE)\n      val arg1 = arena.allocate(JAVA_DOUBLE)\n" + NOISE_ARGS,
+           "    first: Double,\n    second: Double,\n  ): Double {\n    Arena.ofConfined().use { arena ->\n"
+           "      val arg0 = arena.allocate(JAVA_DOUBLE)\n      val arg1 = arena.allocate(JAVA_DOUBLE)\n"
+           "      arg0.set(JAVA_DOUBLE, 0, first)\n      arg1.set(JAVA_FLOAT, 0, second.toFloat())\n")],
+     "API EXERCISE FAIL: ptrcallWithTwoDoubleArgsRetDouble", "ptrcallWithTwoDoubleArgsRetDouble writes its second argument as a float32 into the float64 cell: the const row (wrapper vs Object.call) must fail, not pass",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# An Array return buffer must hold a constructed Array: the engine resizes it in place for a C++ Vector<Variant>
+# return (Animation.method_track_get_params). Left zero-filled, the const row crashes the process, and the smoke
+# names the row the trace saw last.
+case("runtime_smoke.sh (API exercise Array return crash)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit(JVM_OBJECT_CALLS,
+           "      val ret = arena.allocate(8L, 8L)\n      BuiltinTypes.constructEmptyArray(ret)\n      bindPtrcall(methodBind, instance, args, ret)\n      return try {\n        reader(ret)",
+           "      val ret = arena.allocate(8L, 8L)\n      bindPtrcall(methodBind, instance, args, ret)\n      return try {\n        reader(ret)")],
+     "in row B Animation.method_track_get_params", "callArrayReturn hands the engine a zero-filled Array return buffer: the const row of a Vector<Variant> return crashes the run, and the smoke must name that row",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (API exercise known finding passes)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt",

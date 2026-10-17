@@ -1074,11 +1074,12 @@ expected output after an intended rule change).
 ### The exercise rows
 
 `--report` also writes the rows, `src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt`,
-and `--check` fails when that file differs from what the generator writes. So far the rows cover two
-cases: every helper whose best case is a static (C) and every helper whose best case, or whose weak
-static's next-best row, is a property pair (A). A row is one function of straight-line code that calls
-the generated wrapper exactly as a script would, with the Kotlin signature read from the committed tree,
-and reports to the hand-written `ApiExerciseRunner.kt` beside it:
+and `--check` fails when that file differs from what the generator writes. The rows cover every helper
+whose best case is a static (C), a property pair (A), a const method (B) or a singleton method (D), and
+for a weak static the helper's next-best A, B or D row as well; only the reach-only (F) helpers have no
+row yet. A row is one function of straight-line code that calls the generated wrapper exactly as a
+script would, with the Kotlin signature read from the committed tree, and reports to the hand-written
+`ApiExerciseRunner.kt` beside it:
 
 - a **C row** calls the static with its `STATIC_ARGS` and compares the result with
   `ClassDB.class_call_static` on the same arguments: equal and not the type's zero, an object result a
@@ -1091,7 +1092,28 @@ and reports to the hand-written `ApiExerciseRunner.kt` beside it:
   getter and from `Object.get`. `PAIR_OVERRIDES` gives a property a value it can keep (an MP3 stream keeps
   only bytes that decode) or takes it out of the pair rule when a fresh object cannot keep any set value
   (a frame index clamped by a missing `SpriteFrames`); its setter and getter then get their method's own
-  case and the helper's next pair row is used.
+  case and the helper's next pair row is used. On a `SINGLETON_PAIRS` singleton (`Engine`, `AudioServer`)
+  every property the tree calls gets its row (not only where it is its helpers' best), and the row sets
+  process-wide state, so it sets the value it read first back in a `finally`, also when the row fails; `SINGLETON_KEYED_PAIRS` runs a keyed set/get pair the same way
+  (`ProjectSettings.set_setting`/`get_setting` on a key no project defines, erased again by the restore).
+- a **B row** calls a const method on a fresh instance (or the descendant or `RECEIVER_SOURCES` factory
+  the inventory names) and a **D row** a const method of a singleton, or any method of a stateless one
+  (`Geometry2D`, `Geometry3D`, `Marshalls`); both compare the result with `Object.call` of the same
+  method with the same arguments on the same object. The arguments are the required ones (defaulted ones
+  take their defaults on both paths): a recognisable value per type that alternates by position (`7`/`3`,
+  `0.75`/`0.25`, two different vectors), so a helper that swaps two cells of one type passes different
+  values; a path under the scratch directory for a `String` path argument; a square, a tetrahedron or a
+  box's six planes for the geometry lists; a fresh object for an object argument. A result equal to its
+  type's zero (what a fresh, empty object mostly answers) is **weak**: the two paths agreed, but a no-op
+  could have produced it. The run counts those apart; they are not failures.
+- a **RID factory row** (`RID_FACTORIES`: the rendering, physics and navigation servers and the text
+  server) calls an argument-free `*_create` / `create_*`, requires a valid RID, reads one const
+  `<prefix>_get_*` of it through the wrapper and `Object.call` where the server has one, and frees it in
+  a `finally`. The same factories make the RID arguments of those servers' B and D rows (an argument
+  `x` takes the class's own `x_create`, or its `RID_ARG_SOURCES` entry, such as a shaped text or a
+  font for `TextServer`), freed after the row; the leak check at exit holds the rows to that.
+  `FACTORY_RESULTS` lists the factories that return the invalid RID on a host for a reason of the host
+  (the headless dummy renderer makes no lights, skies or particles), where that counts weak.
 
 Every path a row touches is under `user://kanama-api-exercise/`, which the runner creates with its
 fixtures (`fixture.txt` with an extended attribute, `fixture.mp3`, `fixture.wav`, `sub/`) before the
@@ -1112,9 +1134,12 @@ the kit and store `package*` tasks and `installAddonJar` fail on a flagged build
   (`ApiExerciseHook`, beside the signal self-test in `callFrame`) runs the rows on the first frame and
   prints `[kanama] API EXERCISE: <n> passed, <m> failed, <w> weak, <k> known, <r> reach, <e> excluded in <ms> ms` and
   one `[kanama] API EXERCISE FAIL: <helpers> <row> <what>` per failure. `KANAMA_API_EXERCISE=1` forces a
-  run without the setting and `KANAMA_API_EXERCISE_TRACE=1` prints a line before each row, which is how
-  a row that prints an engine error, hangs or crashes is found (run every row headless before adding a
-  device run of new rows).
+  run without the setting and `KANAMA_API_EXERCISE_TRACE=1` prints a line before each row and its verdict
+  after it (`= P` passed, `= W` weak, `= F` failed), which is how a row that prints an engine error,
+  hangs or crashes is found (run every row headless before adding a device run of new rows). The smoke
+  runs with the trace on, so a crash names the row it happened in. A method whose call aborts the engine
+  itself (an index Godot does not bounds-check before a `CRASH_BAD_INDEX`) is excluded in
+  `METHOD_OVERRIDES` with that reason.
 - **iOS:** `ApiExerciseSelfTest.kt` runs the same rows after the frame-1 self-test rows and prints
   `[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): ... faults=<f> expected=<e> in <ms> ms`, a line
   both device runners require.

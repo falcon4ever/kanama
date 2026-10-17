@@ -433,8 +433,8 @@ The three ObjectCalls summary lines therefore end with `faults=<count> expected=
 ```
 
 The third line is the generated API exercise (`ApiExerciseSelfTest.kt`, after the frame-1 rows): one
-row per `ObjectCalls` helper whose best row is a static or a property pair, the same rows the desktop
-smoke runs (see "The exercise rows" in `wrapper-maintenance.md`). A static the shim refused shows as a
+row per `ObjectCalls` helper whose best row is a static, a property pair, a const method or a singleton
+method (with the RID factory rows), the same rows the desktop smoke runs (see "The exercise rows" in `wrapper-maintenance.md`). A static the shim refused shows as a
 `FAULT` line and as `faults` above `expected`; the demos' `ios_device_run.sh` fails on both, while
 `ios_visual_smoke.sh` fails on `FAIL` lines and failed rows but does not compare the fault counts. A row
 listed in `KNOWN_FINDINGS` (`scripts/api_exercise_policy.py`: an iOS gap already tracked, with the

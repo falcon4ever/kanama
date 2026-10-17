@@ -182,7 +182,9 @@ API_EXERCISE_LOG="${LOG_FILE}.api_exercise"
 API_EXERCISE_OVERRIDE="$PROJECT_DIR/override.cfg"
 trap 'rm -f "$OWNED_RELEASE_OVERRIDE" "$SIGNAL_SETTING_OVERRIDE" "$OWNERSHIP_OVERRIDE" "$API_EXERCISE_OVERRIDE"' EXIT
 printf '[kanama]\n\ndebug/api_exercise=true\n' >"$API_EXERCISE_OVERRIDE"
-"$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://api_exercise_smoke.tscn --quit --verbose >"$API_EXERCISE_LOG" 2>&1
+# With the row trace on (one line before each row and its verdict after it), so a crash names its row.
+API_EXERCISE_STATUS=0
+KANAMA_API_EXERCISE_TRACE=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://api_exercise_smoke.tscn --quit --verbose >"$API_EXERCISE_LOG" 2>&1 || API_EXERCISE_STATUS=$?
 rm -f "$API_EXERCISE_OVERRIDE"
 cat "$API_EXERCISE_LOG" >>"$LOG_FILE"
 # task 138 item 6 -- a @RegisterClass method returning a fresh owned Resource, called typed from the
@@ -220,7 +222,14 @@ check_absent() {
 }
 
 # The API exercise first: a wrong helper usually breaks a hand smoke line too, and the exercise's FAIL
-# line names the helper and the row. No FAIL line (printed when there is one), then the pass line.
+# line names the helper and the row. A crash names the row the trace saw last; then no FAIL line
+# (printed when there is one), then the pass line.
+if [[ $API_EXERCISE_STATUS -ne 0 ]] || grep -q "Program crashed" "$API_EXERCISE_LOG"; then
+  last_row="$(grep "API EXERCISE row " "$API_EXERCISE_LOG" | tail -n 1 | sed 's/.*API EXERCISE row //')"
+  # justified: diagnostics before the verdict; a crash without Godot's crash banner still fails below
+  grep -A 12 "Program crashed" "$API_EXERCISE_LOG" >&2 || true
+  smoke_fail "the API exercise crashed (exit $API_EXERCISE_STATUS) in row ${last_row:-<none>}" "$API_EXERCISE_LOG"
+fi
 if grep -q "API EXERCISE FAIL" "$API_EXERCISE_LOG"; then
   grep "API EXERCISE FAIL" "$API_EXERCISE_LOG" >&2
   smoke_fail "unexpected pattern" "API EXERCISE FAIL"
