@@ -548,6 +548,10 @@ case("generate_api_exercise.py --check (RID source no row takes)", API_EXERCISE_
      [Edit("scripts/api_exercise_policy.py", '    ("TextServer", "shaped"): "TextServer.create_shaped_text",\n',
            '    ("TextServer", "shaped"): "TextServer.create_shaped_text",\n    ("TextServer", "red_run"): "TextServer.create_font",\n')],
      "RID_ARG_SOURCES names TextServer argument `red_run`, which no B or D row of TextServer takes", "a `RID_ARG_SOURCES` entry names a RID argument no row passes (renamed or gone): it would make and free a RID for nothing")
+case("generate_api_exercise.py --check (row arguments of no row)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '    ("ClassDB", "class_get_enum_list"): (\'"Node"\',),\n',
+           '    ("ClassDB", "class_get_enum_list"): (\'"Node"\',),\n    ("ClassDB", "class_get_enum_list_red_run"): (\'"Node"\',),\n')],
+     "ROW_ARGS names ClassDB.class_get_enum_list_red_run, which is not a B or D row", "a `ROW_ARGS` entry names a method that is no B or D row (renamed or gone): its arguments would silently go unused")
 case("generate_api_exercise.py --check (known finding names no row)", API_EXERCISE_CHECK,
      [Edit("scripts/api_exercise_policy.py", "tuple[tuple[str, ...], str, str, str]] = {}",
            'tuple[tuple[str, ...], str, str, str]] = {("A", "CharFXTransform.font_red_run"): (("ios",), "got null", "red run", "red run")}')],

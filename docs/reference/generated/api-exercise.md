@@ -330,6 +330,41 @@ B and D rows whose per-type arguments would leave them weak take chosen ones (`R
 
 | row | arguments | receiver set |
 |---|---|---|
+| `AStarGrid2D.is_in_bounds` | `7`, `3` | `region = Rect2i(0, 0, 8, 8)` |
+| `AStarGrid2D.is_in_boundsv` | `Vector2i(7, 3)` | `region = Rect2i(0, 0, 8, 8)` |
+| `CanvasItem.get_visibility_layer_bit` | `0` | — |
+| `ClassDB.class_get_enum_constants` | `"Node"`, `"ProcessMode"` | — |
+| `ClassDB.class_get_enum_list` | `"Node"` | — |
+| `ClassDB.class_get_integer_constant` | `"Node"`, `"NOTIFICATION_READY"` | — |
+| `ClassDB.class_get_integer_constant_enum` | `"Node"`, `"PROCESS_MODE_ALWAYS"` | — |
+| `ClassDB.class_get_method_argument_count` | `"Node"`, `"add_child"` | — |
+| `ClassDB.class_get_method_list` | `"Node2D"` | — |
+| `ClassDB.class_get_property` | `Node2D.new()`, `"scale"` | — |
+| `ClassDB.class_get_property_default_value` | `"Node2D"`, `"scale"` | — |
+| `ClassDB.class_get_signal` | `"Node"`, `"ready"` | — |
+| `ClassDB.class_has_enum` | `"Node"`, `"ProcessMode"` | — |
+| `Control.get_cursor_shape` | — | `mouse_default_cursor_shape = Control.CURSOR_IBEAM` |
+| `Control.get_tooltip` | — | `tooltip_text = "kanama125"` |
+| `Geometry2D.clip_polygons` | `[Vector2(0, 0), Vector2(4, 0), Vector2(4, 4), Vector2(0, 4)]`, `[Vector2(2, 2), Vector2(6, 2), Vector2(6, 6), Vector2(2, 6)]` | — |
+| `Geometry2D.is_polygon_clockwise` | `[Vector2(0, 0), Vector2(0, 4), Vector2(4, 4), Vector2(4, 0)]` | — |
+| `Geometry2D.line_intersects_line` | `Vector2(0, 0)`, `Vector2(1, 1)`, `Vector2(0, 2)`, `Vector2(1, -1)` | — |
+| `Geometry2D.point_is_inside_triangle` | `Vector2(1, 1)`, `Vector2(0, 0)`, `Vector2(4, 0)`, `Vector2(0, 4)` | — |
+| `Geometry3D.get_triangle_barycentric_coords` | `Vector3(0.25, 0.25, 0)`, `Vector3(-1, -1, 0)`, `Vector3(1, -1, 0)`, `Vector3(0, 1, 0)` | — |
+| `Geometry3D.ray_intersects_triangle` | `Vector3(0.25, 0.25, 1)`, `Vector3(0, 0, -1)`, `Vector3(-1, -1, 0)`, `Vector3(1, -1, 0)`, `Vector3(0, 1, 0)` | — |
+| `Geometry3D.segment_intersects_convex` | `Vector3(-2, 0.25, 0.5)`, `Vector3(2, 0.25, 0.5)`, `[Plane(1, 0, 0, 1), Plane(-1, 0, 0, 1), Plane(0, 1, 0, 1), Plane(0, -1, 0, 1), Plane(0, 0, 1, 1), Plane(0, 0, -1, 1)]` | — |
+| `Geometry3D.segment_intersects_cylinder` | `Vector3(-2, 0.25, 0)`, `Vector3(2, 0.25, 0)`, `2.0`, `1.0` | — |
+| `Geometry3D.segment_intersects_sphere` | `Vector3(-2, 0.25, 0)`, `Vector3(2, 0.25, 0)`, `Vector3(0, 0, 0)`, `1.0` | — |
+| `GridMap.get_orthogonal_index_from_basis` | `Basis(Vector3(0, 1, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1))` | — |
+| `GridMap.local_to_map` | `Vector3(5, 7, -3)` | — |
+| `InputEvent.get_action_strength` | `"ui_accept"` | `action = "ui_accept"`, `pressed = true` |
+| `InputEvent.is_action` | `"ui_accept"` | `action = "ui_accept"`, `pressed = true` |
+| `InputEvent.is_action_pressed` | `"ui_accept"` | `action = "ui_accept"`, `pressed = true` |
+| `Marshalls.base64_to_raw` | `"a2FuYW1hMTI1"` | — |
+| `Marshalls.base64_to_variant` | `"AgAAAAcAAAA="` | — |
+| `TextEdit.get_line_wrapped_text` | `0` | `text = "kanama125"` |
+| `Time.get_unix_time_from_datetime_dict` | `{"year": 2026, "month": 10, "day": 17, "hour": 12, "minute": 30, "second": 15}` | — |
+| `Translation.get_message` | `"kanama"` | `messages = {"kanama": "125"}` |
+| `TranslationServer.compare_locales` | `"en_US"`, `"en"` | — |
 
 `PAIR_GROW` (singleton properties a row only ever raises by one): `AudioServer.bus_count` (fewer buses than the project has deletes the project's buses; one more is removed again by the restore).
 

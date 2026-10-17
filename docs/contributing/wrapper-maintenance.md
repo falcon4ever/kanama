@@ -1112,7 +1112,10 @@ script would, with the Kotlin signature read from the committed tree, and report
   has only two); a path under the scratch directory for a `String` path argument; a square, a tetrahedron or a
   box's six planes for the geometry lists; a fresh object for an object argument. A result equal to its
   type's zero (what a fresh, empty object mostly answers) is **weak**: the two paths agreed, but a no-op
-  could have produced it. The run counts those apart; they are not failures.
+  could have produced it. The run counts those apart; they are not failures. `ROW_ARGS` gives a weak
+  row real arguments (one per required argument: a real class and member for `ClassDB`, valid base64,
+  a datetime dictionary, locales, shapes that intersect) and `ROW_RECEIVER_SETS` sets properties of its
+  fresh receiver through `Object.set` first (an `InputEventAction` for `ui_accept`, a grid's region).
 - a **RID factory row** (`RID_FACTORIES`: the rendering, physics and navigation servers and the text
   server) calls an argument-free `*_create` / `create_*`, requires a valid RID, reads one const
   `<prefix>_get_*` of it through the wrapper and `Object.call` where the server has one, and frees it in

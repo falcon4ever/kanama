@@ -2448,7 +2448,7 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithBasisArgRetInt", "GridMap.get_orthogonal_index_from_basis")
     try {
       val o = r.obj(GridMap(r.construct("GridMap")))
-      val a0: Basis = Basis(Vector3(2.0, 0.0, 0.0), Vector3(0.0, 3.0, 0.0), Vector3(0.0, 0.0, 4.0))
+      val a0: Basis = Basis(Vector3(0.0, 1.0, 0.0), Vector3(-1.0, 0.0, 0.0), Vector3(0.0, 0.0, 1.0))
       val got = r.track(o.getOrthogonalIndexFromBasis(a0))
       r.oracle()
       val oracle = r.track(o.call("get_orthogonal_index_from_basis", a0))
@@ -3158,7 +3158,8 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithIntArgRetPackedStringList", "TextEdit.get_line_wrapped_text")
     try {
       val o = r.obj(TextEdit(r.construct("TextEdit")))
-      val a0: Int = 7
+      o.set("text", "kanama125") // ROW_RECEIVER_SETS
+      val a0: Int = 0
       val got = r.track(o.getLineWrappedText(a0))
       r.oracle()
       val oracle = r.track(o.call("get_line_wrapped_text", a0))
@@ -5812,7 +5813,9 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithStringNameAndBoolArgRetBool", "InputEvent.is_action on InputEventAction")
     try {
       val o = r.ref(InputEventAction(r.construct("InputEventAction")))
-      val a0: String = "kanama125"
+      o.set("action", "ui_accept") // ROW_RECEIVER_SETS
+      o.set("pressed", true) // ROW_RECEIVER_SETS
+      val a0: String = "ui_accept"
       val got = r.track(o.isAction(a0))
       r.oracle()
       val oracle = r.track(o.call("is_action", a0))
@@ -5828,7 +5831,9 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithStringNameAndBoolArgRetDouble", "InputEvent.get_action_strength on InputEventAction")
     try {
       val o = r.ref(InputEventAction(r.construct("InputEventAction")))
-      val a0: String = "kanama125"
+      o.set("action", "ui_accept") // ROW_RECEIVER_SETS
+      o.set("pressed", true) // ROW_RECEIVER_SETS
+      val a0: String = "ui_accept"
       val got = r.track(o.getActionStrength(a0))
       r.oracle()
       val oracle = r.track(o.call("get_action_strength", a0))
@@ -5877,7 +5882,9 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithStringNameAndTwoBoolArgsRetBool", "InputEvent.is_action_pressed on InputEventAction")
     try {
       val o = r.ref(InputEventAction(r.construct("InputEventAction")))
-      val a0: String = "kanama125"
+      o.set("action", "ui_accept") // ROW_RECEIVER_SETS
+      o.set("pressed", true) // ROW_RECEIVER_SETS
+      val a0: String = "ui_accept"
       val got = r.track(o.isActionPressed(a0))
       r.oracle()
       val oracle = r.track(o.call("is_action_pressed", a0))
@@ -6307,6 +6314,7 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithTwoIntArgsRetBool", "AStarGrid2D.is_in_bounds")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
+      o.set("region", Rect2i(Vector2i(0, 0), Vector2i(8, 8))) // ROW_RECEIVER_SETS
       val a0: Int = 7
       val a1: Int = 3
       val got = r.track(o.isInBounds(a0, a1))
@@ -6913,7 +6921,8 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithTwoStringNameArgsRetStringName", "Translation.get_message")
     try {
       val o = r.ref(Translation(r.construct("Translation")))
-      val a0: String = "kanama125"
+      o.set("messages", mapOf<String, Any?>("kanama" to "125")) // ROW_RECEIVER_SETS
+      val a0: String = "kanama"
       val got = r.track(o.getMessage(a0))
       r.oracle()
       val oracle = r.track(o.call("get_message", a0))
@@ -7054,7 +7063,7 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithUInt32ArgRetBool", "CanvasItem.get_visibility_layer_bit on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
-      val a0: Long = 7L
+      val a0: Long = 0L
       val got = r.track(o.getVisibilityLayerBit(a0))
       r.oracle()
       val oracle = r.track(o.call("get_visibility_layer_bit", a0))
@@ -7343,6 +7352,7 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithVector2ArgRetLong", "Control.get_cursor_shape")
     try {
       val o = r.obj(Control(r.construct("Control")))
+      o.set("mouse_default_cursor_shape", 1L /* CURSOR_IBEAM */) // ROW_RECEIVER_SETS
       val got = r.track(o.getCursorShape())
       r.oracle()
       val oracle = r.track(o.call("get_cursor_shape"))
@@ -7374,6 +7384,7 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithVector2ArgRetString", "Control.get_tooltip")
     try {
       val o = r.obj(Control(r.construct("Control")))
+      o.set("tooltip_text", "kanama125") // ROW_RECEIVER_SETS
       val got = r.track(o.getTooltip())
       r.oracle()
       val oracle = r.track(o.call("get_tooltip"))
@@ -7572,6 +7583,7 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithVector2iArgRetBool", "AStarGrid2D.is_in_boundsv")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
+      o.set("region", Rect2i(Vector2i(0, 0), Vector2i(8, 8))) // ROW_RECEIVER_SETS
       val a0: Vector2i = Vector2i(7, 3)
       val got = r.track(o.isInBoundsv(a0))
       r.oracle()
@@ -7780,7 +7792,7 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithVector3ArgRetVector3i", "GridMap.local_to_map")
     try {
       val o = r.obj(GridMap(r.construct("GridMap")))
-      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
+      val a0: Vector3 = Vector3(5.0, 7.0, -3.0)
       val got = r.track(o.localToMap(a0))
       r.oracle()
       val oracle = r.track(o.call("local_to_map", a0))
@@ -7985,7 +7997,7 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithDictionaryArgRetLong", "Time.get_unix_time_from_datetime_dict")
     try {
       val s = r.singleton("Time")
-      val a0: Map<String, Any?> = mapOf<String, Any?>("kanama" to 125L)
+      val a0: Map<String, Any?> = mapOf<String, Any?>("year" to 2026L, "month" to 10L, "day" to 17L, "hour" to 12L, "minute" to 30L, "second" to 15L)
       val got = r.track(Time.getUnixTimeFromDateTimeDict(a0))
       r.oracle()
       val oracle = r.track(s.call("get_unix_time_from_datetime_dict", a0))
@@ -8001,11 +8013,11 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithFiveVector3ArgsRetVariantScalar", "Geometry3D.ray_intersects_triangle")
     try {
       val s = r.singleton("Geometry3D")
-      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
-      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
-      val a2: Vector3 = Vector3(0.5, 1.5, 0.125)
-      val a3: Vector3 = Vector3(2.0, 0.375, 1.25)
-      val a4: Vector3 = Vector3(0.625, 2.5, 0.875)
+      val a0: Vector3 = Vector3(0.25, 0.25, 1.0)
+      val a1: Vector3 = Vector3(0.0, 0.0, -1.0)
+      val a2: Vector3 = Vector3(-1.0, -1.0, 0.0)
+      val a3: Vector3 = Vector3(1.0, -1.0, 0.0)
+      val a4: Vector3 = Vector3(0.0, 1.0, 0.0)
       val got = r.track(Geometry3D.rayIntersectsTriangle(a0, a1, a2, a3, a4))
       r.oracle()
       val oracle = r.track(s.call("ray_intersects_triangle", a0, a1, a2, a3, a4))
@@ -8021,10 +8033,10 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithFourVector2ArgsRetBool", "Geometry2D.point_is_inside_triangle")
     try {
       val s = r.singleton("Geometry2D")
-      val a0: Vector2 = Vector2(0.25, 0.5)
-      val a1: Vector2 = Vector2(0.75, 1.0)
-      val a2: Vector2 = Vector2(1.5, 0.125)
-      val a3: Vector2 = Vector2(2.0, 0.375)
+      val a0: Vector2 = Vector2(1.0, 1.0)
+      val a1: Vector2 = Vector2(0.0, 0.0)
+      val a2: Vector2 = Vector2(4.0, 0.0)
+      val a3: Vector2 = Vector2(0.0, 4.0)
       val got = r.track(Geometry2D.pointIsInsideTriangle(a0, a1, a2, a3))
       r.oracle()
       val oracle = r.track(s.call("point_is_inside_triangle", a0, a1, a2, a3))
@@ -8059,10 +8071,10 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithFourVector2ArgsRetVariantScalar", "Geometry2D.line_intersects_line")
     try {
       val s = r.singleton("Geometry2D")
-      val a0: Vector2 = Vector2(0.25, 0.5)
-      val a1: Vector2 = Vector2(0.75, 1.0)
-      val a2: Vector2 = Vector2(1.5, 0.125)
-      val a3: Vector2 = Vector2(2.0, 0.375)
+      val a0: Vector2 = Vector2(0.0, 0.0)
+      val a1: Vector2 = Vector2(1.0, 1.0)
+      val a2: Vector2 = Vector2(0.0, 2.0)
+      val a3: Vector2 = Vector2(1.0, -1.0)
       val got = r.track(Geometry2D.lineIntersectsLine(a0, a1, a2, a3))
       r.oracle()
       val oracle = r.track(s.call("line_intersects_line", a0, a1, a2, a3))
@@ -8097,10 +8109,10 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithFourVector3ArgsRetVector3", "Geometry3D.get_triangle_barycentric_coords")
     try {
       val s = r.singleton("Geometry3D")
-      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
-      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
-      val a2: Vector3 = Vector3(0.5, 1.5, 0.125)
-      val a3: Vector3 = Vector3(2.0, 0.375, 1.25)
+      val a0: Vector3 = Vector3(0.25, 0.25, 0.0)
+      val a1: Vector3 = Vector3(-1.0, -1.0, 0.0)
+      val a2: Vector3 = Vector3(1.0, -1.0, 0.0)
+      val a3: Vector3 = Vector3(0.0, 1.0, 0.0)
       val got = r.track(Geometry3D.getTriangleBarycentricCoords(a0, a1, a2, a3))
       r.oracle()
       val oracle = r.track(s.call("get_triangle_barycentric_coords", a0, a1, a2, a3))
@@ -8202,9 +8214,9 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithObjectStringNameArgRetVariantScalar", "ClassDB.class_get_property")
     try {
       val s = r.singleton("ClassDB")
-      val f0 = r.obj(GodotObject(r.construct("Object")))
+      val f0 = r.obj(Node2D(r.construct("Node2D")))
       val a0: GodotObject = f0
-      val a1: String = "kanama125"
+      val a1: String = "scale"
       val got = r.track(ClassDB.classGetProperty(a0, a1))
       r.oracle()
       val oracle = r.track(s.call("class_get_property", a0, a1))
@@ -8220,7 +8232,7 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithPackedVector2ListArgRetBool", "Geometry2D.is_polygon_clockwise")
     try {
       val s = r.singleton("Geometry2D")
-      val a0: List<Vector2> = listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
+      val a0: List<Vector2> = listOf<Vector2>(Vector2(0.0, 0.0), Vector2(0.0, 4.0), Vector2(4.0, 4.0), Vector2(4.0, 0.0))
       val got = r.track(Geometry2D.isPolygonClockwise(a0))
       r.oracle()
       val oracle = r.track(s.call("is_polygon_clockwise", a0))
@@ -9253,7 +9265,7 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithStringAndBoolArgRetVariantScalar", "Marshalls.base64_to_variant")
     try {
       val s = r.singleton("Marshalls")
-      val a0: String = "kanama125"
+      val a0: String = "AgAAAAcAAAA="
       val got = r.track(Marshalls.base64ToVariant(a0))
       r.oracle()
       val oracle = r.track(s.call("base64_to_variant", a0))
@@ -9269,7 +9281,7 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithStringArgRetByteArray", "Marshalls.base64_to_raw")
     try {
       val s = r.singleton("Marshalls")
-      val a0: String = "kanama125"
+      val a0: String = "a2FuYW1hMTI1"
       val got = r.track(Marshalls.base64ToRaw(a0))
       r.oracle()
       val oracle = r.track(s.call("base64_to_raw", a0))
@@ -9285,7 +9297,7 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithStringNameAndBoolArgRetDictionaryList", "ClassDB.class_get_method_list")
     try {
       val s = r.singleton("ClassDB")
-      val a0: String = "kanama125"
+      val a0: String = "Node2D"
       val got = r.track(ClassDB.classGetMethodList(a0))
       r.oracle()
       val oracle = r.track(s.call("class_get_method_list", a0))
@@ -9301,7 +9313,7 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithStringNameAndBoolArgRetPackedStringList", "ClassDB.class_get_enum_list")
     try {
       val s = r.singleton("ClassDB")
-      val a0: String = "kanama125"
+      val a0: String = "Node"
       val got = r.track(ClassDB.classGetEnumList(a0))
       r.oracle()
       val oracle = r.track(s.call("class_get_enum_list", a0))
@@ -9389,10 +9401,10 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithThreeVector3DoubleArgsRetPackedVector3List", "Geometry3D.segment_intersects_sphere")
     try {
       val s = r.singleton("Geometry3D")
-      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
-      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
-      val a2: Vector3 = Vector3(0.5, 1.5, 0.125)
-      val a3: Double = 0.75
+      val a0: Vector3 = Vector3(-2.0, 0.25, 0.0)
+      val a1: Vector3 = Vector3(2.0, 0.25, 0.0)
+      val a2: Vector3 = Vector3(0.0, 0.0, 0.0)
+      val a3: Double = 1.0
       val got = r.track(Geometry3D.segmentIntersectsSphere(a0, a1, a2, a3))
       r.oracle()
       val oracle = r.track(s.call("segment_intersects_sphere", a0, a1, a2, a3))
@@ -9445,8 +9457,8 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithTwoPackedVector2ListArgsRetPackedVector2ListList", "Geometry2D.clip_polygons")
     try {
       val s = r.singleton("Geometry2D")
-      val a0: List<Vector2> = listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
-      val a1: List<Vector2> = listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
+      val a0: List<Vector2> = listOf<Vector2>(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))
+      val a1: List<Vector2> = listOf<Vector2>(Vector2(2.0, 2.0), Vector2(6.0, 2.0), Vector2(6.0, 6.0), Vector2(2.0, 6.0))
       val got = r.track(Geometry2D.clipPolygons(a0, a1))
       r.oracle()
       val oracle = r.track(s.call("clip_polygons", a0, a1))
@@ -9462,8 +9474,8 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithTwoStringArgsRetInt", "TranslationServer.compare_locales")
     try {
       val s = r.singleton("TranslationServer")
-      val a0: String = "kanama125"
-      val a1: String = "kanama7"
+      val a0: String = "en_US"
+      val a1: String = "en"
       val got = r.track(TranslationServer.compareLocales(a0, a1))
       r.oracle()
       val oracle = r.track(s.call("compare_locales", a0, a1))
@@ -9479,8 +9491,8 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithTwoStringNameAndBoolArgsRetBool", "ClassDB.class_has_enum")
     try {
       val s = r.singleton("ClassDB")
-      val a0: String = "kanama125"
-      val a1: String = "kanama7"
+      val a0: String = "Node"
+      val a1: String = "ProcessMode"
       val got = r.track(ClassDB.classHasEnum(a0, a1))
       r.oracle()
       val oracle = r.track(s.call("class_has_enum", a0, a1))
@@ -9496,8 +9508,8 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithTwoStringNameAndBoolArgsRetInt", "ClassDB.class_get_method_argument_count")
     try {
       val s = r.singleton("ClassDB")
-      val a0: String = "kanama125"
-      val a1: String = "kanama7"
+      val a0: String = "Node"
+      val a1: String = "add_child"
       val got = r.track(ClassDB.classGetMethodArgumentCount(a0, a1))
       r.oracle()
       val oracle = r.track(s.call("class_get_method_argument_count", a0, a1))
@@ -9513,8 +9525,8 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithTwoStringNameAndBoolArgsRetPackedStringList", "ClassDB.class_get_enum_constants")
     try {
       val s = r.singleton("ClassDB")
-      val a0: String = "kanama125"
-      val a1: String = "kanama7"
+      val a0: String = "Node"
+      val a1: String = "ProcessMode"
       val got = r.track(ClassDB.classGetEnumConstants(a0, a1))
       r.oracle()
       val oracle = r.track(s.call("class_get_enum_constants", a0, a1))
@@ -9530,8 +9542,8 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithTwoStringNameAndBoolArgsRetStringName", "ClassDB.class_get_integer_constant_enum")
     try {
       val s = r.singleton("ClassDB")
-      val a0: String = "kanama125"
-      val a1: String = "kanama7"
+      val a0: String = "Node"
+      val a1: String = "PROCESS_MODE_ALWAYS"
       val got = r.track(ClassDB.classGetIntegerConstantEnum(a0, a1))
       r.oracle()
       val oracle = r.track(s.call("class_get_integer_constant_enum", a0, a1))
@@ -9547,8 +9559,8 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithTwoStringNameArgsRetDictionary", "ClassDB.class_get_signal")
     try {
       val s = r.singleton("ClassDB")
-      val a0: String = "kanama125"
-      val a1: String = "kanama7"
+      val a0: String = "Node"
+      val a1: String = "ready"
       val got = r.track(ClassDB.classGetSignal(a0, a1))
       r.oracle()
       val oracle = r.track(s.call("class_get_signal", a0, a1))
@@ -9564,8 +9576,8 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithTwoStringNameArgsRetLong", "ClassDB.class_get_integer_constant")
     try {
       val s = r.singleton("ClassDB")
-      val a0: String = "kanama125"
-      val a1: String = "kanama7"
+      val a0: String = "Node"
+      val a1: String = "NOTIFICATION_READY"
       val got = r.track(ClassDB.classGetIntegerConstant(a0, a1))
       r.oracle()
       val oracle = r.track(s.call("class_get_integer_constant", a0, a1))
@@ -9581,8 +9593,8 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithTwoStringNameArgsRetVariantScalar", "ClassDB.class_get_property_default_value")
     try {
       val s = r.singleton("ClassDB")
-      val a0: String = "kanama125"
-      val a1: String = "kanama7"
+      val a0: String = "Node2D"
+      val a1: String = "scale"
       val got = r.track(ClassDB.classGetPropertyDefaultValue(a0, a1))
       r.oracle()
       val oracle = r.track(s.call("class_get_property_default_value", a0, a1))
@@ -9633,9 +9645,9 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List", "Geometry3D.segment_intersects_convex")
     try {
       val s = r.singleton("Geometry3D")
-      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
-      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
-      val a2: List<Plane> = listOf(Plane(1.0, 0.0, 0.0, 1.0), Plane(-1.0, 0.0, 0.0, 1.0), Plane(0.0, 1.0, 0.0, 1.0), Plane(0.0, -1.0, 0.0, 1.0), Plane(0.0, 0.0, 1.0, 1.0), Plane(0.0, 0.0, -1.0, 1.0))
+      val a0: Vector3 = Vector3(-2.0, 0.25, 0.5)
+      val a1: Vector3 = Vector3(2.0, 0.25, 0.5)
+      val a2: List<Plane> = listOf<Plane>(Plane(1.0, 0.0, 0.0, 1.0), Plane(-1.0, 0.0, 0.0, 1.0), Plane(0.0, 1.0, 0.0, 1.0), Plane(0.0, -1.0, 0.0, 1.0), Plane(0.0, 0.0, 1.0, 1.0), Plane(0.0, 0.0, -1.0, 1.0))
       val got = r.track(Geometry3D.segmentIntersectsConvex(a0, a1, a2))
       r.oracle()
       val oracle = r.track(s.call("segment_intersects_convex", a0, a1, a2))
@@ -9669,10 +9681,10 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallWithTwoVector3TwoDoubleArgsRetPackedVector3List", "Geometry3D.segment_intersects_cylinder")
     try {
       val s = r.singleton("Geometry3D")
-      val a0: Vector3 = Vector3(0.25, 0.5, 0.75)
-      val a1: Vector3 = Vector3(1.0, 0.5, 0.25)
-      val a2: Double = 0.75
-      val a3: Double = 0.25
+      val a0: Vector3 = Vector3(-2.0, 0.25, 0.0)
+      val a1: Vector3 = Vector3(2.0, 0.25, 0.0)
+      val a2: Double = 2.0
+      val a3: Double = 1.0
       val got = r.track(Geometry3D.segmentIntersectsCylinder(a0, a1, a2, a3))
       r.oracle()
       val oracle = r.track(s.call("segment_intersects_cylinder", a0, a1, a2, a3))

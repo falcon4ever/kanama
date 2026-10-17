@@ -182,8 +182,10 @@ Contributors: the generated API exercise (`ApiExercise.generated.kt`, see
 whose best case is a const method of a fresh object (B) or a singleton method (D): the wrapper's result
 must equal `Object.call` of the same method with the same arguments on the same object, and a result equal
 to its type's zero counts `weak` (the summary line's existing field) rather than failed. Each argument of
-a type that occurs more than once in a call gets its own value, so a helper that swaps two cells shows.
-`Engine` and `AudioServer` property pairs and `ProjectSettings.set_setting`/`get_setting`
+a type that occurs more than once in a call gets its own value, so a helper that swaps two cells shows;
+where those values would leave a row weak, `ROW_ARGS` gives it real ones (class and member names for
+`ClassDB`, valid base64, a datetime, locales, shapes that meet) and `ROW_RECEIVER_SETS` sets up its fresh
+receiver first. `Engine` and `AudioServer` property pairs and `ProjectSettings.set_setting`/`get_setting`
 run as set/read-back rows that read the value they found through `Object.get` and put it back through
 `Object.set` in a `finally` (`SINGLETON_PAIRS`, `SINGLETON_KEYED_PAIRS`; the bus count only ever grows,
 `PAIR_GROW`), and every

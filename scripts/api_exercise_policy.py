@@ -414,11 +414,72 @@ PAIR_GROW: dict[tuple[str, str], str] = {
 # defaults), replacing the per-type values where those make the row weak: an empty answer that a no-op
 # could give too. The literals are those of STATIC_ARGS (`Class.new()` is a fresh instance). `--check`
 # requires each entry to name a generated B or D row and to give one value per required argument.
-ROW_ARGS: dict[tuple[str, str], tuple[str, ...]] = {}
+_BOX = (
+    "[Plane(1, 0, 0, 1), Plane(-1, 0, 0, 1), Plane(0, 1, 0, 1), Plane(0, -1, 0, 1), Plane(0, 0, 1, 1), "
+    "Plane(0, 0, -1, 1)]"
+)
+ROW_ARGS: dict[tuple[str, str], tuple[str, ...]] = {
+    # Real classes and members: the answer is the class's own description, not "no such class".
+    ("ClassDB", "class_get_property"): ("Node2D.new()", '"scale"'),
+    ("ClassDB", "class_get_method_list"): ('"Node2D"',),
+    ("ClassDB", "class_get_enum_list"): ('"Node"',),
+    ("ClassDB", "class_has_enum"): ('"Node"', '"ProcessMode"'),
+    ("ClassDB", "class_get_method_argument_count"): ('"Node"', '"add_child"'),
+    ("ClassDB", "class_get_enum_constants"): ('"Node"', '"ProcessMode"'),
+    ("ClassDB", "class_get_integer_constant_enum"): ('"Node"', '"PROCESS_MODE_ALWAYS"'),
+    ("ClassDB", "class_get_signal"): ('"Node"', '"ready"'),
+    ("ClassDB", "class_get_integer_constant"): ('"Node"', '"NOTIFICATION_READY"'),
+    ("ClassDB", "class_get_property_default_value"): ('"Node2D"', '"scale"'),
+    # Valid input: the int 7 as Godot encodes a Variant, and "kanama125" in base64.
+    ("Marshalls", "base64_to_variant"): ('"AgAAAAcAAAA="',),
+    ("Marshalls", "base64_to_raw"): ('"a2FuYW1hMTI1"',),
+    ("Time", "get_unix_time_from_datetime_dict"): ('{"year": 2026, "month": 10, "day": 17, "hour": 12, "minute": 30, "second": 15}',),
+    ("TranslationServer", "compare_locales"): ('"en_US"', '"en"'),
+    ("InputEvent", "is_action"): ('"ui_accept"',),
+    ("InputEvent", "get_action_strength"): ('"ui_accept"',),
+    ("InputEvent", "is_action_pressed"): ('"ui_accept"',),
+    # Shapes that meet: an intersection, not "no intersection".
+    ("Geometry2D", "line_intersects_line"): ("Vector2(0, 0)", "Vector2(1, 1)", "Vector2(0, 2)", "Vector2(1, -1)"),
+    ("Geometry2D", "is_polygon_clockwise"): ("[Vector2(0, 0), Vector2(0, 4), Vector2(4, 4), Vector2(4, 0)]",),
+    ("Geometry2D", "clip_polygons"): (
+        "[Vector2(0, 0), Vector2(4, 0), Vector2(4, 4), Vector2(0, 4)]",
+        "[Vector2(2, 2), Vector2(6, 2), Vector2(6, 6), Vector2(2, 6)]",
+    ),
+    ("Geometry3D", "ray_intersects_triangle"): (
+        "Vector3(0.25, 0.25, 1)", "Vector3(0, 0, -1)", "Vector3(-1, -1, 0)", "Vector3(1, -1, 0)", "Vector3(0, 1, 0)",
+    ),
+    ("Geometry3D", "get_triangle_barycentric_coords"): (
+        "Vector3(0.25, 0.25, 0)", "Vector3(-1, -1, 0)", "Vector3(1, -1, 0)", "Vector3(0, 1, 0)",
+    ),
+    ("Geometry3D", "segment_intersects_sphere"): ("Vector3(-2, 0.25, 0)", "Vector3(2, 0.25, 0)", "Vector3(0, 0, 0)", "1.0"),
+    ("Geometry3D", "segment_intersects_cylinder"): ("Vector3(-2, 0.25, 0)", "Vector3(2, 0.25, 0)", "2.0", "1.0"),
+    ("Geometry3D", "segment_intersects_convex"): ("Vector3(-2, 0.25, 0.5)", "Vector3(2, 0.25, 0.5)", _BOX),
+    ("Geometry2D", "point_is_inside_triangle"): ("Vector2(1, 1)", "Vector2(0, 0)", "Vector2(4, 0)", "Vector2(0, 4)"),
+    # A quarter turn about Z (index 0 is the identity) and a cell away from the origin.
+    ("GridMap", "get_orthogonal_index_from_basis"): ("Basis(Vector3(0, 1, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1))",),
+    ("GridMap", "local_to_map"): ("Vector3(5, 7, -3)",),
+    # Inside the region ROW_RECEIVER_SETS gives the grid.
+    ("AStarGrid2D", "is_in_bounds"): ("7", "3"),
+    ("AStarGrid2D", "is_in_boundsv"): ("Vector2i(7, 3)",),
+    ("Translation", "get_message"): ('"kanama"',),
+    ("TextEdit", "get_line_wrapped_text"): ("0",),
+    ("CanvasItem", "get_visibility_layer_bit"): ("0",),
+}
 
 # (class, method) -> ((property, Godot literal), ...): set on a B row's fresh receiver through the Variant
 # path (`Object.set`) before the call, where a fresh object's empty state makes every answer zero.
-ROW_RECEIVER_SETS: dict[tuple[str, str], tuple[tuple[str, str], ...]] = {}
+_UI_ACCEPT = (("action", '"ui_accept"'), ("pressed", "true"))
+ROW_RECEIVER_SETS: dict[tuple[str, str], tuple[tuple[str, str], ...]] = {
+    ("InputEvent", "is_action"): _UI_ACCEPT,
+    ("InputEvent", "get_action_strength"): _UI_ACCEPT,
+    ("InputEvent", "is_action_pressed"): _UI_ACCEPT,
+    ("AStarGrid2D", "is_in_bounds"): (("region", "Rect2i(0, 0, 8, 8)"),),
+    ("AStarGrid2D", "is_in_boundsv"): (("region", "Rect2i(0, 0, 8, 8)"),),
+    ("Translation", "get_message"): (("messages", '{"kanama": "125"}'),),
+    ("TextEdit", "get_line_wrapped_text"): (("text", '"kanama125"'),),
+    ("Control", "get_cursor_shape"): (("mouse_default_cursor_shape", "Control.CURSOR_IBEAM"),),
+    ("Control", "get_tooltip"): (("tooltip_text", '"kanama125"'),),
+}
 
 # ---- singleton rows -------------------------------------------------------------------------------------
 
