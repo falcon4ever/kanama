@@ -16,9 +16,9 @@ things themselves, so it cannot drift:
 "What it proves" is taken from each script's own docstring or header comment (first
 sentence), so the page says what the script says, not what someone remembered.
 
-"First landed" is `git log --diff-filter=A` for the script, taken once: a script the committed
-page already dates keeps that date (a squash merge would otherwise move it), and only a new one
-is looked up. CI's `local-ci` job checks out a shallow clone, where no date can be derived;
+"First landed" is `git log --diff-filter=A` for the script, except that a date the committed page
+already shows is kept when it is no later than git's (a squash merge lands a day later than the
+branch commit the page was generated on; a later page date is a hand edit and is replaced). CI's `local-ci` job checks out a shallow clone, where no date can be derived;
 `--check` there carries every date from the committed page and SAYS SO, while write mode
 refuses to run on a shallow clone.
 
@@ -430,13 +430,14 @@ def first_landed(path: str, cache: dict[str, str], carried: dict[str, str], shal
     if not (ROOT / path).is_file():
         cache[path] = "—"
         return "—"
-    # A date the committed page already shows is kept, not re-derived: a PR that adds a script
-    # regenerates the page from its branch commit, and the squash on main is a different commit,
+    # A date the committed page already shows is kept when it is no later than git's: a PR that adds a
+    # script regenerates the page from its branch commit, and the squash on main is a different commit,
     # possibly on a later day (281e4cf5 2026-10-16 23:22 -0400 vs its squash 0a9a2219 2026-10-17
-    # 01:43 -0400), so a re-derived date would leave main's page stale. Only a script the page has
-    # not dated yet is looked up in the history.
-    if carried.get(path, "—") != "—" or shallow:
-        cache[path] = carried.get(path, "—")
+    # 01:43 -0400), so a re-derived date would leave main's page stale. A page date LATER than the
+    # history is no squash artifact but a hand edit, and the history wins (--check then fails).
+    page_date = carried.get(path, "—")
+    if shallow:
+        cache[path] = page_date
         return cache[path]
     out = subprocess.run(
         ["git", "-C", str(ROOT), "log", "--diff-filter=A", "--follow", "--format=%ad", "--date=short", "--", path],
@@ -444,7 +445,8 @@ def first_landed(path: str, cache: dict[str, str], carried: dict[str, str], shal
         text=True,
         check=False,  # justified: a failed `git log` leaves the date as a dash, which --check reports as a stale page
     ).stdout.split()
-    cache[path] = out[-1] if out else "—"
+    git_date = out[-1] if out else "—"
+    cache[path] = page_date if page_date != "—" and git_date != "—" and page_date <= git_date else git_date
     return cache[path]
 
 

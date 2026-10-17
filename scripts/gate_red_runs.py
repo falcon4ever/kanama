@@ -719,8 +719,11 @@ for name, args, target, expect, how in [
 ]:
     case(name, py(*args), [Append(target, "\nval redRunHandEdit = 1\n" if target.endswith(".kt") else "\nred run: hand edit\n")], expect, how)
 case("generate_gates_index.py --check (squash-merge dates)", py("generate_gates_index.py", "--markdown", f"{GEN}/gates.md", "--check"),
-     [Edit("scripts/generate_gates_index.py", '    if carried.get(path, "—") != "—" or shallow:\n', "    if shallow:\n")],
+     [Edit("scripts/generate_gates_index.py", 'page_date if page_date != "—" and git_date != "—" and page_date <= git_date else git_date', "git_date")],
      "FAIL stale gates index", "the generator re-derives every first-landed date instead of keeping the page's: #361's script dates 2026-10-16 on the page (its branch commit) but 2026-10-17 in main's history (the squash), so main goes stale")
+case("generate_gates_index.py --check (later page date)", py("generate_gates_index.py", "--markdown", f"{GEN}/gates.md", "--check"),
+     [Edit(f"{GEN}/gates.md", "`scripts/generate_api_exercise.py` | 2026-10-16 |", "`scripts/generate_api_exercise.py` | 2099-01-01 |")],
+     "FAIL stale gates index", "a first-landed date on the page is hand-edited to a day after the script's history: only an earlier (squash-merge) date is kept")
 case("api_wrapper_generator_report.py --check (dropped default)", py("api_wrapper_generator_report.py", "--markdown", f"{GEN}/wrapper-generator-report.md", "--check"),
      [Edit("scripts/generate_api_wrapper.py", '    ("Node3D", "look_at", "up"): "Vector3.UP",\n', "")],
      "FAIL stale markdown", "a Godot default the generator expressed is dropped: the parameter turns required and the report's \"Godot Defaults Not Expressed\" list no longer matches")

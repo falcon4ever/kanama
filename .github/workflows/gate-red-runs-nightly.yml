@@ -29,6 +29,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # Full history for generate_gates_index.py's date cases (see ci.yml gate-red-runs).
+          fetch-depth: 0
 
       - name: Setup Java
         uses: actions/setup-java@v5

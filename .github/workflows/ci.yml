@@ -160,6 +160,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # Full history: generate_gates_index.py derives first-landed dates from it, and its red cases
+          # (squash-merge dates, later page date) stay green on a shallow clone, where the dates are only carried.
+          fetch-depth: 0
 
       - name: Run the fast gate red runs
         shell: bash

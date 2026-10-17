@@ -684,8 +684,7 @@ if ! grep -Eq 'fun callLocalReplaceSmokeScene\(instance: HelloScript\)' "$hello_
 fi
 
 stage "external addon install"
-# A directory of this run's own: a fixed one was shared by concurrent local_ci runs (installAddonJar into one project).
-install_check_dir="$(mktemp -d "${TMPDIR:-/tmp}/kanama_local_ci_install.XXXXXX")"
+install_check_dir="$(mktemp -d "${TMPDIR:-/tmp}/kanama_local_ci_install.XXXXXX")" # per run: concurrent local_ci runs shared a fixed one
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAddonJar \
   "-PkanamaProjectDir=$install_check_dir" \
   "-PkanamaProjectScriptsDir=$ROOT_DIR/example_project"
