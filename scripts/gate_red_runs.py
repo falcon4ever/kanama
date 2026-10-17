@@ -451,14 +451,21 @@ case("check_ios_static_dispatch.py", py("check_ios_static_dispatch.py"),
 IOS_SELFTEST_LOG = "scripts/fixtures/ios_selftest_console.log"
 IOS_SELFTEST_CHECK = ["bash", "scripts/ios_visual_smoke.sh", "--check-selftest-log", IOS_SELFTEST_LOG]
 IOS_SELFTEST_SUMMARIES = ("[kanama][ios][c] PTRCALL SELFTEST MATRIX: 120 passed, 0 failed\n"
-                          "[kanama][ios][kn] OBJECTCALLS SELFTEST: 308 passed, 0 failed faults=7 expected=7\n"
-                          "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7\n")
+                          "[kanama][ios][kn] OBJECTCALLS SELFTEST: 308 passed, 0 failed faults=7 expected=7 in 412 ms\n"
+                          "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7 in 38 ms\n"
+                          "[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): 90 passed, 0 failed, 5 weak, 0 reach faults=7 expected=7 in 120 ms\n")
 case("ios_visual_smoke.sh --check-selftest-log (no self-test)", IOS_SELFTEST_CHECK,
      [Edit(IOS_SELFTEST_LOG, IOS_SELFTEST_SUMMARIES, "")],
      "summary missing: /PTRCALL SELFTEST MATRIX", "a console with no self-test lines at all (a build without -PkanamaIosSelfTest=true) must fail, not pass as clean")
 case("ios_visual_smoke.sh --check-selftest-log (no frame 1)", IOS_SELFTEST_CHECK,
-     [Edit(IOS_SELFTEST_LOG, "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7\n", "")],
+     [Edit(IOS_SELFTEST_LOG, "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7 in 38 ms\n", "")],
      "summary missing: /OBJECTCALLS SELFTEST \\(frame 1\\)", "the app never reached its first frame: the frame-1 summary is missing while the other two passed")
+case("ios_visual_smoke.sh --check-selftest-log (no api exercise)", IOS_SELFTEST_CHECK,
+     [Edit(IOS_SELFTEST_LOG, "[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): 90 passed, 0 failed, 5 weak, 0 reach faults=7 expected=7 in 120 ms\n", "")],
+     "summary missing: /OBJECTCALLS SELFTEST \\(api exercise\\)", "the generated API exercise did not run or did not finish: its summary is missing while the other three passed")
+case("ios_visual_smoke.sh --check-selftest-log (api exercise row failed)", IOS_SELFTEST_CHECK,
+     [Edit(IOS_SELFTEST_LOG, "(api exercise): 90 passed, 0 failed", "(api exercise): 89 passed, 1 failed")],
+     "runtime self-test reported failures", "the API exercise summary reports a failed row with no FAIL line")
 case("ios_visual_smoke.sh --check-selftest-log (1 failed)", IOS_SELFTEST_CHECK,
      [Edit(IOS_SELFTEST_LOG, "(frame 1): 25 passed, 0 failed", "(frame 1): 24 passed, 1 failed")],
      "runtime self-test reported failures", "a summary reports `N passed, 1 failed` with no FAIL line")
@@ -512,11 +519,17 @@ case("generate_api_exercise.py --check (exclusion names no class)", API_EXERCISE
      [Edit("scripts/api_exercise_policy.py", '    "Window": _WINDOW,\n', '    "Window": _WINDOW,\n    "WindowRedRun": _WINDOW,\n')],
      "EXCLUDE_EXACT names WindowRedRun, a class the API lacks", "an exclusion entry names a class the API lacks (as a Godot bump that renames or drops a class leaves it)")
 case("generate_api_exercise.py --check (static args name no method)", API_EXERCISE_CHECK,
-     [Edit("scripts/api_exercise_policy.py", '    ("FileAccess", "open"): (None, None),\n', '    ("FileAccess", "open_red_run"): (None, None),\n')],
+     [Edit("scripts/api_exercise_policy.py", '    ("FileAccess", "open"): (\'scratch("fixture.txt")\', "FileAccess.READ"),\n', '    ("FileAccess", "open_red_run"): (\'scratch("fixture.txt")\', "FileAccess.READ"),\n')],
      "STATIC_ARGS names FileAccess.open_red_run, a method the API lacks", "a `STATIC_ARGS` entry names a method the API lacks (and the static it was for is left without arguments)")
 case("generate_api_exercise.py --check (override no longer applies)", API_EXERCISE_CHECK,
      [Edit("scripts/api_exercise_policy.py", '    ("RegEx", "search"): ("F", _NEW_OBJECT),\n', '    ("RegEx", "search"): ("F", _NEW_OBJECT),\n    ("RegEx", "clear"): ("F", _NEW_OBJECT),\n')],
      "METHOD_OVERRIDES[RegEx.clear] sets case F, which the class rules already give it", "a `METHOD_OVERRIDES` entry sets the case the class rules already give the method (a void method made F): the entry changes nothing")
+case("generate_api_exercise.py --check (static argument off its default)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", 'Arg(\'"kanama-api-exercise"\', "a recognisable name for the OS temp directory the call creates (removed on free)"),', '\'"kanama-api-exercise"\',')],
+     "but extension_api.json's default is", "a `STATIC_ARGS` argument differs from the API default without the `Arg(value, reason)` marker that says it is deliberate")
+case("generate_api_exercise.py --check (rows hand-edited)", API_EXERCISE_CHECK,
+     [Edit("src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt", "r.staticError(got.value, oracle)", "r.staticValue(got.value, oracle, weak = true)")],
+     "ApiExercise.generated.kt is stale or hand-edited", "a generated API exercise row is edited by hand (an Error static made weak): the committed rows must be the generator's")
 case("generate_api_exercise.py --check (rule order)", API_EXERCISE_CHECK,
      [Edit("scripts/generate_api_exercise.py", 'ORDER = "CABDFE"', 'ORDER = "ACBDFE"')],
      "does not match the rules run on the fixture API", "the case ranking puts property pairs before statics: the toy-API fixture and the committed page both catch it")
@@ -925,6 +938,23 @@ case("runtime_smoke.sh (typed-signal self-test)", ["bash", "scripts/runtime_smok
 case("runtime_smoke.sh (self-test setting)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/jvmMain/kotlin/binding/runtime/SignalSelfTest.kt", "setting = { boolSetting(SETTING) },", "setting = { false },")],
      "did not run the self-test", "the kanama/debug/signal_self_test project setting stops opting a run in (the Android smoke can only use the setting)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# The API exercise's property-pair rows hold the Vector3 argument shape: two component writes swapped in the
+# desktop helper (the defect class the rows exist for) must turn its rows red in the smoke. The smoke fails first on
+# an earlier check that reads a Vector3 back, so the case also prints the exercise's own FAIL lines and expects them.
+SMOKE_THEN_EXERCISE_FAILS = ["bash", "-c", f'scripts/runtime_smoke.sh "{GODOT}"; rc=$?; '
+                             'grep -h "API EXERCISE FAIL" "${KANAMA_SMOKE_LOG:-/tmp/kanama_runtime_smoke.log}.api_exercise"; exit $rc']
+case("runtime_smoke.sh (API exercise pair rows)", SMOKE_THEN_EXERCISE_FAILS,
+     [Edit(JVM_OBJECT_CALLS,
+           "    value: Vector3,\n  ) {\n    Arena.ofConfined().use { arena ->\n      val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)\n"
+           "      GodotRealSegment.writeRaw(vec, 0, value.rawX)\n      GodotRealSegment.writeRaw(vec, 1, value.rawY)\n",
+           "    value: Vector3,\n  ) {\n    Arena.ofConfined().use { arena ->\n      val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)\n"
+           "      GodotRealSegment.writeRaw(vec, 0, value.rawY)\n      GodotRealSegment.writeRaw(vec, 1, value.rawX)\n")],
+     "API EXERCISE FAIL: ptrcallNoArgsRetVector3 ptrcallWithVector3Arg", "ptrcallWithVector3Arg writes x and y into each other's slot: the API exercise's Vector3 property-pair row must fail, not pass",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("runtime_smoke.sh (API exercise setting)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/jvmMain/kotlin/binding/runtime/ApiExerciseHook.kt", "setting = { boolSetting(SETTING) },", "setting = { false },")],
+     "API EXERCISE: [1-9][0-9]* passed, 0 failed", "the kanama/debug/api_exercise project setting stops opting a run in (the smoke and the Android build can only use the setting)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("hot_reload_smoke.sh", ["bash", "scripts/hot_reload_smoke.sh", GODOT],
      [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(f)._ready health=")],

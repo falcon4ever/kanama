@@ -708,6 +708,8 @@ for artifact in kanama.jar kanama-scripts.jar kanama.gdextension "$native_artifa
     exit 1
   fi
 done
+# The user-shaped install carries no API exercise rows (they are built only with -PkanamaApiExercise=true).
+python3 "$ROOT_DIR/scripts/generate_api_exercise.py" --check-jar "$install_check_dir/addons/kanama/kanama.jar"
 if [[ "$HOST_UNAME" == "Linux" ]]; then
   linux_native="$install_check_dir/addons/kanama/$native_artifact"
   stage "Linux native bootstrap preflight: file"
@@ -760,6 +762,8 @@ for artifact in \
     exit 1
   fi
 done
+# The published runtime jar carries no API exercise rows (publish tasks refuse -PkanamaApiExercise=true).
+python3 "$ROOT_DIR/scripts/generate_api_exercise.py" --check-jar "$maven_local/kanama/$kanama_version/kanama-$kanama_version.jar"
 
 if [[ $skip_bootstrap -eq 0 ]]; then
   if command -v cmake >/dev/null 2>&1; then

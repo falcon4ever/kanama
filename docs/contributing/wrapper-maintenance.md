@@ -1062,6 +1062,57 @@ arguments needs a `STATIC_ARGS` entry; the failure prints the line to add. The r
 against a small made-up API in `scripts/fixtures/api_exercise/` (`--write-fixture` rewrites the
 expected output after an intended rule change).
 
+### The exercise rows
+
+`--report` also writes the rows, `src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt`,
+and `--check` fails when that file differs from what the generator writes. So far the rows cover two
+cases: every helper whose best case is a static (C) and every helper whose best case, or whose weak
+static's next-best row, is a property pair (A). A row is one function of straight-line code that calls
+the generated wrapper exactly as a script would, with the Kotlin signature read from the committed tree,
+and reports to the hand-written `ApiExerciseRunner.kt` beside it:
+
+- a **C row** calls the static with its `STATIC_ARGS` and compares the result with
+  `ClassDB.class_call_static` on the same arguments: equal and not the type's zero, an object result a
+  non-null object of the declared class from both paths, an `Error` result the same non-OK value from
+  both. A weak row (an argument-free static, or one `STATIC_RESULTS` marks) only checks that the two
+  paths agree and is counted apart; a `fresh` one (a new value per call) checks both are non-zero.
+- an **A row** constructs a fresh instance of the receiver, reads the property, sets a recognisable
+  value of its type that differs from what it read (`7`, `0.75`, `"kanama125"`,
+  `Vector3(0.25, 0.5, 0.75)`, a fresh object, the opposite bool), and requires the value back from the
+  getter and from `Object.get`. `PAIR_OVERRIDES` gives a property a value it can keep (an MP3 stream keeps
+  only bytes that decode) or takes it out of the pair rule when a fresh object cannot keep any set value
+  (a frame index clamped by a missing `SpriteFrames`); its setter and getter then get their method's own
+  case and the helper's next pair row is used.
+
+Every path a row touches is under `user://kanama-api-exercise/`, which the runner creates with its
+fixtures (`fixture.txt` with an extended attribute, `fixture.mp3`, `fixture.wav`, `sub/`) before the
+first row and removes after the last. `FileAccess.create_temp` and `DirAccess.create_temp` take no path;
+they create a `kanama-api-exercise-*` entry in the OS temp directory that is removed when the row frees
+the result. A static returning `Error` is given arguments that make it fail (an existing directory, a
+missing file, a copy onto itself), and three of those print the engine's own error line on purpose.
+
+The rows are a Kanama test hook and never ship: they compile only into a build made with
+`-PkanamaApiExercise=true` (desktop and the Android plugin copy) or, on iOS, with the self-tests
+(`-PkanamaIosSelfTest=true`, through `iosMain` only). Every `publish*` task, `packageDistributions`,
+the kit and store `package*` tasks and `installAddonJar` fail on a flagged build, and local_ci runs
+`generate_api_exercise.py --check-jar` on the published and the installed `kanama.jar`. Where they run:
+
+- **Desktop:** `runtime_smoke.sh` builds the example addon with the flag (only there; local_ci's
+  "external addon install" stage builds the user-shaped jar without it) and runs
+  `api_exercise_smoke.tscn` with the project setting `kanama/debug/api_exercise=true`. The hook
+  (`ApiExerciseHook`, beside the signal self-test in `callFrame`) runs the rows on the first frame and
+  prints `[kanama] API EXERCISE: <n> passed, <m> failed, <w> weak, <r> reach, <e> excluded in <ms> ms` and
+  one `[kanama] API EXERCISE FAIL: <helpers> <row> <what>` per failure. `KANAMA_API_EXERCISE=1` forces a
+  run without the setting and `KANAMA_API_EXERCISE_TRACE=1` prints a line before each row, which is how
+  a row that prints an engine error, hangs or crashes is found (run every row headless before adding a
+  device run of new rows).
+- **iOS:** `ApiExerciseSelfTest.kt` runs the same rows after the frame-1 self-test rows and prints
+  `[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): ... faults=<f> expected=<e> in <ms> ms`, a line
+  both device runners require.
+
+After a Godot bump, run the rows headless (`runtime_smoke.sh`) before any device run: a class the new
+version adds gets rows it has never run.
+
 ## Value-Type Audits
 
 The 19 builtin value types are ONE hand-written set under

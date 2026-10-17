@@ -427,9 +427,15 @@ where they were.
 Both summary lines therefore end with `faults=<count> expected=7`:
 
 ```
-[kanama][ios][kn] OBJECTCALLS SELFTEST: <N> passed, 0 failed faults=7 expected=7
-[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): <N> passed, 0 failed faults=7 expected=7
+[kanama][ios][kn] OBJECTCALLS SELFTEST: <N> passed, 0 failed faults=7 expected=7 in <ms> ms
+[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): <N> passed, 0 failed faults=7 expected=7 in <ms> ms
+[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): <N> passed, 0 failed, <W> weak, <R> reach faults=7 expected=7 in <ms> ms
 ```
+
+The third line is the generated API exercise (`ApiExerciseSelfTest.kt`, after the frame-1 rows): one
+row per `ObjectCalls` helper whose best row is a static or a property pair, the same rows the desktop
+smoke runs (see "The exercise rows" in `wrapper-maintenance.md`). A static the shim refused shows as a
+`FAULT` line and as `faults` above `expected`.
 
 (The counter is never reset, so the frame-1 phase — which raises no faults of its own — reprints
 the same total.) `expected` is the constant `SELFTEST_EXPECTED_FAULTS`, declared immediately
@@ -586,7 +592,8 @@ the report of the probe's exception names `KanamaIosScriptErrorProbe.kt` and a l
   calls into the Kotlin phases) only for that build's DEBUG shim; a release xcframework never
   carries the C side. Kanama's device runners pass the property (`scripts/ios_visual_smoke.sh`, the
   demos' `scripts/ios_device_run.sh`; `scripts/ios_device_gate.sh` refuses a demos checkout whose
-  runner does not) and REQUIRE all three summary lines with `0 failed`, so a runner build that lost
+  runner does not) and REQUIRE all four summary lines (the C matrix, the two ObjectCalls phases and the
+  API exercise) with `0 failed`, so a runner build that lost
   the flag fails rather than passing on silence. `ios_visual_smoke.sh --check-selftest-log LOG` and
   the demos' `ios_device_run.sh --self-test-console-checks` run that verdict without a device.
 - **The on-device self-test runs in two phases, and a row must sit in the right one.**

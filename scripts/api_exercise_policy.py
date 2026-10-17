@@ -164,6 +164,11 @@ METHOD_OVERRIDES: dict[tuple[str, str], tuple[str, str]] = {
     ("InputEvent", "xformed_by"): ("F", _NEW_OBJECT),
     ("RegEx", "search"): ("F", _NEW_OBJECT),
     ("ProjectSettings", "load_resource_pack"): ("E", "mounts a resource pack into res:// for the rest of the process"),
+    ("GLTFDocument", "export_object_model_property"): (
+        "E",
+        "indexes `state.nodes[gltf_node_index]` unchecked for a property on a node: on a GLTFState without "
+        "nodes it aborts the process (cowdata FATAL index, found by the headless sweep)",
+    ),
 }
 
 # ---- referenced helpers outside the generated MethodBind calls ----------------------------------------
@@ -176,69 +181,143 @@ NON_BIND_HELPERS: dict[str, str] = {
     "keepReachable": "the reachability fence after each call (empty on iOS); it has no result to observe",
 }
 
+# ---- property-pair rows -----------------------------------------------------------------------------
+
+# (class, property) -> (Godot literal for the value a row sets, or None, reason). The generator picks the
+# value an A row sets from the property's type (a recognisable non-default: 7, 0.75, "kanama125",
+# Vector3(0.25, 0.5, 0.75), a fresh instance, the bool opposite to the current value). An entry here
+# replaces that choice where the property only keeps a value of a certain kind (an MP3 stream keeps
+# only bytes that decode), or, with None, says the property is no pair at all: a set value does not
+# read back as itself (it is clamped, normalised or validated against state a fresh object lacks),
+# and its setter and getter fall back to their method's own case (a setter is F, a const getter B).
+_LOADED_PATH = "set by load(path), which keeps the path only once the file loads"
+_CLAMPED_BY_FRAMES = "validated against the node's SpriteFrames, which a fresh node lacks: the set value is dropped"
+PAIR_OVERRIDES: dict[tuple[str, str], tuple[str | None, str]] = {
+    ("AnimatedSprite2D", "animation"): (None, _CLAMPED_BY_FRAMES),
+    ("AnimatedSprite2D", "frame"): (None, _CLAMPED_BY_FRAMES),
+    ("AnimatedSprite3D", "animation"): (None, _CLAMPED_BY_FRAMES),
+    ("AnimatedSprite3D", "frame"): (None, _CLAMPED_BY_FRAMES),
+    ("AnimatedTexture", "current_frame"): (None, "clamped to the texture's frame count (1 on a fresh AnimatedTexture)"),
+    ("AudioStreamMP3", "data"): ('fixture("mp3")', "keeps only bytes that decode as MP3"),
+    ("CodeEdit", "indent_automatic_prefixes"): ('["@"]', "each prefix is one character (the setter keeps the first)"),
+    ("CompressedTexture2D", "load_path"): (None, _LOADED_PATH),
+    ("CompressedTexture3D", "load_path"): (None, _LOADED_PATH),
+    ("CompressedTextureLayered", "load_path"): (None, _LOADED_PATH),
+    (
+        "GraphEdit",
+        "connections",
+    ): (
+        '[{"from_node": "kanama_a", "from_port": 1, "to_node": "kanama_b", "to_port": 2, "keep_alive": true}]',
+        "the setter reads the five connection keys and fills the missing ones with defaults",
+    ),
+    ("OggPacketSequence", "packet_data"): ("[[PackedByteArray(1, 2, 3)]]", "each packet is a PackedByteArray"),
+}
+
 # ---- static rows -------------------------------------------------------------------------------------
 
 SCRATCH_DIR = "user://kanama-api-exercise/"
 SCRATCH_POLICY = (
-    "The exercise runner creates `user://kanama-api-exercise/` before its first row and removes it after "
-    "its last. Every row whose method takes a path, of any case, takes one under that directory: the "
-    "`FileAccess` and `DirAccess` statics (`open*`, `create_temp`, `make_dir*`, `rename*`, `copy*`, "
-    "`set_*attribute`, `set_unix_permissions`, `get_file_as_*`) and the instance and singleton rows listed "
-    "below (`Image.save_*`, `GLTFDocument.write_to_filesystem`, ...). No row reads or writes anywhere else; "
-    "a method that cannot be pointed there is excluded in `METHOD_OVERRIDES`."
+    "The exercise runner creates `user://kanama-api-exercise/` before its first row (with the fixture "
+    "files the rows read: `fixture.txt` with an extended attribute, `fixture.mp3`, `fixture.wav`, and the "
+    "directory `sub/`) and removes it after its last. Every row whose method takes a path, of any case, "
+    "takes one under that directory: the `FileAccess` and `DirAccess` statics (`open*`, `make_dir*`, "
+    "`rename*`, `copy*`, `set_*attribute`, `set_unix_permissions`, `get_file_as_*`) and the instance and "
+    "singleton rows listed below (`Image.save_*`, `GLTFDocument.write_to_filesystem`, ...). The one "
+    "exception is `FileAccess.create_temp` / `DirAccess.create_temp`, which take no path: they create "
+    "their file or directory in the OS temp directory, named `kanama-api-exercise-*`, and remove it when "
+    "the returned object is freed (`keep` is false). No row reads or writes anywhere else; a method that "
+    "cannot be pointed there is excluded in `METHOD_OVERRIDES`."
 )
 
-# (class, method) -> one Godot-literal string per argument, or None where a value is still to be chosen.
-# The skeleton: extension_api.json's default where the argument has one (--check compares it, so an
-# API refresh that changes a default fails here), None where a value is still to be chosen. A static
-# row without arguments needs no entry.
+
+class Arg(str):
+    """A STATIC_ARGS argument that deliberately differs from the `extension_api.json` default, with the
+    reason. A plain string where the argument has a default must equal it (--check compares)."""
+
+    reason: str
+
+    def __new__(cls, value: str, reason: str) -> "Arg":
+        made = super().__new__(cls, value)
+        made.reason = reason
+        return made
+
+
+# (class, method) -> one Godot literal per argument. The literals are GDScript expressions: numbers,
+# `true`/`false`/`null`, "strings", `{"k": 7}`, `[...]`, `PackedByteArray(...)`, the value-type
+# constructors (`Vector2(1, 2)`, `Transform3D()`), class constants (`FileAccess.READ`), `Class.new()`
+# (a fresh instance the runner frees after the row), and two runner names: `scratch("name")` (a path
+# under SCRATCH_DIR) and `fixture("name")` (bytes or text the runner builds: `mp3`, `wav`, `svg`,
+# `key32`, `rgba8_4x4`). Where extension_api.json has a default, the literal is that default
+# (--check compares, so an API refresh that changes a default fails here) or an `Arg` with its reason.
+# A static row without arguments needs no entry.
 #
-# A static returning `Error` (make_dir_absolute, rename_absolute, copy_absolute, set_unix_permissions,
-# set_hidden_attribute, set_extended_attribute*, ...) returns OK = 0 on success, which a no-op also
-# returns: its arguments must make it FAIL with a known non-OK Error (a missing source path, a
-# directory that already exists), so the row asserts a value a silent no-op cannot produce.
-STATIC_ARGS: dict[tuple[str, str], tuple[str | None, ...]] = {
+# A static returning `Error` returns OK = 0 on success, which a no-op also returns: its arguments make
+# it FAIL with a known non-OK Error (a missing path, a directory that already exists), so the row
+# asserts a value a silent no-op cannot produce.
+_FAILS = "returns a known non-OK Error"
+STATIC_ARGS: dict[tuple[str, str], tuple[str, ...]] = {
     # FileAccess / DirAccess: every path is under SCRATCH_DIR (see SCRATCH_POLICY).
-    ("DirAccess", "copy_absolute"): (None, None, "-1"),
-    ("DirAccess", "create_temp"): ('""', "false"),
-    ("DirAccess", "dir_exists_absolute"): (None,),
-    ("DirAccess", "get_directories_at"): (None,),
-    ("DirAccess", "get_drive_label"): (None,),
-    ("DirAccess", "make_dir_absolute"): (None,),
-    ("DirAccess", "rename_absolute"): (None, None),
-    ("FileAccess", "create_temp"): (None, '""', '""', "false"),
-    ("FileAccess", "get_extended_attribute"): (None, None),
-    ("FileAccess", "get_extended_attribute_string"): (None, None),
-    ("FileAccess", "get_file_as_bytes"): (None,),
-    ("FileAccess", "get_file_as_string"): (None,),
-    ("FileAccess", "open"): (None, None),
-    ("FileAccess", "open_compressed"): (None, None, "0"),
-    ("FileAccess", "open_encrypted"): (None, None, None, "PackedByteArray()"),
-    ("FileAccess", "open_encrypted_with_pass"): (None, None, None),
-    ("FileAccess", "set_extended_attribute"): (None, None, None),
-    ("FileAccess", "set_extended_attribute_string"): (None, None, None),
-    ("FileAccess", "set_hidden_attribute"): (None, None),
-    ("FileAccess", "set_unix_permissions"): (None, None),
+    # from == to: ERR_INVALID_PARAMETER (31), before any file is opened.
+    ("DirAccess", "copy_absolute"): ('scratch("fixture.txt")', 'scratch("fixture.txt")', "-1"),
+    ("DirAccess", "create_temp"): (
+        Arg('"kanama-api-exercise"', "a recognisable name for the OS temp directory the call creates (removed on free)"),
+        "false",
+    ),
+    ("DirAccess", "dir_exists_absolute"): ('scratch("sub")',),
+    ("DirAccess", "get_directories_at"): ('scratch("")',),
+    ("DirAccess", "get_drive_name"): ("0",),  # the first volume: never "" on a host with a filesystem
+    ("DirAccess", "make_dir_absolute"): ('scratch("sub")',),  # exists: ERR_ALREADY_EXISTS (32)
+    ("DirAccess", "rename_absolute"): ('scratch("missing")', 'scratch("renamed")'),  # FAILED (1)
+    ("FileAccess", "create_temp"): (
+        "FileAccess.WRITE",
+        Arg('"kanama-api-exercise"', "a recognisable name for the OS temp file the call creates (removed on free)"),
+        '""',
+        "false",
+    ),
+    ("FileAccess", "get_extended_attribute"): ('scratch("fixture.txt")', '"kanama"'),
+    ("FileAccess", "get_extended_attribute_string"): ('scratch("fixture.txt")', '"kanama"'),
+    ("FileAccess", "get_file_as_bytes"): ('scratch("fixture.txt")',),
+    ("FileAccess", "get_file_as_string"): ('scratch("fixture.txt")',),
+    ("FileAccess", "open"): ('scratch("fixture.txt")', "FileAccess.READ"),
+    ("FileAccess", "open_compressed"): ('scratch("compressed.bin")', "FileAccess.WRITE", "0"),
+    ("FileAccess", "open_encrypted"): ('scratch("encrypted.bin")', "FileAccess.WRITE", 'fixture("key32")', "PackedByteArray()"),
+    ("FileAccess", "open_encrypted_with_pass"): ('scratch("encrypted_pass.bin")', "FileAccess.WRITE", '"kanama125"'),
+    # A missing file: FAILED (1), or ERR_UNAVAILABLE where the host has no such attribute.
+    ("FileAccess", "set_extended_attribute"): ('scratch("missing")', '"kanama"', "PackedByteArray(1, 2, 3)"),
+    ("FileAccess", "set_extended_attribute_string"): ('scratch("missing")', '"kanama"', '"kanama125"'),
+    ("FileAccess", "set_hidden_attribute"): ('scratch("missing")', "true"),
+    ("FileAccess", "set_unix_permissions"): ('scratch("missing")', "FileAccess.UNIX_READ_OWNER"),
     # Resources from bytes, files, strings or dictionaries: a value the static accepts.
-    ("AudioStreamMP3", "load_from_buffer"): (None,),
-    ("AudioStreamMP3", "load_from_file"): (None,),
-    ("AudioStreamWAV", "load_from_buffer"): (None, "{}"),
-    ("AudioStreamWAV", "load_from_file"): (None, "{}"),
-    ("DPITexture", "create_from_string"): (None, "1.0", "1.0", "{}"),
-    ("GLTFAccessor", "from_dictionary"): (None,),
-    ("GLTFCamera", "from_node"): (None,),
-    ("GLTFDocument", "export_object_model_property"): (None, None, None, None),
-    ("GLTFDocument", "import_object_model_property"): (None, None),
-    ("Image", "create"): (None, None, None, None),
-    ("Image", "create_from_data"): (None, None, None, None, None),
-    ("ImporterMesh", "merge_importer_meshes"): (None, None, "true"),
-    ("JSON", "from_native"): (None, "false"),
-    ("JSON", "parse_string"): (None,),
-    ("JSON", "stringify"): (None, '""', "true", "false"),
-    ("TLSOptions", "server"): (None, None),
+    ("AudioStreamMP3", "load_from_buffer"): ('fixture("mp3")',),
+    ("AudioStreamMP3", "load_from_file"): ('scratch("fixture.mp3")',),
+    ("AudioStreamWAV", "load_from_buffer"): ('fixture("wav")', "{}"),
+    ("AudioStreamWAV", "load_from_file"): ('scratch("fixture.wav")', "{}"),
+    ("DPITexture", "create_from_string"): ('fixture("svg")', "1.0", "1.0", "{}"),
+    ("GLTFAccessor", "from_dictionary"): ('{"type": "SCALAR", "componentType": 5126, "count": 3}',),
+    ("GLTFCamera", "from_node"): ("Camera3D.new()",),
+    # A node pointer: the property object is made before the (empty) state's node lookup fails and is
+    # returned with the error printed; a pointer outside the core object model returns null.
+    ("GLTFDocument", "import_object_model_property"): ("GLTFState.new()", '"/nodes/0/translation"'),
+    ("Image", "create"): ("4", "4", "false", "Image.FORMAT_RGBA8"),
+    ("Image", "create_from_data"): ("4", "4", "false", "Image.FORMAT_RGBA8", 'fixture("rgba8_4x4")'),
+    ("ImporterMesh", "merge_importer_meshes"): ("[ImporterMesh.new()]", "[Transform3D()]", "true"),
+    ("JSON", "from_native"): ("Vector2(1, 2)", "false"),
+    ("JSON", "parse_string"): ('"{\\"kanama\\": 125}"',),
+    ("JSON", "stringify"): ('{"kanama": 125}', '""', "true", "false"),
+    ("TLSOptions", "server"): ("CryptoKey.new()", "X509Certificate.new()"),
     # Pure functions of their arguments.
-    ("PathFollow3D", "correct_posture"): (None, None),
-    ("PhysicsRayQueryParameters2D", "create"): (None, None, "4294967295", "Array[RID]([])"),
-    ("PhysicsRayQueryParameters3D", "create"): (None, None, "4294967295", "Array[RID]([])"),
-    ("Tween", "interpolate_value"): (None, None, None, None, None, None),
+    ("PathFollow3D", "correct_posture"): ("Transform3D()", "PathFollow3D.ROTATION_ORIENTED"),
+    ("PhysicsRayQueryParameters2D", "create"): ("Vector2(1, 2)", "Vector2(3, 4)", "4294967295", "Array[RID]([])"),
+    ("PhysicsRayQueryParameters3D", "create"): ("Vector3(1, 2, 3)", "Vector3(4, 5, 6)", "4294967295", "Array[RID]([])"),
+    ("Tween", "interpolate_value"): ("0.0", "10.0", "0.5", "1.0", "Tween.TRANS_LINEAR", "Tween.EASE_IN"),
+}
+
+# (class, method) -> (kind, reason) for a static row whose result cannot be held to "equals the Variant
+# path and is not its type's zero": `weak` (it can be its type's zero on a healthy host: the row checks
+# the two paths agree and is reported weak, not failed) or `fresh` (a new value per call: the row checks
+# both paths return a non-zero value of one type, not that they are equal). The argument-free statics a
+# zero can come from are weak by rule and need no entry.
+STATIC_RESULTS: dict[tuple[str, str], tuple[str, str]] = {
+    ("DirAccess", "get_drive_label"): ("weak", "a drive label exists only on Windows; every other host returns \"\""),
+    ("Resource", "generate_scene_unique_id"): ("fresh", "a new random id per call"),
 }

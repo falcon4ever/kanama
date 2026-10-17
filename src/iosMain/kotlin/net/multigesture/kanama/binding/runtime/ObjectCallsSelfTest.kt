@@ -622,6 +622,7 @@ private fun runVariantTypeRows(
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_objectcalls_selftest")
 fun kanamaIosRuntimeObjectCallsSelfTest() {
+  val started = kotlin.time.TimeSource.Monotonic.markNow()
   var pass = 0
   var fail = 0
   fun check(label: String, cond: Boolean) {
@@ -4962,7 +4963,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
 
   println(
     "[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed " +
-      "faults=${ObjectCalls.faultCount()} expected=$SELFTEST_EXPECTED_FAULTS"
+      "faults=${ObjectCalls.faultCount()} expected=$SELFTEST_EXPECTED_FAULTS " +
+      "in ${started.elapsedNow().inWholeMilliseconds} ms"
   )
 }
 
@@ -4981,6 +4983,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_objectcalls_selftest_frame")
 fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
+  val started = kotlin.time.TimeSource.Monotonic.markNow()
   var pass = 0
   var fail = 0
   fun check(label: String, cond: Boolean) {
@@ -5203,6 +5206,11 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
   // which is precisely what this line exists to show.
   println(
     "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): $pass passed, $fail failed " +
-      "faults=${ObjectCalls.faultCount()} expected=$SELFTEST_EXPECTED_FAULTS"
+      "faults=${ObjectCalls.faultCount()} expected=$SELFTEST_EXPECTED_FAULTS " +
+      "in ${started.elapsedNow().inWholeMilliseconds} ms"
   )
+
+  // The generated API exercise (exercise/ApiExercise.generated.kt): its own summary line, after the
+  // frame-1 rows, once every class and singleton is registered (ApiExerciseSelfTest.kt).
+  apiExerciseSelfTestRows(SELFTEST_EXPECTED_FAULTS)
 }

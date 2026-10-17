@@ -142,6 +142,25 @@ their shared sources. The bridge protocol is 39: re-export every Web game.
   | `springArm.addExcludedObject(body)` | `springArm.addExcludedObject(body.getRid())` |
   | at most one exclusion, no flags | any number of RIDs; `collideWithAreas`, `collideWithBodies`, `hitFromInside`, `hitBackFaces` |
 
+### Added — tooling: the API exercise runs its static and property-pair rows on the desktop and on iOS
+
+Contributors: `scripts/generate_api_exercise.py --report` now also writes
+`src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt`: one row per helper whose
+best case is a static (45, compared with `ClassDB.class_call_static`; five argument-free ones are weak and
+also get their helper's property-pair row) or a property set/get pair (95 helpers in 50 rows, read back
+through the getter and `Object.get`). The rows are compiled only into a build made with
+`-PkanamaApiExercise=true` (desktop, Android) or `-PkanamaIosSelfTest=true` (iOS); `publish*`,
+`packageDistributions` and `installAddonJar` fail on such a build, and local_ci checks that the published
+and installed jars carry no exercise class (`--check-jar`). `runtime_smoke.sh` builds the example addon with
+the flag and runs `api_exercise_smoke.tscn` with the project setting `kanama/debug/api_exercise` (or
+`KANAMA_API_EXERCISE=1`), requiring `[kanama] API EXERCISE: <n> passed, 0 failed, ... in <ms> ms`. On iOS
+the rows run after the frame-1 self-test rows and print `OBJECTCALLS SELFTEST (api exercise): ...`, which
+`ios_visual_smoke.sh` requires (the kanama-demos device runner requires it too, from its matching change);
+the two existing ObjectCalls self-test summaries now end with `in <ms> ms`. The static arguments, the
+property values that need a hand choice and the statics whose result is weak or new per call are kept in
+`scripts/api_exercise_policy.py` (`STATIC_ARGS`, `PAIR_OVERRIDES`, `STATIC_RESULTS`); an argument that
+deliberately differs from the API default is marked `Arg(value, reason)`.
+
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 
 The control (a plain GDScript visibility-notifier export, `visibility-control` in `web.yml`) handed the

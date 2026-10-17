@@ -8,6 +8,7 @@ plugins {
 // project's scripts + KSP registrars build separately in `:scripts`.
 val kanamaRoot = rootProject.layout.projectDirectory.dir("../..")
 val androidKanamaSources = layout.buildDirectory.dir("generated/kanamaAndroidSources")
+val kanamaApiExercise = providers.gradleProperty("kanamaApiExercise").map { it.trim() == "true" }.getOrElse(false)
 val panamaPortCoreDependency = providers.gradleProperty("kanamaPanamaPortCore")
     .orElse("com.github.falcon4ever.PanamaPort:Core:0.1.5-kanama-r8.1")
 
@@ -31,6 +32,9 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
     // compiles the jvmMain actual with its `actual ` stripped.
     from(kanamaRoot.dir("src/commonMain/kotlin")) {
         exclude("**/*${KanamaAndroidRemap.EXPECT_FILE_SUFFIX}")
+        // The generated API exercise rows: a Kanama test hook, compiled only into a runtime AAR
+        // built with -PkanamaApiExercise=true (as the root build.gradle.kts does for the jar).
+        if (!kanamaApiExercise) exclude("net/multigesture/kanama/exercise/**")
         remapForeignImports()
     }
     from(kanamaRoot.dir("annotations/src/main/kotlin")) {

@@ -51,6 +51,7 @@ from generate_api_wrapper import (
     IOS_HANDWRITTEN_HELPERS,
     IOS_OBJECTCALLS,
     IOS_PT_TAG_VALUES,
+    enum_spec,
     OBJECTCALLS_REFERENCE_RE,
     SHARED_HAND_ROOT_FILES,
     SHARED_API_DIR,
@@ -146,12 +147,18 @@ class Rules:
             if cls.inherits:
                 self.children[cls.inherits].append(name)
         self.pairs: dict[tuple[str, str], str] = {}
+        self.pair_props: dict[tuple[str, str], dict] = {}  # (class, setter or getter) -> the property
+        pair_overrides = getattr(policy, "PAIR_OVERRIDES", {})
         for name, cls in api.items():
             for prop in cls.properties:
                 if prop.get("index") is not None or not prop.get("setter") or not prop.get("getter"):
                     continue
+                if (name, prop["name"]) in pair_overrides and pair_overrides[(name, prop["name"])][0] is None:
+                    continue
                 self.pairs[(name, str(prop["setter"]))] = f"setter of `{prop['name']}`"
                 self.pairs[(name, str(prop["getter"]))] = f"getter of `{prop['name']}`"
+                self.pair_props[(name, str(prop["setter"]))] = prop
+                self.pair_props[(name, str(prop["getter"]))] = prop
 
     def chain(self, name: str) -> list[str]:
         out = []
@@ -226,6 +233,9 @@ class Rules:
             weak = ""
             if not method.argument_types and ZERO_PRONE_RETURNS.match(method.return_type):
                 weak = "argument-free static whose result can be its type's zero on a healthy host"
+            result = getattr(self.policy, "STATIC_RESULTS", {}).get((site.cls, site.method))
+            if result is not None and result[0] == "weak":
+                weak = f"{result[1]} (STATIC_RESULTS)"
             if method.return_type == "enum::Error" and method.argument_types:
                 return Verdict("C", "static returning Error: its arguments must make it fail", weak=weak)
             return Verdict("C", "static with a return value", weak=weak)
@@ -524,11 +534,40 @@ def check_policy(inv: Inventory, rules: Rules, api: dict[str, ApiClass], singlet
         else:
             method = rules.method(cls, name)
             for index, (given, default) in enumerate(zip(value, expected[key])):
-                if default is not None and given != default:
+                if given is None:
+                    inv.failures.append(
+                        f"STATIC_ARGS[{cls}.{name}] argument {index + 1} (`{method.argument_names[index]}`) has no value; choose one"
+                    )
+                elif isinstance(given, policy.Arg):
+                    if not given.reason:
+                        inv.failures.append(f"STATIC_ARGS[{cls}.{name}] argument {index + 1}: an Arg needs its reason")
+                    elif default is not None and str(given) == default:
+                        inv.failures.append(
+                            f"STATIC_ARGS[{cls}.{name}] argument {index + 1} is marked Arg (a deliberate non-default) but "
+                            f"equals extension_api.json's default {default!r}; make it a plain string"
+                        )
+                elif default is not None and given != default:
                     inv.failures.append(
                         f"STATIC_ARGS[{cls}.{name}] argument {index + 1} (`{method.argument_names[index]}`) is {given!r}, "
-                        f"but extension_api.json's default is {default!r} (did an API refresh change it?)"
+                        f"but extension_api.json's default is {default!r} (did an API refresh change it? A deliberate "
+                        "other value is an `Arg(value, reason)`)"
                     )
+    for (cls, prop), (value, reason) in getattr(policy, "PAIR_OVERRIDES", {}).items():
+        props = {str(x["name"]): x for x in api[cls].properties} if cls in api else {}
+        if prop not in props or not props[prop].get("setter") or not props[prop].get("getter"):
+            inv.failures.append(f"PAIR_OVERRIDES names {cls}.{prop}, which is not a set/get property of the API; delete the entry")
+        elif not reason:
+            inv.failures.append(f"PAIR_OVERRIDES[{cls}.{prop}] needs its reason")
+        elif value is not None:
+            try:
+                parse_literal(value)
+            except LiteralError as error:
+                inv.failures.append(f"PAIR_OVERRIDES[{cls}.{prop}]: {error}")
+    for key, (kind, reason) in getattr(policy, "STATIC_RESULTS", {}).items():
+        if key not in {(site.cls, site.method) for _, site in inv.sites if site.kind == "static"}:
+            inv.failures.append(f"STATIC_RESULTS names {key[0]}.{key[1]}, which the shared tree never calls as a static; delete the entry")
+        elif kind not in ("weak", "fresh") or not reason:
+            inv.failures.append(f"STATIC_RESULTS[{key[0]}.{key[1]}] must be ('weak' | 'fresh', reason)")
     for key in sorted(set(expected) - set(policy.STATIC_ARGS)):
         inv.failures.append(
             f"static row {key[0]}.{key[1]} has no STATIC_ARGS entry; add `{key!r}: {expected[key]!r},` "
@@ -594,7 +633,9 @@ def render(inv: Inventory, policy=policy_module) -> str:
         "of it. This page classifies every helper the shared wrapper tree calls by how a generated exercise row can",
         "observe it, from `extension_api.json`, the generator's tables and the committed tree; the judgement calls",
         "(exclusions, stateless singletons, receivers, method-level cases, runtime helpers, static arguments, the",
-        "scratch directory) are hand-kept in `scripts/api_exercise_policy.py`. It is an inventory: no row runs yet.",
+        "scratch directory) are hand-kept in `scripts/api_exercise_policy.py`. The C (static) and A (property pair)",
+        "rows run: `ApiExercise.generated.kt` (the same script writes it) on the desktop smoke and in the iOS self-test",
+        "build; the other cases are listed here and run nowhere yet.",
         "",
         f"**Referenced helpers:** {len(rows)} ({bind_shaped} called by generated methods with a MethodBind, "
         f"{counts['N']} runtime helpers). **MethodBind call sites:** {generated_sites} generated "
@@ -660,14 +701,15 @@ def render(inv: Inventory, policy=policy_module) -> str:
             files = ", ".join(f"`{f}`" for f in users[:4]) + (f", … ({len(users)} files)" if len(users) > 4 else "")
             lines.append(f"| `{helper}` | {files} | {md(row.verdict.reason)} |")
     lines += ["", "## Static rows and the scratch directory", ""]
-    open_entries = sum(1 for v in policy.STATIC_ARGS.values() if any(a is None for a in v))
     argless = counts["C"] - len(inv.static_args_expected)
     weak_c = sum(1 for r in rows.values() if r.case == "C" and r.verdict.weak)
     lines += [
-        f"{counts['C']} static rows; {argless} take no argument ({weak_c} of them weak). The other "
-        f"{len(inv.static_args_expected)} take their arguments from `STATIC_ARGS` ({open_entries} of them still have "
-        "an argument to choose, shown as `?`). A static returning `Error` must be given arguments that make it fail "
-        "with a known non-OK `Error`: OK is 0, which a no-op returns too.",
+        f"{counts['C']} static rows; {argless} take no argument. {weak_c} are weak (they check that the wrapper and "
+        "`ClassDB.class_call_static` agree and are counted apart). The other "
+        f"{len(inv.static_args_expected)} take their arguments from `STATIC_ARGS` (GDScript literals; "
+        "`scratch(\"name\")` is a path under the scratch directory, `fixture(\"name\")` bytes or text the runner "
+        "builds). A static returning `Error` is given arguments that make it fail with a known non-OK `Error`: OK is "
+        "0, which a no-op returns too.",
         "",
         md(policy.SCRATCH_POLICY),
         "",
@@ -679,12 +721,39 @@ def render(inv: Inventory, policy=policy_module) -> str:
         args = policy.STATIC_ARGS.get(key)
         text = "(none)" if args is None else ", ".join("?" if a is None else f"`{md(a)}`" for a in args)
         note = []
+        for index, arg in enumerate(args or ()):
+            if isinstance(arg, policy.Arg):
+                note.append(f"argument {index + 1} is not the API default: {md(arg.reason)}")
+        result = getattr(policy, "STATIC_RESULTS", {}).get(key)
+        if result is not None and result[0] == "fresh":
+            note.append(f"fresh result: {md(result[1])} (both paths non-zero, not compared)")
         if inv.rules.method(*key).return_type == "enum::Error" and args is not None:
             note.append("returns `Error`: arguments must make it fail")
         if row.verdict.weak:
             backed = row.secondary is not None and row.secondary[1].case in "ABD" and not row.secondary[1].weak
             note.append("weak; " + (f"backed by {row.secondary[1].case} `{row.secondary[0].cls}.{row.secondary[0].method}`" if backed else "no non-weak row"))
         lines.append(f"| `{row.site.cls}.{row.site.method}` | {text} | {'; '.join(note) or '—'} |")
+    lines += [
+        "",
+        "`STATIC_RESULTS` (statics whose result cannot be held to equal-and-not-zero):",
+        "",
+    ]
+    for (cls, method), (kind, reason) in getattr(policy, "STATIC_RESULTS", {}).items():
+        lines.append(f"- `{cls}.{method}`: {kind}, {md(reason)}.")
+    lines += [
+        "",
+        "## Property-pair overrides",
+        "",
+        "An A row sets a recognisable non-default value chosen from the property's type. `PAIR_OVERRIDES` gives a",
+        "property the value it can keep, or says it is no pair (a set value does not read back as itself on a fresh",
+        "object), which hands its setter and getter back to their method's own case.",
+        "",
+        "| property | value | reason |",
+        "|---|---|---|",
+    ]
+    for (cls, prop), (value, reason) in getattr(policy, "PAIR_OVERRIDES", {}).items():
+        shown = "not a pair" if value is None else f"`{md(value)}`"
+        lines.append(f"| `{cls}.{prop}` | {shown} | {md(reason)} |")
     paths = [p for p in path_rows(inv) if p[1].case != "C"]
     lines += [
         "",
@@ -843,6 +912,605 @@ class _Policy:
         self.METHOD_OVERRIDES = {tuple(k.split(".")): tuple(v) for k, v in spec.get("method_overrides", {}).items()}
 
 
+# ---- the rows: ApiExercise.generated.kt ----------------------------------------------------------------
+#
+# P1 emits the C (static) and A (property-pair) rows; the B/D/F rows come later. Each row is one private
+# function of straight-line code (no lambda per row) reporting into the hand-written ApiExerciseRunner.
+# The Kotlin signatures are read from the committed shared tree (the generator wrote them), so a row
+# calls exactly what a user calls.
+
+ROWS_PATH = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt"
+ROW_CASES = "CA"
+
+
+@dataclass(frozen=True)
+class KotlinFun:
+    name: str
+    params: tuple[tuple[str, str], ...]  # (name, Kotlin type), defaults dropped
+    ret: str  # "" for Unit
+
+
+@dataclass
+class ExerciseRow:
+    case: str  # C or A
+    helpers: list[str]
+    site: Site
+    verdict: Verdict
+    label: str
+    body: list[str]
+
+
+def _split_top(text: str, sep: str = ",") -> list[str]:
+    out, depth, start = [], 0, 0
+    for i, ch in enumerate(text):
+        if ch in "(<[{":
+            depth += 1
+        elif ch in ")>]}":
+            depth -= 1
+        elif ch == sep and depth == 0:
+            out.append(text[start:i])
+            start = i + 1
+    tail = text[start:]
+    if tail.strip():
+        out.append(tail)
+    return [part.strip() for part in out]
+
+
+class KotlinTree:
+    """The generated shared wrappers' function signatures, read from the files the generator wrote."""
+
+    def __init__(self, rules: Rules) -> None:
+        self.rules = rules
+        self.cache: dict[str, str] = {}
+
+    def text(self, cls: str) -> str | None:
+        name = {v: k for k, v in WRAPPER_CLASS_ALIASES.items()}.get(cls, cls)
+        if name not in self.cache:
+            path = SHARED_API_DIR / f"{name}.kt"
+            self.cache[name] = path.read_text(encoding="utf-8") if path.is_file() else ""
+        return self.cache[name] or None
+
+    def function(self, cls: str, method: str, static: bool) -> KotlinFun | None:
+        """[method] of [cls] (or the nearest ancestor that declares it), with Godot's argument count."""
+        api_method = None
+        for owner in self.rules.chain(cls):
+            if method in self.rules.api[owner].methods:
+                api_method = self.rules.api[owner].methods[method][0]
+                break
+        if api_method is None:
+            return None
+        fn = method_function_name(owner, method)
+        text = self.text(owner)
+        if text is None:
+            return None
+        indent = 8 if static else 4
+        pattern = re.compile(r"\n" + " " * indent + r"(?:@\w+\s+)*fun (" + re.escape(fn) + r")\(")
+        for match in pattern.finditer(text):
+            start = match.end()
+            depth, i = 1, start
+            while depth:
+                depth += {"(": 1, ")": -1}.get(text[i], 0)
+                i += 1
+            raw = text[start : i - 1]
+            params = []
+            for part in _split_top(" ".join(raw.split())):
+                name, _, rest = part.partition(":")
+                ktype = _split_top(rest, "=")[0] if "=" in rest else rest.strip()
+                params.append((name.strip(), ktype.strip()))
+            if len(params) != len(api_method.argument_types):
+                continue
+            tail = text[i : i + 300]
+            ret = ""
+            ret_match = re.match(r"\s*:\s*([^{=\n]+?)\s*(?:\{|=|\n)", tail)
+            if ret_match:
+                ret = ret_match.group(1).strip()
+            return KotlinFun(fn, tuple(params), ret)
+        return None
+
+
+# ---- Godot literals (STATIC_ARGS, PAIR_OVERRIDES) -> Kotlin -----------------------------------------------
+
+_TOKEN_RE = re.compile(r'\s*(?:("(?:[^"\\]|\\.)*")|(-?\d+(?:\.\d+)?(?:e-?\d+)?)|([A-Za-z_][\w]*(?:\[\w+\])?(?:\.[A-Za-z_]\w*)*)|(.))')
+
+
+def _tokens(text: str) -> list[str]:
+    out = []
+    for match in _TOKEN_RE.finditer(text):
+        token = next(g for g in match.groups() if g is not None) if any(match.groups()) else None
+        if token is not None and token.strip():
+            out.append(token)
+    return out
+
+
+class LiteralError(ValueError):
+    pass
+
+
+def parse_literal(text: str):
+    """A GDScript literal as a small tree: ("str", s) ("num", text) ("bool", b) ("null",) ("list", [..])
+    ("dict", [(k, v)..]) ("call", name, [..]) ("const", "Class.NAME") ("new", "Class")."""
+    tokens = _tokens(text)
+    pos = 0
+
+    def peek():
+        return tokens[pos] if pos < len(tokens) else None
+
+    def take(expected=None):
+        nonlocal pos
+        token = peek()
+        if token is None or (expected is not None and token != expected):
+            raise LiteralError(f"{text!r}: expected {expected or 'a value'} at token {pos} ({token!r})")
+        pos += 1
+        return token
+
+    def items(close):
+        out = []
+        while peek() != close:
+            out.append(value())
+            if peek() == ",":
+                take(",")
+        take(close)
+        return out
+
+    def value():
+        token = take()
+        if token.startswith('"'):
+            return ("str", json.loads(token))
+        if re.fullmatch(r"-?\d+(?:\.\d+)?(?:e-?\d+)?", token):
+            return ("num", token)
+        if token in ("true", "false"):
+            return ("bool", token == "true")
+        if token == "null":
+            return ("null",)
+        if token == "[":
+            return ("list", items("]"))
+        if token == "{":
+            pairs = []
+            while peek() != "}":
+                key = value()
+                take(":")
+                pairs.append((key, value()))
+                if peek() == ",":
+                    take(",")
+            take("}")
+            return ("dict", pairs)
+        if re.fullmatch(r"[A-Za-z_][\w\[\]]*(?:\.\w+)*", token):
+            if token.endswith(".new") and peek() == "(":
+                take("(")
+                take(")")
+                return ("new", token.removesuffix(".new"))
+            if peek() == "(":
+                take("(")
+                return ("call", token, items(")"))
+            if "." in token:
+                return ("const", token)
+        raise LiteralError(f"{text!r}: cannot read {token!r}")
+
+    tree = value()
+    if pos != len(tokens):
+        raise LiteralError(f"{text!r}: trailing input after the value")
+    return tree
+
+
+def kotlin_string(value: str) -> str:
+    return '"' + value.replace("\\", "\\\\").replace('"', '\\"').replace("$", "\\$").replace("\n", "\\n") + '"'
+
+
+VALUE_TYPES_3 = {"Vector3", "Vector3i"}
+REAL_TYPES = {"Vector2", "Vector3", "Vector4", "Rect2", "Transform2D", "Transform3D", "Basis", "Quaternion", "Plane", "AABB", "Color"}
+ENUM_KOTLIN_RE = re.compile(r"^[A-Z]\w*(?:\.[A-Z]\w*)?$")
+
+
+class RowContext:
+    """The Kotlin statements one row needs before its calls: fresh objects, and the enum lookups."""
+
+    def __init__(self, gen: "RowGenerator") -> None:
+        self.gen = gen
+        self.lines: list[str] = []
+        self.count = 0
+
+    def fresh(self, cls: str) -> str:
+        receiver, why = self.gen.rules.receiver(cls)
+        if receiver is None or "(" in receiver:
+            raise LiteralError(f"no fresh instance of {cls}: {why or receiver}")
+        var = f"f{self.count}"
+        self.count += 1
+        self.lines.append(f"val {var} = {self.gen.construct(receiver)}")
+        return var
+
+
+class RowGenerator:
+    def __init__(self, inv: Inventory, policy) -> None:
+        self.inv = inv
+        self.rules = inv.rules
+        self.policy = policy
+        self.tree = KotlinTree(self.rules)
+        self.failures: list[str] = []
+        self.godot_constants = self._constants()
+
+    def _constants(self) -> dict[str, int]:
+        """`Class.NAME` -> value for every class enum value and integer constant."""
+        out: dict[str, int] = {}
+        for name, raw in self.rules.raw.items():
+            for enum in raw.get("enums", []) or []:
+                for value in enum.get("values", []):
+                    out[f"{name}.{value['name']}"] = int(value["value"])
+            for constant in raw.get("constants", []) or []:
+                out[f"{name}.{constant['name']}"] = int(constant["value"])
+        return out
+
+    def kotlin_class(self, cls: str) -> str:
+        return {v: k for k, v in WRAPPER_CLASS_ALIASES.items()}.get(cls, cls)
+
+    def is_refcounted(self, cls: str) -> bool:
+        return "RefCounted" in self.rules.chain(cls)
+
+    def construct(self, cls: str) -> str:
+        kotlin = self.kotlin_class(cls)
+        how = "ref" if self.is_refcounted(cls) else "obj"
+        return f'r.{how}({kotlin}(r.construct("{cls}")))'
+
+    # -- a literal in a parameter of a known Kotlin type --
+
+    def literal(self, tree, ktype: str, ctx: RowContext) -> str:
+        ktype = ktype.strip()
+        nullable = ktype.endswith("?")
+        base = ktype.removesuffix("?")
+        kind = tree[0]
+        if kind == "null":
+            if not nullable and base != "Any":
+                raise LiteralError(f"null for the non-null {ktype}")
+            return "null"
+        if kind == "bool":
+            return "true" if tree[1] else "false"
+        if kind == "str":
+            if base == "NodePath":
+                return f"NodePath({kotlin_string(tree[1])})"
+            return kotlin_string(tree[1])
+        if kind == "num":
+            return self.number(tree[1], base)
+        if kind == "const":
+            if tree[1] not in self.godot_constants:
+                raise LiteralError(f"{tree[1]} is not a constant of the API")
+            return self.number(str(self.godot_constants[tree[1]]), base, comment=tree[1].split(".")[-1])
+        if kind == "list":
+            element = self.list_element(base)
+            if not tree[1]:
+                return "emptyList()"
+            return f"listOf<{element}>(" + ", ".join(self.literal(item, element, ctx) for item in tree[1]) + ")"
+        if kind == "dict":
+            if not tree[1]:
+                return "emptyMap()"
+            return "mapOf<String, Any?>(" + ", ".join(
+                f"{self.literal(k, 'String', ctx)} to {self.literal(v, 'Any?', ctx)}" for k, v in tree[1]
+            ) + ")"
+        if kind == "new":
+            return ctx.fresh(tree[1])
+        if kind == "call":
+            return self.call(tree[1], tree[2], base, ctx)
+        raise LiteralError(f"cannot write {tree!r} as {ktype}")
+
+    def number(self, text: str, base: str, comment: str = "") -> str:
+        note = f" /* {comment} */" if comment else ""
+        is_float = "." in text or "e" in text
+        if base in ("Double", "Any"):
+            return (text if is_float else f"{text}.0" if base == "Double" else f"{text}L") + note
+        if base == "Float":
+            return f"{text}f" + note
+        if is_float:
+            raise LiteralError(f"{text} for the integer type {base}")
+        if base == "Int":
+            return text + note
+        if base == "Long":
+            return f"{text}L" + note
+        if ENUM_KOTLIN_RE.match(base) or base.startswith(API_PACKAGE_PREFIX):
+            return f"{base}({text}L){note}"
+        raise LiteralError(f"{text} for {base}")
+
+    def list_element(self, base: str) -> str:
+        match = re.fullmatch(r"List<(.+)>", base)
+        if match:
+            return match.group(1)
+        if base == "Any":
+            return "Any?"
+        raise LiteralError(f"a list for {base}")
+
+    def call(self, name: str, args: list, base: str, ctx: RowContext) -> str:
+        if name == "scratch":
+            return f"r.scratch({kotlin_string(args[0][1])})"
+        if name == "fixture":
+            if base == "ByteArray":
+                return f"r.fixtureBytes({kotlin_string(args[0][1])})"
+            if base in ("String", "Any"):
+                return f"r.fixtureText({kotlin_string(args[0][1])})"
+            raise LiteralError(f"fixture({args[0][1]!r}) for {base}")
+        if name == "PackedByteArray":
+            if not args:
+                return "ByteArray(0)"
+            return "byteArrayOf(" + ", ".join(self.number(a[1], "Int") for a in args) + ")"
+        if re.fullmatch(r"Array\[\w+\]", name):
+            if args and args[0] == ("list", []):
+                return "emptyList()"
+            return self.literal(args[0], base, ctx)
+        if name == "Transform3D" and not args:
+            return "Transform3D.IDENTITY"
+        if name == "Transform2D" and not args:
+            return "Transform2D.IDENTITY"
+        if name in ("Vector2", "Vector3", "Vector4", "Color", "Quaternion", "Plane"):
+            kind = "Double"
+            return f"{name}(" + ", ".join(self.number(a[1], kind) for a in args) + ")"
+        if name in ("Vector2i", "Vector3i", "Vector4i"):
+            return f"{name}(" + ", ".join(self.number(a[1], "Int") for a in args) + ")"
+        if name == "NodePath":
+            return f"NodePath({kotlin_string(args[0][1])})"
+        raise LiteralError(f"cannot write {name}(...) as {base}")
+
+    # -- the value an A row sets: two candidates, the row picks the one the object does not hold --
+
+    def pair_candidates(self, ktype: str, godot_type: str, ctx: RowContext) -> tuple[str, str]:
+        base = ktype.removesuffix("?")
+        simple = {
+            "Boolean": ("true", "false"),
+            "Int": ("7", "3"),
+            "Long": ("7L", "3L"),
+            "Double": ("0.75", "0.25"),
+            "Float": ("0.75f", "0.25f"),
+            "String": ('"kanama125"', '"kanama7"'),
+            "NodePath": ('NodePath("kanama/125")', 'NodePath("kanama/7")'),
+            "RID": ("RID(7L)", "RID(3L)"),
+            "Vector2": ("Vector2(0.25, 0.5)", "Vector2(0.75, 1.0)"),
+            "Vector2i": ("Vector2i(7, 3)", "Vector2i(3, 7)"),
+            "Vector3": ("Vector3(0.25, 0.5, 0.75)", "Vector3(1.0, 0.5, 0.25)"),
+            "Vector3i": ("Vector3i(7, 3, 5)", "Vector3i(3, 7, 5)"),
+            "Vector4": ("Vector4(0.25, 0.5, 0.75, 1.0)", "Vector4(1.0, 0.75, 0.5, 0.25)"),
+            "Color": ("Color(0.25, 0.5, 0.75, 1.0)", "Color(1.0, 0.75, 0.5, 0.25)"),
+            "Rect2": ("Rect2(Vector2(1.0, 2.0), Vector2(3.0, 4.0))", "Rect2(Vector2(4.0, 3.0), Vector2(2.0, 1.0))"),
+            "Rect2i": ("Rect2i(Vector2i(1, 2), Vector2i(3, 4))", "Rect2i(Vector2i(4, 3), Vector2i(2, 1))"),
+            "Transform2D": (
+                "Transform2D(Vector2(1.0, 0.0), Vector2(0.0, 1.0), Vector2(7.0, 3.0))",
+                "Transform2D(Vector2(1.0, 0.0), Vector2(0.0, 1.0), Vector2(3.0, 7.0))",
+            ),
+            "Transform3D": (
+                "Transform3D(Basis.IDENTITY, Vector3(1.0, 2.0, 3.0))",
+                "Transform3D(Basis.IDENTITY, Vector3(3.0, 2.0, 1.0))",
+            ),
+            "Basis": (
+                "Basis(Vector3(2.0, 0.0, 0.0), Vector3(0.0, 3.0, 0.0), Vector3(0.0, 0.0, 4.0))",
+                "Basis(Vector3(4.0, 0.0, 0.0), Vector3(0.0, 3.0, 0.0), Vector3(0.0, 0.0, 2.0))",
+            ),
+            "Quaternion": ("Quaternion(0.5, 0.5, 0.5, 0.5)", "Quaternion(0.0, 0.0, 0.0, 1.0)"),
+            "Plane": ("Plane(0.0, 1.0, 0.0, 0.5)", "Plane(1.0, 0.0, 0.0, 0.25)"),
+            "AABB": ("AABB(Vector3(1.0, 2.0, 3.0), Vector3(4.0, 5.0, 6.0))", "AABB(Vector3(6.0, 5.0, 4.0), Vector3(3.0, 2.0, 1.0))"),
+            "ByteArray": ("byteArrayOf(1, 2, 3)", "byteArrayOf(3, 2, 1)"),
+            "Any": ('"kanama125"', "7L"),
+            "Map<String, Any?>": ('mapOf<String, Any?>("kanama" to 125L)', 'mapOf<String, Any?>("kanama" to 7L)'),
+        }
+        if base in simple:
+            return simple[base]
+        if godot_type.startswith(("enum::", "bitfield::")):
+            spec = enum_spec(godot_type)
+            values = [v for v in spec.values if not v.name.endswith("_MAX")]
+            distinct = []
+            for value in values:
+                if value.value not in [d.value for d in distinct]:
+                    distinct.append(value)
+            if len(distinct) < 2:
+                raise LiteralError(f"{godot_type} has fewer than two values")
+            kotlin = base
+            return tuple(f"{kotlin}({v.value}L) /* {v.name} */" for v in distinct[:2])  # type: ignore[return-value]
+        match = re.fullmatch(r"List<(.+)>", base)
+        if match:
+            element = match.group(1)
+            inner = self._element_godot_type(godot_type)
+            a, b = self.pair_candidates(element, inner, ctx)
+            return (f"listOf<{element}>({a})", f"listOf<{element}>({b})")
+        if base in self.rules.api or base in WRAPPER_CLASS_ALIASES:
+            cls = WRAPPER_CLASS_ALIASES.get(base, base)
+            return (ctx.fresh(cls), ctx.fresh(cls))
+        raise LiteralError(f"no pair value for the Kotlin type {ktype} (Godot {godot_type})")
+
+    def _element_godot_type(self, godot_type: str) -> str:
+        if godot_type.startswith("typedarray::"):
+            return godot_type.removeprefix("typedarray::")
+        packed = {
+            "PackedStringArray": "String",
+            "PackedInt32Array": "int",
+            "PackedInt64Array": "int",
+            "PackedFloat32Array": "float",
+            "PackedFloat64Array": "float",
+            "PackedVector2Array": "Vector2",
+            "PackedVector3Array": "Vector3",
+            "PackedColorArray": "Color",
+            "PackedByteArray": "int",
+        }
+        return packed.get(godot_type, "Variant")
+
+    # -- rows --
+
+    def rows(self) -> list[ExerciseRow]:
+        out: list[ExerciseRow] = []
+        pairs: dict[tuple[str, str, str], ExerciseRow] = {}
+        for helper, row in sorted(self.inv.rows.items()):
+            chosen = []
+            if row.case == "C":
+                chosen.append((row.site, row.verdict))
+                if row.secondary is not None and row.secondary[1].case == "A":
+                    chosen.append(row.secondary)
+            elif row.case == "A":
+                chosen.append((row.site, row.verdict))
+            for site, verdict in chosen:
+                try:
+                    if verdict.case == "C":
+                        out.append(self.static_row(helper, site, verdict))
+                    else:
+                        prop = self.rules.pair_props[(site.cls, site.method)]
+                        receiver = verdict.target or site.cls
+                        key = (receiver, site.cls, str(prop["name"]))
+                        if key in pairs:
+                            pairs[key].helpers.append(helper)
+                            continue
+                        made = self.pair_row(helper, site, verdict, prop, receiver)
+                        pairs[key] = made
+                        out.append(made)
+                except LiteralError as error:
+                    self.failures.append(f"row {helper} ({site.cls}.{site.method}): {error}")
+        return out
+
+    def static_row(self, helper: str, site: Site, verdict: Verdict) -> ExerciseRow:
+        fun = self.tree.function(site.cls, site.method, static=True)
+        if fun is None:
+            raise LiteralError(f"no static Kotlin function {method_function_name(site.cls, site.method)} in {site.cls}.kt")
+        method = self.rules.method(site.cls, site.method)
+        ctx = RowContext(self)
+        literals = self.policy.STATIC_ARGS.get((site.cls, site.method), ())
+        args = []
+        for (pname, ptype), literal in zip(fun.params, literals):
+            args.append(self.literal(parse_literal(str(literal)), ptype, ctx))
+        names = []
+        lines = list(ctx.lines)
+        for index, (expr, (_, ptype)) in enumerate(zip(args, fun.params)):
+            lines.append(f"val a{index}: {ptype} = {expr}")
+            names.append(f"a{index}")
+        kotlin_cls = self.kotlin_class(site.cls)
+        call_args = ", ".join(names)
+        oracle_args = "".join(f", {n}" for n in names)
+        lines.append(f"val got = r.track({kotlin_cls}.{fun.name}({call_args}))")
+        lines.append(f'val oracle = r.track(ClassDB.classCallStatic("{site.cls}", "{site.method}"{oracle_args}))')
+        result = getattr(self.policy, "STATIC_RESULTS", {}).get((site.cls, site.method))
+        ret = method.return_type
+        if ret == "enum::Error" and not verdict.weak:
+            lines.append("r.staticError(got.value, oracle)")
+        elif ret in self.rules.api:
+            lines.append(f'r.staticObject(got, oracle, "{ret}")')
+        elif result is not None and result[0] == "fresh":
+            lines.append("r.staticFresh(got, oracle)")
+        elif ret == "enum::Error":
+            lines.append(f"r.staticValue(got.value, oracle, weak = true)")
+        else:
+            lines.append(f"r.staticValue(got, oracle, weak = {'true' if verdict.weak else 'false'})")
+        return ExerciseRow("C", [helper], site, verdict, f"{site.cls}.{site.method}", lines)
+
+    def pair_row(self, helper: str, site: Site, verdict: Verdict, prop: dict, receiver: str) -> ExerciseRow:
+        setter = self.tree.function(site.cls, str(prop["setter"]), static=False)
+        getter = self.tree.function(site.cls, str(prop["getter"]), static=False)
+        if setter is None or getter is None:
+            raise LiteralError(f"no Kotlin setter/getter for {site.cls}.{prop['name']}")
+        ptype = setter.params[0][1]
+        setter_method = None
+        for owner in self.rules.chain(site.cls):
+            if str(prop["setter"]) in self.rules.api[owner].methods:
+                setter_method = self.rules.api[owner].methods[str(prop["setter"])][0]
+                break
+        godot_type = setter_method.argument_types[0] if setter_method else ""
+        ctx = RowContext(self)
+        override = getattr(self.policy, "PAIR_OVERRIDES", {}).get((site.cls, str(prop["name"])))
+        chosen = None
+        if override is not None and override[0] is not None:
+            chosen = self.literal(parse_literal(override[0]), ptype, ctx)
+        else:
+            a, b = self.pair_candidates(ptype, godot_type, ctx)
+        lines = [f"val o = {self.construct(receiver)}"]
+        lines += ctx.lines
+        lines.append(f"val before = r.track(o.{getter.name}())")
+        if chosen is not None:
+            lines.append(f"val v: {ptype} = {chosen} // PAIR_OVERRIDES")
+        else:
+            lines.append(f"val v = r.pick(before, {a}, {b})")
+        lines.append(f"o.{setter.name}(v)")
+        lines.append(
+            f'r.pair(v, before, r.track(o.{getter.name}()), r.track(o.get("{prop["name"]}")))'
+        )
+        label = f"{site.cls}.{prop['name']}" + (f" on {receiver}" if receiver != site.cls else "")
+        return ExerciseRow("A", [helper], site, verdict, label, lines)
+
+
+API_PACKAGE_PREFIX = "net.multigesture.kanama.api."
+
+
+def render_rows(inv: Inventory, policy=policy_module) -> tuple[str, list[str], list[ExerciseRow]]:
+    gen = RowGenerator(inv, policy)
+    rows = gen.rows()
+    counts = collections.Counter(r.case for r in inv.rows.values())
+    out = [
+        "// GENERATED by scripts/generate_api_exercise.py --report. DO NOT EDIT BY HAND: --check fails on any",
+        "// difference. The API exercise rows (docs/reference/generated/api-exercise.md): compiled only into a",
+        "// -PkanamaApiExercise=true (desktop/Android) or -PkanamaIosSelfTest=true (iOS) build, run by",
+        "// ApiExerciseRunner. One function per row, straight-line code.",
+        "@file:Suppress(\"UNUSED_VARIABLE\", \"RedundantSuppression\")",
+        "",
+        "package net.multigesture.kanama.exercise",
+        "",
+        "import net.multigesture.kanama.api.*",
+        "import net.multigesture.kanama.types.*",
+        "",
+        "internal object ApiExerciseRows {",
+        f"  /** Referenced helpers the inventory excludes (case E): reported, never run. */",
+        f"  const val EXCLUDED: Int = {counts['E']}",
+        "",
+        f"  /** Rows in this file: {sum(1 for r in rows if r.case == 'C')} static (C), {sum(1 for r in rows if r.case == 'A')} property pair (A). */",
+        f"  const val ROWS: Int = {len(rows)}",
+        "",
+    ]
+    for case, title in (("C", "static"), ("A", "pairs")):
+        out.append(f"  fun run{title[0].upper()}{title[1:]}(r: ApiExerciseRunner) {{")
+        for index, row in enumerate(r for r in rows if r.case == case):
+            out.append(f"    {case.lower()}{index:03d}(r)")
+        out.append("  }")
+        out.append("")
+    for case in "CA":
+        for index, row in enumerate(r for r in rows if r.case == case):
+            out.append(f"  // {row.verdict.reason}" + (f"; weak: {row.verdict.weak}" if row.verdict.weak else ""))
+            out.append(f"  private fun {case.lower()}{index:03d}(r: ApiExerciseRunner) {{")
+            out.append(f'    r.begin(\'{case}\', "{" ".join(row.helpers)}", "{row.label}")')
+            out.append("    try {")
+            out += [f"      {line}" for line in row.body]
+            out.append("    } catch (t: Throwable) {")
+            out.append("      r.threw(t)")
+            out.append("    }")
+            out.append("    r.end()")
+            out.append("  }")
+            out.append("")
+    out[-1:] = ["}"]
+    return "\n".join(out) + "\n", gen.failures, rows
+
+
+EXERCISE_PACKAGE_PATH = "net/multigesture/kanama/exercise/"
+
+
+def check_jars(jars: list[Path]) -> int:
+    """The rows are a Kanama test hook (-PkanamaApiExercise=true): no shipped or installed jar has one."""
+    import zipfile
+
+    failures = []
+    for jar in jars:
+        if not jar.is_file():
+            failures.append(f"{jar}: no such jar")
+            continue
+        with zipfile.ZipFile(jar) as archive:
+            # Files only: an incremental build can leave the package's (empty) directory entry behind.
+            found = [n for n in archive.namelist() if n.startswith(EXERCISE_PACKAGE_PATH) and not n.endswith("/")]
+        if found:
+            failures.append(
+                f"{jar} carries {len(found)} API exercise class(es) ({found[0]}, ...): it was built with "
+                "-PkanamaApiExercise=true, which is for the smokes only"
+            )
+    for failure in failures:
+        print(f"{TAG} FAIL {failure}", file=sys.stderr)
+    if failures:
+        return 1
+    print(f"{TAG} PASS no API exercise class in {', '.join(str(j) for j in jars)}")
+    return 0
+
+
+def row_summary(rows: list[ExerciseRow]) -> str:
+    c = [r for r in rows if r.case == "C"]
+    a = [r for r in rows if r.case == "A"]
+    return (
+        f"{len(c)} static rows ({sum(1 for r in c if r.verdict.weak)} weak), {len(a)} property-pair rows "
+        f"covering {sum(len(r.helpers) for r in a)} helper rows"
+    )
+
+
 # ---- main --------------------------------------------------------------------------------------------------
 
 
@@ -852,7 +1520,16 @@ def main() -> int:
     mode.add_argument("--report", action="store_true", help=f"write {REPORT_PATH.relative_to(ROOT)}")
     mode.add_argument("--check", action="store_true", help="fail on drift, a stale policy entry or an unclassified helper")
     mode.add_argument("--write-fixture", action="store_true", help="rewrite the fixture's expected output")
+    mode.add_argument(
+        "--check-jar",
+        nargs="+",
+        metavar="JAR",
+        help="fail when a jar (a published or installed kanama.jar) carries an exercise class",
+    )
     args = parser.parse_args()
+
+    if args.check_jar:
+        return check_jars([Path(j) for j in args.check_jar])
 
     expected_path = FIXTURE_DIR / "rules.expected.txt"
     if args.write_fixture:
@@ -872,8 +1549,16 @@ def main() -> int:
             for failure in failures:
                 print(f"{TAG} FAIL {failure}", file=sys.stderr)
             return 1
+        rows_text, row_failures, rows = render_rows(inv)
+        if row_failures:
+            for failure in row_failures:
+                print(f"{TAG} FAIL {failure}", file=sys.stderr)
+            return 1
         REPORT_PATH.write_text(text, encoding="utf-8")
+        ROWS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        ROWS_PATH.write_text(rows_text, encoding="utf-8")
         print(f"{TAG} wrote {REPORT_PATH.relative_to(ROOT)}: {len(inv.rows)} helpers {summary}")
+        print(f"{TAG} wrote {ROWS_PATH.relative_to(ROOT)}: {row_summary(rows)}")
         return 0
 
     fixture = "\n".join(fixture_lines()) + "\n"
@@ -887,11 +1572,21 @@ def main() -> int:
             f"{REPORT_PATH.relative_to(ROOT)} is stale: regenerate with "
             "`python3 scripts/generate_api_exercise.py --report` and review the diff"
         )
+    rows_text, row_failures, rows = render_rows(inv)
+    failures += row_failures
+    if not ROWS_PATH.is_file() or ROWS_PATH.read_text(encoding="utf-8") != rows_text:
+        failures.append(
+            f"{ROWS_PATH.relative_to(ROOT)} is stale or hand-edited: regenerate with "
+            "`python3 scripts/generate_api_exercise.py --report` and review the diff"
+        )
     if failures:
         for failure in failures:
             print(f"{TAG} FAIL {failure}", file=sys.stderr)
         return 1
-    print(f"{TAG} PASS {len(inv.rows)} referenced helpers classified ({summary}); report and fixture current")
+    print(
+        f"{TAG} PASS {len(inv.rows)} referenced helpers classified ({summary}); report, fixture and rows current "
+        f"({row_summary(rows)})"
+    )
     return 0
 
 

@@ -34,7 +34,10 @@ case "$UNAME_S" in
     ;;
 esac
 
-"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
+# The example addon's kanama.jar carries the generated API exercise rows (-PkanamaApiExercise=true, a
+# Kanama test hook; no publish or install task accepts the flag, so the user-shaped install in
+# local_ci's "external addon install" stage builds without it). The run is opted in further down.
+"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar -PkanamaApiExercise=true >/dev/null
 # task 138 item 23 -- the typed-signal self-test is opt-in (project setting kanama/debug/signal_self_test,
 # off for users); every Godot run below switches it on through its environment override. The setting
 # path itself (on and off) is checked separately further down.
@@ -171,6 +174,17 @@ trap exit_ownership EXIT
 printf '[kanama]\n\ndebug/ownership_self_test=true\n' >"$OWNERSHIP_OVERRIDE"
 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://ownership_self_test.tscn --verbose >"$OWNERSHIP_LOG" 2>&1
 rm -f "$OWNERSHIP_OVERRIDE"
+# The generated API exercise (exercise/ApiExercise.generated.kt, scripts/generate_api_exercise.py): one
+# row per ObjectCalls helper with a static or property-pair row, each asserting a value a silent no-op
+# cannot produce, on the first frame of a scene of its own, opted in through its project setting (as an
+# Android build is). Own log, appended to the main one; the scratch directory it writes is removed again.
+API_EXERCISE_LOG="${LOG_FILE}.api_exercise"
+API_EXERCISE_OVERRIDE="$PROJECT_DIR/override.cfg"
+trap 'rm -f "$OWNED_RELEASE_OVERRIDE" "$SIGNAL_SETTING_OVERRIDE" "$OWNERSHIP_OVERRIDE" "$API_EXERCISE_OVERRIDE"' EXIT
+printf '[kanama]\n\ndebug/api_exercise=true\n' >"$API_EXERCISE_OVERRIDE"
+"$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://api_exercise_smoke.tscn --quit --verbose >"$API_EXERCISE_LOG" 2>&1
+rm -f "$API_EXERCISE_OVERRIDE"
+cat "$API_EXERCISE_LOG" >>"$LOG_FILE"
 # task 138 item 6 -- a @RegisterClass method returning a fresh owned Resource, called typed from the
 # main thread and from a GDScript Thread, and through Object.call, with a collection every frame
 # (KANAMA_GC_STRESS=1): Godot gets a reference of its own, so the wrapper's release never frees what
@@ -451,6 +465,17 @@ if ! grep -Eq "\[kanama\] SIGNAL SELFTEST: [1-9][0-9]* passed, 0 failed" "$SIGNA
 fi
 if grep -q "SIGNAL SELFTEST" "$SIGNAL_SETTING_OFF_LOG"; then
   smoke_fail "the self-test ran without the setting or the environment override" "$SIGNAL_SETTING_OFF_LOG"
+fi
+# The API exercise: a pass line with no failed row, no FAIL line, nothing leaked by its own run, and no
+# exercise in a run that did not ask for one (the setting-off log above: users pay nothing).
+check "\[kanama\] API EXERCISE: [1-9][0-9]* passed, 0 failed, [0-9]+ weak, [0-9]+ reach, [0-9]+ excluded in [0-9]+ ms"
+check_absent "API EXERCISE FAIL"
+if grep -Eq "Leaked instance|ObjectDB instances leaked|Resources still in use at exit|RID allocations .* were leaked" "$API_EXERCISE_LOG"; then
+  grep -E "Leaked instance|leaked|still in use" "$API_EXERCISE_LOG" >&2
+  smoke_fail "the API exercise run leaked" "$API_EXERCISE_LOG"
+fi
+if grep -q "API EXERCISE" "$SIGNAL_SETTING_OFF_LOG"; then
+  smoke_fail "the API exercise ran without the setting or the environment override" "$SIGNAL_SETTING_OFF_LOG"
 fi
 # task 132 -- the GC fallback release: 10,000 dropped owned Resources are gone again after GC +
 # drain (object count back to the baseline), and a getter's +1 that was closed and then collected
