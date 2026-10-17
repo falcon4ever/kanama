@@ -31,6 +31,18 @@ const FORCED_RESTART_AT_MOBS = 4;
 // at most 250 px/s: 0.62 s. A hit sooner than this is an instant-kill bug; the margin absorbs the
 // physics step and the poll that observes the hit.
 const EARLIEST_HIT_SECONDS = 0.4;
+// How long round 2 keeps playing, in game seconds after its first spawn, for mobs to fly off screen
+// and free themselves (Mob._on_VisibilityNotifier2D_screen_exited -> queue_free) before the driver
+// ends it, unless two have already. A mob crosses the 480x720 screen in 2-7 s at 150-250 px/s
+// (slowing under its damping); 60 local runs saw round 2's first exit at most 4.4 s after its first
+// spawn. mobsFreedOffScreen requires one such free: on the Linux CI runner's Firefox screen_exited
+// never fires (task 71) and the quarantined cell fails exactly that check, while new_game's
+// queue_free still frees every mob (mobsSpawnAndFree).
+const SCREEN_EXIT_WAIT_SECONDS = 12;
+// KANAMA_WEB_DODGE_NO_SCREEN_EXIT=1 reproduces that host anywhere: the probe swallows every
+// Mob._on_VisibilityNotifier2D_screen_exited dispatch (still counting it), so no mob frees itself off
+// screen. The run must go red on mobsFreedOffScreen and on nothing else.
+const NO_SCREEN_EXIT = process.env.KANAMA_WEB_DODGE_NO_SCREEN_EXIT === "1";
 const START = Date.now();
 const trace = (msg) => {
   if (DEBUG) process.stderr.write(`[dodge ${((Date.now() - START) / 1000).toFixed(1)}s] ${msg}\n`);
@@ -48,7 +60,11 @@ async function snapshot(evaluate) {
         const entry = Object.entries(bridge.match3ReadyByClass ?? {}).find(([n]) => n.endsWith(suffix));
         return entry?.[1] ?? 0;
       };
-  return {
+      const liveCount = (suffix) => {
+        const entry = Object.entries(bridge.liveScriptsByClass ?? {}).find(([n]) => n.endsWith(suffix));
+        return entry?.[1] ?? 0;
+      };
+      return {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? 0,
         mainHandle: bridge.dodgeMainHandle,
@@ -58,6 +74,13 @@ async function snapshot(evaluate) {
         playerReady: classCount(".Player"),
         hudReady: classCount(".HUD"),
         mobReady: classCount(".Mob"),
+        // Mob scripts freed so far: readied minus live. liveScriptsByClass drops when the bridge
+        // tears a freed script down (its _exit_tree free), whatever freed the node -- its own
+        // screen_exited queue_free or new_game's call_group("mobs", "queue_free").
+        mobFreed: classCount(".Mob") - liveCount(".Mob"),
+        mobLive: liveCount(".Mob"),
+        // Mob._on_VisibilityNotifier2D_screen_exited dispatches seen (installProbe).
+        mobScreenExits: bridge.__kanamaDodgeProbe?.screenExits ?? 0,
         mobInstantiations: bridge.match3PackedSceneInstantiations,
         mobAddChildCommands: bridge.match3AddChildCommands,
         // Every mob spawn and Main.game_over dispatch so far, with its game time (installProbe).
@@ -165,13 +188,22 @@ async function callMain(evaluate, id) {
 // bridge methods the page already calls through the bridge object (Kotlin's instantiate goes
 // through `KanamaWebBridge.immediatePackedSceneInstantiate`, every registered-method dispatch
 // through `recordExercisedDispatch`), and changes nothing else. `driving` marks the driver's own
-// game_over call.
-async function installProbe(evaluate, gameOverId) {
+// game_over call. It also counts the mobs' screen_exited dispatches (the Mob proxy calls
+// `KanamaWebBridge.callNoArgs(handle, <screen_exited id>)`), and under NO_SCREEN_EXIT swallows them.
+async function installProbe(evaluate, gameOverId, screenExitId) {
   return evaluate(`(() => {
     const bridge = globalThis.KanamaWebBridge;
     if (bridge.__kanamaDodgeProbe) return true;
-    const probe = { events: [], driving: false };
+    const probe = { events: [], driving: false, screenExits: 0 };
     bridge.__kanamaDodgeProbe = probe;
+    const callNoArgs = bridge.callNoArgs;
+    bridge.callNoArgs = function (handle, methodId) {
+      if (methodId === ${screenExitId} && String(this.scriptNameByHandle?.[handle] ?? "").endsWith(".Mob")) {
+        probe.screenExits += 1;
+        if (${NO_SCREEN_EXIT}) return 0;
+      }
+      return callNoArgs.call(this, handle, methodId);
+    };
     const recordExercisedDispatch = bridge.recordExercisedDispatch;
     bridge.recordExercisedDispatch = function (owner, callback, member) {
       if (callback === "registered_function" && member === "method#${gameOverId}" && String(this.scriptNameByHandle?.[owner] ?? "").endsWith(".Main")) {
@@ -201,9 +233,8 @@ async function callTeardown(evaluate, exportDir) {
 // Polls the snapshot until `predicate` holds or the window elapses, tracking the
 // running peak and returning { last, peak }. Robust to the page briefly returning null.
 async function observe(take, seedPeak, windowMs, deadline, predicate, onSample = null) {
-  const peak = { mobFrees: 0, ...seedPeak };
+  const peak = { ...seedPeak };
   let last = null;
-  let prevLive = seedPeak.maxLiveHandles;
   const until = Math.min(deadline, Date.now() + windowMs);
   while (Date.now() < until) {
     const snap = await take();
@@ -213,21 +244,13 @@ async function observe(take, seedPeak, windowMs, deadline, predicate, onSample =
       peak.maxLiveHandles = Math.max(peak.maxLiveHandles, snap.maxLiveHandles);
       peak.crossings = Math.max(peak.crossings, snap.crossings);
       peak.callbackErrors = Math.max(peak.callbackErrors, snap.callbackErrors);
-      // A drop in the live-handle count means a mob (and its child nodes) was freed —
-      // dodge mobs queue_free themselves when a VisibleOnScreenNotifier2D reports they
-      // left the screen. Counting drops proves the free/release path works during play.
-      // It UNDERCOUNTS when a spawn lands in the same sample as a free, which is why the
-      // window below is a generous ceiling rather than a fixed duration.
-      if (snap.liveHandles < prevLive) peak.mobFrees += 1;
-      prevLive = snap.liveHandles;
-      // A round restart queue_frees the whole mobs group: re-baseline so those drops are
-      // not counted as off-screen frees.
-      if (onSample && (await onSample(snap, peak))) {
-        await delay(300);
-        prevLive = (await take())?.liveHandles ?? prevLive;
-      }
+      // Mob frees are counted from the bridge's script teardown (snapshot mobFreed), not from
+      // drops in the live-handle count: a drop is also the browser collecting a mob's dropped
+      // SpriteFrames wrapper, and on the Linux CI runner's Firefox, where no mob ever left the
+      // screen, every "free" the old drop counter saw was one of those.
+      if (onSample) await onSample(snap, peak);
       last = snap;
-      trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} frees=${peak.mobFrees} crossings=${snap.crossings} errs=${snap.callbackErrors} canvas=${snap.canvasW}x${snap.canvasH} frames=${snap.frames} sim=${snap.simSeconds}s mobs@ ${snap.mobPositions}`);
+      trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} mobLive=${snap.mobLive} mobFreed=${snap.mobFreed} screenExits=${snap.mobScreenExits} crossings=${snap.crossings} errs=${snap.callbackErrors} canvas=${snap.canvasW}x${snap.canvasH} frames=${snap.frames} sim=${snap.simSeconds}s mobs@ ${snap.mobPositions}`);
       if (predicate && predicate(snap, peak)) break;
     }
     await delay(150);
@@ -242,33 +265,44 @@ async function observe(take, seedPeak, windowMs, deadline, predicate, onSample =
 // kind's minimum, until every kind is back at or below `reference` (a healthy round: within a poll or
 // two), the next round's first mob spawns (after `startMobs`), or `capMs` elapses. Without a
 // reference (round 1's baseline) it samples the whole window. A kind missing from a sample counts as
-// 0 there. It returns the probe log of the last poll, the one that saw a new mob included.
+// 0 there. Settling also needs every mob script freed (mobLive 0): on a slow host the queue_free
+// lands a frame or more after the press. It returns the probe log of the last poll, the one that saw
+// a new mob included, and the old round's mob frees and live mobs as of that last poll.
 async function sampleBetweenRounds(take, reference, deadline, capMs, startMobs) {
   const byKind = {};
   let samples = 0;
   let settled = false;
   let detail = null;
   let probe = null;
+  let mobFreed = null;
+  let mobLive = null;
   const until = Math.min(deadline, Date.now() + capMs);
   while (Date.now() < until) {
     const snap = await take();
     if (snap?.liveByKind) {
       probe = snap.probe ?? probe;
-      if (snap.mobInstantiations !== startMobs) break; // the next round's first mob
+      if (snap.mobInstantiations !== startMobs) {
+        // The next round's first mob: the old round's frees still count, its own mob(s) do not.
+        mobFreed = snap.mobFreed;
+        mobLive = snap.mobLive - (snap.mobInstantiations - startMobs);
+        break;
+      }
       for (const kind of new Set([...Object.keys(byKind), ...Object.keys(snap.liveByKind)])) {
         const previous = kind in byKind ? byKind[kind] : samples > 0 ? 0 : Number.POSITIVE_INFINITY;
         byKind[kind] = Math.min(previous, snap.liveByKind[kind] ?? 0);
       }
       samples += 1;
       detail = snap.liveDetail;
-      if (reference && Object.entries(byKind).every(([kind, count]) => count <= (reference[kind] ?? 0))) {
+      mobFreed = snap.mobFreed;
+      mobLive = snap.mobLive;
+      if (reference && mobLive === 0 && Object.entries(byKind).every(([kind, count]) => count <= (reference[kind] ?? 0))) {
         settled = true;
         break;
       }
     }
     await delay(150);
   }
-  return { byKind: samples > 0 ? byKind : null, samples, settled, probe, detail };
+  return { byKind: samples > 0 ? byKind : null, samples, settled, probe, detail, mobFreed, mobLive };
 }
 
 export async function runDodge({ url, evaluate, navigate, deadline, exportDir }) {
@@ -276,6 +310,8 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   const mainIds = resolveMainIds(exportDir);
   const startPressedId = resolveMethodId(exportDir, "dodge.HUD", "_on_StartButton_pressed");
   if (startPressedId === null) throw new Error("dodge.HUD._on_StartButton_pressed is not in the export manifest");
+  const screenExitId = resolveMethodId(exportDir, "dodge.Mob", "_on_VisibilityNotifier2D_screen_exited");
+  if (screenExitId === null) throw new Error("dodge.Mob._on_VisibilityNotifier2D_screen_exited is not in the export manifest");
   const take = () => snapshot(evaluate);
   const takeCollected = () => snapshot(collecting(evaluate));
   trace("navigate");
@@ -314,10 +350,11 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   // by the mobs of the round it lands in.
   //
   // One evaluate calls Main.game_over when asked (the round is still spawning; marked as the
-  // driver's in the probe) and presses Start, and returns the probe log, the mobs spawned so far and
-  // the game time: no mob spawns between game_over and the press.
+  // driver's in the probe) and presses Start, and returns the probe log, the mobs spawned so far, the
+  // mob scripts freed before the press and the game time: no mob spawns between game_over and the
+  // press, and new_game's queue_free frees the mobs only at the end of the frame.
   const seedPeak = { mobInstantiations: 0, mobAddChildCommands: 0, maxLiveHandles: ready.liveHandles, crossings: ready.crossings, callbackErrors: 0 };
-  await installProbe(evaluate, mainIds.game_over);
+  await installProbe(evaluate, mainIds.game_over, screenExitId);
   const pressStart = (gameOverFirst) =>
     evaluate(`(() => {
       const bridge = globalThis.KanamaWebBridge;
@@ -327,6 +364,8 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
         ([handle, name]) => String(name).endsWith(".HUD") && bridge.api.kanamaWebIsLive(Number(handle)) === 1,
       );
       if (!entry) throw new Error("dodge: no live HUD script handle to press Start on");
+      const mobCount = (table) => Object.entries(table ?? {}).find(([name]) => name.endsWith(".Mob"))?.[1] ?? 0;
+      const mobFreed = mobCount(bridge.match3ReadyByClass) - mobCount(bridge.liveScriptsByClass);
       if (${gameOverFirst ? "true" : "false"}) {
         probe.driving = true;
         try {
@@ -336,7 +375,7 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
         }
       }
       bridge.callNoArgs(Number(entry[0]), ${startPressedId});
-      return { probe: probe.events.slice(), mobs: bridge.match3PackedSceneInstantiations, sim: bridge.simSeconds ?? 0 };
+      return { probe: probe.events.slice(), mobs: bridge.match3PackedSceneInstantiations, mobFreed, sim: bridge.simSeconds ?? 0 };
     })()`);
 
   // Dodge is a real game: the player stands still at the start position and a mob can hit it
@@ -361,7 +400,12 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   let roundRestarts = 0;
   let roundResumes = 0;
   const hits = []; // { round, mobs, sinceFirstSpawn } at each game over the game itself reported
-  const rounds = []; // finished rounds: { index, mobs, baseline, trough, samples, settled }
+  // Finished rounds: { index, mobs, baseline, trough, samples, settled, screenExitFrees, roundEndFrees, mobLive }.
+  const rounds = [];
+  // Mob frees are attributed per round from the bridge's count of mob scripts freed: those before the
+  // round's end press flew off screen (screen exit); those between the press and the end of the
+  // trough are new_game's queue_free of the mobs group (round end).
+  let accountedFrees = 0;
   let round = null;
   let previousRound = null;
   let pressSim = null;
@@ -403,15 +447,29 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
     const between = await sampleBetweenRounds(takeCollected, reference, deadline, capMs, press.mobs);
     round.baseline = between.byKind;
     consume(between.probe);
-    return { ...between, oldMobs: previousRound ? press.mobs - previousRound.startMobs : 0 };
+    const freedAfter = between.mobFreed ?? press.mobFreed;
+    const screenExitFrees = press.mobFreed - accountedFrees;
+    const roundEndFrees = freedAfter - press.mobFreed;
+    accountedFrees = freedAfter;
+    return { ...between, oldMobs: previousRound ? press.mobs - previousRound.startMobs : 0, screenExitFrees, roundEndFrees };
   };
   // Ends the current round the way a player's next game starts (game_over unless the player's hit
   // already ran it, then Start: new_game queue_frees the whole mobs group).
   const endRound = async (label) => {
     const finished = round;
     const between = await startRound(finished.index + 1, finished.spawning, finished.baseline, 4_000);
-    rounds.push({ index: finished.index, mobs: between.oldMobs, baseline: finished.baseline, trough: between.byKind, samples: between.samples, settled: between.settled });
-    trace(`${label}: round ${finished.index} ended after ${between.oldMobs} mob(s); trough (${between.samples} samples, settled=${between.settled}): ${JSON.stringify(between.byKind)}${between.detail ? ` detail ${between.detail}` : ""}`);
+    rounds.push({
+      index: finished.index,
+      mobs: between.oldMobs,
+      baseline: finished.baseline,
+      trough: between.byKind,
+      samples: between.samples,
+      settled: between.settled,
+      screenExitFrees: between.screenExitFrees,
+      roundEndFrees: between.roundEndFrees,
+      mobLive: between.mobLive,
+    });
+    trace(`${label}: round ${finished.index} ended after ${between.oldMobs} mob(s), freed ${between.screenExitFrees} off screen + ${between.roundEndFrees} by new_game, ${between.mobLive} still live; trough (${between.samples} samples, settled=${between.settled}): ${JSON.stringify(between.byKind)}${between.detail ? ` detail ${between.detail}` : ""}`);
   };
 
   trace("press Start (new_game)");
@@ -441,20 +499,27 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   };
   // Play long enough for several mobs to spawn AND for the earliest ones to fly across and leave
   // the screen (each mob queue_frees itself on VisibleOnScreenNotifier2D screen_exited). The window
-  // is a CEILING, not a duration: the predicate ends it as soon as round 2 has spawned 4 mobs and two
-  // mobs have been freed, which on a workstation is a few seconds. It is generous because a
-  // software-GL host simulates less game time per wall-clock second.
+  // is a CEILING, not a duration: the predicate ends it once round 2 has spawned 4 mobs and two mobs
+  // have freed themselves off screen, which on a workstation is a few seconds, or SCREEN_EXIT_WAIT_SECONDS
+  // of game time after round 2's first spawn passed without that (the Linux CI runner's Firefox: the
+  // round's queue_free frees them instead). It is generous because a software-GL host simulates less
+  // game time per wall-clock second.
+  const screenExitFreesSoFar = (snap) =>
+    rounds.reduce((sum, finished) => sum + finished.screenExitFrees, 0) + Math.max(snap.mobFreed - accountedFrees, 0);
   const gameplay = await observe(
     take,
     seedPeak,
     45_000,
     deadline,
-    (snap, p) => roundRestarts > 0 && p.mobFrees >= 2 && (p.roundMobs ?? 0) >= 4,
+    (snap, p) =>
+      roundRestarts > 0 &&
+      (p.roundMobs ?? 0) >= 4 &&
+      (screenExitFreesSoFar(snap) >= 2 || (round.firstSpawnSim !== null && snap.simSeconds - round.firstSpawnSim >= SCREEN_EXIT_WAIT_SECONDS)),
     onRoundSample,
   );
   const peak = gameplay.peak;
   const atPeak = gameplay.last ?? ready;
-  trace(`gameplay: mobs=${peak.mobInstantiations} bestRound=${peak.bestRoundMobs} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} frees=${peak.mobFrees} finalLive=${atPeak.liveHandles} crossings=${peak.crossings} hits=${JSON.stringify(hits)} resumes=${roundResumes} restarts=${roundRestarts}`);
+  trace(`gameplay: mobs=${peak.mobInstantiations} bestRound=${peak.bestRoundMobs} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} screenExitFrees=${screenExitFreesSoFar(atPeak)} finalLive=${atPeak.liveHandles} crossings=${peak.crossings} hits=${JSON.stringify(hits)} resumes=${roundResumes} restarts=${roundRestarts}`);
 
   // Per-entity retention, measured PER ROUND between rounds, where dodge makes it unambiguous: after
   // game_over (no mob spawns any more) and new_game (the whole mobs group is queue_freed), and
@@ -498,6 +563,8 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   trace(`teardown: live=${settled.liveHandles} (peak=${peak.maxLiveHandles}) callbacks=${settled.callbacks} pending=${settled.pending} jobs=${settled.jobs} errs=${settled.callbackErrors}`);
 
   const protocolVersion = ready.protocol;
+  const mobScreenExitFrees = rounds.reduce((sum, finished) => sum + finished.screenExitFrees, 0);
+  const mobScreenExitSignals = settled.mobScreenExits ?? 0;
   const checks = {
     modeDodge: ready.mode === "dodge",
     sceneScriptsReady: ready.mainReady >= 1 && ready.playerReady >= 1 && ready.hudReady >= 1,
@@ -506,15 +573,22 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
     mobsAddedToTree: peak.mobAddChildCommands >= peak.mobInstantiations,
     handleGrowthDuringGameplay: peak.maxLiveHandles > ready.liveHandles,
     crossingsAdvanced: peak.crossings > ready.crossings,
-    // The spawn/free lifecycle works: mobs left the screen and released their handles
-    // (>=2 observed drops during play) and stayed bounded by the peak — no leak.
-    // Task 88: the second clause used to be `atPeak.liveHandles <= peak.maxLiveHandles`,
-    // which cannot be false (maxLiveHandles is a monotone high-water mark of
-    // liveHandles). Dropped rather than rewritten: the free path is already proven by
-    // the mobFrees count here, by the per-entity retention ratio (task 73) during play,
-    // and by liveAfterTeardown === 0 at the end. A clause that cannot fail only makes
-    // the check read stronger than it is.
-    mobsSpawnAndFree: peak.mobFrees >= 2,
+    // The spawn/free lifecycle works: EVERY mob of both rounds was freed -- off screen (its own
+    // queue_free on screen_exited) or by the round's end (new_game's queue_free of the mobs group) --
+    // and the bridge tore its script down, by the time the round's trough settled. Counted from the
+    // bridge's mob scripts (readied minus live), not from drops in the live-handle count: those are
+    // also the browser collecting a mob's dropped SpriteFrames wrapper, and the old ">= 2 drops" form
+    // passed on GC timing alone (Linux CI Firefox: 4/4 green while no mob ever left the screen, then
+    // red once the collector stayed quiet in the window). Off-screen frees are reported
+    // (mobScreenExitFrees) and required by mobsFreedOffScreen below, not here: that host never fires
+    // screen_exited (task 71), and this check must still judge its frees.
+    mobsSpawnAndFree:
+      rounds.length >= 2 &&
+      rounds.every((finished) => finished.mobs > 0 && finished.mobLive === 0 && finished.screenExitFrees + finished.roundEndFrees === finished.mobs),
+    // At least one mob flew off screen and freed itself: its VisibleOnScreenNotifier2D's screen_exited
+    // reached Mob through the bridge and the free followed. Red on the Linux CI runner's Firefox, where
+    // the signal never fires (task 71, the dodge:firefox quarantine), and under NO_SCREEN_EXIT.
+    mobsFreedOffScreen: mobScreenExitFrees >= 1 && mobScreenExitSignals >= 1,
     // Full teardown: quitting the tree drained every live handle to zero.
     fullTeardownToZero: settled.liveHandles === 0,
     // No handle kind is retained per spawned mob, measured per round at the trough between
@@ -577,6 +651,13 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
       roundResumes,
       // Game overs the game itself reported (the player was hit).
       playerHits: hits.length,
+      // Mobs freed while their round ran (flew off screen; 0 where screen_exited never fires, task 71),
+      // and by the round's end (new_game's queue_free), over both rounds; mobsSpawnAndFree needs the
+      // two to add up to every mob, mobsFreedOffScreen the first to be 1+. Signals: Mob screen_exited
+      // dispatches the page saw.
+      mobScreenExitFrees,
+      mobRoundEndFrees: rounds.reduce((sum, finished) => sum + finished.roundEndFrees, 0),
+      mobScreenExitSignals,
       // Worst per-mob handle retention, x100 so the envelope stays integer-friendly
       // (the schema requires numeric counters). 0 is healthy; 100 is one leaked
       // handle per spawn.

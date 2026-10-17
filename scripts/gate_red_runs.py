@@ -989,6 +989,12 @@ case("web/dodge_restart_selftest.mjs (early hit)", ["node", "scripts/web/dodge_r
 case("web/dodge_restart_selftest.mjs (hit across the press)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "const target = previousRound && event.sim === pressSim ? previousRound : round;", "const target = round;")],
      "round 1's hit reported in the first frame after the restart: checks red: noHitBeforeFirstMob", "dodge bills a hit Godot reports in the first frame after Start (an overlap from the old round's last physics step) to the new round: a healthy run goes red as an instant kill")
+case("web/dodge_restart_selftest.mjs (no screen exit)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "finished.screenExitFrees + finished.roundEndFrees === finished.mobs),", "finished.screenExitFrees === finished.mobs),")],
+     "no mob is ever reported off screen (Linux CI Firefox): red checks are [mobsSpawnAndFree, mobsFreedOffScreen], expected exactly [mobsFreedOffScreen]", "dodge's mobsSpawnAndFree counts only the mobs that freed themselves off screen again: a host that never fires screen_exited (the Linux CI runner's Firefox, task 71) fails it too, although new_game frees every mob")
+case("web/dodge_restart_selftest.mjs (off-screen free required)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "mobsFreedOffScreen: mobScreenExitFrees >= 1 && mobScreenExitSignals >= 1,", "mobsFreedOffScreen: true,")],
+     "no mob is ever reported off screen (Linux CI Firefox): mobsFreedOffScreen must be false", "dodge stops requiring one mob to free itself off screen: a host or build where screen_exited never fires or never frees the mob (task 71) passes")
 case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then', 'if false; then')],
      "below-floor expected exit 1", "web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that)")

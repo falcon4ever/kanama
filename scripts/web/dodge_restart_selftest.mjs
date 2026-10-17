@@ -10,7 +10,12 @@
 // judges both rounds' retention, at the trough between rounds (game_over, then Start: new_game
 // queue_frees the mobs), against that round's own baseline, with a collection forced before every
 // poll: a mob's RefCounted results (its SpriteFrames) go only when the page collects the dropped
-// wrapper. Main's method ids come from the export manifest, by name. The scenarios below pin all of it.
+// wrapper. Main's method ids come from the export manifest, by name. Every mob of both rounds must be
+// freed -- off screen (Mob's screen_exited dispatch) or by new_game's queue_free -- counted from the
+// bridge's mob scripts, not from live-handle drops (the browser collecting a mob's SpriteFrames drops
+// them too); a host that never reports a mob off screen (the Linux CI runner's Firefox, task 71) is
+// red on mobsFreedOffScreen and nothing else (at least one mob must free itself off screen). The
+// scenarios below pin all of it.
 //
 // This drives the real runDodge() against a fake bridge (no browser): `evaluate` runs the driver's own
 // snapshot/call source inside a vm context whose KanamaWebBridge is a small game simulation. Time is
@@ -28,6 +33,8 @@ const HUD_HANDLE = 3;
 const MAIN_IDS = { game_over: 21, new_game: 22, _on_MobTimer_timeout: 23, _on_ScoreTimer_timeout: 24, _on_StartTimer_timeout: 25 };
 const START_PRESSED_ID = 4;
 const TEARDOWN_ID = 9;
+const SCREEN_EXITED_ID = 7; // Mob._on_VisibilityNotifier2D_screen_exited
+const FIRST_MOB_HANDLE = 1000;
 const SCENE_NODES = 14; // handles the scene holds before any mob (the driver's baselines absorb them)
 const START_TIMER_TICKS = 4; // StartTimer, in 150 ms polls
 const SPAWN_EVERY_TICKS = 3; // MobTimer
@@ -50,6 +57,12 @@ const HUD_COROUTINE_TICKS = 6; // game over -> MessageTimer -> 1s delay -> Start
  *   hitAtRestart      the player is still hittable when Start is pressed for round 2, and a mob's
  *                     overlap from the old round's last physics step is reported in the first frame
  *                     after the press, before that frame's _process (Godot's flush_queries order).
+ *   screenExits       false: no mob is ever reported off screen (its screen_exited never dispatches,
+ *                     the Linux CI runner's Firefox); only new_game's queue_free frees mobs.
+ *   roundFreeIgnored  new_game's queue_free of the mobs group frees no mob.
+ *   roundFreeDelay    polls before new_game's queue_free lands (default 1: the end of the frame).
+ *   teardownIgnored   a freed mob's script is never torn down by the bridge (its handles go).
+ *   screenExitIgnored Mob's screen_exited dispatch reaches the bridge but frees nothing.
  */
 function makeFakeBridge({
   hitAt = () => Infinity,
@@ -59,6 +72,11 @@ function makeFakeBridge({
   leakPerMob = () => 0,
   leakPerRound = 0,
   hitAtRestart = false,
+  screenExits = true,
+  roundFreeIgnored = false,
+  roundFreeDelay = 1,
+  teardownIgnored = false,
+  screenExitIgnored = false,
 }) {
   const slots = [];
   const mint = (kind, extra = {}) => {
@@ -75,8 +93,8 @@ function makeFakeBridge({
     mobTimer: false,
     startTimer: null,
     playerHittable: false,
-    mobs: [], // { age, node, round, hitIn }
-    freeQueue: [], // mobs new_game queue_freed: released at the end of the frame (the next step)
+    mobs: [], // { age, node, handle, round, hitIn, live }
+    freeQueue: [], // { mob, in }: mobs new_game queue_freed, released `in` steps later (1: the end of the frame)
     hudCoroutine: null, // ticks until the HUD's game-over coroutine shows the Start button again
     startButton: null,
     collectRequested: false,
@@ -107,14 +125,18 @@ function makeFakeBridge({
     state.ticksSinceSpawn = 0;
     state.startTimer = START_TIMER_TICKS; // MobTimer keeps whatever state it had, as in Main.newGame
     state.playerHittable = true;
-    state.freeQueue.push(...state.mobs);
+    if (!roundFreeIgnored) state.freeQueue.push(...state.mobs.map((mob) => ({ mob, in: roundFreeDelay })));
     state.mobs = [];
     for (let index = 0; index < leakPerRound; index += 1) mint("Node");
   };
   const freeMob = (mob) => {
+    if (!mob.live) return;
+    mob.live = false;
     mob.node.live = false;
+    if (!teardownIgnored) bridge.liveScriptsByClass["dodge.Mob"] -= 1; // the bridge's _exit_tree teardown
     for (let index = 0; index < leakPerMob(mob.round); index += 1) mint("Node");
   };
+  const mobByHandle = new Map();
   const bridge = {
     mode: "dodge",
     results: { protocolVersion: 38 },
@@ -122,6 +144,7 @@ function makeFakeBridge({
     smokeHandle: SMOKE_HANDLE,
     readyCount: 4,
     match3ReadyByClass: { "dodge.Main": 1, "dodge.Player": 1, "dodge.HUD": 1, "dodge.Mob": 0 },
+    liveScriptsByClass: { "dodge.Main": 1, "dodge.Player": 1, "dodge.HUD": 1, "dodge.Mob": 0 },
     match3PackedSceneInstantiations: 0,
     match3AddChildCommands: 0,
     exercisedMembers: exercised,
@@ -143,8 +166,10 @@ function makeFakeBridge({
     callbackErrors: 0,
     processCalls: 0,
     simSeconds: 0,
+    immediateNoArgsVector2X: () => 0,
+    immediateNoArgsVector2Y: () => 0,
     api: {
-      kanamaWebIsLive: (handle) => (handle <= HUD_HANDLE && !state.torn ? 1 : 0),
+      kanamaWebIsLive: (handle) => (state.torn ? 0 : handle <= HUD_HANDLE || mobByHandle.get(handle)?.live ? 1 : 0),
       kanamaWebPendingSignalCallbackCount: () => 0,
       kanamaWebPendingCoroutineCount: () => 0,
       kanamaWebRegisteredCoroutineJobCount: () => 0,
@@ -157,6 +182,8 @@ function makeFakeBridge({
       } else if (handle === HUD_HANDLE && id === START_PRESSED_ID) {
         lookUpStartButton(); // startButton.hide(), then start_game -> Main.new_game
         newGame();
+      } else if (mobByHandle.has(handle) && id === SCREEN_EXITED_ID) {
+        if (!screenExitIgnored) freeMob(mobByHandle.get(handle)); // Mob._on_VisibilityNotifier2D_screen_exited: queue_free
       } else if (handle === SMOKE_HANDLE && id === TEARDOWN_ID) {
         state.torn = true;
         for (const slot of slots) slot.live = false;
@@ -174,8 +201,9 @@ function makeFakeBridge({
     bridge.processCalls += 1;
     bridge.simSeconds += 0.15;
     bridge.kotlinToGodotCalls += 3;
-    for (const mob of state.freeQueue) freeMob(mob);
-    state.freeQueue = [];
+    for (const entry of state.freeQueue) entry.in -= 1;
+    for (const entry of state.freeQueue.filter((candidate) => candidate.in <= 0)) freeMob(entry.mob);
+    state.freeQueue = state.freeQueue.filter((entry) => entry.in > 0);
     // A requested collection releases every RefCounted handle no wrapper can reach any more. The
     // page never collects on its own here (Firefox on a quiet page, CI's Linux runner).
     if (state.collectRequested) {
@@ -188,8 +216,12 @@ function makeFakeBridge({
       if (mob.hitIn !== null && mob.age >= mob.hitIn && state.playerHittable) hitPlayer();
       if (mob.hitIn !== null && mob.age >= mob.hitIn) mob.hitIn = null;
     }
-    for (const mob of state.mobs.filter((candidate) => candidate.age >= MOB_LIFETIME_TICKS)) freeMob(mob);
-    state.mobs = state.mobs.filter((mob) => mob.age < MOB_LIFETIME_TICKS);
+    // A mob that flew off screen: VisibleOnScreenNotifier2D.screen_exited dispatches to the Mob proxy,
+    // which calls the bridge (the driver's probe sees it there), and Mob queue_frees itself.
+    if (screenExits) {
+      for (const mob of state.mobs.filter((candidate) => candidate.age >= MOB_LIFETIME_TICKS)) bridge.callNoArgs(mob.handle, SCREEN_EXITED_ID);
+    }
+    state.mobs = state.mobs.filter((mob) => mob.live);
     if (state.hudCoroutine !== null) {
       state.hudCoroutine -= 1;
       if (state.hudCoroutine === 3) mint("SceneTreeTimer", { refCounted: true, reachable: false }); // delaySeconds(1.0)
@@ -215,8 +247,13 @@ function makeFakeBridge({
     // handle only a collection releases.
     mint("SpriteFrames", { refCounted: true, reachable: false });
     const hits = state.roundMobs === hitAt(state.round) || (!hitDisables && state.roundMobs > hitAt(state.round));
-    const mob = { age: 0, node: mint("Node"), round: state.round, hitIn: hits ? hitDelayTicks : null };
+    const handle = FIRST_MOB_HANDLE + bridge.match3PackedSceneInstantiations;
+    const mob = { age: 0, node: mint("Node"), handle, round: state.round, hitIn: hits ? hitDelayTicks : null, live: true };
     state.mobs.push(mob);
+    mobByHandle.set(handle, mob);
+    bridge.scriptNameByHandle[handle] = "dodge.Mob"; // Mob's _ready: the bridge's recordReady
+    bridge.match3ReadyByClass["dodge.Mob"] += 1;
+    bridge.liveScriptsByClass["dodge.Mob"] += 1;
     bridge.immediatePackedSceneInstantiate(); // Main._on_MobTimer_timeout: mob_scene.instantiate()
     bridge.match3AddChildCommands += 1;
     bridge.maxLiveBrowserHandles = Math.max(bridge.maxLiveBrowserHandles, bridge.liveBrowserHandleCount);
@@ -236,6 +273,7 @@ async function runScenario(options, { manifestMain = MAIN_IDS } = {}) {
       scripts: [
         { className: "dodge.SmokeQuit", methods: [{ name: "smoke_teardown", id: TEARDOWN_ID }] },
         { className: "dodge.HUD", methods: [{ name: "_on_StartButton_pressed", id: START_PRESSED_ID }] },
+        { className: "dodge.Mob", methods: [{ name: "_on_VisibilityNotifier2D_screen_exited", id: SCREEN_EXITED_ID }] },
         { className: "dodge.Main", methods: Object.entries(manifestMain).map(([name, id]) => ({ name, id })) },
       ],
     }),
@@ -282,7 +320,9 @@ const expect = (condition, message) => {
 const redChecks = (result) => Object.entries(result.checks).filter(([, ok]) => ok !== true).map(([name]) => name);
 
 // [label, fake options, expected: { red: [checks] (empty: all green), restarts (default 1: round 1 ends
-// after 4 mobs), resumes, hits, retentionX100 (green; default 0) }]
+// after 4 mobs), resumes, hits, retentionX100 (green; default 0), screenExitFrees (green; default: at
+// least 2, every mob freed off screen or by the round's end either way; also checked for an exact
+// red set), exact (red must be exactly `red`) }]
 const round1 = (value) => (round) => (round === 1 ? value : Infinity);
 const round2 = (value) => (round) => (round === 2 ? value : Infinity);
 const scenarios = [
@@ -302,6 +342,12 @@ const scenarios = [
   ["one handle leaked per mob of round 2 only", { leakPerMob: (round) => (round === 2 ? 1 : 0) }, { red: ["noPerMobHandleRetention"], resumes: 0, hits: 0 }],
   ["one handle kept per round, not per mob", { leakPerRound: 1 }, { red: [], resumes: 0, hits: 0, retentionX100: 25 }],
   ["round 1's hit reported in the first frame after the restart", { hitAtRestart: true }, { red: [], resumes: 0, hits: 1 }],
+  ["no mob is ever reported off screen (Linux CI Firefox)", { screenExits: false }, { red: ["mobsFreedOffScreen"], exact: true, resumes: 0, hits: 0, screenExitFrees: 0 }],
+  ["screen_exited reaches the bridge, the mob does not free", { screenExitIgnored: true }, { red: ["mobsFreedOffScreen"], exact: true, screenExitFrees: 0 }],
+  ["the round's queue_free lands two polls after the press (slow host)", { roundFreeDelay: 2 }, { red: [], resumes: 0, hits: 0 }],
+  ["new_game's queue_free frees no mob", { roundFreeIgnored: true }, { red: ["mobsSpawnAndFree"] }],
+  ["new_game's queue_free frees no mob, none reported off screen", { roundFreeIgnored: true, screenExits: false }, { red: ["mobsSpawnAndFree"] }],
+  ["a freed mob's script is never torn down", { teardownIgnored: true }, { red: ["mobsSpawnAndFree"] }],
 ];
 
 for (const [label, options, expected] of scenarios) {
@@ -321,10 +367,24 @@ for (const [label, options, expected] of scenarios) {
   } else {
     expect(red.length > 0, `${label}: expected a red check, but every check is green (the run would pass)`);
     for (const name of expected.red) expect(red.includes(name), `${label}: ${name} must be false (red: [${red.join(", ")}])`);
+    if (expected.exact) {
+      expect(
+        red.length === expected.red.length,
+        `${label}: red checks are [${red.join(", ")}], expected exactly [${expected.red.join(", ")}]`,
+      );
+    }
+  }
+  if (expected.red.length === 0 || expected.exact) {
+    if (expected.screenExitFrees === undefined) expect(c.mobScreenExitFrees >= 2, `${label}: mobScreenExitFrees is ${c.mobScreenExitFrees}, expected 2+`);
+    else expect(c.mobScreenExitFrees === expected.screenExitFrees, `${label}: mobScreenExitFrees is ${c.mobScreenExitFrees}, expected ${expected.screenExitFrees}`);
+    expect(
+      c.mobScreenExitFrees + c.mobRoundEndFrees === c.mobInstantiations,
+      `${label}: ${c.mobScreenExitFrees} mob(s) freed off screen + ${c.mobRoundEndFrees} by the round's end, expected all ${c.mobInstantiations}`,
+    );
   }
   console.log(
     `  ${label}: restarts=${c.roundRestarts} resumes=${c.roundResumes} hits=${c.playerHits} bestRound=${c.bestRoundMobInstantiations} ` +
-      `cumulative=${c.mobInstantiations} retentionX100=${c.worstHandleRetentionPerMobX100} red=[${red.join(",")}]`,
+      `cumulative=${c.mobInstantiations} freed=${c.mobScreenExitFrees}+${c.mobRoundEndFrees} retentionX100=${c.worstHandleRetentionPerMobX100} red=[${red.join(",")}]`,
   );
 }
 
@@ -364,5 +424,6 @@ if (failures.length > 0) {
 }
 console.log(
   "dodge_restart_selftest: OK (early hits resume to 4 mobs; every run restarts once and judges both rounds; " +
-    "no resume, a second hit, a hit before the first mob or too soon after it, and a per-mob leak in either round are red)",
+    "no resume, a second hit, a hit before the first mob or too soon after it, a per-mob leak in either round, a mob left unfreed and " +
+    "a run where no mob frees itself off screen are red; a host that never reports one is red on mobsFreedOffScreen alone)",
 );
