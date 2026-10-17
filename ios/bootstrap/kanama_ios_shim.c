@@ -4315,8 +4315,10 @@ static void kanama_ios_blob_encode_dictionary(KanamaIosBlob *b, uint64_t *dict_s
 // The any-key twin of kanama_ios_blob_encode_dictionary, for a typed Map<K, V> @Export set (desktop:
 // BuiltinTypes.readVariantDictionaryAny): [int32 count]([key record][value record])*, each a
 // [int32 variant_type][int32 byteLen][payload] record, so int, enum and value-type keys reach
-// Kotlin as themselves. Kotlin decodes it with ObjectCalls.decodeDictionaryAnyBlob.
-static void kanama_ios_blob_encode_dictionary_any(KanamaIosBlob *b, uint64_t *dict_storage) {
+// Kotlin as themselves. Kotlin decodes it with ObjectCalls.decodeDictionaryAnyBlob. Returns 0 (and
+// reports) when the Dictionary accessors are unresolved: the caller must not deliver the empty
+// blob, which would clear the property.
+static int kanama_ios_blob_encode_dictionary_any(KanamaIosBlob *b, uint64_t *dict_storage) {
     int64_t count_at = b->len;
     kanama_ios_blob_put_i32(b, 0);
     kanama_ios_cache_array_methods();
@@ -4324,7 +4326,7 @@ static void kanama_ios_blob_encode_dictionary_any(KanamaIosBlob *b, uint64_t *di
     if (g_dictionary_keys_method == NULL || g_array_size_method == NULL || g_array_get_method == NULL ||
         g_dictionary_keyed_getter == NULL || g_array_destructor == NULL || g_variant_destroy == NULL) {
         kanama_ios_fault(__func__, "api-unresolved", "Dictionary keys/getter");
-        return;
+        return 0;
     }
     uint64_t keys = 0;
     g_dictionary_keys_method(dict_storage, NULL, &keys, 0);
@@ -4337,9 +4339,16 @@ static void kanama_ios_blob_encode_dictionary_any(KanamaIosBlob *b, uint64_t *di
         g_array_get_method(&keys, get_args, key_variant, 1);
         uint8_t value[24];
         memset(value, 0, sizeof(value));
-        g_dictionary_keyed_getter((GDExtensionConstTypePtr)dict_storage,
-                                  (GDExtensionConstTypePtr)key_variant,
-                                  (GDExtensionUninitializedTypePtr)value);
+        // The key came from keys(), so it is present; keep the checker gate anyway, as
+        // kanama_ios_blob_encode_dictionary does: the ptr keyed getter dereferences a missing key
+        // (see kanama_ios_raycast_dict_get). A key it refuses encodes a nil value.
+        if (g_dictionary_keyed_checker == NULL ||
+            g_dictionary_keyed_checker(
+                (GDExtensionConstVariantPtr)dict_storage, (GDExtensionConstVariantPtr)key_variant)) {
+            g_dictionary_keyed_getter((GDExtensionConstTypePtr)dict_storage,
+                                      (GDExtensionConstTypePtr)key_variant,
+                                      (GDExtensionUninitializedTypePtr)value);
+        }
         kanama_ios_blob_encode_variant(b, key_variant, 0);
         kanama_ios_blob_encode_variant(b, value, 0);
         g_variant_destroy((GDExtensionVariantPtr)value);
@@ -4347,6 +4356,7 @@ static void kanama_ios_blob_encode_dictionary_any(KanamaIosBlob *b, uint64_t *di
     }
     g_array_destructor(&keys);
     kanama_ios_blob_patch_i32(b, count_at, (int32_t)n);
+    return 1;
 }
 
 // Internal ret_type marker for kanama_ios_godot_ptrcall_dispatch: ret_out is an 8-byte Dictionary /
@@ -9937,8 +9947,13 @@ static GDExtensionBool kanama_ios_script_instance_set_property_of_type(
         uint64_t dict = 0;
         g_variant_to_dictionary(&dict, (GDExtensionVariantPtr)(intptr_t)value);
         KanamaIosBlob b = { NULL, 0, 0, 0 };
-        kanama_ios_blob_encode_dictionary_any(&b, &dict);
+        int encoded = kanama_ios_blob_encode_dictionary_any(&b, &dict);
         g_dictionary_destructor(&dict);
+        if (!encoded) {
+            // Reported by the encoder; the property keeps its value rather than being cleared.
+            free(b.buf);
+            return 0;
+        }
         if (b.oom || b.buf == NULL) {
             free(b.buf);
             kanama_ios_fault(__func__, "encode-failed", "Dictionary property");
