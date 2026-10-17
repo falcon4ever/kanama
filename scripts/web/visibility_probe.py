@@ -5,7 +5,7 @@ Kanama is not involved. This serves a **plain GDScript** export (no addon, no
 bridge, no generated proxies), launches a browser at it, and records the beacons
 the scene fetches back. If the signal fails here too, the behaviour belongs to
 Godot-on-that-host and nothing in this repository can fix it; if it fires here
-while dodge's mobs never free, the difference is ours and task 71 reopens on our
+while dodge's mobs never see it, the difference is ours and task 71 reopens on our
 side.
 
 Deliberately protocol-free: no CDP, no WebDriver. The page reports by fetching
