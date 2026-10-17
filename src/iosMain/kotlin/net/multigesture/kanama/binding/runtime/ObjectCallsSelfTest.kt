@@ -584,6 +584,39 @@ private fun runVariantTypeRows(
     val got = obj.get("inverse_binds")
     (got == listOf(xform3)) to "got=${show(got)}"
   }
+
+  // The generic Map -> Dictionary path is String-key-only in every direction, with desktop's
+  // message (BuiltinTypes.variantFromDictionaryInto): a script's Map<Long, V> return, a Map
+  // inside a List return and a Map argument with a Long or Vector2i key are refused, never sent
+  // to Godot with "1"-style String keys.
+  val keyRefusals =
+    listOf<Pair<String, () -> Unit>>(
+      "kotlin.Long" to
+        {
+          net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(mapOf(1L to "a"))
+        },
+      "kotlin.Long" to
+        {
+          net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(listOf(mapOf(2L to "b")))
+        },
+      "net.multigesture.kanama.types.Vector2i" to
+        {
+          net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(mapOf(Vector2i(1, 2) to 3L))
+        },
+      "kotlin.Long" to
+        {
+          ObjectCalls.callWithVariantArgs(
+            callBind,
+            callNode,
+            listOf("set_meta", "t140k", mapOf(4L to "d")),
+          )
+        },
+    )
+  val keyMessages = keyRefusals.map { (_, body) -> runCatching(body).exceptionOrNull()?.message }
+  check(
+    "dictionary-keys(generic Map with non-String keys refused like desktop) got=$keyMessages",
+    keyMessages == keyRefusals.map { (type, _) -> "Unsupported Dictionary key type: $type" },
+  )
 }
 
 @OptIn(ExperimentalNativeApi::class)
