@@ -32,9 +32,11 @@ you write now.
     - *Store addon:* unzip the 0.5 `kanama-store-addon` zip at the root of your
       Godot project (it replaces `addons/kanama` and `addons/kanama_tools`).
       Your root `build.gradle.kts` and `settings.gradle.kts` are yours; compare
-      them with `addons/kanama/templates/release-kit` (the only change is the
-      JDK toolchain resolver in `settings.gradle.kts`, see
-      [Tooling](#tooling-gradle-and-the-editor)).
+      them with `addons/kanama/templates/release-kit`. Two things changed: the
+      JDK toolchain resolver in `settings.gradle.kts` (see
+      [Tooling](#tooling-gradle-and-the-editor)), and the `kotlin("jvm")` and
+      `com.google.devtools.ksp` plugin versions in `build.gradle.kts`, now
+      2.4.21 and 2.3.12 (the 0.4 versions, 2.3.21 and 2.3.9, still build).
     - *Release kit:* a kit is for new projects. Copy your `kotlin-src` into a
       project made from the 0.5 kit, or apply the store-addon steps above.
     - Use the **Godot 4.7.2** editor and export templates for the build
