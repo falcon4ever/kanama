@@ -64,6 +64,14 @@ the scene, the inspector or GDScript and read back with its keys as they are, li
 a Map with object or script values (`Map<String, Texture2D>`, `Map<Int, Node3D>`) too, its
 Resource values held while the property holds them; a key or value of another type drops its entry.
 
+Android scripts compile at Kotlin API level 2.1, the kotlin-stdlib of Godot 4.7.2's Android build
+template: a script that uses a stdlib API newer than 2.1 now fails to compile instead of crashing on
+the device.
+
+Android scripts now compile against kotlinx.coroutines 1.6.4, the version Godot 4.7.2's Android
+build template puts in the APK, so a coroutines API newer than that fails the build instead of
+the app on the device (desktop and iOS keep 1.11.0).
+
 ### Fixed — iOS: `get`, `call` and `callv` with RID, PackedByteArray and value types in arrays
 
 On iOS the generic Variant path (`GodotObject.get`, `call`, `callv`, `getMeta`, signal arguments)
@@ -90,14 +98,6 @@ lost or refused values that work on desktop:
 `Callable` and `Signal` values still read back as `null` through this path, on desktop and iOS
 alike. On iOS only, a signal or script-method argument of either type fails with an error naming
 the type, where desktop passes `null`.
-
-Android scripts compile at Kotlin API level 2.1, the kotlin-stdlib of Godot 4.7.2's Android build
-template: a script that uses a stdlib API newer than 2.1 now fails to compile instead of crashing on
-the device.
-
-Android scripts now compile against kotlinx.coroutines 1.6.4, the version Godot 4.7.2's Android
-build template puts in the APK, so a coroutines API newer than that fails the build instead of
-the app on the device (desktop and iOS keep 1.11.0).
 
 ### Added — tooling: an inventory of every `ObjectCalls` helper and how a generated exercise can check it
 
