@@ -88,8 +88,12 @@ smoke matrix for every claimed target.
 ## Build Toolchain
 
 The current source build uses Kotlin `2.4.21`, KSP `2.3.12`, and
-kotlinx.coroutines `1.11.0`. Gradle build cache is enabled for the main Kanama
-build and the Android plugin build.
+kotlinx.coroutines `1.11.0`. An Android APK runs on the Kotlin libraries of
+Godot's Android build template (4.7.2: kotlin-stdlib 2.1.21, kotlinx.coroutines
+1.6.4), so the Android runtime and scripts compile at Kotlin API level 2.1 and
+against kotlinx.coroutines 1.6.4: a newer API fails the build, not the device.
+Gradle build cache is enabled for the main Kanama build and the Android plugin
+build.
 
 ## Android
 

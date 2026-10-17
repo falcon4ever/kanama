@@ -113,5 +113,6 @@ tasks.named("preBuild") {
 dependencies {
     compileOnly(project(":plugin"))
     compileOnly(panamaPortCoreDependency)
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+    // The APK's coroutines come from Godot's template, so compile against that version (gradle.properties).
+    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:${providers.gradleProperty("kanamaAndroidCoroutinesVersion").get()}")
 }

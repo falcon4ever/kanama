@@ -91,6 +91,10 @@ lost or refused values that work on desktop:
 alike. On iOS only, a signal or script-method argument of either type fails with an error naming
 the type, where desktop passes `null`.
 
+Android scripts now compile against kotlinx.coroutines 1.6.4, the version Godot 4.7.2's Android
+build template puts in the APK, so a coroutines API newer than that fails the build instead of
+the app on the device (desktop and iOS keep 1.11.0).
+
 ### Added — tooling: an inventory of every `ObjectCalls` helper and how a generated exercise can check it
 
 Contributors: `scripts/generate_api_exercise.py` classifies each of the 1,492 helpers the shared tree calls (static, property pair, const oracle, singleton, reach only, excluded with a reason) into [API Exercise Inventory](docs/reference/generated/api-exercise.md); the local_ci stage "API exercise inventory drift" fails when the page is stale, when `scripts/api_exercise_policy.py` names a class or method the API lacks, or when a helper is classified by nothing.

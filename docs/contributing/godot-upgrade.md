@@ -116,11 +116,15 @@ minor releases — the runbook below is identical, only smaller.
       functions. Enforced by `scripts/check_gdextension_modernization.py` (in the
       gates below and in `local_ci.sh`) — it fails on any deprecated binding or a
       backend divergence.
-    - **Re-check the Android template's Kotlin.** An exported APK runs on the
-      `kotlin-stdlib` of Godot's Android build template (`kotlinVersion` in
-      `config.gradle` inside the export templates' `android_source.zip`; 2.1.21 in
-      4.7.2), so `android/godot-plugin/{plugin,scripts}/build.gradle.kts` compile
-      with `apiVersion` set to that version. Move it with the template.
+    - **Re-check the Android template's Kotlin libraries.** An exported APK runs on
+      the `kotlin-stdlib` and `kotlinx-coroutines` of Godot's Android build template
+      (`kotlinVersion` in `config.gradle` inside the export templates'
+      `android_source.zip`, and `./gradlew :dependencies --configuration
+      standardDebugRuntimeClasspath` there; 4.7.2: stdlib 2.1.21, coroutines 1.6.4),
+      so `android/godot-plugin/{plugin,scripts}/build.gradle.kts` compile with
+      `apiVersion` set to that stdlib version and against that coroutines version
+      (`kanamaAndroidCoroutinesVersion` in `android/godot-plugin/gradle.properties`).
+      Move both with the template.
     - Before tagging:
       `scripts/fresh_clone_smoke.sh /absolute/path/to/new_godot_binary`.
 
