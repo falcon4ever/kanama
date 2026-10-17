@@ -372,3 +372,30 @@ STATIC_RESULTS: dict[tuple[str, str], tuple[str, str]] = {
     ("DirAccess", "get_drive_label"): ("weak", "a drive label exists only on Windows; every other host returns \"\""),
     ("Resource", "generate_scene_unique_id"): ("fresh", "a new random id per call"),
 }
+
+# ---- known findings ------------------------------------------------------------------------------------
+
+# (case, row) -> (platforms, reason, tracking): a row that fails on those platforms for a gap already
+# tracked elsewhere. The row still runs there; its failure prints as `KNOWN:` (not `FAIL:`), counts as
+# `known` in the summary, and fails nothing. A known row that PASSES fails the run ("no longer
+# reproduces: remove it"), as a quarantine does, so an entry cannot outlive its gap. `row` is the
+# label the generated row reports (`Class.method` for a static, `Class.property` for a pair). The
+# platforms are `ios`, `android` and `desktop`.
+_IOS_BYTES = "the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`)"
+_IOS_ELEMENT_NULL = "the iOS Variant return path decodes this element type as null"
+KNOWN_FINDINGS: dict[tuple[str, str], tuple[tuple[str, ...], str, str]] = {
+    ("A", "CharFXTransform.font"): (("ios",), "Object.get of a RID property returns null on iOS", "task 140"),
+    ("A", "NavigationPathQueryParameters2D.excluded_regions"): (("ios",), f"{_IOS_ELEMENT_NULL} (RID: `[null]`)", "task 140"),
+    ("A", "GLTFSkin.inverse_binds"): (("ios",), f"{_IOS_ELEMENT_NULL} (Transform3D: `[null]`)", "task 140"),
+    ("C", "AudioStreamWAV.load_from_buffer"): (("ios",), _IOS_BYTES, "task 140"),
+    ("C", "AudioStreamMP3.load_from_buffer"): (("ios",), _IOS_BYTES, "task 140"),
+    ("C", "FileAccess.open_encrypted"): (("ios",), _IOS_BYTES, "task 140"),
+    ("C", "Image.create_from_data"): (("ios",), _IOS_BYTES, "task 140"),
+    ("C", "FileAccess.set_extended_attribute"): (("ios",), _IOS_BYTES, "task 140"),
+    ("C", "ImporterMesh.merge_importer_meshes"): (
+        ("ios",),
+        "the iOS Variant path cannot encode a Transform3D inside an Array argument",
+        "task 140",
+    ),
+}
+

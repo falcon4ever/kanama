@@ -2,5 +2,5 @@
 [kanama][ios][c] PTRCALL SELFTEST MATRIX: 120 passed, 0 failed
 [kanama][ios][kn] OBJECTCALLS SELFTEST: 308 passed, 0 failed faults=7 expected=7 in 412 ms
 [kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7 in 38 ms
-[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): 90 passed, 0 failed, 5 weak, 0 reach faults=7 expected=7 in 120 ms
+[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): 81 passed, 0 failed, 5 weak, 9 known, 0 reach faults=7 expected=7 in 120 ms
 [kanama][ios] up

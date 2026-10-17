@@ -1101,7 +1101,7 @@ the kit and store `package*` tasks and `installAddonJar` fail on a flagged build
   "external addon install" stage builds the user-shaped jar without it) and runs
   `api_exercise_smoke.tscn` with the project setting `kanama/debug/api_exercise=true`. The hook
   (`ApiExerciseHook`, beside the signal self-test in `callFrame`) runs the rows on the first frame and
-  prints `[kanama] API EXERCISE: <n> passed, <m> failed, <w> weak, <r> reach, <e> excluded in <ms> ms` and
+  prints `[kanama] API EXERCISE: <n> passed, <m> failed, <w> weak, <k> known, <r> reach, <e> excluded in <ms> ms` and
   one `[kanama] API EXERCISE FAIL: <helpers> <row> <what>` per failure. `KANAMA_API_EXERCISE=1` forces a
   run without the setting and `KANAMA_API_EXERCISE_TRACE=1` prints a line before each row, which is how
   a row that prints an engine error, hangs or crashes is found (run every row headless before adding a
@@ -1109,6 +1109,11 @@ the kit and store `package*` tasks and `installAddonJar` fail on a flagged build
 - **iOS:** `ApiExerciseSelfTest.kt` runs the same rows after the frame-1 self-test rows and prints
   `[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): ... faults=<f> expected=<e> in <ms> ms`, a line
   both device runners require.
+
+A row that fails on one platform for a gap already tracked is listed in `KNOWN_FINDINGS` (row, platforms,
+reason, where it is tracked): it still runs there, prints `KNOWN:` instead of `FAIL:` and counts as
+`known` in the summary; when it passes, the run fails with "known finding no longer reproduces" until the
+entry is removed. `--check` fails on an entry that names no generated row.
 
 After a Godot bump, run the rows headless (`runtime_smoke.sh`) before any device run: a class the new
 version adds gets rows it has never run.

@@ -225,7 +225,7 @@ if grep -q "API EXERCISE FAIL" "$API_EXERCISE_LOG"; then
   grep "API EXERCISE FAIL" "$API_EXERCISE_LOG" >&2
   smoke_fail "unexpected pattern" "API EXERCISE FAIL"
 fi
-check "\[kanama\] API EXERCISE: [1-9][0-9]* passed, 0 failed, [0-9]+ weak, [0-9]+ reach, [0-9]+ excluded in [0-9]+ ms"
+check "\[kanama\] API EXERCISE: [1-9][0-9]* passed, 0 failed, [0-9]+ weak, [0-9]+ known, [0-9]+ reach, [0-9]+ excluded in [0-9]+ ms"
 check "ResourceFormatLoader\\._load path=res://HelloScript\\.kt"
 check "HelloScript\\(file\\)\\._ready health=99 speed=5\\.1 label=from_tscn difficulty=HARD"
 check "ResourceOwnerSmoke payload=from_tscn present=true"

@@ -429,14 +429,18 @@ The three ObjectCalls summary lines therefore end with `faults=<count> expected=
 ```
 [kanama][ios][kn] OBJECTCALLS SELFTEST: <N> passed, 0 failed faults=7 expected=7 in <ms> ms
 [kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): <N> passed, 0 failed faults=7 expected=7 in <ms> ms
-[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): <N> passed, 0 failed, <W> weak, <R> reach faults=7 expected=7 in <ms> ms
+[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): <N> passed, 0 failed, <W> weak, <K> known, <R> reach faults=7 expected=7 in <ms> ms
 ```
 
 The third line is the generated API exercise (`ApiExerciseSelfTest.kt`, after the frame-1 rows): one
 row per `ObjectCalls` helper whose best row is a static or a property pair, the same rows the desktop
 smoke runs (see "The exercise rows" in `wrapper-maintenance.md`). A static the shim refused shows as a
 `FAULT` line and as `faults` above `expected`; the demos' `ios_device_run.sh` fails on both, while
-`ios_visual_smoke.sh` fails on `FAIL` lines and failed rows but does not compare the fault counts.
+`ios_visual_smoke.sh` fails on `FAIL` lines and failed rows but does not compare the fault counts. A row
+listed in `KNOWN_FINDINGS` (`scripts/api_exercise_policy.py`: an iOS gap already tracked, such as a
+`PackedByteArray` argument the generic Variant path cannot encode yet) prints `... (api exercise) KNOWN:`
+instead of `FAIL:` and counts as `known`; once it passes, it prints a `FAIL:` line until the entry is
+removed.
 
 (The counter is never reset, so the frame-1 phase and the API exercise, which raise no faults of
 their own, reprint the same total.) `expected` is the constant `SELFTEST_EXPECTED_FAULTS`, declared immediately

@@ -197,7 +197,8 @@ internal object ApiExerciseRows {
 
   // static with a return value
   private fun c006(r: ApiExerciseRunner) {
-    r.begin('C', "ptrcallWithByteArrayAndDictionaryArgRetObject", "AudioStreamWAV.load_from_buffer")
+    r.begin('C', "ptrcallWithByteArrayAndDictionaryArgRetObject", "AudioStreamWAV.load_from_buffer",
+      known = "ios", knownWhy = "the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`)")
     try {
       val a0: ByteArray = r.fixtureBytes("wav")
       val a1: Map<String, Any?> = emptyMap()
@@ -212,7 +213,8 @@ internal object ApiExerciseRows {
 
   // static with a return value
   private fun c007(r: ApiExerciseRunner) {
-    r.begin('C', "ptrcallWithByteArrayArgRetObject", "AudioStreamMP3.load_from_buffer")
+    r.begin('C', "ptrcallWithByteArrayArgRetObject", "AudioStreamMP3.load_from_buffer",
+      known = "ios", knownWhy = "the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`)")
     try {
       val a0: ByteArray = r.fixtureBytes("mp3")
       val got = r.track(AudioStreamMP3.loadFromBuffer(a0))
@@ -286,7 +288,8 @@ internal object ApiExerciseRows {
 
   // static with a return value
   private fun c012(r: ApiExerciseRunner) {
-    r.begin('C', "ptrcallWithObjectListTransform3DListBoolArgsRetObject", "ImporterMesh.merge_importer_meshes")
+    r.begin('C', "ptrcallWithObjectListTransform3DListBoolArgsRetObject", "ImporterMesh.merge_importer_meshes",
+      known = "ios", knownWhy = "the iOS Variant path cannot encode a Transform3D inside an Array argument")
     try {
       val f0 = r.ref(ImporterMesh(r.construct("ImporterMesh")))
       val a0: List<ImporterMesh> = listOf<ImporterMesh>(f0)
@@ -492,7 +495,8 @@ internal object ApiExerciseRows {
 
   // static with a return value
   private fun c026(r: ApiExerciseRunner) {
-    r.begin('C', "ptrcallWithStringLongByteArrayByteArrayArgsRetObject", "FileAccess.open_encrypted")
+    r.begin('C', "ptrcallWithStringLongByteArrayByteArrayArgsRetObject", "FileAccess.open_encrypted",
+      known = "ios", knownWhy = "the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`)")
     try {
       val a0: String = r.scratch("encrypted.bin")
       val a1: FileAccess.ModeFlags = FileAccess.ModeFlags(2L) /* WRITE */
@@ -606,7 +610,8 @@ internal object ApiExerciseRows {
 
   // static with a return value
   private fun c033(r: ApiExerciseRunner) {
-    r.begin('C', "ptrcallWithTwoIntBoolLongByteArrayArgsRetObject", "Image.create_from_data")
+    r.begin('C', "ptrcallWithTwoIntBoolLongByteArrayArgsRetObject", "Image.create_from_data",
+      known = "ios", knownWhy = "the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`)")
     try {
       val a0: Int = 4
       val a1: Int = 2
@@ -641,7 +646,8 @@ internal object ApiExerciseRows {
 
   // static returning Error: its arguments must make it fail
   private fun c035(r: ApiExerciseRunner) {
-    r.begin('C', "ptrcallWithTwoStringAndByteArrayArgsRetLong", "FileAccess.set_extended_attribute")
+    r.begin('C', "ptrcallWithTwoStringAndByteArrayArgsRetLong", "FileAccess.set_extended_attribute",
+      known = "ios", knownWhy = "the iOS Variant path cannot encode a PackedByteArray argument (`encodeVariantArgs: unsupported arg type ByteArray`)")
     try {
       val a0: String = r.scratch("missing")
       val a1: String = "kanama"
@@ -1240,7 +1246,8 @@ internal object ApiExerciseRows {
 
   // getter of `font`
   private fun a029(r: ApiExerciseRunner) {
-    r.begin('A', "ptrcallNoArgsRetRID ptrcallWithRIDArg", "CharFXTransform.font")
+    r.begin('A', "ptrcallNoArgsRetRID ptrcallWithRIDArg", "CharFXTransform.font",
+      known = "ios", knownWhy = "Object.get of a RID property returns null on iOS")
     try {
       val o = r.ref(CharFXTransform(r.construct("CharFXTransform")))
       val before = r.track(o.getFont())
@@ -1255,7 +1262,8 @@ internal object ApiExerciseRows {
 
   // getter of `excluded_regions`
   private fun a030(r: ApiExerciseRunner) {
-    r.begin('A', "ptrcallNoArgsRetRIDList ptrcallWithRIDListArg", "NavigationPathQueryParameters2D.excluded_regions")
+    r.begin('A', "ptrcallNoArgsRetRIDList ptrcallWithRIDListArg", "NavigationPathQueryParameters2D.excluded_regions",
+      known = "ios", knownWhy = "the iOS Variant return path decodes this element type as null (RID: `[null]`)")
     try {
       val o = r.ref(NavigationPathQueryParameters2D(r.construct("NavigationPathQueryParameters2D")))
       val before = r.track(o.getExcludedRegions())
@@ -1360,7 +1368,8 @@ internal object ApiExerciseRows {
 
   // getter of `inverse_binds`
   private fun a037(r: ApiExerciseRunner) {
-    r.begin('A', "ptrcallNoArgsRetTransform3DList ptrcallWithTransform3DListArg", "GLTFSkin.inverse_binds")
+    r.begin('A', "ptrcallNoArgsRetTransform3DList ptrcallWithTransform3DListArg", "GLTFSkin.inverse_binds",
+      known = "ios", knownWhy = "the iOS Variant return path decodes this element type as null (Transform3D: `[null]`)")
     try {
       val o = r.ref(GLTFSkin(r.construct("GLTFSkin")))
       val before = r.track(o.getInverseBinds())

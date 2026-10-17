@@ -784,6 +784,18 @@ def render(inv: Inventory, policy=policy_module) -> str:
         lines.append(f"- `{cls}.{method}`: {kind}, {md(reason)}.")
     lines += [
         "",
+        "## Known findings",
+        "",
+        "Rows that fail on a platform for a gap tracked elsewhere (`KNOWN_FINDINGS`): the row still runs there",
+        "and prints `KNOWN:` instead of `FAIL:`; once it passes, the run fails until the entry is removed.",
+        "",
+        "| row | platforms | reason |",
+        "|---|---|---|",
+    ]
+    for (case, label), (platforms, reason, _tracking) in getattr(policy, "KNOWN_FINDINGS", {}).items():
+        lines.append(f"| {case} `{label}` | {', '.join(platforms)} | {md(reason)} (tracked) |")
+    lines += [
+        "",
         "## Property-pair overrides",
         "",
         "An A row sets a recognisable non-default value chosen from the property's type. `PAIR_OVERRIDES` gives a",
@@ -1504,11 +1516,25 @@ def render_rows(inv: Inventory, policy=policy_module) -> tuple[str, list[str], l
             out.append(f"    {case.lower()}{index:03d}(r)")
         out.append("  }")
         out.append("")
+    known = getattr(policy, "KNOWN_FINDINGS", {})
+    labels = {(r.case, r.label) for r in rows}
+    for key, (platforms, reason, tracking) in known.items():
+        if key not in labels:
+            gen.failures.append(f"KNOWN_FINDINGS names {key[0]} {key[1]}, which is not a generated row; delete or fix the entry")
+        if not platforms or set(platforms) - {"ios", "android", "desktop"}:
+            gen.failures.append(f"KNOWN_FINDINGS[{key[0]} {key[1]}] names platforms {platforms!r}; use ios, android, desktop")
+        if not reason or not tracking:
+            gen.failures.append(f"KNOWN_FINDINGS[{key[0]} {key[1]}] needs its reason and where it is tracked")
     for case in "CA":
         for index, row in enumerate(r for r in rows if r.case == case):
             out.append(f"  // {row.verdict.reason}" + (f"; weak: {row.verdict.weak}" if row.verdict.weak else ""))
             out.append(f"  private fun {case.lower()}{index:03d}(r: ApiExerciseRunner) {{")
-            out.append(f'    r.begin(\'{case}\', "{" ".join(row.helpers)}", "{row.label}")')
+            finding = known.get((case, row.label))
+            if finding is None:
+                out.append(f'    r.begin(\'{case}\', "{" ".join(row.helpers)}", "{row.label}")')
+            else:
+                out.append(f'    r.begin(\'{case}\', "{" ".join(row.helpers)}", "{row.label}",')
+                out.append(f'      known = "{",".join(finding[0])}", knownWhy = {kotlin_string(finding[1])})')
             out.append("    try {")
             out += [f"      {line}" for line in row.body]
             out.append("    } catch (t: Throwable) {")

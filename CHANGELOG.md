@@ -158,8 +158,13 @@ the rows run after the frame-1 self-test rows and print `OBJECTCALLS SELFTEST (a
 `ios_visual_smoke.sh` requires (the kanama-demos device runner requires it too, from its matching change);
 the two existing ObjectCalls self-test summaries now end with `in <ms> ms`. The static arguments, the
 property values that need a hand choice and the statics whose result is weak or new per call are kept in
-`scripts/api_exercise_policy.py` (`STATIC_ARGS`, `PAIR_OVERRIDES`, `STATIC_RESULTS`); an argument that
-deliberately differs from the API default is marked `Arg(value, reason)`.
+`scripts/api_exercise_policy.py` (`STATIC_ARGS`, `PAIR_OVERRIDES`, `STATIC_RESULTS`,
+`STATIC_OBJECT_CHECKS`: what each object static's result must show of its arguments); an argument that
+deliberately differs from the API default is marked `Arg(value, reason)`. Rows that fail on one platform
+for a tracked gap are listed in `KNOWN_FINDINGS` and print `KNOWN:` (counted as `known`) instead of
+`FAIL:` there; nine iOS rows are, for argument and return types the iOS generic Variant path does not
+carry yet (`PackedByteArray` arguments, a `Transform3D` inside an `Array`, `RID` and `Transform3D`
+elements and a `RID` property read through `Object.get`).
 
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 

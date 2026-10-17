@@ -61,6 +61,7 @@ internal object ApiExercise {
     val passed: Int,
     val failed: Int,
     val weak: Int,
+    val known: Int,
     val reach: Int,
     val excluded: Int,
     val millis: Long,
@@ -71,9 +72,14 @@ internal object ApiExercise {
    * (when not null) one line before each row, for the headless sweep that attributes engine errors
    * and crashes to the row that printed them.
    */
-  fun run(fail: (String) -> Unit, trace: ((String) -> Unit)?): Result {
+  fun run(
+    platform: String,
+    fail: (String) -> Unit,
+    known: (String) -> Unit,
+    trace: ((String) -> Unit)?,
+  ): Result {
     val started = TimeSource.Monotonic.markNow()
-    val runner = ApiExerciseRunner(fail, trace)
+    val runner = ApiExerciseRunner(platform, fail, known, trace)
     runner.setUp()
     try {
       ApiExerciseRows.runStatic(runner)
@@ -85,6 +91,7 @@ internal object ApiExercise {
       runner.passed,
       runner.failed,
       runner.weak,
+      runner.known,
       runner.reach,
       ApiExerciseRows.EXCLUDED,
       started.elapsedNow().inWholeMilliseconds,
@@ -97,11 +104,13 @@ internal object ApiExercise {
    * desktop, so trace lines interleave with the engine's own error output).
    */
   @JvmStatic
-  fun runDesktop(trace: Boolean, print: (String) -> Unit) {
+  fun runDesktop(trace: Boolean, platform: String, print: (String) -> Unit) {
     val result =
       try {
         run(
+          platform = platform,
           fail = { print("[kanama] API EXERCISE FAIL: $it") },
+          known = { print("[kanama] API EXERCISE KNOWN: $it") },
           trace = if (trace) ({ print("[kanama] API EXERCISE row $it") }) else null,
         )
       } catch (t: Throwable) {
@@ -112,7 +121,7 @@ internal object ApiExercise {
       }
     print(
       "[kanama] API EXERCISE: ${result.passed} passed, ${result.failed} failed, ${result.weak} weak, " +
-        "${result.reach} reach, ${result.excluded} excluded in ${result.millis} ms"
+        "${result.known} known, ${result.reach} reach, ${result.excluded} excluded in ${result.millis} ms"
     )
   }
 }
@@ -124,7 +133,9 @@ internal object ApiExercise {
  */
 internal class ApiExerciseRunner
 internal constructor(
+  private val platform: String,
   private val onFail: (String) -> Unit,
+  private val onKnown: (String) -> Unit,
   private val onTrace: ((String) -> Unit)?,
 ) {
   var passed: Int = 0
@@ -136,12 +147,18 @@ internal constructor(
   var weak: Int = 0
     private set
 
+  var known: Int = 0
+    private set
+
   var reach: Int = 0
     private set
 
   private var helpers = ""
   private var label = ""
   private var verdict: Char = ' '
+  private var failure = ""
+  private var knownHere = false
+  private var knownWhy = ""
   private val toClose = ArrayList<RefCounted>()
   private val toFree = ArrayList<GodotObject>()
 
@@ -258,10 +275,18 @@ internal constructor(
 
   // ---- one row ---------------------------------------------------------------------------------
 
-  fun begin(case: Char, helpers: String, label: String) {
+  /**
+   * Starts a row. [known] lists the platforms where the row is a known finding (KNOWN_FINDINGS in
+   * scripts/api_exercise_policy.py, with [knownWhy]): there its failure is reported as known, and
+   * its passing fails the run until the entry is removed.
+   */
+  fun begin(case: Char, helpers: String, label: String, known: String = "", knownWhy: String = "") {
     this.helpers = helpers
     this.label = "$case $label"
     verdict = ' '
+    failure = ""
+    knownHere = known.split(',').contains(platform)
+    this.knownWhy = knownWhy
     onTrace?.let { it(this.label) }
   }
 
@@ -275,12 +300,25 @@ internal constructor(
       toClose.clear()
       toFree.clear()
     }
-    when (verdict) {
-      'P' -> passed++
-      'W' -> weak++
-      'F' -> failed++
-      'S' -> Unit
-      else -> fail("ended without a verdict")
+    if (verdict == ' ') fail("ended without a verdict")
+    when {
+      verdict == 'F' && knownHere -> {
+        known++
+        onKnown("$helpers $label $failure (known finding on $platform: $knownWhy)")
+      }
+      verdict == 'F' -> {
+        failed++
+        onFail("$helpers $label $failure")
+      }
+      knownHere -> {
+        failed++
+        onFail(
+          "$helpers $label known finding no longer reproduces on $platform: remove it from " +
+            "KNOWN_FINDINGS in scripts/api_exercise_policy.py"
+        )
+      }
+      verdict == 'P' -> passed++
+      verdict == 'W' -> weak++
     }
   }
 
@@ -325,7 +363,7 @@ internal constructor(
   private fun fail(what: String) {
     if (verdict == 'F') return
     verdict = 'F'
-    onFail("$helpers $label $what")
+    failure = what
   }
 
   private fun pass() {

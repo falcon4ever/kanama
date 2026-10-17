@@ -45,7 +45,12 @@ internal object ApiExerciseHook {
     val entry =
       try {
         Class.forName(ENTRY_CLASS)
-          .getMethod("runDesktop", Boolean::class.javaPrimitiveType, Function1::class.java)
+          .getMethod(
+            "runDesktop",
+            Boolean::class.javaPrimitiveType,
+            String::class.java,
+            Function1::class.java,
+          )
       } catch (_: ReflectiveOperationException) {
         System.err.println(
           "[kanama] API EXERCISE FAIL: the exercise rows are not in this build " +
@@ -55,7 +60,11 @@ internal object ApiExerciseHook {
       }
     val print: (String) -> Unit = { line -> System.err.println(line) }
     try {
-      entry.invoke(null, trace, print)
+      // The same JVM code runs on Android (ART): KNOWN_FINDINGS can name either platform.
+      val platform =
+        if (System.getProperty("java.vm.vendor").orEmpty().contains("Android")) "android"
+        else "desktop"
+      entry.invoke(null, trace, platform, print)
     } catch (t: Throwable) {
       val cause = (t as? java.lang.reflect.InvocationTargetException)?.targetException ?: t
       System.err.println(
