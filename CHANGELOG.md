@@ -61,8 +61,8 @@ Typed `Map<K, V>` `@Export` properties now work on iOS. Before, every `Map` expo
 build (or, with `-PkanamaIosAllowSkips=true`, kept its Kotlin default). A `Map<Int, String>`,
 `Map<Vector2i, Long>`, enum-keyed or enum-valued Map, and a plain `Map<String, Any?>`, is set from
 the scene, the inspector or GDScript and read back with its keys as they are, like on desktop;
-a key or value of another type drops its entry. A Map with object or script values
-(`Map<String, Texture2D>`) is still not delivered on iOS and remains a build error.
+a Map with object or script values (`Map<String, Texture2D>`, `Map<Int, Node3D>`) too, its
+Resource values held while the property holds them; a key or value of another type drops its entry.
 
 ### Fixed — iOS: `get`, `call` and `callv` with RID, PackedByteArray and value types in arrays
 

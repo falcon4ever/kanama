@@ -50,10 +50,7 @@ internal fun dictionaryProbeDescriptor(path: String): KanamaIosScriptDescriptor?
       },
     )
 
-/**
- * The bridge IosScriptCodeEmitter generates for these properties (IosMapExportEmitTest). Before an
- * object-valued Map had an iOS path, `textures` had no case.
- */
+/** The bridge IosScriptCodeEmitter generates for these properties (IosMapExportEmitTest). */
 private class DictionaryProbeBridge(private val script: DictionaryProbeScript) :
   KanamaIosScriptBridge {
   override val scriptInstance: Any
@@ -69,6 +66,7 @@ private class DictionaryProbeBridge(private val script: DictionaryProbeScript) :
             m.entries.associate { (k, v) -> k.ordinal.toLong() to v }
           )
         }
+      3 -> script.textures.let { m -> net.multigesture.kanama.ios.KanamaIosTypedDictionary(m) }
       else -> net.multigesture.kanama.ios.KanamaIosNoProperty
     }
 
@@ -114,6 +112,22 @@ private class DictionaryProbeBridge(private val script: DictionaryProbeScript) :
             .toMap()
         true
       }
+      3 -> {
+        script.textures =
+          entries.entries
+            .mapNotNull { entry ->
+              val k = (entry.key as? String) ?: return@mapNotNull null
+              val v =
+                ((entry.value as? net.multigesture.kanama.api.GodotObject)?.let { o ->
+                  net.multigesture.kanama.api.Texture2D.fromHandle(o.handle)
+                }) ?: return@mapNotNull null
+              k to v
+            }
+            .toMap()
+        true
+      }
       else -> false
     }
+
+  override fun retainsDictionaryValues(propertyIndex: Int): Boolean = propertyIndex == 3
 }

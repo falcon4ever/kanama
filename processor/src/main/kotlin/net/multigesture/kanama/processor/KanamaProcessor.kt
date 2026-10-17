@@ -5991,17 +5991,24 @@ internal fun legacyHandleConstructorMessage(simpleName: String, parameterName: S
  * Shared by the desktop registrar ([ScriptCodeEmitter]) and the iOS bridge
  * ([IosScriptCodeEmitter]).
  */
-internal fun mapWriteSourceExpr(property: ScriptPropertyModel, valueExpr: String): String {
+internal fun mapWriteSourceExpr(
+  property: ScriptPropertyModel,
+  valueExpr: String,
+  // How a custom-script value becomes its owner: desktop's BuiltinTypes.scriptValue; iOS passes
+  // the script itself, which its container encoder already ships as the owner handle.
+  customScriptValue: String =
+    "net.multigesture.kanama.binding.runtime.BuiltinTypes.scriptValue(v, v.godotObject)",
+): String {
   val keyNeedsConv = property.mapKeyEnumEntries.isNotEmpty()
   val valueNeedsConv =
-    property.mapValueEnumFqName != null || property.mapValueCustomScriptFqName != null
+    property.mapValueEnumFqName != null ||
+      (property.mapValueCustomScriptFqName != null && customScriptValue != "v")
   if (!keyNeedsConv && !valueNeedsConv) return valueExpr
   val keyConv = if (keyNeedsConv) "k.ordinal.toLong()" else "k"
   val valueConv =
     when {
       property.mapValueEnumFqName != null -> "v.ordinal.toLong()"
-      property.mapValueCustomScriptFqName != null ->
-        "net.multigesture.kanama.binding.runtime.BuiltinTypes.scriptValue(v, v.godotObject)"
+      property.mapValueCustomScriptFqName != null -> customScriptValue
       else -> "v"
     }
   return "$valueExpr.entries.associate { (k, v) -> $keyConv to $valueConv }"

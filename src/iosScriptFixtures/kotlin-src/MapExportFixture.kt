@@ -5,6 +5,8 @@ import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.api.Node3D
+import net.multigesture.kanama.api.Texture2D
 import net.multigesture.kanama.types.Vector2i
 
 enum class MapFixtureTier {
@@ -13,7 +15,7 @@ enum class MapFixtureTier {
 }
 
 // Map @Export shapes the iOS emitter delivers (typed scalar / value-type / enum keys and values,
-// a nullable value, a MutableMap, and the plain String-keyed Map), so the generated
+// a nullable value, a MutableMap, the plain String-keyed Map, a Resource and a Node value), so the generated
 // setPropertyDictionary / getProperty branches compile on every mobile PR.
 @ScriptClass(attachTo = "Node")
 class MapExportFixture(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
@@ -31,4 +33,10 @@ class MapExportFixture(godotObject: GodotHandle) : KanamaScript<Node>(godotObjec
 
     @Export
     var meta: Map<String, Any?> = emptyMap()
+
+    @Export
+    var textures: Map<String, Texture2D> = emptyMap()
+
+    @Export
+    var markers: Map<Int, Node3D> = emptyMap()
 }

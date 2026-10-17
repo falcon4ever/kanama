@@ -42,7 +42,7 @@ class IosExportSkipTest {
   private fun prop(name: String, type: TypeMapping) =
     ScriptPropertyModel(kotlinName = name, godotName = name, type = type, isMutable = true)
 
-  // A Map with engine-object values: the one Map export iOS does not deliver yet.
+  // A Map with engine-object values (delivered on iOS too).
   private fun objectMap(name: String) =
     prop(name, TypeMapping.DICTIONARY)
       .copy(
@@ -51,28 +51,19 @@ class IosExportSkipTest {
       )
 
   @Test
-  fun anObjectValuedMapExportIsABuildErrorOnIos() {
-    val r = emit(false, objectMap("regions"))
-
-    assertEquals(1, r.errors.size, "one error per property, not one per guard: ${r.errors}")
-    val error = r.errors.single()
-    assertTrue(error.contains("SkipFixture.regions (a Map with object or script values)"), error)
-    assertTrue(error.contains("-P$ALLOW_IOS_SKIPS_OPTION=true"), error)
-    assertEquals(emptyList(), r.warnings)
-  }
-
-  @Test
   fun aValueTypeWithoutAnIosPathIsABuildError() {
     // Task 133: every Variant value type but RID has an iOS @Export path now.
     val r = emit(false, prop("cell", TypeMapping.RID))
 
     assertEquals(1, r.errors.size, "${r.errors}")
     assertTrue(r.errors.single().contains("SkipFixture.cell (RID)"), r.errors.single())
+    assertTrue(r.errors.single().contains("-P$ALLOW_IOS_SKIPS_OPTION=true"), r.errors.single())
+    assertEquals(emptyList(), r.warnings)
   }
 
   @Test
   fun theOptInTurnsEachSkipBackIntoOneWarning() {
-    val r = emit(true, objectMap("regions"), prop("cell", TypeMapping.RID))
+    val r = emit(true, prop("cell", TypeMapping.RID), prop("slot", TypeMapping.RID))
 
     assertEquals(emptyList(), r.errors)
     assertEquals(2, r.warnings.size, "${r.warnings}")
@@ -92,6 +83,7 @@ class IosExportSkipTest {
         prop("tint", TypeMapping.COLOR),
         // A Map<String, Any?> and a typed Map with scalar keys and values are delivered too.
         prop("meta", TypeMapping.DICTIONARY),
+        objectMap("regions"),
         prop("names", TypeMapping.DICTIONARY)
           .copy(mapKeyKotlinType = "Int", mapValueKotlinType = "String"),
         // Task 133: the remaining value types, as raw Godot bytes.

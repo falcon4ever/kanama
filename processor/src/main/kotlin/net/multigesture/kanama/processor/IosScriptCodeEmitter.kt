@@ -193,6 +193,10 @@ internal data class IosProperty(
   // mapValueReadTransformSafe, mapWriteSourceExpr), so both backends keep the same keys.
   val mapSetStatement: String = "",
   val mapGetExpression: String = "",
+  // True for a Map whose values are Resources (a resource wrapper or a Resource script): the
+  // runtime takes and records one reference per value after the set, like desktop's retained
+  // Dictionary reads (readVariantDictionaryObjectValuesRetained / ...RetainedHandles).
+  val mapRetainsValues: Boolean = false,
 )
 
 internal data class IosSignal(val godotName: String, val kotlinName: String)
@@ -577,6 +581,14 @@ internal class IosScriptCodeEmitter(
         }
         builder.appendLine("        else -> false")
         builder.appendLine("    }")
+        val retaining = script.properties.withIndex().filter { it.value.mapRetainsValues }
+        if (retaining.isNotEmpty()) {
+          builder.appendLine()
+          builder.appendLine(
+            "    override fun retainsDictionaryValues(propertyIndex: Int): Boolean = " +
+              retaining.joinToString(" || ") { "propertyIndex == ${it.index}" }
+          )
+        }
       }
       val valueProperties = script.properties.filter { it.valueTypeClassName.isNotEmpty() }
       if (valueProperties.isNotEmpty()) {
@@ -1017,26 +1029,35 @@ internal class IosScriptCodeEmitter(
     // Map exports: a typed `Map<K, V>` (issue #40) with scalar, String, value-type or enum keys
     // and values crosses as one any-key Dictionary blob both ways (setPropertyDictionary, and
     // KanamaIosTypedDictionary on the read), converted like the desktop registrar converts it; a
-    // plain `Map<String, Any?>` rides the generic String-keyed path. Object- and script-valued
-    // Maps need the resource retention the object-array path has and stay an iOS skip.
+    // plain `Map<String, Any?>` rides the generic String-keyed path. Object values are wrapped like
+    // desktop wraps them, and Resource values are retained like desktop retains them.
     // hint/hintString/usage are advertised so the inspector renders the desktop DICTIONARY control.
     if (type == TypeMapping.DICTIONARY) {
-      val objectValued = mapValueWrapperFqName != null || mapValueCustomScriptFqName != null
-      if (objectValued) {
-        exportSkip(
-          className,
-          kotlinName,
-          "[kanama-ios] $className.$kotlinName (a Map with object or script values) — no iOS " +
-            "@Export path for object-valued Maps yet, would keep its Kotlin default",
-        )
-      }
       val mutable = if (isMutableMap) ".toMutableMap()" else ""
       val target = "script.$kotlinName"
       val setStatement: String
       val getExpression: String
       if (mapKeyKotlinType != null) {
         val keySafe = mapKeyReadTransformSafe(this, "entry.key")
-        val valueSafe = mapValueReadTransformSafe(this, "entry.value")
+        // An object value arrives as a borrowed GodotObject: wrapped like desktop's readers do (a
+        // resource wrapper through fromHandle, another wrapper by its constructor), a custom
+        // script resolved to its live Kotlin instance as the List<UserScript> path does. A nil or
+        // unresolved value drops its entry (object values are never nullable, KSP rejects that).
+        val objectValue = "(entry.value as? net.multigesture.kanama.api.GodotObject)"
+        val valueSafe =
+          when {
+            mapValueWrapperFqName != null -> {
+              val fq = mapValueWrapperFqName
+              val wrap =
+                if (fq in RESOURCE_WRAPPERS_WITH_FROM_HANDLE) "$fq.fromHandle(o.handle)"
+                else "$fq(o.handle)"
+              "($objectValue?.let { o -> $wrap })"
+            }
+            mapValueCustomScriptFqName != null ->
+              "($objectValue?.let { o -> net.multigesture.kanama.ios.iosScriptInstanceForOwner(" +
+                "o.handle.segment.address()) as? $mapValueCustomScriptFqName })"
+            else -> mapValueReadTransformSafe(this, "entry.value")
+          }
         // Map<K, V?> keeps a key whose value is nil or of another type (as null); Map<K, V> drops
         // it, as desktop's readVariantDictionaryAny + the registrar's decode do.
         val bind =
@@ -1048,7 +1069,7 @@ internal class IosScriptCodeEmitter(
         val nullSafe = if (nullable) "?." else "."
         getExpression =
           "$target${nullSafe}let { m -> net.multigesture.kanama.ios.KanamaIosTypedDictionary(" +
-            "${mapWriteSourceExpr(this, "m")}) }"
+            "${mapWriteSourceExpr(this, "m", customScriptValue = "v")}) }"
       } else {
         // Map<String, Any?>: the generic String-keyed Dictionary; other keys are dropped, as
         // desktop's readDictionaryScalars drops them.
@@ -1073,8 +1094,11 @@ internal class IosScriptCodeEmitter(
         customScriptFqName = "",
         arrayElementCustomScriptFqName = "",
         listElementIsString = false,
-        mapSetStatement = if (objectValued) "" else setStatement,
-        mapGetExpression = if (objectValued) "" else getExpression,
+        mapSetStatement = setStatement,
+        mapGetExpression = getExpression,
+        mapRetainsValues =
+          mapValueWrapperFqName in RESOURCE_WRAPPERS_WITH_FROM_HANDLE ||
+            (mapValueCustomScriptFqName != null && mapValueCustomScriptIsResource),
       )
     }
     val isList = type == TypeMapping.ARRAY

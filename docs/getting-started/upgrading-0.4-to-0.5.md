@@ -946,8 +946,7 @@ Web sources too.
   warning and silently never running: a registered function or virtual with a
   parameter type the iOS call path does not pass (`Map`, `List`,
   `Packed*Array`), an `@OverrideVirtual` whose return type iOS does not
-  marshal, or an exported property iOS cannot deliver (a `Map` with object or script values;
-  `Map` exports with number, `String`, value-type or enum keys and values are delivered). The error names the method, the parameter and the supported types;
+  marshal, or an exported property iOS cannot deliver (a `RID`; `Map` exports are delivered). The error names the method, the parameter and the supported types;
   change the type, or build with `-PkanamaIosAllowSkips=true` to accept the skip
   (a warning again). `RID` and `Any?` parameters, and `NodePath` and every value
   type as an `@OverrideVirtual` return, are dispatched now.

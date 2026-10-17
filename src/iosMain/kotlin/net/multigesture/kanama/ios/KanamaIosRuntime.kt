@@ -174,6 +174,11 @@ internal interface KanamaIosScriptBridge {
   // branch converts them to the field's key and value types and drops what does not fit.
   fun setPropertyDictionary(propertyIndex: Int, entries: Map<Any?, Any?>): Boolean = false
 
+  // True for a Map property whose values are Resources: after the set the runtime takes one
+  // reference per value object ([KanamaIosRuntime.retainScriptInstancePropertyObjects]), as
+  // desktop's retained Dictionary read does, so a Resource only the Dictionary held stays alive.
+  fun retainsDictionaryValues(propertyIndex: Int): Boolean = false
+
   val scriptInstance: Any?
     get() = null
 }
@@ -666,6 +671,13 @@ internal object KanamaIosRuntime {
       return false
     }
     val ok = instance.bridge.setPropertyDictionary(propertyIndex, entries)
+    if (ok && instance.bridge.retainsDictionaryValues(propertyIndex)) {
+      val objects =
+        entries.values
+          .mapNotNull { (it as? net.multigesture.kanama.api.GodotObject)?.segment?.address() }
+          .toLongArray()
+      retainScriptInstancePropertyObjects(handle, propertyIndex, objects)
+    }
     if (ok) {
       log(
         "property dictionary set handle=$handle index=$propertyIndex count=${entries.size} path=${instance.resource.path}"
