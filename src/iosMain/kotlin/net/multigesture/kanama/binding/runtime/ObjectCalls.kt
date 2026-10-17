@@ -1696,7 +1696,7 @@ actual object ObjectCalls {
   // Float/Double, String, NodePath, Vector2/2i/3, Color, RID, GodotObject / MemorySegment handle,
   // and ONE level of Map<String, *> / List<*> whose values are scalars. Supported inside a
   // Dictionary / Array argument: scalars only; a nested container or any other Kotlin object throws
-  // (IosReturnContainerScratch.taggedValue strict mode) rather than passing nil.
+  // (IosReturnContainerScratch.taggedValue) rather than passing nil.
   internal fun MemScope.packVariantDesc(value: Any?): CPointer<KanamaIosVariantArgDesc> {
     // The struct's own `ptr` FIELD shadows kotlinx.cinterop's `.ptr` on the pointed value, so keep
     // the pointer to the descriptor from the allocation and touch fields through `pointed`.
@@ -1805,20 +1805,11 @@ actual object ObjectCalls {
       is Map<*, *> -> {
         desc.tag = PT_DICTIONARY
         desc.ptr =
-          IosReturnContainerScratch.encodeDictionary(
-            value,
-            { n -> allocArray<ByteVar>(n) },
-            strict = true,
-          )
+          IosReturnContainerScratch.encodeDictionary(value, { n -> allocArray<ByteVar>(n) })
       }
       is List<*> -> {
         desc.tag = PT_ARRAY
-        desc.ptr =
-          IosReturnContainerScratch.encodeArray(
-            value,
-            { n -> allocArray<ByteVar>(n) },
-            strict = true,
-          )
+        desc.ptr = IosReturnContainerScratch.encodeArray(value, { n -> allocArray<ByteVar>(n) })
       }
       // A PackedByteArray Variant value (Object.set, set_meta), as desktop's initVariantFromAny.
       is ByteArray -> {
@@ -1847,10 +1838,10 @@ actual object ObjectCalls {
   }
 
   internal fun MemScope.packDictionaryBlob(map: Map<String, Any?>): CPointer<ByteVar> =
-    IosReturnContainerScratch.encodeDictionary(map, { n -> allocArray<ByteVar>(n) }, strict = true)
+    IosReturnContainerScratch.encodeDictionary(map, { n -> allocArray<ByteVar>(n) })
 
   internal fun MemScope.packArrayBlob(values: List<Any?>): CPointer<ByteVar> =
-    IosReturnContainerScratch.encodeArray(values, { n -> allocArray<ByteVar>(n) }, strict = true)
+    IosReturnContainerScratch.encodeArray(values, { n -> allocArray<ByteVar>(n) })
 
   internal fun MemScope.packByteDesc(bytes: ByteArray): CPointer<KanamaIosPackedArgDesc> {
     val n = bytes.size
@@ -2446,7 +2437,7 @@ actual object ObjectCalls {
   // task 100 (parcel 10) — typed arrays whose ELEMENTS are containers or packed arrays. A
   // Dictionary / Array element is a whole task-29 blob (scalars, ByteArrays and nested containers
   // inside, one level:
-  // the strict encoder throws on anything deeper), a PackedByteArray element is its raw bytes and
+  // the encoder throws on anything deeper), a PackedByteArray element is its raw bytes and
   // a PackedStringArray element is the task-13 string blob; the dispatch's blob boxer rebuilds
   // each element before push_back. One helper per argument layout, never per element content.
   fun MemScope.packTypedDictionaryArrayDesc(
@@ -2455,9 +2446,7 @@ actual object ObjectCalls {
     packTypedArrayDesc(
       VT_DICTIONARY,
       null,
-      values.map {
-        Pair(PT_DICTIONARY, IosReturnContainerScratch.encodeDictionaryBytes(it, strict = true))
-      },
+      values.map { Pair(PT_DICTIONARY, IosReturnContainerScratch.encodeDictionaryBytes(it)) },
     )
 
   fun MemScope.packTypedArrayArrayDesc(
@@ -2466,7 +2455,7 @@ actual object ObjectCalls {
     packTypedArrayDesc(
       VT_ARRAY,
       null,
-      values.map { Pair(PT_ARRAY, IosReturnContainerScratch.encodeArrayBytes(it, strict = true)) },
+      values.map { Pair(PT_ARRAY, IosReturnContainerScratch.encodeArrayBytes(it)) },
     )
 
   fun MemScope.packTypedByteArrayArrayDesc(
@@ -3332,7 +3321,7 @@ actual object ObjectCalls {
           ptrs[i] = c.ptr.reinterpret<CPointed>()
         }
         // task 122 — containers box like desktop's initVariantFromAny (List -> Array, Map ->
-        // Dictionary): the return-side blob builders lay them out, strict mode throws on a value
+        // Dictionary): the return-side blob builders lay them out, the encoder throws on a value
         // type no Variant can hold, nested containers recurse.
         is List<*> -> {
           tags[i] = PT_ARRAY

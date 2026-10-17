@@ -2610,19 +2610,13 @@ internal object IosReturnContainerScratch {
   /**
    * PT tag + payload bytes for one container value. A Kotlin object without a Variant shape throws,
    * naming its type, in both directions (an argument and a script's container return), as desktop's
-   * initVariantFromAny does: it never silently becomes nil. [strict] (the argument direction, task
-   * 100 parcel 7) also refuses a non-String Dictionary key, which the return direction still
-   * stringifies. Nested List / Map recurse (task 122).
+   * initVariantFromAny does: it never silently becomes nil. Nested List / Map recurse (task 122).
    */
   // Nested containers recurse at most this deep (the C boxer recurses without its own bound; a
   // self-containing List would otherwise overflow the Kotlin/Native stack — no StackOverflowError).
   internal const val MAX_CONTAINER_DEPTH = 8
 
-  internal fun taggedValue(
-    value: Any?,
-    strict: Boolean = false,
-    depth: Int = 0,
-  ): Pair<Int, ByteArray> =
+  internal fun taggedValue(value: Any?, depth: Int = 0): Pair<Int, ByteArray> =
     when (value) {
       null -> Pair(IOS_PT_VOID, ByteArray(0))
       is Boolean -> Pair(IOS_PT_BOOL, byteArrayOf(if (value) 1 else 0))
@@ -2655,8 +2649,8 @@ internal object IosReturnContainerScratch {
       is NodePath -> Pair(IOS_PT_NODE_PATH, value.path.encodeToByteArray())
       // task 122 — nested containers recurse (the C boxer's PT_ARRAY / PT_DICTIONARY element cases
       // rebuild them), so Object.set / call take the same List / Map shapes desktop boxes.
-      is List<*> -> Pair(IOS_PT_ARRAY, encodeArrayBytes(value, strict, depth + 1))
-      is Map<*, *> -> Pair(IOS_PT_DICTIONARY, encodeDictionaryBytes(value, strict, depth + 1))
+      is List<*> -> Pair(IOS_PT_ARRAY, encodeArrayBytes(value, depth + 1))
+      is Map<*, *> -> Pair(IOS_PT_DICTIONARY, encodeDictionaryBytes(value, depth + 1))
       else ->
         // The value types Vector3i ... Projection (task 133 layout) as their Godot bytes, boxed by
         // kanama_ios_pt_blob_value_to_variant: a Transform3D inside an Array argument
@@ -2691,38 +2685,33 @@ internal object IosReturnContainerScratch {
   fun encodeDictionary(
     map: Map<*, *>,
     alloc: (Int) -> CPointer<ByteVar> = ::ensure,
-    strict: Boolean = false,
-  ): CPointer<ByteVar> = copyOut(encodeDictionaryBytes(map, strict), alloc)
+  ): CPointer<ByteVar> = copyOut(encodeDictionaryBytes(map), alloc)
 
   fun encodeArray(
     values: List<*>,
     alloc: (Int) -> CPointer<ByteVar> = ::ensure,
-    strict: Boolean = false,
-  ): CPointer<ByteVar> = copyOut(encodeArrayBytes(values, strict), alloc)
+  ): CPointer<ByteVar> = copyOut(encodeArrayBytes(values), alloc)
 
   /**
    * The entry blob as bytes (task 100 parcel 10): a Dictionary element of a typed-Array argument is
    * written into the outer record as a whole nested blob, so the encoder has to hand the bytes back
    * rather than a scratch pointer.
    */
-  fun encodeDictionaryBytes(map: Map<*, *>, strict: Boolean = false, depth: Int = 0): ByteArray {
+  fun encodeDictionaryBytes(map: Map<*, *>, depth: Int = 0): ByteArray {
     if (depth > MAX_CONTAINER_DEPTH) {
       error("iOS: container argument nested deeper than $MAX_CONTAINER_DEPTH levels (cyclic?)")
     }
     val entries =
       map.entries.map { (k, v) ->
-        // Desktop's variantFromDictionaryInto rejects non-String keys; strict (the argument
-        // direction) does the same instead of silently stringifying (task 122 review).
+        // The generic Map -> Dictionary path is String-key-only in every direction, with
+        // desktop's variantFromDictionaryInto message: a script's `Map<Int, V>` return used to
+        // reach Godot with "1"-style String keys.
         val key =
           k as? String
-            ?: if (strict) {
-              error(
-                "iOS: Dictionary argument key must be a String, got ${k?.let { it::class.simpleName }}"
-              )
-            } else {
-              k.toString()
-            }
-        Pair(key.encodeToByteArray(), taggedValue(v, strict, depth))
+            ?: error(
+              "Unsupported Dictionary key type: ${k?.let { it::class.qualifiedName } ?: "null"}"
+            )
+        Pair(key.encodeToByteArray(), taggedValue(v, depth))
       }
     var needed = 4
     for ((key, tagged) in entries) needed += 4 + key.size + 8 + tagged.second.size
@@ -2747,11 +2736,11 @@ internal object IosReturnContainerScratch {
     return out
   }
 
-  fun encodeArrayBytes(values: List<*>, strict: Boolean = false, depth: Int = 0): ByteArray {
+  fun encodeArrayBytes(values: List<*>, depth: Int = 0): ByteArray {
     if (depth > MAX_CONTAINER_DEPTH) {
       error("iOS: container argument nested deeper than $MAX_CONTAINER_DEPTH levels (cyclic?)")
     }
-    val elements = values.map { taggedValue(it, strict, depth) }
+    val elements = values.map { taggedValue(it, depth) }
     var needed = 4
     for (tagged in elements) needed += 8 + tagged.second.size
     val out = ByteArray(needed)
