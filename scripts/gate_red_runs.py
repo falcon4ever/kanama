@@ -838,11 +838,19 @@ case("tool_smoke.sh (plugin copies)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Append("example_project/addons/kanama_tools/plugin.gd", "\n# red run: this copy now differs from the starter template\n")],
      "plugin copies differ", "the example project's editor plugin drifts from the starter template's copy (the cheap pre-check)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
-PLUGIN_DOCS_WAIT = ("    _finish_pending_editor_docs()\n    var editor_settings", "    var editor_settings")
+# Only deleting the wait leaves a race: the crash needs Godot's doc thread to still be loading its cache when the
+# export quits. Linux runners always lose it; a Mac wins it about half the time (the thread finishes, its queued
+# update runs before the editor frees the docs, exit 1). So on the failing export the mutation also restarts the
+# thread in _exit_tree, as the first scan's late extension load does: the crash is then deterministic on every host
+# (10/10 on macOS), and the real wait still covers that restart (exit 1 with both lines in place). The restart is
+# limited to the export so the smoke's plain `--editor --quit` run, which would crash the same way, stays green.
+PLUGIN_DOCS_WAIT = ("    _finish_pending_editor_docs()\n    var editor_settings",
+                    '    if OS.get_cmdline_args().has("--export-release"):\n'
+                    "        GDExtensionManager.extensions_reloaded.emit()\n    var editor_settings")
 case("tool_smoke.sh (failing export exit)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/plugin.gd", *PLUGIN_DOCS_WAIT),
       Edit("example_project/addons/kanama_tools/plugin.gd", *PLUGIN_DOCS_WAIT)],
-     "failing export of a fresh project exited 134", "the editor plugin no longer waits for the editor's doc thread on exit: a failing export of a project without .godot/ crashes in Godot's exit path instead of exiting 1",
+     "failing export of a fresh project exited 134", "the editor plugin restarts the editor's doc thread on exit and no longer waits for it: a failing export of a project without .godot/ crashes in Godot's exit path instead of exiting 1 (the restart makes the crash deterministic, not a race only Linux loses)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(file)._readyX health=")],
