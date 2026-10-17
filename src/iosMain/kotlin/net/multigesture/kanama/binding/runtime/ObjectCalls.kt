@@ -1210,10 +1210,21 @@ actual object ObjectCalls {
             }
           // task 100 parcel 10: a PackedByteArray element carries its raw bytes.
           VT_PACKED_BYTE_ARRAY -> b.copyOfRange(start, end)
-          else -> null
+          VT_RID_TYPE -> if (len >= 8) RID(i64At(start)) else null
+          // The raw value kinds (Vector3i ... Projection) carry their Godot bytes, decoded like a
+          // scalar return of the same type. Nil, Callable and Signal carry none and are null, as
+          // on desktop; the shim reports any other type instead of encoding it.
+          else -> if (len > 0) rawValue(vt, start, len) else null
         }
       off = end
       return value
+    }
+
+    private fun rawValue(variantType: Int, start: Int, len: Int): Any? = memScoped {
+      val raw = allocIosRawValue()
+      val n = minOf(len, net.multigesture.kanama.ios.IOS_RAW_VALUE_MAX_BYTES)
+      for (i in 0 until n) raw[i] = b[start + i]
+      net.multigesture.kanama.ios.decodeIosRawVariant(variantType, raw)
     }
 
     fun array(): List<Any?> {
@@ -1809,6 +1820,11 @@ actual object ObjectCalls {
             strict = true,
           )
       }
+      // A PackedByteArray Variant value (Object.set, set_meta), as desktop's initVariantFromAny.
+      is ByteArray -> {
+        desc.tag = PT_PACKED_BYTE_ARRAY
+        desc.ptr = packByteDesc(value)
+      }
       // Task 133 value types (Vector3i ... Projection): raw Godot bytes, boxed by the shim.
       else -> {
         val raw = allocIosRawValue()
@@ -1821,8 +1837,9 @@ actual object ObjectCalls {
         error(
           "iOS: unsupported Variant argument type " +
             (value::class.simpleName ?: "<anonymous>") +
-            " (task 100 parcel 7 marshals scalars, String/NodePath, Vector2/2i/3, Color, RID, " +
-            "the task 133 value types, object handles and nested Map / List up to 8 levels)"
+            " (scalars, String/NodePath, Vector2/2i/3, Color, RID, ByteArray, the value types " +
+            "Vector3i ... Projection, object handles and nested Map / List up to 8 levels are " +
+            "marshalled)"
         )
       }
     }
@@ -3110,20 +3127,26 @@ actual object ObjectCalls {
       VT_STRING,
       VT_STRING_NAME,
       VT_NODE_PATH -> {
-        // StringName/NodePath decode to utf8 in out_str (the C side builds String(from:…));
-        // a String surfaces here. NodePath-returning callers re-wrap in NodePath. A value longer
-        // than the buffer was parked C-side (kanama_ios_emit_utf8_return): drain it whole.
+        // StringName/NodePath decode to utf8 in out_str (the C side builds String(from:…)). A
+        // StringName surfaces as its String and a NodePath as a NodePath, as desktop's
+        // variantToScalar does (a NodePath property read through Object.get was a String on iOS).
+        // A value longer than the buffer was parked C-side (kanama_ios_emit_utf8_return): drain it
+        // whole.
         val len = outStrLen.value
-        when {
-          len <= 0L -> ""
-          len <= strBufSize -> outStr.readBytes(len.toInt()).decodeToString()
-          else -> {
-            val full = allocArray<ByteVar>(len)
-            val got = kanama_ios_godot_take_pending_utf8(full, len)
-            if (got <= 0L) "" else full.readBytes(minOf(got, len).toInt()).decodeToString()
+        val text =
+          when {
+            len <= 0L -> ""
+            len <= strBufSize -> outStr.readBytes(len.toInt()).decodeToString()
+            else -> {
+              val full = allocArray<ByteVar>(len)
+              val got = kanama_ios_godot_take_pending_utf8(full, len)
+              if (got <= 0L) "" else full.readBytes(minOf(got, len).toInt()).decodeToString()
+            }
           }
-        }
+        if (retType == VT_NODE_PATH) NodePath(text) else text
       }
+      // The C side hands a RID's 64-bit id back in out_int (Object.get of a RID property).
+      VT_RID_TYPE -> RID(outInt.value)
       // A Variant Object return is a GodotObject wrapper (RefCounted when the engine flagged the
       // handle as ref-counted and the caller owns it), the desktop contract. Until task 115 the
       // non-ref-counted case surfaced the raw MemorySegment, so `call("get", "shooter") as?
@@ -3331,6 +3354,12 @@ actual object ObjectCalls {
           c.value = a.value
           tags[i] = PT_RID
           ptrs[i] = c.ptr.reinterpret<CPointed>()
+        }
+        // A PackedByteArray argument, as desktop's initVariantFromAny takes it
+        // (AudioStreamWAV.load_from_buffer, Image.create_from_data through call / callv).
+        is ByteArray -> {
+          tags[i] = PT_PACKED_BYTE_ARRAY
+          ptrs[i] = packByteDesc(a).reinterpret<CPointed>()
         }
         // Task 133 value types (Vector3i ... Projection): raw Godot bytes, boxed by the shim
         // (kanama_ios_pt_arg_to_variant) — e.g. a script signal's emitted arguments.
@@ -3658,8 +3687,8 @@ actual object ObjectCalls {
   // STRING_NAME / NODE_PATH Variant return to utf8 (String(from: StringName|NodePath) C-side), so
   // these
   // route through callWithVariantArgs too. StringName returns surface as Kotlin String; NodePath
-  // returns
-  // re-wrap the decoded path String in NodePath. Object args are MemorySegment handles (0 = null).
+  // returns surface as NodePath (variantNodePath). Object args are MemorySegment handles (0 =
+  // null).
   // (ptrcallWithObjectArgRetStringName — find_animation(Animation) — is deferred: Animation isn't
   // an
   // emitted iOS wrapper yet, so the Object-arg gate blocks it; wire it when Animation lands.)
@@ -3673,7 +3702,7 @@ actual object ObjectCalls {
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
-  ): NodePath = NodePath(callWithVariantArgs(methodBind, instance, listOf(value)) as? String ?: "")
+  ): NodePath = variantNodePath(callWithVariantArgs(methodBind, instance, listOf(value)))
 
   actual fun ptrcallWithObjectAndBoolArgRetNodePath(
     methodBind: MemorySegment,
@@ -3681,7 +3710,12 @@ actual object ObjectCalls {
     objectArg: MemorySegment,
     boolArg: Boolean,
   ): NodePath =
-    NodePath(callWithVariantArgs(methodBind, instance, listOf(objectArg, boolArg)) as? String ?: "")
+    variantNodePath(callWithVariantArgs(methodBind, instance, listOf(objectArg, boolArg)))
+
+  // A NodePath-typed method reached through the Variant call path: the decode answers a NodePath
+  // (desktop parity); a nil or other result is the empty path, as before.
+  private fun variantNodePath(value: Any?): NodePath =
+    value as? NodePath ?: NodePath(value as? String ?: "")
 
   // ===== BEGIN GENERATED MEMBERS (scripts/generate_api_wrapper.py — do not edit) =====
   /*

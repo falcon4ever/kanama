@@ -1762,6 +1762,26 @@ internal fun decodeIosRawVariant(variantType: Int, ptr: CPointer<ByteVar>): Any?
  */
 internal const val IOS_RAW_VALUE_MAX_BYTES = 64
 
+/**
+ * The byte size of a raw value kind's PT [tag] (the shim's k_kanama_ios_raw_value_kinds; real_t is
+ * float32 on iOS), or [IOS_RAW_VALUE_MAX_BYTES] for any other tag.
+ */
+internal fun iosRawValueSize(tag: Int): Int =
+  when (tag) {
+    IOS_PT_VECTOR3I -> 12
+    IOS_PT_VECTOR4,
+    IOS_PT_VECTOR4I,
+    IOS_PT_RECT2,
+    IOS_PT_RECT2I,
+    IOS_PT_PLANE,
+    IOS_PT_QUATERNION -> 16
+    IOS_PT_AABB,
+    IOS_PT_TRANSFORM2D -> 24
+    IOS_PT_BASIS -> 36
+    IOS_PT_TRANSFORM3D -> 48
+    else -> IOS_RAW_VALUE_MAX_BYTES
+  }
+
 /** A raw-value scratch of [IOS_RAW_VALUE_MAX_BYTES], 8-byte aligned (allocated as longs). */
 @OptIn(ExperimentalForeignApi::class)
 internal fun kotlinx.cinterop.NativePlacement.allocIosRawValue(): CPointer<ByteVar> =
@@ -2658,17 +2678,28 @@ internal object IosReturnContainerScratch {
       is List<*> -> Pair(IOS_PT_ARRAY, encodeArrayBytes(value, strict, depth + 1))
       is Map<*, *> -> Pair(IOS_PT_DICTIONARY, encodeDictionaryBytes(value, strict, depth + 1))
       else ->
-        if (strict) {
-          error(
-            "iOS: unsupported value type ${value::class.simpleName ?: "<anonymous>"} inside a " +
-              "Dictionary / Array argument (scalars, strings, NodePath, small vectors, Color, RID, " +
-              "ByteArray, object handles and nested List / Map are marshalled — task 100 parcels " +
-              "7 and 10, task 122)"
-          )
-        } else {
-          Pair(IOS_PT_VOID, ByteArray(0))
-        }
+        // The value types Vector3i ... Projection (task 133 layout) as their Godot bytes, boxed by
+        // kanama_ios_pt_blob_value_to_variant: a Transform3D inside an Array argument
+        // (ImporterMesh.merge_importer_meshes) was refused, and inside a script's container return
+        // it became nil.
+        rawValueBytes(value)
+          ?: if (strict) {
+            error(
+              "iOS: unsupported value type ${value::class.simpleName ?: "<anonymous>"} inside a " +
+                "Dictionary / Array argument (scalars, strings, NodePath, the value types, RID, " +
+                "ByteArray, object handles and nested List / Map are marshalled)"
+            )
+          } else {
+            Pair(IOS_PT_VOID, ByteArray(0))
+          }
     }
+
+  /** A raw value kind's PT tag and Godot bytes, or null when [value] is not one. */
+  private fun rawValueBytes(value: Any): Pair<Int, ByteArray>? = memScoped {
+    val raw = allocIosRawValue()
+    val tag = encodeIosRawValue(value, raw)
+    if (tag < 0) null else Pair(tag, raw.readBytes(iosRawValueSize(tag)))
+  }
 
   /**
    * Encode [map] into the entry blob. [alloc] provides the destination bytes: the return path uses
