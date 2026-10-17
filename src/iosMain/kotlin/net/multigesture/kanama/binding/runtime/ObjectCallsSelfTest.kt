@@ -608,7 +608,7 @@ private fun runVariantTypeRows(
           ObjectCalls.callWithVariantArgs(
             callBind,
             callNode,
-            listOf("set_meta", "t140k", mapOf(4L to "d")),
+            listOf("set_meta", "kanama_key_probe", mapOf(4L to "d")),
           )
         },
     )
