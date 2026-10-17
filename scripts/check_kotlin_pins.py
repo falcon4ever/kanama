@@ -6,8 +6,10 @@ is the single source of truth. The release kit, the KSP processor's `symbol-proc
 dependency, the Android plugin build and the toolchain line of `docs/reference/version-support.md`
 restate those versions by hand, and a Kotlin bump that missed one still builds here while the
 missed artifact compiles against the old compiler. This gate fails on any drift, on a listed pin
-it can no longer find, and on any Kotlin or KSP pin in a tracked Gradle script it was not told
-about (so a new one cannot drift unseen). The demos repo pins its own copies and is out of scope.
+it can no longer find, and on any Kotlin or KSP pin it was not told about in a tracked Gradle script (the root one
+included), gradle.properties or libs.versions.toml: plugin ids in the infix and the `.version("x")`
+call form, `org.jetbrains.kotlin:kotlin-*` and KSP coordinates, `*kotlin*Version=` properties and
+version-catalog entries (so a new one cannot drift unseen). The demos repo pins its own copies and is out of scope.
 
 Usage: python3 scripts/check_kotlin_pins.py
 """
@@ -29,12 +31,21 @@ ROOT_PINS = {
 }
 
 # Any Kotlin or KSP version a Gradle script can pin, and which root value it must equal.
+# Both the infix form (`kotlin("jvm") version "x"`) and the call form (`kotlin("jvm").version("x")`).
+_VERSION = r'(?:\s+version\s+|\s*\.\s*version\s*\(\s*)"([^"]+)"'
 GRADLE_PIN_PATTERNS = (
-    ("kotlin", re.compile(r'kotlin\("[A-Za-z0-9.-]+"\)\s+version\s+"([^"]+)"')),
-    ("kotlin", re.compile(r'id\("org\.jetbrains\.kotlin\.[A-Za-z0-9.-]+"\)\s+version\s+"([^"]+)"')),
-    ("ksp", re.compile(r'id\("com\.google\.devtools\.ksp"\)\s+version\s+"([^"]+)"')),
+    ("kotlin", re.compile(r'kotlin\("[A-Za-z0-9.-]+"\)' + _VERSION)),
+    ("kotlin", re.compile(r'id\("org\.jetbrains\.kotlin\.[A-Za-z0-9.-]+"\)' + _VERSION)),
+    ("ksp", re.compile(r'id\("com\.google\.devtools\.ksp"\)' + _VERSION)),
     ("ksp", re.compile(r'"com\.google\.devtools\.ksp:symbol-processing[A-Za-z-]*:([^"]+)"')),
+    ("kotlin", re.compile(r'"org\.jetbrains\.kotlin:kotlin-[a-z-]+:([^"]+)"')),
 )
+# gradle.properties: a key naming Kotlin or KSP and ending in "version" (kotlinVersion=, kotlin.version=, kspVersion=).
+PROPERTY_PIN_RE = re.compile(r"^\s*([A-Za-z0-9_.-]*?(kotlin(?!x)|ksp)[A-Za-z0-9_.-]*?[Vv]ersion)\s*[=:]\s*(\S+)", re.I)
+# libs.versions.toml: a [versions] key `kotlin`/`kotlin-*`/`ksp*` (not kotlinx), or an inline entry for a Kotlin or KSP
+# plugin/module with `version = "x"`, or a "group:name:version" Kotlin/KSP coordinate (the Gradle patterns above).
+TOML_VERSION_KEY_RE = re.compile(r'^\s*((kotlin(?!x)|ksp)[A-Za-z0-9_-]*)\s*=\s*"([^"]+)"', re.I)
+TOML_INLINE_RE = re.compile(r'(org\.jetbrains\.kotlin|com\.google\.devtools\.ksp)[^}\n]*?\bversion\s*=\s*"([^"]+)"')
 
 # Pins that must exist (a pattern that stops matching must fail, not pass on nothing).
 REQUIRED = (
@@ -47,11 +58,36 @@ REQUIRED = (
 )
 
 
-def tracked_gradle_scripts() -> list[str]:
-    out = subprocess.run(
-        ["git", "ls-files", "*.gradle.kts", "*.gradle"], cwd=ROOT, capture_output=True, text=True, check=True
-    ).stdout
-    return [p for p in out.splitlines() if p and p != "build.gradle.kts"]
+def tracked(*patterns: str) -> list[str]:
+    # tracked files and new ones not yet added (ignored build output stays out)
+    out = subprocess.run(["git", "ls-files", "--cached", "--others", "--exclude-standard", *patterns], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+    return [p for p in out.splitlines() if p]
+
+
+def scan_pins(rel: str, text: str) -> list[tuple[int, str, str]]:
+    """Every (line, kind, version) Kotlin/KSP pin in a tracked build file."""
+    pins: list[tuple[int, str, str]] = []
+    is_props = rel.endswith("gradle.properties")
+    is_toml = rel.endswith(".toml")
+    for lineno, line in enumerate(text.splitlines(), 1):
+        stripped = line.lstrip()
+        if stripped.startswith(("//", "#")):
+            continue
+        if is_props:
+            m = PROPERTY_PIN_RE.match(line)
+            if m:
+                pins.append((lineno, "ksp" if m.group(2).lower() == "ksp" else "kotlin", m.group(3)))
+            continue
+        if is_toml:
+            m = TOML_VERSION_KEY_RE.match(line)
+            if m:
+                pins.append((lineno, "ksp" if m.group(2).lower() == "ksp" else "kotlin", m.group(3)))
+            for m in TOML_INLINE_RE.finditer(line):
+                pins.append((lineno, "ksp" if "ksp" in m.group(1) else "kotlin", m.group(2)))
+        for kind, pattern in GRADLE_PIN_PATTERNS:
+            for m in pattern.finditer(line):
+                pins.append((lineno, kind, m.group(1)))
+    return pins
 
 
 def main() -> int:
@@ -85,23 +121,19 @@ def main() -> int:
             failures.append(f"{rel}: {kind} {m.group(1)} but the root build.gradle.kts pins {expected[kind]}")
 
     seen = 0
-    for rel in tracked_gradle_scripts():
-        text = (ROOT / rel).read_text(encoding="utf-8")
-        for lineno, line in enumerate(text.splitlines(), 1):
-            if line.lstrip().startswith("//"):
-                continue
-            for kind, pattern in GRADLE_PIN_PATTERNS:
-                for m in pattern.finditer(line):
-                    seen += 1
-                    if m.group(1) != expected[kind]:
-                        failures.append(f"{rel}:{lineno}: {kind} {m.group(1)} but the root build.gradle.kts pins {expected[kind]}")
+    # The root build.gradle.kts too: its plugins block is the source, but any other pin in it must agree.
+    for rel in tracked("*.gradle.kts", "*.gradle", "*gradle.properties", "*.versions.toml"):
+        for lineno, kind, version in scan_pins(rel, (ROOT / rel).read_text(encoding="utf-8")):
+            seen += 1
+            if version != expected[kind]:
+                failures.append(f"{rel}:{lineno}: {kind} {version} but the root build.gradle.kts pins {expected[kind]}")
 
     if failures:
         print(f"{TAG} FAIL — Kotlin/KSP pins drifted from build.gradle.kts:", file=sys.stderr)
         for f in failures:
             print(f"  - {f}", file=sys.stderr)
         return 1
-    print(f"{TAG} PASS — Kotlin {expected['kotlin']}, KSP {expected['ksp']}: {seen} Gradle pin(s) and the version-support line agree")
+    print(f"{TAG} PASS — Kotlin {expected['kotlin']}, KSP {expected['ksp']}: {seen} build-file pin(s) and the version-support line agree")
     return 0
 
 

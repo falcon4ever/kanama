@@ -334,6 +334,18 @@ case("check_kotlin_pins.py", py("check_kotlin_pins.py"),
 case("check_kotlin_pins.py (unlisted pin)", py("check_kotlin_pins.py"),
      [Append("buildSrc/build.gradle.kts", '\nplugins { kotlin("plugin.serialization") version "2.0.0" }\n')],
      "kotlin 2.0.0 but the root build.gradle.kts pins", "a Gradle script the check does not list pins an older Kotlin plugin: the scan covers every tracked script")
+case("check_kotlin_pins.py (root coordinate)", py("check_kotlin_pins.py"),
+     [Append("build.gradle.kts", '\nval redRunStdlib = "org.jetbrains.kotlin:kotlin-stdlib:2.0.0"\n')],
+     "build.gradle.kts:", "the root build itself names an older kotlin-stdlib coordinate (the scan covers the root script and `org.jetbrains.kotlin:kotlin-*` coordinates)")
+case("check_kotlin_pins.py (version() call form)", py("check_kotlin_pins.py"),
+     [Append("buildSrc/build.gradle.kts", '\nplugins { id("org.jetbrains.kotlin.plugin.serialization").version("2.0.0") }\n')],
+     "buildSrc/build.gradle.kts:", "a plugin pinned with the `.version(\"x\")` call form instead of the infix `version \"x\"`")
+case("check_kotlin_pins.py (gradle.properties)", py("check_kotlin_pins.py"),
+     [Append("gradle.properties", "\nkotlinVersion=2.0.0\n")],
+     "gradle.properties:", "gradle.properties names an older Kotlin version")
+case("check_kotlin_pins.py (version catalog)", py("check_kotlin_pins.py"),
+     [Create("gradle/libs.versions.toml", '[versions]\nkotlin = "2.0.0"\nksp = "2.3.12"\n\n[plugins]\nkotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.0.0" }\n')],
+     "gradle/libs.versions.toml:2: kotlin 2.0.0", "a new version catalog pins an older Kotlin (a [versions] key and an inline plugin entry)")
 case("check_kotlin_pins.py (doc version)", py("check_kotlin_pins.py"),
      [Edit("docs/reference/version-support.md", "The current source build uses Kotlin `", "The current source build uses Kotlin `9")],
      "docs/reference/version-support.md: kotlin 9", "version-support.md states a Kotlin version the build does not use")
