@@ -2372,6 +2372,9 @@ tasks.register<Exec>("assembleAndroidPluginAar") {
       "android/godot-plugin",
       ":plugin:assembleDebug",
       "-PkanamaPanamaPortCore=${panamaPortCoreDependency.get()}",
+      // The API exercise rows ride into the runtime AAR only on request (android_smoke.sh with
+      // KANAMA_ANDROID_API_EXERCISE=1); the plugin build copies them into its sources then.
+      "-PkanamaApiExercise=${kanamaApiExercise.get()}",
     )
   }
 }
@@ -2638,6 +2641,32 @@ tasks.register<Zip>("packageMobileAddonAndroid") {
   destinationDirectory.set(layout.buildDirectory.dir("distributions"))
   isPreserveFileTimestamps = false
   isReproducibleFileOrder = true
+  // The users' AAR carries no API exercise rows (a -PkanamaApiExercise=true runtime AAR is for
+  // android_smoke.sh only; the graph guard above refuses this task with the flag, and this reads
+  // the AAR it zips, whatever built it).
+  doFirst {
+    val aar =
+      layout.projectDirectory
+        .file("android/godot-plugin/plugin/build/outputs/aar/plugin-debug.aar")
+        .asFile
+    val found =
+      java.util.zip.ZipFile(aar).use { outer ->
+        val classes =
+          outer.getEntry("classes.jar")
+            ?: throw GradleException("${aar.absolutePath} has no classes.jar")
+        java.util.zip.ZipInputStream(outer.getInputStream(classes)).use { jar ->
+          generateSequence { jar.nextEntry }
+            .map { it.name }
+            .firstOrNull { it.startsWith("net/multigesture/kanama/exercise/") && !it.endsWith("/") }
+        }
+      }
+    if (found != null) {
+      throw GradleException(
+        "${aar.absolutePath} carries the API exercise rows ($found): it was built with " +
+          "-PkanamaApiExercise=true, which is for android_smoke.sh only. Rebuild without the flag."
+      )
+    }
+  }
   from(
     layout.projectDirectory.file("android/godot-plugin/plugin/build/outputs/aar/plugin-debug.aar")
   ) {

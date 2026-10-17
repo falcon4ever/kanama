@@ -178,6 +178,28 @@ On Android 8-12 (no `java.lang.ref.Cleaner`, so no fallback) the worker rows pri
 `KANAMA_ANDROID_SELFTEST_WAIT` more seconds, default 90) and fails on a missing verdict, a `failed`
 count above zero or an `OWNERSHIP SELFTEST FAIL` line.
 
+The generated API exercise (`ApiExerciseHook`, one row per `ObjectCalls` helper the shared tree calls;
+see [API Exercise Inventory](../../reference/generated/api-exercise.md) and
+[Wrapper Maintenance](../wrapper-maintenance.md#the-api-exercise-inventory)) is the same JVM code on
+ART, so it runs on the device on request: `KANAMA_ANDROID_API_EXERCISE=1 scripts/android_smoke.sh ...`
+builds the runtime AAR with `-PkanamaApiExercise=true` (the plugin copy then keeps the `exercise/`
+sources it otherwise excludes), writes `kanama/debug/api_exercise=true` beside the two settings above,
+waits for the summary as it does for the ownership verdict and fails on any `API EXERCISE FAIL` line or a
+summary other than
+
+```text
+[kanama] API EXERCISE: <n> passed, 0 failed, <w> weak, <k> known, <r> reach, <e> excluded in <ms> ms
+```
+
+`KANAMA_ANDROID_API_EXERCISE_TRACE=1` adds `kanama/debug/api_exercise_trace` (a line before each row, so
+a crash names its row). Without the variable the smoke checks that no `API EXERCISE` line appears. The
+rows run as platform `android`: `DirAccess.get_drive_name(0)` may be `""` there, where a zero counts weak
+(`STATIC_ZERO_ON`). A flagged AAR is for that debug APK only: the plugin
+build refuses a release variant or a publication with the flag, `packageMobileAddonAndroid` reads the AAR
+it zips for exercise classes, and `android_export_minified.sh` (the release path) and CI's Android lane
+run `generate_api_exercise.py --check-jar` on the AAR. The demo keeps the flagged AAR until the next
+`installAndroidPluginAar` without the flag (the setting is restored, so the rows do not run).
+
 ## Implementation Shape
 
 The current Android implementation lives under `android/godot-plugin`, split

@@ -548,6 +548,23 @@ API_EXERCISE_JAR = ["python3", "-c",
 case("generate_api_exercise.py --check-jar (exercise class in a jar)", API_EXERCISE_JAR,
      [Create("scripts/fixtures/api_exercise/jar/net/multigesture/kanama/exercise/ApiExerciseRows.class", "placeholder\n")],
      "carries 1 API exercise class(es)", "a jar with an `exercise/` class (a -PkanamaApiExercise=true build) is published or installed: the check must fail it")
+# The same over a runtime AAR (the jar zipped as its classes.jar): a flagged Android runtime AAR must fail the check
+# packageMobileAddonAndroid, CI's Android lane and android_export_minified.sh run.
+API_EXERCISE_AAR = ["python3", "-c",
+    "import io, pathlib, subprocess, sys, tempfile, zipfile\n"
+    "root = pathlib.Path('scripts/fixtures/api_exercise/jar')\n"
+    "inner = io.BytesIO()\n"
+    "with zipfile.ZipFile(inner, 'w') as z:\n"
+    "    [z.write(f, f.relative_to(root).as_posix()) for f in sorted(root.rglob('*')) if f.is_file()]\n"
+    "with tempfile.TemporaryDirectory() as tmp:\n"
+    "    aar = pathlib.Path(tmp) / 'plugin-debug.aar'\n"
+    "    with zipfile.ZipFile(aar, 'w') as z:\n"
+    "        z.writestr('classes.jar', inner.getvalue())\n"
+    "    code = subprocess.run([sys.executable, 'scripts/generate_api_exercise.py', '--check-jar', str(aar)]).returncode\n"
+    "sys.exit(code)\n"]
+case("generate_api_exercise.py --check-jar (exercise class in a runtime AAR)", API_EXERCISE_AAR,
+     [Create("scripts/fixtures/api_exercise/jar/net/multigesture/kanama/exercise/ApiExerciseRows.class", "placeholder\n")],
+     "carries 1 API exercise class(es)", "a runtime AAR whose classes.jar has an `exercise/` class (a -PkanamaApiExercise=true Android build) is packaged or exported for release: the check must fail it")
 case("generate_api_exercise.py --check (RID source no row takes)", API_EXERCISE_CHECK,
      [Edit("scripts/api_exercise_policy.py", '    ("TextServer", "shaped"): "TextServer.create_shaped_text",\n',
            '    ("TextServer", "shaped"): "TextServer.create_shaped_text",\n    ("TextServer", "red_run"): "TextServer.create_font",\n')],

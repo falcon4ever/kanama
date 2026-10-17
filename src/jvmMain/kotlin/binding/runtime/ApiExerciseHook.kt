@@ -16,13 +16,15 @@ import net.multigesture.kanama.api.OS
  * [ENVIRONMENT_VARIABLE] (`KANAMA_API_EXERCISE=1` forces it on, `0` off). The rows themselves are
  * compiled only into a build made with `-PkanamaApiExercise=true`, which no publish or install task
  * accepts; this hook is in every build and reaches them by reflection, so a run asked for in a
- * build without them prints a FAIL line instead of nothing. `KANAMA_API_EXERCISE_TRACE=1` prints
- * one line before each row (the headless sweep reads it to attribute an engine error or a crash).
+ * build without them prints a FAIL line instead of nothing. `KANAMA_API_EXERCISE_TRACE=1`, or the
+ * setting [TRACE_SETTING] where no environment reaches the app (Android), prints one line before
+ * each row (the headless sweep reads it to attribute an engine error or a crash).
  */
 internal object ApiExerciseHook {
   const val ENVIRONMENT_VARIABLE: String = "KANAMA_API_EXERCISE"
   const val TRACE_VARIABLE: String = "KANAMA_API_EXERCISE_TRACE"
   const val SETTING: String = "kanama/debug/api_exercise"
+  const val TRACE_SETTING: String = "kanama/debug/api_exercise_trace"
   private const val ENTRY_CLASS = "net.multigesture.kanama.exercise.ApiExercise"
 
   @Volatile private var done = false
@@ -42,7 +44,12 @@ internal object ApiExerciseHook {
         }
         .getOrDefault(false)
     if (!enabled) return
-    val trace = runCatching { OS.getEnvironment(TRACE_VARIABLE).trim() == "1" }.getOrDefault(false)
+    val trace =
+      runCatching {
+          OS.getEnvironment(TRACE_VARIABLE).trim() == "1" ||
+            SignalSelfTest.boolSetting(TRACE_SETTING)
+        }
+        .getOrDefault(false)
     // A MethodHandle, not Method.invoke: the Android source copy rewrites every `.invoke(` to
     // `.invokeWithArguments(` (KanamaAndroidRemap), which a reflective Method does not have.
     val entry =

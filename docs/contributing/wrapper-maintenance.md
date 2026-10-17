@@ -1145,7 +1145,9 @@ The rows are a Kanama test hook and never ship: they compile only into a build m
 `-PkanamaApiExercise=true` (desktop and the Android plugin copy) or, on iOS, with the self-tests
 (`-PkanamaIosSelfTest=true`, through `iosMain` only). Every `publish*` task, `packageDistributions`,
 the kit and store `package*` tasks and `installAddonJar` fail on a flagged build, and local_ci runs
-`generate_api_exercise.py --check-jar` on the published and the installed `kanama.jar`. Where they run:
+`generate_api_exercise.py --check-jar` on the published and the installed `kanama.jar` (the same check
+reads an AAR's `classes.jar`: CI's Android lane and `android_export_minified.sh` run it on the runtime
+AAR, and the Android plugin build refuses a release variant with the flag). Where they run:
 
 - **Desktop:** `runtime_smoke.sh` builds the example addon with the flag (only there; local_ci's
   "external addon install" stage builds the user-shaped jar without it) and runs
@@ -1159,6 +1161,11 @@ the kit and store `package*` tasks and `installAddonJar` fail on a flagged build
   runs with the trace on, so a crash names the row it happened in. A method whose call aborts the engine
   itself (an index Godot does not bounds-check before a `CRASH_BAD_INDEX`) is excluded in
   `METHOD_OVERRIDES` with that reason.
+- **Android:** the same hook on ART, run by `KANAMA_ANDROID_API_EXERCISE=1 scripts/android_smoke.sh`
+  (the runtime AAR built with the flag, `kanama/debug/api_exercise` written into the demo's
+  `project.godot` for the run, `kanama/debug/api_exercise_trace` with
+  `KANAMA_ANDROID_API_EXERCISE_TRACE=1`); see
+  [Android backend](backends/android.md).
 - **iOS:** `ApiExerciseSelfTest.kt` runs the same rows after the frame-1 self-test rows and prints
   `[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): ... faults=<f> expected=<e> in <ms> ms`, a line
   both device runners require.

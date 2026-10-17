@@ -199,6 +199,19 @@ each row's verdict) and names the row a crash happened in. Each run writes under
 so two runs of the example project at once (two worktrees) no longer delete each other's fixtures; a
 crashed run's directory is removed by the next run.
 
+### Added — tooling: the API exercise runs on Android
+
+Contributors: `KANAMA_ANDROID_API_EXERCISE=1 scripts/android_smoke.sh ...` builds the runtime AAR with
+`-PkanamaApiExercise=true`, opts the demo's debug build in through `kanama/debug/api_exercise` and
+requires `[kanama] API EXERCISE: <n> passed, 0 failed, ... in <ms> ms` with no `API EXERCISE FAIL` line
+(`KANAMA_ANDROID_API_EXERCISE_TRACE=1` prints the row trace, through the new setting
+`kanama/debug/api_exercise_trace`); without the variable the smoke checks the exercise stayed off.
+`STATIC_ZERO_ON` lets a static's zero count weak on a platform (`DirAccess.get_drive_name` on
+Android). A flagged AAR cannot reach users: the plugin build
+refuses a release variant or publication with the flag, `packageMobileAddonAndroid` fails on an AAR
+with exercise classes, and `generate_api_exercise.py --check-jar` (which now reads an AAR's jars) runs
+on the runtime AAR in CI's Android lane and in `android_export_minified.sh`.
+
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 
 The control (a plain GDScript visibility-notifier export, `visibility-control` in `web.yml`) handed the

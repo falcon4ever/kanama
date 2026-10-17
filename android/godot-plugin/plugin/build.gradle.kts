@@ -164,6 +164,21 @@ tasks.named("preBuild") {
     dependsOn(auditAndroidKanamaSources)
 }
 
+// A runtime AAR with the API exercise rows (-PkanamaApiExercise=true) is for the debug APK of
+// scripts/android_smoke.sh only: no release variant or publication of it is built (the root build's
+// packageMobileAddonAndroid also reads the AAR it zips for exercise classes).
+gradle.taskGraph.whenReady {
+    if (!kanamaApiExercise) return@whenReady
+    val refused = allTasks.map { it.path }.filter { it.contains("Release") || it.substringAfterLast(':').startsWith("publish") }
+    if (refused.isNotEmpty()) {
+        throw GradleException(
+            "-PkanamaApiExercise=true builds the API exercise rows into the runtime AAR (a Kanama test hook " +
+                "for android_smoke.sh's debug APK); refusing: ${refused.take(3).joinToString()}" +
+                (if (refused.size > 3) " and ${refused.size - 3} more" else "") + ". Run without the flag.",
+        )
+    }
+}
+
 dependencies {
     compileOnly(project(":godot-stubs"))
     implementation(panamaPortCoreDependency)

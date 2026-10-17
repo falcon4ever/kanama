@@ -632,6 +632,13 @@ def check_policy(inv: Inventory, rules: Rules, api: dict[str, ApiClass], singlet
             inv.failures.append(f"STATIC_RESULTS names {key[0]}.{key[1]}, which the shared tree never calls as a static; delete the entry")
         elif kind not in ("weak", "fresh") or not reason:
             inv.failures.append(f"STATIC_RESULTS[{key[0]}.{key[1]}] must be ('weak' | 'fresh', reason)")
+    for key, (platforms, reason) in getattr(policy, "STATIC_ZERO_ON", {}).items():
+        if key not in {(site.cls, site.method) for _, site in inv.sites if site.kind == "static"}:
+            inv.failures.append(f"STATIC_ZERO_ON names {key[0]}.{key[1]}, which the shared tree never calls as a static; delete the entry")
+        elif not platforms or set(platforms) - {"ios", "android", "desktop"} or not reason:
+            inv.failures.append(f"STATIC_ZERO_ON[{key[0]}.{key[1]}] must be ((platforms among ios, android, desktop), reason)")
+        elif key in getattr(policy, "STATIC_RESULTS", {}):
+            inv.failures.append(f"STATIC_ZERO_ON[{key[0]}.{key[1]}]: the row is in STATIC_RESULTS too; keep one entry")
     check_singleton_policy(inv, rules, api, singletons, policy)
     for key in sorted(set(expected) - set(policy.STATIC_ARGS)):
         inv.failures.append(
@@ -888,6 +895,9 @@ def render(inv: Inventory, policy=policy_module) -> str:
         result = getattr(policy, "STATIC_RESULTS", {}).get(key)
         if result is not None and result[0] == "fresh":
             note.append(f"fresh result: {md(result[1])} (both paths non-zero, not compared)")
+        zero_hosts = getattr(policy, "STATIC_ZERO_ON", {}).get(key)
+        if zero_hosts is not None:
+            note.append(f"a zero counts weak on {', '.join(zero_hosts[0])} (STATIC_ZERO_ON)")
         if inv.rules.method(*key).return_type == "enum::Error" and args is not None:
             note.append("returns `Error`: arguments must make it fail")
         if row.verdict.weak:
@@ -901,6 +911,14 @@ def render(inv: Inventory, policy=policy_module) -> str:
     ]
     for (cls, method), (kind, reason) in getattr(policy, "STATIC_RESULTS", {}).items():
         lines.append(f"- `{cls}.{method}`: {kind}, {md(reason)}.")
+    lines += [
+        "",
+        "`STATIC_ZERO_ON` (statics whose result may be its type's zero on a platform: there a zero from both paths",
+        "counts weak, a non-zero result passes as everywhere else):",
+        "",
+    ]
+    for (cls, method), (platforms, reason) in getattr(policy, "STATIC_ZERO_ON", {}).items():
+        lines.append(f"- `{cls}.{method}` on {', '.join(platforms)}: {md(reason)}.")
     lines += [
         "",
         "## Known findings",
@@ -2016,6 +2034,8 @@ class RowGenerator:
         oracle_args = "".join(f", {n}" for n in names)
         lines.append(f"val got = r.track({kotlin_cls}.{fun.name}({call_args}))")
         result = getattr(self.policy, "STATIC_RESULTS", {}).get((site.cls, site.method))
+        zero_hosts = getattr(self.policy, "STATIC_ZERO_ON", {}).get((site.cls, site.method))
+        zero_on = f', zeroOn = "{",".join(zero_hosts[0])}"' if zero_hosts else ""
         ret = method.return_type
         # The wrapper's own result first: a known finding (KNOWN_FINDINGS) can excuse only the oracle half.
         if ret == "enum::Error" and not verdict.weak:
@@ -2026,7 +2046,7 @@ class RowGenerator:
             pass
         else:
             weak = verdict.weak or (result is not None and result[0] == "weak")
-            lines.append(f"r.wrapperValue(got, weak = {'true' if weak else 'false'})")
+            lines.append(f"r.wrapperValue(got, weak = {'true' if weak else 'false'}{zero_on})")
         lines.append("r.oracle()")
         lines.append(f'val oracle = r.track(ClassDB.classCallStatic("{site.cls}", "{site.method}"{oracle_args}))')
         if ret == "enum::Error" and not verdict.weak:
@@ -2040,7 +2060,7 @@ class RowGenerator:
         elif ret == "enum::Error":
             lines.append(f"r.staticValue(got.value, oracle, weak = true)")
         else:
-            lines.append(f"r.staticValue(got, oracle, weak = {'true' if verdict.weak else 'false'})")
+            lines.append(f"r.staticValue(got, oracle, weak = {'true' if verdict.weak else 'false'}{zero_on})")
         return ExerciseRow("C", [helper], site, verdict, f"{site.cls}.{site.method}", lines)
 
     def pair_row(self, helper: str, site: Site, verdict: Verdict, prop: dict, receiver: str, kind: str = "instance") -> ExerciseRow:
@@ -2158,8 +2178,23 @@ def render_rows(inv: Inventory, policy=policy_module) -> tuple[str, list[str], l
 EXERCISE_PACKAGE_PATH = "net/multigesture/kanama/exercise/"
 
 
+def exercise_entries(archive) -> list[str]:
+    """The exercise classes in a jar, or in the jars and AARs an archive carries (an AAR's `classes.jar` and
+    `libs/*.jar`, a mobile add-on zip's AAR)."""
+    import io
+    import zipfile
+
+    # Files only: an incremental build can leave the package's (empty) directory entry behind.
+    found = [n for n in archive.namelist() if n.startswith(EXERCISE_PACKAGE_PATH) and not n.endswith("/")]
+    for name in archive.namelist():
+        if name.endswith((".jar", ".aar")):
+            with zipfile.ZipFile(io.BytesIO(archive.read(name))) as inner:
+                found += [f"{name}!/{n}" for n in exercise_entries(inner)]
+    return found
+
+
 def check_jars(jars: list[Path]) -> int:
-    """The rows are a Kanama test hook (-PkanamaApiExercise=true): no shipped or installed jar has one."""
+    """The rows are a Kanama test hook (-PkanamaApiExercise=true): no shipped or installed jar or AAR has one."""
     import zipfile
 
     failures = []
@@ -2168,8 +2203,7 @@ def check_jars(jars: list[Path]) -> int:
             failures.append(f"{jar}: no such jar")
             continue
         with zipfile.ZipFile(jar) as archive:
-            # Files only: an incremental build can leave the package's (empty) directory entry behind.
-            found = [n for n in archive.namelist() if n.startswith(EXERCISE_PACKAGE_PATH) and not n.endswith("/")]
+            found = exercise_entries(archive)
         if found:
             failures.append(
                 f"{jar} carries {len(found)} API exercise class(es) ({found[0]}, ...): it was built with "
@@ -2209,7 +2243,7 @@ def main() -> int:
         "--check-jar",
         nargs="+",
         metavar="JAR",
-        help="fail when a jar (a published or installed kanama.jar) carries an exercise class",
+        help="fail when a jar or AAR (a published or installed kanama.jar, a runtime AAR) carries an exercise class",
     )
     args = parser.parse_args()
 

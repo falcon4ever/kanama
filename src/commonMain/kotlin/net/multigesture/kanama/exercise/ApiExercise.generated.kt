@@ -766,10 +766,10 @@ internal object ApiExerciseRows {
     try {
       val a0: Int = 0
       val got = r.track(DirAccess.getDriveName(a0))
-      r.wrapperValue(got, weak = false)
+      r.wrapperValue(got, weak = false, zeroOn = "android")
       r.oracle()
       val oracle = r.track(ClassDB.classCallStatic("DirAccess", "get_drive_name", a0))
-      r.staticValue(got, oracle, weak = false)
+      r.staticValue(got, oracle, weak = false, zeroOn = "android")
     } catch (t: Throwable) {
       r.threw(t)
     }

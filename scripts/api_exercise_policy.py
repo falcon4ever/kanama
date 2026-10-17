@@ -294,8 +294,7 @@ STATIC_ARGS: dict[tuple[str, str], tuple[str, ...]] = {
     ),
     ("DirAccess", "dir_exists_absolute"): ('scratch("sub")',),
     ("DirAccess", "get_directories_at"): ('scratch("")',),
-    # The first volume: never "" on a desktop or iOS host. Android (P4) needs a look: DirAccessJAndroid can
-    # report no drive at all, and then the row reads "" and fails.
+    # The first volume: never "" on a desktop or iOS host; Android may report none (STATIC_ZERO_ON).
     ("DirAccess", "get_drive_name"): ("0",),
     ("DirAccess", "make_dir_absolute"): ('scratch("sub")',),  # exists: ERR_ALREADY_EXISTS (32)
     ("DirAccess", "rename_absolute"): ('scratch("missing")', 'scratch("renamed")'),  # FAILED (1)
@@ -400,6 +399,17 @@ STATIC_OBJECT_CHECKS: dict[tuple[str, str], tuple[tuple[str, ...], str]] = {
 STATIC_RESULTS: dict[tuple[str, str], tuple[str, str]] = {
     ("DirAccess", "get_drive_label"): ("weak", "a drive label exists only on Windows; every other host returns \"\""),
     ("Resource", "generate_scene_unique_id"): ("fresh", "a new random id per call"),
+}
+
+# (class, method) -> (platforms, reason) for a static row whose result can be its type's zero on those platforms
+# for a reason of the host, not of the call: there a zero from both paths counts weak; a non-zero result passes
+# and a zero fails everywhere else, as usual. Platforms: `ios`, `android`, `desktop`.
+STATIC_ZERO_ON: dict[tuple[str, str], tuple[tuple[str, ...], str]] = {
+    ("DirAccess", "get_drive_name"): (
+        ("android",),
+        "Android's filesystem DirAccess (DirAccessJAndroid) names a storage volume only from API 30, and a device "
+        "can list none: below API 30 every drive name is \"\"",
+    ),
 }
 
 # (singleton, property) -> reason: an integer singleton property whose row sets `before + 1` instead of a

@@ -463,9 +463,14 @@ internal constructor(
     }
   }
 
-  /** C row, wrapper half: a value a no-op cannot produce (not checked for a weak row). */
-  fun wrapperValue(got: Any?, weak: Boolean) {
-    if (!weak && isZero(got)) fail("expected a value a no-op cannot produce, got ${show(got)}")
+  /**
+   * C row, wrapper half: a value a no-op cannot produce (not checked for a weak row, nor on the
+   * platforms [zeroOn] lists: STATIC_ZERO_ON, where the host can answer its type's zero).
+   */
+  fun wrapperValue(got: Any?, weak: Boolean, zeroOn: String = "") {
+    if (!weak && isZero(got) && !zeroOn.split(',').contains(platform)) {
+      fail("expected a value a no-op cannot produce, got ${show(got)}")
+    }
   }
 
   /** C row, wrapper half: a non-OK `Error`. */
@@ -473,12 +478,16 @@ internal constructor(
     if (got == 0L) fail("expected a non-OK Error got OK (0)")
   }
 
-  /** C row: equal to the Variant path and not its type's zero (only equal, for a weak row). */
-  fun staticValue(got: Any?, oracle: Any?, weak: Boolean) {
+  /**
+   * C row: equal to the Variant path and not its type's zero (only equal, for a weak row; a zero is
+   * weak on the platforms [zeroOn] lists).
+   */
+  fun staticValue(got: Any?, oracle: Any?, weak: Boolean, zeroOn: String = "") {
     when {
       !same(got, oracle) ->
         fail("expected ${show(oracle)} (ClassDB.class_call_static) got ${show(got)}")
-      weak -> if (verdict == ' ') verdict = 'W'
+      weak || isZero(got) && zeroOn.split(',').contains(platform) ->
+        if (verdict == ' ') verdict = 'W'
       isZero(got) ->
         fail("expected a value a no-op cannot produce, got its type's zero ${show(got)}")
       else -> pass()

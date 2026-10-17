@@ -229,7 +229,7 @@ The exercise runner creates its own directory `user://kanama-api-exercise/<pid>-
 | `DirAccess.dir_exists_absolute` | `scratch("sub")` | — |
 | `DirAccess.get_directories_at` | `scratch("")` | — |
 | `DirAccess.get_drive_count` | (none) | weak; backed by A `AnimatedTexture.get_frames` |
-| `DirAccess.get_drive_name` | `0` | — |
+| `DirAccess.get_drive_name` | `0` | a zero counts weak on android (STATIC_ZERO_ON) |
 | `DirAccess.get_open_error` | (none) | weak; backed by A `AStarGrid2D.get_cell_shape` |
 | `DirAccess.make_dir_absolute` | `scratch("sub")` | returns `Error`: arguments must make it fail |
 | `DirAccess.rename_absolute` | `scratch("missing")`, `scratch("renamed")` | returns `Error`: arguments must make it fail |
@@ -269,6 +269,11 @@ The exercise runner creates its own directory `user://kanama-api-exercise/<pid>-
 
 - `DirAccess.get_drive_label`: weak, a drive label exists only on Windows; every other host returns "".
 - `Resource.generate_scene_unique_id`: fresh, a new random id per call.
+
+`STATIC_ZERO_ON` (statics whose result may be its type's zero on a platform: there a zero from both paths
+counts weak, a non-zero result passes as everywhere else):
+
+- `DirAccess.get_drive_name` on android: Android's filesystem DirAccess (DirAccessJAndroid) names a storage volume only from API 30, and a device can list none: below API 30 every drive name is "".
 
 ## Known findings
 
