@@ -8,11 +8,16 @@ if [[ $# -lt 1 ]]; then
   exit 2
 fi
 
-# Logs default to a directory of this run's own (mktemp): a fixed /tmp path was shared by concurrent runs.
+# shellcheck source=scripts/run_logs.sh
+source "$ROOT_DIR/scripts/run_logs.sh"
+# Logs default to a directory of this run's own (scripts/run_logs.sh): deleted when the run passes, kept and
+# named when it fails. A fixed /tmp path was shared by concurrent runs.
 LOG_FILE="${KANAMA_SMOKE_LOG:-}"
 if [[ -z "$LOG_FILE" ]]; then
-  LOG_FILE="$(mktemp -d "${TMPDIR:-/tmp}/kanama_runtime_smoke.XXXXXX")/runtime_smoke.log"
+  run_logs_dir kanama_runtime_smoke
+  LOG_FILE="$RUN_LOGS_DIR/runtime_smoke.log"
 fi
+trap 'run_logs_finish "$?" runtime_smoke' EXIT
 IMPORT_LOG_FILE="${KANAMA_SMOKE_IMPORT_LOG:-${LOG_FILE}.import}"
 echo "[runtime_smoke] log: $LOG_FILE"
 
@@ -122,7 +127,7 @@ KANAMA_FREED_OBJECT_CHECKS=binding "$GODOT_BIN" --headless --path "$PROJECT_DIR_
 # one "released by GC" line per creation site).
 OWNED_RELEASE_OVERRIDE="$PROJECT_DIR/override.cfg"
 printf '[kanama]\n\ndebug/log_gc_releases=true\n' >"$OWNED_RELEASE_OVERRIDE"
-trap 'rm -f "$OWNED_RELEASE_OVERRIDE"' EXIT
+trap 'st=$?; rm -f "$OWNED_RELEASE_OVERRIDE"; run_logs_finish "$st" runtime_smoke' EXIT
 OWNED_RELEASE_GREEN_LOG="${LOG_FILE}.owned_release_green"
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://owned_release_smoke.tscn --quit-after 600 --verbose >"$OWNED_RELEASE_GREEN_LOG" 2>&1
 cat "$OWNED_RELEASE_GREEN_LOG" >>"$LOG_FILE"
@@ -134,7 +139,7 @@ KANAMA_GC_RELEASES=0 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res
 SIGNAL_SETTING_ON_LOG="${LOG_FILE}.signal_setting_on"
 SIGNAL_SETTING_OFF_LOG="${LOG_FILE}.signal_setting_off"
 SIGNAL_SETTING_OVERRIDE="$PROJECT_DIR/override.cfg"
-trap 'rm -f "$OWNED_RELEASE_OVERRIDE" "$SIGNAL_SETTING_OVERRIDE"' EXIT
+trap 'st=$?; rm -f "$OWNED_RELEASE_OVERRIDE" "$SIGNAL_SETTING_OVERRIDE"; run_logs_finish "$st" runtime_smoke' EXIT
 printf '[kanama]\n\ndebug/signal_self_test=true\n' >"$SIGNAL_SETTING_OVERRIDE"
 env -u KANAMA_SIGNAL_SELFTEST "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit >"$SIGNAL_SETTING_ON_LOG" 2>&1
 rm -f "$SIGNAL_SETTING_OVERRIDE"
@@ -147,7 +152,7 @@ env -u KANAMA_SIGNAL_SELFTEST "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_G
 # Own log; the scene quits once the self-test is done.
 OWNERSHIP_LOG="${LOG_FILE}.ownership_self_test"
 OWNERSHIP_OVERRIDE="$PROJECT_DIR/override.cfg"
-trap 'rm -f "$OWNED_RELEASE_OVERRIDE" "$SIGNAL_SETTING_OVERRIDE" "$OWNERSHIP_OVERRIDE"' EXIT
+trap 'st=$?; rm -f "$OWNED_RELEASE_OVERRIDE" "$SIGNAL_SETTING_OVERRIDE" "$OWNERSHIP_OVERRIDE"; run_logs_finish "$st" runtime_smoke' EXIT
 printf '[kanama]\n\ndebug/ownership_self_test=true\n' >"$OWNERSHIP_OVERRIDE"
 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://ownership_self_test.tscn --verbose >"$OWNERSHIP_LOG" 2>&1
 rm -f "$OWNERSHIP_OVERRIDE"
@@ -878,7 +883,7 @@ fi
 JVM_OPTIONS_FILE="$PROJECT_DIR/addons/kanama/kanama-jvm-options.txt"
 PROJECT_GODOT_BACKUP="${LOG_FILE}.project.godot"
 cp "$PROJECT_DIR/project.godot" "$PROJECT_GODOT_BACKUP"
-trap 'rm -f "$JVM_OPTIONS_FILE"; cp "$PROJECT_GODOT_BACKUP" "$PROJECT_DIR/project.godot"' EXIT
+trap 'st=$?; rm -f "$JVM_OPTIONS_FILE"; cp "$PROJECT_GODOT_BACKUP" "$PROJECT_DIR/project.godot"; run_logs_finish "$st" runtime_smoke' EXIT
 printf '# a comment line\n-XX:MaxNewSize=104m\n' >"$JVM_OPTIONS_FILE"
 run_jvm_options
 check_jvm_flag "kanama-jvm-options.txt" MaxNewSize "109051904 command line"
@@ -891,7 +896,7 @@ run_jvm_options "KANAMA_JVM_OPTIONS=-XX:MaxNewSize=96m"
 check_jvm_flag "KANAMA_JVM_OPTIONS over the project setting" MaxNewSize "100663296 command line"
 rm -f "$JVM_OPTIONS_FILE"
 cp "$PROJECT_GODOT_BACKUP" "$PROJECT_DIR/project.godot"
-trap - EXIT
+trap 'run_logs_finish "$?" runtime_smoke' EXIT
 
 # task 83 -- no native call adapter may be generated inside a Godot->JVM upcall.
 # The trace (KANAMA_TRACE_NATIVE_ADAPTERS=1, set above) timestamps every adapter and

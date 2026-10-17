@@ -8,11 +8,16 @@ if [[ $# -lt 1 ]]; then
   exit 2
 fi
 
-# Logs default to a directory of this run's own (mktemp): a fixed /tmp path was shared by concurrent runs.
+# shellcheck source=scripts/run_logs.sh
+source "$ROOT_DIR/scripts/run_logs.sh"
+# Logs default to a directory of this run's own (scripts/run_logs.sh): deleted when the run passes, kept and
+# named when it fails. A fixed /tmp path was shared by concurrent runs.
 LOG_FILE="${KANAMA_TOOL_SMOKE_LOG:-}"
 if [[ -z "$LOG_FILE" ]]; then
-  LOG_FILE="$(mktemp -d "${TMPDIR:-/tmp}/kanama_tool_smoke.XXXXXX")/tool_smoke.log"
+  run_logs_dir kanama_tool_smoke
+  LOG_FILE="$RUN_LOGS_DIR/tool_smoke.log"
 fi
+trap 'run_logs_finish "$?" tool_smoke' EXIT
 echo "[tool_smoke] log: $LOG_FILE"
 
 GODOT_BIN="$1"
@@ -114,7 +119,7 @@ for plugin_file in plugin.gd kanama_export_guard.gd; do
   fi
 done
 JDK_SCRATCH="$(mktemp -d "${TMPDIR:-/tmp}/kanama_jdk_resolution_gd.XXXXXX")"
-trap 'rm -rf "$JDK_SCRATCH"' EXIT
+trap 'st=$?; rm -rf "$JDK_SCRATCH"; run_logs_finish "$st" tool_smoke' EXIT
 mkdir -p "$JDK_SCRATCH/project/addons" "$JDK_SCRATCH/jdks"
 cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$JDK_SCRATCH/project/addons/"
 cp "$ROOT_DIR/scripts/check_editor_jdk_resolution.gd" "$JDK_SCRATCH/project/"

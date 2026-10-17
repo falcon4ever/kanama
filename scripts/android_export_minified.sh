@@ -30,6 +30,7 @@ source "$ROOT_DIR/scripts/android_common.sh"
 usage() {
   cat <<'EOF'
 usage: scripts/android_export_minified.sh /path/to/godot /path/to/demo package.name [/path/to/output.apk]
+  (default: a per-run directory under ${TMPDIR:-/tmp}, deleted when the run passes; pass a path to keep the APK)
 
 Required environment:
   ANDROID_HOME or ANDROID_SDK_ROOT
@@ -56,7 +57,10 @@ GODOT_BIN="$1"
 DEMO_DIR="$2"
 PACKAGE_NAME="$3"
 # The APK and logcat default to a directory of this run's own (mktemp): a fixed /tmp path was shared by concurrent runs.
-RUN_DIR="$(mktemp -d "${TMPDIR:-/tmp}/kanama_android_minified.XXXXXX")"
+# shellcheck source=scripts/run_logs.sh
+source "$ROOT_DIR/scripts/run_logs.sh"
+run_logs_dir kanama_android_minified
+RUN_DIR="$RUN_LOGS_DIR"
 APK_PATH="${4:-$RUN_DIR/kanama-android-minified.apk}"
 LOG_FILE="${KANAMA_ANDROID_LOG:-$RUN_DIR/kanama_android_minified.log}"
 echo "[android_export_minified] output: $RUN_DIR"
@@ -104,10 +108,12 @@ export GODOT_ANDROID_KEYSTORE_RELEASE_USER="$KEYSTORE_USER"
 export GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD="$KEYSTORE_PASSWORD"
 
 cleanup() {
+  local status=$?
   if [[ "${PACKAGE_LAUNCHED:-0}" == "1" ]]; then
     # justified: cleanup after the verdict; the app may already have exited.
     "$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 || true
   fi
+  run_logs_finish "$status" android_export_minified
 }
 trap cleanup EXIT
 

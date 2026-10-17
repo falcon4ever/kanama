@@ -14,8 +14,13 @@ stage_secs=()
 stage_started=0
 
 cleanup() {
+  local status=$?
   if [[ -n "$bootstrap_build_dir" && -d "$bootstrap_build_dir" ]]; then
     rm -rf "$bootstrap_build_dir"
+  fi
+  # The external-addon-install project is removed when its stage passes; a failed run keeps it to inspect.
+  if [[ -n "${install_check_dir:-}" && -d "$install_check_dir" && "$status" -ne 0 ]]; then
+    echo "[local_ci] exit $status: the external addon install project is kept in $install_check_dir" >&2
   fi
 }
 

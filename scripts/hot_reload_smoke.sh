@@ -9,14 +9,18 @@ if [[ $# -lt 1 ]]; then
   exit 2
 fi
 
-# Logs default to a directory of this run's own (mktemp): a fixed /tmp path was shared by concurrent runs.
+# shellcheck source=scripts/run_logs.sh
+source "$ROOT_DIR/scripts/run_logs.sh"
+# Logs default to a directory of this run's own (scripts/run_logs.sh): deleted when the run passes, kept and
+# named when it fails. A fixed /tmp path was shared by concurrent runs.
 LOG1="${KANAMA_HOTRELOAD_LOG1:-}"
 LOG2="${KANAMA_HOTRELOAD_LOG2:-}"
 if [[ -z "$LOG1" || -z "$LOG2" ]]; then
-  RUN_LOG_DIR="$(mktemp -d "${TMPDIR:-/tmp}/kanama_hot_reload.XXXXXX")"
-  LOG1="${LOG1:-$RUN_LOG_DIR/hot_reload_1.log}"
-  LOG2="${LOG2:-$RUN_LOG_DIR/hot_reload_2.log}"
+  run_logs_dir kanama_hot_reload
+  LOG1="${LOG1:-$RUN_LOGS_DIR/hot_reload_1.log}"
+  LOG2="${LOG2:-$RUN_LOGS_DIR/hot_reload_2.log}"
 fi
+trap 'run_logs_finish "$?" hot_reload_smoke' EXIT
 echo "[hot_reload_smoke] logs: $LOG1 $LOG2"
 
 GODOT_BIN="$1"
@@ -48,6 +52,7 @@ restore() {
     status=1
   fi
   rm -f "$BACKUP"
+  run_logs_finish "$status" hot_reload_smoke
   exit "$status"
 }
 trap restore EXIT
