@@ -1,5 +1,6 @@
 package net.multigesture.kanama.binding.runtime
 
+import java.lang.invoke.MethodHandles
 import net.multigesture.kanama.api.Engine
 import net.multigesture.kanama.api.OS
 
@@ -42,14 +43,19 @@ internal object ApiExerciseHook {
         .getOrDefault(false)
     if (!enabled) return
     val trace = runCatching { OS.getEnvironment(TRACE_VARIABLE).trim() == "1" }.getOrDefault(false)
+    // A MethodHandle, not Method.invoke: the Android source copy rewrites every `.invoke(` to
+    // `.invokeWithArguments(` (KanamaAndroidRemap), which a reflective Method does not have.
     val entry =
       try {
-        Class.forName(ENTRY_CLASS)
-          .getMethod(
-            "runDesktop",
-            Boolean::class.javaPrimitiveType,
-            String::class.java,
-            Function1::class.java,
+        MethodHandles.lookup()
+          .unreflect(
+            Class.forName(ENTRY_CLASS)
+              .getMethod(
+                "runDesktop",
+                Boolean::class.javaPrimitiveType,
+                String::class.java,
+                Function1::class.java,
+              )
           )
       } catch (_: ReflectiveOperationException) {
         System.err.println(
@@ -64,13 +70,10 @@ internal object ApiExerciseHook {
       val platform =
         if (System.getProperty("java.vm.vendor").orEmpty().contains("Android")) "android"
         else "desktop"
-      entry.invoke(null, trace, platform, print)
+      entry.invokeWithArguments(trace, platform, print)
     } catch (t: Throwable) {
-      val cause = (t as? java.lang.reflect.InvocationTargetException)?.targetException ?: t
-      System.err.println(
-        "[kanama] API EXERCISE FAIL: ${cause::class.qualifiedName}: ${cause.message}"
-      )
-      cause.printStackTrace(System.err)
+      System.err.println("[kanama] API EXERCISE FAIL: ${t::class.qualifiedName}: ${t.message}")
+      t.printStackTrace(System.err)
     }
   }
 }
