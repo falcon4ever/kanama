@@ -295,6 +295,281 @@ private fun runFaultProbesInProbeMode(n3: MemorySegment, check: (String, Boolean
   )
 }
 
+/**
+ * One row per Variant type per generic path (the Variant path of `Object.get` / `call` / `callv` /
+ * signals), each against a value the ENGINE built or compared, so a Kotlin-side encode/decode pair
+ * that is wrong the same way both directions cannot pass:
+ * - `ret` — a GDScript literal evaluated by an Expression comes back as the Kotlin value
+ *   (kanama_ios_decode_variant_scalar + decodeVariantScalarReturn);
+ * - `elem` — the same literal inside an Array and a Dictionary (kanama_ios_blob_encode_variant +
+ *   ContainerBlob);
+ * - `arg` — the Kotlin value passed to set_meta through Object.call, at the top level and inside an
+ *   Array and a Dictionary, compared with the literal by the engine (encodeVariantArgs +
+ *   kanama_ios_pt_arg_to_variant, IosReturnContainerScratch + kanama_ios_pt_blob_value_to_variant);
+ * - `in` — the literal emitted by the engine to a Variant signal argument, at the top level and
+ *   inside an Array and a Dictionary (kanama_ios_marshal_variant_args + decodeIosCallArg). Nil,
+ *   Callable and Signal decode to null on every backend (desktop's variantToScalar too); their rows
+ *   pin that, and a Callable / Signal signal argument is refused loudly (the `call-arg(Any?)` row).
+ *   Types Kotlin has no distinct value for (StringName is a String; the packed arrays other than
+ *   PackedByteArray are Lists, which encode as Array) and Nil at the top level (set_meta(null)
+ *   erases the entry) have no `arg` row; Callable and Signal have no `arg` or `in` row.
+ */
+@OptIn(ExperimentalForeignApi::class)
+private fun runVariantTypeRows(
+  callBind: MemorySegment,
+  callNode: MemorySegment,
+  check: (String, Boolean) -> Unit,
+) {
+  val node = GodotObject(GodotHandle(callNode))
+  class Case(val type: String, val literal: String, val value: Any?, val arg: Boolean = true)
+  val xform3 =
+    Transform3D(
+      Basis(Vector3(1.0, 2.0, 3.0), Vector3(4.0, 5.0, 6.0), Vector3(7.0, 8.0, 9.0)),
+      Vector3(10.0, 11.0, 12.0),
+    )
+  val cases =
+    listOf(
+      Case("Nil", "null", null, arg = false),
+      Case("bool", "true", true),
+      Case("int", "7", 7L),
+      Case("float", "0.5", 0.5),
+      Case("String", "\"kanama\"", "kanama"),
+      Case("Vector2", "Vector2(0.5, 1.5)", Vector2(0.5, 1.5)),
+      Case("Vector2i", "Vector2i(-3, 4)", Vector2i(-3, 4)),
+      Case("Rect2", "Rect2(0.5, 1.5, 2.25, 3.125)", Rect2(Vector2(0.5, 1.5), Vector2(2.25, 3.125))),
+      Case("Rect2i", "Rect2i(-1, 2, 30, 40)", Rect2i(Vector2i(-1, 2), Vector2i(30, 40))),
+      Case("Vector3", "Vector3(1, 2.5, -3)", Vector3(1.0, 2.5, -3.0)),
+      Case("Vector3i", "Vector3i(7, -8, 9)", Vector3i(7, -8, 9)),
+      Case(
+        "Transform2D",
+        "Transform2D(Vector2(1, 2), Vector2(3, 4), Vector2(5, 6))",
+        Transform2D(Vector2(1.0, 2.0), Vector2(3.0, 4.0), Vector2(5.0, 6.0)),
+      ),
+      Case("Vector4", "Vector4(0.5, -0.25, 8, 2)", Vector4(0.5, -0.25, 8.0, 2.0)),
+      Case(
+        "Vector4i",
+        "Vector4i(-2147483648, 2147483647, 0, 7)",
+        net.multigesture.kanama.types.Vector4i(Int.MIN_VALUE, Int.MAX_VALUE, 0, 7),
+      ),
+      Case("Plane", "Plane(0, 1, 0, 2.5)", Plane(Vector3(0.0, 1.0, 0.0), 2.5)),
+      Case("Quaternion", "Quaternion(0, 0.6, 0, 0.8)", Quaternion(0.0, 0.6, 0.0, 0.8)),
+      Case(
+        "AABB",
+        "AABB(Vector3(-1, -2, -3), Vector3(4, 5, 6))",
+        AABB(Vector3(-1.0, -2.0, -3.0), Vector3(4.0, 5.0, 6.0)),
+      ),
+      Case(
+        "Basis",
+        "Basis(Vector3(1, 0, 0), Vector3(0, 0, 1), Vector3(0, -1, 0))",
+        Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, 0.0, 1.0), Vector3(0.0, -1.0, 0.0)),
+      ),
+      Case(
+        "Transform3D",
+        "Transform3D(Basis(Vector3(1, 2, 3), Vector3(4, 5, 6), Vector3(7, 8, 9)), " +
+          "Vector3(10, 11, 12))",
+        xform3,
+      ),
+      Case(
+        "Projection",
+        "Projection(Vector4(1, 2, 3, 4), Vector4(5, 6, 7, 8), Vector4(9, 10, 11, 12), " +
+          "Vector4(13, 14, 15, 16))",
+        Projection(
+          Vector4(1.0, 2.0, 3.0, 4.0),
+          Vector4(5.0, 6.0, 7.0, 8.0),
+          Vector4(9.0, 10.0, 11.0, 12.0),
+          Vector4(13.0, 14.0, 15.0, 16.0),
+        ),
+      ),
+      Case("Color", "Color(0.5, 0.25, 0, 1)", Color(0.5, 0.25, 0.0, 1.0)),
+      Case("StringName", "StringName(\"sn\")", "sn", arg = false),
+      Case("NodePath", "NodePath(\"A/B\")", NodePath("A/B")),
+      Case("RID", "rid_from_int64(77)", RID(77L)),
+      Case("Object", "self", node),
+      Case("Callable", "Callable(self, \"get_name\")", null, arg = false),
+      Case("Signal", "Signal(self, \"ready\")", null, arg = false),
+      Case("Dictionary", "{\"k\": 1}", mapOf("k" to 1L)),
+      Case("Array", "[1, \"s\"]", listOf(1L, "s")),
+      Case("PackedByteArray", "PackedByteArray([1, 2, 255])", byteArrayOf(1, 2, -1)),
+      Case("PackedInt32Array", "PackedInt32Array([1, -2])", listOf(1, -2), arg = false),
+      Case("PackedInt64Array", "PackedInt64Array([1, -2])", listOf(1L, -2L), arg = false),
+      Case("PackedFloat32Array", "PackedFloat32Array([0.5, 2])", listOf(0.5f, 2f), arg = false),
+      Case("PackedFloat64Array", "PackedFloat64Array([0.5, 2])", listOf(0.5, 2.0), arg = false),
+      Case(
+        "PackedStringArray",
+        "PackedStringArray([\"a\", \"bb\"])",
+        listOf("a", "bb"),
+        arg = false,
+      ),
+      Case(
+        "PackedVector2Array",
+        "PackedVector2Array([Vector2(1, 2)])",
+        listOf(Vector2(1.0, 2.0)),
+        arg = false,
+      ),
+      Case(
+        "PackedVector3Array",
+        "PackedVector3Array([Vector3(1, 2, 3)])",
+        listOf(Vector3(1.0, 2.0, 3.0)),
+        arg = false,
+      ),
+      Case(
+        "PackedColorArray",
+        "PackedColorArray([Color(0.5, 0.25, 0, 1)])",
+        listOf(Color(0.5, 0.25, 0.0, 1.0)),
+        arg = false,
+      ),
+      Case(
+        "PackedVector4Array",
+        "PackedVector4Array([Vector4(1, 2, 3, 4)])",
+        listOf(Vector4(1.0, 2.0, 3.0, 4.0)),
+        arg = false,
+      ),
+    )
+  check("variant-types(one case per Godot Variant type) n=${cases.size}", cases.size == 39)
+
+  fun same(a: Any?, b: Any?): Boolean =
+    when {
+      a is ByteArray && b is ByteArray -> a.contentEquals(b)
+      a is GodotObject && b is GodotObject -> a.segment.address() == b.segment.address()
+      a is List<*> && b is List<*> -> a.size == b.size && a.indices.all { same(a[it], b[it]) }
+      a is Map<*, *> && b is Map<*, *> ->
+        a.size == b.size && a.keys.all { b.containsKey(it) && same(a[it], b[it]) }
+      else -> a == b
+    }
+  fun show(v: Any?): String =
+    when (v) {
+      is ByteArray -> v.toList().toString()
+      is GodotObject -> "Object@" + v.segment.address()
+      is List<*> -> v.joinToString(prefix = "[", postfix = "]") { show(it) }
+      is Map<*, *> ->
+        v.entries.joinToString(prefix = "{", postfix = "}") { "${it.key}=${show(it.value)}" }
+      else -> v.toString()
+    }
+
+  val expressionHandle = ObjectCalls.constructObject("Expression")
+  val expression =
+    net.multigesture.kanama.api.Expression(
+      net.multigesture.kanama.api.GodotHandle(expressionHandle)
+    )
+  fun eval(code: String): Any? {
+    // A literal the Expression cannot parse fails its row here, not as a wrong value.
+    val parsed = expression.parse(code, emptyList())
+    if (parsed != net.multigesture.kanama.api.GodotError.OK) error("Expression cannot parse $code")
+    val result = expression.execute(emptyList(), node)
+    if (expression.hasExecuteFailed()) error("Expression failed: $code")
+    return result
+  }
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
+    callNode,
+    listOf("kanamaVariantIn"),
+  )
+  val received = mutableListOf<Any?>()
+  val inbound =
+    net.multigesture.kanama.api.Signal1(
+      node,
+      "kanamaVariantIn",
+      net.multigesture.kanama.api.SignalArgType.VARIANT,
+    )
+  val connection = inbound.connect(node) { received.add(it) }
+
+  val failed =
+    linkedMapOf(
+      "ret" to mutableListOf<String>(),
+      "elem" to mutableListOf(),
+      "arg" to mutableListOf(),
+      "in" to mutableListOf(),
+    )
+  fun row(path: String, case: Case, body: () -> Pair<Boolean, String>) {
+    val (ok, detail) =
+      runCatching(body).getOrElse { false to "threw ${it::class.simpleName}: ${it.message}" }
+    if (!ok) failed.getValue(path).add(case.type)
+    check("variant-type(${case.type}) $path $detail", ok)
+  }
+  for (case in cases) {
+    val v = case.value
+    val l = case.literal
+    row("ret", case) {
+      val got = eval(l)
+      same(got, v) to "got=${show(got)}"
+    }
+    row("elem", case) {
+      val array = eval("[$l]")
+      val dictionary = eval("{\"k\": $l}")
+      (same(array, listOf(v)) && same(dictionary, mapOf("k" to v))) to
+        "array=${show(array)} dictionary=${show(dictionary)}"
+    }
+    if (case.arg) {
+      row("arg", case) {
+        ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "t140", v))
+        ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "t140a", listOf(v)))
+        ObjectCalls.callWithVariantArgs(
+          callBind,
+          callNode,
+          listOf("set_meta", "t140d", mapOf("k" to v)),
+        )
+        val equal =
+          eval(
+            "get_meta(\"t140\") == $l and get_meta(\"t140a\") == [$l] and " +
+              "get_meta(\"t140d\") == {\"k\": $l}"
+          )
+        (equal == true) to "engine-equal=$equal"
+      }
+    }
+    if (case.type != "Callable" && case.type != "Signal") {
+      row("in", case) {
+        received.clear()
+        eval("emit_signal(\"kanamaVariantIn\", $l)")
+        eval("emit_signal(\"kanamaVariantIn\", [$l])")
+        eval("emit_signal(\"kanamaVariantIn\", {\"k\": $l})")
+        same(received, listOf(v, listOf(v), mapOf("k" to v))) to "got=${show(received)}"
+      }
+    }
+  }
+  connection.close()
+  ObjectCalls.destroyObject(expressionHandle)
+  println(
+    "[kanama][ios][kn] OBJECTCALLS SELFTEST variant-types " +
+      failed.entries.joinToString(" ") { (path, types) -> "$path-failed=${types.size}$types" }
+  )
+
+  // The three Object.get reads the generated API exercise found null on the iPhone: a RID
+  // property, an Array[RID] property and an Array[Transform3D] property, each set through its
+  // typed setter and read back through the Variant path. Each probe is a raw construct the row
+  // destroys itself, so its typed view is the borrowed one (fromHandle).
+  fun getRow(label: String, className: String, body: (GodotObject) -> Pair<Boolean, String>) {
+    val handle = ObjectCalls.constructObject(className)
+    val (ok, detail) =
+      if (handle.address() == 0L) false to "not constructed"
+      else
+        runCatching { body(GodotObject(GodotHandle(handle))) }
+          .getOrElse { false to "threw ${it::class.simpleName}: ${it.message}" }
+    if (handle.address() != 0L) ObjectCalls.destroyObject(handle)
+    check("variant-get($label) $detail", ok)
+  }
+  getRow("CharFXTransform.font RID", "CharFXTransform") { obj ->
+    net.multigesture.kanama.api.CharFXTransform.fromHandle(obj.handle)!!.setFont(
+      RID(0x1_0000_0005L)
+    )
+    val got = obj.get("font")
+    (got == RID(0x1_0000_0005L)) to "got=${show(got)}"
+  }
+  getRow(
+    "NavigationPathQueryParameters2D.excluded_regions Array[RID]",
+    "NavigationPathQueryParameters2D",
+  ) { obj ->
+    net.multigesture.kanama.api.NavigationPathQueryParameters2D.fromHandle(obj.handle)!!
+      .setExcludedRegions(listOf(RID(41L), RID(42L)))
+    val got = obj.get("excluded_regions")
+    (got == listOf(RID(41L), RID(42L))) to "got=${show(got)}"
+  }
+  getRow("GLTFSkin.inverse_binds Array[Transform3D]", "GLTFSkin") { obj ->
+    net.multigesture.kanama.api.GLTFSkin.fromHandle(obj.handle)!!.setInverseBinds(listOf(xform3))
+    val got = obj.get("inverse_binds")
+    (got == listOf(xform3)) to "got=${show(got)}"
+  }
+}
+
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_objectcalls_selftest")
 fun kanamaIosRuntimeObjectCallsSelfTest() {
@@ -3712,13 +3987,14 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     refBack is GodotObject && refBack.segment.address() == refElem.address(),
   )
   // task 122 — top-level NodePath argument (was accepted only inside containers). The scalar
-  // return path hands a NODE_PATH back as its String (see decodeVariantScalarReturn; NodePath-
-  // returning wrappers re-wrap), so the round trip compares the path text.
+  // return path hands a NODE_PATH back as a NodePath, as desktop does (it was the path's String).
   ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "knp", NodePath("A/B")))
   check(
     "variant-call-arg-nodepath(set_meta/get_meta A/B)",
-    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "knp")) == "A/B",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "knp")) ==
+      NodePath("A/B"),
   )
+  runVariantTypeRows(callBind, callNode, ::check)
 
   // Value-type builtin method (BuiltinCalls) via variant_get_ptr_builtin_method + builtin_call.
   // Basis.inverse() is a TRUE inverse: diag(2,4,8) -> diag(0.5,0.25,0.125) (powers of 2, exact

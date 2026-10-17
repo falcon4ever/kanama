@@ -65,6 +65,7 @@ ALLOWED_MULTI: dict[str, str] = {
     "scriptAccessSelfTestRows": "self-test rows: create then ready a script instance, two different calls",
     "kanamaIosRuntimeObjectCallsSelfTest": "self-test: a sequence of independent rows, each its own call",
     "kanamaIosRuntimeObjectCallsSelfTestFrame": "self-test: a sequence of independent rows, each its own call",
+    "runVariantTypeRows": "self-test rows: set_meta of distinct keys, add_user_signal and connect, each its own call",
 }
 # Function -> why it may run an engine call where it can repeat (a lambda / loop). Loop sites are
 # otherwise forbidden. Printed on every run; a stale entry fails the gate.
@@ -72,6 +73,7 @@ ALLOWED_LOOPS: dict[str, str] = {
     "callContainerElementsRow": "self-test: get_string on each DISTINCT RegEx match object of one search_all result, one engine call per element; the search itself runs once",
     "kanamaIosRuntimeObjectCallsSelfTestFrame": "self-test: reaches callContainerElementsRow, whose lambda is one search_all call per row (three rows) and whose per-element get_string runs once per distinct match",
     "kanamaIosRuntimeObjectCallsSelfTest": "self-test: repeat(3) put_u8 / a fixed list of signal names, each iteration a distinct input row",
+    "runVariantTypeRows": "self-test: one iteration per Variant type, each set_meta a distinct input row",
     "scriptInstanceRefcountIncremented": "onIncremented { referenceCount(..) }: the lambda runs once per engine callback",
     "scriptInstanceRefcountDecremented": "onDecremented { referenceCount(..) }: the lambda runs once per engine callback",
 }
