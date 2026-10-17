@@ -1626,8 +1626,9 @@ def body_STRINGNAME_VECTOR2I_RET_INT(calls):
 def body_NOARGS_RET_COLOR(calls):
     return [
         f"require(descriptor.executionMode == {_SNAPSHOT})",
-        "return webModulateSnapshot(receiver.webId())",
-        '?: error("Missing Web CanvasItem.get_modulate snapshot for object handle=${receiver.webId()}")',
+        "// A handle that arrived without the canvas mirror (an exported Control) reads the engine",
+        "// once and seeds it; read-your-write from then on.",
+        "return webModulateSnapshot(receiver.webId()) ?: webSeedModulateSnapshot(receiver.webId())",
     ]
 
 

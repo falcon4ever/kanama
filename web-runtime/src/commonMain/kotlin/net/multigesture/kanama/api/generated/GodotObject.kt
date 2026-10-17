@@ -346,6 +346,14 @@ open class GodotObject(godotObject: GodotHandle) {
 
   private var cachedInstanceId: Long? = null
 
+  /**
+   * Desktop's `get` (Godot's `Object.get`, GDScript's `get`): the value of the property named
+   * [property], decoded (a value type, an object, an Array as a List, a Dictionary as a Map). One
+   * immediate generic call, so it flushes queued commands first.
+   */
+  fun get(property: String): Any? =
+    webGenericCall(this, "get", listOf(property))
+
   /** Signal `script_changed`; see [TypedSignal]. */
   val scriptChanged: Signal0
     get() = Signal0(this, "script_changed")

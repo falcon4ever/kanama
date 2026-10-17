@@ -952,6 +952,12 @@ internal object WebWindowSettings {
   /** Web adaptation: the corpus runs the default 60 Hz fixed physics tick. */
   fun getPhysicsProcessDeltaTime(): Double = 1.0 / 60.0
 
+  /**
+   * The page's single-player session (`WEB_INERT_FACADES`' MultiplayerAPI): nullable as on desktop,
+   * so the shared sources' `getMultiplayer()?.` chains compile unchanged.
+   */
+  fun getMultiplayer(): MultiplayerAPI? = webMultiplayerApi
+
   /** Web no-ops: generated proxies dispatch input only to scripts that declare handlers. */
   fun setProcessInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
 
@@ -987,6 +993,8 @@ fun Node.propagateCall(method: String, args: List<Any?> = emptyList(), parentFir
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Node.getPhysicsProcessDeltaTime(): Double = getPhysicsProcessDeltaTime()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun Node.getMultiplayer(): MultiplayerAPI? = getMultiplayer()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Node.setProcessInput(enable: Boolean) = setProcessInput(enable)
@@ -1962,6 +1970,7 @@ WEB_GENERIC_METHODS: dict[str, dict[str, tuple[str, str, dict[str, str], str]]] 
         "set": ("queued", "set", {}, "Desktop's `set` (Godot's `Object.set`, GDScript's `set`): writes the property named\n   * [property]. A path such as `\"position:x\"` names no property, so it changes nothing;\n   * [setIndexed] is the path form. Queued, like every Web mutation."),
         "set_indexed": ("queued", "setIndexed", {}, "Desktop's `setIndexed` (Godot's `Object.set_indexed`): writes the property path\n   * [propertyPath], so `setIndexed(NodePath(\"position:x\"), 5.0)` sets the x component. Queued."),
         "get_instance_id": ("cached", "instanceId", {}, "The engine instance id, read once per handle and then kept (desktop captures it at\n   * construction): every wrapper of the handle answers without crossing again, also after the\n   * object is freed."),
+        "get": ("immediate", "get", {}, "Desktop's `get` (Godot's `Object.get`, GDScript's `get`): the value of the property named\n   * [property], decoded (a value type, an object, an Array as a List, a Dictionary as a Map). One\n   * immediate generic call, so it flushes queued commands first."),
     },
     # RIDs (a value: its id crosses in text). A body's RID is fixed for its lifetime, so one read per handle.
     "CollisionObject3D": {
@@ -1982,13 +1991,16 @@ WEB_GENERIC_METHODS: dict[str, dict[str, tuple[str, str, dict[str, str], str]]] 
     "KinematicCollision3D": {
         "get_collider_rid": ("immediate", "getColliderRid", {}, "The RID of the collision's [collisionIndex]th collider. One immediate call."),
     },
+    "InputEventMouseMotion": {
+        "get_screen_relative": ("immediate", "getScreenRelative", {}, "Desktop's `getScreenRelative`: the motion in screen pixels, unscaled by the viewport's\n   * stretch (camera look). One immediate generic call."),
+    },
     # Review N2: Godot's own answer (a popup's window too), one immediate call.
     "Node": {
         "get_window": ("immediate", "getWindow", {}, ""),
     },
 }
 _GENERIC_TYPES = {"Variant": "Any?", "StringName": "String", "String": "String", "NodePath": "NodePath", "Array": "List<Any?>", "int": "Long",
-                  "float": "Double", "bool": "Boolean",
+                  "float": "Double", "bool": "Boolean", "Vector2": "Vector2",
                   # A RID is a value: its id crosses in the Variant codec's text (check_rid_transport).
                   "RID": "RID", "typedarray::RID": "List<RID>"}
 

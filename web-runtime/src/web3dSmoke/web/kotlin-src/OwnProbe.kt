@@ -6,10 +6,13 @@ import net.multigesture.kanama.api.Area3D
 import net.multigesture.kanama.api.Button
 import net.multigesture.kanama.api.ButtonGroup
 import net.multigesture.kanama.api.CollisionObject3D
+import net.multigesture.kanama.api.ColorRect
+import net.multigesture.kanama.api.ENetMultiplayerPeer
 import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.InputEvent
+import net.multigesture.kanama.api.InputEventMouseMotion
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
 import net.multigesture.kanama.api.Node
@@ -19,12 +22,16 @@ import net.multigesture.kanama.api.RayCast3D
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.api.Resource
 import net.multigesture.kanama.api.MeshInstance3D
+import net.multigesture.kanama.api.MultiplayerPeer
+import net.multigesture.kanama.api.OfflineMultiplayerPeer
 import net.multigesture.kanama.api.Signal2
 import net.multigesture.kanama.api.SignalArgType
 import net.multigesture.kanama.api.SpringArm3D
 import net.multigesture.kanama.api.StaticBody3D
 import net.multigesture.kanama.api.newScriptInstance
+import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
+import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebExperimentalGenericCall
 import net.multigesture.kanama.web.WebGenericCallResult
@@ -88,7 +95,8 @@ import net.multigesture.kanama.web.WebGenericCallResult
  * the microseconds, per 1000 dispatches of an already-seen InputEvent (0, 2) and plain Node (1, 3);
  * (4) the frames O2 / O6 waited for the collection.
  *
- * [rayMask] (the R rows: ray queries and RIDs with desktop's API; 32767 when healthy). A RID is a
+ * [rayMask] (the R and N rows: ray queries and RIDs with desktop's API, and the other members a
+ * shared raycasting file needs; 524287 when healthy). A RID is a
  * value that crosses as its id in text, the query parameters stay a Kotlin value the applier builds
  * the engine object from, and a ray is one engine crossing that mints no handle:
  * - R1 `rayHitIsDictionary`: 1 = `intersectRay` answers a Map with exactly `position, normal,
@@ -111,6 +119,12 @@ import net.multigesture.kanama.web.WebGenericCallResult
  *   and lets the arm reach its full length.
  * - R10 `ridSignalIsSameCodec`: 16384 = `Area3D.bodyShapeEntered`'s RID argument `==`
  *   `body.getRid()`.
+ * - N1 `objectGetIsGeneric`: 32768 = `GodotObject.get(property)` answers the engine's value.
+ * - N2 `modulateReadsWithoutSnapshot`: 65536 = a ColorRect whose handle came without the canvas
+ *   mirror reads its `modulate` from the engine once, then its own writes.
+ * - N3 `multiplayerFacadeMembers`: 131072 = `getMultiplayer()` is a member, `hasMultiplayerPeer`,
+ *   and the peers answer `isClass` and `getConnectionStatus` (offline connected, ENet not).
+ * - N4 `screenRelativeReads`: 262144 = `InputEventMouseMotion.getScreenRelative()` reads the event.
  *
  * [rayCost]: (0) engine crossings of 1000 `getRid()`, (1) of 100 rays, (2) live browser handles
  * gained by 10 000 rays at once and (3) a sweep later (reported only: other rows run meanwhile),
@@ -457,6 +471,43 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
         twinLong("emit_rid_signal")
         (got != null && got == a.getRid()).also { if (!it) note("R10 got=$got rid=${a.getRid()}") }
       }) rayMask = rayMask or 16384L
+    parityRows(twin)
+  }
+
+  /** N1-N4: the other members a shared raycasting file needs (see [rayMask]). */
+  private fun parityRows(twin: Node) {
+    if (answers("N1 get") {
+        val target = twin.requireAs("OwnRayCast", ::RayCast3D).get("target_position")
+        (target == Vector3(0.0, -20.0, 0.0)).also { if (!it) note("N1 get=$target") }
+      }) rayMask = rayMask or 32768L
+    if (answers("N2 modulate") {
+        // A generic call's node carries no canvas mirror: the first read asks the engine.
+        val rect = ColorRect((twin.call("fade_rect") as GodotObject).handle)
+        val first = rect.modulate.a
+        rect.modulate = Color(1.0, 1.0, 1.0, 0.5)
+        val written = rect.modulate.a
+        (first == 0.25 && written == 0.5 && twinLong("fade_rect_alpha_x100") == 50L).also {
+          if (!it) note("N2 modulate $first -> $written")
+        }
+      }) rayMask = rayMask or 65536L
+    if (answers("N3 multiplayer") {
+        val api = checkNotNull(self.getMultiplayer()) { "no multiplayer" }
+        val offline: MultiplayerPeer = OfflineMultiplayerPeer.create()
+        val enet: MultiplayerPeer = ENetMultiplayerPeer.create()
+        api.hasMultiplayerPeer() == (api.getMultiplayerPeer() != null) &&
+          offline.isClass("OfflineMultiplayerPeer") && offline.isClass("MultiplayerPeer") &&
+          !offline.isClass("ENetMultiplayerPeer") &&
+          offline.getConnectionStatus() == MultiplayerPeer.ConnectionStatus.CONNECTED &&
+          enet.getConnectionStatus() == MultiplayerPeer.ConnectionStatus.DISCONNECTED
+      }) rayMask = rayMask or 131072L
+    if (answers("N4 screen relative") {
+        var motion: Vector2? = null
+        twin.signal("own_motion").connectObject(self, GodotObject.ConnectFlags.ONE_SHOT) {
+          motion = InputEventMouseMotion(it.handle).getScreenRelative()
+        }
+        twinLong("emit_motion")
+        (motion == Vector2(3.0, 4.0)).also { if (!it) note("N4 screen relative=$motion") }
+      }) rayMask = rayMask or 262144L
   }
 
   /** R5: `getRid()` crosses once per handle; 10 000 rays mint no handle. */

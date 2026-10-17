@@ -200,7 +200,7 @@
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt": {
       "category": "transitional",
-      "lines": 243,
+      "lines": 106,
       "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
       "reason": "per-platform hand file the generator should emit"
     },
@@ -219,6 +219,11 @@
       "category": "sugar",
       "lines": 20,
       "reason": "Web-only import-compat names the replaced Web GD/Mathf copies had (task 129 E): Basis alias, five GD extensions"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebMultiplayer.kt": {
+      "category": "runtime-core",
+      "lines": 170,
+      "reason": "the single-player session behind Node.getMultiplayer (WEB_INERT_FACADES): Web has no sockets, so these stand-ins answer the offline values and are never generated; moved out of WebFacades.kt with the members the shared tps-demo sources call (hasMultiplayerPeer, getConnectionStatus, isClass)"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebPhysicsQuery.kt": {
       "category": "seam",
@@ -370,10 +375,16 @@
       ]
     },
     "generate_web_wrappers.CLASS_POLICY[Node].custom": {
-      "lines": 47
+      "lines": 53,
+      "raises": [
+        "47 -> 53: desktop's multiplayer members on the Web session stand-in: Node.getMultiplayer becomes a member (with its import-compat alias) so shared sources compile without the Web import"
+      ]
     },
     "generate_web_wrappers.CLASS_POLICY[Node].top_level": {
-      "lines": 17
+      "lines": 19,
+      "raises": [
+        "17 -> 19: desktop's multiplayer members on the Web session stand-in: Node.getMultiplayer becomes a member (with its import-compat alias) so shared sources compile without the Web import"
+      ]
     },
     "generate_web_wrappers.CLASS_POLICY[OS].custom": {
       "lines": 2

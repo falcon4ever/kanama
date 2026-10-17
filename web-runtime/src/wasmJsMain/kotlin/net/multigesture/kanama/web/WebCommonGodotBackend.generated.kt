@@ -1070,10 +1070,9 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     return webFreedAware {
       require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-      return webModulateSnapshot(receiver.webId())
-        ?: error(
-          "Missing Web CanvasItem.get_modulate snapshot for object handle=${receiver.webId()}"
-        )
+      // A handle that arrived without the canvas mirror (an exported Control) reads the engine
+      // once and seeds it; read-your-write from then on.
+      return webModulateSnapshot(receiver.webId()) ?: webSeedModulateSnapshot(receiver.webId())
     }
   }
 

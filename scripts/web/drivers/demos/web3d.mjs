@@ -864,6 +864,14 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     rayCastExceptionRid: (rayMask & 12288) === 12288,
     // R10: a signal's RID argument is the same value as getRid().
     ridSignalIsSameCodec: (rayMask & 16384) === 16384,
+    // N1: GodotObject.get(property) answers the engine's value (one generic call).
+    objectGetIsGeneric: (rayMask & 32768) === 32768,
+    // N2: a CanvasItem handle without the canvas mirror reads modulate once from the engine.
+    modulateReadsWithoutSnapshot: (rayMask & 65536) === 65536,
+    // N3: getMultiplayer() is a Node member; hasMultiplayerPeer, isClass and getConnectionStatus.
+    multiplayerFacadeMembers: (rayMask & 131072) === 131072,
+    // N4: InputEventMouseMotion.getScreenRelative() reads the event.
+    screenRelativeReads: (rayMask & 262144) === 262144,
     // O10: handing over an already-seen InputEvent costs at most one JS call (the wrapper's
     // registration); a plain Node still none.
     rcDispatchCost: ownCost[0] >= 0 && ownCost[0] <= 1010 && ownCost[1] >= 0 && ownCost[1] <= 10,

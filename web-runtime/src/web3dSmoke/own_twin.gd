@@ -11,6 +11,7 @@ signal own_keep(obj: Object)
 signal own_cost(obj: Object)
 signal own_ignored(obj: Object, round: int)
 signal own_doomed(obj: Object)
+signal own_motion(event: Object)
 
 ## Weak references to the objects a row emitted, by row name.
 var weak: Dictionary = {}
@@ -21,6 +22,7 @@ var button: Button
 var doomed: Node
 var bumps := 0
 var orphan: Window
+var fade: ColorRect
 
 
 func _ready() -> void:
@@ -131,6 +133,30 @@ func emit_rid_signal(_unused: int) -> int:
 ## R9: how far OwnSpringArm reaches, in millimetres (its full length is 20 m).
 func spring_hit_length_mm(_unused: int) -> int:
 	return int((get_node("OwnSpringArm") as SpringArm3D).get_hit_length() * 1000.0)
+
+
+## N2: a ColorRect handed back by a generic call (no canvas mirror), authored at alpha 0.25.
+func fade_rect() -> ColorRect:
+	if fade == null:
+		fade = ColorRect.new()
+		fade.name = "OwnFadeRect"
+		fade.modulate = Color(1.0, 1.0, 1.0, 0.25)
+		add_child(fade)
+	return fade
+
+
+## N2: the rect's alpha as the engine has it, x100.
+func fade_rect_alpha_x100(_unused: int) -> int:
+	return roundi(fade.modulate.a * 100.0)
+
+
+## N4: a mouse motion whose screen_relative differs from its relative.
+func emit_motion(_unused: int) -> int:
+	var event := InputEventMouseMotion.new()
+	event.relative = Vector2(1.0, 2.0)
+	event.screen_relative = Vector2(3.0, 4.0)
+	own_motion.emit(event)
+	return 1
 
 
 ## Why an OwnProbe row failed, for the driver's trace.
