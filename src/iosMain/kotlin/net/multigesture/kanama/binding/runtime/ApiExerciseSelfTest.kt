@@ -18,6 +18,8 @@ import net.multigesture.kanama.exercise.ApiExercise
 // and one `OBJECTCALLS SELFTEST (api exercise) FAIL: <helpers> <row> <what>` line per failed row. A
 // known finding (KNOWN_FINDINGS, scripts/api_exercise_policy.py) that fails prints `... KNOWN: ...`
 // instead, which no runner treats as a failure; one that passes prints a FAIL line.
+// A factory row whose RID is invalid on both paths (the renderer makes no such resource) prints a
+// `... (api exercise) WEAK: ...` line with that reason and counts as weak.
 // The fault count is the process-wide one, so a row whose call the shim refused shows as a FAULT
 // line and as faults above the deliberate probes' [expectedFaults]. The demos runner fails on both;
 // ios_visual_smoke.sh does not compare the counts (it fails on FAIL lines and failed rows).
@@ -27,6 +29,7 @@ internal fun apiExerciseSelfTestRows(expectedFaults: Int) {
       platform = "ios",
       fail = { println("[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise) FAIL: $it") },
       known = { println("[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise) KNOWN: $it") },
+      weak = { println("[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise) WEAK: $it") },
       trace = null,
     )
   println(

@@ -7916,15 +7916,21 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallNoArgsRetRID", "TextServer.create_font on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
-      val rid = o.createFont()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(o.fontGetFaceIndex(rid))
+        rid = o.createFont()
+        viaCall = (r.track(o.call("create_font")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(o.call("font_get_face_index", rid))
-        r.readBack(got, oracle, "font_get_face_index")
+        if (rid.value != 0L) {
+          val got = r.track(o.fontGetFaceIndex(rid))
+          val oracle = r.track(o.call("font_get_face_index", rid))
+          r.readBack(got, oracle, "font_get_face_index")
+        }
       } finally {
-        o.freeRid(rid)
+        if (viaCall.value != 0L) o.freeRid(viaCall)
+        if (rid.value != 0L) o.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -7937,15 +7943,21 @@ internal object ApiExerciseRows {
     r.begin('B', "ptrcallWithTwoLongArgsRetRID", "TextServer.create_shaped_text on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
-      val rid = o.createShapedText()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(o.shapedTextGetDirection(rid))
+        rid = o.createShapedText()
+        viaCall = (r.track(o.call("create_shaped_text")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(o.call("shaped_text_get_direction", rid))
-        r.readBack(got, oracle, "shaped_text_get_direction")
+        if (rid.value != 0L) {
+          val got = r.track(o.shapedTextGetDirection(rid))
+          val oracle = r.track(o.call("shaped_text_get_direction", rid))
+          r.readBack(got, oracle, "shaped_text_get_direction")
+        }
       } finally {
-        o.freeRid(rid)
+        if (viaCall.value != 0L) o.freeRid(viaCall)
+        if (rid.value != 0L) o.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -9760,15 +9772,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer2D.agent_create")
     try {
       val s = r.singleton("NavigationServer2D")
-      val rid = NavigationServer2D.agentCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(NavigationServer2D.agentGetAvoidanceEnabled(rid))
+        rid = NavigationServer2D.agentCreate()
+        viaCall = (r.track(s.call("agent_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("agent_get_avoidance_enabled", rid))
-        r.readBack(got, oracle, "agent_get_avoidance_enabled")
+        if (rid.value != 0L) {
+          val got = r.track(NavigationServer2D.agentGetAvoidanceEnabled(rid))
+          val oracle = r.track(s.call("agent_get_avoidance_enabled", rid))
+          r.readBack(got, oracle, "agent_get_avoidance_enabled")
+        }
       } finally {
-        NavigationServer2D.freeRid(rid)
+        if (viaCall.value != 0L) NavigationServer2D.freeRid(viaCall)
+        if (rid.value != 0L) NavigationServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -9781,15 +9799,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer2D.link_create")
     try {
       val s = r.singleton("NavigationServer2D")
-      val rid = NavigationServer2D.linkCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(NavigationServer2D.linkGetIterationId(rid))
+        rid = NavigationServer2D.linkCreate()
+        viaCall = (r.track(s.call("link_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("link_get_iteration_id", rid))
-        r.readBack(got, oracle, "link_get_iteration_id")
+        if (rid.value != 0L) {
+          val got = r.track(NavigationServer2D.linkGetIterationId(rid))
+          val oracle = r.track(s.call("link_get_iteration_id", rid))
+          r.readBack(got, oracle, "link_get_iteration_id")
+        }
       } finally {
-        NavigationServer2D.freeRid(rid)
+        if (viaCall.value != 0L) NavigationServer2D.freeRid(viaCall)
+        if (rid.value != 0L) NavigationServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -9802,15 +9826,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer2D.map_create")
     try {
       val s = r.singleton("NavigationServer2D")
-      val rid = NavigationServer2D.mapCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(NavigationServer2D.mapIsActive(rid))
+        rid = NavigationServer2D.mapCreate()
+        viaCall = (r.track(s.call("map_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("map_is_active", rid))
-        r.readBack(got, oracle, "map_is_active")
+        if (rid.value != 0L) {
+          val got = r.track(NavigationServer2D.mapIsActive(rid))
+          val oracle = r.track(s.call("map_is_active", rid))
+          r.readBack(got, oracle, "map_is_active")
+        }
       } finally {
-        NavigationServer2D.freeRid(rid)
+        if (viaCall.value != 0L) NavigationServer2D.freeRid(viaCall)
+        if (rid.value != 0L) NavigationServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -9823,15 +9853,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer2D.obstacle_create")
     try {
       val s = r.singleton("NavigationServer2D")
-      val rid = NavigationServer2D.obstacleCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(NavigationServer2D.obstacleGetAvoidanceEnabled(rid))
+        rid = NavigationServer2D.obstacleCreate()
+        viaCall = (r.track(s.call("obstacle_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("obstacle_get_avoidance_enabled", rid))
-        r.readBack(got, oracle, "obstacle_get_avoidance_enabled")
+        if (rid.value != 0L) {
+          val got = r.track(NavigationServer2D.obstacleGetAvoidanceEnabled(rid))
+          val oracle = r.track(s.call("obstacle_get_avoidance_enabled", rid))
+          r.readBack(got, oracle, "obstacle_get_avoidance_enabled")
+        }
       } finally {
-        NavigationServer2D.freeRid(rid)
+        if (viaCall.value != 0L) NavigationServer2D.freeRid(viaCall)
+        if (rid.value != 0L) NavigationServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -9844,15 +9880,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer2D.region_create")
     try {
       val s = r.singleton("NavigationServer2D")
-      val rid = NavigationServer2D.regionCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(NavigationServer2D.regionGetIterationId(rid))
+        rid = NavigationServer2D.regionCreate()
+        viaCall = (r.track(s.call("region_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("region_get_iteration_id", rid))
-        r.readBack(got, oracle, "region_get_iteration_id")
+        if (rid.value != 0L) {
+          val got = r.track(NavigationServer2D.regionGetIterationId(rid))
+          val oracle = r.track(s.call("region_get_iteration_id", rid))
+          r.readBack(got, oracle, "region_get_iteration_id")
+        }
       } finally {
-        NavigationServer2D.freeRid(rid)
+        if (viaCall.value != 0L) NavigationServer2D.freeRid(viaCall)
+        if (rid.value != 0L) NavigationServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -9865,11 +9907,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer2D.source_geometry_parser_create")
     try {
       val s = r.singleton("NavigationServer2D")
-      val rid = NavigationServer2D.sourceGeometryParserCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = NavigationServer2D.sourceGeometryParserCreate()
+        viaCall = (r.track(s.call("source_geometry_parser_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        NavigationServer2D.freeRid(rid)
+        if (viaCall.value != 0L) NavigationServer2D.freeRid(viaCall)
+        if (rid.value != 0L) NavigationServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -9882,15 +9929,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer3D.agent_create")
     try {
       val s = r.singleton("NavigationServer3D")
-      val rid = NavigationServer3D.agentCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(NavigationServer3D.agentGetAvoidanceEnabled(rid))
+        rid = NavigationServer3D.agentCreate()
+        viaCall = (r.track(s.call("agent_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("agent_get_avoidance_enabled", rid))
-        r.readBack(got, oracle, "agent_get_avoidance_enabled")
+        if (rid.value != 0L) {
+          val got = r.track(NavigationServer3D.agentGetAvoidanceEnabled(rid))
+          val oracle = r.track(s.call("agent_get_avoidance_enabled", rid))
+          r.readBack(got, oracle, "agent_get_avoidance_enabled")
+        }
       } finally {
-        NavigationServer3D.freeRid(rid)
+        if (viaCall.value != 0L) NavigationServer3D.freeRid(viaCall)
+        if (rid.value != 0L) NavigationServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -9903,15 +9956,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer3D.link_create")
     try {
       val s = r.singleton("NavigationServer3D")
-      val rid = NavigationServer3D.linkCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(NavigationServer3D.linkGetIterationId(rid))
+        rid = NavigationServer3D.linkCreate()
+        viaCall = (r.track(s.call("link_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("link_get_iteration_id", rid))
-        r.readBack(got, oracle, "link_get_iteration_id")
+        if (rid.value != 0L) {
+          val got = r.track(NavigationServer3D.linkGetIterationId(rid))
+          val oracle = r.track(s.call("link_get_iteration_id", rid))
+          r.readBack(got, oracle, "link_get_iteration_id")
+        }
       } finally {
-        NavigationServer3D.freeRid(rid)
+        if (viaCall.value != 0L) NavigationServer3D.freeRid(viaCall)
+        if (rid.value != 0L) NavigationServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -9924,15 +9983,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer3D.map_create")
     try {
       val s = r.singleton("NavigationServer3D")
-      val rid = NavigationServer3D.mapCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(NavigationServer3D.mapIsActive(rid))
+        rid = NavigationServer3D.mapCreate()
+        viaCall = (r.track(s.call("map_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("map_is_active", rid))
-        r.readBack(got, oracle, "map_is_active")
+        if (rid.value != 0L) {
+          val got = r.track(NavigationServer3D.mapIsActive(rid))
+          val oracle = r.track(s.call("map_is_active", rid))
+          r.readBack(got, oracle, "map_is_active")
+        }
       } finally {
-        NavigationServer3D.freeRid(rid)
+        if (viaCall.value != 0L) NavigationServer3D.freeRid(viaCall)
+        if (rid.value != 0L) NavigationServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -9945,15 +10010,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer3D.obstacle_create")
     try {
       val s = r.singleton("NavigationServer3D")
-      val rid = NavigationServer3D.obstacleCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(NavigationServer3D.obstacleGetAvoidanceEnabled(rid))
+        rid = NavigationServer3D.obstacleCreate()
+        viaCall = (r.track(s.call("obstacle_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("obstacle_get_avoidance_enabled", rid))
-        r.readBack(got, oracle, "obstacle_get_avoidance_enabled")
+        if (rid.value != 0L) {
+          val got = r.track(NavigationServer3D.obstacleGetAvoidanceEnabled(rid))
+          val oracle = r.track(s.call("obstacle_get_avoidance_enabled", rid))
+          r.readBack(got, oracle, "obstacle_get_avoidance_enabled")
+        }
       } finally {
-        NavigationServer3D.freeRid(rid)
+        if (viaCall.value != 0L) NavigationServer3D.freeRid(viaCall)
+        if (rid.value != 0L) NavigationServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -9966,15 +10037,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer3D.region_create")
     try {
       val s = r.singleton("NavigationServer3D")
-      val rid = NavigationServer3D.regionCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(NavigationServer3D.regionGetIterationId(rid))
+        rid = NavigationServer3D.regionCreate()
+        viaCall = (r.track(s.call("region_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("region_get_iteration_id", rid))
-        r.readBack(got, oracle, "region_get_iteration_id")
+        if (rid.value != 0L) {
+          val got = r.track(NavigationServer3D.regionGetIterationId(rid))
+          val oracle = r.track(s.call("region_get_iteration_id", rid))
+          r.readBack(got, oracle, "region_get_iteration_id")
+        }
       } finally {
-        NavigationServer3D.freeRid(rid)
+        if (viaCall.value != 0L) NavigationServer3D.freeRid(viaCall)
+        if (rid.value != 0L) NavigationServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -9987,11 +10064,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "NavigationServer3D.source_geometry_parser_create")
     try {
       val s = r.singleton("NavigationServer3D")
-      val rid = NavigationServer3D.sourceGeometryParserCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = NavigationServer3D.sourceGeometryParserCreate()
+        viaCall = (r.track(s.call("source_geometry_parser_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        NavigationServer3D.freeRid(rid)
+        if (viaCall.value != 0L) NavigationServer3D.freeRid(viaCall)
+        if (rid.value != 0L) NavigationServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10004,15 +10086,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.area_create")
     try {
       val s = r.singleton("PhysicsServer2D")
-      val rid = PhysicsServer2D.areaCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(PhysicsServer2D.areaGetSpace(rid))
+        rid = PhysicsServer2D.areaCreate()
+        viaCall = (r.track(s.call("area_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("area_get_space", rid))
-        r.readBack(got, oracle, "area_get_space")
+        if (rid.value != 0L) {
+          val got = r.track(PhysicsServer2D.areaGetSpace(rid))
+          val oracle = r.track(s.call("area_get_space", rid))
+          r.readBack(got, oracle, "area_get_space")
+        }
       } finally {
-        PhysicsServer2D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer2D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10025,15 +10113,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.body_create")
     try {
       val s = r.singleton("PhysicsServer2D")
-      val rid = PhysicsServer2D.bodyCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(PhysicsServer2D.bodyGetSpace(rid))
+        rid = PhysicsServer2D.bodyCreate()
+        viaCall = (r.track(s.call("body_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("body_get_space", rid))
-        r.readBack(got, oracle, "body_get_space")
+        if (rid.value != 0L) {
+          val got = r.track(PhysicsServer2D.bodyGetSpace(rid))
+          val oracle = r.track(s.call("body_get_space", rid))
+          r.readBack(got, oracle, "body_get_space")
+        }
       } finally {
-        PhysicsServer2D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer2D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10046,11 +10140,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.capsule_shape_create")
     try {
       val s = r.singleton("PhysicsServer2D")
-      val rid = PhysicsServer2D.capsuleShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer2D.capsuleShapeCreate()
+        viaCall = (r.track(s.call("capsule_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer2D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer2D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10063,11 +10162,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.circle_shape_create")
     try {
       val s = r.singleton("PhysicsServer2D")
-      val rid = PhysicsServer2D.circleShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer2D.circleShapeCreate()
+        viaCall = (r.track(s.call("circle_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer2D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer2D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10080,11 +10184,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.concave_polygon_shape_create")
     try {
       val s = r.singleton("PhysicsServer2D")
-      val rid = PhysicsServer2D.concavePolygonShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer2D.concavePolygonShapeCreate()
+        viaCall = (r.track(s.call("concave_polygon_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer2D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer2D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10097,11 +10206,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.convex_polygon_shape_create")
     try {
       val s = r.singleton("PhysicsServer2D")
-      val rid = PhysicsServer2D.convexPolygonShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer2D.convexPolygonShapeCreate()
+        viaCall = (r.track(s.call("convex_polygon_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer2D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer2D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10114,15 +10228,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.joint_create")
     try {
       val s = r.singleton("PhysicsServer2D")
-      val rid = PhysicsServer2D.jointCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(PhysicsServer2D.jointIsDisabledCollisionsBetweenBodies(rid))
+        rid = PhysicsServer2D.jointCreate()
+        viaCall = (r.track(s.call("joint_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("joint_is_disabled_collisions_between_bodies", rid))
-        r.readBack(got, oracle, "joint_is_disabled_collisions_between_bodies")
+        if (rid.value != 0L) {
+          val got = r.track(PhysicsServer2D.jointIsDisabledCollisionsBetweenBodies(rid))
+          val oracle = r.track(s.call("joint_is_disabled_collisions_between_bodies", rid))
+          r.readBack(got, oracle, "joint_is_disabled_collisions_between_bodies")
+        }
       } finally {
-        PhysicsServer2D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer2D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10135,11 +10255,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.rectangle_shape_create")
     try {
       val s = r.singleton("PhysicsServer2D")
-      val rid = PhysicsServer2D.rectangleShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer2D.rectangleShapeCreate()
+        viaCall = (r.track(s.call("rectangle_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer2D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer2D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10152,11 +10277,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.segment_shape_create")
     try {
       val s = r.singleton("PhysicsServer2D")
-      val rid = PhysicsServer2D.segmentShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer2D.segmentShapeCreate()
+        viaCall = (r.track(s.call("segment_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer2D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer2D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10169,11 +10299,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.separation_ray_shape_create")
     try {
       val s = r.singleton("PhysicsServer2D")
-      val rid = PhysicsServer2D.separationRayShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer2D.separationRayShapeCreate()
+        viaCall = (r.track(s.call("separation_ray_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer2D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer2D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10186,15 +10321,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.space_create")
     try {
       val s = r.singleton("PhysicsServer2D")
-      val rid = PhysicsServer2D.spaceCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(PhysicsServer2D.spaceIsActive(rid))
+        rid = PhysicsServer2D.spaceCreate()
+        viaCall = (r.track(s.call("space_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("space_is_active", rid))
-        r.readBack(got, oracle, "space_is_active")
+        if (rid.value != 0L) {
+          val got = r.track(PhysicsServer2D.spaceIsActive(rid))
+          val oracle = r.track(s.call("space_is_active", rid))
+          r.readBack(got, oracle, "space_is_active")
+        }
       } finally {
-        PhysicsServer2D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer2D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10207,11 +10348,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer2D.world_boundary_shape_create")
     try {
       val s = r.singleton("PhysicsServer2D")
-      val rid = PhysicsServer2D.worldBoundaryShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer2D.worldBoundaryShapeCreate()
+        viaCall = (r.track(s.call("world_boundary_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer2D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer2D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer2D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10224,15 +10370,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.area_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.areaCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(PhysicsServer3D.areaGetSpace(rid))
+        rid = PhysicsServer3D.areaCreate()
+        viaCall = (r.track(s.call("area_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("area_get_space", rid))
-        r.readBack(got, oracle, "area_get_space")
+        if (rid.value != 0L) {
+          val got = r.track(PhysicsServer3D.areaGetSpace(rid))
+          val oracle = r.track(s.call("area_get_space", rid))
+          r.readBack(got, oracle, "area_get_space")
+        }
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10245,15 +10397,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.body_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.bodyCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(PhysicsServer3D.bodyGetSpace(rid))
+        rid = PhysicsServer3D.bodyCreate()
+        viaCall = (r.track(s.call("body_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("body_get_space", rid))
-        r.readBack(got, oracle, "body_get_space")
+        if (rid.value != 0L) {
+          val got = r.track(PhysicsServer3D.bodyGetSpace(rid))
+          val oracle = r.track(s.call("body_get_space", rid))
+          r.readBack(got, oracle, "body_get_space")
+        }
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10266,11 +10424,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.box_shape_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.boxShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer3D.boxShapeCreate()
+        viaCall = (r.track(s.call("box_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10283,11 +10446,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.capsule_shape_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.capsuleShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer3D.capsuleShapeCreate()
+        viaCall = (r.track(s.call("capsule_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10300,11 +10468,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.concave_polygon_shape_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.concavePolygonShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer3D.concavePolygonShapeCreate()
+        viaCall = (r.track(s.call("concave_polygon_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10317,11 +10490,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.convex_polygon_shape_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.convexPolygonShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer3D.convexPolygonShapeCreate()
+        viaCall = (r.track(s.call("convex_polygon_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10334,11 +10512,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.cylinder_shape_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.cylinderShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer3D.cylinderShapeCreate()
+        viaCall = (r.track(s.call("cylinder_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10351,11 +10534,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.heightmap_shape_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.heightmapShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer3D.heightmapShapeCreate()
+        viaCall = (r.track(s.call("heightmap_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10368,15 +10556,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.joint_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.jointCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(PhysicsServer3D.jointGetType(rid))
+        rid = PhysicsServer3D.jointCreate()
+        viaCall = (r.track(s.call("joint_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("joint_get_type", rid))
-        r.readBack(got, oracle, "joint_get_type")
+        if (rid.value != 0L) {
+          val got = r.track(PhysicsServer3D.jointGetType(rid))
+          val oracle = r.track(s.call("joint_get_type", rid))
+          r.readBack(got, oracle, "joint_get_type")
+        }
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10389,11 +10583,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.separation_ray_shape_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.separationRayShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer3D.separationRayShapeCreate()
+        viaCall = (r.track(s.call("separation_ray_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10406,15 +10605,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.soft_body_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.softBodyCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(PhysicsServer3D.softBodyGetSpace(rid))
+        rid = PhysicsServer3D.softBodyCreate()
+        viaCall = (r.track(s.call("soft_body_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("soft_body_get_space", rid))
-        r.readBack(got, oracle, "soft_body_get_space")
+        if (rid.value != 0L) {
+          val got = r.track(PhysicsServer3D.softBodyGetSpace(rid))
+          val oracle = r.track(s.call("soft_body_get_space", rid))
+          r.readBack(got, oracle, "soft_body_get_space")
+        }
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10427,15 +10632,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.space_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.spaceCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(PhysicsServer3D.spaceIsActive(rid))
+        rid = PhysicsServer3D.spaceCreate()
+        viaCall = (r.track(s.call("space_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("space_is_active", rid))
-        r.readBack(got, oracle, "space_is_active")
+        if (rid.value != 0L) {
+          val got = r.track(PhysicsServer3D.spaceIsActive(rid))
+          val oracle = r.track(s.call("space_is_active", rid))
+          r.readBack(got, oracle, "space_is_active")
+        }
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10448,11 +10659,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.sphere_shape_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.sphereShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer3D.sphereShapeCreate()
+        viaCall = (r.track(s.call("sphere_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10465,11 +10681,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "PhysicsServer3D.world_boundary_shape_create")
     try {
       val s = r.singleton("PhysicsServer3D")
-      val rid = PhysicsServer3D.worldBoundaryShapeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = PhysicsServer3D.worldBoundaryShapeCreate()
+        viaCall = (r.track(s.call("world_boundary_shape_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        PhysicsServer3D.freeRid(rid)
+        if (viaCall.value != 0L) PhysicsServer3D.freeRid(viaCall)
+        if (rid.value != 0L) PhysicsServer3D.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10482,11 +10703,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.area_light_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.areaLightCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
+        rid = RenderingServer.areaLightCreate()
+        viaCall = (r.track(s.call("area_light_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10499,11 +10725,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.camera_attributes_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.cameraAttributesCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.cameraAttributesCreate()
+        viaCall = (r.track(s.call("camera_attributes_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10516,11 +10747,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.camera_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.cameraCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.cameraCreate()
+        viaCall = (r.track(s.call("camera_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10533,11 +10769,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.canvas_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.canvasCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.canvasCreate()
+        viaCall = (r.track(s.call("canvas_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10550,15 +10791,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.canvas_item_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.canvasItemCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(RenderingServer.canvasItemGetInstanceShaderParameterList(rid))
+        rid = RenderingServer.canvasItemCreate()
+        viaCall = (r.track(s.call("canvas_item_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("canvas_item_get_instance_shader_parameter_list", rid))
-        r.readBack(got, oracle, "canvas_item_get_instance_shader_parameter_list")
+        if (rid.value != 0L) {
+          val got = r.track(RenderingServer.canvasItemGetInstanceShaderParameterList(rid))
+          val oracle = r.track(s.call("canvas_item_get_instance_shader_parameter_list", rid))
+          r.readBack(got, oracle, "canvas_item_get_instance_shader_parameter_list")
+        }
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10571,11 +10818,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.canvas_light_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.canvasLightCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.canvasLightCreate()
+        viaCall = (r.track(s.call("canvas_light_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10588,11 +10840,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.canvas_light_occluder_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.canvasLightOccluderCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.canvasLightOccluderCreate()
+        viaCall = (r.track(s.call("canvas_light_occluder_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10605,11 +10862,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.canvas_occluder_polygon_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.canvasOccluderPolygonCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.canvasOccluderPolygonCreate()
+        viaCall = (r.track(s.call("canvas_occluder_polygon_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10622,11 +10884,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.canvas_texture_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.canvasTextureCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
+        rid = RenderingServer.canvasTextureCreate()
+        viaCall = (r.track(s.call("canvas_texture_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10639,11 +10906,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.compositor_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.compositorCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.compositorCreate()
+        viaCall = (r.track(s.call("compositor_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10656,11 +10928,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.compositor_effect_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.compositorEffectCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.compositorEffectCreate()
+        viaCall = (r.track(s.call("compositor_effect_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10673,11 +10950,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.decal_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.decalCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
+        rid = RenderingServer.decalCreate()
+        viaCall = (r.track(s.call("decal_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10690,11 +10972,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.directional_light_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.directionalLightCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
+        rid = RenderingServer.directionalLightCreate()
+        viaCall = (r.track(s.call("directional_light_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10707,11 +10994,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.environment_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.environmentCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.environmentCreate()
+        viaCall = (r.track(s.call("environment_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10724,11 +11016,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.fog_volume_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.fogVolumeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
+        rid = RenderingServer.fogVolumeCreate()
+        viaCall = (r.track(s.call("fog_volume_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10741,11 +11038,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.instance_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.instanceCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.instanceCreate()
+        viaCall = (r.track(s.call("instance_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10758,15 +11060,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.lightmap_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.lightmapCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(RenderingServer.lightmapGetProbeCapturePoints(rid))
+        rid = RenderingServer.lightmapCreate()
+        viaCall = (r.track(s.call("lightmap_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("lightmap_get_probe_capture_points", rid))
-        r.readBack(got, oracle, "lightmap_get_probe_capture_points")
+        if (rid.value != 0L) {
+          val got = r.track(RenderingServer.lightmapGetProbeCapturePoints(rid))
+          val oracle = r.track(s.call("lightmap_get_probe_capture_points", rid))
+          r.readBack(got, oracle, "lightmap_get_probe_capture_points")
+        }
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10779,11 +11087,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.material_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.materialCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.materialCreate()
+        viaCall = (r.track(s.call("material_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10796,15 +11109,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.mesh_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.meshCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(RenderingServer.meshGetBlendShapeCount(rid))
+        rid = RenderingServer.meshCreate()
+        viaCall = (r.track(s.call("mesh_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("mesh_get_blend_shape_count", rid))
-        r.readBack(got, oracle, "mesh_get_blend_shape_count")
+        if (rid.value != 0L) {
+          val got = r.track(RenderingServer.meshGetBlendShapeCount(rid))
+          val oracle = r.track(s.call("mesh_get_blend_shape_count", rid))
+          r.readBack(got, oracle, "mesh_get_blend_shape_count")
+        }
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10817,15 +11136,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.multimesh_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.multimeshCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(RenderingServer.multimeshGetInstanceCount(rid))
+        rid = RenderingServer.multimeshCreate()
+        viaCall = (r.track(s.call("multimesh_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("multimesh_get_instance_count", rid))
-        r.readBack(got, oracle, "multimesh_get_instance_count")
+        if (rid.value != 0L) {
+          val got = r.track(RenderingServer.multimeshGetInstanceCount(rid))
+          val oracle = r.track(s.call("multimesh_get_instance_count", rid))
+          r.readBack(got, oracle, "multimesh_get_instance_count")
+        }
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10838,11 +11163,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.occluder_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.occluderCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.occluderCreate()
+        viaCall = (r.track(s.call("occluder_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10855,11 +11185,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.omni_light_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.omniLightCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
+        rid = RenderingServer.omniLightCreate()
+        viaCall = (r.track(s.call("omni_light_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10872,11 +11207,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.particles_collision_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.particlesCollisionCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
+        rid = RenderingServer.particlesCollisionCreate()
+        viaCall = (r.track(s.call("particles_collision_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10889,11 +11229,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.particles_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.particlesCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
+        rid = RenderingServer.particlesCreate()
+        viaCall = (r.track(s.call("particles_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10906,11 +11251,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.reflection_probe_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.reflectionProbeCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
+        rid = RenderingServer.reflectionProbeCreate()
+        viaCall = (r.track(s.call("reflection_probe_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10923,11 +11273,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.scenario_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.scenarioCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.scenarioCreate()
+        viaCall = (r.track(s.call("scenario_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10940,15 +11295,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.shader_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.shaderCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(RenderingServer.shaderGetCode(rid))
+        rid = RenderingServer.shaderCreate()
+        viaCall = (r.track(s.call("shader_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("shader_get_code", rid))
-        r.readBack(got, oracle, "shader_get_code")
+        if (rid.value != 0L) {
+          val got = r.track(RenderingServer.shaderGetCode(rid))
+          val oracle = r.track(s.call("shader_get_code", rid))
+          r.readBack(got, oracle, "shader_get_code")
+        }
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10961,15 +11322,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.skeleton_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.skeletonCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
-        val got = r.track(RenderingServer.skeletonGetBoneCount(rid))
+        rid = RenderingServer.skeletonCreate()
+        viaCall = (r.track(s.call("skeleton_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("skeleton_get_bone_count", rid))
-        r.readBack(got, oracle, "skeleton_get_bone_count")
+        if (rid.value != 0L) {
+          val got = r.track(RenderingServer.skeletonGetBoneCount(rid))
+          val oracle = r.track(s.call("skeleton_get_bone_count", rid))
+          r.readBack(got, oracle, "skeleton_get_bone_count")
+        }
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10982,11 +11349,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.sky_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.skyCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
+        rid = RenderingServer.skyCreate()
+        viaCall = (r.track(s.call("sky_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -10999,11 +11371,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.spot_light_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.spotLightCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
+        rid = RenderingServer.spotLightCreate()
+        viaCall = (r.track(s.call("spot_light_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -11016,11 +11393,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.texture_2d_placeholder_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.texture2dPlaceholderCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.texture2dPlaceholderCreate()
+        viaCall = (r.track(s.call("texture_2d_placeholder_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -11033,11 +11415,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.texture_3d_placeholder_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.texture3dPlaceholderCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
+        rid = RenderingServer.texture3dPlaceholderCreate()
+        viaCall = (r.track(s.call("texture_3d_placeholder_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -11050,15 +11437,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.viewport_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.viewportCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid)
-        val got = r.track(RenderingServer.viewportGetUpdateMode(rid))
+        rid = RenderingServer.viewportCreate()
+        viaCall = (r.track(s.call("viewport_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("viewport_get_update_mode", rid))
-        r.readBack(got, oracle, "viewport_get_update_mode")
+        if (rid.value != 0L) {
+          val got = r.track(RenderingServer.viewportGetUpdateMode(rid))
+          val oracle = r.track(s.call("viewport_get_update_mode", rid))
+          r.readBack(got, oracle, "viewport_get_update_mode")
+        }
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -11071,11 +11464,16 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.visibility_notifier_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.visibilityNotifierCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
+        rid = RenderingServer.visibilityNotifierCreate()
+        viaCall = (r.track(s.call("visibility_notifier_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
+        r.oracle()
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -11088,15 +11486,21 @@ internal object ApiExerciseRows {
     r.begin('D', "ptrcallNoArgsRetRID", "RenderingServer.voxel_gi_create")
     try {
       val s = r.singleton("RenderingServer")
-      val rid = RenderingServer.voxelGiCreate()
+      var rid = RID(0L)
+      var viaCall = RID(0L)
       try {
-        r.created(rid, invalidOn = "desktop")
-        val got = r.track(RenderingServer.voxelGiGetOctreeSize(rid))
+        rid = RenderingServer.voxelGiCreate()
+        viaCall = (r.track(s.call("voxel_gi_create")) as? RID) ?: RID(0L)
+        r.created(rid, viaCall)
         r.oracle()
-        val oracle = r.track(s.call("voxel_gi_get_octree_size", rid))
-        r.readBack(got, oracle, "voxel_gi_get_octree_size")
+        if (rid.value != 0L) {
+          val got = r.track(RenderingServer.voxelGiGetOctreeSize(rid))
+          val oracle = r.track(s.call("voxel_gi_get_octree_size", rid))
+          r.readBack(got, oracle, "voxel_gi_get_octree_size")
+        }
       } finally {
-        RenderingServer.freeRid(rid)
+        if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
+        if (rid.value != 0L) RenderingServer.freeRid(rid)
       }
     } catch (t: Throwable) {
       r.threw(t)

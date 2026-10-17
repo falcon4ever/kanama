@@ -368,22 +368,7 @@ B and D rows whose per-type arguments would leave them weak take chosen ones (`R
 
 `PAIR_GROW` (singleton properties a row only ever raises by one): `AudioServer.bus_count` (fewer buses than the project has deletes the project's buses; one more is removed again by the restore).
 
-`FACTORY_RESULTS` (factories that return the invalid RID on a host, where that counts weak and a valid RID fails until the entry is removed):
-
-- `RenderingServer.area_light_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
-- `RenderingServer.canvas_texture_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
-- `RenderingServer.decal_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
-- `RenderingServer.directional_light_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
-- `RenderingServer.fog_volume_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
-- `RenderingServer.omni_light_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
-- `RenderingServer.particles_collision_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
-- `RenderingServer.particles_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
-- `RenderingServer.reflection_probe_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
-- `RenderingServer.skeleton_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
-- `RenderingServer.sky_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
-- `RenderingServer.spot_light_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
-- `RenderingServer.visibility_notifier_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
-- `RenderingServer.voxel_gi_create` on desktop: the headless dummy renderer (the desktop smoke) allocates none and returns RID().
+A factory row also calls the factory through `Object.call`: a `RID()` from both paths is the host's (a renderer without decals, fog volumes or VoxelGI; the headless dummy renderer) and counts weak, printed with that reason; a `RID()` from the wrapper alone fails.
 
 Rows of other cases whose method takes a path (20): each takes one under the scratch directory.
 

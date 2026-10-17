@@ -640,11 +640,8 @@ def check_policy(inv: Inventory, rules: Rules, api: dict[str, ApiClass], singlet
         )
 
 
-PLATFORMS = {"ios", "android", "desktop"}
-
-
 def check_singleton_policy(inv: Inventory, rules: Rules, api: dict[str, ApiClass], singletons: set[str], policy) -> None:
-    """SINGLETON_PAIRS, SINGLETON_KEYED_PAIRS, RID_FACTORIES, RID_ARG_SOURCES and FACTORY_RESULTS name
+    """SINGLETON_PAIRS, SINGLETON_KEYED_PAIRS, RID_FACTORIES and RID_ARG_SOURCES name
     what the API has and what a row uses."""
     fail = inv.failures.append
     for name in getattr(policy, "SINGLETON_PAIRS", {}):
@@ -728,12 +725,7 @@ def check_singleton_policy(inv: Inventory, rules: Rules, api: dict[str, ApiClass
         types = {str(p["name"]): p.get("type") for p in api[cls].properties} if cls in api else {}
         if cls not in getattr(policy, "SINGLETON_PAIRS", {}) or types.get(prop) != "int" or not reason:
             fail(f"PAIR_GROW names {cls}.{prop}, which is not an int property of a SINGLETON_PAIRS singleton (with a reason)")
-    for (server, factory), (platforms, reason) in getattr(policy, "FACTORY_RESULTS", {}).items():
-        called = any(site.cls == server and site.method == factory and rules.site(site).row == "factory" for _, site in inv.sites)
-        if not called:
-            fail(f"FACTORY_RESULTS names {server}.{factory}, which is not a factory row: delete the entry")
-        if not platforms or set(platforms) - PLATFORMS or not reason:
-            fail(f"FACTORY_RESULTS[{server}.{factory}] must be ((platforms among {sorted(PLATFORMS)}), reason)")
+
 
 
 # ---- the report -------------------------------------------------------------------------------------------
@@ -1016,12 +1008,10 @@ def render_singleton_policy(inv: Inventory, policy) -> list[str]:
         + ", ".join(f"`{c}.{p}` ({md(r)})" for (c, p), r in getattr(policy, "PAIR_GROW", {}).items())
         + ".",
         "",
-        "`FACTORY_RESULTS` (factories that return the invalid RID on a host, where that counts weak and a valid "
-        "RID fails until the entry is removed):",
-        "",
+        "A factory row also calls the factory through `Object.call`: a `RID()` from both paths is the host's "
+        "(a renderer without decals, fog volumes or VoxelGI; the headless dummy renderer) and counts weak, "
+        "printed with that reason; a `RID()` from the wrapper alone fails.",
     ]
-    for (server, factory), (platforms, reason) in getattr(policy, "FACTORY_RESULTS", {}).items():
-        lines.append(f"- `{server}.{factory}` on {', '.join(platforms)}: {md(reason)}.")
     return lines
 
 
@@ -1909,18 +1899,33 @@ class RowGenerator:
         lines, wrapper, variant = self.receiver_lines(site, verdict)
         receiver_server = site.cls
         free = self.policy.RID_FACTORIES[site.cls][0]
-        lines.append(f"val rid = {self.server_call(site.cls, site.method, receiver_server, wrapper)}()")
-        result = getattr(self.policy, "FACTORY_RESULTS", {}).get((site.cls, site.method))
-        body = [f'r.created(rid, invalidOn = "{",".join(result[0])}")' if result else "r.created(rid)"]
+        free_call = self.server_call(site.cls, free, receiver_server, wrapper)
+        # The factory through the wrapper and through the Variant path: a RID(0) from both is the host
+        # (a renderer without decals, the headless dummy renderer), a RID(0) from the wrapper alone is ours.
+        lines += ["var rid = RID(0L)", "var viaCall = RID(0L)"]
+        body = [
+            f"rid = {self.server_call(site.cls, site.method, receiver_server, wrapper)}()",
+            f'viaCall = (r.track({variant}.call("{site.method}")) as? RID) ?: RID(0L)',
+            "r.created(rid, viaCall)",
+            "r.oracle()",
+        ]
         read = self.factory_read(site.cls, site.method)
         if read is not None:
             body += [
-                f"val got = r.track({self.server_call(site.cls, read[0], receiver_server, wrapper)}(rid))",
-                "r.oracle()",
-                f'val oracle = r.track({variant}.call("{read[0]}", rid))',
-                f'r.readBack(got, oracle, "{read[0]}")',
+                "if (rid.value != 0L) {",
+                f"  val got = r.track({self.server_call(site.cls, read[0], receiver_server, wrapper)}(rid))",
+                f'  val oracle = r.track({variant}.call("{read[0]}", rid))',
+                f'  r.readBack(got, oracle, "{read[0]}")',
+                "}",
             ]
-        lines += self.guarded(body, [f"{self.server_call(site.cls, free, receiver_server, wrapper)}(rid)"])
+        lines += [
+            "try {",
+            *[f"  {line}" for line in body],
+            "} finally {",
+            f"  if (viaCall.value != 0L) {free_call}(viaCall)",
+            f"  if (rid.value != 0L) {free_call}(rid)",
+            "}",
+        ]
         target = verdict.target
         label = f"{site.cls}.{site.method}" + (f" on {target}" if target else "")
         return ExerciseRow(verdict.case, helpers, site, verdict, label, lines)

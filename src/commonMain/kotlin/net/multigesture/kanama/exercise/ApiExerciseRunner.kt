@@ -86,9 +86,10 @@ internal object ApiExercise {
     fail: (String) -> Unit,
     known: (String) -> Unit,
     trace: ((String) -> Unit)?,
+    weak: (String) -> Unit = {},
   ): Result {
     val started = TimeSource.Monotonic.markNow()
-    val runner = ApiExerciseRunner(platform, fail, known, trace)
+    val runner = ApiExerciseRunner(platform, fail, known, trace, weak)
     runner.setUp()
     try {
       ApiExerciseRows.runStatic(runner)
@@ -122,6 +123,7 @@ internal object ApiExercise {
           platform = platform,
           fail = { print("[kanama] API EXERCISE FAIL: $it") },
           known = { print("[kanama] API EXERCISE KNOWN: $it") },
+          weak = { print("[kanama] API EXERCISE WEAK: $it") },
           trace = if (trace) ({ print("[kanama] API EXERCISE row $it") }) else null,
         )
       } catch (t: Throwable) {
@@ -148,6 +150,7 @@ internal constructor(
   private val onFail: (String) -> Unit,
   private val onKnown: (String) -> Unit,
   private val onTrace: ((String) -> Unit)?,
+  private val onWeak: (String) -> Unit = {},
 ) {
   var passed: Int = 0
     private set
@@ -547,22 +550,23 @@ internal constructor(
   }
 
   /**
-   * RID factory row: the created RID is valid (a no-op returns the invalid RID 0). On the platforms
-   * [invalidOn] lists (FACTORY_RESULTS: the host makes none, e.g. the headless dummy renderer) an
-   * invalid RID is weak instead, and a valid one fails until the entry is removed (as a known
-   * finding that no longer reproduces does).
+   * RID factory row: the wrapper's RID is valid (a no-op returns the invalid RID 0). When it is
+   * not, [viaCall] (the same factory through `Object.call`) decides: invalid too means the host
+   * makes no such resource (a renderer without decals, fog volumes or VoxelGI, the headless dummy
+   * renderer) and the row is weak, with that reason printed; valid means the wrapper lost a RID the
+   * engine made, and the row fails.
    */
-  fun created(rid: RID, invalidOn: String = "") {
-    val excused = invalidOn.split(',').contains(platform)
+  fun created(rid: RID, viaCall: RID) {
     when {
-      rid.value != 0L && excused ->
-        fail(
-          "returns a valid RID on $platform now: remove its FACTORY_RESULTS entry in " +
-            "scripts/api_exercise_policy.py"
-        )
       rid.value != 0L -> pass()
-      excused -> if (verdict == ' ') verdict = 'W'
-      else -> fail("expected a valid RID got RID(0)")
+      viaCall.value != 0L ->
+        fail(
+          "expected a valid RID got RID(0); Object.call made ${viaCall.value} (the wrapper's fault)"
+        )
+      else -> {
+        if (verdict == ' ') verdict = 'W'
+        onWeak("$helpers $label RID(0) from both paths: the renderer does not support this")
+      }
     }
   }
 

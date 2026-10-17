@@ -518,30 +518,6 @@ RID_FACTORIES: dict[str, tuple[str, str]] = {
     "TextServer": ("free_rid", "fonts and shaped texts of the running text server"),
 }
 
-# (server, factory) -> (platforms, reason): a factory that returns the invalid RID on those platforms for a
-# reason of the host, not of the call (the headless smoke runs the dummy renderer, which makes no lights,
-# skies, particles, ...). There its RID(0) counts weak; on every other platform it fails as usual.
-_DUMMY_RENDERER = "the headless dummy renderer (the desktop smoke) allocates none and returns RID()"
-FACTORY_RESULTS: dict[tuple[str, str], tuple[tuple[str, ...], str]] = {
-    ("RenderingServer", name): (("desktop",), _DUMMY_RENDERER)
-    for name in (
-        "area_light_create",
-        "canvas_texture_create",
-        "decal_create",
-        "directional_light_create",
-        "fog_volume_create",
-        "omni_light_create",
-        "particles_collision_create",
-        "particles_create",
-        "reflection_probe_create",
-        "skeleton_create",
-        "sky_create",
-        "spot_light_create",
-        "visibility_notifier_create",
-        "voxel_gi_create",
-    )
-}
-
 # (class, argument name) -> "Server.factory": the RID argument of a B or D row that the rule (an argument
 # `x` takes the class's own argument-free `x_create`) cannot name. The RID is freed after the row with the
 # server's RID_FACTORIES free method.

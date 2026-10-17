@@ -1123,9 +1123,10 @@ script would, with the Kotlin signature read from the committed tree, and report
   a `finally`. The same factories make the RID arguments of those servers' B and D rows (an argument
   `x` takes the class's own `x_create`, or its `RID_ARG_SOURCES` entry, such as a shaped text or a
   font for `TextServer`), freed after the row; the leak check at exit holds the rows to that.
-  `FACTORY_RESULTS` lists the factories that return the invalid RID on a host for a reason of the host
-  (the headless dummy renderer makes no lights, skies or particles), where that counts weak; a valid RID
-  there fails until the entry is removed. A RID argument is made inside the row's guarded block, so a
+  The row also calls the factory through `Object.call` and frees both RIDs: an invalid RID from both
+  paths is the host's (the headless dummy renderer makes no lights, skies or particles; the iOS
+  renderer no decals, fog volumes or VoxelGI) and counts weak, printed as a `WEAK:` line with that
+  reason; an invalid RID from the wrapper alone fails. A RID argument is made inside the row's guarded block, so a
   failing later one still frees the earlier ones.
 
 Every path a row touches is under the run's own directory, `user://kanama-api-exercise/<pid>-<random>/`,
