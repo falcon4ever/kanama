@@ -100,8 +100,9 @@ For breakpoint debugging, enable `kanama/debug/jdwp_enabled`. Kanama tools
 registers `kanama/debug/jdwp_port` with the conventional runtime/game default
 `5005`. Restart the game process after changing either setting. Kanama reads
 these settings before starting the embedded JVM and enables JDWP at
-`localhost:PORT` for runtime/game processes (skipped, with a log line, when the
-port is already taken on macOS and Linux); attach IntelliJ with a **Remote JVM Debug**
+`localhost:PORT` for runtime/game processes (skipped, with a log line, when
+another Kanama process holds the port's lock, or on macOS and Linux when
+something else listens on it); attach IntelliJ with a **Remote JVM Debug**
 configuration pointed at `localhost:PORT`. Editor processes skip the runtime
 port so pressing Play does not create a port conflict.
 

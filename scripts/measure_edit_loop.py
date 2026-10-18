@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure the desktop edit -> running loop on a fresh starter project (task 135 item 4).
+"""Measure the desktop edit -> running loop on a fresh starter project.
 
 What a user does, timed from the moment a `.kt` file is saved:
 

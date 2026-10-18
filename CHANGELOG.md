@@ -60,8 +60,14 @@ debug a game on another machine, give a full address: `KANAMA_JDWP_PORT='*:5005'
 
 On Linux and Windows the editor took the project's JDWP port itself (only macOS recognised the
 editor process), so the game started with Play could not open it and exited at startup. The editor
-now skips the port on every desktop OS. On macOS and Linux a second game instance that finds the
-port taken starts without the debugger and says so, instead of exiting.
+now skips the port on every desktop OS; like Godot, it counts `--editor`, `-e` and a
+`project.godot` path as the editor, and ignores the user arguments after `--`.
+
+A second game instance on the same port (**Run Multiple Instances**, even when the instances start
+at the same moment) starts without the debugger and says so, instead of exiting at startup. Each
+process claims its port with a lock the OS drops when the process ends (a file lock in the temp
+folder on macOS and Linux, a named mutex on Windows); on macOS and Linux it also checks that no
+other program listens on the port.
 
 ### Fixed — a running game no longer stalls once a second after a hot reload
 

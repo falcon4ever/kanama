@@ -108,6 +108,10 @@ its own port and attach to that one:
 KANAMA_JDWP_PORT=5006 godot --path /path/to/project --editor
 ```
 
+A game you start with Play from that editor inherits `KANAMA_JDWP_PORT=5006`,
+finds the editor holding the port, and runs without the debugger; start the
+game from another terminal with its own port to debug both.
+
 ### Debug from another machine
 
 The debug port listens on `localhost` only, because anyone who can reach a
@@ -127,7 +131,7 @@ KANAMA_JDWP_PORT='*:5005' godot --path /path/to/project
 | Completion shows an old API after you updated Kanama. | Rerun `installAddonJar` from the checkout ([step 3](source-checkout.md#3-build-and-sync-kanama)), then **Reload All Gradle Projects**. |
 | The import fails with "Cannot find a Java installation matching languageVersion=25". | No JDK 25 is installed and Gradle could not download one (it does that once, with network access). Install a JDK 25, or set **Settings > Build, Execution, Deployment > Build Tools > Gradle > Gradle JVM** to one. |
 | "Connection refused" when you attach. | The game is not listening. Look for `JDWP debug agent enabled at` in the Godot output: without it, debugging is off or the game was started before you turned it on. Check that the port in IntelliJ matches. |
-| The output says `JDWP port 5005 is already in use (another game instance?); starting without the debugger`. | Another game instance has the port, for example with **Debug > Customize Run Instances**. Attach to that one, or start the second one with its own `KANAMA_JDWP_PORT`. On Windows the second instance does not start at all; give each one its own port. |
+| The output says `JDWP port 5005 is already in use (another game instance?); starting without the debugger`. | Another game instance has the port, for example the first of several started with **Debug > Customize Run Instances**: only one instance gets the debugger. Attach to that one. To debug another instance too, start it from a terminal with its own `KANAMA_JDWP_PORT` (run instances take launch arguments, not environment variables). |
 | A breakpoint never hits. | The line already ran before you attached (see [Stop before your first line runs](#stop-before-your-first-line-runs)), or the node is still running the code from before your last build: after a hot reload, existing nodes keep their old code until the scene reloads. Restart the scene or the game. |
 
 ## How these steps were checked
