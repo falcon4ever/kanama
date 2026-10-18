@@ -66,7 +66,7 @@ class OpenXRSpatialMarkerTrackingCapability(handle: GodotHandle) : OpenXRExtensi
      *
      * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability.start_entity_discovery
      */
-    fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
+    fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase? = null, nextSnapshotQuery: OpenXRStructureBase? = null, userCallback: GodotCallable): OpenXRFutureResult? {
         val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(Binds.startEntityDiscoveryBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: NULL_SEGMENT, nextSnapshotQuery?.requireOpenHandle() ?: NULL_SEGMENT, userCallback.target.segment, userCallback.method))
         ObjectCalls.keepReachable(nextSnapshotCreate)
         ObjectCalls.keepReachable(nextSnapshotQuery)
@@ -84,7 +84,7 @@ class OpenXRSpatialMarkerTrackingCapability(handle: GodotHandle) : OpenXRExtensi
      *
      * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability.do_entity_update
      */
-    fun doEntityUpdate(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?) {
+    fun doEntityUpdate(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase? = null, nextSnapshotQuery: OpenXRStructureBase? = null) {
         ObjectCalls.ptrcallWithRIDObjectListTwoObjectArgs(Binds.doEntityUpdateBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: NULL_SEGMENT, nextSnapshotQuery?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(nextSnapshotCreate)
         ObjectCalls.keepReachable(nextSnapshotQuery)

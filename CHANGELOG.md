@@ -99,6 +99,32 @@ lost or refused values that work on desktop:
 alike. On iOS only, a signal or script-method argument of either type fails with an error naming
 the type, where desktop passes `null`.
 
+### Fixed — Web: an object argument is accepted however the object was obtained
+
+On Web, passing an object to a wrapper member threw `Kanama Web browser handle=... has kind=NODE,
+expected=RESOURCE` (or `expected=NODE`, `expected=OBJECT`) when the object came another way than the
+one the member's first demo used: a resource from `duplicate()` or from a getter given to
+`Sprite2D.texture` (which took only a loaded one), a loaded `MeshLibrary` given to
+`GridMap.meshLibrary` or a loaded `ButtonGroup` to `BaseButton.buttonGroup` (which took only a
+`create()`d one). The members now accept any live object of the declared type, as desktop and iOS do (`Sprite2D.texture`, `TextureRect.texture`,
+`AudioStreamPlayer.stream`, `GridMap.meshLibrary`, `Material.nextPass`, `BaseButton.buttonGroup`,
+`LightmapGI.lightData`, `MeshLibrary.setItemMesh`, `Mesh.surfaceSetMaterial`,
+`Input.setCustomMouseCursor`, `CanvasItem.drawTexture`).
+
+### Fixed — Web: a generic call that returns a PackedStringArray
+
+`WebExperimentalGenericCall.callImmediate(...).asAny()` of a `PackedStringArray` result threw
+`IndexOutOfBoundsException`; it returns the `List<String>`.
+
+### Added — tooling: the Web API exercise, one generated row per Web call shape
+
+Contributors: `scripts/generate_web_exercise.py` writes one row per call shape of
+`scripts/platform_backend_calls.json` into the web3d fixture (`ApiExerciseProbe.kt`) and the
+[Web API Exercise](docs/reference/generated/web-api-exercise.md) page; each row calls its shape and
+checks it against the generic tier on the same object, and the web3d driver requires every row to
+pass (`checks.apiExercise`) in Chrome and Firefox. `--check` (local_ci, `:web-runtime:check`) fails
+when a contract shape has no row.
+
 ### Added — tooling: an inventory of every `ObjectCalls` helper and how a generated exercise can check it
 
 Contributors: `scripts/generate_api_exercise.py` classifies each of the 1,492 helpers the shared tree calls (static, property pair, const oracle, singleton, reach only, excluded with a reason) into [API Exercise Inventory](docs/reference/generated/api-exercise.md); the local_ci stage "API exercise inventory drift" fails when the page is stale, when `scripts/api_exercise_policy.py` names a class or method the API lacks, or when a helper is classified by nothing.
@@ -211,6 +237,35 @@ Android). A flagged AAR cannot reach users: the plugin build
 refuses a release variant or publication with the flag, `packageMobileAddonAndroid` fails on an AAR
 with exercise classes, and `generate_api_exercise.py --check-jar` (which now reads an AAR's jars) runs
 on the runtime AAR in CI's Android lane and in `android_export_minified.sh`.
+
+### Fixed — an object parameter Godot defaults to `null` can be left out, or passed `null`
+
+`Tree.createItem()` could not make a tree's root item: its `parent` was a required, non-null `TreeItem`,
+where GDScript's `create_item()` passes `null`. The same held for `Expression.execute` (`baseInstance`),
+`VoxelGI.bake` (`fromNode`), `EditorInspector.createDefaultInspector`, `EditorInterface.popupNodeSelector`
+and `EditorUndoRedoManager.createAction`. Every object parameter whose Godot default is `null` is now
+nullable and defaults to `null` (`tree.createItem()`, `expression.execute(baseInstance = node)`), including
+the 55 that were already nullable but had to be passed (`ItemList.addItem(text)`, `CanvasItem.drawPolygon(
+points, colors)`). Found by the API exercise's reach rows, which could not write the call.
+
+- **Source break:** `Tree` `Expression` `VoxelGI` `EditorInspector` `EditorInterface` `EditorUndoRedoManager`
+  — the parameter above is `T? = null` instead of `T`. Calls compile unchanged; only a function reference
+  typed with the old non-null parameter needs the `?`.
+
+### Added — tooling: the API exercise runs every reach-only helper and one row per Variant type
+
+Contributors: the generated API exercise (`ApiExercise.generated.kt`) now runs a row for every helper the
+inventory could only reach (F, 602): the helper is called once on a valid receiver (a fresh instance, the
+singleton, a Tween made by `create_tween()` where a fresh one is invalid, `REACH_RECEIVERS`) and passes
+when it returns without an exception or a backend fault (`reach` in the summary line). On iOS a FAULT the
+shim prints while any row runs now fails that row by name. Rows that would change what a running game
+shows or hears on a device (a boot splash, the microphone, a made-up native texture handle, process-wide
+rendering settings) are excluded with that reason. And it runs one row per Godot Variant type (read from
+`Variant.Type`, values in `VARIANT_TYPE_VALUES`) through each generic Variant path — a return, a container
+element, an `Object.call` argument, an inbound signal argument — against a value the engine built or
+compared, on the desktop and on iOS; these replace the hand-written iOS `variant-type(...)` self-test rows.
+The inventory page lists which rows cover each typed-Array argument kind. The desktop run takes under a
+second (`in <ms>` in the summary).
 
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 

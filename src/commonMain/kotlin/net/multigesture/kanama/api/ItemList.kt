@@ -133,7 +133,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: ItemList.add_item
      */
-    fun addItem(text: String, icon: Texture2D?, selectable: Boolean = true): Int {
+    fun addItem(text: String, icon: Texture2D? = null, selectable: Boolean = true): Int {
         val ret = ObjectCalls.ptrcallWithStringObjectBoolArgsRetInt(Binds.addItemBind, segment, text, icon?.requireOpenHandle() ?: NULL_SEGMENT, selectable)
         ObjectCalls.keepReachable(icon)
         return ret

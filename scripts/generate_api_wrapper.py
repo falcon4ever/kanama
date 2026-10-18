@@ -1924,7 +1924,8 @@ def kotlin_default_expression(default_value: str | None, logical_kind: str) -> s
         if len(text) >= 2 and text[0] == text[-1] == '"':
             return text
         return None
-    if logical_kind == "Variant" and default_value == "null":
+    if logical_kind in {"Variant", "Object"} and default_value == "null":
+        # An Object parameter Godot defaults to null is nullable (object_param_is_nullable rule 3).
         return "null"
     if logical_kind in {"Array", "PackedStringArray"} and default_value == "[]":
         return "emptyList()"
@@ -2635,8 +2636,13 @@ def object_param_is_nullable(
          an old override required must stop admitting null). This is the task-52b tightening.
       2. resource-like (Resource/RefCounted-derived) -> nullable (existing legacy policy for
          *unmarked* resource params).
-      3. exact (class, method, arg) in NULLABLE_OBJECT_PARAM_OVERRIDES -> nullable (audited source).
-      4. otherwise -> non-null (conservative legacy default).
+      3. Godot's own default for the parameter is `null` -> nullable (and `= null`, see
+         [parameter_default_expression]): the engine declares null the value a caller who omits the
+         argument passes, so it handles it (`Tree.create_item(parent = null)` makes the root item,
+         `Expression.execute(base_instance = null)` runs without a base). Before, a non-resource one
+         was non-null and a Kotlin caller could not pass what GDScript passes by omitting it.
+      4. exact (class, method, arg) in NULLABLE_OBJECT_PARAM_OVERRIDES -> nullable (audited source).
+      5. otherwise -> non-null (conservative legacy default).
 
     Task 52a kept resource-like nullable regardless of `required` (non-breaking). Task 52b moves
     the `required` check ABOVE the resource-like line, turning the 65 explicitly-required
@@ -2646,7 +2652,20 @@ def object_param_is_nullable(
         return False
     if is_resource_like(type_name, api_classes):
         return True
+    if godot_argument_default(class_name, method_name, arg_name, api_classes) == "null":
+        return True
     return (class_name, method_name, arg_name) in NULLABLE_OBJECT_PARAM_OVERRIDES
+
+
+def godot_argument_default(
+    class_name: str, method_name: str, arg_name: str, api_classes: dict[str, ApiClass]
+) -> str | None:
+    """extension_api.json's `default_value` of one method argument (None when it has none)."""
+    cls = api_classes.get(class_name)
+    for method in (cls.methods.get(method_name, []) if cls is not None else []):
+        if arg_name in method.argument_names:
+            return method.argument_defaults[method.argument_names.index(arg_name)]
+    return None
 
 
 def kotlin_parameter_type(

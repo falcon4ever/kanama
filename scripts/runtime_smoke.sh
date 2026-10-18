@@ -175,9 +175,9 @@ printf '[kanama]\n\ndebug/ownership_self_test=true\n' >"$OWNERSHIP_OVERRIDE"
 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://ownership_self_test.tscn --verbose >"$OWNERSHIP_LOG" 2>&1
 rm -f "$OWNERSHIP_OVERRIDE"
 # The generated API exercise (exercise/ApiExercise.generated.kt, scripts/generate_api_exercise.py): one
-# row per ObjectCalls helper with a static or property-pair row, each asserting a value a silent no-op
-# cannot produce, on the first frame of a scene of its own, opted in through its project setting (as an
-# Android build is). Own log, appended to the main one; the scratch directory it writes is removed again.
+# row per ObjectCalls helper the shared tree calls (a value-asserting or a reach-only row) and one per
+# Variant type per generic Variant path, on the first frame of a scene of its own, opted in through its
+# project setting (as an Android build is). Own log, appended to the main one; the scratch directory it writes is removed again.
 API_EXERCISE_LOG="${LOG_FILE}.api_exercise"
 API_EXERCISE_OVERRIDE="$PROJECT_DIR/override.cfg"
 trap 'rm -f "$OWNED_RELEASE_OVERRIDE" "$SIGNAL_SETTING_OVERRIDE" "$OWNERSHIP_OVERRIDE" "$API_EXERCISE_OVERRIDE"' EXIT
@@ -234,7 +234,7 @@ if grep -q "API EXERCISE FAIL" "$API_EXERCISE_LOG"; then
   grep "API EXERCISE FAIL" "$API_EXERCISE_LOG" >&2
   smoke_fail "unexpected pattern" "API EXERCISE FAIL"
 fi
-check "\[kanama\] API EXERCISE: [1-9][0-9]* passed, 0 failed, [0-9]+ weak, [0-9]+ known, [0-9]+ reach, [0-9]+ excluded in [0-9]+ ms"
+check "\[kanama\] API EXERCISE: [1-9][0-9]* passed, 0 failed, [0-9]+ weak, [0-9]+ known, [1-9][0-9]* reach, [0-9]+ excluded in [0-9]+ ms"
 check "ResourceFormatLoader\\._load path=res://HelloScript\\.kt"
 check "HelloScript\\(file\\)\\._ready health=99 speed=5\\.1 label=from_tscn difficulty=HARD"
 check "ResourceOwnerSmoke payload=from_tscn present=true"

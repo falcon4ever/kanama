@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
@@ -33,9 +34,9 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Expression.execute
      */
-    fun execute(inputs: List<Any?> = emptyList(), baseInstance: GodotObject, showError: Boolean = true, constCallsOnly: Boolean = false): Any? {
+    fun execute(inputs: List<Any?> = emptyList(), baseInstance: GodotObject? = null, showError: Boolean = true, constCallsOnly: Boolean = false): Any? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(Binds.executeBind, segment, inputs, baseInstance.segment, showError, constCallsOnly)
+        val ret = ObjectCalls.ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(Binds.executeBind, segment, inputs, baseInstance?.segment ?: NULL_SEGMENT, showError, constCallsOnly)
         ObjectCalls.keepReachable(this)
         ObjectCalls.keepReachable(baseInstance)
         return ret

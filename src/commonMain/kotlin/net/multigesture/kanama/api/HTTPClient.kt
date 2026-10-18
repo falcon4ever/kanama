@@ -41,7 +41,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: HTTPClient.connect_to_host
      */
-    fun connectToHost(host: String, port: Int = -1, tlsOptions: TLSOptions?): GodotError {
+    fun connectToHost(host: String, port: Int = -1, tlsOptions: TLSOptions? = null): GodotError {
         checkOpen()
         val ret = GodotError(ObjectCalls.ptrcallWithStringIntObjectArgsRetLong(Binds.connectToHostBind, segment, host, port, tlsOptions?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(this)

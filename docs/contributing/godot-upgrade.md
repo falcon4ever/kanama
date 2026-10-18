@@ -91,6 +91,17 @@ minor releases — the runbook below is identical, only smaller.
       unlike the `api/**` wrappers), and `ktfmtCheck` in `local_ci.sh` gates it.
     - Run local CI against the new binary:
       `scripts/local_ci.sh /absolute/path/to/new_godot_binary`.
+    - **Run the API exercise and its sweep before any device gate.** Regenerate the rows
+      (`python3 scripts/generate_api_exercise.py --report`; `--check` fails on a new Variant type
+      without a `VARIANT_TYPE_VALUES` entry, an exclusion naming a class the new API lacks, or a
+      helper nothing classifies) and review the page's diff: every class the new version adds gets
+      rows it has never run. Then run them headless with the trace on (`runtime_smoke.sh` does,
+      or `KANAMA_API_EXERCISE=1 KANAMA_API_EXERCISE_TRACE=1` on `api_exercise_smoke.tscn` with a
+      `-PkanamaApiExercise=true` addon): a row that crashes (the smoke names it), hangs, writes outside
+      the scratch directory or would change a running game's state on a device gets a
+      `METHOD_OVERRIDES` or exclusion entry with that reason in `scripts/api_exercise_policy.py`;
+      a row that fails is a finding to fix. Only then the iOS and Android device runs, which run the
+      same rows (see "The exercise rows" in `wrapper-maintenance.md`).
     - Re-run the platform smoke/device gates per the release-gate matrix (§6) in
       the internal task repo. **Support claims move only after the matching gate
       passes** — the upgrade tooling never edits support wording.

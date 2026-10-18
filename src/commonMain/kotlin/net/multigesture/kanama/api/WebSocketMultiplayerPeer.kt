@@ -59,7 +59,7 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      *
      * Generated from Godot docs: WebSocketMultiplayerPeer.create_client
      */
-    fun createClient(url: String, tlsClientOptions: TLSOptions?): GodotError {
+    fun createClient(url: String, tlsClientOptions: TLSOptions? = null): GodotError {
         checkOpen()
         val ret = GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(Binds.createClientBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(this)
@@ -73,7 +73,7 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      *
      * Generated from Godot docs: WebSocketMultiplayerPeer.create_server
      */
-    fun createServer(port: Int, bindAddress: String = "*", tlsServerOptions: TLSOptions?): GodotError {
+    fun createServer(port: Int, bindAddress: String = "*", tlsServerOptions: TLSOptions? = null): GodotError {
         checkOpen()
         val ret = GodotError(ObjectCalls.ptrcallWithIntStringObjectArgsRetLong(Binds.createServerBind, segment, port, bindAddress, tlsServerOptions?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(this)

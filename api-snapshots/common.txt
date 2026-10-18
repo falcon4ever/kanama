@@ -4612,7 +4612,7 @@ CanvasItem: fun drawArc(center: Vector2, radius: Double, startAngle: Double, end
 CanvasItem: fun drawChar(font: Font, pos: Vector2, char: String, fontSize: Int = ..., modulate: Color, oversampling: Double = ...)
 CanvasItem: fun drawCharOutline(font: Font, pos: Vector2, char: String, fontSize: Int = ..., size: Int = ..., modulate: Color, oversampling: Double = ...)
 CanvasItem: fun drawCircle(position: Vector2, radius: Double, color: Color, filled: Boolean = ..., width: Double = ..., antialiased: Boolean = ...)
-CanvasItem: fun drawColoredPolygon(points: List<Vector2>, color: Color, uvs: List<Vector2>, texture: Texture2D?)
+CanvasItem: fun drawColoredPolygon(points: List<Vector2>, color: Color, uvs: List<Vector2>, texture: Texture2D? = ...)
 CanvasItem: fun drawDashedLine(from: Vector2, to: Vector2, color: Color, width: Double = ..., dash: Double = ..., aligned: Boolean = ..., antialiased: Boolean = ...)
 CanvasItem: fun drawEllipse(position: Vector2, major: Double, minor: Double, color: Color, filled: Boolean = ..., width: Double = ..., antialiased: Boolean = ...)
 CanvasItem: fun drawEllipseArc(center: Vector2, major: Double, minor: Double, startAngle: Double, endAngle: Double, pointCount: Int, color: Color, width: Double = ..., antialiased: Boolean = ...)
@@ -4626,10 +4626,10 @@ CanvasItem: fun drawMultilineColors(points: List<Vector2>, colors: List<Color>, 
 CanvasItem: fun drawMultilineString(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = ..., width: Double = ..., fontSize: Int = ..., maxLines: Int = ..., modulate: Color, brkFlags: TextServer.LineBreakFlag = ..., justificationFlags: TextServer.JustificationFlag = ..., direction: TextServer.Direction = ..., orientation: TextServer.Orientation = ..., oversampling: Double = ...)
 CanvasItem: fun drawMultilineStringOutline(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = ..., width: Double = ..., fontSize: Int = ..., maxLines: Int = ..., size: Int = ..., modulate: Color, brkFlags: TextServer.LineBreakFlag = ..., justificationFlags: TextServer.JustificationFlag = ..., direction: TextServer.Direction = ..., orientation: TextServer.Orientation = ..., oversampling: Double = ...)
 CanvasItem: fun drawMultimesh(multimesh: MultiMesh, texture: Texture2D?)
-CanvasItem: fun drawPolygon(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D?)
+CanvasItem: fun drawPolygon(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D? = ...)
 CanvasItem: fun drawPolyline(points: List<Vector2>, color: Color, width: Double = ..., antialiased: Boolean = ...)
 CanvasItem: fun drawPolylineColors(points: List<Vector2>, colors: List<Color>, width: Double = ..., antialiased: Boolean = ...)
-CanvasItem: fun drawPrimitive(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D?)
+CanvasItem: fun drawPrimitive(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D? = ...)
 CanvasItem: fun drawRect(rect: Rect2, color: Color, filled: Boolean = ..., width: Double = ..., antialiased: Boolean = ...)
 CanvasItem: fun drawSetTransform(position: Vector2, rotation: Double = ..., scale: Vector2)
 CanvasItem: fun drawSetTransformMatrix(xform: Transform2D)
@@ -5218,7 +5218,7 @@ ClockDirection.Companion: val COUNTERCLOCKWISE: ClockDirection
 CodeEdit: class CodeEdit : TextEdit
 CodeEdit: constructor(handle: GodotHandle)
 CodeEdit: fun addAutoBraceCompletionPair(startKey: String, endKey: String)
-CodeEdit: fun addCodeCompletionOption(type: CodeEdit.CodeCompletionKind, displayText: String, insertText: String, textColor: Color, icon: Resource?, value: Any? = ..., location: Int = ...)
+CodeEdit: fun addCodeCompletionOption(type: CodeEdit.CodeCompletionKind, displayText: String, insertText: String, textColor: Color, icon: Resource? = ..., value: Any? = ..., location: Int = ...)
 CodeEdit: fun addCommentDelimiter(startKey: String, endKey: String, lineOnly: Boolean = ...)
 CodeEdit: fun addStringDelimiter(startKey: String, endKey: String, lineOnly: Boolean = ...)
 CodeEdit: fun canFoldLine(line: Int): Boolean
@@ -7448,8 +7448,8 @@ DisplayServer.WindowResizeEdge.Companion: val TOP_LEFT: WindowResizeEdge
 DisplayServer.WindowResizeEdge.Companion: val TOP_RIGHT: WindowResizeEdge
 DrawableTexture2D: class DrawableTexture2D : Texture2D
 DrawableTexture2D: constructor(handle: GodotHandle)
-DrawableTexture2D: fun blitRect(rect: Rect2i, source: Texture2D?, modulate: Color, mipmap: Int = ..., material: Material?)
-DrawableTexture2D: fun blitRectMulti(rect: Rect2i, sources: List<Texture2D>, extraTargets: List<DrawableTexture2D>, modulate: Color, mipmap: Int = ..., material: Material?)
+DrawableTexture2D: fun blitRect(rect: Rect2i, source: Texture2D?, modulate: Color, mipmap: Int = ..., material: Material? = ...)
+DrawableTexture2D: fun blitRectMulti(rect: Rect2i, sources: List<Texture2D>, extraTargets: List<DrawableTexture2D>, modulate: Color, mipmap: Int = ..., material: Material? = ...)
 DrawableTexture2D: fun generateMipmaps()
 DrawableTexture2D: fun getUseMipmaps(): Boolean
 DrawableTexture2D: fun setFormat(format: DrawableTexture2D.DrawableFormat)
@@ -7475,7 +7475,7 @@ ENetConnection: fun connectToHost(address: String, port: Int, channels: Int = ..
 ENetConnection: fun createHost(maxPeers: Int = ..., maxChannels: Int = ..., inBandwidth: Int = ..., outBandwidth: Int = ...): GodotError
 ENetConnection: fun createHostBound(bindAddress: String, bindPort: Int, maxPeers: Int = ..., maxChannels: Int = ..., inBandwidth: Int = ..., outBandwidth: Int = ...): GodotError
 ENetConnection: fun destroy()
-ENetConnection: fun dtlsClientSetup(hostname: String, clientOptions: TLSOptions?): GodotError
+ENetConnection: fun dtlsClientSetup(hostname: String, clientOptions: TLSOptions? = ...): GodotError
 ENetConnection: fun dtlsServerSetup(serverOptions: TLSOptions?): GodotError
 ENetConnection: fun flush()
 ENetConnection: fun getLocalPort(): Int
@@ -7591,9 +7591,9 @@ EditorCommandPalette.Companion: companion object
 EditorCommandPalette.Companion: fun fromHandle(handle: GodotHandle): EditorCommandPalette?
 EditorContextMenuPlugin: class EditorContextMenuPlugin : RefCounted
 EditorContextMenuPlugin: constructor(handle: GodotHandle)
-EditorContextMenuPlugin: fun addContextMenuItem(name: String, callback: GodotCallable, icon: Texture2D?)
-EditorContextMenuPlugin: fun addContextMenuItemFromShortcut(name: String, shortcut: Shortcut?, icon: Texture2D?)
-EditorContextMenuPlugin: fun addContextSubmenuItem(name: String, menu: PopupMenu, icon: Texture2D?)
+EditorContextMenuPlugin: fun addContextMenuItem(name: String, callback: GodotCallable, icon: Texture2D? = ...)
+EditorContextMenuPlugin: fun addContextMenuItemFromShortcut(name: String, shortcut: Shortcut?, icon: Texture2D? = ...)
+EditorContextMenuPlugin: fun addContextSubmenuItem(name: String, menu: PopupMenu, icon: Texture2D? = ...)
 EditorContextMenuPlugin: fun addMenuShortcut(shortcut: Shortcut?, callback: GodotCallable)
 EditorContextMenuPlugin.Companion: companion object
 EditorContextMenuPlugin.Companion: fun fromHandle(handle: GodotHandle): EditorContextMenuPlugin?
@@ -7744,7 +7744,7 @@ EditorExportPlatform: fun sshRunOnRemote(host: String, port: String, sshArg: Lis
 EditorExportPlatform: fun sshRunOnRemoteNoWait(host: String, port: String, sshArgs: List<String>, cmdArgs: String, portFwd: Int = ...): Long
 EditorExportPlatform.Companion: companion object
 EditorExportPlatform.Companion: fun fromHandle(handle: GodotHandle): EditorExportPlatform?
-EditorExportPlatform.Companion: fun getForcedExportFiles(preset: EditorExportPreset?): List<String>
+EditorExportPlatform.Companion: fun getForcedExportFiles(preset: EditorExportPreset? = ...): List<String>
 EditorExportPlatform.DebugFlags: value class DebugFlags : GodotEnumValue
 EditorExportPlatform.DebugFlags: constructor(value: Long)
 EditorExportPlatform.DebugFlags: fun inv(): DebugFlags
@@ -8000,7 +8000,7 @@ EditorInspector: val propertyToggled: Signal2<String, Boolean>
 EditorInspector: val resourceSelected: Signal2<Resource?, String>
 EditorInspector: val restartRequested: Signal0
 EditorInspector.Companion: companion object
-EditorInspector.Companion: fun createDefaultInspector(filterLineEdit: LineEdit): EditorInspector?
+EditorInspector.Companion: fun createDefaultInspector(filterLineEdit: LineEdit? = ...): EditorInspector?
 EditorInspector.Companion: fun fromHandle(handle: GodotHandle): EditorInspector?
 EditorInspector.Companion: fun instantiatePropertyEditor(objectValue: GodotObject, type: VariantType, path: String, hint: GodotPropertyHint, hintText: String, usage: Long, wide: Boolean = ...): EditorProperty?
 EditorInspector.Signals: object Signals
@@ -8077,7 +8077,7 @@ EditorInterface: fun popupDialogCentered(dialog: Window, minsize: Vector2i)
 EditorInterface: fun popupDialogCenteredClamped(dialog: Window, minsize: Vector2i, fallbackRatio: Double = ...)
 EditorInterface: fun popupDialogCenteredRatio(dialog: Window, ratio: Double = ...)
 EditorInterface: fun popupMethodSelector(objectValue: GodotObject, callback: GodotCallable, currentValue: String = ...)
-EditorInterface: fun popupNodeSelector(callback: GodotCallable, validTypes: List<String>, currentValue: Node)
+EditorInterface: fun popupNodeSelector(callback: GodotCallable, validTypes: List<String>, currentValue: Node? = ...)
 EditorInterface: fun popupPropertySelector(objectValue: GodotObject, callback: GodotCallable, typeFilter: List<Int>, currentValue: String = ...)
 EditorInterface: fun popupQuickOpen(callback: GodotCallable, baseTypes: List<String>)
 EditorInterface: fun reloadSceneFromPath(sceneFilepath: String)
@@ -8101,7 +8101,7 @@ EditorNode3DGizmo: fun addCollisionSegments(segments: List<Vector3>)
 EditorNode3DGizmo: fun addCollisionTriangles(triangles: TriangleMesh?)
 EditorNode3DGizmo: fun addHandles(handles: List<Vector3>, material: Material?, ids: List<Int>, billboard: Boolean = ..., secondary: Boolean = ...)
 EditorNode3DGizmo: fun addLines(lines: List<Vector3>, material: Material?, billboard: Boolean = ..., modulate: Color)
-EditorNode3DGizmo: fun addMesh(mesh: Mesh?, material: Material?, transform: Transform3D, skeleton: SkinReference?)
+EditorNode3DGizmo: fun addMesh(mesh: Mesh?, material: Material? = ..., transform: Transform3D, skeleton: SkinReference? = ...)
 EditorNode3DGizmo: fun addUnscaledBillboard(material: Material?, defaultScale: Double = ..., modulate: Color)
 EditorNode3DGizmo: fun clear()
 EditorNode3DGizmo: fun getNode3d(): Node3D?
@@ -8115,10 +8115,10 @@ EditorNode3DGizmo.Companion: fun fromHandle(handle: GodotHandle): EditorNode3DGi
 EditorNode3DGizmoPlugin: class EditorNode3DGizmoPlugin : Resource
 EditorNode3DGizmoPlugin: constructor(handle: GodotHandle)
 EditorNode3DGizmoPlugin: fun addMaterial(name: String, material: StandardMaterial3D?)
-EditorNode3DGizmoPlugin: fun createHandleMaterial(name: String, billboard: Boolean = ..., texture: Texture2D?)
+EditorNode3DGizmoPlugin: fun createHandleMaterial(name: String, billboard: Boolean = ..., texture: Texture2D? = ...)
 EditorNode3DGizmoPlugin: fun createIconMaterial(name: String, texture: Texture2D?, onTop: Boolean = ..., color: Color)
 EditorNode3DGizmoPlugin: fun createMaterial(name: String, color: Color, billboard: Boolean = ..., onTop: Boolean = ..., useVertexColor: Boolean = ...)
-EditorNode3DGizmoPlugin: fun getMaterial(name: String, gizmo: EditorNode3DGizmo?): StandardMaterial3D?
+EditorNode3DGizmoPlugin: fun getMaterial(name: String, gizmo: EditorNode3DGizmo? = ...): StandardMaterial3D?
 EditorNode3DGizmoPlugin.Companion: companion object
 EditorNode3DGizmoPlugin.Companion: fun fromHandle(handle: GodotHandle): EditorNode3DGizmoPlugin?
 EditorPaths: class EditorPaths : GodotObject
@@ -8135,9 +8135,9 @@ EditorPlugin: open class EditorPlugin : Node
 EditorPlugin: constructor(handle: GodotHandle)
 EditorPlugin: fun addAutoloadSingleton(name: String, path: String)
 EditorPlugin: fun addContextMenuPlugin(slot: EditorContextMenuPlugin.ContextMenuSlot, plugin: EditorContextMenuPlugin?)
-EditorPlugin: fun addControlToBottomPanel(control: Control, title: String, shortcut: Shortcut?): Button?
+EditorPlugin: fun addControlToBottomPanel(control: Control, title: String, shortcut: Shortcut? = ...): Button?
 EditorPlugin: fun addControlToContainer(container: EditorPlugin.CustomControlContainer, control: Control)
-EditorPlugin: fun addControlToDock(slot: EditorPlugin.DockSlot, control: Control, shortcut: Shortcut?)
+EditorPlugin: fun addControlToDock(slot: EditorPlugin.DockSlot, control: Control, shortcut: Shortcut? = ...)
 EditorPlugin: fun addCustomType(type: String, base: String, script: Script?, icon: Texture2D?)
 EditorPlugin: fun addDebuggerPlugin(script: EditorDebuggerPlugin?)
 EditorPlugin: fun addDock(dock: EditorDock)
@@ -8559,7 +8559,7 @@ EditorUndoRedoManager: fun addUndoProperty(objectValue: GodotObject, property: S
 EditorUndoRedoManager: fun addUndoReference(objectValue: GodotObject)
 EditorUndoRedoManager: fun clearHistory(id: Int = ..., increaseVersion: Boolean = ...)
 EditorUndoRedoManager: fun commitAction(execute: Boolean = ...)
-EditorUndoRedoManager: fun createAction(name: String, mergeMode: UndoRedo.MergeMode = ..., customContext: GodotObject, backwardUndoOps: Boolean = ..., markUnsaved: Boolean = ...)
+EditorUndoRedoManager: fun createAction(name: String, mergeMode: UndoRedo.MergeMode = ..., customContext: GodotObject? = ..., backwardUndoOps: Boolean = ..., markUnsaved: Boolean = ...)
 EditorUndoRedoManager: fun forceFixedHistory()
 EditorUndoRedoManager: fun getHistoryUndoRedo(id: Int): UndoRedo?
 EditorUndoRedoManager: fun getObjectHistoryId(objectValue: GodotObject): Int
@@ -9047,7 +9047,7 @@ EulerOrder.Companion: val ZXY: EulerOrder
 EulerOrder.Companion: val ZYX: EulerOrder
 Expression: class Expression : RefCounted
 Expression: constructor(handle: GodotHandle)
-Expression: fun execute(inputs: List<Any?> = ..., baseInstance: GodotObject, showError: Boolean = ..., constCallsOnly: Boolean = ...): Any?
+Expression: fun execute(inputs: List<Any?> = ..., baseInstance: GodotObject? = ..., showError: Boolean = ..., constCallsOnly: Boolean = ...): Any?
 Expression: fun getErrorText(): String
 Expression: fun hasExecuteFailed(): Boolean
 Expression: fun parse(expression: String, inputNames: List<String>): GodotError
@@ -11790,7 +11790,7 @@ GraphNode: fun isSlotDrawStylebox(slotIndex: Int): Boolean
 GraphNode: fun isSlotEnabledLeft(slotIndex: Int): Boolean
 GraphNode: fun isSlotEnabledRight(slotIndex: Int): Boolean
 GraphNode: fun setIgnoreInvalidConnectionType(ignore: Boolean)
-GraphNode: fun setSlot(slotIndex: Int, enableLeftPort: Boolean, typeLeft: Int, colorLeft: Color, enableRightPort: Boolean, typeRight: Int, colorRight: Color, customIconLeft: Texture2D?, customIconRight: Texture2D?, drawStylebox: Boolean = ...)
+GraphNode: fun setSlot(slotIndex: Int, enableLeftPort: Boolean, typeLeft: Int, colorLeft: Color, enableRightPort: Boolean, typeRight: Int, colorRight: Color, customIconLeft: Texture2D? = ..., customIconRight: Texture2D? = ..., drawStylebox: Boolean = ...)
 GraphNode: fun setSlotColorLeft(slotIndex: Int, color: Color)
 GraphNode: fun setSlotColorRight(slotIndex: Int, color: Color)
 GraphNode: fun setSlotCustomIconLeft(slotIndex: Int, customIcon: Texture2D?)
@@ -11963,7 +11963,7 @@ HSplitContainer.Companion: fun fromHandle(handle: GodotHandle): HSplitContainer?
 HTTPClient: class HTTPClient : RefCounted
 HTTPClient: constructor(handle: GodotHandle)
 HTTPClient: fun closeConnection()
-HTTPClient: fun connectToHost(host: String, port: Int = ..., tlsOptions: TLSOptions?): GodotError
+HTTPClient: fun connectToHost(host: String, port: Int = ..., tlsOptions: TLSOptions? = ...): GodotError
 HTTPClient: fun getConnection(): StreamPeer?
 HTTPClient: fun getReadChunkSize(): Int
 HTTPClient: fun getResponseBodyLength(): Long
@@ -12474,7 +12474,7 @@ ImmediateMesh: constructor(handle: GodotHandle)
 ImmediateMesh: fun clearSurfaces()
 ImmediateMesh: fun surfaceAddVertex(vertex: Vector3)
 ImmediateMesh: fun surfaceAddVertex2d(vertex: Vector2)
-ImmediateMesh: fun surfaceBegin(primitive: Mesh.PrimitiveType, material: Material?)
+ImmediateMesh: fun surfaceBegin(primitive: Mesh.PrimitiveType, material: Material? = ...)
 ImmediateMesh: fun surfaceEnd()
 ImmediateMesh: fun surfaceSetColor(color: Color)
 ImmediateMesh: fun surfaceSetNormal(normal: Vector3)
@@ -12486,14 +12486,14 @@ ImmediateMesh.Companion: fun fromHandle(handle: GodotHandle): ImmediateMesh?
 ImporterMesh: class ImporterMesh : Resource
 ImporterMesh: constructor(handle: GodotHandle)
 ImporterMesh: fun addBlendShape(name: String)
-ImporterMesh: fun addSurface(primitive: Mesh.PrimitiveType, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = ..., material: Material?, name: String = ..., flags: Long = ...)
+ImporterMesh: fun addSurface(primitive: Mesh.PrimitiveType, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = ..., material: Material? = ..., name: String = ..., flags: Long = ...)
 ImporterMesh: fun clear()
 ImporterMesh: fun generateLods(normalMergeAngle: Double, normalSplitAngle: Double, boneTransformArray: List<Any?>)
 ImporterMesh: fun getBlendShapeCount(): Int
 ImporterMesh: fun getBlendShapeMode(): Mesh.BlendShapeMode
 ImporterMesh: fun getBlendShapeName(blendShapeIdx: Int): String
 ImporterMesh: fun getLightmapSizeHint(): Vector2i
-ImporterMesh: fun getMesh(baseMesh: ArrayMesh?): ArrayMesh?
+ImporterMesh: fun getMesh(baseMesh: ArrayMesh? = ...): ArrayMesh?
 ImporterMesh: fun getSurfaceArrays(surfaceIdx: Int): List<Any?>
 ImporterMesh: fun getSurfaceBlendShapeArrays(surfaceIdx: Int, blendShapeIdx: Int): List<Any?>
 ImporterMesh: fun getSurfaceCount(): Int
@@ -12978,7 +12978,7 @@ InputMap.Signals: object Signals
 InputMap.Signals: const val projectSettingsLoaded: String
 InstancePlaceholder: class InstancePlaceholder : Node
 InstancePlaceholder: constructor(handle: GodotHandle)
-InstancePlaceholder: fun createInstance(replace: Boolean = ..., customScene: PackedScene?): Node?
+InstancePlaceholder: fun createInstance(replace: Boolean = ..., customScene: PackedScene? = ...): Node?
 InstancePlaceholder: fun getInstancePath(): String
 InstancePlaceholder: fun getStoredValues(withOrder: Boolean = ...): Map<String, Any?>
 InstancePlaceholder.Companion: companion object
@@ -12990,7 +12990,7 @@ IntervalTweener.Companion: fun fromHandle(handle: GodotHandle): IntervalTweener?
 ItemList: class ItemList : Control
 ItemList: constructor(handle: GodotHandle)
 ItemList: fun addIconItem(icon: Texture2D?, selectable: Boolean = ...): Int
-ItemList: fun addItem(text: String, icon: Texture2D?, selectable: Boolean = ...): Int
+ItemList: fun addItem(text: String, icon: Texture2D? = ..., selectable: Boolean = ...): Int
 ItemList: fun centerOnCurrent(centerVerically: Boolean = ..., centerHorizontally: Boolean = ...)
 ItemList: fun clear()
 ItemList: fun deselect(idx: Int)
@@ -15102,11 +15102,11 @@ MeshInstance2D.Signals: object Signals
 MeshInstance2D.Signals: const val textureChanged: String
 MeshInstance3D: open class MeshInstance3D : GeometryInstance3D
 MeshInstance3D: constructor(handle: GodotHandle)
-MeshInstance3D: fun bakeMeshFromCurrentBlendShapeMix(existing: ArrayMesh?): ArrayMesh?
-MeshInstance3D: fun bakeMeshFromCurrentSkeletonPose(existing: ArrayMesh?): ArrayMesh?
+MeshInstance3D: fun bakeMeshFromCurrentBlendShapeMix(existing: ArrayMesh? = ...): ArrayMesh?
+MeshInstance3D: fun bakeMeshFromCurrentSkeletonPose(existing: ArrayMesh? = ...): ArrayMesh?
 MeshInstance3D: fun createConvexCollision(clean: Boolean = ..., simplify: Boolean = ...)
 MeshInstance3D: fun createDebugTangents()
-MeshInstance3D: fun createMultipleConvexCollisions(settings: MeshConvexDecompositionSettings?)
+MeshInstance3D: fun createMultipleConvexCollisions(settings: MeshConvexDecompositionSettings? = ...)
 MeshInstance3D: fun createTrimeshCollision()
 MeshInstance3D: fun findBlendShapeByName(name: String): Int
 MeshInstance3D: fun getActiveMaterial(surface: Int): Material?
@@ -30915,9 +30915,9 @@ OpenXRRenderModelManager.Signals: const val renderModelRemoved: String
 OpenXRSpatialAnchorCapability: class OpenXRSpatialAnchorCapability : OpenXRExtensionWrapper
 OpenXRSpatialAnchorCapability: constructor(handle: GodotHandle)
 OpenXRSpatialAnchorCapability: fun createDefaultPersistenceContext(userCallback: GodotCallable): OpenXRFutureResult?
-OpenXRSpatialAnchorCapability: fun createNewAnchor(transform: Transform3D, spatialContext: RID, next: OpenXRStructureBase?): OpenXRAnchorTracker?
+OpenXRSpatialAnchorCapability: fun createNewAnchor(transform: Transform3D, spatialContext: RID, next: OpenXRStructureBase? = ...): OpenXRAnchorTracker?
 OpenXRSpatialAnchorCapability: fun createPersistenceContext(scope: OpenXRSpatialAnchorCapability.PersistenceScope, userCallback: GodotCallable): OpenXRFutureResult?
-OpenXRSpatialAnchorCapability: fun doEntityUpdate(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?)
+OpenXRSpatialAnchorCapability: fun doEntityUpdate(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase? = ..., nextSnapshotQuery: OpenXRStructureBase? = ...)
 OpenXRSpatialAnchorCapability: fun freePersistenceContext(persistenceContext: RID)
 OpenXRSpatialAnchorCapability: fun getPersistenceContextHandle(persistenceContext: RID): Long
 OpenXRSpatialAnchorCapability: fun isPersistenceScopeSupported(scope: OpenXRSpatialAnchorCapability.PersistenceScope): Boolean
@@ -30925,7 +30925,7 @@ OpenXRSpatialAnchorCapability: fun isSpatialAnchorSupported(): Boolean
 OpenXRSpatialAnchorCapability: fun isSpatialPersistenceSupported(): Boolean
 OpenXRSpatialAnchorCapability: fun persistAnchor(anchorTracker: OpenXRAnchorTracker?, persistenceContext: RID, userCallback: GodotCallable): OpenXRFutureResult?
 OpenXRSpatialAnchorCapability: fun removeAnchor(anchorTracker: OpenXRAnchorTracker?)
-OpenXRSpatialAnchorCapability: fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult?
+OpenXRSpatialAnchorCapability: fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase? = ..., nextSnapshotQuery: OpenXRStructureBase? = ..., userCallback: GodotCallable): OpenXRFutureResult?
 OpenXRSpatialAnchorCapability: fun unpersistAnchor(anchorTracker: OpenXRAnchorTracker?, persistenceContext: RID, userCallback: GodotCallable): OpenXRFutureResult?
 OpenXRSpatialAnchorCapability.Companion: companion object
 OpenXRSpatialAnchorCapability.Companion: fun fromHandle(handle: GodotHandle): OpenXRSpatialAnchorCapability?
@@ -31115,9 +31115,9 @@ OpenXRSpatialContextPersistenceConfig.Companion: fun fromHandle(handle: GodotHan
 OpenXRSpatialEntityExtension: class OpenXRSpatialEntityExtension : OpenXRExtensionWrapper
 OpenXRSpatialEntityExtension: constructor(handle: GodotHandle)
 OpenXRSpatialEntityExtension: fun addSpatialEntity(spatialContext: RID, entityId: Long, entity: Long): RID
-OpenXRSpatialEntityExtension: fun createSpatialContext(capabilityConfigurations: List<OpenXRSpatialCapabilityConfigurationBaseHeader>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult?
-OpenXRSpatialEntityExtension: fun discoverSpatialEntities(spatialContext: RID, componentTypes: List<Long>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult?
-OpenXRSpatialEntityExtension: fun discoverSpatialEntitiesWithComponentData(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult?
+OpenXRSpatialEntityExtension: fun createSpatialContext(capabilityConfigurations: List<OpenXRSpatialCapabilityConfigurationBaseHeader>, next: OpenXRStructureBase? = ..., userCallback: GodotCallable): OpenXRFutureResult?
+OpenXRSpatialEntityExtension: fun discoverSpatialEntities(spatialContext: RID, componentTypes: List<Long>, next: OpenXRStructureBase? = ..., userCallback: GodotCallable): OpenXRFutureResult?
+OpenXRSpatialEntityExtension: fun discoverSpatialEntitiesWithComponentData(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase? = ..., userCallback: GodotCallable): OpenXRFutureResult?
 OpenXRSpatialEntityExtension: fun findSpatialEntity(entityId: Long): RID
 OpenXRSpatialEntityExtension: fun freeSpatialContext(spatialContext: RID)
 OpenXRSpatialEntityExtension: fun freeSpatialEntity(entity: RID)
@@ -31136,10 +31136,10 @@ OpenXRSpatialEntityExtension: fun getUint8Buffer(spatialSnapshot: RID, bufferId:
 OpenXRSpatialEntityExtension: fun getVector2Buffer(spatialSnapshot: RID, bufferId: Long): List<Vector2>
 OpenXRSpatialEntityExtension: fun getVector3Buffer(spatialSnapshot: RID, bufferId: Long): List<Vector3>
 OpenXRSpatialEntityExtension: fun makeSpatialEntity(spatialContext: RID, entityId: Long): RID
-OpenXRSpatialEntityExtension: fun querySnapshot(spatialSnapshot: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase?): Boolean
+OpenXRSpatialEntityExtension: fun querySnapshot(spatialSnapshot: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase? = ...): Boolean
 OpenXRSpatialEntityExtension: fun supportsCapability(capability: OpenXRSpatialEntityExtension.Capability): Boolean
 OpenXRSpatialEntityExtension: fun supportsComponentType(capability: OpenXRSpatialEntityExtension.Capability, componentType: OpenXRSpatialEntityExtension.ComponentType): Boolean
-OpenXRSpatialEntityExtension: fun updateSpatialEntities(spatialContext: RID, entities: List<RID>, componentTypes: List<Long>, next: OpenXRStructureBase?): RID
+OpenXRSpatialEntityExtension: fun updateSpatialEntities(spatialContext: RID, entities: List<RID>, componentTypes: List<Long>, next: OpenXRStructureBase? = ...): RID
 OpenXRSpatialEntityExtension: val spatialDiscoveryRecommended: Signal1<RID>
 OpenXRSpatialEntityExtension.Capability: value class Capability : GodotEnumValue
 OpenXRSpatialEntityExtension.Capability: constructor(value: Long)
@@ -31199,18 +31199,18 @@ OpenXRSpatialEntityTracker.Signals: const val nextChanged: String
 OpenXRSpatialEntityTracker.Signals: const val spatialTrackingStateChanged: String
 OpenXRSpatialMarkerTrackingCapability: class OpenXRSpatialMarkerTrackingCapability : OpenXRExtensionWrapper
 OpenXRSpatialMarkerTrackingCapability: constructor(handle: GodotHandle)
-OpenXRSpatialMarkerTrackingCapability: fun doEntityUpdate(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?)
+OpenXRSpatialMarkerTrackingCapability: fun doEntityUpdate(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase? = ..., nextSnapshotQuery: OpenXRStructureBase? = ...)
 OpenXRSpatialMarkerTrackingCapability: fun isAprilTagSupported(): Boolean
 OpenXRSpatialMarkerTrackingCapability: fun isArucoSupported(): Boolean
 OpenXRSpatialMarkerTrackingCapability: fun isMicroQrcodeSupported(): Boolean
 OpenXRSpatialMarkerTrackingCapability: fun isQrcodeSupported(): Boolean
-OpenXRSpatialMarkerTrackingCapability: fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult?
+OpenXRSpatialMarkerTrackingCapability: fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase? = ..., nextSnapshotQuery: OpenXRStructureBase? = ..., userCallback: GodotCallable): OpenXRFutureResult?
 OpenXRSpatialMarkerTrackingCapability.Companion: companion object
 OpenXRSpatialMarkerTrackingCapability.Companion: fun fromHandle(handle: GodotHandle): OpenXRSpatialMarkerTrackingCapability?
 OpenXRSpatialPlaneTrackingCapability: class OpenXRSpatialPlaneTrackingCapability : OpenXRExtensionWrapper
 OpenXRSpatialPlaneTrackingCapability: constructor(handle: GodotHandle)
 OpenXRSpatialPlaneTrackingCapability: fun isSupported(): Boolean
-OpenXRSpatialPlaneTrackingCapability: fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult?
+OpenXRSpatialPlaneTrackingCapability: fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase? = ..., nextSnapshotQuery: OpenXRStructureBase? = ..., userCallback: GodotCallable): OpenXRFutureResult?
 OpenXRSpatialPlaneTrackingCapability.Companion: companion object
 OpenXRSpatialPlaneTrackingCapability.Companion: fun fromHandle(handle: GodotHandle): OpenXRSpatialPlaneTrackingCapability?
 OpenXRSpatialQueryResultData: class OpenXRSpatialQueryResultData : OpenXRSpatialComponentData
@@ -31356,7 +31356,7 @@ PacketPeer.Companion: companion object
 PacketPeer.Companion: fun fromHandle(handle: GodotHandle): PacketPeer?
 PacketPeerDTLS: class PacketPeerDTLS : PacketPeer
 PacketPeerDTLS: constructor(handle: GodotHandle)
-PacketPeerDTLS: fun connectToPeer(packetPeer: PacketPeerUDP?, hostname: String, clientOptions: TLSOptions?): GodotError
+PacketPeerDTLS: fun connectToPeer(packetPeer: PacketPeerUDP?, hostname: String, clientOptions: TLSOptions? = ...): GodotError
 PacketPeerDTLS: fun disconnectFromPeer()
 PacketPeerDTLS: fun getStatus(): PacketPeerDTLS.Status
 PacketPeerDTLS: fun poll()
@@ -32123,7 +32123,7 @@ PhysicsBody2D: fun getCollisionExceptions(): List<PhysicsBody2D>
 PhysicsBody2D: fun getGravity(): Vector2
 PhysicsBody2D: fun moveAndCollide(motion: Vector2, testOnly: Boolean = ..., safeMargin: Double = ..., recoveryAsCollision: Boolean = ...): KinematicCollision2D?
 PhysicsBody2D: fun removeCollisionExceptionWith(body: Node)
-PhysicsBody2D: fun testMove(from: Transform2D, motion: Vector2, collision: KinematicCollision2D?, safeMargin: Double = ..., recoveryAsCollision: Boolean = ...): Boolean
+PhysicsBody2D: fun testMove(from: Transform2D, motion: Vector2, collision: KinematicCollision2D? = ..., safeMargin: Double = ..., recoveryAsCollision: Boolean = ...): Boolean
 PhysicsBody2D.Companion: companion object
 PhysicsBody2D.Companion: fun fromHandle(handle: GodotHandle): PhysicsBody2D?
 PhysicsBody3D: open class PhysicsBody3D : CollisionObject3D
@@ -32135,7 +32135,7 @@ PhysicsBody3D: fun getGravity(): Vector3
 PhysicsBody3D: fun moveAndCollide(motion: Vector3, testOnly: Boolean = ..., safeMargin: Double = ..., recoveryAsCollision: Boolean = ..., maxCollisions: Int = ...): KinematicCollision3D?
 PhysicsBody3D: fun removeCollisionExceptionWith(body: Node)
 PhysicsBody3D: fun setAxisLock(axis: PhysicsServer3D.BodyAxis, lock: Boolean)
-PhysicsBody3D: fun testMove(from: Transform3D, motion: Vector3, collision: KinematicCollision3D?, safeMargin: Double = ..., recoveryAsCollision: Boolean = ..., maxCollisions: Int = ...): Boolean
+PhysicsBody3D: fun testMove(from: Transform3D, motion: Vector3, collision: KinematicCollision3D? = ..., safeMargin: Double = ..., recoveryAsCollision: Boolean = ..., maxCollisions: Int = ...): Boolean
 PhysicsBody3D: var axisLockAngularX: Boolean
 PhysicsBody3D: var axisLockAngularY: Boolean
 PhysicsBody3D: var axisLockAngularZ: Boolean
@@ -32513,7 +32513,7 @@ PhysicsServer2D: fun bodySetShapeTransform(body: RID, shapeIdx: Int, transform: 
 PhysicsServer2D: fun bodySetSpace(body: RID, space: RID)
 PhysicsServer2D: fun bodySetState(body: RID, state: PhysicsServer2D.BodyState, value: Any?)
 PhysicsServer2D: fun bodySetStateSyncCallback(body: RID, callable: GodotCallable)
-PhysicsServer2D: fun bodyTestMotion(body: RID, parameters: PhysicsTestMotionParameters2D, result: PhysicsTestMotionResult2D?): Boolean
+PhysicsServer2D: fun bodyTestMotion(body: RID, parameters: PhysicsTestMotionParameters2D, result: PhysicsTestMotionResult2D? = ...): Boolean
 PhysicsServer2D: fun capsuleShapeCreate(): RID
 PhysicsServer2D: fun circleShapeCreate(): RID
 PhysicsServer2D: fun concavePolygonShapeCreate(): RID
@@ -32786,7 +32786,7 @@ PhysicsServer3D: fun bodySetShapeTransform(body: RID, shapeIdx: Int, transform: 
 PhysicsServer3D: fun bodySetSpace(body: RID, space: RID)
 PhysicsServer3D: fun bodySetState(body: RID, state: PhysicsServer3D.BodyState, value: Any?)
 PhysicsServer3D: fun bodySetStateSyncCallback(body: RID, callable: GodotCallable)
-PhysicsServer3D: fun bodyTestMotion(body: RID, parameters: PhysicsTestMotionParameters3D, result: PhysicsTestMotionResult3D?): Boolean
+PhysicsServer3D: fun bodyTestMotion(body: RID, parameters: PhysicsTestMotionParameters3D, result: PhysicsTestMotionResult3D? = ...): Boolean
 PhysicsServer3D: fun boxShapeCreate(): RID
 PhysicsServer3D: fun capsuleShapeCreate(): RID
 PhysicsServer3D: fun concavePolygonShapeCreate(): RID
@@ -43083,7 +43083,7 @@ StreamPeerTCP.Companion: fun fromHandle(handle: GodotHandle): StreamPeerTCP?
 StreamPeerTLS: class StreamPeerTLS : StreamPeer
 StreamPeerTLS: constructor(handle: GodotHandle)
 StreamPeerTLS: fun acceptStream(stream: StreamPeer?, serverOptions: TLSOptions?): GodotError
-StreamPeerTLS: fun connectToStream(stream: StreamPeer?, commonName: String, clientOptions: TLSOptions?): GodotError
+StreamPeerTLS: fun connectToStream(stream: StreamPeer?, commonName: String, clientOptions: TLSOptions? = ...): GodotError
 StreamPeerTLS: fun disconnectFromStream()
 StreamPeerTLS: fun getStatus(): StreamPeerTLS.Status
 StreamPeerTLS: fun getStream(): StreamPeer?
@@ -43436,13 +43436,13 @@ TLSOptions: fun getTrustedCaChain(): X509Certificate?
 TLSOptions: fun isServer(): Boolean
 TLSOptions: fun isUnsafeClient(): Boolean
 TLSOptions.Companion: companion object
-TLSOptions.Companion: fun client(trustedChain: X509Certificate?, commonNameOverride: String = ...): TLSOptions?
-TLSOptions.Companion: fun clientUnsafe(trustedChain: X509Certificate?): TLSOptions?
+TLSOptions.Companion: fun client(trustedChain: X509Certificate? = ..., commonNameOverride: String = ...): TLSOptions?
+TLSOptions.Companion: fun clientUnsafe(trustedChain: X509Certificate? = ...): TLSOptions?
 TLSOptions.Companion: fun fromHandle(handle: GodotHandle): TLSOptions?
 TLSOptions.Companion: fun server(key: CryptoKey?, certificate: X509Certificate?): TLSOptions?
 TabBar: class TabBar : Control
 TabBar: constructor(handle: GodotHandle)
-TabBar: fun addTab(title: String = ..., icon: Texture2D?)
+TabBar: fun addTab(title: String = ..., icon: Texture2D? = ...)
 TabBar: fun clearTabs()
 TabBar: fun ensureTabVisible(idx: Int)
 TabBar: fun getClipTabs(): Boolean
@@ -45806,7 +45806,7 @@ Tree: class Tree : Control
 Tree: constructor(handle: GodotHandle)
 Tree: fun areColumnTitlesVisible(): Boolean
 Tree: fun clear()
-Tree: fun createItem(parent: TreeItem, index: Int = ...): TreeItem?
+Tree: fun createItem(parent: TreeItem? = ..., index: Int = ...): TreeItem?
 Tree: fun deselectAll()
 Tree: fun editSelected(forceEdit: Boolean = ...): Boolean
 Tree: fun ensureCursorIsVisible()
@@ -48548,7 +48548,7 @@ VisualShaderNodeWorldPositionFromDepth.Companion: companion object
 VisualShaderNodeWorldPositionFromDepth.Companion: fun fromHandle(handle: GodotHandle): VisualShaderNodeWorldPositionFromDepth?
 VoxelGI: class VoxelGI : VisualInstance3D
 VoxelGI: constructor(handle: GodotHandle)
-VoxelGI: fun bake(fromNode: Node, createVisualDebug: Boolean = ...)
+VoxelGI: fun bake(fromNode: Node? = ..., createVisualDebug: Boolean = ...)
 VoxelGI: fun debugBake()
 VoxelGI: fun getCameraAttributes(): CameraAttributes?
 VoxelGI: fun getProbeData(): VoxelGIData?
@@ -48715,8 +48715,8 @@ WebRTCPeerConnectionExtension.Companion: companion object
 WebRTCPeerConnectionExtension.Companion: fun fromHandle(handle: GodotHandle): WebRTCPeerConnectionExtension?
 WebSocketMultiplayerPeer: class WebSocketMultiplayerPeer : MultiplayerPeer
 WebSocketMultiplayerPeer: constructor(handle: GodotHandle)
-WebSocketMultiplayerPeer: fun createClient(url: String, tlsClientOptions: TLSOptions?): GodotError
-WebSocketMultiplayerPeer: fun createServer(port: Int, bindAddress: String = ..., tlsServerOptions: TLSOptions?): GodotError
+WebSocketMultiplayerPeer: fun createClient(url: String, tlsClientOptions: TLSOptions? = ...): GodotError
+WebSocketMultiplayerPeer: fun createServer(port: Int, bindAddress: String = ..., tlsServerOptions: TLSOptions? = ...): GodotError
 WebSocketMultiplayerPeer: fun getHandshakeHeaders(): List<String>
 WebSocketMultiplayerPeer: fun getHandshakeTimeout(): Double
 WebSocketMultiplayerPeer: fun getInboundBufferSize(): Int
@@ -48744,7 +48744,7 @@ WebSocketPeer: class WebSocketPeer : PacketPeer
 WebSocketPeer: constructor(handle: GodotHandle)
 WebSocketPeer: fun acceptStream(stream: StreamPeer?): GodotError
 WebSocketPeer: fun closeConnection(code: Int = ..., reason: String = ...)
-WebSocketPeer: fun connectToUrl(url: String, tlsClientOptions: TLSOptions?): GodotError
+WebSocketPeer: fun connectToUrl(url: String, tlsClientOptions: TLSOptions? = ...): GodotError
 WebSocketPeer: fun getCloseCode(): Int
 WebSocketPeer: fun getCloseReason(): String
 WebSocketPeer: fun getConnectedHost(): String

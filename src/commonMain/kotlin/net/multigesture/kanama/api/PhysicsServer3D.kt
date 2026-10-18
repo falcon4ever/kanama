@@ -1131,7 +1131,7 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.body_test_motion
      */
     @JvmStatic
-    fun bodyTestMotion(body: RID, parameters: PhysicsTestMotionParameters3D, result: PhysicsTestMotionResult3D?): Boolean {
+    fun bodyTestMotion(body: RID, parameters: PhysicsTestMotionParameters3D, result: PhysicsTestMotionResult3D? = null): Boolean {
         val ret = ObjectCalls.ptrcallWithRIDAndTwoObjectArgsRetBool(Binds.bodyTestMotionBind, singleton, body, parameters.requireOpenHandle(), result?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(parameters)
         ObjectCalls.keepReachable(result)

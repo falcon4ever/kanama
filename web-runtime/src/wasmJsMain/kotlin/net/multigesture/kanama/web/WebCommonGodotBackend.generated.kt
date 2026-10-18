@@ -309,7 +309,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     webFreedAware {
       require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-      requireWebBrowserHandle(texture.webId(), WebBrowserHandleKind.RESOURCE)
+      requireLiveWebHandle(texture.webId())
       drawCommands.appendDrawTexture(
         descriptor.opcode,
         receiver.webId(),
@@ -449,16 +449,16 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
         }
         16 -> {
           require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-          value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+          value?.let { requireLiveWebHandle(it.webId()) }
           webWriteTextureSnapshot(receiver.webId(), value?.webId() ?: 0)
         }
         46 -> {
           require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-          value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+          value?.let { requireLiveWebHandle(it.webId()) }
         }
         130 -> {
           require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-          value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+          value?.let { requireLiveWebHandle(it.webId()) }
         }
         165 -> {
           require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
@@ -470,24 +470,19 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
         }
         202 -> {
           require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-          // The MeshLibrary was constructed via ClassDB.instantiate, so it is
-          // registered under the NODE kind like every constructed handle.
-          value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.NODE) }
+          value?.let { requireLiveWebHandle(it.webId()) }
         }
         247 -> {
           require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-          // Duplicated materials return through the browser-object channel.
-          value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.OBJECT) }
+          value?.let { requireLiveWebHandle(it.webId()) }
         }
         257 -> {
           require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-          // The ButtonGroup was constructed via ClassDB.instantiate (NODE kind).
-          value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.NODE) }
+          value?.let { requireLiveWebHandle(it.webId()) }
         }
         284 -> {
           require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-          // Baked lightmap data arrives through ResourceLoader.load (RESOURCE kind).
-          value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+          value?.let { requireLiveWebHandle(it.webId()) }
         }
         else -> error("Unsupported Web object-argument opcode=${descriptor.opcode}")
       }
@@ -833,7 +828,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     webFreedAware {
       require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
       require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
-      objectValue?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }
+      objectValue?.let { requireLiveWebHandle(it.webId()) }
       commands.flush()
       immediateWebSetCustomMouseCursor(
         requireActiveWebScriptHandle(),
@@ -1758,7 +1753,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
       require(descriptor.opcode in setOf(210, 245))
       require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
-      objectValue?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.OBJECT) }
+      objectValue?.let { requireLiveWebHandle(it.webId()) }
       commands.flush()
       // Item index and object handle packed into one query string (unit separator);
       // handle id 0 clears the slot.

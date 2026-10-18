@@ -172,11 +172,10 @@ These classes have every method covered by the conservative generator. Promotion
 
 Godot gives these parameters a default value that the generator cannot write as a Kotlin default argument, so the generated parameter is **required** (Rule 9 of the [Generated API Conventions](../wrapper-conventions.md#9-defaults-and-overloads)). Giving one a default later is not a source break. A new row here is a new required parameter in a signature, and a row that disappears gained its default.
 
-294 parameters, by Godot default:
+232 parameters, by Godot default:
 
 | Godot default | Parameters |
 | --- | ---: |
-| Object: `null` | 62 |
 | Color: `Color(1, 1, 1, 1)` | 52 |
 | Callable: `Callable()` | 50 |
 | RID: `RID()` | 15 |
@@ -220,7 +219,6 @@ Godot gives these parameters a default value that the generator cannot write as 
 | ArrayMesh | `add_surface_from_arrays` | `blend_shapes` | `[]` |
 | CanvasItem | `draw_char` | `modulate` | `Color(1, 1, 1, 1)` |
 | CanvasItem | `draw_char_outline` | `modulate` | `Color(1, 1, 1, 1)` |
-| CanvasItem | `draw_colored_polygon` | `texture` | `null` |
 | CanvasItem | `draw_colored_polygon` | `uvs` | `PackedVector2Array()` |
 | CanvasItem | `draw_lcd_texture_rect_region` | `modulate` | `Color(1, 1, 1, 1)` |
 | CanvasItem | `draw_mesh` | `modulate` | `Color(1, 1, 1, 1)` |
@@ -228,9 +226,7 @@ Godot gives these parameters a default value that the generator cannot write as 
 | CanvasItem | `draw_msdf_texture_rect_region` | `modulate` | `Color(1, 1, 1, 1)` |
 | CanvasItem | `draw_multiline_string` | `modulate` | `Color(1, 1, 1, 1)` |
 | CanvasItem | `draw_multiline_string_outline` | `modulate` | `Color(1, 1, 1, 1)` |
-| CanvasItem | `draw_polygon` | `texture` | `null` |
 | CanvasItem | `draw_polygon` | `uvs` | `PackedVector2Array()` |
-| CanvasItem | `draw_primitive` | `texture` | `null` |
 | CanvasItem | `draw_set_transform` | `scale` | `Vector2(1, 1)` |
 | CanvasItem | `draw_string` | `modulate` | `Color(1, 1, 1, 1)` |
 | CanvasItem | `draw_string_outline` | `modulate` | `Color(1, 1, 1, 1)` |
@@ -239,7 +235,6 @@ Godot gives these parameters a default value that the generator cannot write as 
 | CanvasItem | `draw_texture_rect_region` | `modulate` | `Color(1, 1, 1, 1)` |
 | CharacterBody2D | `get_floor_angle` | `up_direction` | `Vector2(0, -1)` |
 | CharacterBody3D | `get_floor_angle` | `up_direction` | `Vector3(0, 1, 0)` |
-| CodeEdit | `add_code_completion_option` | `icon` | `null` |
 | CodeEdit | `add_code_completion_option` | `text_color` | `Color(1, 1, 1, 1)` |
 | Curve3D | `add_point` | `in` | `Vector3(0, 0, 0)` |
 | Curve3D | `add_point` | `out` | `Vector3(0, 0, 0)` |
@@ -258,40 +253,23 @@ Godot gives these parameters a default value that the generator cannot write as 
 | DisplayServer | `global_menu_add_radio_check_item` | `callback` | `Callable()` |
 | DisplayServer | `global_menu_add_radio_check_item` | `key_callback` | `Callable()` |
 | DisplayServer | `virtual_keyboard_show` | `position` | `Rect2(0, 0, 0, 0)` |
-| DrawableTexture2D | `blit_rect` | `material` | `null` |
 | DrawableTexture2D | `blit_rect` | `modulate` | `Color(1, 1, 1, 1)` |
-| DrawableTexture2D | `blit_rect_multi` | `material` | `null` |
 | DrawableTexture2D | `blit_rect_multi` | `modulate` | `Color(1, 1, 1, 1)` |
 | DrawableTexture2D | `setup` | `color` | `Color(1, 1, 1, 1)` |
-| ENetConnection | `dtls_client_setup` | `client_options` | `null` |
-| EditorContextMenuPlugin | `add_context_menu_item` | `icon` | `null` |
-| EditorContextMenuPlugin | `add_context_menu_item_from_shortcut` | `icon` | `null` |
-| EditorContextMenuPlugin | `add_context_submenu_item` | `icon` | `null` |
 | EditorExportPlatform | `export_pack_patch` | `patches` | `PackedStringArray()` |
 | EditorExportPlatform | `export_project_files` | `shared_cb` | `Callable()` |
 | EditorExportPlatform | `export_zip_patch` | `patches` | `PackedStringArray()` |
-| EditorExportPlatform | `get_forced_export_files` | `preset` | `null` |
-| EditorInspector | `create_default_inspector` | `filter_line_edit` | `null` |
 | EditorInterface | `popup_create_dialog` | `type_blocklist` | `Array[StringName]([])` |
 | EditorInterface | `popup_dialog` | `rect` | `Rect2i(0, 0, 0, 0)` |
 | EditorInterface | `popup_dialog_centered` | `minsize` | `Vector2i(0, 0)` |
 | EditorInterface | `popup_dialog_centered_clamped` | `minsize` | `Vector2i(0, 0)` |
-| EditorInterface | `popup_node_selector` | `current_value` | `null` |
 | EditorInterface | `popup_node_selector` | `valid_types` | `Array[StringName]([])` |
 | EditorInterface | `popup_property_selector` | `type_filter` | `PackedInt32Array()` |
 | EditorInterface | `popup_quick_open` | `base_types` | `Array[StringName]([])` |
 | EditorNode3DGizmo | `add_lines` | `modulate` | `Color(1, 1, 1, 1)` |
-| EditorNode3DGizmo | `add_mesh` | `material` | `null` |
-| EditorNode3DGizmo | `add_mesh` | `skeleton` | `null` |
 | EditorNode3DGizmo | `add_mesh` | `transform` | `Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)` |
 | EditorNode3DGizmo | `add_unscaled_billboard` | `modulate` | `Color(1, 1, 1, 1)` |
-| EditorNode3DGizmoPlugin | `create_handle_material` | `texture` | `null` |
 | EditorNode3DGizmoPlugin | `create_icon_material` | `color` | `Color(1, 1, 1, 1)` |
-| EditorNode3DGizmoPlugin | `get_material` | `gizmo` | `null` |
-| EditorPlugin | `add_control_to_bottom_panel` | `shortcut` | `null` |
-| EditorPlugin | `add_control_to_dock` | `shortcut` | `null` |
-| EditorUndoRedoManager | `create_action` | `custom_context` | `null` |
-| Expression | `execute` | `base_instance` | `null` |
 | Expression | `parse` | `input_names` | `PackedStringArray()` |
 | Font | `draw_char` | `modulate` | `Color(1, 1, 1, 1)` |
 | Font | `draw_char_outline` | `modulate` | `Color(1, 1, 1, 1)` |
@@ -301,23 +279,12 @@ Godot gives these parameters a default value that the generator cannot write as 
 | Font | `draw_string_outline` | `modulate` | `Color(1, 1, 1, 1)` |
 | Font | `find_variation` | `custom_colors` | `PackedColorArray()` |
 | Font | `find_variation` | `transform` | `Transform2D(1, 0, 0, 1, 0, 0)` |
-| GraphNode | `set_slot` | `custom_icon_left` | `null` |
-| GraphNode | `set_slot` | `custom_icon_right` | `null` |
-| HTTPClient | `connect_to_host` | `tls_options` | `null` |
 | HTTPRequest | `request` | `custom_headers` | `PackedStringArray()` |
 | HTTPRequest | `request_raw` | `custom_headers` | `PackedStringArray()` |
 | HTTPRequest | `request_raw` | `request_data_raw` | `PackedByteArray()` |
-| ImmediateMesh | `surface_begin` | `material` | `null` |
 | ImporterMesh | `add_surface` | `blend_shapes` | `Array[Array]([])` |
-| ImporterMesh | `add_surface` | `material` | `null` |
-| ImporterMesh | `get_mesh` | `base_mesh` | `null` |
-| InstancePlaceholder | `create_instance` | `custom_scene` | `null` |
-| ItemList | `add_item` | `icon` | `null` |
 | KinematicCollision2D | `get_angle` | `up_direction` | `Vector2(0, -1)` |
 | KinematicCollision3D | `get_angle` | `up_direction` | `Vector3(0, 1, 0)` |
-| MeshInstance3D | `bake_mesh_from_current_blend_shape_mix` | `existing` | `null` |
-| MeshInstance3D | `bake_mesh_from_current_skeleton_pose` | `existing` | `null` |
-| MeshInstance3D | `create_multiple_convex_collisions` | `settings` | `null` |
 | NativeMenu | `add_check_item` | `callback` | `Callable()` |
 | NativeMenu | `add_check_item` | `key_callback` | `Callable()` |
 | NativeMenu | `add_icon_check_item` | `callback` | `Callable()` |
@@ -346,39 +313,20 @@ Godot gives these parameters a default value that the generator cannot write as 
 | OpenXRFutureExtension | `register_future` | `on_success` | `Callable()` |
 | OpenXRPlaneTracker | `set_mesh_data` | `indices` | `PackedInt32Array()` |
 | OpenXRSpatialAnchorCapability | `create_default_persistence_context` | `user_callback` | `Callable()` |
-| OpenXRSpatialAnchorCapability | `create_new_anchor` | `next` | `null` |
 | OpenXRSpatialAnchorCapability | `create_new_anchor` | `spatial_context` | `RID()` |
 | OpenXRSpatialAnchorCapability | `create_persistence_context` | `user_callback` | `Callable()` |
-| OpenXRSpatialAnchorCapability | `do_entity_update` | `next_snapshot_create` | `null` |
-| OpenXRSpatialAnchorCapability | `do_entity_update` | `next_snapshot_query` | `null` |
 | OpenXRSpatialAnchorCapability | `persist_anchor` | `persistence_context` | `RID()` |
 | OpenXRSpatialAnchorCapability | `persist_anchor` | `user_callback` | `Callable()` |
-| OpenXRSpatialAnchorCapability | `start_entity_discovery` | `next_snapshot_create` | `null` |
-| OpenXRSpatialAnchorCapability | `start_entity_discovery` | `next_snapshot_query` | `null` |
 | OpenXRSpatialAnchorCapability | `start_entity_discovery` | `user_callback` | `Callable()` |
 | OpenXRSpatialAnchorCapability | `unpersist_anchor` | `persistence_context` | `RID()` |
 | OpenXRSpatialAnchorCapability | `unpersist_anchor` | `user_callback` | `Callable()` |
-| OpenXRSpatialEntityExtension | `create_spatial_context` | `next` | `null` |
 | OpenXRSpatialEntityExtension | `create_spatial_context` | `user_callback` | `Callable()` |
-| OpenXRSpatialEntityExtension | `discover_spatial_entities` | `next` | `null` |
 | OpenXRSpatialEntityExtension | `discover_spatial_entities` | `user_callback` | `Callable()` |
-| OpenXRSpatialEntityExtension | `discover_spatial_entities_with_component_data` | `next` | `null` |
 | OpenXRSpatialEntityExtension | `discover_spatial_entities_with_component_data` | `user_callback` | `Callable()` |
-| OpenXRSpatialEntityExtension | `query_snapshot` | `next` | `null` |
-| OpenXRSpatialEntityExtension | `update_spatial_entities` | `next` | `null` |
-| OpenXRSpatialMarkerTrackingCapability | `do_entity_update` | `next_snapshot_create` | `null` |
-| OpenXRSpatialMarkerTrackingCapability | `do_entity_update` | `next_snapshot_query` | `null` |
-| OpenXRSpatialMarkerTrackingCapability | `start_entity_discovery` | `next_snapshot_create` | `null` |
-| OpenXRSpatialMarkerTrackingCapability | `start_entity_discovery` | `next_snapshot_query` | `null` |
 | OpenXRSpatialMarkerTrackingCapability | `start_entity_discovery` | `user_callback` | `Callable()` |
-| OpenXRSpatialPlaneTrackingCapability | `start_entity_discovery` | `next_snapshot_create` | `null` |
-| OpenXRSpatialPlaneTrackingCapability | `start_entity_discovery` | `next_snapshot_query` | `null` |
 | OpenXRSpatialPlaneTrackingCapability | `start_entity_discovery` | `user_callback` | `Callable()` |
-| PacketPeerDTLS | `connect_to_peer` | `client_options` | `null` |
 | PhysicalBone3D | `apply_impulse` | `position` | `Vector3(0, 0, 0)` |
 | PhysicalBoneSimulator3D | `physical_bones_start_simulation` | `bones` | `[]` |
-| PhysicsBody2D | `test_move` | `collision` | `null` |
-| PhysicsBody3D | `test_move` | `collision` | `null` |
 | PhysicsDirectBodyState3D | `add_constant_central_force` | `force` | `Vector3(0, 0, 0)` |
 | PhysicsDirectBodyState3D | `add_constant_force` | `position` | `Vector3(0, 0, 0)` |
 | PhysicsDirectBodyState3D | `apply_central_force` | `force` | `Vector3(0, 0, 0)` |
@@ -389,7 +337,6 @@ Godot gives these parameters a default value that the generator cannot write as 
 | PhysicsServer2D | `area_add_shape` | `transform` | `Transform2D(1, 0, 0, 1, 0, 0)` |
 | PhysicsServer2D | `body_add_shape` | `transform` | `Transform2D(1, 0, 0, 1, 0, 0)` |
 | PhysicsServer2D | `body_set_shape_as_one_way_collision` | `direction` | `Vector2(0, 1)` |
-| PhysicsServer2D | `body_test_motion` | `result` | `null` |
 | PhysicsServer2D | `joint_make_damped_spring` | `body_b` | `RID()` |
 | PhysicsServer2D | `joint_make_groove` | `body_a` | `RID()` |
 | PhysicsServer2D | `joint_make_groove` | `body_b` | `RID()` |
@@ -399,7 +346,6 @@ Godot gives these parameters a default value that the generator cannot write as 
 | PhysicsServer3D | `body_add_shape` | `transform` | `Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)` |
 | PhysicsServer3D | `body_apply_force` | `position` | `Vector3(0, 0, 0)` |
 | PhysicsServer3D | `body_apply_impulse` | `position` | `Vector3(0, 0, 0)` |
-| PhysicsServer3D | `body_test_motion` | `result` | `null` |
 | RegExMatch | `get_end` | `name` | `0` |
 | RegExMatch | `get_start` | `name` | `0` |
 | RegExMatch | `get_string` | `name` | `0` |
@@ -461,15 +407,11 @@ Godot gives these parameters a default value that the generator cannot write as 
 | SkeletonModification2DPhysicalBones | `start_simulation` | `bones` | `[]` |
 | SkeletonModification2DPhysicalBones | `stop_simulation` | `bones` | `[]` |
 | SoftBody3D | `set_point_pinned` | `attachment_path` | `NodePath("")` |
-| StreamPeerTLS | `connect_to_stream` | `client_options` | `null` |
 | SurfaceTool | `add_triangle_fan` | `colors` | `PackedColorArray()` |
 | SurfaceTool | `add_triangle_fan` | `normals` | `PackedVector3Array()` |
 | SurfaceTool | `add_triangle_fan` | `tangents` | `Array[Plane]([])` |
 | SurfaceTool | `add_triangle_fan` | `uv2s` | `PackedVector2Array()` |
 | SurfaceTool | `add_triangle_fan` | `uvs` | `PackedVector2Array()` |
-| TLSOptions | `client` | `trusted_chain` | `null` |
-| TLSOptions | `client_unsafe` | `trusted_chain` | `null` |
-| TabBar | `add_tab` | `icon` | `null` |
 | TextLine | `draw` | `color` | `Color(1, 1, 1, 1)` |
 | TextLine | `draw_outline` | `color` | `Color(1, 1, 1, 1)` |
 | TextParagraph | `draw` | `color` | `Color(1, 1, 1, 1)` |
@@ -497,12 +439,7 @@ Godot gives these parameters a default value that the generator cannot write as 
 | TileSetAtlasSource | `has_room_for_tile` | `ignored_tile` | `Vector2i(-1, -1)` |
 | TileSetAtlasSource | `move_tile_in_atlas` | `new_atlas_coords` | `Vector2i(-1, -1)` |
 | TileSetAtlasSource | `move_tile_in_atlas` | `new_size` | `Vector2i(-1, -1)` |
-| Tree | `create_item` | `parent` | `null` |
 | VideoStreamPlayback | `mix_audio` | `buffer` | `PackedFloat32Array()` |
-| VoxelGI | `bake` | `from_node` | `null` |
-| WebSocketMultiplayerPeer | `create_client` | `tls_client_options` | `null` |
-| WebSocketMultiplayerPeer | `create_server` | `tls_server_options` | `null` |
-| WebSocketPeer | `connect_to_url` | `tls_client_options` | `null` |
 | Window | `popup` | `rect` | `Rect2i(0, 0, 0, 0)` |
 | Window | `popup_centered` | `minsize` | `Vector2i(0, 0)` |
 | Window | `popup_centered_clamped` | `minsize` | `Vector2i(0, 0)` |

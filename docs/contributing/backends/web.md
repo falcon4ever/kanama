@@ -900,6 +900,25 @@ grow rather than being faked. Old exports fail the gate with a rebuild hint
 (their envelopes carry unresolved `method#N` keys because the export predates
 the manifest copy).
 
+**The Web API exercise.** Every generated Web wrapper member is one
+`GodotBackendCalls.invoke<Shape>` call, so a defect in a call shape (its Kotlin arm, JS extern or
+GDScript arm) is shared by every opcode of it. The web3d fixture runs one generated row per shape
+of `scripts/platform_backend_calls.json`: `scripts/generate_web_exercise.py` writes
+`web-runtime/src/web3dSmoke/web/kotlin-src/ApiExerciseProbe.kt` and the
+[Web API Exercise](../../reference/generated/web-api-exercise.md) page from a hand-kept row table
+(the opcode, receiver and arguments per shape) and derives the rest from the contract. A row calls
+its shape on an object the scene constructs and checks it against the generic tier
+(`WebExperimentalGenericCall.callImmediate`) on the same object: a result equals the generic call's,
+a setter's value reads back through the generic getter (a queued mutation a frame later), and the
+few shapes the generic tier cannot be the oracle of assert a connected handler's payload, a new
+object's state or a seeded random draw, or only reach. What the generic tier cannot reach by
+itself (the engine singletons, `seed`) is in `web-runtime/src/web3dSmoke/api_twin.gd`. The driver requires every row to
+pass (`checks.apiExercise`); the console line is `[kanama:web] API EXERCISE: <n> passed, <m> failed,
+<w> weak, <r> reach, <e> excluded in <ms> ms`, with one `API EXERCISE FAIL:` line per failed row
+(`KANAMA_WEB_SMOKE_DEBUG=1` copies both into the Chrome driver log). `generate_web_exercise.py
+--check` (local_ci stage "Web API exercise drift", `:web-runtime:checkWebExercise`) fails when a
+contract shape has no row, so admitting a new shape means adding its row.
+
 Browser-specific notes:
 
 - **Safari** exposes Retina coordinate bugs the other engines hide. Godot's

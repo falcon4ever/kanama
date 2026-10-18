@@ -1575,6 +1575,22 @@ class Main(godotObject: GodotHandle) :
   fun shareProbeAfter(value: Long): Long = shareMask
 
   /**
+   * Task 125 P5: the Web API exercise, one generated row per Web call shape (see ApiExerciseProbe,
+   * written by scripts/generate_web_exercise.py). [apiExerciseProbe] runs the rows (1);
+   * [apiExerciseProbeAfter] is `passed * 1000 + failed` once their queued readbacks have landed and
+   * the cleanup ran (-1 before); [apiExerciseRows] is the number of rows that must pass.
+   */
+  fun apiExerciseProbe(value: Long): Long = apiExerciseSays("api_exercise_arm")
+
+  fun apiExerciseProbeAfter(value: Long): Long = apiExerciseSays("api_exercise_result")
+
+  fun apiExerciseRows(value: Long): Long = apiExerciseSays("api_exercise_rows")
+
+  private fun apiExerciseSays(method: String): Long =
+    WebExperimentalGenericCall.callImmediate(self.requireAs("ApiExerciseProbe", ::Node), method, listOf(0L))
+      .asLong()
+
+  /**
    * Connects and fires the scalar-payload signal once. Called from [ready] so the payload has
    * landed long before the driver reads [dispatchProbe]; the connection is one-shot, so it
    * unregisters itself and the smoke's callback-drain assertion is unaffected.

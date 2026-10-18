@@ -863,6 +863,12 @@ if [[ $skip_web -eq 0 ]]; then
   stage "web wrapper tree drift gate"
   python3 "$ROOT_DIR/scripts/generate_web_wrappers.py" --check
 
+  # The Web API exercise (task 125 P5): one generated row per Web call shape in the web3d fixture
+  # (ApiExerciseProbe.kt) and its report page. Fails when a contract shape has no row, a row names an
+  # opcode of another shape or the wrong number of arguments, or a committed output is stale.
+  stage "Web API exercise drift"
+  python3 "$ROOT_DIR/scripts/generate_web_exercise.py" --check
+
   # Typed Godot enums on Web (task 128 C): every Web wrapper enum/bitfield slot uses its value
   # class, required returns are non-null, and Web value names equal the shared naming function.
   stage "web typed Godot enums and required returns (task 128 C)"

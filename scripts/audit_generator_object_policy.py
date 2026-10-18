@@ -293,6 +293,7 @@ def check_object_param_nullability_policy(api_classes: dict) -> list[str]:
         ("Node", "set_owner", "owner", "Node", "", True, "audited override -> nullable"),
         ("Node", "add_child", "node", "Node", "required", False, "required ordinary Object -> non-null"),
         ("TextureRect", "set_texture", "texture", "Texture2D", "", True, "unmarked Resource -> nullable (legacy)"),
+        ("Tree", "create_item", "parent", "TreeItem", "", True, "Godot's default is null -> nullable"),
         # 52b tightening: a required Resource-like param is now non-null (the `required` check sits
         # above the resource-like line), calling requireOpenHandle() without a safe-call.
         ("CanvasItem", "draw_texture", "texture", "Texture2D", "required", False, "required Resource -> non-null (52b)"),

@@ -623,6 +623,22 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`initProbe: ${initProbe}`);
 
+  // Task 125 P5: the Web API exercise, one generated row per Web call shape (ApiExerciseProbe, from
+  // scripts/generate_web_exercise.py). Main.api_exercise_probe runs the rows; the queued readbacks land
+  // over the next frames, then api_exercise_probe_after reads `passed * 1000 + failed` (-1 before), and
+  // api_exercise_rows is how many must pass. A failed row prints `[kanama:web] API EXERCISE FAIL: ...`.
+  const apiExerciseArmed = await callMain("api_exercise_probe");
+  const apiExerciseRows = await callMain("api_exercise_rows");
+  let apiExercise = await callMain("api_exercise_probe_after");
+  const apiExerciseDeadline = Math.min(deadline, Date.now() + 10_000);
+  while (apiExercise < 0 && Date.now() < apiExerciseDeadline) {
+    await delay(150);
+    apiExercise = await callMain("api_exercise_probe_after");
+  }
+  const apiExercisePassed = apiExercise >= 0 ? Math.floor(apiExercise / 1000) : -1;
+  const apiExerciseFailed = apiExercise >= 0 ? apiExercise % 1000 : -1;
+  trace(`apiExercise: armed=${apiExerciseArmed} rows=${apiExerciseRows} passed=${apiExercisePassed} failed=${apiExerciseFailed}`);
+
   // KANAMA_WEB3D_EXTRA_PLAY_MS=<ms>: keep the level running this long before teardown. A timing-dependent
   // defect in the fixture (the Player drifting off its floor, task 118) fires with a small probability per
   // second of play; a long window makes it near-certain, which is this gate's own red run. Unset = no wait.
@@ -923,6 +939,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // A script whose property initializers call an engine singleton and construct a RefCounted
     // constructs on Web as it does on desktop (the tps-demo Settings autoload's boot failure).
     scriptInitializersCallEngine: initProbe === 255,
+    // Task 125 P5: every generated Web API exercise row passed (one per call shape, the excluded
+    // ones aside), checked against the generic tier on the same object; none failed.
+    apiExercise:
+      apiExerciseArmed === 1 && apiExerciseRows > 0 && apiExercisePassed === apiExerciseRows && apiExerciseFailed === 0,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
     // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
     // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an
@@ -1069,6 +1089,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
       // Task 76 spike cost measurement (schema requires non-negative numbers, so the
       // millisecond totals ride x1000 and the generic/typed ratio rides x100).
       genericProbeIterations: generic.iterations,
+      // Task 125 P5: the API exercise rows that must pass, and those that did.
+      apiExerciseRows: Math.max(0, apiExerciseRows),
+      apiExerciseRowsPassed: Math.max(0, apiExercisePassed),
       genericImmediateMsX1000: Math.max(0, Math.round(generic.genericMs * 1000)),
       typedImmediateMsX1000: Math.max(0, Math.round(generic.typedMs * 1000)),
       // L10: the lending's GDScript->JS calls and microseconds per 1000 dispatches of a seen plain

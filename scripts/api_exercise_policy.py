@@ -31,6 +31,10 @@ lives here, and only here:
     holds the `extension_api.json` default where one exists and `None` where a value is still
     to be chosen.
   * SCRATCH_DIR / SCRATCH_POLICY -- the one place an exercise row may touch the filesystem.
+  * VARIANT_TYPE_VALUES -- one value per Godot Variant type (GDScript literal + the Kotlin value the
+    Variant path answers) for the T rows, and the paths a type has no row on, with the reason.
+  * REACH_RECEIVERS / HAND_ROOT_REACH / REACH_AFTER -- the reach (F) rows' valid receivers where a fresh
+    instance is not one, the calls of the hand-written GodotObject root, and what a row does after its call.
 
 `generate_api_exercise.py --check` fails when an entry here names a class or method the API lacks,
 when an entry matches nothing or no longer applies (a METHOD_OVERRIDES entry whose case the class
@@ -142,6 +146,7 @@ RECEIVER_SOURCES: dict[str, tuple[str, str, str]] = {
 # ---- method-level cases --------------------------------------------------------------------------------
 
 _CLOCK = "reads the clock: two reads an oracle compares can differ"
+_DEVICE = "the desktop smoke's dummy renderer ignores it, a phone's renderer does not"
 _NEW_OBJECT = "returns a new object per call: an oracle would compare two different objects"
 _SHAPE_INDEX = (
     "a shape index the area does not have aborts the process: the server indexes the area's shapes "
@@ -173,7 +178,7 @@ METHOD_OVERRIDES: dict[tuple[str, str], tuple[str, str]] = {
     ("RenderingServer", "texture_2d_layer_get"): ("F", _NEW_OBJECT),
     ("InputEvent", "xformed_by"): ("F", _NEW_OBJECT),
     ("RegEx", "search"): ("F", _NEW_OBJECT),
-    ("Tree", "get_item_area_rect"): ("F", "takes a TreeItem, which only a Tree's create_item makes: no fresh argument"),
+    ("Tree", "get_item_area_rect"): ("F", "an item's area before any layout is the zero Rect2, which a no-op answers too"),
     ("Object", "is_connected"): (
         "F",
         "the hand-written root spells it isConnected(signal, target, method), not with Godot's Callable argument",
@@ -188,6 +193,31 @@ METHOD_OVERRIDES: dict[tuple[str, str], tuple[str, str]] = {
     ("PhysicsServer3D", "body_get_shape_transform"): ("E", _SHAPE_INDEX),
     ("PhysicsServer3D", "custom_shape_create"): ("F", "Godot Physics 3D has no custom shapes: it always returns RID() with an error"),
     ("ProjectSettings", "load_resource_pack"): ("E", "mounts a resource pack into res:// for the rest of the process"),
+    # Reach rows that would change what the running game (a device self-test build) shows or hears, with
+    # no getter to put it back: the exercise runs inside the game there, not in a process of its own.
+    ("AudioServer", "set_input_device_active"): (
+        "E",
+        "starts capture from the host's microphone (a permission prompt on a phone; desktop only warns that "
+        "audio/driver/enable_input is off)",
+    ),
+    ("RenderingServer", "set_boot_image"): ("E", f"draws the boot splash over the running game's frame: {_DEVICE}"),
+    ("RenderingServer", "set_boot_image_with_stretch"): ("E", f"draws the boot splash over the running game's frame: {_DEVICE}"),
+    ("RenderingServer", "texture_create_from_native_handle"): (
+        "E",
+        f"wraps a native GPU texture handle: a made-up one is undefined behaviour ({_DEVICE})",
+    ),
+    ("RenderingServer", "screen_space_roughness_limiter_set_active"): (
+        "E",
+        "sets a process-wide rendering setting of the running game, with no getter to restore it",
+    ),
+    ("RenderingServer", "environment_set_ssao_quality"): (
+        "E",
+        "sets a process-wide rendering setting of the running game, with no getter to restore it",
+    ),
+    ("RenderingServer", "environment_set_ssil_quality"): (
+        "E",
+        "sets a process-wide rendering setting of the running game, with no getter to restore it",
+    ),
     ("GLTFDocument", "export_object_model_property"): (
         "E",
         "indexes `state.nodes[gltf_node_index]` unchecked for a property on a node: on a GLTFState without "
@@ -420,10 +450,12 @@ PAIR_GROW: dict[tuple[str, str], str] = {
 
 # ---- B and D row arguments ------------------------------------------------------------------------------
 
-# (class, method) -> one Godot literal per REQUIRED argument of a B or D row (the defaulted ones keep their
-# defaults), replacing the per-type values where those make the row weak: an empty answer that a no-op
-# could give too. The literals are those of STATIC_ARGS (`Class.new()` is a fresh instance). `--check`
-# requires each entry to name a generated B or D row and to give one value per required argument.
+# (class, method) -> one Godot literal per REQUIRED argument of a B, D or F row (the defaulted ones keep
+# their defaults), replacing the per-type values where those make a B or D row weak (an empty answer that a
+# no-op could give too) or where an F row's argument has no fresh value. The literals are those of
+# STATIC_ARGS (`Class.new()` is a fresh instance), plus `receiver.<method>()` (an object the row's own
+# receiver makes). `--check` requires each entry to name a B, D or F row and give one value per required
+# argument.
 _BOX = (
     "[Plane(1, 0, 0, 1), Plane(-1, 0, 0, 1), Plane(0, 1, 0, 1), Plane(0, -1, 0, 1), Plane(0, 0, 1, 1), "
     "Plane(0, 0, -1, 1)]"
@@ -474,6 +506,12 @@ ROW_ARGS: dict[tuple[str, str], tuple[str, ...]] = {
     ("Translation", "get_message"): ('"kanama"',),
     ("TextEdit", "get_line_wrapped_text"): ("1",),  # the second line: a swapped index reads "a"
     ("CanvasItem", "get_visibility_layer_bit"): ("3",),  # layer bit 3 of 8, not the default bit 0
+    # Reach rows. `receiver.<method>()` is an argument the row's own receiver makes.
+    ("Tree", "get_item_area_rect"): ("receiver.create_item()",),
+    # A property that exists and a value of its type: a tweener for a missing property, or a `from` value
+    # of another type than the final one, is refused with null (which the required return turns into a throw).
+    ("Tween", "tween_property"): ("Node.new()", 'NodePath("process_priority")', "7", "0.75"),
+    ("PropertyTweener", "from"): ("3",),
 }
 
 # (class, method) -> ((property, Godot literal), ...): set on a B row's fresh receiver through the Variant
@@ -553,3 +591,154 @@ RID_ARG_SOURCES: dict[tuple[str, str], str] = {
 #       "the iOS Variant path cannot encode a PackedByteArray argument", "task 140"),
 # (The nine iOS entries of the first device run went with the encoders that fixed them.)
 KNOWN_FINDINGS: dict[tuple[str, str], tuple[tuple[str, ...], str, str, str]] = {}
+
+# ---- Variant type rows ----------------------------------------------------------------------------------
+
+# One value per Godot Variant type (the generator reads the types from `Variant.Type` in extension_api.json,
+# so a type a later engine adds fails --check until it has an entry). type -> (GDScript literal, the Kotlin
+# value the generic Variant path must answer for it, {path: reason} for the paths it has no row on). The
+# rows (case T) run each value through every generic Variant path of the runtime, against a value the
+# ENGINE built or compared (an `Expression` evaluates the literal), so an encode/decode pair that is wrong
+# the same way in both directions cannot pass:
+#   ret   the literal evaluated by the Expression comes back as the Kotlin value (the Variant return decode);
+#   elem  the same literal inside an Array and a Dictionary (the container return decode);
+#   arg   the Kotlin value passed to `set_meta` through `Object.call`, at the top level and inside an Array
+#         and a Dictionary, compared with the literal by the engine (the Variant argument encoders);
+#   in    the literal emitted by the engine to a Variant signal argument of a Kotlin lambda, at the top
+#         level and inside an Array and a Dictionary (the inbound argument decode).
+# `r.typeObject()` is the row's probe node (the Expression's base instance, `self` in the literal).
+_NO_ARG_VALUE = (
+    "Kotlin has no value of its own for it (a List encodes as an Array, a String as a String), so the engine's "
+    "comparison with the literal would compare another type"
+)
+_DECODES_NULL = "decodes to null through the Variant path on every backend: there is no value to pass back"
+_NO_INBOUND = (
+    "a Callable or Signal signal argument decodes to null on desktop and is refused with an error naming the "
+    "type on iOS (docs/contributing/backends/ios.md): the backends answer differently by design"
+)
+VARIANT_TYPE_VALUES: dict[str, tuple[str, str, dict[str, str]]] = {
+    "Nil": ("null", "null", {"arg": "set_meta(name, null) erases the entry: nothing to compare"}),
+    "bool": ("true", "true", {}),
+    "int": ("7", "7L", {}),
+    "float": ("0.5", "0.5", {}),
+    "String": ('"kanama"', '"kanama"', {}),
+    "Vector2": ("Vector2(0.5, 1.5)", "Vector2(0.5, 1.5)", {}),
+    "Vector2i": ("Vector2i(-3, 4)", "Vector2i(-3, 4)", {}),
+    "Rect2": ("Rect2(0.5, 1.5, 2.25, 3.125)", "Rect2(Vector2(0.5, 1.5), Vector2(2.25, 3.125))", {}),
+    "Rect2i": ("Rect2i(-1, 2, 30, 40)", "Rect2i(Vector2i(-1, 2), Vector2i(30, 40))", {}),
+    "Vector3": ("Vector3(1, 2.5, -3)", "Vector3(1.0, 2.5, -3.0)", {}),
+    "Vector3i": ("Vector3i(7, -8, 9)", "Vector3i(7, -8, 9)", {}),
+    "Transform2D": (
+        "Transform2D(Vector2(1, 2), Vector2(3, 4), Vector2(5, 6))",
+        "Transform2D(Vector2(1.0, 2.0), Vector2(3.0, 4.0), Vector2(5.0, 6.0))",
+        {},
+    ),
+    "Vector4": ("Vector4(0.5, -0.25, 8, 2)", "Vector4(0.5, -0.25, 8.0, 2.0)", {}),
+    "Vector4i": ("Vector4i(-2147483648, 2147483647, 0, 7)", "Vector4i(Int.MIN_VALUE, Int.MAX_VALUE, 0, 7)", {}),
+    "Plane": ("Plane(0, 1, 0, 2.5)", "Plane(Vector3(0.0, 1.0, 0.0), 2.5)", {}),
+    "Quaternion": ("Quaternion(0, 0.6, 0, 0.8)", "Quaternion(0.0, 0.6, 0.0, 0.8)", {}),
+    "AABB": ("AABB(Vector3(-1, -2, -3), Vector3(4, 5, 6))", "AABB(Vector3(-1.0, -2.0, -3.0), Vector3(4.0, 5.0, 6.0))", {}),
+    "Basis": (
+        "Basis(Vector3(1, 0, 0), Vector3(0, 0, 1), Vector3(0, -1, 0))",
+        "Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, 0.0, 1.0), Vector3(0.0, -1.0, 0.0))",
+        {},
+    ),
+    "Transform3D": (
+        "Transform3D(Basis(Vector3(1, 2, 3), Vector3(4, 5, 6), Vector3(7, 8, 9)), Vector3(10, 11, 12))",
+        "Transform3D(Basis(Vector3(1.0, 2.0, 3.0), Vector3(4.0, 5.0, 6.0), Vector3(7.0, 8.0, 9.0)), Vector3(10.0, 11.0, 12.0))",
+        {},
+    ),
+    "Projection": (
+        "Projection(Vector4(1, 2, 3, 4), Vector4(5, 6, 7, 8), Vector4(9, 10, 11, 12), Vector4(13, 14, 15, 16))",
+        "Projection(Vector4(1.0, 2.0, 3.0, 4.0), Vector4(5.0, 6.0, 7.0, 8.0), Vector4(9.0, 10.0, 11.0, 12.0), "
+        "Vector4(13.0, 14.0, 15.0, 16.0))",
+        {},
+    ),
+    "Color": ("Color(0.5, 0.25, 0, 1)", "Color(0.5, 0.25, 0.0, 1.0)", {}),
+    "StringName": ('StringName("sn")', '"sn"', {"arg": _NO_ARG_VALUE}),
+    "NodePath": ('NodePath("A/B")', 'NodePath("A/B")', {}),
+    "RID": ("rid_from_int64(77)", "RID(77L)", {}),
+    "Object": ("self", "r.typeObject()", {}),
+    "Callable": ('Callable(self, "get_name")', "null", {"arg": _DECODES_NULL, "in": _NO_INBOUND}),
+    "Signal": ('Signal(self, "ready")', "null", {"arg": _DECODES_NULL, "in": _NO_INBOUND}),
+    "Dictionary": ('{"k": 1}', 'mapOf("k" to 1L)', {}),
+    "Array": ('[1, "s"]', 'listOf(1L, "s")', {}),
+    "PackedByteArray": ("PackedByteArray([1, 2, 255])", "byteArrayOf(1, 2, -1)", {}),
+    "PackedInt32Array": ("PackedInt32Array([1, -2])", "listOf(1, -2)", {"arg": _NO_ARG_VALUE}),
+    "PackedInt64Array": ("PackedInt64Array([1, -2])", "listOf(1L, -2L)", {"arg": _NO_ARG_VALUE}),
+    "PackedFloat32Array": ("PackedFloat32Array([0.5, 2])", "listOf(0.5f, 2f)", {"arg": _NO_ARG_VALUE}),
+    "PackedFloat64Array": ("PackedFloat64Array([0.5, 2])", "listOf(0.5, 2.0)", {"arg": _NO_ARG_VALUE}),
+    "PackedStringArray": ('PackedStringArray(["a", "bb"])', 'listOf("a", "bb")', {"arg": _NO_ARG_VALUE}),
+    "PackedVector2Array": ("PackedVector2Array([Vector2(1, 2)])", "listOf(Vector2(1.0, 2.0))", {"arg": _NO_ARG_VALUE}),
+    "PackedVector3Array": ("PackedVector3Array([Vector3(1, 2, 3)])", "listOf(Vector3(1.0, 2.0, 3.0))", {"arg": _NO_ARG_VALUE}),
+    "PackedColorArray": ("PackedColorArray([Color(0.5, 0.25, 0, 1)])", "listOf(Color(0.5, 0.25, 0.0, 1.0))", {"arg": _NO_ARG_VALUE}),
+    "PackedVector4Array": ("PackedVector4Array([Vector4(1, 2, 3, 4)])", "listOf(Vector4(1.0, 2.0, 3.0, 4.0))", {"arg": _NO_ARG_VALUE}),
+}
+
+# ---- reach rows -------------------------------------------------------------------------------------
+
+# helper -> (Kotlin statements on `o`, a fresh Object, reason): the reach row of a helper only the
+# hand-written GodotObject root calls, in a spelling the generator cannot derive from Godot's arguments
+# (the root splits Godot's Callable into a target object and a method name). `r.typeObject()` is the run's
+# probe node, a live connection target; each row connects first where it disconnects or queries.
+_SPLIT_CALLABLE = "the hand-written root splits Godot's Callable argument into (target, method)"
+HAND_ROOT_REACH: dict[str, tuple[tuple[str, ...], str]] = {
+    "ptrcallWithStringNameCallableAndUInt32ArgsRetLong": (
+        ('r.reached(o.connect("script_changed", r.typeObject(), "get_instance_id"))',),
+        _SPLIT_CALLABLE,
+    ),
+    "ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong": (
+        ('r.reached(o.connectBound("script_changed", r.typeObject(), "get_instance_id", listOf(7L)))',),
+        _SPLIT_CALLABLE + "; connectBound is the bound-argument form `connect` uses",
+    ),
+    "ptrcallWithStringNameAndCallableArgs": (
+        (
+            'o.connect("script_changed", r.typeObject(), "get_instance_id")',
+            'o.disconnect("script_changed", r.typeObject(), "get_instance_id")',
+            "r.reached()",
+        ),
+        _SPLIT_CALLABLE,
+    ),
+    "ptrcallWithStringNameAndBoundCallableArgs": (
+        (
+            'o.connectBound("script_changed", r.typeObject(), "get_instance_id", listOf(7L))',
+            'o.disconnectBound("script_changed", r.typeObject(), "get_instance_id", listOf(7L))',
+            "r.reached()",
+        ),
+        _SPLIT_CALLABLE + "; disconnectBound is the bound-argument form `disconnect` uses",
+    ),
+    "ptrcallWithStringNameAndCallableArgsRetBool": (
+        (
+            'o.connect("script_changed", r.typeObject(), "get_instance_id")',
+            'r.reached(o.isConnected("script_changed", r.typeObject(), "get_instance_id"))',
+        ),
+        _SPLIT_CALLABLE,
+    ),
+}
+
+# class -> (Kotlin expression, reason): the receiver of the reach rows of a class whose fresh instance is not
+# a valid one (Godot prints "can't be created directly" and its methods answer null). The expressions use
+# the runner: `r.tween()` is a Tween of the running SceneTree (`create_tween()`), killed when the row ends.
+_TWEEN_MADE = "can't be created directly: a fresh one is invalid and its tween_* / from() calls answer null"
+REACH_RECEIVERS: dict[str, tuple[str, str]] = {
+    "Tween": ("r.tween()", f"a Tween not made by create_tween() {_TWEEN_MADE}"),
+    "PropertyTweener": (
+        'r.tween().tweenProperty(r.typeObject(), NodePath("process_priority"), 7L, 1.0)',
+        f"a PropertyTweener not made by Tween.tween_property {_TWEEN_MADE}",
+    ),
+    "AwaitTweener": ("r.tween().tweenAwait(r.probeSignal())", f"an AwaitTweener not made by Tween.tween_await {_TWEEN_MADE}"),
+}
+
+# (class, method) -> (Kotlin statement run after the call, with the row's arguments `a0`, `a1`, ..., reason):
+# what the engine expects a caller to do after a reach row's call, so the row leaves nothing behind.
+REACH_AFTER: dict[tuple[str, str], tuple[str, str]] = {
+    ("RenderingServer", "global_shader_parameter_add"): (
+        "RenderingServer.globalShaderParameterRemove(a0)",
+        "the parameter is process-wide state of the running game: the row removes the one it added",
+    ),
+    ("ResourceLoader", "load_threaded_request"): (
+        "r.track(ResourceLoader.loadThreadedGet(a0))",
+        "a request keeps its load token (a RefCounted) until load_threaded_get collects it: without that it "
+        "leaks at exit (found by the runtime smoke's leak check)",
+    ),
+}

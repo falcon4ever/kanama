@@ -48,7 +48,7 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: EditorNode3DGizmoPlugin.create_handle_material
      */
-    fun createHandleMaterial(name: String, billboard: Boolean = false, texture: Texture2D?) {
+    fun createHandleMaterial(name: String, billboard: Boolean = false, texture: Texture2D? = null) {
         checkOpen()
         ObjectCalls.ptrcallWithStringBoolObjectArgs(Binds.createHandleMaterialBind, segment, name, billboard, texture?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(this)
@@ -74,7 +74,7 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: EditorNode3DGizmoPlugin.get_material
      */
-    fun getMaterial(name: String, gizmo: EditorNode3DGizmo?): StandardMaterial3D? {
+    fun getMaterial(name: String, gizmo: EditorNode3DGizmo? = null): StandardMaterial3D? {
         checkOpen()
         val ret = StandardMaterial3D.wrapOwned(ObjectCalls.ptrcallWithStringAndObjectArgRetObject(Binds.getMaterialBind, segment, name, gizmo?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(this)

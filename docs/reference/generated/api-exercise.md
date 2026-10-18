@@ -8,11 +8,12 @@ call, and each backend implements each helper once, so a defect in a helper is s
 of it. This page classifies every helper the shared wrapper tree calls by how a generated exercise row can
 observe it, from `extension_api.json`, the generator's tables and the committed tree; the judgement calls
 (exclusions, stateless singletons, receivers, method-level cases, runtime helpers, static arguments, the
-scratch directory, the singleton rows) are hand-kept in `scripts/api_exercise_policy.py`. The C, A, B and D
-rows run: `ApiExercise.generated.kt` (the same script writes it) on the desktop smoke and in the iOS self-test
-build; the F (reach-only) rows are listed here and run nowhere yet.
+scratch directory, the singleton rows, the Variant type values) are hand-kept in
+`scripts/api_exercise_policy.py`. Every row runs: `ApiExercise.generated.kt` (the same script writes it) on
+the desktop smoke and in the iOS self-test build, the C, A, B and D rows asserting values, the F rows
+reach only, and the T rows one value per Godot Variant type through each generic Variant path.
 
-**Referenced helpers:** 1492 (1487 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15335 generated (12998 instance, 2223 singleton, 114 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 892 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 541 (of the 541 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 607; excluded 339. A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the runs count those apart (`weak` in the summary line), so this count is an upper bound.
+**Referenced helpers:** 1492 (1487 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15335 generated (12998 instance, 2223 singleton, 114 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 892 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 541 (of the 541 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 602; excluded 344. A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the runs count those apart (`weak` in the summary line), so this count is an upper bound.
 
 ## Cases
 
@@ -27,8 +28,8 @@ on a healthy host (**weak**), and then the second row is the one that can tell a
 | A property pair | setter or getter of a non-indexed property of an instantiable class (or its receiver below), or of a `SINGLETON_PAIRS` singleton, or a `SINGLETON_KEYED_PAIRS` method | a value set through the wrapper reads back through the getter and `Object.get` (on a singleton, the value read first is set back in a `finally`) | 91 |
 | B const oracle | const non-void instance method on such a class (or an argument-free RID factory of a `RID_FACTORIES` class) | the wrapper's result equals `Object.call` with the same arguments on the same object; a result equal to its type's zero is **weak** (counted apart, not failed) | 311 |
 | D singleton | const non-void method of a non-excluded singleton, any non-void method of a stateless singleton, or an argument-free RID factory of a `RID_FACTORIES` server | the wrapper's result equals `Object.call` on the singleton (weak as B); a factory returns a valid RID, one read of it agrees on both paths, and the RID is freed | 94 |
-| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 607 |
-| E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 339 |
+| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 602 |
+| E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 344 |
 | N runtime helper | no generated method calls it with a MethodBind | nothing of its own: every row uses it | 5 |
 
 179 of the rows get their receiver elsewhere than a fresh instance of the declaring class (a descendant,
@@ -39,7 +40,7 @@ or the factory `RECEIVER_SOURCES` names, because the declaring class is abstract
 - **C static** by class: `FileAccess` 13, `DirAccess` 9, `JSON` 3, `AudioStreamMP3` 2, `AudioStreamWAV` 2, `GLTFDocument` 2, `Image` 2, `DPITexture` 1, `GLTFAccessor` 1, `GLTFCamera` 1, `ImporterMesh` 1, `Node` 1, `PathFollow3D` 1, `PhysicsRayQueryParameters2D` 1, `PhysicsRayQueryParameters3D` 1, `PortableCompressedTexture2D` 1, `Resource` 1, `TLSOptions` 1, `Tween` 1.
 - **D singleton** by class: `RenderingServer` 19, `Geometry2D` 16, `Geometry3D` 13, `ClassDB` 11, `NavigationServer2D` 10, `NavigationServer3D` 10, `Time` 5, `Marshalls` 3, `PhysicsServer3D` 3, `TranslationServer` 2, `AccessibilityServer` 1, `ProjectSettings` 1.
 - **B const** through a descendant, by declaring class: `TextServer` 56, `CollisionObject2D` 8, `Font` 7, `InputEvent` 4, `IterateIK3D` 2, `Noise` 2, `TileSetSource` 2, `AnimationMixer` 1, `BaseMaterial3D` 1, `CanvasItem` 1, `CollisionObject3D` 1.
-- **F reach only**, largest classes: `RenderingServer` 91, `CanvasItem` 28, `TextServer` 27, `AccessibilityServer` 22, `Animation` 19, `FontFile` 14, `PhysicsServer2D` 14, `RichTextLabel` 14, `Image` 12, `AnimationPlayer` 9, `AStar2D` 8, `PhysicsServer3D` 8.
+- **F reach only**, largest classes: `RenderingServer` 86, `CanvasItem` 28, `TextServer` 27, `AccessibilityServer` 22, `Animation` 19, `FontFile` 14, `PhysicsServer2D` 14, `RichTextLabel` 14, `Image` 13, `AnimationPlayer` 9, `AStar2D` 8, `PhysicsServer3D` 8.
 
 ## By iOS ptrcall tag
 
@@ -47,17 +48,17 @@ The generated iOS helpers by the type tags their bodies pack (a helper counts on
 
 | tag | helpers | sites | C | A | B | D | F | E |
 |---|---|---|---|---|---|---|---|---|
-| `PT_INT64` | 827 | 3440 | 19 | 2 | 197 | 30 | 348 | 231 |
-| `PT_VOID` | 573 | 2921 | – | 34 | – | – | 430 | 109 |
-| `PT_RID` | 365 | 1750 | – | 2 | 55 | 41 | 177 | 90 |
-| `PT_BOOL` | 350 | 1250 | 9 | – | 63 | 25 | 173 | 80 |
-| `PT_OBJECT` | 270 | 677 | 20 | – | 26 | 2 | 124 | 98 |
+| `PT_INT64` | 827 | 3440 | 19 | 2 | 197 | 30 | 345 | 234 |
+| `PT_VOID` | 573 | 2921 | – | 34 | – | – | 426 | 113 |
+| `PT_RID` | 365 | 1750 | – | 2 | 55 | 41 | 176 | 91 |
+| `PT_BOOL` | 350 | 1250 | 9 | – | 63 | 25 | 169 | 84 |
+| `PT_OBJECT` | 270 | 677 | 20 | – | 26 | 2 | 122 | 100 |
 | `PT_STRING` | 263 | 1006 | 25 | 3 | 29 | 8 | 66 | 132 |
-| `PT_FLOAT64` | 232 | 696 | 2 | – | 52 | 9 | 152 | 17 |
+| `PT_FLOAT64` | 232 | 696 | 2 | – | 52 | 9 | 150 | 19 |
 | `PT_STRING_NAME` | 134 | 479 | – | 1 | 31 | 14 | 60 | 28 |
 | `PT_VECTOR2` | 133 | 252 | 1 | – | 38 | 12 | 76 | 6 |
 | `PT_VECTOR2I` | 101 | 186 | – | – | 48 | 1 | 46 | 6 |
-| `PT_COLOR` | 97 | 167 | – | – | 8 | 1 | 80 | 8 |
+| `PT_COLOR` | 97 | 167 | – | – | 8 | 1 | 78 | 10 |
 | `PT_VARIANT` | 77 | 157 | 3 | 3 | 12 | 2 | 37 | 20 |
 | `PT_TYPED_ARRAY_BLOB` | 66 | 112 | 3 | 11 | – | 3 | 21 | 28 |
 | `PT_VECTOR3` | 60 | 184 | 1 | – | 18 | 16 | 20 | 5 |
@@ -149,7 +150,7 @@ instantiable descendant it excludes.
 | `*Extension*` | substring | a base a script or extension implements (TextServerExtension, PhysicsServer3DExtension, ...): its methods are hooks, not engine behaviour | 34 | 7 |
 | `Editor*` | prefix | editor-only classes | 54 | 0 |
 | — | derived | abstract, and no instantiable descendant (and no `RECEIVER_SOURCES` entry) | — | 12 |
-| `METHOD_OVERRIDES` | method | see below | — | 2 |
+| `METHOD_OVERRIDES` | method | see below | — | 7 |
 
 Stateless singletons (`STATELESS_SINGLETONS`, every non-void method is a D row): `Geometry2D` (pure 2D geometry functions of their arguments), `Geometry3D` (pure 3D geometry functions of their arguments), `Marshalls` (pure encoders and decoders of their arguments).
 
@@ -185,7 +186,7 @@ Stateless singletons (`STATELESS_SINGLETONS`, every non-void method is a D row):
 | `RenderingServer.texture_2d_layer_get` | F | returns a new object per call: an oracle would compare two different objects |
 | `InputEvent.xformed_by` | F | returns a new object per call: an oracle would compare two different objects |
 | `RegEx.search` | F | returns a new object per call: an oracle would compare two different objects |
-| `Tree.get_item_area_rect` | F | takes a TreeItem, which only a Tree's create_item makes: no fresh argument |
+| `Tree.get_item_area_rect` | F | an item's area before any layout is the zero Rect2, which a no-op answers too |
 | `Object.is_connected` | F | the hand-written root spells it isConnected(signal, target, method), not with Godot's Callable argument |
 | `PhysicsServer2D.area_get_shape` | E | a shape index the area does not have aborts the process: the server indexes the area's shapes with CRASH_BAD_INDEX and no bounds check before it (found by the headless sweep) |
 | `PhysicsServer2D.area_get_shape_transform` | E | a shape index the area does not have aborts the process: the server indexes the area's shapes with CRASH_BAD_INDEX and no bounds check before it (found by the headless sweep) |
@@ -197,6 +198,13 @@ Stateless singletons (`STATELESS_SINGLETONS`, every non-void method is a D row):
 | `PhysicsServer3D.body_get_shape_transform` | E | a shape index the area does not have aborts the process: the server indexes the area's shapes with CRASH_BAD_INDEX and no bounds check before it (found by the headless sweep) |
 | `PhysicsServer3D.custom_shape_create` | F | Godot Physics 3D has no custom shapes: it always returns RID() with an error |
 | `ProjectSettings.load_resource_pack` | E | mounts a resource pack into res:// for the rest of the process |
+| `AudioServer.set_input_device_active` | E | starts capture from the host's microphone (a permission prompt on a phone; desktop only warns that audio/driver/enable_input is off) |
+| `RenderingServer.set_boot_image` | E | draws the boot splash over the running game's frame: the desktop smoke's dummy renderer ignores it, a phone's renderer does not |
+| `RenderingServer.set_boot_image_with_stretch` | E | draws the boot splash over the running game's frame: the desktop smoke's dummy renderer ignores it, a phone's renderer does not |
+| `RenderingServer.texture_create_from_native_handle` | E | wraps a native GPU texture handle: a made-up one is undefined behaviour (the desktop smoke's dummy renderer ignores it, a phone's renderer does not) |
+| `RenderingServer.screen_space_roughness_limiter_set_active` | E | sets a process-wide rendering setting of the running game, with no getter to restore it |
+| `RenderingServer.environment_set_ssao_quality` | E | sets a process-wide rendering setting of the running game, with no getter to restore it |
+| `RenderingServer.environment_set_ssil_quality` | E | sets a process-wide rendering setting of the running game, with no getter to restore it |
 | `GLTFDocument.export_object_model_property` | E | indexes `state.nodes[gltf_node_index]` unchecked for a property on a node: on a GLTFState without nodes it aborts the process (cowdata FATAL index, found by the headless sweep) |
 
 ## Runtime helpers
@@ -366,14 +374,122 @@ B and D rows whose per-type arguments would leave them weak take chosen ones (`R
 | `InputEvent.is_action_pressed` | `"ui_accept"` | `action = "ui_accept"`, `pressed = true` |
 | `Marshalls.base64_to_raw` | `"a2FuYW1hMTI1"` | — |
 | `Marshalls.base64_to_variant` | `"AgAAAAcAAAA="` | — |
+| `PropertyTweener.from` | `3` | — |
 | `TextEdit.get_line_wrapped_text` | `1` | `text = "a\nkanama125"` |
 | `Time.get_unix_time_from_datetime_dict` | `{"year": 2026, "month": 10, "day": 17, "hour": 12, "minute": 30, "second": 15}` | — |
 | `Translation.get_message` | `"kanama"` | `messages = {"kanama": "125"}` |
 | `TranslationServer.compare_locales` | `"en_US"`, `"en"` | — |
+| `Tree.get_item_area_rect` | `receiver.create_item()` | — |
+| `Tween.tween_property` | `Node.new()`, `NodePath("process_priority")`, `7`, `0.75` | — |
 
 `PAIR_GROW` (singleton properties a row only ever raises by one): `AudioServer.bus_count` (fewer buses than the project has deletes the project's buses; one more is removed again by the restore).
 
 A factory row also calls the factory through `Object.call`: a `RID()` from both paths is the host's (a renderer without decals, fog volumes or VoxelGI; the headless dummy renderer) and counts weak, printed with that reason; a `RID()` from the wrapper alone fails.
+
+## Variant type rows
+
+One row (case T) per Godot Variant type (39, read from `Variant.Type` in extension_api.json) per
+generic Variant path of the runtime, each against a value the engine built or compared (an `Expression`
+evaluates the literal on the run's probe node), so an encode/decode pair wrong the same way both ways cannot
+pass. The values are `VARIANT_TYPE_VALUES`; a type a later engine adds fails `--check` until it has one.
+
+- `ret`: the literal the engine evaluated comes back as the Kotlin value (the Variant return decode).
+- `elem`: the literal inside an Array and a Dictionary (the container return decode).
+- `arg`: the Kotlin value through Object.call, alone and inside an Array and a Dictionary, equals the literal by the engine's comparison (the argument encoders).
+- `in`: the literal emitted to a Kotlin lambda's Variant signal argument, alone and inside an Array and a Dictionary (the inbound decode).
+
+| type | literal | Kotlin value | paths without a row |
+|---|---|---|---|
+| `Nil` | `null` | `null` | `arg`: set_meta(name, null) erases the entry: nothing to compare |
+| `bool` | `true` | `true` | — |
+| `int` | `7` | `7L` | — |
+| `float` | `0.5` | `0.5` | — |
+| `String` | `"kanama"` | `"kanama"` | — |
+| `Vector2` | `Vector2(0.5, 1.5)` | `Vector2(0.5, 1.5)` | — |
+| `Vector2i` | `Vector2i(-3, 4)` | `Vector2i(-3, 4)` | — |
+| `Rect2` | `Rect2(0.5, 1.5, 2.25, 3.125)` | `Rect2(Vector2(0.5, 1.5), Vector2(2.25, 3.125))` | — |
+| `Rect2i` | `Rect2i(-1, 2, 30, 40)` | `Rect2i(Vector2i(-1, 2), Vector2i(30, 40))` | — |
+| `Vector3` | `Vector3(1, 2.5, -3)` | `Vector3(1.0, 2.5, -3.0)` | — |
+| `Vector3i` | `Vector3i(7, -8, 9)` | `Vector3i(7, -8, 9)` | — |
+| `Transform2D` | `Transform2D(Vector2(1, 2), Vector2(3, 4), Vector2(5, 6))` | `Transform2D(Vector2(1.0, 2.0), Vector2(3.0, 4.0), Vector2(5.0, 6.0))` | — |
+| `Vector4` | `Vector4(0.5, -0.25, 8, 2)` | `Vector4(0.5, -0.25, 8.0, 2.0)` | — |
+| `Vector4i` | `Vector4i(-2147483648, 2147483647, 0, 7)` | `Vector4i(Int.MIN_VALUE, Int.MAX_VALUE, 0, 7)` | — |
+| `Plane` | `Plane(0, 1, 0, 2.5)` | `Plane(Vector3(0.0, 1.0, 0.0), 2.5)` | — |
+| `Quaternion` | `Quaternion(0, 0.6, 0, 0.8)` | `Quaternion(0.0, 0.6, 0.0, 0.8)` | — |
+| `AABB` | `AABB(Vector3(-1, -2, -3), Vector3(4, 5, 6))` | `AABB(Vector3(-1.0, -2.0, -3.0), Vector3(4.0, 5.0, 6.0))` | — |
+| `Basis` | `Basis(Vector3(1, 0, 0), Vector3(0, 0, 1), Vector3(0, -1, 0))` | `Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, 0.0, 1.0), Vector3(0.0, -1.0, 0.0))` | — |
+| `Transform3D` | `Transform3D(Basis(Vector3(1, 2, 3), Vector3(4, 5, 6), Vector3(7, 8, 9)), Vector3(10, 11, 12))` | `Transform3D(Basis(Vector3(1.0, 2.0, 3.0), Vector3(4.0, 5.0, 6.0), Vector3(7.0, 8.0, 9.0)), Vector3(10.0, 11.0, 12.0))` | — |
+| `Projection` | `Projection(Vector4(1, 2, 3, 4), Vector4(5, 6, 7, 8), Vector4(9, 10, 11, 12), Vector4(13, 14, 15, 16))` | `Projection(Vector4(1.0, 2.0, 3.0, 4.0), Vector4(5.0, 6.0, 7.0, 8.0), Vector4(9.0, 10.0, 11.0, 12.0), Vector4(13.0, 14.0, 15.0, 16.0))` | — |
+| `Color` | `Color(0.5, 0.25, 0, 1)` | `Color(0.5, 0.25, 0.0, 1.0)` | — |
+| `StringName` | `StringName("sn")` | `"sn"` | `arg`: Kotlin has no value of its own for it (a List encodes as an Array, a String as a String), so the engine's comparison with the literal would compare another type |
+| `NodePath` | `NodePath("A/B")` | `NodePath("A/B")` | — |
+| `RID` | `rid_from_int64(77)` | `RID(77L)` | — |
+| `Object` | `self` | `r.typeObject()` | — |
+| `Callable` | `Callable(self, "get_name")` | `null` | `arg`: decodes to null through the Variant path on every backend: there is no value to pass back; `in`: a Callable or Signal signal argument decodes to null on desktop and is refused with an error naming the type on iOS (docs/contributing/backends/ios.md): the backends answer differently by design |
+| `Signal` | `Signal(self, "ready")` | `null` | `arg`: decodes to null through the Variant path on every backend: there is no value to pass back; `in`: a Callable or Signal signal argument decodes to null on desktop and is refused with an error naming the type on iOS (docs/contributing/backends/ios.md): the backends answer differently by design |
+| `Dictionary` | `{"k": 1}` | `mapOf("k" to 1L)` | — |
+| `Array` | `[1, "s"]` | `listOf(1L, "s")` | — |
+| `PackedByteArray` | `PackedByteArray([1, 2, 255])` | `byteArrayOf(1, 2, -1)` | — |
+| `PackedInt32Array` | `PackedInt32Array([1, -2])` | `listOf(1, -2)` | `arg`: Kotlin has no value of its own for it (a List encodes as an Array, a String as a String), so the engine's comparison with the literal would compare another type |
+| `PackedInt64Array` | `PackedInt64Array([1, -2])` | `listOf(1L, -2L)` | `arg`: Kotlin has no value of its own for it (a List encodes as an Array, a String as a String), so the engine's comparison with the literal would compare another type |
+| `PackedFloat32Array` | `PackedFloat32Array([0.5, 2])` | `listOf(0.5f, 2f)` | `arg`: Kotlin has no value of its own for it (a List encodes as an Array, a String as a String), so the engine's comparison with the literal would compare another type |
+| `PackedFloat64Array` | `PackedFloat64Array([0.5, 2])` | `listOf(0.5, 2.0)` | `arg`: Kotlin has no value of its own for it (a List encodes as an Array, a String as a String), so the engine's comparison with the literal would compare another type |
+| `PackedStringArray` | `PackedStringArray(["a", "bb"])` | `listOf("a", "bb")` | `arg`: Kotlin has no value of its own for it (a List encodes as an Array, a String as a String), so the engine's comparison with the literal would compare another type |
+| `PackedVector2Array` | `PackedVector2Array([Vector2(1, 2)])` | `listOf(Vector2(1.0, 2.0))` | `arg`: Kotlin has no value of its own for it (a List encodes as an Array, a String as a String), so the engine's comparison with the literal would compare another type |
+| `PackedVector3Array` | `PackedVector3Array([Vector3(1, 2, 3)])` | `listOf(Vector3(1.0, 2.0, 3.0))` | `arg`: Kotlin has no value of its own for it (a List encodes as an Array, a String as a String), so the engine's comparison with the literal would compare another type |
+| `PackedColorArray` | `PackedColorArray([Color(0.5, 0.25, 0, 1)])` | `listOf(Color(0.5, 0.25, 0.0, 1.0))` | `arg`: Kotlin has no value of its own for it (a List encodes as an Array, a String as a String), so the engine's comparison with the literal would compare another type |
+| `PackedVector4Array` | `PackedVector4Array([Vector4(1, 2, 3, 4)])` | `listOf(Vector4(1.0, 2.0, 3.0, 4.0))` | `arg`: Kotlin has no value of its own for it (a List encodes as an Array, a String as a String), so the engine's comparison with the literal would compare another type |
+
+## Typed-array element kinds
+
+Each typed-Array argument kind the iOS generator emits (`IOS_TYPED_ARRAY_ARGS`) is boxed element by element
+by the shim's per-tag switch; each kind's helpers and the case of their row (a kind with only reach rows
+proves the call is accepted, not the element values):
+
+| kind | helpers (case) |
+|---|---|
+| `TypedRIDArray` | `ptrcallWithRIDAndRIDListArgs` (F), `ptrcallWithRIDListArg` (A), `ptrcallWithRIDListLongUInt32ArgsRetRID` (E), `ptrcallWithRIDListObjectListLongUInt32ArgsRetRID` (E), `ptrcallWithRIDListObjectListUInt32ArgsRetRID` (E), `ptrcallWithRIDListRect2iRIDColorRIDListIntArgs` (F), `ptrcallWithRIDLongRIDListLongDictionaryArgs` (F), `ptrcallWithRIDRIDListPackedInt64ListObjectArgsRetRID` (E), `ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList` (F), `ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool` (F), `ptrcallWithRIDUInt32FourLongPackedColorListDoubleUInt32Rect2RIDListArgsRetPackedInt64List` (E), `ptrcallWithTwoLongUInt32RIDListPackedInt64ListArgs` (E), `ptrcallWithTwoVector2UInt32RIDListArgsRetObject` (C), `ptrcallWithTwoVector3UInt32RIDListArgsRetObject` (C), `ptrcallWithUInt32LongRIDListPackedInt64ListArgsRetRID` (E) |
+| `TypedIntArray` | `ptrcallWithTypedIntListArg` (A) |
+| `TypedStringArray` | `ptrcallWithTypedStringListArg` (A) |
+| `TypedStringNameArray` | `ptrcallWithCallableStringNameListArgs` (E), `ptrcallWithCallableStringNameListObjectArgs` (E), `ptrcallWithCallableStringNameTwoStringStringNameListArgs` (E), `ptrcallWithStringNameListArg` (F) |
+| `TypedNodePathArray` | `ptrcallWithNodePathListArg` (A) |
+| `TypedVector2iArray` | `ptrcallWithIntAndVector2iListArgsRetObject` (F), `ptrcallWithIntVector2iListTwoIntAndBoolArgs` (F), `ptrcallWithVector2iListArgRetObject` (F), `ptrcallWithVector2iListTwoIntAndBoolArgs` (F) |
+| `TypedTransform3DArray` | `ptrcallWithObjectListTransform3DListBoolArgsRetObject` (C), `ptrcallWithRIDAndTransform3DListArgs` (F), `ptrcallWithTransform3DListArg` (A) |
+| `TypedPlaneArray` | `ptrcallWithPackedVector3ListPackedVector2ListPackedColorListPackedVector2ListPackedVector3ListPlaneListArgs` (F), `ptrcallWithPlaneListAndRIDArgsRetPackedInt64List` (D), `ptrcallWithPlaneListArgRetPackedVector3List` (D), `ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List` (D) |
+| `TypedPackedVector2Array` | `ptrcallWithPackedVector2ListListArg` (A) |
+| `TypedDictionaryArray` | `ptrcallWithDictionaryDictionaryListArgsRetDictionary` (E), `ptrcallWithDictionaryListArg` (A), `ptrcallWithDictionaryListIntArgsRetRID` (F), `ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong` (E) |
+| `TypedArrayArray` | `ptrcallWithArrayListArg` (A), `ptrcallWithLongArrayArrayListDictionaryLongArgs` (F), `ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs` (F) |
+| `TypedPackedByteArray` | `ptrcallWithByteArrayListArg` (A), `ptrcallWithTwoObjectByteArrayListArgsRetRID` (E) |
+| `TypedPackedStringArray` | `ptrcallWithPackedStringListListArg` (A) |
+
+## Reach rows
+
+An F row calls its helper once on a valid receiver (a fresh instance, the singleton, the policy's
+`REACH_RECEIVERS` factory, or none for a static) with the per-type argument values, and passes when the
+call returns without an exception or a backend fault (iOS: a FAULT line during the row fails it). Engine
+error prints for arguments a fresh object cannot use (an index past an empty list) are expected: the call
+crossed into the engine and came back. A RID a server returns is freed, an owned result closed, a new
+parentless Node freed. Rows that would change what a running game shows or hears on a device are excluded
+(`METHOD_OVERRIDES`).
+
+`REACH_RECEIVERS`:
+
+- `Tween`: `r.tween()` — a Tween not made by create_tween() can't be created directly: a fresh one is invalid and its tween_* / from() calls answer null.
+- `PropertyTweener`: `r.tween().tweenProperty(r.typeObject(), NodePath("process_priority"), 7L, 1.0)` — a PropertyTweener not made by Tween.tween_property can't be created directly: a fresh one is invalid and its tween_* / from() calls answer null.
+- `AwaitTweener`: `r.tween().tweenAwait(r.probeSignal())` — an AwaitTweener not made by Tween.tween_await can't be created directly: a fresh one is invalid and its tween_* / from() calls answer null.
+
+`HAND_ROOT_REACH` (helpers only the hand-written `GodotObject` root calls):
+
+- `ptrcallWithStringNameCallableAndUInt32ArgsRetLong`: the hand-written root splits Godot's Callable argument into (target, method).
+- `ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong`: the hand-written root splits Godot's Callable argument into (target, method); connectBound is the bound-argument form `connect` uses.
+- `ptrcallWithStringNameAndCallableArgs`: the hand-written root splits Godot's Callable argument into (target, method).
+- `ptrcallWithStringNameAndBoundCallableArgs`: the hand-written root splits Godot's Callable argument into (target, method); disconnectBound is the bound-argument form `disconnect` uses.
+- `ptrcallWithStringNameAndCallableArgsRetBool`: the hand-written root splits Godot's Callable argument into (target, method).
+
+`REACH_AFTER` (what a row does after its call):
+
+- `RenderingServer.global_shader_parameter_add`: `RenderingServer.globalShaderParameterRemove(a0)` — the parameter is process-wide state of the running game: the row removes the one it added.
+- `ResourceLoader.load_threaded_request`: `r.track(ResourceLoader.loadThreadedGet(a0))` — a request keeps its load token (a RefCounted) until load_threaded_get collects it: without that it leaks at exit (found by the runtime smoke's leak check).
 
 Rows of other cases whose method takes a path (20): each takes one under the scratch directory.
 
@@ -492,7 +608,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithBoolArgRetBool` | B | `Control.has_focus` (const non-void method) | 4 | PT_BOOL |
 | `ptrcallWithBoolArgRetDictionary` | F | `Time.get_date_dict_from_system` (reads the clock: two reads an oracle compares can differ (METHOD_OVERRIDES)) | 4 | PT_BOOL |
 | `ptrcallWithBoolArgRetInt` | B | `Node.get_child_count` (const non-void method) | 3 | PT_BOOL PT_INT64 |
-| `ptrcallWithBoolArgRetLong` | F | `AudioServer.set_input_device_active` (non-const singleton method) | 4 | PT_BOOL PT_INT64 |
+| `ptrcallWithBoolArgRetLong` | F | `Image.generate_mipmaps` (non-const method) | 4 | PT_BOOL PT_INT64 |
 | `ptrcallWithBoolArgRetObject` | F | `BoxContainer.add_spacer` (non-const method) | 10 | PT_BOOL PT_OBJECT |
 | `ptrcallWithBoolArgRetPackedInt32List` | B | `TextEdit.get_sorted_carets` (const non-void method) | 1 | PT_BOOL |
 | `ptrcallWithBoolArgRetRID` | E | `RenderSceneBuffersRD.get_color_texture` (*RenderSceneBuffers*: only meaningful inside a frame being rendered by a RenderingDevice renderer) | 3 | PT_BOOL PT_RID |
@@ -500,7 +616,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithBoolArgRetTypedObjectList` | B | `Node.get_children` (const non-void method) | 2 | hand |
 | `ptrcallWithBoolArgRetVariantScalar` | F | `PacketPeer.get_var` on `PacketPeerStream` (non-const method) | 3 | PT_BOOL |
 | `ptrcallWithBoolObjectArgsRetObject` | E | `InstancePlaceholder.create_instance` (abstract, and no instantiable descendant) | 1 | PT_BOOL PT_OBJECT |
-| `ptrcallWithBoolTwoDoubleArgs` | F | `RenderingServer.screen_space_roughness_limiter_set_active` (void singleton method) | 1 | PT_BOOL PT_FLOAT64 PT_VOID |
+| `ptrcallWithBoolTwoDoubleArgs` | E | `RenderingServer.screen_space_roughness_limiter_set_active` (sets a process-wide rendering setting of the running game, with no getter to restore it (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_FLOAT64 PT_VOID |
 | `ptrcallWithByteArrayAndBoolArgRetInt` | F | `GLTFState.append_data_to_buffers` (non-const method) | 1 | PT_BOOL PT_INT64 PT_PACKED_BYTE_ARRAY |
 | `ptrcallWithByteArrayAndDictionaryArgRetObject` | C | `AudioStreamWAV.load_from_buffer` (static with a return value) | 1 | PT_DICTIONARY PT_OBJECT PT_PACKED_BYTE_ARRAY |
 | `ptrcallWithByteArrayAndDoubleArgRetLong` | F | `Image.load_svg_from_buffer` (non-const method) | 1 | PT_FLOAT64 PT_INT64 PT_PACKED_BYTE_ARRAY |
@@ -799,7 +915,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithLongArrayArrayListDictionaryLongArgs` | F | `ArrayMesh.add_surface_from_arrays` (void method) | 1 | PT_ARRAY PT_DICTIONARY PT_INT64 PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs` | F | `ImporterMesh.add_surface` (void method) | 1 | PT_ARRAY PT_DICTIONARY PT_INT64 PT_OBJECT PT_STRING PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithLongArrayStringArgsRetVector3iList` | B | `TextServer.parse_structured_text` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_ARRAY PT_INT64 PT_STRING |
-| `ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs` | F | `RenderingServer.environment_set_ssao_quality` (void singleton method) | 2 | PT_BOOL PT_FLOAT64 PT_INT64 PT_VOID |
+| `ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs` | E | `RenderingServer.environment_set_ssao_quality` (sets a process-wide rendering setting of the running game, with no getter to restore it (METHOD_OVERRIDES)) | 2 | PT_BOOL PT_FLOAT64 PT_INT64 PT_VOID |
 | `ptrcallWithLongBoolIntArgs` | E | `DisplayServer.window_set_flag` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_INT64 PT_VOID |
 | `ptrcallWithLongBoolRIDThreeUInt32Args` | E | `RenderingDevice.draw_list_draw_indirect` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_BOOL PT_INT64 PT_RID PT_VOID |
 | `ptrcallWithLongBoolTwoUInt32Args` | E | `RenderingDevice.draw_list_draw` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_BOOL PT_INT64 PT_VOID |
@@ -872,7 +988,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List` | F | `TileSetAtlasSource.get_tiles_to_be_removed_on_change` (non-const method) | 1 | PT_OBJECT PT_VECTOR2I |
 | `ptrcallWithObjectAndTransform3DArg` | F | `NavigationMeshSourceGeometryData3D.add_mesh` (void method) | 1 | PT_OBJECT PT_TRANSFORM3D PT_VOID |
 | `ptrcallWithObjectAndTwoBoolArgs` | E | `EngineDebugger.script_debug` (EngineDebugger: the debugger connection of the running engine) | 1 | PT_BOOL PT_OBJECT PT_VOID |
-| `ptrcallWithObjectAndTwoIntArgsRetRect2` | F | `Tree.get_item_area_rect` (takes a TreeItem, which only a Tree's create_item makes: no fresh argument (METHOD_OVERRIDES)) | 1 | PT_INT64 PT_OBJECT PT_RECT2 |
+| `ptrcallWithObjectAndTwoIntArgsRetRect2` | F | `Tree.get_item_area_rect` (an item's area before any layout is the zero Rect2, which a no-op answers too (METHOD_OVERRIDES)) | 1 | PT_INT64 PT_OBJECT PT_RECT2 |
 | `ptrcallWithObjectAndVariantArgRetLong` | E | `MultiplayerAPI.object_configuration_add` (*Multiplayer*: opens sockets or talks to the network) | 2 | PT_INT64 PT_OBJECT PT_VARIANT |
 | `ptrcallWithObjectAndVector2iArg` | E | `EditorInterface.popup_dialog_centered` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_OBJECT PT_VECTOR2I PT_VOID |
 | `ptrcallWithObjectArgRetBool` | B | `Area2D.overlaps_area` (const non-void method) | 18 | PT_BOOL PT_OBJECT |
@@ -898,8 +1014,8 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectCallableArgs` | E | `EditorContextMenuPlugin.add_menu_shortcut` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_CALLABLE PT_OBJECT PT_VOID |
 | `ptrcallWithObjectCallablePackedInt32ListStringArgs` | E | `EditorInterface.popup_property_selector` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_CALLABLE PT_OBJECT PT_PACKED_INT32_ARRAY PT_STRING PT_VOID |
 | `ptrcallWithObjectCallableStringArgs` | E | `EditorInterface.popup_method_selector` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_CALLABLE PT_OBJECT PT_STRING PT_VOID |
-| `ptrcallWithObjectColorLongBoolArgs` | F | `RenderingServer.set_boot_image_with_stretch` (void singleton method) | 1 | PT_BOOL PT_COLOR PT_INT64 PT_OBJECT PT_VOID |
-| `ptrcallWithObjectColorTwoBoolArgs` | F | `RenderingServer.set_boot_image` (void singleton method) | 1 | PT_BOOL PT_COLOR PT_OBJECT PT_VOID |
+| `ptrcallWithObjectColorLongBoolArgs` | E | `RenderingServer.set_boot_image_with_stretch` (draws the boot splash over the running game's frame: the desktop smoke's dummy renderer ignores it, a phone's renderer does not (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_COLOR PT_INT64 PT_OBJECT PT_VOID |
+| `ptrcallWithObjectColorTwoBoolArgs` | E | `RenderingServer.set_boot_image` (draws the boot splash over the running game's frame: the desktop smoke's dummy renderer ignores it, a phone's renderer does not (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_COLOR PT_OBJECT PT_VOID |
 | `ptrcallWithObjectDoubleColorArgs` | E | `EditorNode3DGizmo.add_unscaled_billboard` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_COLOR PT_FLOAT64 PT_OBJECT PT_VOID |
 | `ptrcallWithObjectDoubleIntStringNameArgs` | F | `AnimationNodeBlendSpace1D.add_blend_point` (void method) | 1 | PT_FLOAT64 PT_INT64 PT_OBJECT PT_STRING_NAME PT_VOID |
 | `ptrcallWithObjectDoubleTwoBoolArgsRetObject` | F | `GLTFDocument.generate_scene` (non-const method) | 1 | PT_BOOL PT_FLOAT64 PT_OBJECT |
@@ -1527,7 +1643,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList` | F | `Noise.get_seamless_image_3d` on `FastNoiseLite` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 |
 | `ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList` | F | `Noise.get_image_3d` on `FastNoiseLite` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_INT64 |
 | `ptrcallWithThreeLongArgsRetLong` | F | `Image.compress` (non-const method) | 2 | PT_INT64 |
-| `ptrcallWithThreeLongFourIntLongArgsRetRID` | F | `RenderingServer.texture_create_from_native_handle` (non-const singleton method) | 1 | PT_INT64 PT_RID |
+| `ptrcallWithThreeLongFourIntLongArgsRetRID` | E | `RenderingServer.texture_create_from_native_handle` (wraps a native GPU texture handle: a made-up one is undefined behaviour (the desktop smoke's dummy renderer ignores it, a phone's renderer does not) (METHOD_OVERRIDES)) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithThreeLongFourUInt32ArgsRetLong` | E | `OpenXRAPIExtension.openxr_swapchain_create` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 |
 | `ptrcallWithThreeObjectCallableArgs` | F | `NavigationMeshGenerator.parse_source_geometry_data` (void singleton method) | 3 | PT_CALLABLE PT_OBJECT PT_VOID |
 | `ptrcallWithThreeObjectListUInt32ArgsRetRID` | E | `RenderingDevice.raytracing_pipeline_create` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_RID PT_TYPED_ARRAY_BLOB |

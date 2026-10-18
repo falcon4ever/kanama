@@ -243,6 +243,12 @@ async function main() {
             "exception",
         });
       }
+      // KANAMA_WEB_SMOKE_DEBUG=1: the web3d API exercise's summary and FAIL lines (task 125 P5) are
+      // console.log lines, which the envelope does not keep; the driver log shows them.
+      if (message.method === "Runtime.consoleAPICalled" && process.env.KANAMA_WEB_SMOKE_DEBUG === "1") {
+        const text = message.params.args.map((arg) => arg.value ?? arg.description ?? arg.type).join(" ");
+        if (text.startsWith("[kanama:web] API EXERCISE")) process.stderr.write(`[console] ${text}\n`);
+      }
       if (
         message.method === "Runtime.consoleAPICalled" &&
         message.params.type === "error"

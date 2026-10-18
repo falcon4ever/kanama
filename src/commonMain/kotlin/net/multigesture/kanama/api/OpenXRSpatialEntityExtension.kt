@@ -46,7 +46,7 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
      *
      * Generated from Godot docs: OpenXRSpatialEntityExtension.create_spatial_context
      */
-    fun createSpatialContext(capabilityConfigurations: List<OpenXRSpatialCapabilityConfigurationBaseHeader>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
+    fun createSpatialContext(capabilityConfigurations: List<OpenXRSpatialCapabilityConfigurationBaseHeader>, next: OpenXRStructureBase? = null, userCallback: GodotCallable): OpenXRFutureResult? {
         val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithObjectListObjectCallableArgsRetObject(Binds.createSpatialContextBind, segment, capabilityConfigurations, next?.requireOpenHandle() ?: NULL_SEGMENT, userCallback.target.segment, userCallback.method))
         ObjectCalls.keepReachable(next)
         ObjectCalls.keepReachable(userCallback)
@@ -88,7 +88,7 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
      *
      * Generated from Godot docs: OpenXRSpatialEntityExtension.discover_spatial_entities_with_component_data
      */
-    fun discoverSpatialEntitiesWithComponentData(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
+    fun discoverSpatialEntitiesWithComponentData(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase? = null, userCallback: GodotCallable): OpenXRFutureResult? {
         val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithRIDObjectListObjectCallableArgsRetObject(Binds.discoverSpatialEntitiesWithComponentDataBind, segment, spatialContext, componentData, next?.requireOpenHandle() ?: NULL_SEGMENT, userCallback.target.segment, userCallback.method))
         ObjectCalls.keepReachable(next)
         ObjectCalls.keepReachable(userCallback)
@@ -105,7 +105,7 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
      *
      * Generated from Godot docs: OpenXRSpatialEntityExtension.discover_spatial_entities
      */
-    fun discoverSpatialEntities(spatialContext: RID, componentTypes: List<Long>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
+    fun discoverSpatialEntities(spatialContext: RID, componentTypes: List<Long>, next: OpenXRStructureBase? = null, userCallback: GodotCallable): OpenXRFutureResult? {
         val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject(Binds.discoverSpatialEntitiesBind, segment, spatialContext, componentTypes, next?.requireOpenHandle() ?: NULL_SEGMENT, userCallback.target.segment, userCallback.method))
         ObjectCalls.keepReachable(next)
         ObjectCalls.keepReachable(userCallback)
@@ -118,7 +118,7 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
      *
      * Generated from Godot docs: OpenXRSpatialEntityExtension.update_spatial_entities
      */
-    fun updateSpatialEntities(spatialContext: RID, entities: List<RID>, componentTypes: List<Long>, next: OpenXRStructureBase?): RID {
+    fun updateSpatialEntities(spatialContext: RID, entities: List<RID>, componentTypes: List<Long>, next: OpenXRStructureBase? = null): RID {
         val ret = ObjectCalls.ptrcallWithRIDRIDListPackedInt64ListObjectArgsRetRID(Binds.updateSpatialEntitiesBind, segment, spatialContext, entities, componentTypes, next?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(next)
         return ret
@@ -162,7 +162,7 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
      *
      * Generated from Godot docs: OpenXRSpatialEntityExtension.query_snapshot
      */
-    fun querySnapshot(spatialSnapshot: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase?): Boolean {
+    fun querySnapshot(spatialSnapshot: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase? = null): Boolean {
         val ret = ObjectCalls.ptrcallWithRIDObjectListObjectArgsRetBool(Binds.querySnapshotBind, segment, spatialSnapshot, componentData, next?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(next)
         return ret

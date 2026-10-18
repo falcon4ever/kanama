@@ -34,7 +34,7 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
      *
      * Generated from Godot docs: EditorNode3DGizmo.add_mesh
      */
-    fun addMesh(mesh: Mesh?, material: Material?, transform: Transform3D, skeleton: SkinReference?) {
+    fun addMesh(mesh: Mesh?, material: Material? = null, transform: Transform3D, skeleton: SkinReference? = null) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoObjectTransform3DObjectArgs(Binds.addMeshBind, segment, mesh?.requireOpenHandle() ?: NULL_SEGMENT, material?.requireOpenHandle() ?: NULL_SEGMENT, transform, skeleton?.requireOpenHandle() ?: NULL_SEGMENT)
         ObjectCalls.keepReachable(this)

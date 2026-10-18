@@ -101,7 +101,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: ImporterMesh.add_surface
      */
-    fun addSurface(primitive: Mesh.PrimitiveType, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), material: Material?, name: String = "", flags: Long = 0L) {
+    fun addSurface(primitive: Mesh.PrimitiveType, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), material: Material? = null, name: String = "", flags: Long = 0L) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(Binds.addSurfaceBind, segment, primitive.value, arrays, blendShapes, lods, material?.requireOpenHandle() ?: NULL_SEGMENT, name, flags)
         ObjectCalls.keepReachable(this)
@@ -277,7 +277,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: ImporterMesh.get_mesh
      */
-    fun getMesh(baseMesh: ArrayMesh?): ArrayMesh? {
+    fun getMesh(baseMesh: ArrayMesh? = null): ArrayMesh? {
         checkOpen()
         val ret = ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.getMeshBind, segment, baseMesh?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(this)

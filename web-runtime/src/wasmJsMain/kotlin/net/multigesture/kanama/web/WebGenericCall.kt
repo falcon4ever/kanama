@@ -224,6 +224,11 @@ class WebGenericCallResult internal constructor(val tag: String, val payload: Li
 
   companion object {
     internal fun parse(raw: String): WebGenericCallResult {
+      // A `v` Variant is one payload: a PackedStringArray separates its elements with the unit
+      // separator (task 125 P5: split here, its asAny() read only the count).
+      if (raw.startsWith("v${WebExperimentalGenericCall.UNIT_SEPARATOR}")) {
+        return WebGenericCallResult("v", listOf(raw.substring(2)))
+      }
       val parts = raw.split(WebExperimentalGenericCall.UNIT_SEPARATOR)
       return WebGenericCallResult(parts[0], parts.drop(1))
     }

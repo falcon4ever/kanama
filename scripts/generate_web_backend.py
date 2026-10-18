@@ -1013,7 +1013,7 @@ def body_NOARGS_VOID(calls):
 def body_TEXTURE2D_VECTOR2_COLOR_ARGS(calls):
     return [
         f"require(descriptor.executionMode == {_QUEUED})",
-        "requireWebBrowserHandle(texture.webId(), WebBrowserHandleKind.RESOURCE)",
+        "requireLiveWebHandle(texture.webId())",
         "drawCommands.appendDrawTexture(",
         "descriptor.opcode,",
         "receiver.webId(),",
@@ -1102,7 +1102,7 @@ def body_OBJECT_ARG(calls):
             lines += [
                 "16 -> {",
                 f"require(descriptor.executionMode == {_QUEUED})",
-                "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }",
+                "value?.let { requireLiveWebHandle(it.webId()) }",
                 "webWriteTextureSnapshot(receiver.webId(), value?.webId() ?: 0)",
                 "}",
             ]
@@ -1110,14 +1110,14 @@ def body_OBJECT_ARG(calls):
             lines += [
                 "46 -> {",
                 f"require(descriptor.executionMode == {_IMMEDIATE})",
-                "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }",
+                "value?.let { requireLiveWebHandle(it.webId()) }",
                 "}",
             ]
         elif op == 130:
             lines += [
                 "130 -> {",
                 f"require(descriptor.executionMode == {_QUEUED})",
-                "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }",
+                "value?.let { requireLiveWebHandle(it.webId()) }",
                 "}",
             ]
         elif op in (165, 171):
@@ -1131,33 +1131,28 @@ def body_OBJECT_ARG(calls):
             lines += [
                 "202 -> {",
                 f"require(descriptor.executionMode == {_QUEUED})",
-                "// The MeshLibrary was constructed via ClassDB.instantiate, so it is",
-                "// registered under the NODE kind like every constructed handle.",
-                "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.NODE) }",
+                "value?.let { requireLiveWebHandle(it.webId()) }",
                 "}",
             ]
         elif op == 247:
             lines += [
                 "247 -> {",
                 f"require(descriptor.executionMode == {_QUEUED})",
-                "// Duplicated materials return through the browser-object channel.",
-                "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.OBJECT) }",
+                "value?.let { requireLiveWebHandle(it.webId()) }",
                 "}",
             ]
         elif op == 257:
             lines += [
                 "257 -> {",
                 f"require(descriptor.executionMode == {_QUEUED})",
-                "// The ButtonGroup was constructed via ClassDB.instantiate (NODE kind).",
-                "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.NODE) }",
+                "value?.let { requireLiveWebHandle(it.webId()) }",
                 "}",
             ]
         elif op == 284:
             lines += [
                 "284 -> {",
                 f"require(descriptor.executionMode == {_QUEUED})",
-                "// Baked lightmap data arrives through ResourceLoader.load (RESOURCE kind).",
-                "value?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }",
+                "value?.let { requireLiveWebHandle(it.webId()) }",
                 "}",
             ]
         else:
@@ -1316,7 +1311,7 @@ def body_OBJECT_LONG_VECTOR2_ARGS(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
         "require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
-        "objectValue?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.RESOURCE) }",
+        "objectValue?.let { requireLiveWebHandle(it.webId()) }",
         "commands.flush()",
         "immediateWebSetCustomMouseCursor(",
         "requireActiveWebScriptHandle(),",
@@ -1830,7 +1825,7 @@ def body_LONG_OBJECT_ARG(calls):
         f"require(descriptor.executionMode == {_IMMEDIATE})",
         f"require({_opcode_guard(calls)})",
         "require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
-        "objectValue?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.OBJECT) }",
+        "objectValue?.let { requireLiveWebHandle(it.webId()) }",
         "commands.flush()",
         "// Item index and object handle packed into one query string (unit separator);",
         "// handle id 0 clears the slot.",

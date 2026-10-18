@@ -2,10 +2,11 @@ package net.multigesture.kanama.binding.runtime
 
 import net.multigesture.kanama.exercise.ApiExercise
 
-// The generated API exercise on iOS: the common rows (exercise/ApiExercise.generated.kt, one per
-// ObjectCalls helper with a static, property-pair, const or singleton row, and the RID factory
-// rows) run through the Kotlin/Native runtime and the C shim, at the end of the frame-1 self-test
-// phase (every class and singleton registered). A
+// The generated API exercise on iOS: the common rows (exercise/ApiExercise.generated.kt: one per
+// ObjectCalls helper the shared tree calls, a static, property-pair, const, singleton, RID factory
+// or reach-only row, and one per Godot Variant type through each generic Variant path) run through
+// the Kotlin/Native runtime and the C shim, at the end of the frame-1 self-test phase (every class
+// and singleton registered). A
 // Kanama test hook like the other self-tests: this file and the rows are compiled only into a
 // -PkanamaIosSelfTest=true build (build.gradle.kts), which the device runners make.
 //
@@ -31,6 +32,9 @@ internal fun apiExerciseSelfTestRows(expectedFaults: Int) {
       known = { println("[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise) KNOWN: $it") },
       weak = { println("[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise) WEAK: $it") },
       trace = null,
+      // A FAULT raised while a row runs fails that row (its FAIL line names it) as well as the
+      // count below.
+      faults = { ObjectCalls.faultCount() },
     )
   println(
     "[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): ${result.passed} passed, " +

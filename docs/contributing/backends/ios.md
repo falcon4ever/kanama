@@ -185,12 +185,11 @@ Four rules of the bridge (three about ownership), each with its self-test rows:
   (`kanama_ios_decode_variant_scalar`) answers a RID (`Object.get` of a RID property) and a NodePath
   as a `NodePath`; the outbound encoders take a `ByteArray` (`PT_PACKED_BYTE_ARRAY`, boxed by
   `kanama_ios_pt_arg_to_variant`) and the value types inside a `List`/`Map` argument
-  (`IosReturnContainerScratch.taggedValue` -> `kanama_ios_pt_blob_value_to_variant`). Rows (scene
-  init, `runVariantTypeRows`): `variant-type(<T>) ret|elem|arg|in` for each of the 39 types, each
-  against a value the engine built or compared through an `Expression`, and `variant-get(...)` for
-  `CharFXTransform.font`, `NavigationPathQueryParameters2D.excluded_regions` and
-  `GLTFSkin.inverse_binds`; the line `OBJECTCALLS SELFTEST variant-types ret-failed=0[] ...`
-  names any type that fails per path.
+  (`IosReturnContainerScratch.taggedValue` -> `kanama_ios_pt_blob_value_to_variant`). Rows: the API
+  exercise's T rows (`<Type> ret|elem|arg|in`, one per Godot Variant type per path, each against a value
+  the engine built or compared through an `Expression`; the same rows run on desktop, see "The exercise
+  rows" in `wrapper-maintenance.md`), and its A rows `CharFXTransform.font`,
+  `NavigationPathQueryParameters2D.excluded_regions` and `GLTFSkin.inverse_binds` for `Object.get`.
 - **Map @Export properties cross as an any-key Dictionary.** A set (`kanama_ios_script_instance_set_property_of_type`'s
   Dictionary case) encodes the Dictionary with `kanama_ios_blob_encode_dictionary_any`
   (`[count]([key record][value record])*`), `kanama_ios_runtime_script_instance_set_property_dictionary`
@@ -433,9 +432,11 @@ The three ObjectCalls summary lines therefore end with `faults=<count> expected=
 ```
 
 The third line is the generated API exercise (`ApiExerciseSelfTest.kt`, after the frame-1 rows): one
-row per `ObjectCalls` helper whose best row is a static, a property pair, a const method or a singleton
-method (with the RID factory rows), the same rows the desktop smoke runs (see "The exercise rows" in `wrapper-maintenance.md`). A static the shim refused shows as a
-`FAULT` line and as `faults` above `expected`; the demos' `ios_device_run.sh` fails on both, while
+row per `ObjectCalls` helper the shared tree calls (a static, a property pair, a const method, a
+singleton method, a RID factory, or a reach-only call), and one per Godot Variant type per generic Variant
+path, the same rows the desktop smoke runs (see "The exercise rows" in `wrapper-maintenance.md`). A call
+the shim refused shows as a `FAULT` line, fails the row it happened in, and shows as `faults` above
+`expected`; the demos' `ios_device_run.sh` fails on both, while
 `ios_visual_smoke.sh` fails on `FAIL` lines and failed rows but does not compare the fault counts. A row
 listed in `KNOWN_FINDINGS` (`scripts/api_exercise_policy.py`: an iOS gap already tracked, with the
 failure text it excuses) prints `... (api exercise) KNOWN:` instead of `FAIL:` and counts as `known` when

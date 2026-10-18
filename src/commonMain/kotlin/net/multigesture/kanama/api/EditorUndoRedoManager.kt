@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
@@ -28,8 +29,8 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: EditorUndoRedoManager.create_action
      */
-    fun createAction(name: String, mergeMode: UndoRedo.MergeMode = UndoRedo.MergeMode.DISABLE, customContext: GodotObject, backwardUndoOps: Boolean = false, markUnsaved: Boolean = true) {
-        ObjectCalls.ptrcallWithStringLongObjectTwoBoolArgs(Binds.createActionBind, segment, name, mergeMode.value, customContext.segment, backwardUndoOps, markUnsaved)
+    fun createAction(name: String, mergeMode: UndoRedo.MergeMode = UndoRedo.MergeMode.DISABLE, customContext: GodotObject? = null, backwardUndoOps: Boolean = false, markUnsaved: Boolean = true) {
+        ObjectCalls.ptrcallWithStringLongObjectTwoBoolArgs(Binds.createActionBind, segment, name, mergeMode.value, customContext?.segment ?: NULL_SEGMENT, backwardUndoOps, markUnsaved)
         ObjectCalls.keepReachable(customContext)
     }
 
