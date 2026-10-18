@@ -27,6 +27,10 @@ occurrence followed by "(" or ":" as a candidate, and it caught this very file's
 docstring on first CI contact -- the claim auditor auditing the claim auditor's
 documentation, and behaving exactly as designed.)
 
+Kinds: `protocol` (the Web bridge protocol, from WebScriptCodeEmitter) and `ios-static-size` (the iOS static
+library sizes measured in version-support.md's iOS row; the packaged iOS add-on README's size line in
+build.gradle.kts is checked without a marker).
+
 Adding a claim kind: give it an extractor here and mark the doc line. The check fails
 if a marked line's stated value disagrees with the source, and it fails just as loudly
 if a marker exists whose kind it does not know — an unrecognised marker must never be
@@ -59,6 +63,38 @@ def _current_protocol(root: Path) -> int:
     return int(match.group(1))
 
 
+# The iOS static library sizes are measured once, in version-support.md's iOS row (with the command); every
+# other statement of them repeats those numbers, rounded to whole MB: marked doc lines, and the size line of the
+# packaged iOS add-on README that build.gradle.kts writes (a shipped file cannot carry the marker).
+IOS_SIZE_SOURCE = Path("docs/reference/version-support.md")
+IOS_SIZE_SOURCE_RE = re.compile(r"~(\d+(?:\.\d+)?) MB debug / ~(\d+(?:\.\d+)?) MB release static `\.a`, measured")
+IOS_SIZE_RE = re.compile(r"(\d+(?:\.\d+)?) MB debug / ~?(\d+(?:\.\d+)?) MB release")
+IOS_SIZE_UNMARKED_FILES = (Path("build.gradle.kts"),)
+
+
+def _ios_sizes(root: Path) -> tuple[int, int]:
+    found = IOS_SIZE_SOURCE_RE.findall((root / IOS_SIZE_SOURCE).read_text())
+    if len(found) != 1:
+        raise SystemExit(
+            f"check_doc_claims: FAIL — expected one measured iOS size statement in {IOS_SIZE_SOURCE}, found {len(found)}; "
+            "the source of truth moved and this check would silently pass"
+        )
+    return round(float(found[0][0])), round(float(found[0][1]))
+
+
+def _check_ios_size(where: str, line: str, sizes: tuple[int, int], failures: list[str]) -> None:
+    match = IOS_SIZE_RE.search(line)
+    if match is None:
+        failures.append(f"{where}: marked as an iOS size claim but states no '<N> MB debug / <N> MB release'")
+        return
+    stated = (round(float(match.group(1))), round(float(match.group(2))))
+    if stated != sizes:
+        failures.append(
+            f"{where}: claims {stated[0]} MB debug / {stated[1]} MB release, but {IOS_SIZE_SOURCE} measured "
+            f"{sizes[0]} / {sizes[1]}"
+        )
+
+
 def _stated_protocol(line: str) -> int | None:
     match = re.search(r"protocol (\d+)", line)
     return int(match.group(1)) if match else None
@@ -78,8 +114,17 @@ def main() -> int:
         return 2
 
     protocol = _current_protocol(root)
+    ios_sizes = _ios_sizes(root)
     checked = 0
     failures: list[str] = []
+
+    for rel in IOS_SIZE_UNMARKED_FILES:
+        size_lines = [(n, l) for n, l in enumerate((root / rel).read_text().splitlines(), start=1) if "MB debug" in l]
+        if not size_lines:
+            failures.append(f"{rel}: no iOS size line ('MB debug') found; the README text moved and this check would silently pass")
+        for number, line in size_lines:
+            checked += 1
+            _check_ios_size(f"{rel}:{number}", line, ios_sizes, failures)
 
     for path in docs:
         for number, line in enumerate(path.read_text().splitlines(), start=1):
@@ -100,6 +145,9 @@ def main() -> int:
                         f"{path}:{number}: claims protocol {stated}, but "
                         f"WebScriptCodeEmitter declares {protocol}"
                     )
+            elif kind == "ios-static-size":
+                checked += 1
+                _check_ios_size(f"{path}:{number}", line, ios_sizes, failures)
             else:
                 # An unknown kind is a failure, never a skip: a marker nobody checks is
                 # a claim everybody believes is checked.
@@ -122,7 +170,7 @@ def main() -> int:
 
     print(
         f"check_doc_claims: OK — {checked} marked claim(s) across {len(docs)} docs agree "
-        f"with their sources (protocol {protocol})"
+        f"with their sources (protocol {protocol}; iOS static library {ios_sizes[0]} / {ios_sizes[1]} MB)"
     )
     return 0
 

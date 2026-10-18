@@ -2446,9 +2446,9 @@ val prepareMobileAddonIosExtras by
             |# Kanama iOS add-on (experimental, prebuilt runtime)
             |
             |Prebuilt Kanama iOS runtime xcframeworks (device arm64 slices,
-            |debug + release; the static libraries are large — roughly 200 MB
-            |debug / 88 MB release before zip) for an existing Kanama Godot
-            |project.
+            |debug + release; the static libraries are large —
+            |roughly 168 MB debug / 110 MB release before zip) for an existing
+            |Kanama Godot project.
             |
             |**Honest caveat:** this delivers the *runtime* only. Compiling your
             |project's Kotlin scripts for iOS still requires a Kanama source

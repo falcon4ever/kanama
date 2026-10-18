@@ -6,12 +6,22 @@ PROJECT_DIR="$ROOT_DIR/example_project"
 SCRIPT_FILE="$PROJECT_DIR/HelloScript.kt"
 # Task 133 C2: the Kotlin scene autoload, rebuilt with a new build marker and a changed type.
 AUTOLOAD_FILE="$PROJECT_DIR/KanamaSceneAutoload.kt"
-LOG_FILE="${KANAMA_HOTRELOAD_IN_PROCESS_LOG:-/tmp/kanama_hot_reload_in_process.log}"
-
 if [[ $# -lt 1 ]]; then
   echo "usage: $0 /absolute/path/to/godot_binary"
   exit 2
 fi
+
+# shellcheck source=scripts/run_logs.sh
+source "$ROOT_DIR/scripts/run_logs.sh"
+# Logs default to a directory of this run's own (scripts/run_logs.sh): deleted when the run passes, kept and
+# named when it fails. A fixed /tmp path was shared by concurrent runs.
+LOG_FILE="${KANAMA_HOTRELOAD_IN_PROCESS_LOG:-}"
+if [[ -z "$LOG_FILE" ]]; then
+  run_logs_dir kanama_hot_reload_in_process
+  LOG_FILE="$RUN_LOGS_DIR/hot_reload_in_process.log"
+fi
+trap 'run_logs_finish "$?" hot_reload_in_process_smoke' EXIT
+echo "[hot_reload_in_process_smoke] log: $LOG_FILE"
 
 GODOT_BIN="$1"
 PROJECT_DIR_FOR_GODOT="$PROJECT_DIR"
@@ -24,12 +34,14 @@ case "$(uname -s)" in
     ;;
 esac
 
-BACKUP="$(mktemp /tmp/kanama_hello_backup.XXXXXX.kt)"
-SIGNAL_FILE="$(mktemp /tmp/kanama_hot_reload_signal.XXXXXX)"
-STAGE_FILE="$(mktemp /tmp/kanama_hot_reload_stage.XXXXXX)"
+# The X's end each template: BSD/macOS mktemp does not randomize X's a suffix follows, so the former
+# `kanama_hello_backup.XXXXXX.kt` was one fixed path that concurrent runs shared (see hot_reload_smoke.sh).
+BACKUP="$(mktemp "${TMPDIR:-/tmp}/kanama_hello_backup.XXXXXX")"
+SIGNAL_FILE="$(mktemp "${TMPDIR:-/tmp}/kanama_hot_reload_signal.XXXXXX")"
+STAGE_FILE="$(mktemp "${TMPDIR:-/tmp}/kanama_hot_reload_stage.XXXXXX")"
 rm -f "$SIGNAL_FILE" "$STAGE_FILE" "$LOG_FILE"
 cp "$SCRIPT_FILE" "$BACKUP"
-AUTOLOAD_BACKUP="$(mktemp /tmp/kanama_scene_autoload_backup.XXXXXX.kt)"
+AUTOLOAD_BACKUP="$(mktemp "${TMPDIR:-/tmp}/kanama_scene_autoload_backup.XXXXXX")"
 cp "$AUTOLOAD_FILE" "$AUTOLOAD_BACKUP"
 
 GODOT_PID=""
@@ -51,6 +63,7 @@ restore() {
     status=1
   fi
   rm -f "$BACKUP" "$AUTOLOAD_BACKUP" "$SIGNAL_FILE" "$STAGE_FILE"
+  run_logs_finish "$status" hot_reload_in_process_smoke
   exit "$status"
 }
 trap restore EXIT

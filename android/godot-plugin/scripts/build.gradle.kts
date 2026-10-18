@@ -89,6 +89,20 @@ android {
     }
 }
 
+// The APK runs on the Kotlin libraries of Godot's Android build template (4.7.2: kotlin-stdlib
+// 2.1.21 and kotlinx-coroutines 1.6.4 on its runtime classpath), not on the newer stdlib this
+// compiles against: a stdlib API newer than 2.1 would compile here and fail with NoSuchMethodError
+// on the device, so the API level keeps it out. On a Godot re-pin, re-check the template's
+// kotlinVersion (config.gradle in android_source.zip; docs/contributing/godot-upgrade.md).
+// Kotlin 2.4 already warns that API version 2.1 is deprecated (its first non-deprecated one is 2.2);
+// if the usual cycle holds, a Kotlin around 2.6 refuses it, so a root Kotlin bump then breaks this
+// build until Godot's template moves past 2.1.21. That is the signal to re-check, not to drop this.
+kotlin {
+    compilerOptions {
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1)
+    }
+}
+
 androidComponents {
     onVariants(selector().all()) { variant ->
         variant.sources.kotlin?.addStaticSourceDirectory("build/generated/kanamaAndroidScriptSources")
@@ -102,5 +116,6 @@ tasks.named("preBuild") {
 dependencies {
     compileOnly(project(":plugin"))
     compileOnly(panamaPortCoreDependency)
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+    // The APK's coroutines come from Godot's template, so compile against that version (gradle.properties).
+    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:${providers.gradleProperty("kanamaAndroidCoroutinesVersion").get()}")
 }

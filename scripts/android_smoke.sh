@@ -15,6 +15,7 @@ source "$ROOT_DIR/scripts/android_common.sh"
 usage() {
   cat <<'EOF'
 usage: scripts/android_smoke.sh /path/to/godot /path/to/demo package.name [/path/to/output.apk]
+  (default: a per-run directory under ${TMPDIR:-/tmp}, deleted when the run passes; pass a path to keep the APK)
 
 Runs the experimental Kanama Android smoke:
   - builds and installs the Kanama Android plugin AAR into the demo,
@@ -50,9 +51,15 @@ fi
 GODOT_BIN="$1"
 DEMO_DIR="$2"
 PACKAGE_NAME="$3"
-APK_PATH="${4:-/tmp/kanama-android-smoke.apk}"
-LOG_FILE="${KANAMA_ANDROID_LOG:-/tmp/kanama_android_smoke.log}"
-SCREENSHOT="${KANAMA_ANDROID_SCREENSHOT:-/tmp/kanama_android_smoke.png}"
+# The APK, logcat and screenshot default to a directory of this run's own (mktemp): a fixed /tmp path was shared by concurrent runs.
+# shellcheck source=scripts/run_logs.sh
+source "$ROOT_DIR/scripts/run_logs.sh"
+run_logs_dir kanama_android_smoke
+RUN_DIR="$RUN_LOGS_DIR"
+APK_PATH="${4:-$RUN_DIR/kanama-android-smoke.apk}"
+LOG_FILE="${KANAMA_ANDROID_LOG:-$RUN_DIR/kanama_android_smoke.log}"
+SCREENSHOT="${KANAMA_ANDROID_SCREENSHOT:-$RUN_DIR/kanama_android_smoke.png}"
+echo "[android_smoke] output: $RUN_DIR"
 LAUNCH_WAIT="${KANAMA_ANDROID_LAUNCH_WAIT:-30}"
 SELFTEST_WAIT="${KANAMA_ANDROID_SELFTEST_WAIT:-90}"
 PANAMAPORT_MAVEN_REPO="${KANAMA_PANAMAPORT_MAVEN_REPO:-file://$HOME/.m2/repository}"
@@ -111,6 +118,7 @@ adb_retry() {
 }
 
 cleanup() {
+  local status=$?
   if [[ "${PACKAGE_LAUNCHED:-0}" == "1" ]]; then
     # justified: cleanup after the verdict; the app may already have exited.
     "$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 || true
@@ -119,6 +127,7 @@ cleanup() {
     cp "$PROJECT_GODOT_BACKUP" "$DEMO_DIR/project.godot"
     rm -f "$PROJECT_GODOT_BACKUP"
   fi
+  run_logs_finish "$status" android_smoke
 }
 trap cleanup EXIT
 

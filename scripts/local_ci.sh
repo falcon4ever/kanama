@@ -14,8 +14,13 @@ stage_secs=()
 stage_started=0
 
 cleanup() {
+  local status=$?
   if [[ -n "$bootstrap_build_dir" && -d "$bootstrap_build_dir" ]]; then
     rm -rf "$bootstrap_build_dir"
+  fi
+  # The external-addon-install project is removed when its stage passes; a failed run keeps it to inspect.
+  if [[ -n "${install_check_dir:-}" && -d "$install_check_dir" && "$status" -ne 0 ]]; then
+    echo "[local_ci] exit $status: the external addon install project is kept in $install_check_dir" >&2
   fi
 }
 
@@ -323,6 +328,11 @@ python3 "$ROOT_DIR/scripts/check_ios_no_silent_stubs.py"
 
 stage "Godot version pin consistency"
 python3 "$ROOT_DIR/scripts/check_godot_version_pin.py"
+
+stage "Kotlin/KSP pin consistency"
+# The release kit, the KSP processor, the Android plugin build and version-support.md restate the
+# root build.gradle.kts Kotlin/KSP versions; a bump that misses one fails here.
+python3 "$ROOT_DIR/scripts/check_kotlin_pins.py"
 
 stage "GDExtension modernization + backend convergence"
 python3 "$ROOT_DIR/scripts/check_gdextension_modernization.py"
@@ -679,7 +689,7 @@ if ! grep -Eq 'fun callLocalReplaceSmokeScene\(instance: HelloScript\)' "$hello_
 fi
 
 stage "external addon install"
-install_check_dir="${TMPDIR:-/tmp}/kanama_local_ci_install"
+install_check_dir="$(mktemp -d "${TMPDIR:-/tmp}/kanama_local_ci_install.XXXXXX")" # per run: concurrent local_ci runs shared a fixed one
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAddonJar \
   "-PkanamaProjectDir=$install_check_dir" \
   "-PkanamaProjectScriptsDir=$ROOT_DIR/example_project"
@@ -727,6 +737,7 @@ if ! grep -Eq '^res://addons/kanama/kanama\.gdextension$' "$install_check_dir/.g
   echo "[local_ci] installAddonJar did not enable the Kanama gdextension" >&2
   exit 1
 fi
+rm -rf "$install_check_dir"
 
 stage "publish to mavenLocal"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" publishKanamaToMavenLocal

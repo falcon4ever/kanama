@@ -313,6 +313,12 @@ case("check_android_remap_sources.py (address space, NULL_SEGMENT)", py("check_a
 case("check_doc_claims.py", py("check_doc_claims.py"),
      [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 39)", "versioned JavaScript bridge (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
+case("check_doc_claims.py (iOS size, marked doc)", py("check_doc_claims.py"),
+     [Edit("docs/exporting/ios.md", "roughly 168 MB debug", "roughly 200 MB debug")],
+     "claims 200 MB debug / 110 MB release, but", "the iOS export guide states an iOS static library size the measurement in version-support.md does not")
+case("check_doc_claims.py (iOS size, add-on README)", py("check_doc_claims.py"),
+     [Edit("build.gradle.kts", "roughly 168 MB debug / 110 MB release", "roughly 168 MB debug / 88 MB release")],
+     "build.gradle.kts", "the packaged iOS add-on README states a stale release size (it carries no marker; its size line is always checked)")
 case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
      [Create(f"{COMMON}/api/ZzRedRun.expect.kt", "package net.multigesture.kanama.api\n\nexpect fun redRun(a: Int = 1)\n")],
      "default argument(s) on an `expect` declaration", "an `expect fun` declares a default argument")
@@ -322,6 +328,39 @@ case("check_gate_evidence.py", py("check_gate_evidence.py"),
 case("check_godot_version_pin.py", py("check_godot_version_pin.py"),
      [Edit("gradle.properties", "kanamaGodotVersion=4.7.2.stable", "kanamaGodotVersion=4.7.1.stable")],
      "Godot version pins drifted", "gradle.properties pins a different Godot than CI")
+case("check_kotlin_pins.py", py("check_kotlin_pins.py"),
+     [Edit("templates/release-kit/build.gradle.kts", 'id("com.google.devtools.ksp") version "', 'id("com.google.devtools.ksp") version "0.')],
+     "templates/release-kit/build.gradle.kts:3: ksp 0.2", "the release kit pins a KSP version the root build does not use")
+case("check_kotlin_pins.py (unlisted pin)", py("check_kotlin_pins.py"),
+     [Append("buildSrc/build.gradle.kts", '\nplugins { kotlin("plugin.serialization") version "2.0.0" }\n')],
+     "kotlin 2.0.0 but the root build.gradle.kts pins", "a Gradle script the check does not list pins an older Kotlin plugin: the scan covers every tracked script")
+case("check_kotlin_pins.py (root coordinate)", py("check_kotlin_pins.py"),
+     [Append("build.gradle.kts", '\nval redRunStdlib = "org.jetbrains.kotlin:kotlin-stdlib:2.0.0"\n')],
+     "build.gradle.kts:", "the root build itself names an older kotlin-stdlib coordinate (the scan covers the root script and `org.jetbrains.kotlin:kotlin-*` coordinates)")
+case("check_kotlin_pins.py (version() call form)", py("check_kotlin_pins.py"),
+     [Append("buildSrc/build.gradle.kts", '\nplugins { id("org.jetbrains.kotlin.plugin.serialization").version("2.0.0") }\n')],
+     "buildSrc/build.gradle.kts:", "a plugin pinned with the `.version(\"x\")` call form instead of the infix `version \"x\"`")
+case("check_kotlin_pins.py (gradle.properties)", py("check_kotlin_pins.py"),
+     [Append("gradle.properties", "\nkotlinVersion=2.0.0\n")],
+     "gradle.properties:", "gradle.properties names an older Kotlin version")
+case("check_kotlin_pins.py (version catalog)", py("check_kotlin_pins.py"),
+     [Create("gradle/libs.versions.toml", '[versions]\nkotlin = "2.0.0"\nksp = "2.3.12"\n\n[plugins]\nkotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.0.0" }\n')],
+     "gradle/libs.versions.toml:2: kotlin 2.0.0", "a new version catalog pins an older Kotlin (a [versions] key and an inline plugin entry)")
+case("check_kotlin_pins.py (coroutines)", py("check_kotlin_pins.py"),
+     [Edit("web-runtime/build.gradle.kts", '"org.jetbrains.kotlinx:kotlinx-coroutines-core:', '"org.jetbrains.kotlinx:kotlinx-coroutines-core:0.')],
+     "web-runtime/build.gradle.kts:", "the Web runtime pins a kotlinx-coroutines the root build does not use")
+case("check_kotlin_pins.py (Android coroutines literal)", py("check_kotlin_pins.py"),
+     [Edit("android/godot-plugin/plugin/build.gradle.kts", '${providers.gradleProperty("kanamaAndroidCoroutinesVersion").get()}', "1.11.0")],
+     "coroutines-android 1.11.0 but android/godot-plugin/gradle.properties pins", "the Android runtime compiles against the desktop coroutines again instead of the APK's (the property)")
+case("check_kotlin_pins.py (Android coroutines doc)", py("check_kotlin_pins.py"),
+     [Edit("android/godot-plugin/gradle.properties", "kanamaAndroidCoroutinesVersion=", "kanamaAndroidCoroutinesVersion=9.")],
+     "docs/reference/version-support.md: coroutines-android", "the Android coroutines property moves but version-support.md still states the old version")
+case("check_kotlin_pins.py (doc version)", py("check_kotlin_pins.py"),
+     [Edit("docs/reference/version-support.md", "The current source build uses Kotlin `", "The current source build uses Kotlin `9")],
+     "docs/reference/version-support.md: kotlin 9", "version-support.md states a Kotlin version the build does not use")
+case("check_kotlin_pins.py (doc line reworded)", py("check_kotlin_pins.py"),
+     [Edit("docs/reference/version-support.md", "The current source build uses Kotlin `", "The current source build is on Kotlin `")],
+     "docs/reference/version-support.md: the kotlin pin is gone or reworded", "the version-support toolchain line is reworded: the check must fail, not pass on nothing")
 case("check_ios_no_silent_stubs.py", py("check_ios_no_silent_stubs.py"),
      [Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nclass ZzRedRun {\n    fun redRun(): Boolean = false\n}\n")],
      "un-annotated silent stub", "a shared wrapper function whose whole body is a bare default, without a marker")
@@ -688,6 +727,12 @@ for name, args, target, expect, how in [
     ("generate_web_wrappers.py --check", ("generate_web_wrappers.py", "--check"), f"{WEBGEN}/Node.kt", "FAIL", "a generated Web wrapper is hand-edited"),
 ]:
     case(name, py(*args), [Append(target, "\nval redRunHandEdit = 1\n" if target.endswith(".kt") else "\nred run: hand edit\n")], expect, how)
+case("generate_gates_index.py --check (squash-merge dates)", py("generate_gates_index.py", "--markdown", f"{GEN}/gates.md", "--check"),
+     [Edit("scripts/generate_gates_index.py", 'page_date if page_date != "—" and git_date != "—" and page_date <= git_date else git_date', "git_date")],
+     "FAIL stale gates index", "the generator re-derives every first-landed date instead of keeping the page's: #361's script dates 2026-10-16 on the page (its branch commit) but 2026-10-17 in main's history (the squash), so main goes stale")
+case("generate_gates_index.py --check (later page date)", py("generate_gates_index.py", "--markdown", f"{GEN}/gates.md", "--check"),
+     [Edit(f"{GEN}/gates.md", "`scripts/generate_api_exercise.py` | 2026-10-16 |", "`scripts/generate_api_exercise.py` | 2099-01-01 |")],
+     "FAIL stale gates index", "a first-landed date on the page is hand-edited to a day after the script's history: only an earlier (squash-merge) date is kept")
 case("api_wrapper_generator_report.py --check (dropped default)", py("api_wrapper_generator_report.py", "--markdown", f"{GEN}/wrapper-generator-report.md", "--check"),
      [Edit("scripts/generate_api_wrapper.py", '    ("Node3D", "look_at", "up"): "Vector3.UP",\n', "")],
      "FAIL stale markdown", "a Godot default the generator expressed is dropped: the parameter turns required and the report's \"Godot Defaults Not Expressed\" list no longer matches")
@@ -747,6 +792,8 @@ portability_case("rg probe", "if command -v rg >/dev/null; then :; fi\n", "[bann
 portability_case("gsed", "gsed -n 1p file\n", "[banned-tool] `gsed`", "a script calls the Homebrew GNU tool name")
 portability_case("unlisted command", "sha256sum file\n", "[unlisted-command] `sha256sum`", "a script calls a command outside the portable list (not on a stock macOS)")
 portability_case("grep -P", "grep -oP 'a\\K.*' file\n", "[grep-P]", "a script uses PCRE grep, which BSD grep lacks")
+portability_case("mktemp suffix", 'f="$(mktemp /tmp/kanama_x.XXXXXX.kt)"\n', "[mktemp-suffix]", "a mktemp template has a suffix after its X's: BSD/macOS mktemp then creates one fixed path that concurrent runs share")
+portability_case("fixed /tmp default", 'LOG="${KANAMA_X_LOG:-/tmp/kanama_x.log}"\n', "[fixed-tmp]", "a script defaults a log to a fixed /tmp path: two concurrent runs interleave one file (two runtime smokes did)")
 portability_case("sed -i", "sed -i 's/a/b/' file\n", "[sed-i] `sed -i` differs", "a script edits in place with GNU-only sed -i (outside scripts/portable.sh)")
 portability_case("sed -i ''", "sed -i '' 's/a/b/' file\n", "[sed-i] `sed -i ''` is the BSD spelling", "a script edits in place with the BSD-only spelling")
 portability_case("declare -A", "declare -A map\n", "[bash4] `declare -A`", "a script uses an associative array (bash 4; macOS ships 3.2)")
@@ -838,11 +885,19 @@ case("tool_smoke.sh (plugin copies)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Append("example_project/addons/kanama_tools/plugin.gd", "\n# red run: this copy now differs from the starter template\n")],
      "plugin copies differ", "the example project's editor plugin drifts from the starter template's copy (the cheap pre-check)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
-PLUGIN_DOCS_WAIT = ("    _finish_pending_editor_docs()\n    var editor_settings", "    var editor_settings")
+# Only deleting the wait leaves a race: the crash needs Godot's doc thread to still be loading its cache when the
+# export quits. Linux runners always lose it; a Mac wins it about half the time (the thread finishes, its queued
+# update runs before the editor frees the docs, exit 1). So on the failing export the mutation also restarts the
+# thread in _exit_tree, as the first scan's late extension load does: the crash is then deterministic on every host
+# (10/10 on macOS), and the real wait still covers that restart (exit 1 with both lines in place). The restart is
+# limited to the export so the smoke's plain `--editor --quit` run, which would crash the same way, stays green.
+PLUGIN_DOCS_WAIT = ("    _finish_pending_editor_docs()\n    var editor_settings",
+                    '    if OS.get_cmdline_args().has("--export-release"):\n'
+                    "        GDExtensionManager.extensions_reloaded.emit()\n    var editor_settings")
 case("tool_smoke.sh (failing export exit)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/plugin.gd", *PLUGIN_DOCS_WAIT),
       Edit("example_project/addons/kanama_tools/plugin.gd", *PLUGIN_DOCS_WAIT)],
-     "failing export of a fresh project exited 134", "the editor plugin no longer waits for the editor's doc thread on exit: a failing export of a project without .godot/ crashes in Godot's exit path instead of exiting 1",
+     "failing export of a fresh project exited 134", "the editor plugin restarts the editor's doc thread on exit and no longer waits for it: a failing export of a project without .godot/ crashes in Godot's exit path instead of exiting 1 (the restart makes the crash deterministic, not a race only Linux loses)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(file)._readyX health=")],
