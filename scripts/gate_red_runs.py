@@ -759,6 +759,16 @@ case("audit_singleton_refcounted_policy.py", py("audit_singleton_refcounted_poli
 case("audit_stale_blockers.py", py("audit_stale_blockers.py"),
      [Edit("CONTRIBUTING.md", "# Contributing to Kanama", "# Contributing to Kanama\n<!-- " + BLOCKED_MARKER + " -->")],
      "stale_blockers] FAIL", "a stale-blocker marker whose blocker no longer holds")
+# issue:<n> tokens: the lookup is pinned by KANAMA_ISSUE_STATES so the cases need no network.
+ISSUE_STATES = {"KANAMA_ISSUE_STATES": "370=open,999999=closed"}
+case("audit_stale_blockers.py (issue closed)", py("audit_stale_blockers.py"),
+     [Edit("CONTRIBUTING.md", "# Contributing to Kanama",
+           "# Contributing to Kanama\n<!-- KANAMA" + "-BLOCKED(since:2026-01-01, issue:999999): red run -->")],
+     "BLOCKER LIFTED -- issue #999999 is closed", "a marker whose GitHub issue is closed", env=ISSUE_STATES)
+case("audit_stale_blockers.py (issue token malformed)", py("audit_stale_blockers.py"),
+     [Edit("CONTRIBUTING.md", "# Contributing to Kanama",
+           "# Contributing to Kanama\n<!-- KANAMA" + "-BLOCKED(since:2026-01-01, issue:abc): red run -->")],
+     "issue token must be an issue number", "an issue token that is not a number", env=ISSUE_STATES)
 case("audit_value_type_wrappers.py", py("audit_value_type_wrappers.py", "--strict"),
      [Edit(f"{COMMON}/types/Quaternion.kt", "    f.putDouble(2, weight)\n    f.call(QuaternionMethods.slerp, 2)",
            "    f.putReal(2, 0, narrowReal(weight))\n    f.call(QuaternionMethods.slerp, 2)")],
@@ -1216,10 +1226,10 @@ case("web/dodge_restart_selftest.mjs (hit across the press)", ["node", "scripts/
      "round 1's hit reported in the first frame after the restart: checks red: noHitBeforeFirstMob", "dodge bills a hit Godot reports in the first frame after Start (an overlap from the old round's last physics step) to the new round: a healthy run goes red as an instant kill")
 case("web/dodge_restart_selftest.mjs (no screen exit)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "finished.screenExitFrees + finished.roundEndFrees === finished.mobs),", "finished.screenExitFrees === finished.mobs),")],
-     "no mob is ever reported off screen (Linux CI Firefox): red checks are [mobsSpawnAndFree, mobsFreedOffScreen], expected exactly [mobsFreedOffScreen]", "dodge's mobsSpawnAndFree counts only the mobs that freed themselves off screen again: a host that never fires screen_exited (the Linux CI runner's Firefox, task 71) fails it too, although new_game frees every mob")
+     "no mob is ever reported off screen (Linux CI Firefox): red checks are [mobsSpawnAndFree, mobsFreedOffScreen], expected exactly [mobsFreedOffScreen]", "dodge's mobsSpawnAndFree counts only the mobs that freed themselves off screen again: a host that never fires screen_exited (the Linux CI runner's Firefox, issue #370) fails it too, although new_game frees every mob")
 case("web/dodge_restart_selftest.mjs (off-screen free required)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "mobsFreedOffScreen: mobScreenExitFrees >= 1 && mobScreenExitSignals >= 1,", "mobsFreedOffScreen: true,")],
-     "no mob is ever reported off screen (Linux CI Firefox): mobsFreedOffScreen must be false", "dodge stops requiring one mob to free itself off screen: a host or build where screen_exited never fires or never frees the mob (task 71) passes")
+     "no mob is ever reported off screen (Linux CI Firefox): mobsFreedOffScreen must be false", "dodge stops requiring one mob to free itself off screen: a host or build where screen_exited never fires or never frees the mob (issue #370) passes")
 case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then', 'if false; then')],
      "below-floor expected exit 1", "web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that)")

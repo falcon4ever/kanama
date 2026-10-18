@@ -39,6 +39,13 @@ Token kinds:
                            is a SEPARATE repo: when it is absent these tokens are
                            SKIPPED with a note, never a hard failure. Pass
                            --require-tasks to make an absent tasks repo fatal.
+    issue:<n>              GitHub issue #<n> of this repository (origin) is still
+                           OPEN. Resolved with `gh api`; when gh is missing,
+                           unauthenticated or offline the token is SKIPPED with a
+                           note (--require-issues makes that fatal). CI passes a
+                           read-only token so the check really runs.
+                           KANAMA_ISSUE_STATES="370=open,12=closed" overrides the
+                           lookup (red runs, offline tests).
 
 Exit codes: 0 = every blocker still holds, 1 = a blocker was lifted or a token
 could not be resolved.
@@ -86,6 +93,7 @@ SINCE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 SYMBOL_TOKEN_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*)@([a-z]+)$")
 WEBCALL_TOKEN_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*)\.([a-z_][a-z0-9_]*)$")
 TASK_TOKEN_RE = re.compile(r"^[0-9]+[a-z]?$")
+ISSUE_TOKEN_RE = re.compile(r"^[0-9]+$")
 
 # Files whose KANAMA-BLOCKED text is grammar, not a claim. This audit spells the
 # marker out; nothing else may be exempted, and the count is printed on PASS so
@@ -115,6 +123,7 @@ class Result:
     errors: list[str] = field(default_factory=list)
     resolved: int = 0
     skipped: int = 0
+    issues_skipped: int = 0
 
 
 def default_tasks_dir() -> Path:
@@ -306,6 +315,49 @@ def task_files(tasks_dir: Path) -> tuple[dict[str, str], dict[str, str]]:
     return open_tasks, closed_tasks
 
 
+def origin_repo() -> str | None:
+    """owner/name of the origin remote (GITHUB_REPOSITORY under Actions)."""
+    env = os.environ.get("GITHUB_REPOSITORY", "").strip()
+    if env:
+        return env
+    try:
+        url = subprocess.run(
+            ["git", "-C", str(ROOT), "remote", "get-url", "origin"],
+            check=True, capture_output=True, text=True,
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):  # justified: no origin remote means the issue lookup is skipped, reported by the caller
+        return None
+    match = re.search(r"github\.com[:/]([^/]+/[^/]+?)(?:\.git)?$", url)
+    return match.group(1) if match else None
+
+
+_ISSUE_CACHE: dict[str, str | None] = {}
+
+
+def issue_state(number: str) -> str | None:
+    """'open' / 'closed', or None when it cannot be looked up."""
+    override = os.environ.get("KANAMA_ISSUE_STATES", "").strip()
+    if override:
+        states = dict(pair.split("=", 1) for pair in override.split(",") if "=" in pair)
+        return states.get(number)
+    if number in _ISSUE_CACHE:
+        return _ISSUE_CACHE[number]
+    repo = origin_repo()
+    state: str | None = None
+    if repo:
+        try:
+            out = subprocess.run(
+                ["gh", "api", f"repos/{repo}/issues/{number}", "--jq", ".state"],
+                capture_output=True, text=True, timeout=30,
+            )
+            if out.returncode == 0 and out.stdout.strip() in ("open", "closed"):
+                state = out.stdout.strip()
+        except (OSError, subprocess.TimeoutExpired):  # justified: gh missing or offline means the token is skipped, reported by the caller
+            state = None
+    _ISSUE_CACHE[number] = state
+    return state
+
+
 def resolve(
     marker: Marker,
     token: str,
@@ -319,7 +371,7 @@ def resolve(
     if ":" not in token:
         result.errors.append(
             f"{where}: token {token!r} has no kind; expected "
-            f"symbol:/file:/webcall:/task:"
+            f"symbol:/file:/webcall:/task:/issue:"
         )
         return
     kind, _, value = token.partition(":")
@@ -434,8 +486,27 @@ def resolve(
         )
         return
 
+    if kind == "issue":
+        if not ISSUE_TOKEN_RE.match(value):
+            result.errors.append(
+                f"{where}: issue token must be an issue number like issue:370 (got {value!r})"
+            )
+            return
+        state = issue_state(value)
+        if state is None:
+            result.issues_skipped += 1
+            return
+        result.resolved += 1
+        if state == "closed":
+            repo = origin_repo() or "<origin>"
+            result.lifted.append(
+                f"{where}: BLOCKER LIFTED -- issue #{value} is closed "
+                f"(https://github.com/{repo}/issues/{value}). Claim: {marker.reason}"
+            )
+        return
+
     result.errors.append(
-        f"{where}: unknown token kind {kind!r}; expected symbol:/file:/webcall:/task:"
+        f"{where}: unknown token kind {kind!r}; expected symbol:/file:/webcall:/task:/issue:"
     )
 
 
@@ -451,6 +522,11 @@ def main() -> int:
         "--require-tasks",
         action="store_true",
         help="fail instead of skipping when the kanama-tasks checkout is absent",
+    )
+    parser.add_argument(
+        "--require-issues",
+        action="store_true",
+        help="fail instead of skipping when an issue:<n> token cannot be looked up (no gh, no auth, offline)",
     )
     parser.add_argument(
         "--list",
@@ -507,6 +583,19 @@ def main() -> int:
                 file=sys.stderr,
             )
         return 1
+
+    if result.issues_skipped:
+        if args.require_issues:
+            print(
+                f"[stale_blockers] FAIL --require-issues: {result.issues_skipped} issue:<n> token(s) "
+                "could not be looked up (gh missing, unauthenticated or offline)",
+                file=sys.stderr,
+            )
+            return 1
+        skip(
+            "stale-blocker-issue-tokens",
+            f"{result.issues_skipped} issue:<n> token(s) not checked (gh missing, unauthenticated or offline)",
+        )
 
     if tasks is None and result.skipped:
         # The task:<id> tokens were not checked. Fatal under CI unless explicitly opted out.

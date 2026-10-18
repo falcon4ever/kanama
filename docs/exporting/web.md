@@ -511,13 +511,13 @@ A quarantined cell that **passes** is reported just as loudly, with an explicit
 "lift the quarantine" line, because a stale quarantine is worse than none.
 Lifting one is a one-line deletion.
 
-<!-- KANAMA-BLOCKED(since:2026-07-28, task:71): the dodge quarantine below -->
+<!-- KANAMA-BLOCKED(since:2026-07-28, issue:370): the dodge quarantine below -->
 Currently quarantined: `dodge:firefox` — `screen_exited` never fires for dodge's
 mobs on the Linux runner's Firefox (dodge passes in Firefox on macOS, and
 `dodge:chrome` passes on Linux), so the cell fails `mobsFreedOffScreen` there and
 nothing else (the next game's `queue_free` still frees every mob); the quarantine
 runs until 2027-03-31. `squash:firefox` was lifted on
-2026-08-11 (the task-71 signature stopped reproducing there and the cell passes
+2026-08-11 (the [#370](https://github.com/falcon4ever/kanama/issues/370) signature stopped reproducing there and the cell passes
 outright under the task-81 gameplay checks, death path included).
 `squash:chrome` was lifted on 2026-08-12: its quarantine covered the
 death-phase choreography only (the parked player waited for a randomly-heading
@@ -657,8 +657,8 @@ commits, per-demo checksums, payload sizes, protocol version and driver results.
   a script edit means rebuild + re-export.
 - A packaged/addon install path (exporting without the Kanama checkout) is not
   yet available; the current workflow is a source-checkout export.
-<!-- KANAMA-BLOCKED(since:2026-07-28, task:71): the unexplained-defect entry below -->
-- **One defect is unexplained, not solved (task 71).** On one Linux CI host,
+<!-- KANAMA-BLOCKED(since:2026-07-28, issue:370): the unexplained-defect entry below -->
+- **One defect is unexplained, not solved ([issue #370](https://github.com/falcon4ever/kanama/issues/370)).** On one Linux CI host,
   spawned mobs in two demos travel far off screen yet
   `VisibleOnScreenNotifier2D.screen_exited` never fires, so they are never
   freed and live handles plateau. Five hypotheses have been eliminated by

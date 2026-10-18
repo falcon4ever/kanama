@@ -1,6 +1,6 @@
 extends Node2D
 
-# Plain-GDScript control for task 71. NO Kanama anywhere in this project.
+# Plain-GDScript control for issue #370. NO Kanama anywhere in this project.
 #
 # It mirrors what dodge's mobs do -- a node moves steadily off screen and is
 # expected to report screen_exited -- and reports everything to the SERVER via

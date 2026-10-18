@@ -1,4 +1,4 @@
-; Plain-GDScript control for task 71. NO Kanama: no addon, no bridge, no proxies.
+; Plain-GDScript control for issue #370. NO Kanama: no addon, no bridge, no proxies.
 ; It answers one question — does VisibleOnScreenNotifier2D.screen_exited fire in a
 ; Godot 4.7 Web export on a given host/browser? — so a failure can be attributed
 ; to Godot-on-that-host rather than to the Kanama backend.

@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: read
+  issues: read  # audit_stale_blockers.py resolves issue:<n> markers
 
 concurrency:
   group: gate-red-runs-nightly-${{ github.ref }}
@@ -73,6 +74,8 @@ jobs:
 
       - name: Run every gate red run, slow ones included
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
           chmod +x "$godot_bin"

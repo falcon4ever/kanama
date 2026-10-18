@@ -121,7 +121,7 @@ Parsed from `.github/workflows/{ci,web,package}.yml`. Scripts are the repo gate 
 | `ci.yml` | ios (xcframework build) (`ios`) | PR + push to main, only when `mobile` paths changed (docs-only PRs skip; push to main always runs) | — |
 | `web.yml` | detect changes (`changes`) | PR + push to main + nightly (cron) + manual | — |
 | `web.yml` | web matrix (chrome + firefox) (`matrix`) | PR + push to main + nightly (cron) + manual, only when `web` paths changed (docs-only PRs skip; push to main always runs) | `scripts/check_unapplied_annotations.py`, `scripts/web_ci_matrix.sh` |
-| `web.yml` | task 71 control (plain GDScript notifier) (`visibility-control`) | nightly + manual only | `scripts/web/visibility_probe.py` |
+| `web.yml` | issue #370 control (plain GDScript notifier) (`visibility-control`) | nightly + manual only | `scripts/web/visibility_probe.py` |
 | `web.yml` | soak (leak gate, chrome) (`soak`) | nightly + manual only | `scripts/web_ci_matrix.sh` |
 | `package.yml` | gdextension-header (`gdextension-header`) | tag `v*` + manual | — |
 | `package.yml` | ${{ matrix.classifier }} (`desktop-kit`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |

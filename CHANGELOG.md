@@ -41,6 +41,13 @@ only `--write`.
 
 Upgrading from 0.4? See [Upgrading from 0.4 to 0.5](docs/getting-started/upgrading-0.4-to-0.5.md).
 
+### Changed — tooling: a `KANAMA-BLOCKED` marker can name a GitHub issue
+
+Contributors: `scripts/audit_stale_blockers.py` accepts `issue:<n>` tokens. The marker holds while GitHub issue #<n> is open
+and fails the audit once it is closed (looked up with `gh`; skipped with a note when `gh` cannot reach GitHub, and
+`--require-issues` makes that fatal; CI passes a read-only token). The dodge-on-Linux-Firefox quarantine now tracks
+[#370](https://github.com/falcon4ever/kanama/issues/370).
+
 ### Changed — Kotlin 2.4.21 and KSP 2.3.12
 
 Kanama builds with Kotlin 2.4.21 (was 2.3.21) and KSP 2.3.12 (was 2.3.9); the release kit and the

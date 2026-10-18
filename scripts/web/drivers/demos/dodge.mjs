@@ -36,7 +36,7 @@ const EARLIEST_HIT_SECONDS = 0.4;
 // ends it, unless two have already. A mob crosses the 480x720 screen in 2-7 s at 150-250 px/s
 // (slowing under its damping); 60 local runs saw round 2's first exit at most 4.4 s after its first
 // spawn. mobsFreedOffScreen requires one such free: on the Linux CI runner's Firefox screen_exited
-// never fires (task 71) and the quarantined cell fails exactly that check, while new_game's
+// never fires (issue #370) and the quarantined cell fails exactly that check, while new_game's
 // queue_free still frees every mob (mobsSpawnAndFree).
 const SCREEN_EXIT_WAIT_SECONDS = 12;
 // KANAMA_WEB_DODGE_NO_SCREEN_EXIT=1 reproduces that host anywhere: the probe swallows every
@@ -91,13 +91,13 @@ async function snapshot(evaluate) {
         // handle per mob is as visible across seven mobs as across seven hundred.
         // Task 72 leaked exactly that and still took a ten-minute nightly soak to
         // surface, because the absolute growth is what needs time, not the ratio.
-        // Are the mobs MOVING? (task 71). The mob proxy has no get_position arm,
+        // Are the mobs MOVING? (issue #370). The mob proxy has no get_position arm,
         // but it does have opcode 27, CanvasItem.get_local_mouse_position, which is
         // the pointer expressed in the node's local space. The pointer never moves
         // in a driven run, so this value changes exactly as the NODE moves -- a
         // motion probe that needs no protocol change.
         //
-        // It splits task 71 in half: if these sweep while frees stays 0, the mobs
+        // It splits issue #370 in half: if these sweep while frees stays 0, the mobs
         // move and VisibleOnScreenNotifier2D is not reporting them off-screen; if
         // they are frozen, it is physics or the velocity write.
         mobPositions: (() => {
@@ -581,13 +581,13 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
     // passed on GC timing alone (Linux CI Firefox: 4/4 green while no mob ever left the screen, then
     // red once the collector stayed quiet in the window). Off-screen frees are reported
     // (mobScreenExitFrees) and required by mobsFreedOffScreen below, not here: that host never fires
-    // screen_exited (task 71), and this check must still judge its frees.
+    // screen_exited (issue #370), and this check must still judge its frees.
     mobsSpawnAndFree:
       rounds.length >= 2 &&
       rounds.every((finished) => finished.mobs > 0 && finished.mobLive === 0 && finished.screenExitFrees + finished.roundEndFrees === finished.mobs),
     // At least one mob flew off screen and freed itself: its VisibleOnScreenNotifier2D's screen_exited
     // reached Mob through the bridge and the free followed. Red on the Linux CI runner's Firefox, where
-    // the signal never fires (task 71, the dodge:firefox quarantine), and under NO_SCREEN_EXIT.
+    // the signal never fires (issue #370, the dodge:firefox quarantine), and under NO_SCREEN_EXIT.
     mobsFreedOffScreen: mobScreenExitFrees >= 1 && mobScreenExitSignals >= 1,
     // Full teardown: quitting the tree drained every live handle to zero.
     fullTeardownToZero: settled.liveHandles === 0,
@@ -651,7 +651,7 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
       roundResumes,
       // Game overs the game itself reported (the player was hit).
       playerHits: hits.length,
-      // Mobs freed while their round ran (flew off screen; 0 where screen_exited never fires, task 71),
+      // Mobs freed while their round ran (flew off screen; 0 where screen_exited never fires, issue #370),
       // and by the round's end (new_game's queue_free), over both rounds; mobsSpawnAndFree needs the
       // two to add up to every mob, mobsFreedOffScreen the first to be 1+. Signals: Mob screen_exited
       // dispatches the page saw.
