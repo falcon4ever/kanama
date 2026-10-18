@@ -1059,7 +1059,12 @@ static int claim_jdwp_port(int port) {
     char path[2048];
     snprintf(path, sizeof path, "%s%skanama-jdwp-%d.lock", dir,
              (len > 0 && dir[len - 1] == '/') ? "" : "/", port);
-    int fd = open(path, O_RDWR | O_CREAT | O_CLOEXEC, 0666);
+    /* Read-only is enough for flock; O_NOFOLLOW refuses a symlink planted in a shared /tmp. */
+#ifdef O_NOFOLLOW
+    int fd = open(path, O_RDONLY | O_CREAT | O_CLOEXEC | O_NOFOLLOW, 0644);
+#else
+    int fd = open(path, O_RDONLY | O_CREAT | O_CLOEXEC, 0644);
+#endif
     if (fd < 0) {
         return 1;
     }
