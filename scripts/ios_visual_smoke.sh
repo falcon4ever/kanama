@@ -95,8 +95,9 @@ EOF
 }
 
 # The runtime self-tests' verdict (tasks 118, 129 A, 138 item 24), on every Kanama launch: no FAIL line and no
-# summary with a failed count, any phase (the frame-1 lines carry a parenthesised phase); and all three summaries
-# PRESENT with 0 failed: the C ptrcall matrix, the scene-init ObjectCalls summary and the frame-1 one. The
+# summary with a failed count, any phase (the frame-1 and API exercise lines carry a parenthesised phase); and all
+# four summaries PRESENT with 0 failed: the C ptrcall matrix, the scene-init ObjectCalls summary, the frame-1 one and
+# the generated API exercise's (ApiExerciseSelfTest.kt, run after the frame-1 rows). The
 # self-tests are compiled only into a -PkanamaIosSelfTest=true build, which this script makes; a console
 # without them means the build lost the flag or the app never reached its first frame, and fails.
 # `--check-selftest-log LOG` runs only this check on a saved console log (its red runs need no device).
@@ -112,13 +113,14 @@ selftest_verdict() {
   local summary
   for summary in 'PTRCALL SELFTEST MATRIX: [0-9]+ passed, 0 failed' \
                  'OBJECTCALLS SELFTEST: [0-9]+ passed, 0 failed' \
-                 'OBJECTCALLS SELFTEST \(frame 1\): [0-9]+ passed, 0 failed'; do
+                 'OBJECTCALLS SELFTEST \(frame 1\): [0-9]+ passed, 0 failed' \
+                 'OBJECTCALLS SELFTEST \(api exercise\): [0-9]+ passed, 0 failed'; do
     if ! grep -Eq "$summary" "$@"; then
       echo "[ios_visual_smoke] runtime self-test summary missing: /$summary/ (the self-test did not run or did not finish; a build without -PkanamaIosSelfTest=true has none)" >&2
       return 1
     fi
   done
-  echo "[ios_visual_smoke] runtime self-tests (ptrcall matrix + ObjectCalls scene init + frame 1) all passed"
+  echo "[ios_visual_smoke] runtime self-tests (ptrcall matrix + ObjectCalls scene init + frame 1 + API exercise) all passed"
 }
 
 if [[ "${1:-}" == "--check-selftest-log" ]]; then

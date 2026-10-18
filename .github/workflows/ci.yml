@@ -232,6 +232,10 @@ jobs:
         # APK-export time, which is a heavier, separate follow-on.
         run: ./gradlew assembleAndroidPluginAar
 
+      - name: The runtime AAR carries no API exercise rows
+        shell: bash
+        run: python3 scripts/generate_api_exercise.py --check-jar android/godot-plugin/plugin/build/outputs/aar/plugin-debug.aar
+
   ios:
     name: ios (xcframework build)
     needs: [changes, gdextension-header]

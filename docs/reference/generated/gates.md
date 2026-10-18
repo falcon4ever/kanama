@@ -116,7 +116,7 @@ Parsed from `.github/workflows/{ci,web,package}.yml`. Scripts are the repo gate 
 | `ci.yml` | detect changes (`changes`) | PR + push to main | `scripts/gate_red_runs.py` |
 | `ci.yml` | gate red runs (fast set) (`gate-red-runs`) | PR + push to main, only when `gates` paths changed (docs-only PRs skip; push to main always runs) | `scripts/gate_red_runs.py` |
 | `ci.yml` | gdextension-header (`gdextension-header`) | PR + push to main, only when `mobile` paths changed (docs-only PRs skip; push to main always runs) | — |
-| `ci.yml` | android (aar build) (`android`) | PR + push to main, only when `mobile` paths changed (docs-only PRs skip; push to main always runs) | — |
+| `ci.yml` | android (aar build) (`android`) | PR + push to main, only when `mobile` paths changed (docs-only PRs skip; push to main always runs) | `scripts/generate_api_exercise.py` |
 | `ci.yml` | ios (xcframework build) (`ios`) | PR + push to main, only when `mobile` paths changed (docs-only PRs skip; push to main always runs) | — |
 | `web.yml` | detect changes (`changes`) | PR + push to main + nightly (cron) + manual | — |
 | `web.yml` | web matrix (chrome + firefox) (`matrix`) | PR + push to main + nightly (cron) + manual, only when `web` paths changed (docs-only PRs skip; push to main always runs) | `scripts/check_unapplied_annotations.py`, `scripts/web_ci_matrix.sh` |

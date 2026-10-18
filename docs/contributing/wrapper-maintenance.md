@@ -1029,6 +1029,17 @@ iOS may declare more than desktop needs — an `actual object` may carry extra m
 is how the iOS-only `ptrcallNoArgsRetByteArray(methodBind, instance, sizeHint)` coexists
 with the two-argument shape desktop declares.
 
+**An Array return buffer holds a constructed Array.** The engine writes a ptrcall's return into
+the buffer the caller passes. For most types it assigns, which works on a zero-filled buffer, but a
+method whose C++ return type is `Vector<Variant>`, `Vector<RID>` or `Vector<Plane>` (exposed as an
+`Array` or a typed array, e.g. `Animation.method_track_get_params`, `Geometry3D.build_box_planes`)
+resizes the buffer's Array in place, and a zero-filled buffer is a null Array: the process crashes.
+Every desktop helper that reads an Array return constructs an empty one in the buffer first
+(`BuiltinTypes.constructEmptyArray`, in `callArrayReturn` and in the helpers that read their Array
+return directly), and so does the iOS shim, in its typed-array return
+(`kanama_ios_godot_ptrcall_ret_array_blob`) and its container return
+(`kanama_ios_ptrcall_encode_container`). Packed arrays, `String`, `Dictionary` and `Variant` returns take a zero-filled buffer.
+
 The drift gate (`check_single_tree`) compares the region's MEMBER SET rather than its bytes,
 because the file is ktfmt-formatted outside the region and so the region gets reformatted
 after every regen; `--write-tree` skips rewriting the file for the same reason when the
@@ -1061,6 +1072,113 @@ call of a helper is spelled in a way the scanner does not read (with its `file:l
 arguments needs a `STATIC_ARGS` entry; the failure prints the line to add. The rules are also checked
 against a small made-up API in `scripts/fixtures/api_exercise/` (`--write-fixture` rewrites the
 expected output after an intended rule change).
+
+### The exercise rows
+
+`--report` also writes the rows, `src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt`,
+and `--check` fails when that file differs from what the generator writes. The rows cover every helper
+whose best case is a static (C), a property pair (A), a const method (B) or a singleton method (D), and
+for a weak static the helper's next-best A, B or D row as well; only the reach-only (F) helpers have no
+row yet. A row is one function of straight-line code that calls the generated wrapper exactly as a
+script would, with the Kotlin signature read from the committed tree, and reports to the hand-written
+`ApiExerciseRunner.kt` beside it:
+
+- a **C row** calls the static with its `STATIC_ARGS` and compares the result with
+  `ClassDB.class_call_static` on the same arguments: equal and not the type's zero, an object result a
+  non-null object of the declared class from both paths, an `Error` result the same non-OK value from
+  both. A weak row (an argument-free static, or one `STATIC_RESULTS` marks) only checks that the two
+  paths agree and is counted apart; a `fresh` one (a new value per call) checks both are non-zero.
+- an **A row** constructs a fresh instance of the receiver, reads the property, sets a recognisable
+  value of its type that differs from what it read (`7`, `0.75`, `"kanama125"`,
+  `Vector3(0.25, 0.5, 0.75)`, a fresh object, the opposite bool), and requires the value back from the
+  getter and from `Object.get`. `PAIR_OVERRIDES` gives a property a value it can keep (an MP3 stream keeps
+  only bytes that decode) or takes it out of the pair rule when a fresh object cannot keep any set value
+  (a frame index clamped by a missing `SpriteFrames`); its setter and getter then get their method's own
+  case and the helper's next pair row is used. On a `SINGLETON_PAIRS` singleton (`Engine`, `AudioServer`)
+  every property the tree calls gets its row (not only where it is its helpers' best), and the row sets
+  process-wide state, so it reads the original through `Object.get` and puts it back through
+  `Object.set` in a `finally`, also when the row fails: never through the setter and getter under test,
+  so a broken wrapper cannot leave `Engine.time_scale` wrong; the finally reads the value back the same
+  way and fails the row when the restore did not take. `PAIR_GROW` makes a row only ever raise a
+  count (`AudioServer.bus_count`: fewer buses would delete the project's). `SINGLETON_KEYED_PAIRS` runs a
+  keyed set/get pair the same way (`ProjectSettings.set_setting`/`get_setting` on a key no project
+  defines, restored through `Object.call("set_setting", ...)`, which erases it again).
+- a **B row** calls a const method on a fresh instance (or the descendant or `RECEIVER_SOURCES` factory
+  the inventory names) and a **D row** a const method of a singleton, or any method of a stateless one
+  (`Geometry2D`, `Geometry3D`, `Marshalls`); both compare the result with `Object.call` of the same
+  method with the same arguments on the same object. The arguments are the required ones (defaulted ones
+  take their defaults on both paths): a recognisable value per type, and each further argument of the
+  same type in the call gets the next of three or more values (`7`/`3`/`5`/`2`, `0.75`/`0.25`/`0.5`,
+  different vectors), so a helper that swaps any two cells of one type passes different values (a bool
+  has only two); a path under the scratch directory for a `String` path argument; a square, a tetrahedron or a
+  box's six planes for the geometry lists; a fresh object for an object argument. A result equal to its
+  type's zero (what a fresh, empty object mostly answers) is **weak**: the two paths agreed, but a no-op
+  could have produced it. The run counts those apart; they are not failures. `ROW_ARGS` gives a weak
+  row real arguments (one per required argument: a real class and member for `ClassDB`, valid base64,
+  a datetime dictionary, locales, shapes that intersect) and `ROW_RECEIVER_SETS` sets properties of its
+  fresh receiver through `Object.set` first (an `InputEventAction` for `ui_accept`, a grid's region).
+- a **RID factory row** (`RID_FACTORIES`: the rendering, physics and navigation servers and the text
+  server) calls an argument-free `*_create` / `create_*`, requires a valid RID, reads one const
+  `<prefix>_get_*` of it through the wrapper and `Object.call` where the server has one, and frees it in
+  a `finally`. The same factories make the RID arguments of those servers' B and D rows (an argument
+  `x` takes the class's own `x_create`, or its `RID_ARG_SOURCES` entry, such as a shaped text or a
+  font for `TextServer`), freed after the row; the leak check at exit holds the rows to that.
+  The row also calls the factory through `Object.call` and frees both RIDs: an invalid RID from both
+  paths is the host's (the headless dummy renderer makes no lights, skies or particles; the iOS
+  renderer no decals, fog volumes or VoxelGI) and counts weak, printed as a `WEAK:` line with that
+  reason; an invalid RID from the wrapper alone fails. A RID argument is made inside the row's guarded block, so a
+  failing later one still frees the earlier ones.
+
+Every path a row touches is under the run's own directory, `user://kanama-api-exercise/<pid>-<random>/`,
+which the runner creates with its fixtures (`fixture.txt` with an extended attribute, `fixture.mp3`,
+`fixture.wav`, `sub/`) before the first row and removes after the last (teardown fails when it is still
+there; the shared parent is removed once empty). Every worktree's example project shares one `user://`,
+so a per-run directory is what lets two smokes run at once without deleting each other's fixtures. Setup
+also removes the directories of earlier runs that crashed before their teardown: those whose fixture is
+older than an hour (by age alone; `OS.is_process_running` only knows the caller's own children, so it
+would call a concurrent run in another process dead). `FileAccess.create_temp` and `DirAccess.create_temp` take no path;
+they create a `kanama-api-exercise-*` entry in the OS temp directory that is removed when the row frees
+the result. A static returning `Error` is given arguments that make it fail (an existing directory, a
+missing file, a copy onto itself), and three of those print the engine's own error line on purpose.
+
+The rows are a Kanama test hook and never ship: they compile only into a build made with
+`-PkanamaApiExercise=true` (desktop and the Android plugin copy) or, on iOS, with the self-tests
+(`-PkanamaIosSelfTest=true`, through `iosMain` only). Every `publish*` task, `packageDistributions`,
+the kit and store `package*` tasks and `installAddonJar` fail on a flagged build, and local_ci runs
+`generate_api_exercise.py --check-jar` on the published and the installed `kanama.jar` (the same check
+reads an AAR's `classes.jar`: CI's Android lane and `android_export_minified.sh` run it on the runtime
+AAR, and the Android plugin build refuses a release variant with the flag). Where they run:
+
+- **Desktop:** `runtime_smoke.sh` builds the example addon with the flag (only there; local_ci's
+  "external addon install" stage builds the user-shaped jar without it) and runs
+  `api_exercise_smoke.tscn` with the project setting `kanama/debug/api_exercise=true`. The hook
+  (`ApiExerciseHook`, beside the signal self-test in `callFrame`) runs the rows on the first frame and
+  prints `[kanama] API EXERCISE: <n> passed, <m> failed, <w> weak, <k> known, <r> reach, <e> excluded in <ms> ms` and
+  one `[kanama] API EXERCISE FAIL: <helpers> <row> <what>` per failure. `KANAMA_API_EXERCISE=1` forces a
+  run without the setting and `KANAMA_API_EXERCISE_TRACE=1` prints a line before each row and its verdict
+  after it (`= P` passed, `= W` weak, `= F` failed), which is how a row that prints an engine error,
+  hangs or crashes is found (run every row headless before adding a device run of new rows). The smoke
+  runs with the trace on, so a crash names the row it happened in. A method whose call aborts the engine
+  itself (an index Godot does not bounds-check before a `CRASH_BAD_INDEX`) is excluded in
+  `METHOD_OVERRIDES` with that reason.
+- **Android:** the same hook on ART, run by `KANAMA_ANDROID_API_EXERCISE=1 scripts/android_smoke.sh`
+  (the runtime AAR built with the flag, `kanama/debug/api_exercise` written into the demo's
+  `project.godot` for the run, `kanama/debug/api_exercise_trace` with
+  `KANAMA_ANDROID_API_EXERCISE_TRACE=1`); see
+  [Android backend](backends/android.md).
+- **iOS:** `ApiExerciseSelfTest.kt` runs the same rows after the frame-1 self-test rows and prints
+  `[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): ... faults=<f> expected=<e> in <ms> ms`, a line
+  both device runners require.
+
+A row that fails on one platform for a gap already tracked is listed in `KNOWN_FINDINGS` (row, platforms,
+the failure text it excuses, reason, where it is tracked): it still runs there. A C row checks the
+wrapper's own result before it calls the Variant path, and only a failure of the Variant-path half
+(an A row's read-backs) whose message contains that text prints `KNOWN:` instead of `FAIL:` and counts
+as `known`; any other failure fails, and when the row passes the run fails with "known finding no longer
+reproduces" until the entry is removed. `--check` fails on an entry that names no generated row.
+
+After a Godot bump, run the rows headless (`runtime_smoke.sh`) before any device run: a class the new
+version adds gets rows it has never run.
 
 ## Value-Type Audits
 

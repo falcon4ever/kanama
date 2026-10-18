@@ -424,19 +424,30 @@ correctly failed. They are fault probes, so they now live with the probes and sa
 so. Their producers, and the non-default assertions that proved those producers worked, stayed
 where they were.
 
-Both summary lines therefore end with `faults=<count> expected=7`:
+The three ObjectCalls summary lines therefore end with `faults=<count> expected=7 in <ms> ms`:
 
 ```
-[kanama][ios][kn] OBJECTCALLS SELFTEST: <N> passed, 0 failed faults=7 expected=7
-[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): <N> passed, 0 failed faults=7 expected=7
+[kanama][ios][kn] OBJECTCALLS SELFTEST: <N> passed, 0 failed faults=7 expected=7 in <ms> ms
+[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): <N> passed, 0 failed faults=7 expected=7 in <ms> ms
+[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): <N> passed, 0 failed, <W> weak, <K> known, <R> reach faults=7 expected=7 in <ms> ms
 ```
 
-(The counter is never reset, so the frame-1 phase — which raises no faults of its own — reprints
-the same total.) `expected` is the constant `SELFTEST_EXPECTED_FAULTS`, declared immediately
+The third line is the generated API exercise (`ApiExerciseSelfTest.kt`, after the frame-1 rows): one
+row per `ObjectCalls` helper whose best row is a static, a property pair, a const method or a singleton
+method (with the RID factory rows), the same rows the desktop smoke runs (see "The exercise rows" in `wrapper-maintenance.md`). A static the shim refused shows as a
+`FAULT` line and as `faults` above `expected`; the demos' `ios_device_run.sh` fails on both, while
+`ios_visual_smoke.sh` fails on `FAIL` lines and failed rows but does not compare the fault counts. A row
+listed in `KNOWN_FINDINGS` (`scripts/api_exercise_policy.py`: an iOS gap already tracked, with the
+failure text it excuses) prints `... (api exercise) KNOWN:` instead of `FAIL:` and counts as `known` when
+its Variant-path half fails with that text; any other failure prints `FAIL:`, and once it passes it
+prints a `FAIL:` line until the entry is removed.
+
+(The counter is never reset, so the frame-1 phase and the API exercise, which raise no faults of
+their own, reprint the same total.) `expected` is the constant `SELFTEST_EXPECTED_FAULTS`, declared immediately
 above `runFaultProbes` with a comment listing the seven, so the number and the things it counts
 are one screen apart and cannot drift. Change it only when you change the probes. Only a debug
 build made with `-PkanamaIosSelfTest=true` runs the self-test (see below); every other build prints
-neither summary line.
+none of the summary lines.
 
 **The sink marks the probes, not the lines around them.** `runFaultProbes` calls
 `kanama_ios_fault_set_probe(1)` before the first probe and `kanama_ios_fault_set_probe(0)` after the
@@ -586,7 +597,8 @@ the report of the probe's exception names `KanamaIosScriptErrorProbe.kt` and a l
   calls into the Kotlin phases) only for that build's DEBUG shim; a release xcframework never
   carries the C side. Kanama's device runners pass the property (`scripts/ios_visual_smoke.sh`, the
   demos' `scripts/ios_device_run.sh`; `scripts/ios_device_gate.sh` refuses a demos checkout whose
-  runner does not) and REQUIRE all three summary lines with `0 failed`, so a runner build that lost
+  runner does not) and REQUIRE all four summary lines (the C matrix, the two ObjectCalls phases and the
+  API exercise) with `0 failed`, so a runner build that lost
   the flag fails rather than passing on silence. `ios_visual_smoke.sh --check-selftest-log LOG` and
   the demos' `ios_device_run.sh --self-test-console-checks` run that verdict without a device.
 - **The on-device self-test runs in two phases, and a row must sit in the right one.**

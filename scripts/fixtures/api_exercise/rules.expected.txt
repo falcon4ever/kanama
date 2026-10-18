@@ -21,6 +21,13 @@ site Node.generate_unique_id [static] -> C: static with a return value
 site Node.make_dir [static] -> C: static returning Error: its arguments must make it fail
 site PhysicsBase.get_gravity [instance] -> E: *Extension*: abstract; every instantiable descendant is excluded by it
 site Engine.get_ticks [singleton] -> F: reads the clock (METHOD_OVERRIDES)
+site AudioServer.set_bus_count [singleton] -> A: setter of `bus_count`, set and restored on the singleton (SINGLETON_PAIRS)
+site AudioServer.get_bus_count [singleton] -> A: getter of `bus_count`, set and restored on the singleton (SINGLETON_PAIRS)
+site ProjectSettings.set_setting [singleton] -> A: setter of the keyed value "kanama/probe", set and restored (SINGLETON_KEYED_PAIRS)
+site ProjectSettings.get_setting [singleton] -> A: getter of the keyed value "kanama/probe", set and restored (SINGLETON_KEYED_PAIRS)
+site RenderingServer.mesh_create [singleton] -> D: RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
+site RenderingServer.free_rid [singleton] -> F: void singleton method
+site RenderingServer.mesh_get_surface_count [singleton] -> D: const non-void singleton method
 helper abstractRoots -> B (TextServer.get_name)
 helper constOnly -> B (Node.get_child_count)
 helper descendant -> B (AbstractBase.get_value)
@@ -28,10 +35,14 @@ helper editor -> E (EditorThing.get_size)
 helper errorStatic -> C (Node.make_dir)
 helper exactNotPrefix -> B (InputEventKey.is_pressed)
 helper excludedDescendant -> E (PhysicsBase.get_gravity)
+helper factory -> D (RenderingServer.mesh_create)
+helper keyedPair -> A (ProjectSettings.get_setting)
 helper override -> F (Engine.get_ticks)
 helper pair -> A (Node.set_name)
 helper prefixed -> E (RDTextureFormat.get_width)
+helper ridRead -> D (RenderingServer.mesh_get_surface_count)
 helper singletonConst -> D (Engine.get_frames_drawn)
+helper singletonPair -> A (AudioServer.get_bus_count)
 helper singletonReach -> F (Engine.get_ratio)
 helper stateless -> D (Geometry2D.is_point_in_polygon)
 helper staticFirst -> C (Node.get_orphan_node_ids), then A (Node.get_name)

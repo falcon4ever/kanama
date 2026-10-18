@@ -8,6 +8,7 @@ import java.lang.foreign.ValueLayout.JAVA_INT
 import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodType
 import net.multigesture.kanama.api.MainThread
+import net.multigesture.kanama.binding.runtime.ApiExerciseHook
 import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.GcStress
@@ -855,6 +856,8 @@ object KanamaScriptLanguage {
     SignalSelfTest.onFrame()
     // The ownership self-test, from the first frame on (task 138 item 6).
     OwnershipSelfTest.onFrame()
+    // The generated API exercise, once, on the first frame (opt-in; rows only in a flagged build).
+    ApiExerciseHook.onFrame()
   }
 
   @JvmStatic

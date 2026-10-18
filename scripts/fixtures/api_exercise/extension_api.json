@@ -461,6 +461,143 @@
    "api_type": "core",
    "inherits": "PhysicsBase",
    "methods": []
+  },
+  {
+   "name": "AudioServer",
+   "is_refcounted": false,
+   "is_instantiable": false,
+   "api_type": "core",
+   "inherits": "Object",
+   "methods": [
+    {
+     "name": "set_bus_count",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 3001,
+     "arguments": [
+      {
+       "name": "amount",
+       "type": "int"
+      }
+     ]
+    },
+    {
+     "name": "get_bus_count",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 3002,
+     "return_value": {
+      "type": "int"
+     }
+    }
+   ],
+   "properties": [
+    {
+     "type": "int",
+     "name": "bus_count",
+     "setter": "set_bus_count",
+     "getter": "get_bus_count"
+    }
+   ]
+  },
+  {
+   "name": "ProjectSettings",
+   "is_refcounted": false,
+   "is_instantiable": false,
+   "api_type": "core",
+   "inherits": "Object",
+   "methods": [
+    {
+     "name": "set_setting",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 3003,
+     "arguments": [
+      {
+       "name": "name",
+       "type": "String"
+      },
+      {
+       "name": "value",
+       "type": "Variant"
+      }
+     ]
+    },
+    {
+     "name": "get_setting",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 3004,
+     "return_value": {
+      "type": "Variant"
+     },
+     "arguments": [
+      {
+       "name": "name",
+       "type": "String"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "RenderingServer",
+   "is_refcounted": false,
+   "is_instantiable": false,
+   "api_type": "core",
+   "inherits": "Object",
+   "methods": [
+    {
+     "name": "mesh_create",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 3005,
+     "return_value": {
+      "type": "RID"
+     }
+    },
+    {
+     "name": "free_rid",
+     "is_const": false,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 3006,
+     "arguments": [
+      {
+       "name": "rid",
+       "type": "RID"
+      }
+     ]
+    },
+    {
+     "name": "mesh_get_surface_count",
+     "is_const": true,
+     "is_vararg": false,
+     "is_static": false,
+     "is_virtual": false,
+     "hash": 3007,
+     "return_value": {
+      "type": "int"
+     },
+     "arguments": [
+      {
+       "name": "mesh",
+       "type": "RID"
+      }
+     ]
+    }
+   ]
   }
  ],
  "singletons": [
@@ -479,6 +616,18 @@
   {
    "name": "TextServerManager",
    "type": "TextServerManager"
+  },
+  {
+   "name": "AudioServer",
+   "type": "AudioServer"
+  },
+  {
+   "name": "ProjectSettings",
+   "type": "ProjectSettings"
+  },
+  {
+   "name": "RenderingServer",
+   "type": "RenderingServer"
   }
  ]
 }

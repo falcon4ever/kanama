@@ -4342,12 +4342,18 @@ def referenced_objectcalls_helpers(trees: tuple[Path, ...] = SHARED_TREES) -> se
     disagree about, say, a helper named only in a comment -- which is exactly what they did while
     each kept its own grep and only one of them stripped comments.
     """
+    return objectcalls_helpers_in(
+        strip_comments(path.read_text(encoding="utf-8")) for root in trees for path in sorted(root.rglob("*.kt"))
+    )
+
+
+def objectcalls_helpers_in(stripped_texts) -> set[str]:
+    """The `ObjectCalls.<name>(` calls in sources whose comments are already stripped: the one scan
+    `referenced_objectcalls_helpers` runs, for a caller that holds the stripped text already
+    (`generate_api_exercise.py` strips each shared file once for its own scans)."""
     names: set[str] = set()
-    for root in trees:
-        for path in sorted(root.rglob("*.kt")):
-            names.update(
-                OBJECTCALLS_REFERENCE_RE.findall(strip_comments(path.read_text(encoding="utf-8")))
-            )
+    for text in stripped_texts:
+        names.update(OBJECTCALLS_REFERENCE_RE.findall(text))
     return names
 
 

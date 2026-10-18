@@ -142,6 +142,76 @@ their shared sources. The bridge protocol is 39: re-export every Web game.
   | `springArm.addExcludedObject(body)` | `springArm.addExcludedObject(body.getRid())` |
   | at most one exclusion, no flags | any number of RIDs; `collideWithAreas`, `collideWithBodies`, `hitFromInside`, `hitBackFaces` |
 
+### Added — tooling: the API exercise runs its static and property-pair rows on the desktop and on iOS
+
+Contributors: `scripts/generate_api_exercise.py --report` now also writes
+`src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt`: one row per helper whose
+best case is a static (45, compared with `ClassDB.class_call_static`; five argument-free ones are weak and
+also get their helper's property-pair row) or a property set/get pair (95 helpers in 50 rows, read back
+through the getter and `Object.get`). The rows are compiled only into a build made with
+`-PkanamaApiExercise=true` (desktop, Android) or `-PkanamaIosSelfTest=true` (iOS); `publish*`,
+`packageDistributions` and `installAddonJar` fail on such a build, and local_ci checks that the published
+and installed jars carry no exercise class (`--check-jar`). `runtime_smoke.sh` builds the example addon with
+the flag and runs `api_exercise_smoke.tscn` with the project setting `kanama/debug/api_exercise` (or
+`KANAMA_API_EXERCISE=1`), requiring `[kanama] API EXERCISE: <n> passed, 0 failed, ... in <ms> ms`. On iOS
+the rows run after the frame-1 self-test rows and print `OBJECTCALLS SELFTEST (api exercise): ...`, which
+`ios_visual_smoke.sh` requires (the kanama-demos device runner requires it too, from its matching change);
+the two existing ObjectCalls self-test summaries now end with `in <ms> ms`. The static arguments, the
+property values that need a hand choice and the statics whose result is weak or new per call are kept in
+`scripts/api_exercise_policy.py` (`STATIC_ARGS`, `PAIR_OVERRIDES`, `STATIC_RESULTS`,
+`STATIC_OBJECT_CHECKS`: what each object static's result must show of its arguments); an argument that
+deliberately differs from the API default is marked `Arg(value, reason)`. A row that fails on one platform
+for a tracked gap can be listed in `KNOWN_FINDINGS` with the failure text it excuses: there, that
+failure of its Variant-path half prints `KNOWN:` (counted as `known`) instead of `FAIL:`, any other
+failure still fails, and a pass fails until the entry is removed. The list is empty.
+
+### Fixed — calls that return an engine-built array no longer crash
+
+A Godot method whose engine implementation builds its `Array` result in place (a C++ `Vector<Variant>`,
+`Vector<RID>` or `Vector<Plane>` return, such as `Camera3D.getFrustum()` and
+`Animation.methodTrackGetParams()`) crashed the process when called from Kotlin on the desktop,
+Android and iOS: the return buffer Kanama handed the engine was zero-filled instead of holding an empty
+`Array`, and the engine resized a null `Array`. Every call that returns an `Array` or a typed array now
+passes a constructed one (the desktop and Android helpers, and on iOS the shim's typed-array and
+container return paths).
+
+### Added — tooling: the API exercise runs const, singleton and RID factory rows
+
+Contributors: the generated API exercise (`ApiExercise.generated.kt`, see
+[API Exercise Inventory](docs/reference/generated/api-exercise.md)) now also runs a row for every helper
+whose best case is a const method of a fresh object (B) or a singleton method (D): the wrapper's result
+must equal `Object.call` of the same method with the same arguments on the same object, and a result equal
+to its type's zero counts `weak` (the summary line's existing field) rather than failed. Each argument of
+a type that occurs more than once in a call gets its own value, so a helper that swaps two cells shows;
+where those values would leave a row weak, `ROW_ARGS` gives it real ones (class and member names for
+`ClassDB`, valid base64, a datetime, locales, shapes that meet) and `ROW_RECEIVER_SETS` sets up its fresh
+receiver first. `Engine` and `AudioServer` property pairs and `ProjectSettings.set_setting`/`get_setting`
+run as set/read-back rows that read the value they found through `Object.get` and put it back through
+`Object.set` in a `finally` (`SINGLETON_PAIRS`, `SINGLETON_KEYED_PAIRS`; the bus count only ever grows,
+`PAIR_GROW`), and every
+argument-free `*_create` / `create_*` of the rendering, physics, navigation and text servers runs as a
+factory row: a valid RID, one read of it on both paths, then `free_rid` (`RID_FACTORIES`; the same
+factories make the RID arguments of those servers' B and D rows, `RID_ARG_SOURCES`, so a shaped text or a
+font a `TextServer` row uses is freed again). Methods whose call aborts the engine on a fresh object (a
+physics shape index the server does not bounds-check) are excluded in `METHOD_OVERRIDES` with that reason.
+`runtime_smoke.sh` runs the exercise with its row trace on (`KANAMA_API_EXERCISE_TRACE=1` now also prints
+each row's verdict) and names the row a crash happened in. Each run writes under its own `user://kanama-api-exercise/<pid>-<random>/`,
+so two runs of the example project at once (two worktrees) no longer delete each other's fixtures; a
+crashed run's directory is removed by the next run.
+
+### Added — tooling: the API exercise runs on Android
+
+Contributors: `KANAMA_ANDROID_API_EXERCISE=1 scripts/android_smoke.sh ...` builds the runtime AAR with
+`-PkanamaApiExercise=true`, opts the demo's debug build in through `kanama/debug/api_exercise` and
+requires `[kanama] API EXERCISE: <n> passed, 0 failed, ... in <ms> ms` with no `API EXERCISE FAIL` line
+(`KANAMA_ANDROID_API_EXERCISE_TRACE=1` prints the row trace, through the new setting
+`kanama/debug/api_exercise_trace`); without the variable the smoke checks the exercise stayed off.
+`STATIC_ZERO_ON` lets a static's zero count weak on a platform (`DirAccess.get_drive_name` on
+Android). A flagged AAR cannot reach users: the plugin build
+refuses a release variant or publication with the flag, `packageMobileAddonAndroid` fails on an AAR
+with exercise classes, and `generate_api_exercise.py --check-jar` (which now reads an AAR's jars) runs
+on the runtime AAR in CI's Android lane and in `android_export_minified.sh`.
+
 ### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
 
 The control (a plain GDScript visibility-notifier export, `visibility-control` in `web.yml`) handed the
