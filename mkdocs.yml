@@ -42,6 +42,7 @@ nav:
       - Upgrading from 0.4 to 0.5: getting-started/upgrading-0.4-to-0.5.md
       - Work on Kanama: getting-started/work-on-kanama.md
       - The Editor Loop: getting-started/editor-workflow.md
+      - Open in IntelliJ IDEA: getting-started/intellij.md
   - Game Development:
       - Writing Kotlin Scripts: game-dev/scripts.md
       - Calling Godot APIs: game-dev/godot-api.md

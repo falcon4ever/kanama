@@ -56,6 +56,14 @@ typedef void *(WINAPI *AddDllDirectoryFn)(const wchar_t *);
 #include <dirent.h>
 #include <sys/stat.h>
 #endif
+#if !defined(_WIN32) && !defined(__ANDROID__)
+#include <arpa/inet.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <netinet/in.h>
+#include <sys/file.h>
+#include <sys/socket.h>
+#endif
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -923,18 +931,174 @@ static int read_port_setting_from_project(const char *jar_path, const char *key)
     return parse_positive_port(value);
 }
 
+/* How Godot itself decides to open the editor: --editor/-e, or a path to project.godot. */
+static int is_editor_arg(const char *arg) {
+    size_t n = strlen(arg);
+    const char *project_file = "project.godot";
+    size_t m = strlen(project_file);
+    return strcmp(arg, "--editor") == 0 || strcmp(arg, "-e") == 0 ||
+           (n >= m && strcmp(arg + n - m, project_file) == 0);
+}
+
+/* `--` (or `++`) starts the user arguments, which Godot hands to the game unread. */
+static int is_user_args_separator(const char *arg) {
+    return strcmp(arg, "--") == 0 || strcmp(arg, "++") == 0;
+}
+
+#ifdef _WIN32
+/* The Windows command line is one string: split it the way the C runtime does for the cases
+ * Godot's arguments take (whitespace-separated, double quotes group a path with spaces), and look
+ * for an editor argument before the user arguments. The first word is the executable. */
+static int command_line_has_editor_flag(const char *line) {
+    char arg[4096];
+    const char *p = line;
+    int index = 0;
+    while (*p) {
+        while (*p == ' ' || *p == '\t') {
+            p++;
+        }
+        if (!*p) {
+            break;
+        }
+        size_t n = 0;
+        int quoted = 0;
+        while (*p && (quoted || (*p != ' ' && *p != '\t'))) {
+            if (*p == '"') {
+                quoted = !quoted;
+            } else if (n + 1 < sizeof arg) {
+                arg[n++] = *p;
+            }
+            p++;
+        }
+        arg[n] = '\0';
+        if (index++ == 0) {
+            continue;
+        }
+        if (is_user_args_separator(arg)) {
+            return 0;
+        }
+        if (is_editor_arg(arg)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+#endif
+
+/* The editor is started with --editor/-e or a project.godot path (the project manager adds
+ * --editor; a game started with Play has neither). Before this read the command line on Linux and
+ * Windows too, the editor there took the project's JDWP port and the game it started could not
+ * bind it. */
 static int is_editor_process(void) {
-#ifdef __APPLE__
+#if defined(__APPLE__)
     int argc = *_NSGetArgc();
     char **argv = *_NSGetArgv();
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "--editor") == 0 || strcmp(argv[i], "-e") == 0) {
+        if (is_user_args_separator(argv[i])) {
+            return 0;
+        }
+        if (is_editor_arg(argv[i])) {
+            return 1;
+        }
+    }
+#elif defined(_WIN32)
+    const char *line = GetCommandLineA();
+    if (line && command_line_has_editor_flag(line)) {
+        return 1;
+    }
+#elif defined(__linux__) && !defined(__ANDROID__)
+    /* /proc/self/cmdline holds the arguments, each ending in a NUL. */
+    FILE *f = fopen("/proc/self/cmdline", "rb");
+    if (!f) {
+        return 0;
+    }
+    static char cmdline[65536];
+    size_t len = fread(cmdline, 1, sizeof cmdline - 1, f);
+    fclose(f);
+    cmdline[len] = '\0';
+    size_t first = strlen(cmdline) + 1; /* skip argv[0] */
+    for (size_t i = first; i < len; i += strlen(cmdline + i) + 1) {
+        if (is_user_args_separator(cmdline + i)) {
+            return 0;
+        }
+        if (is_editor_arg(cmdline + i)) {
             return 1;
         }
     }
 #endif
     return 0;
 }
+
+#ifndef __ANDROID__
+/* One Kanama process per JDWP port. Godot's Run Multiple Instances starts the instances back to
+ * back, faster than the first one's JDWP agent binds the port, and an agent that cannot bind exits
+ * the process. So the port is claimed first with a lock that every Kanama process takes the same
+ * way and that the OS drops when the process ends: a file lock on macOS and Linux (not inherited by
+ * the processes it starts, such as the game the editor runs), a named mutex on Windows. The lock
+ * is held for the life of the process. Returns 0 when another process holds it; 1 when this process
+ * now does, or when the lock cannot be made (then the JVM's own bind decides, as before). */
+static int claim_jdwp_port(int port) {
+#ifdef _WIN32
+    char name[64];
+    snprintf(name, sizeof name, "Local\\kanama-jdwp-%d", port);
+    HANDLE mutex = CreateMutexA(NULL, FALSE, name);
+    if (mutex == NULL) {
+        return 1;
+    }
+    if (GetLastError() == ERROR_ALREADY_EXISTS) {
+        CloseHandle(mutex);
+        return 0;
+    }
+    return 1; /* the handle stays open: the name exists while this process lives */
+#else
+    const char *dir = getenv("TMPDIR");
+    if (!dir || !*dir) {
+        dir = "/tmp";
+    }
+    size_t len = strlen(dir);
+    char path[2048];
+    snprintf(path, sizeof path, "%s%skanama-jdwp-%d.lock", dir,
+             (len > 0 && dir[len - 1] == '/') ? "" : "/", port);
+    /* Read-only is enough for flock; O_NOFOLLOW refuses a symlink planted in a shared /tmp. */
+#ifdef O_NOFOLLOW
+    int fd = open(path, O_RDONLY | O_CREAT | O_CLOEXEC | O_NOFOLLOW, 0644);
+#else
+    int fd = open(path, O_RDONLY | O_CREAT | O_CLOEXEC, 0644);
+#endif
+    if (fd < 0) {
+        return 1;
+    }
+    if (flock(fd, LOCK_EX | LOCK_NB) != 0) {
+        int taken = errno == EWOULDBLOCK;
+        close(fd);
+        return taken ? 0 : 1;
+    }
+    return 1; /* fd stays open: the lock lasts as long as this process */
+#endif
+}
+#endif
+
+#if !defined(_WIN32) && !defined(__ANDROID__)
+/* Whether something other than a Kanama process (the lock above covers those) already listens on
+ * loopback `port`: the JVM's bind would fail and its JDWP agent would exit the process. */
+static int loopback_port_in_use(int port) {
+    int fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (fd < 0) {
+        return 0;
+    }
+    /* As the JDWP agent does: a port left in TIME_WAIT by the last debug session is free to it. */
+    int reuse = 1;
+    setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof reuse);
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof addr);
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons((unsigned short)port);
+    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    int in_use = bind(fd, (struct sockaddr *)&addr, sizeof addr) != 0;
+    close(fd);
+    return in_use;
+}
+#endif
 
 static int is_numeric_port_string(const char *value) {
     if (!value || !*value) {
@@ -1247,10 +1411,13 @@ static int start_jvm(const char *jar_path) {
     char jdwp_opt[256] = {0};
     char jdwp_address[128] = {0};
     int jdwp_enabled = 0;
+    /* A bare port listens on loopback only: JDWP with suspend=n is remote code execution for
+     * anyone who can reach the port, so it is not opened to the network unless asked for with
+     * an explicit address (KANAMA_JDWP_PORT='*:5005'). */
     const char *jdwp_port = getenv("KANAMA_JDWP_PORT");
     if (jdwp_port && *jdwp_port) {
         if (is_numeric_port_string(jdwp_port)) {
-            snprintf(jdwp_address, sizeof jdwp_address, "*:%s", jdwp_port);
+            snprintf(jdwp_address, sizeof jdwp_address, "localhost:%s", jdwp_port);
         } else {
             snprintf(jdwp_address, sizeof jdwp_address, "%s", jdwp_port);
         }
@@ -1268,8 +1435,24 @@ static int start_jvm(const char *jar_path) {
                 ? read_port_setting_from_project(jar_path, "debug/jdwp_port")
                 : 0;
             if (runtime_enabled && project_port > 0) {
-                snprintf(jdwp_address, sizeof jdwp_address, "*:%d", project_port);
+                snprintf(jdwp_address, sizeof jdwp_address, "localhost:%d", project_port);
             }
+        }
+    }
+    if (jdwp_address[0] != '\0') {
+        /* The port is what follows the last ':' (`localhost:5005`, `*:5005`, `5005`). */
+        const char *colon = strrchr(jdwp_address, ':');
+        int port = parse_positive_port(colon ? colon + 1 : jdwp_address);
+        int taken = port > 0 && !claim_jdwp_port(port);
+#ifndef _WIN32
+        if (!taken && port > 0 && strncmp(jdwp_address, "localhost:", 10) == 0) {
+            taken = loopback_port_in_use(port);
+        }
+#endif
+        if (taken) {
+            fprintf(stderr, "[kanama] JDWP port %d is already in use (another game instance?); "
+                            "starting without the debugger\n", port);
+            jdwp_address[0] = '\0';
         }
     }
     if (jdwp_address[0] != '\0') {

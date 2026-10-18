@@ -244,6 +244,10 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/local_ci.sh:769` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/local_ci.sh:785` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/local_ci.sh:798` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/measure_edit_loop.py:97` | `except OSError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/measure_edit_loop.py:110` | `except ProcessLookupError:` | justified: cleanup after the verdict; the process already exited |
+| `scripts/measure_edit_loop.py:114` | `except subprocess.TimeoutExpired:` | justified: escalated to SIGKILL on the next line |
+| `scripts/measure_edit_loop.py:117` | `except ProcessLookupError:` | justified: cleanup after the verdict; it exited meanwhile |
 | `scripts/package_install_smoke.sh:114` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
 | `scripts/package_install_smoke.sh:130` | `if command -v xattr >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/package_install_smoke.sh:132` | `xattr -dr com.apple.quarantine "$project_dir" 2>/dev/null \|\| true` | justified: clearing quarantine is best effort; a quarantined binary that cannot load fails the Godot launch below. |

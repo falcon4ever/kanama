@@ -41,6 +41,47 @@ only `--write`.
 
 Upgrading from 0.4? See [Upgrading from 0.4 to 0.5](docs/getting-started/upgrading-0.4-to-0.5.md).
 
+### Added — docs: Open in IntelliJ IDEA, and how long the edit loop takes
+
+A new page, [Open in IntelliJ IDEA](docs/getting-started/intellij.md), takes a starter from
+**File > Open** to completion on the Godot API and a debugger stopped in your script, with the
+common problems. [The Editor Loop](docs/getting-started/editor-workflow.md#how-long-the-loop-takes)
+now records how long a save takes to show (median 3.7 s in the editor with build on save, 2.0 s for
+the build alone, on an Apple M1 Max) and sets a budget of 5 s. `scripts/measure_edit_loop.py`
+measures it on your machine.
+
+### Changed — the JDWP debug port listens on localhost only
+
+`kanama/debug/jdwp_enabled` and a bare `KANAMA_JDWP_PORT=5005` now open the debug port on `localhost`
+instead of every network interface: anyone who could reach the port could run code in the game. To
+debug a game on another machine, give a full address: `KANAMA_JDWP_PORT='*:5005'`.
+
+### Fixed — debugging a game started from the editor on Linux and Windows
+
+On Linux and Windows the editor took the project's JDWP port itself (only macOS recognised the
+editor process), so the game started with Play could not open it and exited at startup. The editor
+now skips the port on every desktop OS; like Godot, it counts `--editor`, `-e` and a
+`project.godot` path as the editor, and ignores the user arguments after `--`.
+
+A second game instance on the same port (**Run Multiple Instances**, even when the instances start
+at the same moment) starts without the debugger and says so, instead of exiting at startup. Each
+process claims its port with a lock the OS drops when the process ends (a file lock in the temp
+folder on macOS and Linux, a named mutex on Windows); on macOS and Linux it also checks that no
+other program listens on the port.
+
+### Fixed — a running game no longer stalls once a second after a hot reload
+
+After a new `kanama-scripts.jar` was loaded, a game whose scene was not reloaded (its nodes keep the
+old build's code) forced three full garbage collections and three 25 ms sleeps on the main thread
+every second (about 100 ms), and logged a `retired-loader-check` line each time, for as long as it ran. The check now
+forces collections only when an old build can be collected, and logs only when its result changes.
+
+### Fixed — build on save built twice per save
+
+The Kanama Tools watcher also scanned Gradle's `build/` folder, where every build rewrites the
+generated `.kt` registrars, so each save started a second build (the editor is busy while a build
+runs). It now skips `build/`, `android/` and hidden folders.
+
 ### Changed — tooling: a `KANAMA-BLOCKED` marker can name a GitHub issue
 
 Contributors: `scripts/audit_stale_blockers.py` accepts `issue:<n>` tokens. The marker holds while GitHub issue #<n> is open

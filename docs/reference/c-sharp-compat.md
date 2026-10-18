@@ -37,7 +37,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 | Editor build button | SUPPORTED | Optional Kanama Tools plugin adds `Build Scripts`. |
 | Auto build on save | SUPPORTED | Debounced and opt-in through project settings. |
 | Scene reload after script sync | SUPPORTED | Enabled through the Kanama Tools plugin. |
-| IntelliJ debugging | PARTIAL | Desktop only. Enable JDWP, restart the game process, attach a Remote JVM Debug configuration. Verified by hand on 2026-10-03 by attaching a JDWP client (`jdb`, the JDK's debugger) to a headless starter project started with `KANAMA_JDWP_PORT`; IntelliJ itself is not driven by any automated check, and the CI stage only greps that the settings are wired through `bootstrap.c` and the editor plugins. |
+| IntelliJ debugging | PARTIAL | Desktop only. Enable JDWP, restart the game process, attach a Remote JVM Debug configuration ([Open in IntelliJ IDEA](../getting-started/intellij.md#debug-the-running-game)). Verified by hand on 2026-10-18 by attaching a JDWP client (`jdb`, the JDK's debugger) to a headless starter project started with the project setting and with `KANAMA_JDWP_PORT`; IntelliJ itself is not driven by any automated check, and the CI stage only greps that the settings are wired through `bootstrap.c` and the editor plugins. |
 | Rider support | MISSING | Rider does not support Kotlin/JVM project editing the way IntelliJ IDEA does. |
 
 ## API Surface
