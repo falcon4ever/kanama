@@ -74,7 +74,8 @@ starter's `kotlin-src`, or wherever your scripts live. For multiple roots, use
    in the starter folder.
 6. Press **Play** again.
 
-See [The Editor Loop](editor-workflow.md) for hot reload and debugger setup.
+See [Open in IntelliJ IDEA](intellij.md) for completion and the debugger, and
+[The Editor Loop](editor-workflow.md) for build on save and hot reload.
 
 ## Source Checkout Notes
 

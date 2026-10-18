@@ -56,6 +56,11 @@ typedef void *(WINAPI *AddDllDirectoryFn)(const wchar_t *);
 #include <dirent.h>
 #include <sys/stat.h>
 #endif
+#if !defined(_WIN32) && !defined(__ANDROID__)
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#endif
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -923,18 +928,100 @@ static int read_port_setting_from_project(const char *jar_path, const char *key)
     return parse_positive_port(value);
 }
 
+static int is_editor_flag(const char *arg) {
+    return strcmp(arg, "--editor") == 0 || strcmp(arg, "-e") == 0;
+}
+
+#ifdef _WIN32
+/* The Windows command line is one string: split it the way the C runtime does for the cases
+ * Godot's arguments take (whitespace-separated, double quotes group a path with spaces), and look
+ * for the editor flag as a whole argument. */
+static int command_line_has_editor_flag(const char *line) {
+    char arg[4096];
+    const char *p = line;
+    while (*p) {
+        while (*p == ' ' || *p == '\t') {
+            p++;
+        }
+        size_t n = 0;
+        int quoted = 0;
+        while (*p && (quoted || (*p != ' ' && *p != '\t'))) {
+            if (*p == '"') {
+                quoted = !quoted;
+            } else if (n + 1 < sizeof arg) {
+                arg[n++] = *p;
+            }
+            p++;
+        }
+        arg[n] = '\0';
+        if (n > 0 && is_editor_flag(arg)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+#endif
+
+/* The editor is started with --editor/-e (the project manager adds --editor; a game started with
+ * Play is not). Before this read the command line on Linux and Windows too, the editor there took
+ * the project's JDWP port and the game it started could not bind it. */
 static int is_editor_process(void) {
-#ifdef __APPLE__
+#if defined(__APPLE__)
     int argc = *_NSGetArgc();
     char **argv = *_NSGetArgv();
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "--editor") == 0 || strcmp(argv[i], "-e") == 0) {
+        if (is_editor_flag(argv[i])) {
+            return 1;
+        }
+    }
+#elif defined(_WIN32)
+    const char *line = GetCommandLineA();
+    if (line && command_line_has_editor_flag(line)) {
+        return 1;
+    }
+#elif defined(__linux__) && !defined(__ANDROID__)
+    /* /proc/self/cmdline holds the arguments, each ending in a NUL. */
+    FILE *f = fopen("/proc/self/cmdline", "rb");
+    if (!f) {
+        return 0;
+    }
+    static char cmdline[65536];
+    size_t len = fread(cmdline, 1, sizeof cmdline - 1, f);
+    fclose(f);
+    cmdline[len] = '\0';
+    size_t first = strlen(cmdline) + 1; /* skip argv[0] */
+    for (size_t i = first; i < len; i += strlen(cmdline + i) + 1) {
+        if (is_editor_flag(cmdline + i)) {
             return 1;
         }
     }
 #endif
     return 0;
 }
+
+#if !defined(_WIN32) && !defined(__ANDROID__)
+/* Whether something already listens on loopback `port`. A second game instance (Run Multiple
+ * Instances, or Play while an exported build runs) would otherwise hand the JVM a JDWP port it
+ * cannot bind, and the JDWP agent then exits the process. Probing has a race, which only matters if
+ * the port is taken in the microseconds before the JVM binds it. */
+static int loopback_port_in_use(int port) {
+    int fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (fd < 0) {
+        return 0;
+    }
+    /* As the JDWP agent does: a port left in TIME_WAIT by the last debug session is free to it. */
+    int reuse = 1;
+    setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof reuse);
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof addr);
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons((unsigned short)port);
+    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    int in_use = bind(fd, (struct sockaddr *)&addr, sizeof addr) != 0;
+    close(fd);
+    return in_use;
+}
+#endif
 
 static int is_numeric_port_string(const char *value) {
     if (!value || !*value) {
@@ -1247,10 +1334,13 @@ static int start_jvm(const char *jar_path) {
     char jdwp_opt[256] = {0};
     char jdwp_address[128] = {0};
     int jdwp_enabled = 0;
+    /* A bare port listens on loopback only: JDWP with suspend=n is remote code execution for
+     * anyone who can reach the port, so it is not opened to the network unless asked for with
+     * an explicit address (KANAMA_JDWP_PORT='*:5005'). */
     const char *jdwp_port = getenv("KANAMA_JDWP_PORT");
     if (jdwp_port && *jdwp_port) {
         if (is_numeric_port_string(jdwp_port)) {
-            snprintf(jdwp_address, sizeof jdwp_address, "*:%s", jdwp_port);
+            snprintf(jdwp_address, sizeof jdwp_address, "localhost:%s", jdwp_port);
         } else {
             snprintf(jdwp_address, sizeof jdwp_address, "%s", jdwp_port);
         }
@@ -1268,10 +1358,20 @@ static int start_jvm(const char *jar_path) {
                 ? read_port_setting_from_project(jar_path, "debug/jdwp_port")
                 : 0;
             if (runtime_enabled && project_port > 0) {
-                snprintf(jdwp_address, sizeof jdwp_address, "*:%d", project_port);
+                snprintf(jdwp_address, sizeof jdwp_address, "localhost:%d", project_port);
             }
         }
     }
+#if !defined(_WIN32) && !defined(__ANDROID__)
+    if (jdwp_address[0] != '\0' && strncmp(jdwp_address, "localhost:", 10) == 0) {
+        int port = parse_positive_port(jdwp_address + 10);
+        if (port > 0 && loopback_port_in_use(port)) {
+            fprintf(stderr, "[kanama] JDWP port %d is already in use (another game instance?); "
+                            "starting without the debugger\n", port);
+            jdwp_address[0] = '\0';
+        }
+    }
+#endif
     if (jdwp_address[0] != '\0') {
         snprintf(jdwp_opt, sizeof jdwp_opt,
             "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=%s", jdwp_address);

@@ -87,8 +87,10 @@ cd kanama
 Open `kanama-starter/project.godot` in Godot and press **Play**. The starter
 script is `kanama-starter/kotlin-src/HelloScript.kt`. The starter is a Gradle
 project with its own wrapper: open the `kanama-starter` folder in IntelliJ IDEA
-as a Gradle project for Kotlin completion of the Kanama API. After editing a
-script, press **Build Scripts** in Godot, or run it from the starter folder:
+as a Gradle project for Kotlin completion of the Kanama API
+([Open in IntelliJ IDEA](docs/getting-started/intellij.md) also covers the
+debugger). After editing a script, press **Build Scripts** in Godot, or run it
+from the starter folder:
 
 ```sh
 cd /path/to/kanama-starter

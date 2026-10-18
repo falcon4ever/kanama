@@ -882,7 +882,7 @@ case "$UNAME_S" in
     # task 131 item 18 -- the exit hook is a JNI option too: with JDWP on and user JVM options
     # appended after it, it must still be there (and the JDWP option must not displace it).
     sigterm_leg "JDWP + KANAMA_JVM_OPTIONS" ".jdwp" KANAMA_JDWP_PORT=0 "KANAMA_JVM_OPTIONS=-XX:MaxNewSize=96m"
-    for want in "JDWP debug agent enabled at \*:0" "JVM options from KANAMA_JVM_OPTIONS: -XX:MaxNewSize=96m"; do
+    for want in "JDWP debug agent enabled at localhost:0" "JVM options from KANAMA_JVM_OPTIONS: -XX:MaxNewSize=96m"; do
       if ! grep -q "\[kanama\] $want" "${LOG_FILE}.sigterm.jdwp"; then
         echo "[runtime_smoke] FAIL -- SIGTERM leg (JDWP + KANAMA_JVM_OPTIONS): no '[kanama] $want' line (log: ${LOG_FILE}.sigterm.jdwp)" >&2
         exit 1

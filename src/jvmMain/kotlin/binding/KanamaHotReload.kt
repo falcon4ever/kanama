@@ -39,6 +39,9 @@ object KanamaHotReload {
   private var nextCheckNanos: Long = 0L
   private var nextLoaderId: Long = 1L
   private var nextRetiredLoaderCheckNanos: Long = 0L
+  private var retiredLoaderCheckIntervalNanos: Long = RETIRED_LOADER_CHECK_INTERVAL_NANOS
+  // The last `alive=… alive_ids=…` the check printed: an unchanged result is not printed again.
+  private var lastRetiredLoaderReport: String = ""
   private var projectClassesRegistered: Boolean = false
   private val retiredLoaders = ArrayList<RetiredLoader>()
 
@@ -49,6 +52,7 @@ object KanamaHotReload {
 
   private const val CHECK_INTERVAL_NANOS: Long = 500_000_000L
   private const val RETIRED_LOADER_CHECK_INTERVAL_NANOS: Long = 1_000_000_000L
+  private const val RETIRED_LOADER_CHECK_MAX_INTERVAL_NANOS: Long = 8_000_000_000L
 
   private val childFirstPrefixes =
     listOf("net.multigesture.kanama.generated.", "net.multigesture.kanama.example.")
@@ -76,6 +80,8 @@ object KanamaHotReload {
       lastScriptsJarMtime = -1L
       nextCheckNanos = 0L
       nextRetiredLoaderCheckNanos = 0L
+      retiredLoaderCheckIntervalNanos = RETIRED_LOADER_CHECK_INTERVAL_NANOS
+      lastRetiredLoaderReport = ""
       nextLoaderId = 1L
       projectClassesRegistered = false
       retiredLoaders.clear()
@@ -89,6 +95,9 @@ object KanamaHotReload {
     if (sweepRequested) {
       sweepRequested = false
       sweepRetiredConnections()
+      // A retired build just lost its last script object: its loader can go now, check soon.
+      retiredLoaderCheckIntervalNanos = RETIRED_LOADER_CHECK_INTERVAL_NANOS
+      nextRetiredLoaderCheckNanos = 0L
     }
     val now = System.nanoTime()
     if (now < nextCheckNanos) return
@@ -207,6 +216,7 @@ object KanamaHotReload {
       loader.close()
     } catch (_: Throwable) {}
     retiredLoaders += RetiredLoader(loader.reloadId, WeakReference(loader))
+    retiredLoaderCheckIntervalNanos = RETIRED_LOADER_CHECK_INTERVAL_NANOS
     System.err.println("[kanama:kt] hot-reload: retired loader=${loader.reloadId}")
   }
 
@@ -300,20 +310,29 @@ object KanamaHotReload {
   private fun checkRetiredLoaders(now: Long = System.nanoTime()) {
     if (retiredLoaders.isEmpty()) return
     if (now < nextRetiredLoaderCheckNanos) return
-    nextRetiredLoaderCheckNanos = now + RETIRED_LOADER_CHECK_INTERVAL_NANOS
     // Backstop for the per-frame sweep: nothing a finished build made may pin its loader.
     sweepRetiredConnections()
 
+    // A retired build that still has live script objects cannot be collected: a running game keeps
+    // its scene's nodes, and their old code, until the scene reloads. Forcing collections for it
+    // stalled the main thread every second (three full GCs and three 25 ms sleeps) for as long as
+    // the game ran after a reload, so the GC rounds run only when some retired build has no live
+    // script object left, which is when its loader is expected to go.
+    val collectable =
+      retiredLoaders.any { retired ->
+        val loader = retired.ref.get()
+        loader == null || ScriptBridge.liveScriptObjects(loader) == 0
+      }
     var collected = 0
     var alive = 0
     val aliveIds = ArrayList<Long>()
     // System.gc() is a hint: under machine load a single cycle often leaves the
     // retired loader uncollected until the next check, and a short-lived process
     // (the in-process reload smoke) can exit before that check fires. Retry a few
-    // bounded rounds within one check — this path only runs while a retired
-    // loader exists, i.e. right after a hot reload.
-    for (attempt in 0 until 3) {
-      System.gc()
+    // bounded rounds within one check.
+    val rounds = if (collectable) 3 else 1
+    for (attempt in 0 until rounds) {
+      if (collectable) System.gc()
       alive = 0
       aliveIds.clear()
       val iterator = retiredLoaders.iterator()
@@ -327,13 +346,24 @@ object KanamaHotReload {
           aliveIds += retired.reloadId
         }
       }
-      if (alive == 0) break
+      if (alive == 0 || attempt == rounds - 1) break
       Thread.sleep(25)
     }
-    System.err.println(
-      "[kanama:kt] hot-reload: retired-loader-check collected=$collected " +
-        "alive=$alive alive_ids=${aliveIds.joinToString(",")} swept=$sweptSinceCheck"
-    )
+    // A collectable build whose loader survived the GC rounds is pinned by something else (a
+    // leak the line below reports): back off up to 8 s instead of forcing collections every second.
+    retiredLoaderCheckIntervalNanos =
+      if (collectable && collected == 0 && alive > 0)
+        minOf(retiredLoaderCheckIntervalNanos * 2, RETIRED_LOADER_CHECK_MAX_INTERVAL_NANOS)
+      else RETIRED_LOADER_CHECK_INTERVAL_NANOS
+    nextRetiredLoaderCheckNanos = now + retiredLoaderCheckIntervalNanos
+    val report = "alive=$alive alive_ids=${aliveIds.joinToString(",")}"
+    if (collected > 0 || sweptSinceCheck > 0 || report != lastRetiredLoaderReport) {
+      System.err.println(
+        "[kanama:kt] hot-reload: retired-loader-check collected=$collected " +
+          "$report swept=$sweptSinceCheck"
+      )
+      lastRetiredLoaderReport = report
+    }
     sweptSinceCheck = 0
   }
 

@@ -46,6 +46,8 @@ with **Build Scripts** before Godot can run the updated behavior.
 
 ## What To Read Next
 
+- [Open in IntelliJ IDEA](intellij.md) for completion on the Godot API and the
+  debugger.
 - [The Editor Loop](editor-workflow.md) for build buttons, hot reload, and
   debugging.
 - [Writing Kotlin Scripts](../game-dev/scripts.md) for script structure,

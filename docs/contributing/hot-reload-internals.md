@@ -73,7 +73,13 @@ running the old build's code and pins the retired loader. The pieces:
    its class. A build that still has live objects keeps its connections.
 4. **Logs.** `retired-loader-check collected=C alive=A alive_ids=… swept=N`
    reports the connections the sweeps dropped since the previous check; with
-   nothing left to pin it, the retired loader is collected (`alive=0`).
+   nothing left to pin it, the retired loader is collected (`alive=0`). The
+   line is printed when something changed (a collection, a sweep, a different
+   set of live loaders), not every second. The check forces garbage
+   collections only while some retired build has no live script object left:
+   a build whose objects are still alive (a running game whose scene was not
+   reloaded) cannot be collected, and forcing collections for it stalled the
+   main thread once a second.
 
 `AutoloadReload` still disconnects the lambdas bound to a reset autoload node
 at once (receiver-keyed); the build sweep covers every other target. An
@@ -93,8 +99,9 @@ template. Scene reload is still recommended for reliable live-node replacement.
 For breakpoint debugging, enable `kanama/debug/jdwp_enabled`. Kanama tools
 registers `kanama/debug/jdwp_port` with the conventional runtime/game default
 `5005`. Restart the game process after changing either setting. Kanama reads
-these settings before starting the embedded JVM and enables JDWP at `*:PORT`
-for runtime/game processes; attach IntelliJ with a **Remote JVM Debug**
+these settings before starting the embedded JVM and enables JDWP at
+`localhost:PORT` for runtime/game processes (skipped, with a log line, when the
+port is already taken on macOS and Linux); attach IntelliJ with a **Remote JVM Debug**
 configuration pointed at `localhost:PORT`. Editor processes skip the runtime
 port so pressing Play does not create a port conflict.
 

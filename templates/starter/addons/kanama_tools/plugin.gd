@@ -419,6 +419,14 @@ func _collect_kt_mtimes() -> Dictionary:
     return result
 
 
+# Folders the build-on-save watcher does not scan, the ones the script build does not compile:
+# Gradle's build/ (KSP rewrites the generated registrar .kt files there on every build, so watching
+# it made each save build twice), Godot's android/ build template, and hidden folders (.godot,
+# .gradle, .git, .idea).
+static func _is_kt_scan_skipped_dir(name: String) -> bool:
+    return name.begins_with(".") or name == "build" or name == "android"
+
+
 func _collect_kt_mtimes_recursive(dir_path: String, sink: Dictionary) -> void:
     var dir := DirAccess.open(dir_path)
     if dir == null:
@@ -432,7 +440,8 @@ func _collect_kt_mtimes_recursive(dir_path: String, sink: Dictionary) -> void:
             continue
         var child := dir_path.path_join(name)
         if dir.current_is_dir():
-            _collect_kt_mtimes_recursive(child, sink)
+            if not _is_kt_scan_skipped_dir(name):
+                _collect_kt_mtimes_recursive(child, sink)
         elif name.to_lower().ends_with(".kt"):
             sink[child] = FileAccess.get_modified_time(child)
     dir.list_dir_end()

@@ -176,14 +176,18 @@ debug/jdwp_port=5005
 Restart the game process after changing either setting. Kanama reads these
 settings before starting the embedded JVM. When launching from the Godot editor,
 the editor process skips the runtime JDWP port so the spawned game process can
-bind it.
+bind it. The port listens on `localhost` only; a game instance that finds the
+port taken starts without the debugger and says so.
 
 Create an IntelliJ **Remote JVM Debug** run configuration for `localhost:5005`
 or the configured port, then press Play in Godot and attach the debugger. You
 can set breakpoints in Kotlin scripts and step through lifecycle callbacks,
 signal handlers, and ordinary gameplay code while the game is running.
+[Open in IntelliJ IDEA](intellij.md#debug-the-running-game) walks through it,
+including how to stop before `_ready` runs.
 
-For one-off launches, `KANAMA_JDWP_PORT=5005` overrides the project setting.
+For one-off launches, `KANAMA_JDWP_PORT=5005` overrides the project setting; a
+full address (`KANAMA_JDWP_PORT='*:5005'`) opens the port to other machines.
 Other JVM options (a GC log, heap sizes) go in `KANAMA_JVM_OPTIONS`, for example
 `KANAMA_JVM_OPTIONS="-Xlog:gc"`; see
 [JVM Options](../exporting/desktop.md#jvm-options).
@@ -201,3 +205,38 @@ Godot's ClassDB and require an editor restart after changes.
 
 For maintainer-level details and smoke scripts, see
 [Hot Reload Internals](../contributing/hot-reload-internals.md).
+
+## How Long the Loop Takes
+
+Measured on a fresh starter: save `HelloScript.kt` with a changed print line,
+then time until the change shows.
+
+| From saving a `.kt` file until | Median | p90 |
+| --- | --- | --- |
+| `./gradlew buildScripts` has finished (build only) | 2.0 s | 2.1 s |
+| a newly started game prints the new line (build, then Play again) | 2.4 s | 2.5 s |
+| the editor shows it: build on save, then the scene reloads | 3.7 s | 3.8 s |
+| a running game has loaded the new build | 2.6 s | 2.9 s |
+
+Five runs each after one warm-up run, with the Gradle daemon running (the first
+build after starting it took 4.3 s). Machine: Apple M1 Max, 64 GB, macOS 26.6,
+Godot 4.7.2, JDK 25, headless editor and game; measured 2026-10-18.
+
+About 1.5 s of the editor number is build on save waiting for you to stop
+saving: it scans for changed files every 0.6 s and builds once
+`kanama/tools/auto_build_debounce_ms` (800 ms) has passed without another
+change. A running game checks for a new build every 0.5 s, but the nodes it
+already has keep running their old code until their scene reloads; new
+instances and Kotlin autoloads use the new code at once. For a change you want
+to see in the game, restarting it is the fastest path.
+
+The budget is a median of 5 s or less from save to the change showing in the
+editor. To measure your own machine:
+
+```sh
+python3 scripts/measure_edit_loop.py /path/to/godot --runs 5
+```
+
+It creates a fresh starter from your checkout, runs the four measurements, and
+prints the median, the p90 and a budget line. The budget line is a report: the
+script fails only when it cannot take a measurement.
