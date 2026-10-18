@@ -1,4 +1,4 @@
-// demos/visibilityprobe.mjs -- task 71 control (see scripts/web/visibility_probe.py).
+// demos/visibilityprobe.mjs -- issue #370 control (see scripts/web/visibility_probe.py).
 //
 // Drives a PLAIN GDSCRIPT export that contains no Kanama at all. Its only job is
 // to open the page, keep it open, and let the scene report for itself; the

@@ -13,7 +13,7 @@
 // wrapper. Main's method ids come from the export manifest, by name. Every mob of both rounds must be
 // freed -- off screen (Mob's screen_exited dispatch) or by new_game's queue_free -- counted from the
 // bridge's mob scripts, not from live-handle drops (the browser collecting a mob's SpriteFrames drops
-// them too); a host that never reports a mob off screen (the Linux CI runner's Firefox, task 71) is
+// them too); a host that never reports a mob off screen (the Linux CI runner's Firefox, issue #370) is
 // red on mobsFreedOffScreen and nothing else (at least one mob must free itself off screen). The
 // scenarios below pin all of it.
 //

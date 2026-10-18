@@ -176,9 +176,9 @@ kanama_web_demo_local_only_reason() {
 # archived, so a quarantine cannot outlive the defect it cites.
 kanama_web_quarantine_reason() {
   case "$1" in
-    # KANAMA-BLOCKED(since:2026-07-28, task:71): screen_exited never fires for dodge's mobs on Linux Firefox
+    # KANAMA-BLOCKED(since:2026-07-28, issue:370): screen_exited never fires for dodge's mobs on Linux Firefox
     dodge:firefox)
-      echo "task 71 — screen_exited never fires for dodge's mobs on Linux Firefox (red on mobsFreedOffScreen only); dodge passes on macOS"
+      echo "issue #370 — screen_exited never fires for dodge's mobs on Linux Firefox (red on mobsFreedOffScreen only); dodge passes on macOS"
       ;;
     # squash:chrome was quarantined 2026-08-12 for its death-phase choreography only
     # (the parked player waited for a randomly-heading mob, 1-for-2 on the slow
@@ -194,7 +194,7 @@ kanama_web_quarantine_reason() {
 # citing task is re-planned; the matrix warns loudly once today is past it.
 kanama_web_quarantine_until() {
   case "$1" in
-    # quarantined 2026-07-28 (task 71 parked); renewed 2026-10-16 to 2027-03-31: screen_exited never
+    # quarantined 2026-07-28 (issue #370 open); renewed 2026-10-16 to 2027-03-31: screen_exited never
     # fires for dodge's mobs on the Linux runner's Firefox, so the cell fails mobsFreedOffScreen there
     # and only that (new_game frees every mob; the cell is otherwise green there).
     dodge:firefox) echo "2027-03-31" ;;

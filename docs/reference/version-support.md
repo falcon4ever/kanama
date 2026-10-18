@@ -297,11 +297,11 @@ above — mobile WebKit stays outside the validated claim.
 - No Web editor, no hot reload, no threads, no Kotlin/JS path.
 - Safari has **no headless mode**, so the Safari gate is a local GUI gate rather
   than a CI cell; iOS/iPadOS WebKit is hand-checked only, not gated.
-<!-- KANAMA-BLOCKED(since:2026-07-28, task:71): screen_exited never fires for dodge's mobs on Linux Firefox; the dodge:firefox cell is quarantined -->
+<!-- KANAMA-BLOCKED(since:2026-07-28, issue:370): screen_exited never fires for dodge's mobs on Linux Firefox; the dodge:firefox cell is quarantined -->
 - One defect is tracked openly rather than solved: on one Linux CI host,
   spawned mobs never receive `VisibleOnScreenNotifier2D.screen_exited`, so they
   are not freed off screen; the next round's `queue_free` still frees them
-  (task 71; the `dodge:firefox` cell is quarantined, not hidden). Nothing measured implicates the Kanama backend, but it has not been ruled
+  ([issue #370](https://github.com/falcon4ever/kanama/issues/370); the `dodge:firefox` cell is quarantined, not hidden). Nothing measured implicates the Kanama backend, but it has not been ruled
   out — see [Exporting → Web](../exporting/web.md) Known Limitations.
 - Reproducible export builds currently require
   `--no-daemon -Pkotlin.compiler.execution.strategy=in-process` (Kotlin daemon
