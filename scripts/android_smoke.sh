@@ -200,6 +200,10 @@ for key in "${SELFTEST_KEYS[@]}"; do
   }
 done
 echo "[android_smoke] self-tests enabled for this run: $(printf 'kanama/debug/%s ' "${SELFTEST_KEYS[@]}")"
+# The desktop Godot runs below (template install, export, exported-scene check) load the same project
+# with the user-shaped desktop jar, which has no exercise rows: the environment override (it wins over
+# the project setting, as for the other self-tests) keeps the exercise off there. The device never sees it.
+export KANAMA_API_EXERCISE=0
 
 if [[ -n "$RENDERER_OVERRIDE" ]]; then
   if ! grep -q '^renderer/rendering_method.mobile=' "$PROJECT_GODOT"; then

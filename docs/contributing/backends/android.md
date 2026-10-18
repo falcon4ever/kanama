@@ -191,6 +191,10 @@ summary other than
 [kanama] API EXERCISE: <n> passed, 0 failed, <w> weak, <k> known, <r> reach, <e> excluded in <ms> ms
 ```
 
+The exercise stays opt-in on Android and runs on Match3 only: on a Pixel 7 it takes about 4 s of the
+first frame (`340 passed, 0 failed, 254 weak ... in 3960 ms`, against about 0.25 s on an iPhone 12), over
+the 2 s a first-frame test hook may cost. The desktop Godot runs inside the smoke (export, exported-scene
+check) get `KANAMA_API_EXERCISE=0`, which wins over the project setting the smoke writes.
 `KANAMA_ANDROID_API_EXERCISE_TRACE=1` adds `kanama/debug/api_exercise_trace` (a line before each row, so
 a crash names its row). Without the variable the smoke checks that no `API EXERCISE` line appears. The
 rows run as platform `android`: `DirAccess.get_drive_name(0)` may be `""` there, where a zero counts weak
