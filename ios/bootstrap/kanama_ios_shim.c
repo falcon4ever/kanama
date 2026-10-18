@@ -3789,8 +3789,13 @@ static int64_t kanama_ios_godot_ptrcall_ret_array_blob_dispatch(
                              : "g_array_get_method");
             return -1;
         }
-        // Array opaque is 8 bytes on 64-bit (OPAQUE_8_BYTE_TYPES).
+        // Array opaque is 8 bytes on 64-bit (OPAQUE_8_BYTE_TYPES). Constructed, not zeroed: the engine
+        // writes a C++ Vector<Variant> / Vector<RID> / Vector<Plane> return by resizing this Array in
+        // place, which dereferences a null Array (a zeroed cell) and crashes.
         uint64_t array_storage = 0;
+        if (g_array_constructor != NULL) {
+            g_array_constructor((GDExtensionUninitializedTypePtr)&array_storage, NULL);
+        }
         kanama_ios_godot_ptrcall_dispatch(
             method_bind, instance, arg_types, arg_ptrs, arg_count, KANAMA_IOS_RET_ARRAY_CELL, &array_storage);
         total = kanama_ios_encode_typed_array_blob(&array_storage, elem_kind, NULL, 0);
@@ -4390,6 +4395,12 @@ static int kanama_ios_ptrcall_encode_container(
     // Dictionary and Array opaques are one 8-byte pointer each; the dispatch writes it (and builds
     // any String-family / packed args).
     uint64_t storage = 0;
+    // An Array return cell is constructed first: the engine resizes it in place for a C++
+    // Vector<Variant> / Vector<RID> / Vector<Plane> return (a zeroed cell crashes). A Dictionary
+    // return is always assigned, which a zeroed cell takes.
+    if (container_kind == KANAMA_IOS_VARIANT_TYPE_ARRAY && g_array_constructor != NULL) {
+        g_array_constructor((GDExtensionUninitializedTypePtr)&storage, NULL);
+    }
     kanama_ios_godot_ptrcall_dispatch(
         method_bind, instance, arg_types, arg_ptrs, arg_count, KANAMA_IOS_RET_CONTAINER_CELL, &storage);
     if (container_kind == KANAMA_IOS_VARIANT_TYPE_DICTIONARY) {

@@ -294,6 +294,10 @@ case("check_android_remap_sources.py (string literal)", py("check_android_remap_
 case("check_android_remap_sources.py (nested template)", py("check_android_remap_sources.py"),
      [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt", 'package net.multigesture.kanama\nval zzText: String = "${"/*"}"\nfun zz() = Files.readString(x)\n')],
      "ZzRedRun.kt:3: forbidden after the Android remap", "a template whose inner literal holds a block-comment opener no longer hides the following lines (task 138 item 28)")
+case("check_android_remap_sources.py (reflective Method.invoke)", py("check_android_remap_sources.py"),
+     [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt",
+             'package net.multigesture.kanama\nfun zz(flag: Boolean) {\n  val entry =\n    Class.forName("x")\n      .getMethod("y", Boolean::class.javaPrimitiveType)\n  entry.invoke(null, flag)\n}\n')],
+     "ZzRedRun.kt:6: `.invoke(` on the reflective Method `entry`", "a reflective `Method.invoke` in the runtime sources: the Android remap makes it `invokeWithArguments`, which Method lacks, and the runtime AAR stops compiling (the API exercise hook)")
 case("check_android_remap_sources.py (invokeExact)", py("check_android_remap_sources.py"),
      [Edit("android/godot-plugin/buildSrc/src/main/kotlin/KanamaAndroidRemap.kt",
            'needle = ".invokeExact(",', 'needle = ".invokeExactDisabled(",')],
@@ -451,14 +455,21 @@ case("check_ios_static_dispatch.py", py("check_ios_static_dispatch.py"),
 IOS_SELFTEST_LOG = "scripts/fixtures/ios_selftest_console.log"
 IOS_SELFTEST_CHECK = ["bash", "scripts/ios_visual_smoke.sh", "--check-selftest-log", IOS_SELFTEST_LOG]
 IOS_SELFTEST_SUMMARIES = ("[kanama][ios][c] PTRCALL SELFTEST MATRIX: 120 passed, 0 failed\n"
-                          "[kanama][ios][kn] OBJECTCALLS SELFTEST: 308 passed, 0 failed faults=7 expected=7\n"
-                          "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7\n")
+                          "[kanama][ios][kn] OBJECTCALLS SELFTEST: 308 passed, 0 failed faults=7 expected=7 in 412 ms\n"
+                          "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7 in 38 ms\n"
+                          "[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): 90 passed, 0 failed, 5 weak, 0 known, 0 reach faults=7 expected=7 in 120 ms\n")
 case("ios_visual_smoke.sh --check-selftest-log (no self-test)", IOS_SELFTEST_CHECK,
      [Edit(IOS_SELFTEST_LOG, IOS_SELFTEST_SUMMARIES, "")],
      "summary missing: /PTRCALL SELFTEST MATRIX", "a console with no self-test lines at all (a build without -PkanamaIosSelfTest=true) must fail, not pass as clean")
 case("ios_visual_smoke.sh --check-selftest-log (no frame 1)", IOS_SELFTEST_CHECK,
-     [Edit(IOS_SELFTEST_LOG, "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7\n", "")],
+     [Edit(IOS_SELFTEST_LOG, "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7 in 38 ms\n", "")],
      "summary missing: /OBJECTCALLS SELFTEST \\(frame 1\\)", "the app never reached its first frame: the frame-1 summary is missing while the other two passed")
+case("ios_visual_smoke.sh --check-selftest-log (no api exercise)", IOS_SELFTEST_CHECK,
+     [Edit(IOS_SELFTEST_LOG, "[kanama][ios][kn] OBJECTCALLS SELFTEST (api exercise): 90 passed, 0 failed, 5 weak, 0 known, 0 reach faults=7 expected=7 in 120 ms\n", "")],
+     "summary missing: /OBJECTCALLS SELFTEST \\(api exercise\\)", "the generated API exercise did not run or did not finish: its summary is missing while the other three passed")
+case("ios_visual_smoke.sh --check-selftest-log (api exercise row failed)", IOS_SELFTEST_CHECK,
+     [Edit(IOS_SELFTEST_LOG, "(api exercise): 90 passed, 0 failed", "(api exercise): 89 passed, 1 failed")],
+     "runtime self-test reported failures", "the API exercise summary reports a failed row with no FAIL line")
 case("ios_visual_smoke.sh --check-selftest-log (1 failed)", IOS_SELFTEST_CHECK,
      [Edit(IOS_SELFTEST_LOG, "(frame 1): 25 passed, 0 failed", "(frame 1): 24 passed, 1 failed")],
      "runtime self-test reported failures", "a summary reports `N passed, 1 failed` with no FAIL line")
@@ -512,8 +523,60 @@ case("generate_api_exercise.py --check (exclusion names no class)", API_EXERCISE
      [Edit("scripts/api_exercise_policy.py", '    "Window": _WINDOW,\n', '    "Window": _WINDOW,\n    "WindowRedRun": _WINDOW,\n')],
      "EXCLUDE_EXACT names WindowRedRun, a class the API lacks", "an exclusion entry names a class the API lacks (as a Godot bump that renames or drops a class leaves it)")
 case("generate_api_exercise.py --check (static args name no method)", API_EXERCISE_CHECK,
-     [Edit("scripts/api_exercise_policy.py", '    ("FileAccess", "open"): (None, None),\n', '    ("FileAccess", "open_red_run"): (None, None),\n')],
+     [Edit("scripts/api_exercise_policy.py", '    ("FileAccess", "open"): (\'scratch("fixture.txt")\', "FileAccess.READ"),\n', '    ("FileAccess", "open_red_run"): (\'scratch("fixture.txt")\', "FileAccess.READ"),\n')],
      "STATIC_ARGS names FileAccess.open_red_run, a method the API lacks", "a `STATIC_ARGS` entry names a method the API lacks (and the static it was for is left without arguments)")
+case("generate_api_exercise.py --check (override no longer applies)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '    ("RegEx", "search"): ("F", _NEW_OBJECT),\n', '    ("RegEx", "search"): ("F", _NEW_OBJECT),\n    ("RegEx", "clear"): ("F", _NEW_OBJECT),\n')],
+     "METHOD_OVERRIDES[RegEx.clear] sets case F, which the class rules already give it", "a `METHOD_OVERRIDES` entry sets the case the class rules already give the method (a void method made F): the entry changes nothing")
+case("generate_api_exercise.py --check (static argument off its default)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", 'Arg(\'"kanama-api-exercise"\', "a recognisable name for the OS temp directory the call creates (removed on free)"),', '\'"kanama-api-exercise"\',')],
+     "but extension_api.json's default is", "a `STATIC_ARGS` argument differs from the API default without the `Arg(value, reason)` marker that says it is deliberate")
+case("generate_api_exercise.py --check (rows hand-edited)", API_EXERCISE_CHECK,
+     [Edit("src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt", "r.staticError(got.value, oracle)", "r.staticValue(got.value, oracle, weak = true)")],
+     "ApiExercise.generated.kt is stale or hand-edited", "a generated API exercise row is edited by hand (an Error static made weak): the committed rows must be the generator's")
+# --check-jar over a jar built from scripts/fixtures/api_exercise/jar/ (zipped by the command): a shipped jar that
+# carries an exercise class (a build made with -PkanamaApiExercise=true) must fail the check.
+API_EXERCISE_JAR = ["python3", "-c",
+    "import pathlib, subprocess, sys, tempfile, zipfile\n"
+    "root = pathlib.Path('scripts/fixtures/api_exercise/jar')\n"
+    "with tempfile.TemporaryDirectory() as tmp:\n"
+    "    jar = pathlib.Path(tmp) / 'kanama.jar'\n"
+    "    with zipfile.ZipFile(jar, 'w') as z:\n"
+    "        [z.write(f, f.relative_to(root).as_posix()) for f in sorted(root.rglob('*')) if f.is_file()]\n"
+    "    code = subprocess.run([sys.executable, 'scripts/generate_api_exercise.py', '--check-jar', str(jar)]).returncode\n"
+    "sys.exit(code)\n"]
+case("generate_api_exercise.py --check-jar (exercise class in a jar)", API_EXERCISE_JAR,
+     [Create("scripts/fixtures/api_exercise/jar/net/multigesture/kanama/exercise/ApiExerciseRows.class", "placeholder\n")],
+     "carries 1 API exercise class(es)", "a jar with an `exercise/` class (a -PkanamaApiExercise=true build) is published or installed: the check must fail it")
+# The same over a runtime AAR (the jar zipped as its classes.jar): a flagged Android runtime AAR must fail the check
+# packageMobileAddonAndroid, CI's Android lane and android_export_minified.sh run.
+API_EXERCISE_AAR = ["python3", "-c",
+    "import io, pathlib, subprocess, sys, tempfile, zipfile\n"
+    "root = pathlib.Path('scripts/fixtures/api_exercise/jar')\n"
+    "inner = io.BytesIO()\n"
+    "with zipfile.ZipFile(inner, 'w') as z:\n"
+    "    [z.write(f, f.relative_to(root).as_posix()) for f in sorted(root.rglob('*')) if f.is_file()]\n"
+    "with tempfile.TemporaryDirectory() as tmp:\n"
+    "    aar = pathlib.Path(tmp) / 'plugin-debug.aar'\n"
+    "    with zipfile.ZipFile(aar, 'w') as z:\n"
+    "        z.writestr('classes.jar', inner.getvalue())\n"
+    "    code = subprocess.run([sys.executable, 'scripts/generate_api_exercise.py', '--check-jar', str(aar)]).returncode\n"
+    "sys.exit(code)\n"]
+case("generate_api_exercise.py --check-jar (exercise class in a runtime AAR)", API_EXERCISE_AAR,
+     [Create("scripts/fixtures/api_exercise/jar/net/multigesture/kanama/exercise/ApiExerciseRows.class", "placeholder\n")],
+     "carries 1 API exercise class(es)", "a runtime AAR whose classes.jar has an `exercise/` class (a -PkanamaApiExercise=true Android build) is packaged or exported for release: the check must fail it")
+case("generate_api_exercise.py --check (RID source no row takes)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '    ("TextServer", "shaped"): "TextServer.create_shaped_text",\n',
+           '    ("TextServer", "shaped"): "TextServer.create_shaped_text",\n    ("TextServer", "red_run"): "TextServer.create_font",\n')],
+     "RID_ARG_SOURCES names TextServer argument `red_run`, which no B or D row of TextServer takes", "a `RID_ARG_SOURCES` entry names a RID argument no row passes (renamed or gone): it would make and free a RID for nothing")
+case("generate_api_exercise.py --check (row arguments of no row)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '    ("ClassDB", "class_get_enum_list"): (\'"Node"\',),\n',
+           '    ("ClassDB", "class_get_enum_list"): (\'"Node"\',),\n    ("ClassDB", "class_get_enum_list_red_run"): (\'"Node"\',),\n')],
+     "ROW_ARGS names ClassDB.class_get_enum_list_red_run, which is not a B or D row", "a `ROW_ARGS` entry names a method that is no B or D row (renamed or gone): its arguments would silently go unused")
+case("generate_api_exercise.py --check (known finding names no row)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", "tuple[tuple[str, ...], str, str, str]] = {}",
+           'tuple[tuple[str, ...], str, str, str]] = {("A", "CharFXTransform.font_red_run"): (("ios",), "got null", "red run", "red run")}')],
+     "KNOWN_FINDINGS names A CharFXTransform.font_red_run, which is not a generated row", "a KNOWN_FINDINGS entry names a row the generator does not write (renamed or gone): it would hide nothing and stay forever")
 case("generate_api_exercise.py --check (rule order)", API_EXERCISE_CHECK,
      [Edit("scripts/generate_api_exercise.py", 'ORDER = "CABDFE"', 'ORDER = "ACBDFE"')],
      "does not match the rules run on the fixture API", "the case ranking puts property pairs before statics: the toy-API fixture and the committed page both catch it")
@@ -923,6 +986,77 @@ case("runtime_smoke.sh (self-test setting)", ["bash", "scripts/runtime_smoke.sh"
      [Edit("src/jvmMain/kotlin/binding/runtime/SignalSelfTest.kt", "setting = { boolSetting(SETTING) },", "setting = { false },")],
      "did not run the self-test", "the kanama/debug/signal_self_test project setting stops opting a run in (the Android smoke can only use the setting)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+# The API exercise's rows hold the argument shapes: two component writes swapped in the desktop Vector3 helper (a
+# property-pair row) and the two Vector2 arguments of a static swapped (a static row reading its result back)
+# must each turn the exercise's own check red, the first one the smoke makes, naming the helper.
+case("runtime_smoke.sh (API exercise pair rows)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit(JVM_OBJECT_CALLS,
+           "    value: Vector3,\n  ) {\n    Arena.ofConfined().use { arena ->\n      val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)\n"
+           "      GodotRealSegment.writeRaw(vec, 0, value.rawX)\n      GodotRealSegment.writeRaw(vec, 1, value.rawY)\n",
+           "    value: Vector3,\n  ) {\n    Arena.ofConfined().use { arena ->\n      val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)\n"
+           "      GodotRealSegment.writeRaw(vec, 0, value.rawY)\n      GodotRealSegment.writeRaw(vec, 1, value.rawX)\n")],
+     "API EXERCISE FAIL: ptrcallNoArgsRetVector3 ptrcallWithVector3Arg", "ptrcallWithVector3Arg writes x and y into each other's slot: the API exercise's Vector3 property-pair row must fail, not pass",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+RAY_ARGS = ("        GodotRealSegment.writeRaw(toCell, 1, to.rawY)\n        maskCell.set(JAVA_INT, 0, checkedMask)\n"
+            "        BuiltinTypes.initArrayOfRids(excludeCell, exclude)\n        val args = arena.allocate(ADDRESS, 4)\n")
+case("runtime_smoke.sh (API exercise static arguments)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit(JVM_OBJECT_CALLS, RAY_ARGS + "        args.setAtIndex(ADDRESS, 0, fromCell)\n        args.setAtIndex(ADDRESS, 1, toCell)\n",
+           RAY_ARGS + "        args.setAtIndex(ADDRESS, 0, toCell)\n        args.setAtIndex(ADDRESS, 1, fromCell)\n")],
+     "API EXERCISE FAIL: ptrcallWithTwoVector2UInt32RIDListArgsRetObject", "PhysicsRayQueryParameters2D.create's helper passes `to` as `from` and back: the static row must read the swap back from its result",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# A const (B) row compares the wrapper with the Variant path on the same object: the second double argument of
+# Noise.get_noise_2d's helper written as a float32 into its float64 cell reaches the engine as another value, and
+# the row must name the helper.
+NOISE_ARGS = "      arg0.set(JAVA_DOUBLE, 0, first)\n      arg1.set(JAVA_DOUBLE, 0, second)\n"
+case("runtime_smoke.sh (API exercise const rows)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit(JVM_OBJECT_CALLS,
+           "    first: Double,\n    second: Double,\n  ): Double {\n    Arena.ofConfined().use { arena ->\n"
+           "      val arg0 = arena.allocate(JAVA_DOUBLE)\n      val arg1 = arena.allocate(JAVA_DOUBLE)\n" + NOISE_ARGS,
+           "    first: Double,\n    second: Double,\n  ): Double {\n    Arena.ofConfined().use { arena ->\n"
+           "      val arg0 = arena.allocate(JAVA_DOUBLE)\n      val arg1 = arena.allocate(JAVA_DOUBLE)\n"
+           "      arg0.set(JAVA_DOUBLE, 0, first)\n      arg1.set(JAVA_FLOAT, 0, second.toFloat())\n")],
+     "API EXERCISE FAIL: ptrcallWithTwoDoubleArgsRetDouble", "ptrcallWithTwoDoubleArgsRetDouble writes its second argument as a float32 into the float64 cell: the const row (wrapper vs Object.call) must fail, not pass",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# An Array return buffer must hold a constructed Array: the engine resizes it in place for a C++ Vector<Variant>
+# return (Animation.method_track_get_params). Left zero-filled, the const row crashes the process, and the smoke
+# names the row the trace saw last.
+case("runtime_smoke.sh (API exercise Array return crash)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit(JVM_OBJECT_CALLS,
+           "      val ret = arena.allocate(8L, 8L)\n      BuiltinTypes.constructEmptyArray(ret)\n      bindPtrcall(methodBind, instance, args, ret)\n      return try {\n        reader(ret)",
+           "      val ret = arena.allocate(8L, 8L)\n      bindPtrcall(methodBind, instance, args, ret)\n      return try {\n        reader(ret)")],
+     "in row B Animation.method_track_get_params", "callArrayReturn hands the engine a zero-filled Array return buffer: the const row of a Vector<Variant> return crashes the run, and the smoke must name that row",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("runtime_smoke.sh (API exercise known finding passes)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt",
+           '"Tween.interpolate_value")', '"Tween.interpolate_value", known = "desktop", knownWhy = "red run", knownFailure = "expected")')],
+     "known finding no longer reproduces on desktop", "a KNOWN_FINDINGS row passes on its platform: the run must fail until the entry is removed (a quarantine that outlives its gap)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# A known finding excuses only its own failure: the Vector3 pair row marked known on the desktop for a ByteArray
+# encoder gap, then broken by the Vector3 argument swap, must still FAIL (its failure is not the known one).
+case("runtime_smoke.sh (API exercise known finding fails differently)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt",
+           '"Area3D.gravity_direction")', '"Area3D.gravity_direction", known = "desktop", knownWhy = "red run", knownFailure = "unsupported arg type ByteArray")'),
+      Edit(JVM_OBJECT_CALLS,
+           "    value: Vector3,\n  ) {\n    Arena.ofConfined().use { arena ->\n      val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)\n"
+           "      GodotRealSegment.writeRaw(vec, 0, value.rawX)\n      GodotRealSegment.writeRaw(vec, 1, value.rawY)\n",
+           "    value: Vector3,\n  ) {\n    Arena.ofConfined().use { arena ->\n      val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)\n"
+           "      GodotRealSegment.writeRaw(vec, 0, value.rawY)\n      GodotRealSegment.writeRaw(vec, 1, value.rawX)\n")],
+     "not the known finding on desktop", "a KNOWN_FINDINGS row fails for another reason than its known one: it must fail, not print KNOWN",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("runtime_smoke.sh (API exercise setting)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/jvmMain/kotlin/binding/runtime/ApiExerciseHook.kt", "setting = { SignalSelfTest.boolSetting(SETTING) },", "setting = { false },")],
+     "API EXERCISE: [1-9][0-9]* passed, 0 failed", "the kanama/debug/api_exercise project setting stops opting a run in (the smoke and the Android build can only use the setting)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# The publish guard: a flagged build must not publish, package or install. The command passes when Gradle refuses
+# a flagged `publishKanamaToMavenLocal --dry-run`; with the guard's publish clause gone, the dry run succeeds.
+API_EXERCISE_GUARD = ["bash", "-c",
+    'out="$(./gradlew -p . publishKanamaToMavenLocal packageMobileAddonIos -PkanamaApiExercise=true --dry-run 2>&1)"; '
+    'if printf "%s" "$out" | grep -q "refusing to publish, package or install"; then echo "guard refused the flagged build"; exit 0; fi; '
+    'printf "%s\\n" "$out" | tail -n 20; echo "API EXERCISE GUARD MISSING: a flagged build was allowed to publish"; exit 1']
+case("build.gradle.kts API exercise publish guard", API_EXERCISE_GUARD,
+     [Edit("build.gradle.kts", '          it.startsWith("publish") ||\n          it.startsWith("package")', "          false")],
+     "API EXERCISE GUARD MISSING", "the -PkanamaApiExercise=true guard stops refusing the publish and package tasks: the rows would ship",
+     timeout=1800, slow=True)
 case("hot_reload_smoke.sh", ["bash", "scripts/hot_reload_smoke.sh", GODOT],
      [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(f)._ready health=")],
      "missing marker", "the reloadable script line the smoke rewrites is gone, so no marker can reach the log",

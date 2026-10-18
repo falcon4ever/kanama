@@ -35,7 +35,17 @@ Optional environment:
   KANAMA_ANDROID_LAUNCH_WAIT=30
   KANAMA_ANDROID_SELFTEST_WAIT=90
       After the launch wait, wait at most this many more seconds for the ownership self-test's
-      verdict line (it ends as soon as the line is in the log or the app has stopped).
+      verdict line (and the API exercise's, when it runs; it ends as soon as the lines are in the
+      log or the app has stopped).
+  KANAMA_ANDROID_API_EXERCISE=1
+      Also run the generated API exercise (one row per ObjectCalls helper the shared wrapper tree
+      calls, docs/reference/generated/api-exercise.md) on the device: the runtime AAR is built
+      with -PkanamaApiExercise=true, the demo's debug build opted in through
+      kanama/debug/api_exercise, and the run fails on any "API EXERCISE FAIL" line or a summary
+      with failures. Default 0 (the run then checks the exercise stayed off).
+  KANAMA_ANDROID_API_EXERCISE_TRACE=1
+      With the exercise: one log line before each row (kanama/debug/api_exercise_trace), so a
+      crash names its row. Off by default (about two thousand more logcat lines).
   KANAMA_ANDROID_RENDERER=mobile|gl_compatibility|forward_plus
       Temporarily overrides the demo's rendering_method.mobile project setting
       for this run (restored afterwards) and asserts in logcat that the
@@ -64,7 +74,19 @@ LAUNCH_WAIT="${KANAMA_ANDROID_LAUNCH_WAIT:-30}"
 SELFTEST_WAIT="${KANAMA_ANDROID_SELFTEST_WAIT:-90}"
 PANAMAPORT_MAVEN_REPO="${KANAMA_PANAMAPORT_MAVEN_REPO:-file://$HOME/.m2/repository}"
 RENDERER_OVERRIDE="${KANAMA_ANDROID_RENDERER:-}"
+API_EXERCISE="${KANAMA_ANDROID_API_EXERCISE:-0}"
+API_EXERCISE_TRACE="${KANAMA_ANDROID_API_EXERCISE_TRACE:-0}"
 PROJECT_GODOT_BACKUP=""
+
+for flag in "KANAMA_ANDROID_API_EXERCISE=$API_EXERCISE" "KANAMA_ANDROID_API_EXERCISE_TRACE=$API_EXERCISE_TRACE"; do
+  case "${flag#*=}" in
+    0|1) ;;
+    *)
+      echo "[android_smoke] $flag: use 0 or 1" >&2
+      exit 2
+      ;;
+  esac
+done
 
 case "$RENDERER_OVERRIDE" in
   ""|mobile|gl_compatibility|forward_plus) ;;
@@ -143,16 +165,24 @@ PROJECT_GODOT_BACKUP="$(mktemp "${TMPDIR:-/tmp}/kanama_project_godot.XXXXXX")"
 cp "$PROJECT_GODOT" "$PROJECT_GODOT_BACKUP"
 
 # Task 138 item 23: opt the demo's debug build into the typed-signal self-test (SignalSelfTest.kt;
-# off for users), and task 138 item 6: into the ownership self-test (OwnershipSelfTest.kt). The
-# settings sit under [kanama]; an existing key is replaced, a missing section added.
-python3 - "$PROJECT_GODOT" <<'PY'
+# off for users), and task 138 item 6: into the ownership self-test (OwnershipSelfTest.kt); with
+# KANAMA_ANDROID_API_EXERCISE=1 also into the API exercise (ApiExerciseHook.kt). The settings sit
+# under [kanama]; an existing key is replaced, a missing section added.
+SELFTEST_KEYS=(signal_self_test ownership_self_test)
+if [[ "$API_EXERCISE" == "1" ]]; then
+  SELFTEST_KEYS+=(api_exercise)
+  if [[ "$API_EXERCISE_TRACE" == "1" ]]; then
+    SELFTEST_KEYS+=(api_exercise_trace)
+  fi
+fi
+python3 - "$PROJECT_GODOT" "${SELFTEST_KEYS[@]}" <<'PY'
 import re
 import sys
 
 path = sys.argv[1]
 with open(path, encoding="utf-8") as fh:
     text = fh.read()
-for key in ("debug/signal_self_test", "debug/ownership_self_test"):
+for key in ("debug/" + name for name in sys.argv[2:]):
     line = key + "=true"
     if re.search(r"^" + re.escape(key) + r"=.*$", text, re.M):
         text = re.sub(r"^" + re.escape(key) + r"=.*$", line, text, flags=re.M)
@@ -163,13 +193,17 @@ for key in ("debug/signal_self_test", "debug/ownership_self_test"):
 with open(path, "w", encoding="utf-8") as fh:
     fh.write(text)
 PY
-for key in signal_self_test ownership_self_test; do
+for key in "${SELFTEST_KEYS[@]}"; do
   grep -q "^debug/${key}=true\$" "$PROJECT_GODOT" || {
     echo "[android_smoke] could not write kanama/debug/${key} into $PROJECT_GODOT" >&2
     exit 1
   }
 done
-echo "[android_smoke] typed-signal and ownership self-tests enabled for this run (kanama/debug/signal_self_test, kanama/debug/ownership_self_test)"
+echo "[android_smoke] self-tests enabled for this run: $(printf 'kanama/debug/%s ' "${SELFTEST_KEYS[@]}")"
+# The desktop Godot runs below (template install, export, exported-scene check) load the same project
+# with the user-shaped desktop jar, which has no exercise rows: the environment override (it wins over
+# the project setting, as for the other self-tests) keeps the exercise off there. The device never sees it.
+export KANAMA_API_EXERCISE=0
 
 if [[ -n "$RENDERER_OVERRIDE" ]]; then
   if ! grep -q '^renderer/rendering_method.mobile=' "$PROJECT_GODOT"; then
@@ -184,9 +218,15 @@ fi
 echo "[android_smoke] demo: $DEMO_DIR"
 build_demo_scripts
 
+# The API exercise rows are compiled into the runtime AAR only on request (a Kanama test hook: no
+# publish or package task accepts the flag, and the plugin build refuses a release variant with it).
+# The demo keeps that AAR until the next installAndroidPluginAar without the flag replaces it.
+AAR_ARGS=("-PkanamaAndroidDemoDir=$DEMO_DIR")
+if [[ "$API_EXERCISE" == "1" ]]; then
+  AAR_ARGS+=("-PkanamaApiExercise=true")
+fi
 ANDROID_HOME="$ANDROID_SDK_DIR" ANDROID_SDK_ROOT="$ANDROID_SDK_DIR" \
-  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAndroidPluginAar \
-  -PkanamaAndroidDemoDir="$DEMO_DIR"
+  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAndroidPluginAar "${AAR_ARGS[@]}"
 
 install_desktop_addon
 ensure_android_build_template
@@ -294,16 +334,22 @@ fi
 adb_retry logcat --pid "$APP_PID" -d >"$LOG_FILE"
 # Task 138 item 6: the ownership self-test (switched on above) runs over many frames, longer on a slow
 # device; wait for its own verdict line, at most SELFTEST_WAIT more seconds, rather than a fixed window.
-# An app that stopped (crashed, or quit on its own) is judged on the log it left.
+# The API exercise (when on) runs on the first frame and prints one summary line; it is waited for the
+# same way. An app that stopped (crashed, or quit on its own) is judged on the log it left.
+API_EXERCISE_VERDICT="\\[kanama\\] API EXERCISE: [0-9]+ passed, [0-9]+ failed"
+verdicts_in_log() {
+  grep -Eq "OWNERSHIP SELFTEST: [0-9]+ passed, [0-9]+ failed" "$LOG_FILE" &&
+    { [[ "$API_EXERCISE" != "1" ]] || grep -Eq "$API_EXERCISE_VERDICT" "$LOG_FILE"; }
+}
 selftest_waited=0
-while ! grep -Eq "OWNERSHIP SELFTEST: [0-9]+ passed, [0-9]+ failed" "$LOG_FILE" &&
+while ! verdicts_in_log &&
   (( selftest_waited < SELFTEST_WAIT )) &&
   [[ "$(app_pid_once "$ADB_BIN" "$PACKAGE_NAME")" == "$APP_PID" ]]; do
   sleep 2
   selftest_waited=$((selftest_waited + 2))
   adb_retry logcat --pid "$APP_PID" -d >"$LOG_FILE"
 done
-echo "[android_smoke] ownership self-test verdict wait: ${selftest_waited}s after the ${LAUNCH_WAIT}s launch wait"
+echo "[android_smoke] self-test verdict wait: ${selftest_waited}s after the ${LAUNCH_WAIT}s launch wait"
 
 check_log "Initializing Godot plugin KanamaAndroid"
 check_log "registered KanamaScriptLanguage"
@@ -341,6 +387,29 @@ check_log "\\[kanama\\] OWNERSHIP SELFTEST getter microbench ns/call: fence_off=
 check_log "\\[kanama\\] OWNERSHIP SELFTEST: [1-9][0-9]* passed, 0 failed"
 check_log_absent "OWNERSHIP SELFTEST FAIL"
 check_log_absent "OWNERSHIP SELFTEST: [0-9]+ passed, [1-9][0-9]* failed"
+# Task 125 P4 -- the generated API exercise (exercise/ApiExercise.generated.kt, shared desktop/Android
+# code), switched on above with KANAMA_ANDROID_API_EXERCISE=1: every static, property-pair, const and
+# singleton row on ART (tagged heap pointers, the PanamaPort remap), each asserting a value a silent
+# no-op cannot produce. The FAIL lines first (they name the helper and the row), then the summary,
+# whose "in <ms> ms" is the exercise's cost on this device.
+if [[ "$API_EXERCISE" == "1" ]]; then
+  if grep -q "API EXERCISE FAIL" "$LOG_FILE"; then
+    grep "API EXERCISE FAIL" "$LOG_FILE" >&2
+    check_log_absent "API EXERCISE FAIL"
+  fi
+  if ! grep -Eq "$API_EXERCISE_VERDICT" "$LOG_FILE"; then
+    if grep -q "API EXERCISE row " "$LOG_FILE"; then
+      last_row="$(grep "API EXERCISE row " "$LOG_FILE" | tail -n 1 | sed 's/.*API EXERCISE row //')"
+      echo "[android_smoke] the API exercise printed no verdict; its last trace line: $last_row" >&2
+    else
+      echo "[android_smoke] the API exercise printed no verdict (rerun with KANAMA_ANDROID_API_EXERCISE_TRACE=1 to name the row)" >&2
+    fi
+  fi
+  check_log "\\[kanama\\] API EXERCISE: [1-9][0-9]* passed, 0 failed, [0-9]+ weak, [0-9]+ known, [0-9]+ reach, [0-9]+ excluded in [0-9]+ ms"
+  grep -Eo "\\[kanama\\] API EXERCISE: .*" "$LOG_FILE" | tail -n 1 | sed 's/^/[android_smoke] /'
+else
+  check_log_absent "API EXERCISE"
+fi
 
 # Renderer assertion: the override must have actually initialized on device.
 # Godot logs the active driver + method at startup (e.g. "Vulkan 1.x - Forward

@@ -50,6 +50,9 @@ allprojects {
   tasks.withType<com.ncorti.ktfmt.gradle.tasks.KtfmtBaseTask>().configureEach {
     // Exclude the drift-gated generated API wrappers (see note above).
     exclude("**/net/multigesture/kanama/api/**")
+    // The generated API exercise rows are drift-gated the same way (generate_api_exercise.py --check).
+    // (pattern by file name: with -PkanamaIosSelfTest=true iosMain adds the exercise directory as a root)
+    exclude("**/ApiExercise.generated.kt")
   }
   // Don't format *.gradle.kts build scripts: ktfmt 0.54 mis-parses the Gradle DSL (it did so in
   // the former ios-runtime/build.gradle.kts), and build scripts aren't the formatting target here.
@@ -120,6 +123,19 @@ val configuredIosScriptDirs =
 val kanamaIosSelfTest =
   providers.gradleProperty("kanamaIosSelfTest").map { it.trim() == "true" }.orElse(false)
 val iosSelfTestSources = listOf("**/*SelfTest.kt", "**/KanamaIosScriptErrorProbe.kt")
+
+// The generated API exercise (src/commonMain/.../exercise/: one row per ObjectCalls helper the shared
+// tree calls, scripts/generate_api_exercise.py) is a Kanama test hook like the iOS self-tests. It is
+// compiled only into a build that asks for it: -PkanamaApiExercise=true on the desktop/Android side
+// (runtime_smoke.sh passes it to syncExampleAddonJar, android_smoke.sh to the runtime AAR), and on
+// iOS with the self-tests (-PkanamaIosSelfTest=true: the device runners pass only that flag), there
+// through iosMain alone so the JVM jar of an iOS install carries none. A flagged JVM build is never
+// published, packaged or installed: the guard below fails those tasks, and local_ci checks the
+// published and installed jars (generate_api_exercise.py --check-jar).
+val kanamaApiExercise =
+  providers.gradleProperty("kanamaApiExercise").map { it.trim() == "true" }.orElse(false)
+val apiExerciseSources = listOf("net/multigesture/kanama/exercise/**")
+val apiExerciseDir = "src/commonMain/kotlin/net/multigesture/kanama/exercise"
 
 val kanamaRealPrecision = providers.gradleProperty("kanamaPrecision").orElse("single")
 
@@ -303,6 +319,7 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
       // inside a platform compilation — which is what makes the compiler the proof that both
       // backends implement every declaration in it.
       kotlin.srcDir(generateKanamaReal)
+      if (!kanamaApiExercise.get()) kotlin.exclude(apiExerciseSources)
       dependencies {
         implementation(kotlin("stdlib"))
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
@@ -325,6 +342,8 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
     val iosMain by creating {
       dependsOn(commonMain)
       if (!kanamaIosSelfTest.get()) kotlin.exclude(iosSelfTestSources)
+      // The API exercise rows ride with the iOS self-tests (ApiExerciseSelfTest.kt runs them).
+      if (kanamaIosSelfTest.get() && !kanamaApiExercise.get()) kotlin.srcDir(apiExerciseDir)
     }
     // Both iOS targets refine iosMain and compile the consumer project's scripts, identically.
     for (name in listOf("iosArm64Main", "iosSimulatorArm64Main")) {
@@ -1104,6 +1123,42 @@ tasks.register<Zip>("packageStoreAddon") {
   }
   from(layout.projectDirectory.file("gradlew.bat")) { into("addons/kanama/templates/release-kit") }
   from(layout.projectDirectory.dir("gradle")) { into("addons/kanama/templates/release-kit/gradle") }
+}
+
+// The exercise's hand-written sources are formatted like the rest, also in a build without the flag
+// (when commonMain excludes them, the per-source-set ktfmt tasks do not see them).
+val ktfmtCheckApiExercise by
+  tasks.registering(com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask::class) {
+    source = fileTree(apiExerciseDir) { exclude("ApiExercise.generated.kt") }
+  }
+val ktfmtFormatApiExercise by
+  tasks.registering(com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask::class) {
+    source = fileTree(apiExerciseDir) { exclude("ApiExercise.generated.kt") }
+  }
+tasks.named("ktfmtCheck") { dependsOn(ktfmtCheckApiExercise) }
+tasks.named("ktfmtFormat") { dependsOn(ktfmtFormatApiExercise) }
+
+// A -PkanamaApiExercise=true build carries the API exercise rows (in kanama.jar and, through
+// commonMain, in the iOS runtime): it is for the smokes only. Every task that publishes, packages or
+// installs Kanama refuses it, at graph time (so `--dry-run` shows it too).
+gradle.taskGraph.whenReady {
+  if (!kanamaApiExercise.get()) return@whenReady
+  val refused =
+    allTasks
+      .map { it.name }
+      .filter {
+        it == "installAddonJar" ||
+          it == "installIosAddon" ||
+          it.startsWith("publish") ||
+          it.startsWith("package")
+      }
+      .distinct()
+  if (refused.isNotEmpty()) {
+    throw GradleException(
+      "-PkanamaApiExercise=true builds the API exercise rows into kanama.jar (a Kanama test hook); " +
+        "refusing to publish, package or install it: ${refused.joinToString()}. Run without the flag."
+    )
+  }
 }
 
 tasks.register("packageDistributions") {
@@ -2317,6 +2372,9 @@ tasks.register<Exec>("assembleAndroidPluginAar") {
       "android/godot-plugin",
       ":plugin:assembleDebug",
       "-PkanamaPanamaPortCore=${panamaPortCoreDependency.get()}",
+      // The API exercise rows ride into the runtime AAR only on request (android_smoke.sh with
+      // KANAMA_ANDROID_API_EXERCISE=1); the plugin build copies them into its sources then.
+      "-PkanamaApiExercise=${kanamaApiExercise.get()}",
     )
   }
 }
@@ -2583,6 +2641,32 @@ tasks.register<Zip>("packageMobileAddonAndroid") {
   destinationDirectory.set(layout.buildDirectory.dir("distributions"))
   isPreserveFileTimestamps = false
   isReproducibleFileOrder = true
+  // The users' AAR carries no API exercise rows (a -PkanamaApiExercise=true runtime AAR is for
+  // android_smoke.sh only; the graph guard above refuses this task with the flag, and this reads
+  // the AAR it zips, whatever built it).
+  doFirst {
+    val aar =
+      layout.projectDirectory
+        .file("android/godot-plugin/plugin/build/outputs/aar/plugin-debug.aar")
+        .asFile
+    val found =
+      java.util.zip.ZipFile(aar).use { outer ->
+        val classes =
+          outer.getEntry("classes.jar")
+            ?: throw GradleException("${aar.absolutePath} has no classes.jar")
+        java.util.zip.ZipInputStream(outer.getInputStream(classes)).use { jar ->
+          generateSequence { jar.nextEntry }
+            .map { it.name }
+            .firstOrNull { it.startsWith("net/multigesture/kanama/exercise/") && !it.endsWith("/") }
+        }
+      }
+    if (found != null) {
+      throw GradleException(
+        "${aar.absolutePath} carries the API exercise rows ($found): it was built with " +
+          "-PkanamaApiExercise=true, which is for android_smoke.sh only. Rebuild without the flag."
+      )
+    }
+  }
   from(
     layout.projectDirectory.file("android/godot-plugin/plugin/build/outputs/aar/plugin-debug.aar")
   ) {

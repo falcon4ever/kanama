@@ -568,6 +568,19 @@ object BuiltinTypes {
     }
   }
 
+  private val emptyArrayConstructor: MethodHandle by lazy { ptrConstructor(VariantType.ARRAY, 0) }
+
+  /**
+   * An empty Array constructed in [dest], the return buffer of a ptrcall that returns an Array. The
+   * engine writes some Array returns by resizing the buffer in place (a C++ `Vector<Variant>`,
+   * `Vector<RID>` or `Vector<Plane>` return, e.g. `Animation.method_track_get_params`,
+   * `Geometry3D.build_box_planes`), which on a zero-filled buffer dereferences a null Array and
+   * crashes the process; an assignment (`Array`, `TypedArray<T>`) works either way.
+   */
+  fun constructEmptyArray(dest: MemorySegment) {
+    emptyArrayConstructor.invoke(dest, MemorySegment.NULL)
+  }
+
   /**
    * Construct [type] into [dest] using [constructorIndex]. [args] are typed pointers for that
    * constructor, matching Godot's builtin ABI.

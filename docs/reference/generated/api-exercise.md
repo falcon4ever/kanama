@@ -8,9 +8,11 @@ call, and each backend implements each helper once, so a defect in a helper is s
 of it. This page classifies every helper the shared wrapper tree calls by how a generated exercise row can
 observe it, from `extension_api.json`, the generator's tables and the committed tree; the judgement calls
 (exclusions, stateless singletons, receivers, method-level cases, runtime helpers, static arguments, the
-scratch directory) are hand-kept in `scripts/api_exercise_policy.py`. It is an inventory: no row runs yet.
+scratch directory, the singleton rows) are hand-kept in `scripts/api_exercise_policy.py`. The C, A, B and D
+rows run: `ApiExercise.generated.kt` (the same script writes it) on the desktop smoke and in the iOS self-test
+build; the F (reach-only) rows are listed here and run nowhere yet.
 
-**Referenced helpers:** 1492 (1487 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15335 generated (12998 instance, 2223 singleton, 114 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 892 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 544 (of the 544 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 605; excluded 338.
+**Referenced helpers:** 1492 (1487 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15335 generated (12998 instance, 2223 singleton, 114 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 892 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 541 (of the 541 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 607; excluded 339. A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the runs count those apart (`weak` in the summary line), so this count is an upper bound.
 
 ## Cases
 
@@ -21,12 +23,12 @@ on a healthy host (**weak**), and then the second row is the one that can tell a
 
 | case | a site qualifies when | a row would assert | helpers |
 |---|---|---|---|
-| C static | `is_static` with a return value, class not excluded | the wrapper's result equals `ClassDB.class_call_static` with the same arguments, and is not the type's zero (an `Error` static: a known non-OK `Error`) | 46 |
-| A property pair | setter or getter of a non-indexed property of an instantiable class (or its receiver below) | a value set through the wrapper reads back through the getter and `Object.get` | 89 |
-| B const oracle | const non-void instance method on such a class | the wrapper's result equals `Object.callv` on the same object | 314 |
-| D singleton | const non-void method of a non-excluded singleton, or any non-void method of a stateless singleton | the wrapper's result equals `Object.callv` on the singleton | 95 |
-| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 605 |
-| E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 338 |
+| C static | `is_static` with a return value, class not excluded | the wrapper's result equals `ClassDB.class_call_static` with the same arguments, and is not the type's zero (an `Error` static: a known non-OK `Error`) | 45 |
+| A property pair | setter or getter of a non-indexed property of an instantiable class (or its receiver below), or of a `SINGLETON_PAIRS` singleton, or a `SINGLETON_KEYED_PAIRS` method | a value set through the wrapper reads back through the getter and `Object.get` (on a singleton, the value read first is set back in a `finally`) | 91 |
+| B const oracle | const non-void instance method on such a class (or an argument-free RID factory of a `RID_FACTORIES` class) | the wrapper's result equals `Object.call` with the same arguments on the same object; a result equal to its type's zero is **weak** (counted apart, not failed) | 311 |
+| D singleton | const non-void method of a non-excluded singleton, any non-void method of a stateless singleton, or an argument-free RID factory of a `RID_FACTORIES` server | the wrapper's result equals `Object.call` on the singleton (weak as B); a factory returns a valid RID, one read of it agrees on both paths, and the RID is freed | 94 |
+| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 607 |
+| E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 339 |
 | N runtime helper | no generated method calls it with a MethodBind | nothing of its own: every row uses it | 5 |
 
 179 of the rows get their receiver elsewhere than a fresh instance of the declaring class (a descendant,
@@ -34,10 +36,10 @@ or the factory `RECEIVER_SOURCES` names, because the declaring class is abstract
 
 ## Where the rows are
 
-- **C static** by class: `FileAccess` 13, `DirAccess` 9, `GLTFDocument` 3, `JSON` 3, `AudioStreamMP3` 2, `AudioStreamWAV` 2, `Image` 2, `DPITexture` 1, `GLTFAccessor` 1, `GLTFCamera` 1, `ImporterMesh` 1, `Node` 1, `PathFollow3D` 1, `PhysicsRayQueryParameters2D` 1, `PhysicsRayQueryParameters3D` 1, `PortableCompressedTexture2D` 1, `Resource` 1, `TLSOptions` 1, `Tween` 1.
-- **D singleton** by class: `Geometry2D` 16, `RenderingServer` 16, `Geometry3D` 13, `ClassDB` 11, `NavigationServer2D` 10, `NavigationServer3D` 10, `Time` 5, `PhysicsServer3D` 4, `Marshalls` 3, `PhysicsServer2D` 2, `ProjectSettings` 2, `TranslationServer` 2.
-- **B const** through a descendant, by declaring class: `TextServer` 55, `CollisionObject2D` 8, `Font` 7, `InputEvent` 5, `IterateIK3D` 2, `Noise` 2, `TileSetSource` 2, `AnimationMixer` 1, `BaseMaterial3D` 1, `CanvasItem` 1, `CollisionObject3D` 1.
-- **F reach only**, largest classes: `RenderingServer` 91, `CanvasItem` 28, `TextServer` 28, `AccessibilityServer` 22, `Animation` 19, `FontFile` 14, `PhysicsServer2D` 14, `RichTextLabel` 14, `Image` 12, `AnimationPlayer` 9, `AStar2D` 8, `PhysicsServer3D` 8.
+- **C static** by class: `FileAccess` 13, `DirAccess` 9, `JSON` 3, `AudioStreamMP3` 2, `AudioStreamWAV` 2, `GLTFDocument` 2, `Image` 2, `DPITexture` 1, `GLTFAccessor` 1, `GLTFCamera` 1, `ImporterMesh` 1, `Node` 1, `PathFollow3D` 1, `PhysicsRayQueryParameters2D` 1, `PhysicsRayQueryParameters3D` 1, `PortableCompressedTexture2D` 1, `Resource` 1, `TLSOptions` 1, `Tween` 1.
+- **D singleton** by class: `RenderingServer` 19, `Geometry2D` 16, `Geometry3D` 13, `ClassDB` 11, `NavigationServer2D` 10, `NavigationServer3D` 10, `Time` 5, `Marshalls` 3, `PhysicsServer3D` 3, `TranslationServer` 2, `AccessibilityServer` 1, `ProjectSettings` 1.
+- **B const** through a descendant, by declaring class: `TextServer` 56, `CollisionObject2D` 8, `Font` 7, `InputEvent` 4, `IterateIK3D` 2, `Noise` 2, `TileSetSource` 2, `AnimationMixer` 1, `BaseMaterial3D` 1, `CanvasItem` 1, `CollisionObject3D` 1.
+- **F reach only**, largest classes: `RenderingServer` 91, `CanvasItem` 28, `TextServer` 27, `AccessibilityServer` 22, `Animation` 19, `FontFile` 14, `PhysicsServer2D` 14, `RichTextLabel` 14, `Image` 12, `AnimationPlayer` 9, `AStar2D` 8, `PhysicsServer3D` 8.
 
 ## By iOS ptrcall tag
 
@@ -45,28 +47,28 @@ The generated iOS helpers by the type tags their bodies pack (a helper counts on
 
 | tag | helpers | sites | C | A | B | D | F | E |
 |---|---|---|---|---|---|---|---|---|
-| `PT_INT64` | 827 | 3440 | 20 | 2 | 198 | 30 | 347 | 230 |
-| `PT_VOID` | 573 | 2921 | – | 33 | – | – | 431 | 109 |
-| `PT_RID` | 365 | 1750 | – | 2 | 54 | 41 | 178 | 90 |
-| `PT_BOOL` | 350 | 1250 | 9 | – | 64 | 25 | 172 | 80 |
-| `PT_OBJECT` | 270 | 677 | 21 | – | 29 | 2 | 121 | 97 |
-| `PT_STRING` | 263 | 1006 | 25 | 1 | 30 | 9 | 66 | 132 |
+| `PT_INT64` | 827 | 3440 | 19 | 2 | 197 | 30 | 348 | 231 |
+| `PT_VOID` | 573 | 2921 | – | 34 | – | – | 430 | 109 |
+| `PT_RID` | 365 | 1750 | – | 2 | 55 | 41 | 177 | 90 |
+| `PT_BOOL` | 350 | 1250 | 9 | – | 63 | 25 | 173 | 80 |
+| `PT_OBJECT` | 270 | 677 | 20 | – | 26 | 2 | 124 | 98 |
+| `PT_STRING` | 263 | 1006 | 25 | 3 | 29 | 8 | 66 | 132 |
 | `PT_FLOAT64` | 232 | 696 | 2 | – | 52 | 9 | 152 | 17 |
-| `PT_STRING_NAME` | 134 | 479 | – | 1 | 32 | 14 | 59 | 28 |
-| `PT_VECTOR2` | 133 | 252 | 1 | – | 39 | 12 | 75 | 6 |
+| `PT_STRING_NAME` | 134 | 479 | – | 1 | 31 | 14 | 60 | 28 |
+| `PT_VECTOR2` | 133 | 252 | 1 | – | 38 | 12 | 76 | 6 |
 | `PT_VECTOR2I` | 101 | 186 | – | – | 48 | 1 | 46 | 6 |
 | `PT_COLOR` | 97 | 167 | – | – | 8 | 1 | 80 | 8 |
-| `PT_VARIANT` | 77 | 157 | 3 | 1 | 12 | 3 | 38 | 20 |
+| `PT_VARIANT` | 77 | 157 | 3 | 3 | 12 | 2 | 37 | 20 |
 | `PT_TYPED_ARRAY_BLOB` | 66 | 112 | 3 | 11 | – | 3 | 21 | 28 |
 | `PT_VECTOR3` | 60 | 184 | 1 | – | 18 | 16 | 20 | 5 |
-| `PT_CALLABLE` | 55 | 122 | – | – | 1 | – | 14 | 40 |
+| `PT_CALLABLE` | 55 | 122 | – | – | – | – | 15 | 40 |
 | `PT_PACKED_BYTE_ARRAY` | 47 | 64 | 5 | 1 | – | 1 | 21 | 19 |
-| `PT_RECT2` | 45 | 56 | – | – | 10 | 1 | 28 | 6 |
+| `PT_RECT2` | 45 | 56 | – | – | 9 | 1 | 29 | 6 |
 | `PT_TRANSFORM3D` | 34 | 114 | 1 | 2 | 3 | 2 | 18 | 8 |
 | `PT_PACKED_STRING_ARRAY` | 28 | 44 | – | 1 | 1 | 1 | 2 | 23 |
-| `PT_TRANSFORM2D` | 25 | 82 | – | 2 | 7 | 1 | 15 | – |
+| `PT_TRANSFORM2D` | 25 | 82 | – | 2 | 6 | 1 | 16 | – |
 | `PT_ARRAY` | 24 | 47 | – | 1 | 1 | – | 11 | 11 |
-| `PT_NODE_PATH` | 24 | 110 | 1 | 1 | 7 | – | 14 | 1 |
+| `PT_NODE_PATH` | 24 | 110 | – | 1 | 7 | – | 14 | 2 |
 | `PT_PACKED_VECTOR2_ARRAY` | 23 | 33 | – | – | – | 9 | 12 | 2 |
 | `PT_DICTIONARY` | 22 | 63 | 4 | 1 | 1 | 2 | 8 | 6 |
 | `PT_RECT2I` | 19 | 40 | – | 2 | 4 | – | 10 | 3 |
@@ -85,7 +87,7 @@ The generated iOS helpers by the type tags their bodies pack (a helper counts on
 | `PT_PACKED_FLOAT64_ARRAY` | 1 | 2 | – | 1 | – | – | – | – |
 | `PT_SIGNAL` | 1 | 1 | – | – | – | – | 1 | – |
 
-Tags with no value-asserting row among generated helpers: `PT_SIGNAL`.
+Tags with no value-asserting row among generated helpers: `PT_CALLABLE`, `PT_SIGNAL`.
 
 ## Exclusions
 
@@ -147,7 +149,7 @@ instantiable descendant it excludes.
 | `*Extension*` | substring | a base a script or extension implements (TextServerExtension, PhysicsServer3DExtension, ...): its methods are hooks, not engine behaviour | 34 | 7 |
 | `Editor*` | prefix | editor-only classes | 54 | 0 |
 | — | derived | abstract, and no instantiable descendant (and no `RECEIVER_SOURCES` entry) | — | 12 |
-| `METHOD_OVERRIDES` | method | see below | — | 1 |
+| `METHOD_OVERRIDES` | method | see below | — | 2 |
 
 Stateless singletons (`STATELESS_SINGLETONS`, every non-void method is a D row): `Geometry2D` (pure 2D geometry functions of their arguments), `Geometry3D` (pure 3D geometry functions of their arguments), `Marshalls` (pure encoders and decoders of their arguments).
 
@@ -181,7 +183,21 @@ Stateless singletons (`STATELESS_SINGLETONS`, every non-void method is a D row):
 | `Noise.get_seamless_image_3d` | F | returns a new object per call: an oracle would compare two different objects |
 | `RenderingServer.texture_2d_get` | F | returns a new object per call: an oracle would compare two different objects |
 | `RenderingServer.texture_2d_layer_get` | F | returns a new object per call: an oracle would compare two different objects |
+| `InputEvent.xformed_by` | F | returns a new object per call: an oracle would compare two different objects |
+| `RegEx.search` | F | returns a new object per call: an oracle would compare two different objects |
+| `Tree.get_item_area_rect` | F | takes a TreeItem, which only a Tree's create_item makes: no fresh argument |
+| `Object.is_connected` | F | the hand-written root spells it isConnected(signal, target, method), not with Godot's Callable argument |
+| `PhysicsServer2D.area_get_shape` | E | a shape index the area does not have aborts the process: the server indexes the area's shapes with CRASH_BAD_INDEX and no bounds check before it (found by the headless sweep) |
+| `PhysicsServer2D.area_get_shape_transform` | E | a shape index the area does not have aborts the process: the server indexes the area's shapes with CRASH_BAD_INDEX and no bounds check before it (found by the headless sweep) |
+| `PhysicsServer2D.body_get_shape` | E | a shape index the area does not have aborts the process: the server indexes the area's shapes with CRASH_BAD_INDEX and no bounds check before it (found by the headless sweep) |
+| `PhysicsServer2D.body_get_shape_transform` | E | a shape index the area does not have aborts the process: the server indexes the area's shapes with CRASH_BAD_INDEX and no bounds check before it (found by the headless sweep) |
+| `PhysicsServer3D.area_get_shape` | E | a shape index the area does not have aborts the process: the server indexes the area's shapes with CRASH_BAD_INDEX and no bounds check before it (found by the headless sweep) |
+| `PhysicsServer3D.area_get_shape_transform` | E | a shape index the area does not have aborts the process: the server indexes the area's shapes with CRASH_BAD_INDEX and no bounds check before it (found by the headless sweep) |
+| `PhysicsServer3D.body_get_shape` | E | a shape index the area does not have aborts the process: the server indexes the area's shapes with CRASH_BAD_INDEX and no bounds check before it (found by the headless sweep) |
+| `PhysicsServer3D.body_get_shape_transform` | E | a shape index the area does not have aborts the process: the server indexes the area's shapes with CRASH_BAD_INDEX and no bounds check before it (found by the headless sweep) |
+| `PhysicsServer3D.custom_shape_create` | F | Godot Physics 3D has no custom shapes: it always returns RID() with an error |
 | `ProjectSettings.load_resource_pack` | E | mounts a resource pack into res:// for the rest of the process |
+| `GLTFDocument.export_object_model_property` | E | indexes `state.nodes[gltf_node_index]` unchecked for a property on a node: on a GLTFState without nodes it aborts the process (cowdata FATAL index, found by the headless sweep) |
 
 ## Runtime helpers
 
@@ -189,78 +205,187 @@ Referenced by the shared sources, but never with a generated MethodBind (`NON_BI
 
 | helper | used by | why it has no row of its own |
 |---|---|---|
-| `constructObject` | `AudioStreamPlayer`, `BoxMesh`, `BoxShape3D`, `ButtonGroup`, … (20 files) | constructs the fresh instance of every A/B/F row; a row that constructs is its check |
-| `destroyObject` | `RefCounted` | frees what a row constructed (a RefCounted's last release); part of every row's teardown |
+| `constructObject` | `ApiExerciseRunner`, `AudioStreamPlayer`, `BoxMesh`, `BoxShape3D`, … (21 files) | constructs the fresh instance of every A/B/F row; a row that constructs is its check |
+| `destroyObject` | `ApiExerciseRunner`, `RefCounted` | frees what a row constructed (a RefCounted's last release); part of every row's teardown |
 | `getMethodBind` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (841 files) | resolves the MethodBind every row's call passes; a wrong bind fails the row that uses it |
-| `getSingleton` | `AccessibilityServer`, `AudioServer`, `CameraServer`, `ClassDB`, … (42 files) | resolves the singleton handle every D row calls |
+| `getSingleton` | `AccessibilityServer`, `ApiExerciseRunner`, `AudioServer`, `CameraServer`, … (43 files) | resolves the singleton handle every D row calls |
 | `keepReachable` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (685 files) | the reachability fence after each call (empty on iOS); it has no result to observe |
 
 ## Static rows and the scratch directory
 
-46 static rows; 6 take no argument (5 of them weak). The other 40 take their arguments from `STATIC_ARGS` (39 of them still have an argument to choose, shown as `?`). A static returning `Error` must be given arguments that make it fail with a known non-OK `Error`: OK is 0, which a no-op returns too.
+45 static rows; 6 take no argument. 5 are weak (they check that the wrapper and `ClassDB.class_call_static` agree and are counted apart). The other 39 take their arguments from `STATIC_ARGS` (GDScript literals; `scratch("name")` is a path under the scratch directory, `fixture("name")` bytes or text the runner builds). A static returning `Error` is given arguments that make it fail with a known non-OK `Error`: OK is 0, which a no-op returns too.
 
-The exercise runner creates `user://kanama-api-exercise/` before its first row and removes it after its last. Every row whose method takes a path, of any case, takes one under that directory: the `FileAccess` and `DirAccess` statics (`open*`, `create_temp`, `make_dir*`, `rename*`, `copy*`, `set_*attribute`, `set_unix_permissions`, `get_file_as_*`) and the instance and singleton rows listed below (`Image.save_*`, `GLTFDocument.write_to_filesystem`, ...). No row reads or writes anywhere else; a method that cannot be pointed there is excluded in `METHOD_OVERRIDES`.
+The exercise runner creates its own directory `user://kanama-api-exercise/<pid>-<random>/` before its first row (with the fixture files the rows read: `fixture.txt` with an extended attribute, `fixture.mp3`, `fixture.wav`, and the directory `sub/`) and removes it after its last (and the shared parent once it is empty), so two runs of one project at once never touch each other's files. Every row whose method takes a path, of any case, takes one under that directory: the `FileAccess` and `DirAccess` statics (`open*`, `make_dir*`, `rename*`, `copy*`, `set_*attribute`, `set_unix_permissions`, `get_file_as_*`) and the instance and singleton rows listed below (`Image.save_*`, `GLTFDocument.write_to_filesystem`, ...). The one exception is `FileAccess.create_temp` / `DirAccess.create_temp`, which take no path: they create their file or directory in the OS temp directory, named `kanama-api-exercise-*`, and remove it when the returned object is freed (`keep` is false). No row reads or writes anywhere else; a method that cannot be pointed there is excluded in `METHOD_OVERRIDES`.
 
 | static | arguments | note |
 |---|---|---|
-| `AudioStreamMP3.load_from_buffer` | ? | — |
-| `AudioStreamMP3.load_from_file` | ? | — |
-| `AudioStreamWAV.load_from_buffer` | ?, `{}` | — |
-| `AudioStreamWAV.load_from_file` | ?, `{}` | — |
-| `DPITexture.create_from_string` | ?, `1.0`, `1.0`, `{}` | — |
-| `DirAccess.copy_absolute` | ?, ?, `-1` | returns `Error`: arguments must make it fail |
-| `DirAccess.create_temp` | `""`, `false` | — |
-| `DirAccess.dir_exists_absolute` | ? | — |
-| `DirAccess.get_directories_at` | ? | — |
-| `DirAccess.get_drive_count` | (none) | weak; backed by A `AnimatedSprite2D.get_frame` |
-| `DirAccess.get_drive_label` | ? | — |
+| `AudioStreamMP3.load_from_buffer` | `fixture("mp3")` | reads back `data` from both results |
+| `AudioStreamMP3.load_from_file` | `scratch("fixture.mp3")` | reads back `data` from both results |
+| `AudioStreamWAV.load_from_buffer` | `fixture("wav")`, `{}` | reads back `mix_rate`, `stereo`, `format` from both results |
+| `AudioStreamWAV.load_from_file` | `scratch("fixture.wav")`, `{}` | reads back `mix_rate`, `stereo`, `format` from both results |
+| `DPITexture.create_from_string` | `fixture("svg")`, `2.0`, `0.5`, `{}` | argument 2 is not the API default: a scale unlike the default, so STATIC_OBJECT_CHECKS can tell it from the saturation; argument 3 is not the API default: a saturation unlike the default and the scale; reads back `base_scale`, `saturation` from both results |
+| `DirAccess.copy_absolute` | `scratch("fixture.txt")`, `scratch("fixture.txt")`, `-1` | returns `Error`: arguments must make it fail |
+| `DirAccess.create_temp` | `"kanama-api-exercise"`, `false` | argument 1 is not the API default: a recognisable name for the OS temp directory the call creates (removed on free); reads nothing back: a new temporary name per call: nothing the two results share besides their class |
+| `DirAccess.dir_exists_absolute` | `scratch("sub")` | — |
+| `DirAccess.get_directories_at` | `scratch("")` | — |
+| `DirAccess.get_drive_count` | (none) | weak; backed by A `AnimatedTexture.get_frames` |
+| `DirAccess.get_drive_name` | `0` | a zero counts weak on android (STATIC_ZERO_ON) |
 | `DirAccess.get_open_error` | (none) | weak; backed by A `AStarGrid2D.get_cell_shape` |
-| `DirAccess.make_dir_absolute` | ? | returns `Error`: arguments must make it fail |
-| `DirAccess.rename_absolute` | ?, ? | returns `Error`: arguments must make it fail |
-| `FileAccess.create_temp` | ?, `""`, `""`, `false` | — |
-| `FileAccess.get_extended_attribute` | ?, ? | — |
-| `FileAccess.get_extended_attribute_string` | ?, ? | — |
-| `FileAccess.get_file_as_bytes` | ? | — |
-| `FileAccess.get_file_as_string` | ? | — |
-| `FileAccess.open` | ?, ? | — |
-| `FileAccess.open_compressed` | ?, ?, `0` | — |
-| `FileAccess.open_encrypted` | ?, ?, ?, `PackedByteArray()` | — |
-| `FileAccess.open_encrypted_with_pass` | ?, ?, ? | — |
-| `FileAccess.set_extended_attribute` | ?, ?, ? | returns `Error`: arguments must make it fail |
-| `FileAccess.set_extended_attribute_string` | ?, ?, ? | returns `Error`: arguments must make it fail |
-| `FileAccess.set_hidden_attribute` | ?, ? | returns `Error`: arguments must make it fail |
-| `FileAccess.set_unix_permissions` | ?, ? | returns `Error`: arguments must make it fail |
-| `GLTFAccessor.from_dictionary` | ? | — |
-| `GLTFCamera.from_node` | ? | — |
-| `GLTFDocument.export_object_model_property` | ?, ?, ?, ? | — |
+| `DirAccess.make_dir_absolute` | `scratch("sub")` | returns `Error`: arguments must make it fail |
+| `DirAccess.rename_absolute` | `scratch("missing")`, `scratch("renamed")` | returns `Error`: arguments must make it fail |
+| `FileAccess.create_temp` | `FileAccess.WRITE`, `"kanama-api-exercise"`, `""`, `false` | argument 2 is not the API default: a recognisable name for the OS temp file the call creates (removed on free); reads nothing back: a new temporary name per call: nothing the two results share besides their class |
+| `FileAccess.get_extended_attribute` | `scratch("fixture.txt")`, `"kanama"` | — |
+| `FileAccess.get_extended_attribute_string` | `scratch("fixture.txt")`, `"kanama"` | — |
+| `FileAccess.get_file_as_bytes` | `scratch("fixture.txt")` | — |
+| `FileAccess.get_file_as_string` | `scratch("fixture.txt")` | — |
+| `FileAccess.open` | `scratch("fixture.txt")`, `FileAccess.READ` | reads back `get_path()`, `get_length()` from both results |
+| `FileAccess.open_compressed` | `scratch("compressed.bin")`, `FileAccess.WRITE`, `0` | reads back `get_path()` from both results |
+| `FileAccess.open_encrypted` | `scratch("encrypted.bin")`, `FileAccess.WRITE`, `fixture("key32")`, `PackedByteArray()` | reads back `get_path()` from both results |
+| `FileAccess.open_encrypted_with_pass` | `scratch("encrypted_pass.bin")`, `FileAccess.WRITE`, `"kanama125"` | reads back `get_path()` from both results |
+| `FileAccess.set_extended_attribute` | `scratch("missing")`, `"kanama"`, `PackedByteArray(1, 2, 3)` | returns `Error`: arguments must make it fail |
+| `FileAccess.set_extended_attribute_string` | `scratch("missing")`, `"kanama"`, `"kanama125"` | returns `Error`: arguments must make it fail |
+| `FileAccess.set_hidden_attribute` | `scratch("missing")`, `true` | returns `Error`: arguments must make it fail |
+| `FileAccess.set_unix_permissions` | `scratch("missing")`, `FileAccess.UNIX_READ_OWNER` | returns `Error`: arguments must make it fail |
+| `GLTFAccessor.from_dictionary` | `{"type": "SCALAR", "componentType": 5126, "count": 3}` | reads back `count`, `component_type` from both results |
+| `GLTFCamera.from_node` | `Camera3D.new()` | reads back `fov`, `depth_far`, `depth_near` from both results |
 | `GLTFDocument.get_supported_gltf_extensions` | (none) | weak; backed by A `SystemFont.get_font_names` |
-| `GLTFDocument.import_object_model_property` | ?, ? | — |
-| `Image.create` | ?, ?, ?, ? | — |
-| `Image.create_from_data` | ?, ?, ?, ?, ? | — |
-| `ImporterMesh.merge_importer_meshes` | ?, ?, `true` | — |
-| `JSON.from_native` | ?, `false` | — |
-| `JSON.parse_string` | ? | — |
-| `JSON.stringify` | ?, `""`, `true`, `false` | — |
+| `GLTFDocument.import_object_model_property` | `GLTFState.new()`, `"/nodes/0/translation"` | reads back `json_pointers` from both results |
+| `Image.create` | `4`, `2`, `false`, `Image.FORMAT_RGBA8` | reads back `get_width()`, `get_height()`, `get_format()` from both results |
+| `Image.create_from_data` | `4`, `2`, `false`, `Image.FORMAT_RGBA8`, `fixture("rgba8_4x2")` | reads back `get_width()`, `get_height()`, `get_data()` from both results |
+| `ImporterMesh.merge_importer_meshes` | `[ImporterMesh.new()]`, `[Transform3D()]`, `true` | reads back `get_surface_count()` from both results |
+| `JSON.from_native` | `Vector2(1, 2)`, `false` | — |
+| `JSON.parse_string` | `"{\"kanama\": 125}"` | — |
+| `JSON.stringify` | `{"kanama": 125}`, `""`, `true`, `false` | — |
 | `Node.get_orphan_node_ids` | (none) | weak; backed by A `CodeEdit.get_line_length_guidelines` |
-| `PathFollow3D.correct_posture` | ?, ? | — |
-| `PhysicsRayQueryParameters2D.create` | ?, ?, `4294967295`, `Array[RID]([])` | — |
-| `PhysicsRayQueryParameters3D.create` | ?, ?, `4294967295`, `Array[RID]([])` | — |
+| `PathFollow3D.correct_posture` | `Transform3D(Vector3(0, 1, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(1, 2, 3))`, `PathFollow3D.ROTATION_ORIENTED` | — |
+| `PhysicsRayQueryParameters2D.create` | `Vector2(1, 2)`, `Vector2(3, 4)`, `5`, `Array[RID]([])` | argument 3 is not the API default: a mask unlike the default, so STATIC_OBJECT_CHECKS reads back a value the call chose; reads back `from`, `to`, `collision_mask` from both results |
+| `PhysicsRayQueryParameters3D.create` | `Vector3(1, 2, 3)`, `Vector3(4, 5, 6)`, `5`, `Array[RID]([])` | argument 3 is not the API default: a mask unlike the default, so STATIC_OBJECT_CHECKS reads back a value the call chose; reads back `from`, `to`, `collision_mask` from both results |
 | `PortableCompressedTexture2D.is_keeping_all_compressed_buffers` | (none) | weak; backed by A `AStar2D.is_neighbor_filter_enabled` |
-| `Resource.generate_scene_unique_id` | (none) | — |
-| `TLSOptions.server` | ?, ? | — |
-| `Tween.interpolate_value` | ?, ?, ?, ?, ?, ? | — |
+| `Resource.generate_scene_unique_id` | (none) | fresh result: a new random id per call (both paths non-zero, not compared) |
+| `TLSOptions.server` | `CryptoKey.new()`, `X509Certificate.new()` | reads back `is_server()` from both results |
+| `Tween.interpolate_value` | `0.0`, `10.0`, `0.5`, `1.0`, `Tween.TRANS_LINEAR`, `Tween.EASE_IN` | — |
+
+`STATIC_RESULTS` (statics whose result cannot be held to equal-and-not-zero):
+
+- `DirAccess.get_drive_label`: weak, a drive label exists only on Windows; every other host returns "".
+- `Resource.generate_scene_unique_id`: fresh, a new random id per call.
+
+`STATIC_ZERO_ON` (statics whose result may be its type's zero on a platform: there a zero from both paths
+counts weak, a non-zero result passes as everywhere else):
+
+- `DirAccess.get_drive_name` on android: Android's filesystem DirAccess (DirAccessJAndroid) names a storage volume only from API 30, and a device can list none: below API 30 every drive name is "".
+
+## Known findings
+
+Rows that fail on a platform for a gap tracked elsewhere (`KNOWN_FINDINGS`): the row still runs there,
+and a failure in its Variant-path half whose message contains the entry's text prints `KNOWN:` instead of
+`FAIL:`; any other failure fails, and once the row passes the run fails until the entry is removed.
+
+| row | platforms | reason |
+|---|---|---|
+| — | — | none |
+
+## Property-pair overrides
+
+An A row sets a recognisable non-default value chosen from the property's type. `PAIR_OVERRIDES` gives a
+property the value it can keep, or says it is no pair (a set value does not read back as itself on a fresh
+object), which hands its setter and getter back to their method's own case.
+
+| property | value | reason |
+|---|---|---|
+| `AnimatedSprite2D.animation` | not a pair | validated against the node's SpriteFrames, which a fresh node lacks: the set value is dropped |
+| `AnimatedSprite2D.frame` | not a pair | validated against the node's SpriteFrames, which a fresh node lacks: the set value is dropped |
+| `AnimatedSprite3D.animation` | not a pair | validated against the node's SpriteFrames, which a fresh node lacks: the set value is dropped |
+| `AnimatedSprite3D.frame` | not a pair | validated against the node's SpriteFrames, which a fresh node lacks: the set value is dropped |
+| `AnimatedTexture.current_frame` | not a pair | clamped to the texture's frame count (1 on a fresh AnimatedTexture) |
+| `AudioServer.input_device` | not a pair | validated against the host's audio devices: a name the host lacks reads back as "Default" |
+| `AudioServer.output_device` | not a pair | validated against the host's audio devices: a name the host lacks reads back as "Default" |
+| `AudioStreamMP3.data` | `fixture("mp3")` | keeps only bytes that decode as MP3 |
+| `CodeEdit.indent_automatic_prefixes` | `["@"]` | each prefix is one character (the setter keeps the first) |
+| `CompressedTexture2D.load_path` | not a pair | set by load(path), which keeps the path only once the file loads |
+| `CompressedTexture3D.load_path` | not a pair | set by load(path), which keeps the path only once the file loads |
+| `CompressedTextureLayered.load_path` | not a pair | set by load(path), which keeps the path only once the file loads |
+| `GraphEdit.connections` | `[{"from_node": "kanama_a", "from_port": 1, "to_node": "kanama_b", "to_port": 2, "keep_alive": true}]` | the setter reads the five connection keys and fills the missing ones with defaults |
+| `OggPacketSequence.packet_data` | `[[PackedByteArray(1, 2, 3)]]` | each packet is a PackedByteArray |
+
+## Singleton state and RID factories
+
+Singleton property pairs that set process-wide state and restore it (`SINGLETON_PAIRS`): `Engine` (process-wide engine settings, restored by the row (frame rate caps, time scale, tick rate, ...)), `AudioServer` (the audio mix settings, restored by the row (bus count, playback speed)). Keyed pairs (`SINGLETON_KEYED_PAIRS`): `ProjectSettings.set_setting`/`get_setting` on `"kanama/api_exercise/probe"` (a project setting no project defines; setting it back to null erases it).
+
+RID factories (`RID_FACTORIES`; 75 rows, one per factory method the tree calls): each creates, requires a valid RID, reads one const `<prefix>_get_*`/`<prefix>_is_*` of it through the wrapper and the Variant path where the server has one, and frees it in a `finally`. The same factories make the RID arguments of the servers' B and D rows (an argument `x` takes the class's own `x_create`, or the `RID_ARG_SOURCES` entry); any other RID argument is the invalid `RID()`.
+
+| server | frees with | reason |
+|---|---|---|
+| `RenderingServer` | `free_rid` | the rendering server's resources: meshes, textures, shaders, viewports, canvas items, ... |
+| `NavigationServer2D` | `free_rid` | navigation maps, regions, links, agents and obstacles |
+| `NavigationServer3D` | `free_rid` | navigation maps, regions, links, agents and obstacles |
+| `PhysicsServer2D` | `free_rid` | physics spaces, shapes, bodies, areas and joints |
+| `PhysicsServer3D` | `free_rid` | physics spaces, shapes, bodies, areas and joints |
+| `TextServer` | `free_rid` | fonts and shaped texts of the running text server |
+
+| RID argument | made by |
+|---|---|
+| `TextServer` `font_rid` | `TextServer.create_font` |
+| `TextServer` `font` | `TextServer.create_font` |
+| `TextServer` `shaped` | `TextServer.create_shaped_text` |
+| `RenderingServer` `texture` | `RenderingServer.texture_2d_placeholder_create` |
+| `Font` `canvas_item` | `RenderingServer.canvas_item_create` |
+
+B and D rows whose per-type arguments would leave them weak take chosen ones (`ROW_ARGS`, one per required argument) or a receiver set up through `Object.set` first (`ROW_RECEIVER_SETS`):
+
+| row | arguments | receiver set |
+|---|---|---|
+| `AStarGrid2D.is_in_bounds` | `7`, `3` | `region = Rect2i(0, 0, 8, 4)` |
+| `AStarGrid2D.is_in_boundsv` | `Vector2i(7, 3)` | `region = Rect2i(0, 0, 8, 4)` |
+| `CanvasItem.get_visibility_layer_bit` | `3` | `visibility_layer = 8` |
+| `ClassDB.class_get_enum_constants` | `"Node"`, `"ProcessMode"` | — |
+| `ClassDB.class_get_enum_list` | `"Node"` | — |
+| `ClassDB.class_get_integer_constant` | `"Node"`, `"NOTIFICATION_READY"` | — |
+| `ClassDB.class_get_integer_constant_enum` | `"Node"`, `"PROCESS_MODE_ALWAYS"` | — |
+| `ClassDB.class_get_method_argument_count` | `"Node"`, `"add_child"` | — |
+| `ClassDB.class_get_method_list` | `"Node2D"` | — |
+| `ClassDB.class_get_property` | `Node2D.new()`, `"scale"` | — |
+| `ClassDB.class_get_property_default_value` | `"Node2D"`, `"scale"` | — |
+| `ClassDB.class_get_signal` | `"Node"`, `"ready"` | — |
+| `ClassDB.class_has_enum` | `"Node"`, `"ProcessMode"` | — |
+| `Control.get_cursor_shape` | — | `mouse_default_cursor_shape = Control.CURSOR_IBEAM` |
+| `Control.get_tooltip` | — | `tooltip_text = "kanama125"` |
+| `Geometry2D.clip_polygons` | `[Vector2(0, 0), Vector2(4, 0), Vector2(4, 4), Vector2(0, 4)]`, `[Vector2(2, 2), Vector2(6, 2), Vector2(6, 6), Vector2(2, 6)]` | — |
+| `Geometry2D.is_polygon_clockwise` | `[Vector2(0, 0), Vector2(0, 4), Vector2(4, 4), Vector2(4, 0)]` | — |
+| `Geometry2D.line_intersects_line` | `Vector2(0, 0)`, `Vector2(1, 1)`, `Vector2(0, 2)`, `Vector2(1, -1)` | — |
+| `Geometry2D.point_is_inside_triangle` | `Vector2(1, 1)`, `Vector2(0, 0)`, `Vector2(4, 0)`, `Vector2(0, 4)` | — |
+| `Geometry3D.get_triangle_barycentric_coords` | `Vector3(0.25, 0.25, 0)`, `Vector3(-1, -1, 0)`, `Vector3(1, -1, 0)`, `Vector3(0, 1, 0)` | — |
+| `Geometry3D.ray_intersects_triangle` | `Vector3(0.25, 0.25, 1)`, `Vector3(0, 0, -1)`, `Vector3(-1, -1, 0)`, `Vector3(1, -1, 0)`, `Vector3(0, 1, 0)` | — |
+| `Geometry3D.segment_intersects_convex` | `Vector3(-2, 0.25, 0.5)`, `Vector3(2, 0.25, 0.5)`, `[Plane(1, 0, 0, 1), Plane(-1, 0, 0, 1), Plane(0, 1, 0, 1), Plane(0, -1, 0, 1), Plane(0, 0, 1, 1), Plane(0, 0, -1, 1)]` | — |
+| `Geometry3D.segment_intersects_cylinder` | `Vector3(-2, 0.25, 0)`, `Vector3(2, 0.25, 0)`, `2.0`, `1.0` | — |
+| `Geometry3D.segment_intersects_sphere` | `Vector3(-2, 0.25, 0)`, `Vector3(2, 0.25, 0)`, `Vector3(0, 0, 0)`, `1.0` | — |
+| `GridMap.get_orthogonal_index_from_basis` | `Basis(Vector3(0, 1, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1))` | — |
+| `GridMap.local_to_map` | `Vector3(5, 7, -3)` | — |
+| `InputEvent.get_action_strength` | `"ui_accept"` | `action = "ui_accept"`, `pressed = true` |
+| `InputEvent.is_action` | `"ui_accept"` | `action = "ui_accept"`, `pressed = true` |
+| `InputEvent.is_action_pressed` | `"ui_accept"` | `action = "ui_accept"`, `pressed = true` |
+| `Marshalls.base64_to_raw` | `"a2FuYW1hMTI1"` | — |
+| `Marshalls.base64_to_variant` | `"AgAAAAcAAAA="` | — |
+| `TextEdit.get_line_wrapped_text` | `1` | `text = "a\nkanama125"` |
+| `Time.get_unix_time_from_datetime_dict` | `{"year": 2026, "month": 10, "day": 17, "hour": 12, "minute": 30, "second": 15}` | — |
+| `Translation.get_message` | `"kanama"` | `messages = {"kanama": "125"}` |
+| `TranslationServer.compare_locales` | `"en_US"`, `"en"` | — |
+
+`PAIR_GROW` (singleton properties a row only ever raises by one): `AudioServer.bus_count` (fewer buses than the project has deletes the project's buses; one more is removed again by the restore).
+
+A factory row also calls the factory through `Object.call`: a `RID()` from both paths is the host's (a renderer without decals, fog volumes or VoxelGI; the headless dummy renderer) and counts weak, printed with that reason; a `RID()` from the wrapper alone fails.
 
 Rows of other cases whose method takes a path (20): each takes one under the scratch directory.
 
 | row | case | path arguments |
 |---|---|---|
-| `CompressedTexture2D.load` | A | `path` |
 | `ConfigFile.load_encrypted` | F | `path` |
 | `ConfigFile.load_encrypted_pass` | F | `path` |
 | `CryptoKey.load` | F | `path` |
 | `GLTFDocument.append_from_buffer` | F | `base_path` |
 | `GLTFDocument.append_from_file` | F | `path`, `base_path` |
 | `GLTFDocument.write_to_filesystem` | F | `path` |
+| `Image.save_dds` | B | `path` |
 | `Image.save_exr` | B | `path` |
 | `Image.save_jpg` | B | `path` |
 | `Image.save_webp` | B | `path` |
@@ -302,7 +427,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallNoArgsRetDictionary` | A | `AudioStreamOggVorbis.get_tags` (getter of `tags`) | 39 | (no tag) |
 | `ptrcallNoArgsRetDictionaryList` | A | `GraphEdit.get_connection_list` (getter of `connections`) | 16 | (no tag) |
 | `ptrcallNoArgsRetDouble` | A | `AnimatedSprite2D.get_frame_progress` (getter of `frame_progress`) | 913 | hand |
-| `ptrcallNoArgsRetInt` | C | `DirAccess.get_drive_count` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `AnimatedSprite2D.get_frame` (getter of `frame`) | 562 | hand |
+| `ptrcallNoArgsRetInt` | C | `DirAccess.get_drive_count` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `AnimatedTexture.get_frames` (getter of `frames`) | 562 | hand |
 | `ptrcallNoArgsRetLong` | C | `DirAccess.get_open_error` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `AStarGrid2D.get_cell_shape` (getter of `cell_shape`) | 697 | hand |
 | `ptrcallNoArgsRetLongList` | C | `Node.get_orphan_node_ids` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `CodeEdit.get_line_length_guidelines` (getter of `line_length_guidelines`) | 7 | hand |
 | `ptrcallNoArgsRetNodePath` | A | `AnimationMixer.get_root_motion_track` on `AnimationPlayer` (getter of `root_motion_track`) | 47 | hand |
@@ -328,7 +453,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallNoArgsRetRect2List` | E | `DisplayServer.get_display_cutouts` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | (no tag) |
 | `ptrcallNoArgsRetRect2i` | A | `AStarGrid2D.get_region` (getter of `region`) | 8 | PT_RECT2I |
 | `ptrcallNoArgsRetString` | C | `Resource.generate_scene_unique_id` (static with a return value); then A `AnimatedSprite2D.get_autoplay` (getter of `autoplay`) | 262 | hand |
-| `ptrcallNoArgsRetStringName` | A | `AnimatedSprite2D.get_animation` (getter of `animation`) | 47 | hand |
+| `ptrcallNoArgsRetStringName` | A | `AnimationNodeAnimation.get_animation` (getter of `animation`) | 47 | hand |
 | `ptrcallNoArgsRetStringNameList` | B | `AnimationLibrary.get_animation_list` (const non-void method) | 12 | hand |
 | `ptrcallNoArgsRetTransform2D` | A | `Bone2D.get_rest` (getter of `rest`) | 21 | PT_TRANSFORM2D |
 | `ptrcallNoArgsRetTransform3D` | A | `GLTFNode.get_xform` (getter of `xform`) | 23 | PT_TRANSFORM3D |
@@ -510,7 +635,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithIntAndVector2iArgRetInt` | B | `FontFile.get_texture_count` (const non-void method) | 1 | PT_INT64 PT_VECTOR2I |
 | `ptrcallWithIntAndVector2iListArgsRetObject` | F | `TileMap.get_pattern` (non-const method) | 1 | PT_INT64 PT_OBJECT PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithIntAndVector3Arg` | F | `Curve3D.set_point_in` (void method) | 14 | PT_INT64 PT_VECTOR3 PT_VOID |
-| `ptrcallWithIntArg` | A | `AnimatedSprite2D.set_frame` (setter of `frame`) | 499 | hand |
+| `ptrcallWithIntArg` | A | `AnimatedTexture.set_frames` (setter of `frames`) | 499 | hand |
 | `ptrcallWithIntArgRetArray` | B | `ImporterMesh.get_surface_arrays` (const non-void method) | 10 | PT_INT64 |
 | `ptrcallWithIntArgRetArrayList` | B | `Mesh.surface_get_blend_shape_arrays` (const non-void method) | 1 | PT_INT64 |
 | `ptrcallWithIntArgRetBasis` | B | `GridMap.get_basis_with_orthogonal_index` (const non-void method) | 1 | PT_BASIS PT_INT64 |
@@ -533,7 +658,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithIntArgRetRID` | B | `KinematicCollision3D.get_collider_rid` (const non-void method) | 12 | PT_INT64 PT_RID |
 | `ptrcallWithIntArgRetRect2` | B | `ItemList.get_item_icon_region` (const non-void method) | 5 | PT_INT64 PT_RECT2 |
 | `ptrcallWithIntArgRetRect2i` | E | `DisplayServer.screen_get_usable_rect` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 2 | PT_INT64 PT_RECT2I |
-| `ptrcallWithIntArgRetString` | C | `DirAccess.get_drive_label` (static with a return value); then B `AnimationNode.get_input_name` (const non-void method) | 81 | PT_INT64 PT_STRING |
+| `ptrcallWithIntArgRetString` | C | `DirAccess.get_drive_name` (static with a return value); then B `AnimationNode.get_input_name` (const non-void method) | 81 | PT_INT64 PT_STRING |
 | `ptrcallWithIntArgRetStringName` | B | `AnimationNodeBlendSpace1D.get_blend_point_name` (const non-void method) | 18 | PT_INT64 PT_STRING_NAME |
 | `ptrcallWithIntArgRetStringNameList` | B | `Skeleton3D.get_bone_meta_list` (const non-void method) | 1 | PT_INT64 |
 | `ptrcallWithIntArgRetTransform2D` | B | `FontFile.get_transform` (const non-void method) | 3 | PT_INT64 PT_TRANSFORM2D |
@@ -747,7 +872,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List` | F | `TileSetAtlasSource.get_tiles_to_be_removed_on_change` (non-const method) | 1 | PT_OBJECT PT_VECTOR2I |
 | `ptrcallWithObjectAndTransform3DArg` | F | `NavigationMeshSourceGeometryData3D.add_mesh` (void method) | 1 | PT_OBJECT PT_TRANSFORM3D PT_VOID |
 | `ptrcallWithObjectAndTwoBoolArgs` | E | `EngineDebugger.script_debug` (EngineDebugger: the debugger connection of the running engine) | 1 | PT_BOOL PT_OBJECT PT_VOID |
-| `ptrcallWithObjectAndTwoIntArgsRetRect2` | B | `Tree.get_item_area_rect` (const non-void method) | 1 | PT_INT64 PT_OBJECT PT_RECT2 |
+| `ptrcallWithObjectAndTwoIntArgsRetRect2` | F | `Tree.get_item_area_rect` (takes a TreeItem, which only a Tree's create_item makes: no fresh argument (METHOD_OVERRIDES)) | 1 | PT_INT64 PT_OBJECT PT_RECT2 |
 | `ptrcallWithObjectAndVariantArgRetLong` | E | `MultiplayerAPI.object_configuration_add` (*Multiplayer*: opens sockets or talks to the network) | 2 | PT_INT64 PT_OBJECT PT_VARIANT |
 | `ptrcallWithObjectAndVector2iArg` | E | `EditorInterface.popup_dialog_centered` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_OBJECT PT_VECTOR2I PT_VOID |
 | `ptrcallWithObjectArgRetBool` | B | `Area2D.overlaps_area` (const non-void method) | 18 | PT_BOOL PT_OBJECT |
@@ -793,7 +918,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectLongAndVector2Arg` | E | `DisplayServer.cursor_set_custom_image` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 2 | PT_INT64 PT_OBJECT PT_VECTOR2 PT_VOID |
 | `ptrcallWithObjectLongBoolDoubleArgs` | F | `PortableCompressedTexture2D.create_from_image` (void method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_OBJECT PT_VOID |
 | `ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject` | E | `EditorInspector.instantiate_property_editor` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_BOOL PT_INT64 PT_OBJECT PT_STRING |
-| `ptrcallWithObjectNodePathObjectIntArgsRetObject` | C | `GLTFDocument.export_object_model_property` (static with a return value) | 1 | PT_INT64 PT_NODE_PATH PT_OBJECT |
+| `ptrcallWithObjectNodePathObjectIntArgsRetObject` | E | `GLTFDocument.export_object_model_property` (indexes `state.nodes[gltf_node_index]` unchecked for a property on a node: on a GLTFState without nodes it aborts the process (cowdata FATAL index, found by the headless sweep) (METHOD_OVERRIDES)) | 1 | PT_INT64 PT_NODE_PATH PT_OBJECT |
 | `ptrcallWithObjectNodePathVariantDoubleArgsRetObject` | F | `Tween.tween_property` (non-const method) | 1 | PT_FLOAT64 PT_NODE_PATH PT_OBJECT PT_VARIANT |
 | `ptrcallWithObjectObjectIntBoolArgs` | E | `PopupMenu.add_icon_check_shortcut` (*Popup*: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 2 | PT_BOOL PT_INT64 PT_OBJECT PT_VOID |
 | `ptrcallWithObjectObjectIntTwoBoolArgs` | E | `PopupMenu.add_icon_shortcut` (*Popup*: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_INT64 PT_OBJECT PT_VOID |
@@ -901,10 +1026,10 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithRIDAndIntArgRetInt` | E | `NativeMenu.add_separator` (NativeMenu: the host OS menu bar) | 4 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetLong` | E | `NativeMenu.get_item_accelerator` (NativeMenu: the host OS menu bar) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetObject` | F | `RenderingServer.texture_2d_layer_get` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 2 | PT_INT64 PT_OBJECT PT_RID |
-| `ptrcallWithRIDAndIntArgRetRID` | D | `PhysicsServer2D.area_get_shape` (const non-void singleton method) | 6 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndIntArgRetRID` | D | `RenderingServer.mesh_surface_get_material` (const non-void singleton method) | 6 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetString` | E | `NativeMenu.get_item_text` (NativeMenu: the host OS menu bar) | 2 | PT_INT64 PT_RID PT_STRING |
-| `ptrcallWithRIDAndIntArgRetTransform2D` | D | `PhysicsServer2D.area_get_shape_transform` (const non-void singleton method) | 4 | PT_INT64 PT_RID PT_TRANSFORM2D |
-| `ptrcallWithRIDAndIntArgRetTransform3D` | D | `PhysicsServer3D.area_get_shape_transform` (const non-void singleton method) | 4 | PT_INT64 PT_RID PT_TRANSFORM3D |
+| `ptrcallWithRIDAndIntArgRetTransform2D` | D | `RenderingServer.multimesh_instance_get_transform_2d` (const non-void singleton method) | 4 | PT_INT64 PT_RID PT_TRANSFORM2D |
+| `ptrcallWithRIDAndIntArgRetTransform3D` | D | `RenderingServer.multimesh_instance_get_transform` (const non-void singleton method) | 4 | PT_INT64 PT_RID PT_TRANSFORM3D |
 | `ptrcallWithRIDAndIntArgRetVariantScalar` | E | `NativeMenu.get_item_tag` (NativeMenu: the host OS menu bar) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetVector2` | D | `NavigationServer2D.region_get_connection_pathway_end` (const non-void singleton method) | 2 | PT_INT64 PT_RID PT_VECTOR2 |
 | `ptrcallWithRIDAndIntArgRetVector3` | D | `NavigationServer3D.region_get_connection_pathway_end` (const non-void singleton method) | 3 | PT_INT64 PT_RID PT_VECTOR3 |
@@ -1232,20 +1357,20 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithStringAndThreeIntArgsRetObject` | E | `ENetConnection.connect_to_host` (*ENet*: opens sockets or talks to the network) | 1 | PT_INT64 PT_OBJECT PT_STRING |
 | `ptrcallWithStringAndTransform3DArg` | F | `Skin.add_named_bind` (void method) | 1 | PT_STRING PT_TRANSFORM3D PT_VOID |
 | `ptrcallWithStringAndTwoBoolArgsRetObject` | B | `Node.find_child` (const non-void method) | 1 | PT_BOOL PT_OBJECT PT_STRING |
-| `ptrcallWithStringAndTwoIntArgsRetObject` | B | `RegEx.search` (const non-void method) | 1 | PT_INT64 PT_OBJECT PT_STRING |
+| `ptrcallWithStringAndTwoIntArgsRetObject` | F | `RegEx.search` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | PT_INT64 PT_OBJECT PT_STRING |
 | `ptrcallWithStringAndTwoObjectArgs` | E | `EditorContextMenuPlugin.add_context_menu_item_from_shortcut` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_OBJECT PT_STRING PT_VOID |
 | `ptrcallWithStringAndTwoVariantArgsRetDictionary` | F | `JSONRPC.make_request` (non-const method) | 1 | PT_STRING PT_VARIANT |
-| `ptrcallWithStringAndVariantArg` | F | `ProjectSettings.set_initial_value` (void singleton method) | 6 | PT_STRING PT_VARIANT PT_VOID |
+| `ptrcallWithStringAndVariantArg` | A | `ProjectSettings.set_setting` (setter of the keyed value "kanama/api_exercise/probe", set and restored (SINGLETON_KEYED_PAIRS)) | 6 | PT_STRING PT_VARIANT PT_VOID |
 | `ptrcallWithStringAndVariantArgRetDictionary` | F | `JSONRPC.make_notification` (non-const method) | 1 | PT_STRING PT_VARIANT |
 | `ptrcallWithStringAndVariantArgRetInt` | E | `DisplayServer.global_menu_get_item_index_from_tag` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_INT64 PT_STRING PT_VARIANT |
-| `ptrcallWithStringAndVariantArgRetVariantScalar` | D | `ProjectSettings.get_setting` (const non-void singleton method) | 1 | PT_STRING PT_VARIANT |
+| `ptrcallWithStringAndVariantArgRetVariantScalar` | A | `ProjectSettings.get_setting` (getter of the keyed value "kanama/api_exercise/probe", set and restored (SINGLETON_KEYED_PAIRS)) | 1 | PT_STRING PT_VARIANT |
 | `ptrcallWithStringArg` | A | `AnimatedSprite2D.set_autoplay` (setter of `autoplay`) | 213 | PT_STRING PT_VOID |
 | `ptrcallWithStringArgRetBool` | C | `DirAccess.dir_exists_absolute` (static with a return value); then B `CodeEdit.has_auto_brace_completion_close_key` (const non-void method) | 53 | PT_BOOL PT_STRING |
 | `ptrcallWithStringArgRetByteArray` | C | `FileAccess.get_file_as_bytes` (static with a return value); then D `Marshalls.base64_to_raw` (non-void method of a stateless singleton) | 2 | PT_STRING |
 | `ptrcallWithStringArgRetColor` | B | `CodeHighlighter.get_keyword_color` (const non-void method) | 2 | PT_COLOR PT_STRING |
 | `ptrcallWithStringArgRetDictionary` | E | `EditorExportPlatform.find_export_template` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_STRING |
 | `ptrcallWithStringArgRetInt` | B | `AnimationNode.find_input` (const non-void method) | 10 | PT_INT64 PT_STRING |
-| `ptrcallWithStringArgRetLong` | C | `DirAccess.make_dir_absolute` (static returning Error: its arguments must make it fail); then A `CompressedTexture2D.load` (setter of `load_path`) | 52 | PT_INT64 PT_STRING |
+| `ptrcallWithStringArgRetLong` | C | `DirAccess.make_dir_absolute` (static returning Error: its arguments must make it fail); then B `Image.save_dds` (const non-void method) | 52 | PT_INT64 PT_STRING |
 | `ptrcallWithStringArgRetObject` | C | `AudioStreamMP3.load_from_file` (static with a return value); then B `Node.find_parent` (const non-void method) | 21 | PT_OBJECT PT_STRING |
 | `ptrcallWithStringArgRetPackedStringList` | C | `DirAccess.get_directories_at` (static with a return value); then B `ConfigFile.get_section_keys` (const non-void method) | 15 | PT_STRING |
 | `ptrcallWithStringArgRetString` | C | `FileAccess.get_file_as_string` (static with a return value); then B `CodeEdit.get_auto_brace_completion_close_key` (const non-void method) | 29 | hand |
@@ -1290,7 +1415,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithStringNameAndBoolArgRetString` | E | `EditorExportPreset.get_version` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_BOOL PT_STRING PT_STRING_NAME |
 | `ptrcallWithStringNameAndBoundCallableArgs` | F | `Object.disconnect` (hand-written root) (void method) | 1 | hand |
 | `ptrcallWithStringNameAndCallableArgs` | F | `Object.disconnect` (hand-written root) (void method) | 2 | PT_CALLABLE PT_STRING_NAME PT_VOID |
-| `ptrcallWithStringNameAndCallableArgsRetBool` | B | `Object.is_connected` (hand-written root) (const non-void method) | 1 | PT_BOOL PT_CALLABLE PT_STRING_NAME |
+| `ptrcallWithStringNameAndCallableArgsRetBool` | F | `Object.is_connected` (hand-written root) (the hand-written root spells it isConnected(signal, target, method), not with Godot's Callable argument (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_CALLABLE PT_STRING_NAME |
 | `ptrcallWithStringNameAndColorArg` | F | `Animation.set_marker_color` (void method) | 3 | PT_COLOR PT_STRING_NAME PT_VOID |
 | `ptrcallWithStringNameAndDoubleArg` | F | `Animation.add_marker` (void method) | 6 | PT_FLOAT64 PT_STRING_NAME PT_VOID |
 | `ptrcallWithStringNameAndIntArg` | F | `AnimationNodeBlendTree.disconnect_node` (void method) | 7 | PT_INT64 PT_STRING_NAME PT_VOID |
@@ -1307,7 +1432,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithStringNameAndVariantArg` | F | `AnimationNode.set_parameter` (void method) | 18 | PT_STRING_NAME PT_VARIANT PT_VOID |
 | `ptrcallWithStringNameAndVariantArgRetVariantScalar` | B | `Object.get_meta` (hand-written root) (const non-void method) | 1 | PT_STRING_NAME PT_VARIANT |
 | `ptrcallWithStringNameAndVector2Arg` | F | `AnimationNodeBlendTree.set_node_position` (void method) | 2 | PT_STRING_NAME PT_VECTOR2 PT_VOID |
-| `ptrcallWithStringNameArg` | A | `AnimatedSprite2D.set_animation` (setter of `animation`) | 85 | PT_STRING_NAME PT_VOID |
+| `ptrcallWithStringNameArg` | A | `AnimationNodeAnimation.set_animation` (setter of `animation`) | 85 | PT_STRING_NAME PT_VOID |
 | `ptrcallWithStringNameArgRetBool` | B | `Animation.has_marker` (const non-void method) | 49 | PT_BOOL PT_STRING_NAME |
 | `ptrcallWithStringNameArgRetColor` | B | `Animation.get_marker_color` (const non-void method) | 1 | PT_COLOR PT_STRING_NAME |
 | `ptrcallWithStringNameArgRetDictionaryList` | B | `GraphEdit.get_connection_list_from_node` (const non-void method) | 2 | PT_STRING_NAME |
@@ -1428,7 +1553,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithTransform2DArg` | A | `Bone2D.set_rest` (setter of `rest`) | 13 | PT_TRANSFORM2D PT_VOID |
 | `ptrcallWithTransform2DObjectTransform2DArgsRetBool` | F | `Shape2D.collide` on `CapsuleShape2D` (non-const method) | 1 | PT_BOOL PT_OBJECT PT_TRANSFORM2D |
 | `ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List` | F | `Shape2D.collide_and_get_contacts` on `CapsuleShape2D` (non-const method) | 1 | PT_OBJECT PT_TRANSFORM2D |
-| `ptrcallWithTransform2DVector2ArgsRetObject` | B | `InputEvent.xformed_by` on `InputEventAction` (const non-void method) | 1 | PT_OBJECT PT_TRANSFORM2D PT_VECTOR2 |
+| `ptrcallWithTransform2DVector2ArgsRetObject` | F | `InputEvent.xformed_by` on `InputEventAction` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | PT_OBJECT PT_TRANSFORM2D PT_VECTOR2 |
 | `ptrcallWithTransform2DVector2ObjectDoubleBoolArgsRetBool` | F | `PhysicsBody2D.test_move` on `CharacterBody2D` (non-const method) | 1 | PT_BOOL PT_FLOAT64 PT_OBJECT PT_TRANSFORM2D PT_VECTOR2 |
 | `ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool` | F | `Shape2D.collide_with_motion` on `CapsuleShape2D` (non-const method) | 1 | PT_BOOL PT_OBJECT PT_TRANSFORM2D PT_VECTOR2 |
 | `ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List` | F | `Shape2D.collide_with_motion_and_get_contacts` on `CapsuleShape2D` (non-const method) | 1 | PT_OBJECT PT_TRANSFORM2D PT_VECTOR2 |
@@ -1521,7 +1646,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithTwoLongArgsRetInt` | F | `Viewport.get_render_info` on `SubViewport` (non-const method) | 1 | PT_INT64 |
 | `ptrcallWithTwoLongArgsRetLong` | E | `OpenXRInterface.get_hand_joint_flags` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 |
 | `ptrcallWithTwoLongArgsRetQuaternion` | E | `OpenXRInterface.get_hand_joint_rotation` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 PT_QUATERNION |
-| `ptrcallWithTwoLongArgsRetRID` | F | `TextServer.create_shaped_text` on `TextServerManager.get_primary_interface()` (non-const method) | 1 | PT_INT64 PT_RID |
+| `ptrcallWithTwoLongArgsRetRID` | B | `TextServer.create_shaped_text` on `TextServerManager.get_primary_interface()` (RID factory: a valid RID, one read of it, freed (RID_FACTORIES)) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithTwoLongArgsRetVector2` | B | `TextServer.get_hex_code_box_size` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_INT64 PT_VECTOR2 |
 | `ptrcallWithTwoLongArgsRetVector3` | E | `OpenXRInterface.get_hand_joint_angular_velocity` (*XR*: an XR runtime and its devices) | 3 | PT_INT64 PT_VECTOR3 |
 | `ptrcallWithTwoLongStringArgs` | E | `OpenXRAPIExtension.set_object_name` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 PT_STRING PT_VOID |

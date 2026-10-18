@@ -25,6 +25,22 @@
     "F",
     "reads the clock"
    ]
+  },
+  "singleton_pairs": {
+   "AudioServer": "restored mix settings"
+  },
+  "singleton_keyed_pairs": {
+   "ProjectSettings.set_setting": [
+    "get_setting",
+    "\"kanama/probe\"",
+    "a key no project defines"
+   ]
+  },
+  "rid_factories": {
+   "RenderingServer": [
+    "free_rid",
+    "server resources"
+   ]
   }
  },
  "sites": [
@@ -164,6 +180,48 @@
    "override",
    "Engine",
    "get_ticks",
+   "singleton"
+  ],
+  [
+   "singletonPair",
+   "AudioServer",
+   "set_bus_count",
+   "singleton"
+  ],
+  [
+   "singletonPair",
+   "AudioServer",
+   "get_bus_count",
+   "singleton"
+  ],
+  [
+   "keyedPair",
+   "ProjectSettings",
+   "set_setting",
+   "singleton"
+  ],
+  [
+   "keyedPair",
+   "ProjectSettings",
+   "get_setting",
+   "singleton"
+  ],
+  [
+   "factory",
+   "RenderingServer",
+   "mesh_create",
+   "singleton"
+  ],
+  [
+   "factory",
+   "RenderingServer",
+   "free_rid",
+   "singleton"
+  ],
+  [
+   "ridRead",
+   "RenderingServer",
+   "mesh_get_surface_count",
    "singleton"
   ]
  ]

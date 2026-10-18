@@ -173,6 +173,7 @@ actual object ObjectCalls {
   ): List<T> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, args, ret)
       return try {
         reader(ret)
@@ -1358,6 +1359,7 @@ actual object ObjectCalls {
   ): List<GodotObject> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayObjectsOwned(ret)
@@ -1383,6 +1385,7 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetArray(methodBind: MemorySegment, instance: MemorySegment): List<Any?> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayScalars(ret)
@@ -1533,6 +1536,7 @@ actual object ObjectCalls {
   ): List<Vector3i> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayVector3i(ret)
@@ -1549,6 +1553,7 @@ actual object ObjectCalls {
   ): List<Long> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayLongs(ret)
@@ -1564,6 +1569,7 @@ actual object ObjectCalls {
   ): List<RID> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayRids(ret)
@@ -1579,6 +1585,7 @@ actual object ObjectCalls {
   ): List<String> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayStrings(ret)
@@ -1594,6 +1601,7 @@ actual object ObjectCalls {
   ): List<String> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayStringNames(ret)
@@ -1609,6 +1617,7 @@ actual object ObjectCalls {
   ): List<Map<String, Any?>> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayDictionaries(ret)
@@ -1628,6 +1637,7 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ): List<GodotObject> {
     val scratch = ptrcallScratch.get()
+    BuiltinTypes.constructEmptyArray(scratch.arrayRet)
     bindPtrcall(methodBind, instance, scratch.setBoolArg(boolArg), scratch.arrayRet)
     return try {
       BuiltinTypes.readArrayObjectsOwned(scratch.arrayRet)
@@ -1643,6 +1653,7 @@ actual object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> {
     val scratch = ptrcallScratch.get()
+    BuiltinTypes.constructEmptyArray(scratch.arrayRet)
     bindPtrcall(methodBind, instance, scratch.setBoolArg(boolArg), scratch.arrayRet)
     return try {
       BuiltinTypes.readArrayObjectsOwned(scratch.arrayRet, wrapper)
@@ -1673,6 +1684,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, boolCell)
+        BuiltinTypes.constructEmptyArray(ret)
         bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readArrayObjectsOwned(ret)
       } finally {
@@ -1739,6 +1751,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, firstCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
+        BuiltinTypes.constructEmptyArray(ret)
         bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
       } finally {
@@ -1797,6 +1810,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, thirdCell)
       args.setAtIndex(ADDRESS, 3, firstBoolCell)
       args.setAtIndex(ADDRESS, 4, secondBoolCell)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
@@ -1861,6 +1875,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, firstBoolCell)
       args.setAtIndex(ADDRESS, 4, valueCell)
       args.setAtIndex(ADDRESS, 5, secondBoolCell)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
@@ -3922,6 +3937,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(8L, 8L)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readArrayRids(ret)
@@ -8604,6 +8620,7 @@ actual object ObjectCalls {
     value: Boolean,
   ): List<Any?> {
     val scratch = ptrcallScratch.get()
+    BuiltinTypes.constructEmptyArray(scratch.arrayRet)
     bindPtrcall(methodBind, instance, scratch.setBoolArg(value), scratch.arrayRet)
     return try {
       BuiltinTypes.readArrayScalars(scratch.arrayRet)
@@ -13200,6 +13217,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedVector2Array(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
+        BuiltinTypes.constructEmptyArray(ret)
         bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readArrayPackedVector2Arrays(ret)
       } finally {
@@ -13265,6 +13283,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, firstPacked)
         arr.setAtIndex(ADDRESS, 1, secondPacked)
+        BuiltinTypes.constructEmptyArray(ret)
         bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readArrayPackedVector2Arrays(ret)
       } finally {
@@ -13295,6 +13314,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, argPacked)
         arr.setAtIndex(ADDRESS, 1, amountCell)
         arr.setAtIndex(ADDRESS, 2, modeCell)
+        BuiltinTypes.constructEmptyArray(ret)
         bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readArrayPackedVector2Arrays(ret)
       } finally {
@@ -13328,6 +13348,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, amountCell)
         arr.setAtIndex(ADDRESS, 2, joinTypeCell)
         arr.setAtIndex(ADDRESS, 3, endTypeCell)
+        BuiltinTypes.constructEmptyArray(ret)
         bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readArrayPackedVector2Arrays(ret)
       } finally {
@@ -15121,6 +15142,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, rect)
       arr.setAtIndex(ADDRESS, 1, amountCell)
       val ret = arena.allocate(8L, 8L)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readArrayPackedVector2Arrays(ret)
@@ -19845,6 +19867,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val ret = arena.allocate(8L, 8L)
+      BuiltinTypes.constructEmptyArray(ret)
       bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
@@ -26868,6 +26891,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, dict)
         val ret = arena.allocate(8L, 8L)
+        BuiltinTypes.constructEmptyArray(ret)
         bindPtrcall(methodBind, instance, args, ret)
         return try {
           BuiltinTypes.readArrayScalars(ret)
