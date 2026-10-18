@@ -13,7 +13,7 @@ scratch directory, the singleton rows, the Variant type values) are hand-kept in
 the desktop smoke and in the iOS self-test build, the C, A, B and D rows asserting values, the F rows
 reach only, and the T rows one value per Godot Variant type through each generic Variant path.
 
-**Referenced helpers:** 1492 (1487 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15335 generated (12998 instance, 2223 singleton, 114 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 892 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 541 (of the 541 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 603; excluded 343. A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the runs count those apart (`weak` in the summary line), so this count is an upper bound.
+**Referenced helpers:** 1492 (1487 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15335 generated (12998 instance, 2223 singleton, 114 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 892 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 541 (of the 541 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 602; excluded 344. A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the runs count those apart (`weak` in the summary line), so this count is an upper bound.
 
 ## Cases
 
@@ -28,8 +28,8 @@ on a healthy host (**weak**), and then the second row is the one that can tell a
 | A property pair | setter or getter of a non-indexed property of an instantiable class (or its receiver below), or of a `SINGLETON_PAIRS` singleton, or a `SINGLETON_KEYED_PAIRS` method | a value set through the wrapper reads back through the getter and `Object.get` (on a singleton, the value read first is set back in a `finally`) | 91 |
 | B const oracle | const non-void instance method on such a class (or an argument-free RID factory of a `RID_FACTORIES` class) | the wrapper's result equals `Object.call` with the same arguments on the same object; a result equal to its type's zero is **weak** (counted apart, not failed) | 311 |
 | D singleton | const non-void method of a non-excluded singleton, any non-void method of a stateless singleton, or an argument-free RID factory of a `RID_FACTORIES` server | the wrapper's result equals `Object.call` on the singleton (weak as B); a factory returns a valid RID, one read of it agrees on both paths, and the RID is freed | 94 |
-| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 603 |
-| E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 343 |
+| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 602 |
+| E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 344 |
 | N runtime helper | no generated method calls it with a MethodBind | nothing of its own: every row uses it | 5 |
 
 179 of the rows get their receiver elsewhere than a fresh instance of the declaring class (a descendant,
@@ -40,7 +40,7 @@ or the factory `RECEIVER_SOURCES` names, because the declaring class is abstract
 - **C static** by class: `FileAccess` 13, `DirAccess` 9, `JSON` 3, `AudioStreamMP3` 2, `AudioStreamWAV` 2, `GLTFDocument` 2, `Image` 2, `DPITexture` 1, `GLTFAccessor` 1, `GLTFCamera` 1, `ImporterMesh` 1, `Node` 1, `PathFollow3D` 1, `PhysicsRayQueryParameters2D` 1, `PhysicsRayQueryParameters3D` 1, `PortableCompressedTexture2D` 1, `Resource` 1, `TLSOptions` 1, `Tween` 1.
 - **D singleton** by class: `RenderingServer` 19, `Geometry2D` 16, `Geometry3D` 13, `ClassDB` 11, `NavigationServer2D` 10, `NavigationServer3D` 10, `Time` 5, `Marshalls` 3, `PhysicsServer3D` 3, `TranslationServer` 2, `AccessibilityServer` 1, `ProjectSettings` 1.
 - **B const** through a descendant, by declaring class: `TextServer` 56, `CollisionObject2D` 8, `Font` 7, `InputEvent` 4, `IterateIK3D` 2, `Noise` 2, `TileSetSource` 2, `AnimationMixer` 1, `BaseMaterial3D` 1, `CanvasItem` 1, `CollisionObject3D` 1.
-- **F reach only**, largest classes: `RenderingServer` 87, `CanvasItem` 28, `TextServer` 27, `AccessibilityServer` 22, `Animation` 19, `FontFile` 14, `PhysicsServer2D` 14, `RichTextLabel` 14, `Image` 13, `AnimationPlayer` 9, `AStar2D` 8, `PhysicsServer3D` 8.
+- **F reach only**, largest classes: `RenderingServer` 86, `CanvasItem` 28, `TextServer` 27, `AccessibilityServer` 22, `Animation` 19, `FontFile` 14, `PhysicsServer2D` 14, `RichTextLabel` 14, `Image` 13, `AnimationPlayer` 9, `AStar2D` 8, `PhysicsServer3D` 8.
 
 ## By iOS ptrcall tag
 
@@ -48,13 +48,13 @@ The generated iOS helpers by the type tags their bodies pack (a helper counts on
 
 | tag | helpers | sites | C | A | B | D | F | E |
 |---|---|---|---|---|---|---|---|---|
-| `PT_INT64` | 827 | 3440 | 19 | 2 | 197 | 30 | 346 | 233 |
-| `PT_VOID` | 573 | 2921 | – | 34 | – | – | 427 | 112 |
+| `PT_INT64` | 827 | 3440 | 19 | 2 | 197 | 30 | 345 | 234 |
+| `PT_VOID` | 573 | 2921 | – | 34 | – | – | 426 | 113 |
 | `PT_RID` | 365 | 1750 | – | 2 | 55 | 41 | 176 | 91 |
-| `PT_BOOL` | 350 | 1250 | 9 | – | 63 | 25 | 170 | 83 |
+| `PT_BOOL` | 350 | 1250 | 9 | – | 63 | 25 | 169 | 84 |
 | `PT_OBJECT` | 270 | 677 | 20 | – | 26 | 2 | 122 | 100 |
 | `PT_STRING` | 263 | 1006 | 25 | 3 | 29 | 8 | 66 | 132 |
-| `PT_FLOAT64` | 232 | 696 | 2 | – | 52 | 9 | 151 | 18 |
+| `PT_FLOAT64` | 232 | 696 | 2 | – | 52 | 9 | 150 | 19 |
 | `PT_STRING_NAME` | 134 | 479 | – | 1 | 31 | 14 | 60 | 28 |
 | `PT_VECTOR2` | 133 | 252 | 1 | – | 38 | 12 | 76 | 6 |
 | `PT_VECTOR2I` | 101 | 186 | – | – | 48 | 1 | 46 | 6 |
@@ -150,7 +150,7 @@ instantiable descendant it excludes.
 | `*Extension*` | substring | a base a script or extension implements (TextServerExtension, PhysicsServer3DExtension, ...): its methods are hooks, not engine behaviour | 34 | 7 |
 | `Editor*` | prefix | editor-only classes | 54 | 0 |
 | — | derived | abstract, and no instantiable descendant (and no `RECEIVER_SOURCES` entry) | — | 12 |
-| `METHOD_OVERRIDES` | method | see below | — | 6 |
+| `METHOD_OVERRIDES` | method | see below | — | 7 |
 
 Stateless singletons (`STATELESS_SINGLETONS`, every non-void method is a D row): `Geometry2D` (pure 2D geometry functions of their arguments), `Geometry3D` (pure 3D geometry functions of their arguments), `Marshalls` (pure encoders and decoders of their arguments).
 
@@ -204,6 +204,7 @@ Stateless singletons (`STATELESS_SINGLETONS`, every non-void method is a D row):
 | `RenderingServer.texture_create_from_native_handle` | E | wraps a native GPU texture handle: a made-up one is undefined behaviour (the desktop smoke's dummy renderer ignores it, a phone's renderer does not) |
 | `RenderingServer.screen_space_roughness_limiter_set_active` | E | sets a process-wide rendering setting of the running game, with no getter to restore it |
 | `RenderingServer.environment_set_ssao_quality` | E | sets a process-wide rendering setting of the running game, with no getter to restore it |
+| `RenderingServer.environment_set_ssil_quality` | E | sets a process-wide rendering setting of the running game, with no getter to restore it |
 | `GLTFDocument.export_object_model_property` | E | indexes `state.nodes[gltf_node_index]` unchecked for a property on a node: on a GLTFState without nodes it aborts the process (cowdata FATAL index, found by the headless sweep) |
 
 ## Runtime helpers
@@ -487,6 +488,7 @@ parentless Node freed. Rows that would change what a running game shows or hears
 
 `REACH_AFTER` (what a row does after its call):
 
+- `RenderingServer.global_shader_parameter_add`: `RenderingServer.globalShaderParameterRemove(a0)` — the parameter is process-wide state of the running game: the row removes the one it added.
 - `ResourceLoader.load_threaded_request`: `r.track(ResourceLoader.loadThreadedGet(a0))` — a request keeps its load token (a RefCounted) until load_threaded_get collects it: without that it leaks at exit (found by the runtime smoke's leak check).
 
 Rows of other cases whose method takes a path (20): each takes one under the scratch directory.
@@ -913,7 +915,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithLongArrayArrayListDictionaryLongArgs` | F | `ArrayMesh.add_surface_from_arrays` (void method) | 1 | PT_ARRAY PT_DICTIONARY PT_INT64 PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs` | F | `ImporterMesh.add_surface` (void method) | 1 | PT_ARRAY PT_DICTIONARY PT_INT64 PT_OBJECT PT_STRING PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithLongArrayStringArgsRetVector3iList` | B | `TextServer.parse_structured_text` on `TextServerManager.get_primary_interface()` (const non-void method) | 1 | PT_ARRAY PT_INT64 PT_STRING |
-| `ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs` | F | `RenderingServer.environment_set_ssil_quality` (void singleton method) | 2 | PT_BOOL PT_FLOAT64 PT_INT64 PT_VOID |
+| `ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs` | E | `RenderingServer.environment_set_ssao_quality` (sets a process-wide rendering setting of the running game, with no getter to restore it (METHOD_OVERRIDES)) | 2 | PT_BOOL PT_FLOAT64 PT_INT64 PT_VOID |
 | `ptrcallWithLongBoolIntArgs` | E | `DisplayServer.window_set_flag` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_INT64 PT_VOID |
 | `ptrcallWithLongBoolRIDThreeUInt32Args` | E | `RenderingDevice.draw_list_draw_indirect` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_BOOL PT_INT64 PT_RID PT_VOID |
 | `ptrcallWithLongBoolTwoUInt32Args` | E | `RenderingDevice.draw_list_draw` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_BOOL PT_INT64 PT_VOID |

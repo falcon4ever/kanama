@@ -3834,6 +3834,39 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // (ApiExerciseSelfTest.kt,
   // scripts/api_exercise_policy.py VARIANT_TYPE_VALUES), which run on desktop too.
 
+  // The generic Map -> Dictionary path is String-key-only in every direction, with desktop's
+  // message (BuiltinTypes.variantFromDictionaryInto): a script's Map<Long, V> return, a Map
+  // inside a List return and a Map argument with a Long or Vector2i key are refused, never sent
+  // to Godot with "1"-style String keys.
+  val keyRefusals =
+    listOf<Pair<String, () -> Unit>>(
+      "kotlin.Long" to
+        {
+          net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(mapOf(1L to "a"))
+        },
+      "kotlin.Long" to
+        {
+          net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(listOf(mapOf(2L to "b")))
+        },
+      "net.multigesture.kanama.types.Vector2i" to
+        {
+          net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(mapOf(Vector2i(1, 2) to 3L))
+        },
+      "kotlin.Long" to
+        {
+          ObjectCalls.callWithVariantArgs(
+            callBind,
+            callNode,
+            listOf("set_meta", "kanama_key_probe", mapOf(4L to "d")),
+          )
+        },
+    )
+  val keyMessages = keyRefusals.map { (_, body) -> runCatching(body).exceptionOrNull()?.message }
+  check(
+    "dictionary-keys(generic Map with non-String keys refused like desktop) got=$keyMessages",
+    keyMessages == keyRefusals.map { (type, _) -> "Unsupported Dictionary key type: $type" },
+  )
+
   // Value-type builtin method (BuiltinCalls) via variant_get_ptr_builtin_method + builtin_call.
   // Basis.inverse() is a TRUE inverse: diag(2,4,8) -> diag(0.5,0.25,0.125) (powers of 2, exact
   // float32). Transform3D.inverse() assumes orthonormal — it transposes the basis (diag stays

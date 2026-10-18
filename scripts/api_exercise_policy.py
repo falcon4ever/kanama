@@ -214,6 +214,10 @@ METHOD_OVERRIDES: dict[tuple[str, str], tuple[str, str]] = {
         "E",
         "sets a process-wide rendering setting of the running game, with no getter to restore it",
     ),
+    ("RenderingServer", "environment_set_ssil_quality"): (
+        "E",
+        "sets a process-wide rendering setting of the running game, with no getter to restore it",
+    ),
     ("GLTFDocument", "export_object_model_property"): (
         "E",
         "indexes `state.nodes[gltf_node_index]` unchecked for a property on a node: on a GLTFState without "
@@ -728,6 +732,10 @@ REACH_RECEIVERS: dict[str, tuple[str, str]] = {
 # (class, method) -> (Kotlin statement run after the call, with the row's arguments `a0`, `a1`, ..., reason):
 # what the engine expects a caller to do after a reach row's call, so the row leaves nothing behind.
 REACH_AFTER: dict[tuple[str, str], tuple[str, str]] = {
+    ("RenderingServer", "global_shader_parameter_add"): (
+        "RenderingServer.globalShaderParameterRemove(a0)",
+        "the parameter is process-wide state of the running game: the row removes the one it added",
+    ),
     ("ResourceLoader", "load_threaded_request"): (
         "r.track(ResourceLoader.loadThreadedGet(a0))",
         "a request keeps its load token (a RefCounted) until load_threaded_get collects it: without that it "

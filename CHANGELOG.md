@@ -229,7 +229,7 @@ points, colors)`). Found by the API exercise's reach rows, which could not write
 ### Added — tooling: the API exercise runs every reach-only helper and one row per Variant type
 
 Contributors: the generated API exercise (`ApiExercise.generated.kt`) now runs a row for every helper the
-inventory could only reach (F, 603): the helper is called once on a valid receiver (a fresh instance, the
+inventory could only reach (F, 602): the helper is called once on a valid receiver (a fresh instance, the
 singleton, a Tween made by `create_tween()` where a fresh one is invalid, `REACH_RECEIVERS`) and passes
 when it returns without an exception or a backend fault (`reach` in the summary line). On iOS a FAULT the
 shim prints while any row runs now fails that row by name. Rows that would change what a running game
