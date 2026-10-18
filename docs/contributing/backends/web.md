@@ -900,7 +900,7 @@ grow rather than being faked. Old exports fail the gate with a rebuild hint
 (their envelopes carry unresolved `method#N` keys because the export predates
 the manifest copy).
 
-**The Web API exercise (task 125 P5).** Every generated Web wrapper member is one
+**The Web API exercise.** Every generated Web wrapper member is one
 `GodotBackendCalls.invoke<Shape>` call, so a defect in a call shape (its Kotlin arm, JS extern or
 GDScript arm) is shared by every opcode of it. The web3d fixture runs one generated row per shape
 of `scripts/platform_backend_calls.json`: `scripts/generate_web_exercise.py` writes

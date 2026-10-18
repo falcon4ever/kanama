@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Web API exercise: one row per Web call shape (task 125 P5).
+"""Generate the Web API exercise: one row per Web call shape.
 
 Every generated Web wrapper member is one `GodotBackendCalls.invoke<Shape>(descriptor, ...)` call, and
 the Web backend implements each contract *shape* once (an arm of `WebCommonGodotBackend`, a JS bridge
