@@ -48,6 +48,7 @@ from pathlib import Path
 root = Path(sys.argv[1])
 PAGES = {
     "README.md": "repo",
+    "docs/getting-started/index.md": "repo",
     "docs/getting-started/source-checkout.md": "repo",
     "docs/getting-started/editor-workflow.md": "repo",
     "docs/getting-started/release-kit.md": "project",

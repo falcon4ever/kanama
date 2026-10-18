@@ -5,7 +5,7 @@
 <h1 align="center">Kanama</h1>
 
 <p align="center">
-  Kotlin for Godot through a GDExtension runtime powered by the JVM and the
+  Kotlin scripting for Godot 4, through a GDExtension runtime on the JVM's
   Foreign Function & Memory API.
 </p>
 
@@ -19,60 +19,56 @@
   <img alt="Status: 0.4.0 preview" src="https://img.shields.io/badge/status-0.4.0_preview-478cbf.svg">
 </p>
 
-Kanama lets Kotlin scripts attach to Godot nodes through a GDExtension runtime.
-In the Godot editor, Kanama `.kt` files appear as script resources and can be
-attached directly to nodes like `.gd` scripts. Kanama aims to preserve the
-Godot workflow while giving game code access to Kotlin, Gradle, coroutines, and
-the JVM ecosystem.
+Kanama lets you write Godot scripts in Kotlin. A `.kt` file attaches to a node
+like a `.gd` file does, and you keep the Godot editor, scenes and inspector you
+already use.
 
-## Related Projects
+- **Every Godot 4.7 class has a Kotlin class** with the same methods,
+  properties and signals, and Godot's own documentation in your IDE.
+- **No engine fork and no engine module.** Kanama is an addon in your project.
+- **Desktop, Android and iOS are supported**, Web is experimental. Desktop
+  runs your scripts on the JDK and Android on ART; iOS and Web compile them
+  ahead of time, with no JVM on the device.
+- **A short edit loop:** press **Build Scripts** in Godot and the running
+  editor picks up your Kotlin. IntelliJ IDEA's debugger attaches to a running game.
+- **Exported desktop games carry their own Java runtime.** Players install
+  nothing, and one machine builds for Windows, Linux and macOS.
 
-Kanama is a preview-stage (`0.4.0`) project using a Panama/FFM-based GDExtension
-architecture. If you want a more established Kotlin integration for Godot today, also
-evaluate [Godot Kotlin/JVM](https://godot-kotl.in/en/stable/). It is a
-separate project with a different runtime and export model.
+```kotlin
+@ScriptClass(attachTo = "CharacterBody2D")
+class Player(godotObject: GodotHandle) :
+    KanamaScript<CharacterBody2D>(godotObject, ::CharacterBody2D) {
 
-Upgrading from 0.4? See the [0.4 to 0.5 migration guide](docs/getting-started/upgrading-0.4-to-0.5.md).
+    @Export
+    var speed: Double = 300.0
 
-## Status
+    @OnPhysicsProcess
+    fun physicsProcess(delta: Double) {
+        val input = Input.getVector("ui_left", "ui_right", "ui_up", "ui_down")
+        self.velocity = input * speed
+        self.moveAndSlide()
+    }
+}
+```
 
-Kanama is desktop-first. The badges above are the current platform tiers;
-[Version Support](docs/reference/version-support.md) is the one page that
-records what each tier was validated on, when, and with which caveats, and
-it is the only page that states requirements. Exported desktop games are
-unpack-and-play: they ship a bundled, jlink-trimmed JVM runtime, and that
-runtime is cross-target, so one host can produce Windows, Linux, and macOS
-builds — see [Desktop and Packaging](docs/exporting/desktop.md).
+## Getting Started in Five Minutes
 
-## Highlights
+You need [Godot 4.7.2](https://godotengine.org/download/archive/4.7.2-stable/)
+and a JDK 25 or newer. Download a desktop kit for your machine from the
+[releases page](https://github.com/falcon4ever/kanama/releases), unzip it, and
+build its Kotlin script:
 
-- Kotlin scripts attach to Godot nodes like GDScript
-- No engine fork, no engine module, no JNI glue in game code
-- Desktop runtime powered by the JDK Foreign Function & Memory API
-- Android runtime through Godot's Android plugin AAR flow (ART + PanamaPort)
-- iOS runtime through a Kotlin/Native `.xcframework`, no on-device JVM
-- Kotlin/Wasm Web backend through a generated proxy and a versioned JavaScript
-  bridge, no on-device JVM
-- Desktop script reload and editor build tools: **Build Scripts** rebuilds the
-  Kotlin jar and rebinds attached scripts without restarting Godot (reloading
-  the scene is the reliable path; `@RegisterClass` types need an editor restart;
-  no reload on mobile or Web, see
-  [The Editor Loop](docs/getting-started/editor-workflow.md#script-reload))
-- Every Godot 4.7 class has a Kotlin wrapper (1036/1036, generated KDoc from
-  Godot docs; engine virtuals overridable via `@OverrideVirtual`). The builtin
-  value types (`Vector3`, `Transform3D`, `Color`, ...) are thinner than
-  GDScript's: only a subset of Godot's builtin methods and operators exist; see
-  [API Coverage](docs/reference/generated/api-coverage.md)
+```sh
+cd /path/to/kanama-starter
+./gradlew buildScripts
+```
 
-## Requirements
+Open `project.godot` in Godot and press **Play**: a label shows text written by
+Kotlin, and the scene turns.
 
-The Godot pin and JDK are the badges above. The full list — per workflow, and
-per export platform — lives once, in
-[Version Support → Requirements](docs/reference/version-support.md#requirements).
-
-## Quick Start
-
-Use a source checkout for the current public onboarding path:
+The kits published so far are for Kanama 0.4. Until 0.5.0 is released, build
+the starter from this repository instead. That also needs CMake and a C
+compiler:
 
 ```sh
 git clone https://github.com/falcon4ever/kanama
@@ -84,123 +80,39 @@ cd kanama
   -PkanamaProjectScriptsDir=/path/to/kanama-starter/kotlin-src
 ```
 
-Open `kanama-starter/project.godot` in Godot and press **Play**. The starter
-script is `kanama-starter/kotlin-src/HelloScript.kt`. The starter is a Gradle
-project with its own wrapper: open the `kanama-starter` folder in IntelliJ IDEA
-as a Gradle project for Kotlin completion of the Kanama API
-([Open in IntelliJ IDEA](docs/getting-started/intellij.md) also covers the
-debugger). After editing a script, press **Build Scripts** in Godot, or run it
-from the starter folder:
-
-```sh
-cd /path/to/kanama-starter
-./gradlew buildScripts
-```
-
-After updating the Kanama checkout, rerun the `installAddonJar` command above to
-refresh the runtime and the API the starter compiles against.
-
-Package tasks can also build local desktop kit and store-addon zips for smoke
-testing:
-
-```sh
-./gradlew packageDistributions
-```
-
-If a matching GitHub zip release exists, a release kit can be used for a new
-project:
-
-```sh
-unzip kanama-desktop-kit-v<version>-<platform>.zip -d kanama-starter
-cd kanama-starter
-./gradlew buildScripts
-```
-
-For an existing Godot project and a locally built or published store-addon zip,
-unzip it at the project root, then initialize the project:
-
-```sh
-sh addons/kanama/setup-kanama-project.sh
-./gradlew buildScripts
-```
-
-The release-kit and store-addon pages describe those generated zip shapes; they
-become download flows once matching release artifacts are published.
-
-## Example
-
-```kotlin
-package com.example.game
-
-import net.multigesture.kanama.annotations.OnReady
-import net.multigesture.kanama.annotations.ScriptClass
-import net.multigesture.kanama.api.GD
-import net.multigesture.kanama.api.GodotHandle
-import net.multigesture.kanama.api.KanamaScript
-import net.multigesture.kanama.api.Node
-
-@ScriptClass(attachTo = "Node")
-class HelloKanama(godotObject: GodotHandle) :
-    KanamaScript<Node>(godotObject, ::Node) {
-    @OnReady
-    fun ready() {
-        GD.print("Hello from Kotlin")
-    }
-}
-```
+Then open `/path/to/kanama-starter/project.godot` and press **Play**.
+[Get Started](docs/getting-started/index.md) walks through both paths, your
+first edit, and what to do when something goes wrong.
 
 ## Documentation
 
-The latest public documentation is published at
+The documentation is published at
 [falcon4ever.github.io/kanama](https://falcon4ever.github.io/kanama/).
 
-- [Getting Started](docs/getting-started/index.md)
-- [Use a Release Kit](docs/getting-started/release-kit.md)
-- [Use a Store Addon](docs/getting-started/store-addon.md)
-- [Use a Source Checkout](docs/getting-started/source-checkout.md)
-- [Work on Kanama](docs/getting-started/work-on-kanama.md)
-- [The Editor Loop](docs/getting-started/editor-workflow.md)
-- [Writing Kotlin Scripts](docs/game-dev/scripts.md)
-- [Calling Godot APIs](docs/game-dev/godot-api.md)
-- [Exports and Resources](docs/game-dev/properties-resources.md)
-- [Signals and Callbacks](docs/game-dev/signals.md)
-- [Porting GDScript](docs/game-dev/porting-gdscript.md)
-- [Kotlin Style](docs/game-dev/style-guide.md)
-- [Desktop and Packaging](docs/exporting/desktop.md)
-- [Android](docs/exporting/android.md)
-- [iOS](docs/exporting/ios.md)
-- [Version Support](docs/reference/version-support.md)
-- [API Coverage](docs/reference/generated/api-coverage.md)
-- [C# Comparison](docs/reference/c-sharp-compat.md)
-- [Changelog](CHANGELOG.md)
-- [Contributor Guide](docs/contributing/index.md)
+- [Get Started](docs/getting-started/index.md), and
+  [Upgrading from 0.4](docs/getting-started/upgrading-0.4-to-0.5.md) if you have 0.4 scripts.
+- [Writing Scripts](docs/game-dev/scripts.md) and
+  [Calling Godot APIs](docs/game-dev/godot-api.md).
+- Shipping your game: [Desktop](docs/exporting/desktop.md),
+  [Android](docs/exporting/android.md), [iOS](docs/exporting/ios.md),
+  [Web](docs/exporting/web.md).
+- [Requirements and Platform Status](docs/reference/version-support.md).
+- [Changelog](CHANGELOG.md).
 
-To preview documentation changes locally:
-
-```sh
-pip install -r docs/requirements.txt
-mkdocs serve
-```
+Kanama is a preview. [Godot Kotlin/JVM](https://godot-kotl.in/en/stable/) is a
+separate, more established Kotlin integration with a different runtime and
+export model; if you need one today, evaluate it too.
 
 ## Demos
 
-The companion demo repository is
-[falcon4ever/kanama-demos](https://github.com/falcon4ever/kanama-demos). Keep
-it beside this checkout:
-
-```text
-dev/
-  kanama/
-  kanama-demos/
-```
-
-Current demo ports cover starter kits, official Godot demos, and GDQuest 3D
-controller demos. The demo repo is also where new wrappers are validated
-against real gameplay before release.
+[falcon4ever/kanama-demos](https://github.com/falcon4ever/kanama-demos) has
+starter kits, official Godot demos and GDQuest 3D controller demos ported to
+Kanama. Clone it beside this checkout (`kanama/` and `kanama-demos/` in one
+folder) to build them against your Kanama changes.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [Develop Kanama](docs/contributing/index.md).
 
 ## License
 

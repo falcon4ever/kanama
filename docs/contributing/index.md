@@ -16,7 +16,7 @@ you are changing:
   baseline.
 - [API Coverage](../reference/generated/api-coverage.md) and
   [Wrapper Generator Report](../reference/generated/wrapper-generator-report.md)
-  (generated, under Reference → Generated Reports) before promoting wrapper
+  (generated reports) before promoting wrapper
   coverage or changing generator skip policy.
 - [Hot Reload Internals](hot-reload-internals.md) before changing script reload
   behavior or reload smoke checks.
@@ -28,7 +28,7 @@ you are changing:
   [iOS Backend Architecture](backends/ios.md), and
   [Web Internals](backends/web.md) (the Kotlin/Wasm backend, its generated
   proxy, and the versioned JS bridge). The user-facing export workflow for
-  each lives under Exporting; these pages hold the design and the gates.
+  each lives under Shipping Your Game; these pages hold the design and the gates.
 - [Gates Index](../reference/generated/gates.md) (generated from
   `local_ci.sh`, the workflows, and the ledger) to find what each `local_ci.sh`
   stage, CI job, and local-only device/browser gate proves and where it runs,

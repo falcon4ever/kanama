@@ -18,7 +18,6 @@ theme:
         name: Switch to light mode
   features:
     - navigation.sections
-    - navigation.expand
     - content.code.copy
 markdown_extensions:
   - admonition
@@ -34,50 +33,51 @@ extra_javascript:
   - https://unpkg.com/mermaid@10/dist/mermaid.min.js
 nav:
   - Home: index.md
-  - Getting Started:
-      - Introduction: getting-started/index.md
-      - Use a Release Kit: getting-started/release-kit.md
-      - Use a Store Addon: getting-started/store-addon.md
-      - Use a Source Checkout: getting-started/source-checkout.md
-      - Upgrading from 0.4 to 0.5: getting-started/upgrading-0.4-to-0.5.md
-      - Work on Kanama: getting-started/work-on-kanama.md
-      - The Editor Loop: getting-started/editor-workflow.md
+  - Use Kanama:
+      - Get Started: getting-started/index.md
+      - Install Options:
+          - Release Kit (New Project): getting-started/release-kit.md
+          - Store Addon (Existing Project): getting-started/store-addon.md
+          - Source Checkout: getting-started/source-checkout.md
       - Open in IntelliJ IDEA: getting-started/intellij.md
-  - Game Development:
-      - Writing Kotlin Scripts: game-dev/scripts.md
+      - Edit, Build, Run: getting-started/editor-workflow.md
+      - Writing Scripts: game-dev/scripts.md
       - Calling Godot APIs: game-dev/godot-api.md
       - Exports and Resources: game-dev/properties-resources.md
-      - Signals and Callbacks: game-dev/signals.md
+      - Signals and Await: game-dev/signals.md
       - Multiplayer: game-dev/multiplayer.md
-      - Porting GDScript: game-dev/porting-gdscript.md
+      - Porting from GDScript: game-dev/porting-gdscript.md
       - Kotlin Style: game-dev/style-guide.md
-  - Exporting:
-      - Desktop and Packaging: exporting/desktop.md
-      - Android: exporting/android.md
-      - iOS: exporting/ios.md
-      - Web: exporting/web.md
-  - Reference:
-      - Version Support: reference/version-support.md
-      - Generated API Conventions: reference/wrapper-conventions.md
-      - C# Comparison: reference/c-sharp-compat.md
-      - Generated Reports:
+      - Shipping Your Game:
+          - Desktop: exporting/desktop.md
+          - Android: exporting/android.md
+          - iOS: exporting/ios.md
+          - Web (Experimental): exporting/web.md
+      - Upgrading from 0.4: getting-started/upgrading-0.4-to-0.5.md
+      - Reference:
+          - Requirements and Platform Status: reference/version-support.md
+          - API Conventions: reference/wrapper-conventions.md
+          - Coming from C#: reference/c-sharp-compat.md
           - API Coverage: reference/generated/api-coverage.md
+          - Enum Constant Migration: reference/generated/enum-migration.md
+  - Develop Kanama:
+      - Start Here: contributing/index.md
+      - Work on Kanama: getting-started/work-on-kanama.md
+      - Architecture: contributing/architecture.md
+      - Wrapper Generator: contributing/wrapper-maintenance.md
+      - Shared Wrapper Tree Design Check: contributing/shared-wrapper-tree-design-check.md
+      - Hot Reload Internals: contributing/hot-reload-internals.md
+      - Godot Upgrade Runbook: contributing/godot-upgrade.md
+      - Demo Porting Rules: contributing/demo-porting-rules.md
+      - Writing These Docs: contributing/docs-style.md
+      - Backends:
+          - Android: contributing/backends/android.md
+          - iOS: contributing/backends/ios.md
+          - Web: contributing/backends/web.md
+      - Generated Reports:
           - Wrapper Generator Report: reference/generated/wrapper-generator-report.md
           - Gates Index: reference/generated/gates.md
-          - iOS Backend Hand-written Registry: reference/generated/ios-backend-handwritten.md
+          - iOS Hand-written Registry: reference/generated/ios-backend-handwritten.md
           - iOS Shape Gap: reference/generated/ios-shape-gap.md
-          - API Exercise Inventory: reference/generated/api-exercise.md
+          - API Exercise: reference/generated/api-exercise.md
           - Web API Exercise: reference/generated/web-api-exercise.md
-          - Enum Constant Migration: reference/generated/enum-migration.md
-  - Contributing:
-      - Contributor Guide: contributing/index.md
-      - Architecture: contributing/architecture.md
-      - Wrapper Maintenance: contributing/wrapper-maintenance.md
-      - Shared Wrapper Tree Design Check: contributing/shared-wrapper-tree-design-check.md
-      - Godot Upgrade Runbook: contributing/godot-upgrade.md
-      - Hot Reload Internals: contributing/hot-reload-internals.md
-      - Demo Porting Rules: contributing/demo-porting-rules.md
-      - Backends:
-          - Android Internals: contributing/backends/android.md
-          - iOS Backend Architecture: contributing/backends/ios.md
-          - Web Internals: contributing/backends/web.md
