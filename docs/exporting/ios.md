@@ -86,9 +86,9 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 ```
 
 This writes `build/distributions/kanama-mobile-addon-ios-v<version>.zip`
-containing both device `arm64` xcframeworks (debug + release — the static
-libraries are large, roughly 200 MB debug / 88 MB release before zip), a
-`.gdextension` entries fragment to merge, and an install README.
+containing both device `arm64` xcframeworks (debug + release — the static libraries are large,
+roughly 168 MB debug / 110 MB release before zip; measured in [Version support](../reference/version-support.md)), <!-- kanama-claim: ios-static-size -->
+a `.gdextension` entries fragment to merge, and an install README.
 
 **Honest caveat:** the packaged addon delivers the *runtime* only. Compiling a
 project's Kotlin scripts for iOS still requires a Kanama source checkout

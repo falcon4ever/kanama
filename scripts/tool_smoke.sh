@@ -3,12 +3,22 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_DIR="${KANAMA_PROJECT_DIR:-$ROOT_DIR/example_project}"
-LOG_FILE="${KANAMA_TOOL_SMOKE_LOG:-/tmp/kanama_tool_smoke.log}"
-
 if [[ $# -lt 1 ]]; then
   echo "usage: $0 /absolute/path/to/godot_binary"
   exit 2
 fi
+
+# shellcheck source=scripts/run_logs.sh
+source "$ROOT_DIR/scripts/run_logs.sh"
+# Logs default to a directory of this run's own (scripts/run_logs.sh): deleted when the run passes, kept and
+# named when it fails. A fixed /tmp path was shared by concurrent runs.
+LOG_FILE="${KANAMA_TOOL_SMOKE_LOG:-}"
+if [[ -z "$LOG_FILE" ]]; then
+  run_logs_dir kanama_tool_smoke
+  LOG_FILE="$RUN_LOGS_DIR/tool_smoke.log"
+fi
+trap 'run_logs_finish "$?" tool_smoke' EXIT
+echo "[tool_smoke] log: $LOG_FILE"
 
 GODOT_BIN="$1"
 PROJECT_DIR_FOR_GODOT="$PROJECT_DIR"
@@ -109,7 +119,12 @@ for plugin_file in plugin.gd kanama_export_guard.gd; do
   fi
 done
 JDK_SCRATCH="$(mktemp -d "${TMPDIR:-/tmp}/kanama_jdk_resolution_gd.XXXXXX")"
-trap 'rm -rf "$JDK_SCRATCH"' EXIT
+exit_jdk_scratch() {
+  local status=$?
+  rm -rf "$JDK_SCRATCH"
+  run_logs_finish "$status" tool_smoke
+}
+trap exit_jdk_scratch EXIT
 mkdir -p "$JDK_SCRATCH/project/addons" "$JDK_SCRATCH/jdks"
 cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$JDK_SCRATCH/project/addons/"
 cp "$ROOT_DIR/scripts/check_editor_jdk_resolution.gd" "$JDK_SCRATCH/project/"

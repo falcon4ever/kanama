@@ -50,6 +50,14 @@ still build against this release. The Android plugin
 now compiles with Kotlin 2.4.21 too: until now the Android Gradle plugin's built-in Kotlin (2.2.10)
 compiled it, whatever version the root build named.
 
+Android scripts compile at Kotlin API level 2.1, the kotlin-stdlib of Godot 4.7.2's Android build
+template: a script that uses a stdlib API newer than 2.1 now fails to compile instead of crashing on
+the device.
+
+Android scripts now compile against kotlinx.coroutines 1.6.4, the version Godot 4.7.2's Android
+build template puts in the APK, so a coroutines API newer than that fails the build instead of
+the app on the device (desktop and iOS keep 1.11.0).
+
 ### Fixed — iOS: `Map` exports keep their keys, and a non-String key is refused like desktop
 
 On iOS a script method returning a `Map<Int, V>` (or a list holding one) reached Godot with its keys
@@ -2164,7 +2172,6 @@ accessors now and the rest in a follow-up (see "Web" below).
   it with an `ALL` target (`kanama_bootstrap_install`, `copy_if_different`) instead of a `POST_BUILD`
   step on the library, so deleting or truncating only the copy is repaired by the next build rather than
   failing with "was not created".
-
 
 ### Changed — typed Godot enums and required returns (task 128 A) — BREAKING
 
