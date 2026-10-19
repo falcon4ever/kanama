@@ -1,4 +1,4 @@
-# Kanama Docs
+# Kanama
 
 <p align="center">
   <img src="assets/kanama-logo.png" alt="Kanama logo" width="180">
@@ -12,40 +12,52 @@
   <img alt="Web: experimental" src="https://img.shields.io/badge/Web-experimental-f5a623.svg">
 </p>
 
-Kanama brings Kotlin scripting to Godot 4 through a GDExtension runtime powered
-by the JVM and the Foreign Function & Memory API.
+Kanama lets you write Godot 4 scripts in Kotlin. A `.kt` file attaches to a
+node like a `.gd` file does, and every Godot class, method, property and signal
+has a Kotlin twin with Godot's own documentation, so IntelliJ IDEA completes
+the whole engine API. You keep the Godot editor and your scenes; you gain
+Kotlin, Gradle, coroutines and the Java libraries. Your game runs on desktop,
+Android and iOS, and experimentally in the browser.
 
-Kanama is desktop-first, with Android, iOS, and Web backends. If you need a
-more established Kotlin integration for Godot today, also evaluate
-[Godot Kotlin/JVM](https://godot-kotl.in/en/stable/). Kanama is a separate
-Panama/FFM GDExtension path.
+```kotlin
+@ScriptClass(attachTo = "CharacterBody2D")
+class Player(godotObject: GodotHandle) :
+    KanamaScript<CharacterBody2D>(godotObject, ::CharacterBody2D) {
 
-## Start Here
+    @Export
+    var speed: Double = 300.0
 
-New to Kanama? Start with the [Introduction](getting-started/index.md), then
-read [The Editor Loop](getting-started/editor-workflow.md) to understand the
-build button, build-on-save, scene reload, hot reload, and IntelliJ debugging
-workflow.
+    @OnPhysicsProcess
+    fun physicsProcess(delta: Double) {
+        val input = Input.getVector("ui_left", "ui_right", "ui_up", "ui_down")
+        self.velocity = input * speed
+        self.moveAndSlide()
+    }
+}
+```
 
-Already comfortable with Godot? The [Writing Kotlin Scripts](game-dev/scripts.md)
-and [Calling Godot APIs](game-dev/godot-api.md) pages cover the main Kanama
-differences: `this` vs `self`, immutable value types, rebuilds, resource
-ownership, signals, and wrapper coverage. For existing GDScript projects, use
-[Porting GDScript](game-dev/porting-gdscript.md) with the
-[Kotlin Style](game-dev/style-guide.md) guide.
+## Where to Start
+
+- **New to Kanama?** [Get Started](getting-started/index.md) takes you from
+  nothing installed to a Kotlin script running in a scene.
+- **Ready to write game code?** [Writing Scripts](game-dev/scripts.md) and
+  [Calling Godot APIs](game-dev/godot-api.md) cover what differs from
+  GDScript: `self`, immutable vectors, rebuilding after an edit, and releasing
+  resources. Porting an existing game? Read
+  [Porting from GDScript](game-dev/porting-gdscript.md).
+- **Changing Kanama itself?** [Develop Kanama](contributing/index.md) has the
+  architecture, the generator, the backends and the checks.
 
 ## Platform Status
 
-The badges above are the current tiers. Which Godot release and JDK Kanama
-requires, what each platform was validated on, and the caveats each tier
-carries are recorded once, in [Version Support](reference/version-support.md).
+The badges above are the current status of each platform.
+[Requirements and Platform Status](reference/version-support.md) lists what
+each workflow needs and what each platform has been tested on.
 
-## Contributors
-
-Changing Kanama itself? Start with the
-[Contributor Guide](contributing/index.md). Architecture, wrapper maintenance,
-hot reload internals, demo porting rules, and the per-backend internals
-(Android, iOS, Web) live under the Contributing section.
+Kanama is a preview, and not the only way to use Kotlin with Godot.
+[Godot Kotlin/JVM](https://godot-kotl.in/en/stable/) is a separate, more
+established project with a different runtime and export model. If you need a
+proven integration today, evaluate it too.
 
 Kanama is distributed under the
 [MIT license](https://github.com/falcon4ever/kanama/blob/main/LICENSE).

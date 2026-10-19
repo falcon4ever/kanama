@@ -1,58 +1,191 @@
-# Getting Started
+# Getting Started with Kanama
 
-Kanama's current public onboarding path is a source checkout. Packaged desktop
-kits and store add-ons are buildable release artifacts, but they are download
-flows only after matching GitHub zip artifacts are published.
-
-| Path | Use it when | Start here |
-| --- | --- | --- |
-| Source checkout | You want to use Kanama today, use the current `main` branch, or validate a local Kanama change in your own project. | [Use a Source Checkout](source-checkout.md) |
-| Release kit | You have a locally built or published desktop kit and want a small new Godot project without a sibling Kanama source checkout. | [Use a Release Kit](release-kit.md) |
-| Store addon | You have a locally built or published store-addon zip and want to add Kanama to an existing Godot project without a sibling Kanama source checkout. | [Use a Store Addon](store-addon.md) |
-| Contributor checkout | You want to work on Kanama runtime, wrappers, docs, native bootstrap, or release packaging. | [Work on Kanama](work-on-kanama.md) |
-| Upgrading | You have Kotlin scripts written against Kanama 0.4. | [Upgrading from 0.4 to 0.5](upgrading-0.4-to-0.5.md) |
-
-Android and iOS exports use their own toolchains; once the desktop workflow is
-running, continue with [Android](../exporting/android.md) or
-[iOS](../exporting/ios.md). Which platforms are Supported, and on what
-evidence, is recorded in [Version Support](../reference/version-support.md).
+Kanama lets you write Godot scripts in Kotlin. A `.kt` file attaches to a node
+like a `.gd` file does, and you keep the Godot editor, scenes and inspector you
+already use. This page takes you from nothing installed to a Kotlin script
+running in a scene, in about ten minutes.
 
 ## Requirements
 
-The Godot release, JDK, host platforms, and per-workflow toolchains are listed
-once, in [Version Support → Requirements](../reference/version-support.md#requirements).
-In short: a desktop project needs the pinned Godot release and a JDK; a source
-or contributor checkout additionally needs CMake and a C toolchain because it
-builds the native bootstrap locally, while release kits and store add-ons ship
-the prebuilt bootstrap.
+- **Godot 4.7.2** from the
+  [4.7.2 stable archive](https://godotengine.org/download/archive/4.7.2-stable/).
+  Kanama is built and tested against this release.
+- **A JDK 25 or newer**, for example [Temurin 25](https://adoptium.net/).
+  Kanama runs your scripts on it and builds them with it.
+- **A desktop computer** running macOS (Apple silicon), Windows (x64) or
+  Linux (x64 or ARM64).
+- **IntelliJ IDEA** (the free Community edition is enough). Optional, but it
+  is where you get completion and documentation for the Godot API.
 
-## How Kanama Fits Into Godot
+Exporting to Android, iOS or the Web needs more tools, which each platform's
+page lists. [Requirements and Platform Status](../reference/version-support.md)
+has the full list and says which platforms are supported.
 
-```mermaid
-flowchart LR
-    KT[".kt script<br/>in your Godot project"]
-    BUILD["Build Scripts<br/>Gradle + KSP"]
-    JAR["kanama-scripts.jar"]
-    ADDON["addons/kanama<br/>GDExtension runtime"]
-    NODE["Godot node<br/>script = Player.kt"]
-    GAME["Game runs<br/>Kotlin callbacks"]
+Then pick one of the two ways to get Kanama. The kit is the short one. If no
+kit has been published for the version you want, or you want to follow `main`,
+use the source checkout.
 
-    KT --> BUILD --> JAR --> ADDON --> NODE --> GAME
+!!! note "Until Kanama 0.5.0 is released"
+    The kits published so far are for Kanama 0.4, whose scripts look different
+    from the ones in these docs. Until the 0.5.0 kits are out, use
+    [Option 2: Build Kanama From Source](#option-2-build-kanama-from-source).
+
+## Option 1: Start From the Desktop Release Kit
+
+A desktop kit is a complete Godot project with Kanama inside it.
+
+1. Download `kanama-desktop-kit-v<version>-<platform>.zip` for your machine
+   from the [releases page](https://github.com/falcon4ever/kanama/releases)
+   and unzip it into a new folder. `project.godot`, `build.gradle.kts` and
+   `addons/` are at the top level.
+2. On macOS, clear the download quarantine once, or Godot refuses to load the
+   addon:
+
+    ```sh
+    xattr -dr com.apple.quarantine /path/to/kanama-starter
+    ```
+
+3. Build the Kotlin script that ships with the kit:
+
+    ```sh
+    cd /path/to/kanama-starter
+    ./gradlew buildScripts
+    ```
+
+    On Windows, run `gradlew.bat buildScripts`. The first build downloads
+    Gradle and the Kotlin compiler, so it takes a minute or two; later builds
+    take a few seconds.
+
+4. Open `project.godot` in Godot and press **Play**.
+
+You should see a label that says *Hello from Kanama* and *Kotlin script is
+running for 1.2s*, and the whole scene slowly rotating. That text comes from
+Kotlin. Skip to [Making Your First Change](#making-your-first-change).
+
+## Option 2: Build Kanama From Source
+
+This path also needs **CMake 3.22 or newer** and a C compiler (the Xcode
+command line tools, `build-essential`, or Visual Studio with the C++
+workload), because it builds Kanama's small native loader on your machine.
+
+1. Clone Kanama and create a starter project next to it:
+
+    ```sh
+    git clone https://github.com/falcon4ever/kanama
+    cd kanama
+    ./gradlew createStarterProject \
+      -PkanamaStarterProjectDir=/path/to/kanama-starter
+    ```
+
+2. Build Kanama and install it into the starter:
+
+    ```sh
+    ./gradlew installAddonJar \
+      -PkanamaProjectDir=/path/to/kanama-starter \
+      -PkanamaProjectScriptsDir=/path/to/kanama-starter/kotlin-src
+    ```
+
+    This takes a few minutes the first time. It compiles the runtime, the
+    native loader and the starter script, and copies everything into
+    `kanama-starter/addons/kanama`.
+
+3. Open `/path/to/kanama-starter/project.godot` in Godot and press **Play**.
+
+The same label and the same slow rotation appear. When you later update the
+checkout, run the `installAddonJar` command again so the starter picks up the
+new runtime.
+
+## How Your First Script Works
+
+The scene is one `Node2D` with a `Label` child. The node has
+`kotlin-src/HelloScript.kt` attached, the way a `.gd` script would be. The
+script, shortened:
+
+```kotlin
+package com.example.game
+
+@ScriptClass(attachTo = "Node2D")
+class HelloScript(godotObject: GodotHandle) :
+    KanamaScript<Node2D>(godotObject, ::Node2D) {
+
+    @Export
+    var greeting: String = "Hello from Kanama"
+
+    private var elapsedSeconds = 0.0
+    private var statusLabel: Label? = null
+
+    @OnReady
+    fun ready() {
+        statusLabel = self.getNodeAsOrNull("Status", "Label", ::Label)
+        GD.print("[kanama:starter] $greeting")
+    }
+
+    @OnProcess
+    fun process(delta: Double) {
+        elapsedSeconds += delta
+        self.rotation = elapsedSeconds * 0.6
+        statusLabel?.text = "$greeting\nKotlin script is running."
+    }
+}
 ```
 
-Kanama `.kt` files are Godot script resources. Attach them to compatible nodes
-the same way you would attach a `.gd` script. Kotlin changes must be compiled
-with **Build Scripts** before Godot can run the updated behavior.
+Five things to notice, because every Kanama script has them:
 
-## What To Read Next
+- `@ScriptClass(attachTo = "Node2D")` says which Godot class the script
+  attaches to, like `extends Node2D` in GDScript.
+- The class extends `KanamaScript<Node2D>`. Inside, `self` is the node:
+  `self.rotation` is the node's `rotation` property. Kotlin's `this` is the
+  script object, not the node.
+- `@Export var greeting` shows up in the inspector, like `@export var greeting`
+  in GDScript.
+- `@OnReady` and `@OnProcess` mark the functions Godot calls for `_ready` and
+  `_process`. The function names are yours to choose.
+- `GD.print` writes to Godot's output panel, like `print()` in GDScript.
 
-- [Open in IntelliJ IDEA](intellij.md) for completion on the Godot API and the
-  debugger.
-- [The Editor Loop](editor-workflow.md) for build buttons, hot reload, and
-  debugging.
-- [Writing Kotlin Scripts](../game-dev/scripts.md) for script structure,
-  lifecycle callbacks, and `self`.
-- [Calling Godot APIs](../game-dev/godot-api.md) for generated wrappers.
-- [Exports and Resources](../game-dev/properties-resources.md) for inspector
-  properties and node references.
-- [Signals and Callbacks](../game-dev/signals.md) for Godot-style events.
+The full file also has `@Tool`, so the script runs inside the editor too and
+the scene turns there as well, and `@GlobalClass`, which is GDScript's
+`class_name`.
+
+## Making Your First Change
+
+1. Open the project folder in IntelliJ IDEA as a Gradle project (**File >
+   Open**, pick the folder, trust the project). Completion for every Godot
+   class now works. [Open in IntelliJ IDEA](intellij.md) has the details and
+   sets up the debugger.
+2. In `kotlin-src/HelloScript.kt`, change `"Hello from Kanama"` to anything
+   else and save.
+3. Back in Godot, press **Build Scripts** in the toolbar. The Kanama Tools
+   plugin added that button; it runs `./gradlew buildScripts` for you. You can
+   also run that command in a terminal.
+4. Press **Play**. The label shows your text.
+
+That is the loop: edit in IntelliJ, build with the button, play in Godot.
+GDScript changes are live; Kotlin changes need the build step, and it takes a
+few seconds. Turn on the `kanama/tools/auto_build_on_save` project setting if
+you prefer not to press the button. [Edit, Build, Run](editor-workflow.md)
+covers the rest of the loop: scene reload after a build, and attaching the
+IntelliJ debugger to a running game.
+
+## Next Steps
+
+- [Writing Scripts](../game-dev/scripts.md): lifecycle callbacks, node lookup,
+  `await`, and the differences from GDScript.
+- [Calling Godot APIs](../game-dev/godot-api.md): how a Godot name becomes a
+  Kotlin name, vectors, enums, resources.
+- [Exports and Resources](../game-dev/properties-resources.md) and
+  [Signals and Await](../game-dev/signals.md).
+- Adding Kanama to a project you already have:
+  [Store Addon](store-addon.md).
+- Shipping: [Desktop](../exporting/desktop.md), [Android](../exporting/android.md),
+  [iOS](../exporting/ios.md), [Web](../exporting/web.md).
+- Coming from Kanama 0.4: [Upgrading from 0.4](upgrading-0.4-to-0.5.md).
+
+## Troubleshooting
+
+| Godot says | Do this |
+| --- | --- |
+| It cannot find `libjvm`, or the Kanama Tools plugin warns about Java. | Install a JDK 25 or newer. Kanama looks in the usual install folders; if yours is elsewhere, set `JAVA_HOME`, or set the editor setting **Kanama > Build > JDK Path** to the JDK folder, then restart Godot. [Which JDK Kanama Uses](editor-workflow.md#which-jdk-kanama-uses) lists the folders. |
+| `"libkanama_bootstrap.dylib" Not Opened` (macOS). | The zip was quarantined by Gatekeeper. Run `xattr -dr com.apple.quarantine /path/to/project` and open the project again. |
+| The game runs, but your edit does not show. | The build did not run. Press **Build Scripts** or run `./gradlew buildScripts`, then Play again. |
+| `res://kotlin-src/HelloScript.kt` is missing, or the node has no script. | The addon is not registered. Check that `.godot/extension_list.cfg` contains `res://addons/kanama/kanama.gdextension`, then reopen the project. On the source checkout path, run `installAddonJar` again. |
+| Gradle cannot resolve `net.multigesture.kanama`. | The project resolves Kanama from `addons/kanama/maven`. Make sure that folder exists; on the source checkout path, `installAddonJar` creates it. |
