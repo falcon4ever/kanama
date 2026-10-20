@@ -44,7 +44,7 @@ Edit a script and save. Then either:
 Either way, `addons/kanama/kanama-scripts.jar` is rebuilt and Godot picks it
 up. To skip that step, turn on build on save in Godot
 (`kanama/tools/auto_build_on_save`): every save in IntelliJ then starts a build
-by itself. [The Editor Loop](editor-workflow.md#how-long-the-loop-takes) has the
+by itself. [Edit, Build, Run](editor-workflow.md#how-long-the-loop-takes) has the
 numbers.
 
 ## Debug the running game
@@ -128,7 +128,7 @@ KANAMA_JDWP_PORT='*:5005' godot --path /path/to/project
 | --- | --- |
 | `net.multigesture.kanama` imports are red; nothing completes. | The Gradle import did not finish or found no Kanama API. Check that `addons/kanama/maven` exists (in a source-checkout starter, `installAddonJar` writes it), then open the Gradle tool window and click **Reload All Gradle Projects**. |
 | The project has no `build.gradle.kts`. | It was prepared with `installStarterTemplate`, which adds no Gradle build. Set it up with the [store addon](store-addon.md) to get one, or start from `createStarterProject`. |
-| Completion shows an old API after you updated Kanama. | Rerun `installAddonJar` from the checkout ([step 3](source-checkout.md#3-build-and-sync-kanama)), then **Reload All Gradle Projects**. |
+| Completion shows an old API after you updated Kanama. | Rerun `installAddonJar` from the checkout ([Building and Installing Kanama](source-checkout.md#building-and-installing-kanama)), then **Reload All Gradle Projects**. |
 | The import fails with "Cannot find a Java installation matching languageVersion=25". | No JDK 25 is installed and Gradle could not download one (it does that once, with network access). Install a JDK 25, or set **Settings > Build, Execution, Deployment > Build Tools > Gradle > Gradle JVM** to one. |
 | "Connection refused" when you attach. | The game is not listening. Look for `JDWP debug agent enabled at` in the Godot output: without it, debugging is off or the game was started before you turned it on. Check that the port in IntelliJ matches. |
 | The output says `JDWP port 5005 is already in use (another game instance?); starting without the debugger`. | Another game instance has the port, for example the first of several started with **Debug > Customize Run Instances**: only one instance gets the debugger. Attach to that one. To debug another instance too, start it from a terminal with its own `KANAMA_JDWP_PORT` (run instances take launch arguments, not environment variables). |

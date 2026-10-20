@@ -41,6 +41,24 @@ Grep for them, and see "Documented Limitations" in the root `CONTRIBUTING.md`
 for the `KANAMA-BLOCKED` marker that makes the machine-checkable ones fail the
 build the day they go stale.
 
+## Building From Source
+
+The user steps are on [Install From a Source Checkout](../getting-started/source-checkout.md).
+What sits under them:
+
+- The desktop native bootstrap is built from the GDExtension headers tracked in
+  this repository, the JDK 25 headers, CMake and the platform C toolchain. No
+  Godot source checkout is involved.
+- Gradle passes its JDK 25 toolchain to CMake as `-DKANAMA_JAVA_HOME`. Without
+  Gradle, `bootstrap/CMakeLists.txt` uses `JAVA_HOME`, then on macOS
+  `/usr/libexec/java_home -v 25`, then the system default JDK.
+- On every OS the configure step stops with a message naming the JDK it found
+  when that JDK's `jni.h` has no `JNI_VERSION_21`, so a bare
+  `JNI_VERSION_21 undeclared` from `bootstrap.c` does not appear.
+- `./gradlew syncExampleAddonJar` refreshes the checked-in `example_project`
+  and is the local smoke-test path for it: the counterpart of `installAddonJar`
+  for that project.
+
 Use the narrowest useful check while iterating, then run the broader local gate
 before release-facing changes:
 
