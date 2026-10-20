@@ -40,6 +40,10 @@ Optional environment:
   KANAMA_DEMO_JAVA_HOME=/path/to/jdk25
   KANAMA_ANDROID_LOG=/path/to/logcat.txt
   KANAMA_ANDROID_LAUNCH_WAIT=30
+  KANAMA_PANAMAPORT_MAVEN_REPO=file:///path/to/.m2/repository
+      One extra Maven repository for a PanamaPort fork published outside JitPack (with
+      ORG_GRADLE_PROJECT_kanamaPanamaPortCore=<test coordinate>). Unset by default: the export then
+      resolves PanamaPort only through KanamaAndroid.gdap, as a user's editor export does.
   # Release signing (defaults to the standard Android debug keystore so the
   # minified release APK is installable without per-machine editor settings):
   KANAMA_RELEASE_KEYSTORE=$HOME/.android/debug.keystore
@@ -65,7 +69,7 @@ APK_PATH="${4:-$RUN_DIR/kanama-android-minified.apk}"
 LOG_FILE="${KANAMA_ANDROID_LOG:-$RUN_DIR/kanama_android_minified.log}"
 echo "[android_export_minified] output: $RUN_DIR"
 LAUNCH_WAIT="${KANAMA_ANDROID_LAUNCH_WAIT:-30}"
-PANAMAPORT_MAVEN_REPO="${KANAMA_PANAMAPORT_MAVEN_REPO:-file://$HOME/.m2/repository}"
+PANAMAPORT_MAVEN_REPO="${KANAMA_PANAMAPORT_MAVEN_REPO:-}"
 
 ANDROID_SDK_DIR="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
 if [[ -z "$ANDROID_SDK_DIR" ]]; then
@@ -148,7 +152,6 @@ ensure_android_build_template
 # nativeLinker().downcallHandle(). Force compat mode for the minified build.
 GP="$DEMO_DIR/android/build/gradle.properties"
 set_gradle_property "$GP" "android.enableR8.fullMode" "false"
-set_gradle_property "$GP" "plugins_maven_repos" "$PANAMAPORT_MAVEN_REPO"
 
 # Drop any stale rules file from earlier script versions.
 rm -f "$DEMO_DIR/android/build/kanama-minify.pro"
@@ -156,10 +159,12 @@ rm -f "$DEMO_DIR/android/build/kanama-minify.pro"
 # Re-apply the patch fresh every run. --install-android-build-template does not
 # always regenerate build.gradle, so a skip-if-present guard would reuse a stale
 # patch; strip our previous block (marker -> EOF) and re-append.
-MARKER="kanama-r8-minify"
-if grep -q "$MARKER" "$BUILD_GRADLE"; then
-  sed_inplace "$BUILD_GRADLE" "/=== $MARKER /,\$d"
-fi
+# Strip this script's earlier block and android_smoke.sh's (marker -> EOF each).
+for marker in kanama-local-maven kanama-r8-minify; do
+  if grep -q "=== $marker " "$BUILD_GRADLE"; then
+    sed_inplace "$BUILD_GRADLE" "/=== $marker /,\$d"
+  fi
+done
 echo "[android_minified] patching $BUILD_GRADLE (enable R8 on release)"
 cat >>"$BUILD_GRADLE" <<'GRADLE'
 
@@ -169,13 +174,9 @@ cat >>"$BUILD_GRADLE" <<'GRADLE'
 // export-template upgrades instead of forking android_source.zip. The Kanama
 // AAR's consumer-rules.pro is applied automatically by R8. R8 compat mode is
 // forced via gradle.properties (android.enableR8.fullMode=false) so PanamaPort's
-// annotation-driven rules behave as designed.
-allprojects {
-    repositories {
-        mavenLocal()
-        maven { url 'https://jitpack.io' }
-    }
-}
+// annotation-driven rules behave as designed. Repositories are NOT added here:
+// PanamaPort resolves through the repository KanamaAndroid.gdap declares, as in
+// a user's editor export (KANAMA_PANAMAPORT_MAVEN_REPO adds one, see below).
 
 android {
     buildTypes {
@@ -187,6 +188,16 @@ android {
     }
 }
 GRADLE
+if [[ -n "$PANAMAPORT_MAVEN_REPO" ]]; then
+  cat >>"$BUILD_GRADLE" <<GRADLE
+
+allprojects {
+    repositories {
+        maven { url '$PANAMAPORT_MAVEN_REPO' } // KANAMA_PANAMAPORT_MAVEN_REPO
+    }
+}
+GRADLE
+fi
 
 # 3) Export the release APK WITHOUT reinstalling the template (keeps the patch).
 rm -rf "$DEMO_DIR/.godot/exported" # task 106/116: never reuse a conversion made without the desktop addon

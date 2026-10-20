@@ -2345,7 +2345,12 @@ tasks.register<Copy>("createStarterProject") {
   }
 }
 
-val kanamaAndroidDemoDir = providers.gradleProperty("kanamaAndroidDemoDir")
+// The Godot project the Android AARs are built for and installed into. -PkanamaAndroidProjectDir is
+// the documented name; -PkanamaAndroidDemoDir (the demo runners' spelling) stays as an alias.
+val kanamaAndroidDemoDir =
+  providers
+    .gradleProperty("kanamaAndroidProjectDir")
+    .orElse(providers.gradleProperty("kanamaAndroidDemoDir"))
 val kanamaAndroidSdkDir =
   providers
     .environmentVariable("ANDROID_HOME")
@@ -2396,7 +2401,7 @@ tasks.register<Exec>("assembleAndroidScriptsAar") {
 
   doFirst {
     if (!kanamaAndroidDemoDir.isPresent) {
-      throw GradleException("Missing -PkanamaAndroidDemoDir=/absolute/path/to/kanama demo project")
+      throw GradleException("Missing -PkanamaAndroidProjectDir=/absolute/path/to/godot_project")
     }
     if (!kanamaAndroidSdkDir.isPresent) {
       throw GradleException("Missing ANDROID_HOME or ANDROID_SDK_ROOT for Android plugin build")
@@ -2424,7 +2429,7 @@ tasks.register("installAndroidPluginAar") {
 
   doLast {
     if (!kanamaAndroidDemoDir.isPresent) {
-      throw GradleException("Missing -PkanamaAndroidDemoDir=/absolute/path/to/kanama demo project")
+      throw GradleException("Missing -PkanamaAndroidProjectDir=/absolute/path/to/godot_project")
     }
 
     val pluginsDir = file(kanamaAndroidDemoDir.get()).resolve("android/plugins")
@@ -2449,6 +2454,9 @@ tasks.register("installAndroidPluginAar") {
       rename { "KanamaAndroidScripts.debug.aar" }
     }
 
+    // custom_maven_repos: the PanamaPort fork is published on JitPack, which Godot's Android build
+    // template does not list; Godot passes this repo to its Gradle build, so a plain editor export
+    // resolves the remote dependency without patching android/build.
     pluginsDir
       .resolve("KanamaAndroid.gdap")
       .writeText(
@@ -2462,6 +2470,7 @@ tasks.register("installAndroidPluginAar") {
             |[dependencies]
             |local=["KanamaAndroidScripts.debug.aar"]
             |remote=["${panamaPortCoreDependency.get()}"]
+            |custom_maven_repos=["https://jitpack.io"]
             |"""
           .trimMargin()
       )
@@ -2575,6 +2584,7 @@ val prepareMobileAddonAndroidExtras by
             |
             |[dependencies]
             |remote=["${panamaPortCoreDependency.get()}"]
+            |custom_maven_repos=["https://jitpack.io"]
             |"""
             .trimMargin()
         )

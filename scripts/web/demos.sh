@@ -11,7 +11,7 @@
 # scripts/web_fresh_checkout_smoke.sh (60g) and scripts/web_ci_matrix.sh (60h).
 #
 # Adding a demo means editing THIS file plus the driver wiring listed in
-# docs/exporting/web.md.
+# docs/contributing/device-runs.md.
 
 # The full corpus, in port order. `web3d` is an in-repo fixture; every other demo
 # lives in the kanama-demos checkout.

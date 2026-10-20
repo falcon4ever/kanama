@@ -1,672 +1,162 @@
-# Web
+# Export for the Web
+
+!!! note "Web is experimental"
+    This release exports only the Kanama demo projects to the Web. It cannot
+    export your own game. Use this page to try the Web build with a demo, and
+    to keep your scripts ready for the Web. What does not work is listed in
+    [Limitations](../reference/limitations.md#web).
 
 The Web backend compiles Kanama project scripts to **Kotlin/Wasm** and runs
 them against a Godot Web export through a generated per-call proxy and a
-versioned JavaScript bridge (protocol 39). <!-- kanama-claim: protocol --> This page is the reproducible export
-workflow: prerequisites, the build/export/serve/smoke/publish commands, the
-browser matrix and budgets you run, and the limitations you meet while
-shipping. The tier, the twelve-demo corpus evidence, the browser floors and
-what "tested" versus "validated-at" mean, and the hand-checked-only status of
-iOS/iPadOS are recorded once in
-[Version Support → Web](../reference/version-support.md#web). For the
-architecture — batching, snapshots, handle generations, the bridge protocol —
-see [Web Internals](../contributing/backends/web.md).
-
-## How Web Differs
-
-Unlike desktop, Android, and iOS, the Web backend uses **no JVM and no
-FFM/PanamaPort path**: the Kanama Wasm module and Godot's own Emscripten/Wasm
-runtime are separate modules that cannot share a heap, so calls cross as typed
-commands over a JavaScript bridge rather than as direct FFI
-([Web Internals → Where Web Sits](../contributing/backends/web.md#where-web-sits-relative-to-the-other-backends)).
-The consequences for your scripts are the next section.
+versioned JavaScript bridge (protocol 39). <!-- kanama-claim: protocol -->
+In plain terms: your scripts become a WebAssembly module that runs next to
+Godot's own in the browser, with no Java. [Web Internals](../contributing/backends/web.md)
+explains how the two talk.
 
 ## Requirements
 
-- The **pinned Godot editor binary** from
-  [Version Support → Requirements](../reference/version-support.md#requirements).
-- The **`web_nothreads_release`** export template for that exact Godot version.
-  The single-thread template is required: the preview backend does not use
-  threads or cross-origin isolation.
-- A **modern browser** with WasmGC + exception handling (recent
-  Chrome/Firefox/Safari; the validated floors are in
-  [Version Support → Web](../reference/version-support.md#web)).
-- **Node.js** (only for the export-smoke harness, not for the export itself).
-- Reproducible builds currently require
-  `--no-daemon -Pkotlin.compiler.execution.strategy=in-process`; the Kotlin
-  daemon can exhaust memory on these builds while the in-process path is stable.
+- A checkout of the Kanama repository, set up as in
+  [Install from a Source Checkout](../getting-started/source-checkout.md).
+- A checkout of the [Kanama demos](https://github.com/falcon4ever/kanama-demos).
+- Godot 4.7.2 and its export templates, installed from **Editor > Manage
+  Export Templates**. The Web export uses `web_nothreads_release.zip` from the
+  templates folder:
 
-## Web-Compatible Project Scripts
+    | OS | Export templates folder |
+    | --- | --- |
+    | macOS | `~/Library/Application Support/Godot/export_templates/4.7.2.stable/` |
+    | Linux | `~/.local/share/godot/export_templates/4.7.2.stable/` |
+    | Windows | `%APPDATA%\Godot\export_templates\4.7.2.stable\` |
 
-The Web export compiles gameplay from a **merged view** of two directories in
-the project checkout:
+- A desktop browser recent enough to run the WebAssembly features Kanama's
+  scripts use: Chrome 130, Firefox 141 or Safari 26.5, or newer.
 
-1. **`<project>/kotlin-src/`** — the shared script root, the same files the
-   desktop build compiles. A script is directly Wasm-compatible when written
-   portably: the constructor takes `GodotHandle` (a zero-cost value class over the
-   backend's own handle — an FFM `MemorySegment` on JVM/Android and iOS, a
-   generation-tagged registry id on Web); vector and color components are
-   `Double` on every backend, so no numeric conversion is needed; raw pointer
-   identity (`handle.address()`) is replaced by
-   `isSameInstance()`; and no JVM-only APIs are used.
-2. **`<project>/web/kotlin-src/`** — per-file overrides. A file here replaces
-   the same-named shared file in the Web build. Use it for scripts that are
-   genuinely platform-different (a smoke hook, a capability stub), not for
-   copies.
+## Trying the Web Build with a Demo
 
-A desktop-only script that must keep its `res://kotlin-src/` path (for example
-one selected by path at runtime, like Bunnymark's benchmark variants) is listed
-in `<project>/web/kotlin-src-excludes.txt`, one kotlin-src-relative path per
-line; the merge skips it and fails loudly on a stale or contradictory entry.
-Anything a shared script calls that the Web API surface does not model yet
-fails the Web compile — that is the fail-loud coverage gate working as
-intended. Files under the merged root resolve to `res://kotlin-src/*.kt` and
-match the scene script attachments on both platforms.
+### Exporting a Demo
 
-`@Export` declarations are portable including `NodePath`
-properties and hint metadata (a typed hint annotation such as `@ExportRange`
-reaches the generated proxy verbatim as `@export_custom(hint, "hint string")`,
-and `@ExportStorage` as `@export_storage`). The generated `Autoloads` object works
-on Web too (the processor is pointed at the demo's `project.godot`); read an
-autoload from a script callback. Two Web-specific rules fail the build loudly
-instead of silently mis-hydrating: a property default must be a literal or a
-constant expression the processor folds (`Mathf.PI / 3.0` is fine; a reference to
-another property is not — the proxy re-emits the default into GDScript and pushes
-it back into Kotlin at hydration), and a property type outside the supported Web
-set is rejected with an error naming the property.
-
-**A script's property initializers may call the engine**, as GDScript's `var x = ...` can. The
-constructor runs with the script's proxy wired and its handle-keyed snapshots seeded, so an
-initializer can call an engine singleton (`RenderingServer.getCurrentRenderingDriverName()`,
-`RenderingServer.getCurrentRenderingMethod()`), construct a `RefCounted` (`ConfigFile.create()`),
-and use `self`: `self.getTree()`, `self.getNodeOrNull(...)`, `self.addChild(...)` and the mirrored
-spatial reads (`self.position`). Two Web differences from desktop: the node is usually already in the
-tree when its initializers run (the proxy builds the script at `_enter_tree`/`_ready`; desktop runs
-them at `.new()`, before it is), and the `self` reads see
-the value mirrored when the proxy was wired, not a later engine change. A script that calls into
-its own script instance from an initializer fails with "still constructing". If an initializer
-throws, the script is not built and not retried: the failure is reported once, and any other
-script that looks it up gets an error, not a half-built instance.
-
-A **companion-object or top-level property** is initialized on first access, inside whichever
-script's callback touches it first; what it keeps outlives that script, as on desktop (a node lives
-until it is freed, a `RefCounted` while Kotlin holds it). Engine code that runs with no script
-running at all (a call outside any callback) fails with "No Kanama Web proxy owns handle=0" or "A
-Kanama Web singleton call was made outside a script callback".
-
-**Physics loops should derive movement from velocity, not from re-reading a
-spatial value they just wrote.** On Web, spatial reads (`self.position`,
-`self.rotation`, …) come from a mirrored snapshot rather than a live engine
-call. The snapshot refreshes at the start of every `_process` **and** (since
-task 87) every `_physics_process` dispatch, so a per-tick read is coherent with
-the previous tick — but it is still a start-of-dispatch mirror: a value the
-engine changes *inside* the current tick (after `moveAndSlide()`, for example)
-is not visible until the next dispatch. Desktop reads the engine live, so a
-spelling that re-reads a just-written spatial value can be subtly
-platform-different even when it works. Preferred spelling: accumulate movement
-in `self.velocity` + `moveAndSlide()`, and derive orientation from the intended
-direction (as squash's Player does with `lookAtFromPosition(self.position,
-self.position + direction, UP)` — the *direction* is the input, not a read-back
-of engine physics).
-
-## Build The Web Scripts
-
-`buildWebScripts` generates the GDScript proxy bundle (proxies + manifest +
-protocol descriptor) and collects the Kotlin/Wasm runtime a project attaches:
+Run this from the Kanama checkout. `-PkanamaWebDemo` picks the demo, and the
+matching `-PkanamaWeb<Demo>ProjectDir` points at its folder in the demos
+checkout:
 
 ```sh
-./gradlew --no-daemon -Pkotlin.compiler.execution.strategy=in-process \
-  :web-runtime:buildWebScripts
-```
-
-The bundle lands in `web-runtime/build/web-scripts/` with a
-`build-web-scripts.report.json` recording the protocol version, renderer, and
-files. No source maps are published.
-
-## Export A Demo
-
-The `exportWeb` task below stages a copy of the project without `addons/kanama/`
-and `kotlin-src/` and points every scene at the generated Web proxies, so no staged
-scene attaches a `.kt` script. The Kanama Tools plugin stays enabled in that copy;
-its export check (see the Android guide's
-[Export Guard](android.md#export-guard)) finds no `.kt` script to check and stays
-silent. A plain Godot Web export of the project itself is checked like the other
-platforms and stops with `Kanama: Export stopped: …` when a `.kt` script that its
-scenes attach does not bind in the editor.
-
-`exportWeb` stages a disposable copy of the project, runs the Godot Web export,
-installs the Kotlin/Wasm runtime and bridge, cache-busts the entry scripts, and
-writes a self-contained served directory plus a release payload report. Point it
-at a **clean checkout** of the demo (never a shared working tree); the Web script
-root is auto-derived from `<project>/web`.
-
-Each demo is selected with `-PkanamaWebDemo=<key>` and given its checkout with
-the matching `-PkanamaWeb<Key>ProjectDir`:
-
-| Key | Demo project | Key | Demo project |
-|---|---|---|---|
-| `match3` | Starter-Kit-Match3 | `thirdperson` | godot-4-3d-third-person-controller |
-| `bunnymark` | Bunnymark | `charactercontroller` | godot-4-3d-character-controller-tutorial |
-| `dodge` | godot-demo-2d-dodge-the-creeps | `racing` | Starter-Kit-Racing |
-| `platformer` | Starter-Kit-3D-Platformer | `citybuilder` | Starter-Kit-City-Builder |
-| `squash` | godot-demo-3d-squash-the-creeps | `tpsdemo` | tps-demo-kanama |
-| `fps` | Starter-Kit-FPS | `web3d` | in-repo fixture (no checkout needed) |
-
-Match3:
-
-```sh
+cd /path/to/kanama
 ./gradlew --no-daemon -Pkotlin.compiler.execution.strategy=in-process \
   :web-runtime:exportWeb \
   -PkanamaWebDemo=match3 \
-  -PkanamaGodotExecutable=/absolute/path/to/godot \
-  -PkanamaWebTemplateRelease=/absolute/path/to/web_nothreads_release.zip \
-  -PkanamaWebMatch3ProjectDir=/absolute/path/to/checkout/Starter-Kit-Match3
+  -PkanamaGodotExecutable=/path/to/godot \
+  -PkanamaWebTemplateRelease=/path/to/web_nothreads_release.zip \
+  -PkanamaWebMatch3ProjectDir=/path/to/kanama-demos/Starter-Kit-Match3
 ```
 
-Bunnymark (the validated 256-sprite V1Sprites variant):
+Keep `--no-daemon -Pkotlin.compiler.execution.strategy=in-process`: the
+Kotlin compiler can run out of memory on this build without them. The export
+works on a copy of the demo and leaves the demo folder unchanged. It lands in
+`web-runtime/build/web-export/<demo>/`.
 
-```sh
-./gradlew --no-daemon -Pkotlin.compiler.execution.strategy=in-process \
-  :web-runtime:exportWeb \
-  -PkanamaWebDemo=bunnymark \
-  -PkanamaWebBunnymarkVariant=BunnymarkV1Sprites \
-  -PkanamaGodotExecutable=/absolute/path/to/godot \
-  -PkanamaWebTemplateRelease=/absolute/path/to/web_nothreads_release.zip \
-  -PkanamaWebBunnymarkProjectDir=/absolute/path/to/checkout/Bunnymark
-```
+| `-PkanamaWebDemo` | Demo folder | `-PkanamaWebDemo` | Demo folder |
+|---|---|---|---|
+| `match3` | `Starter-Kit-Match3` | `thirdperson` | `godot-4-3d-third-person-controller` |
+| `bunnymark` | `Bunnymark` | `charactercontroller` | `godot-4-3d-character-controller-tutorial` |
+| `dodge` | `godot-demo-2d-dodge-the-creeps` | `racing` | `Starter-Kit-Racing` |
+| `platformer` | `Starter-Kit-3D-Platformer` | `citybuilder` | `Starter-Kit-City-Builder` |
+| `squash` | `godot-demo-3d-squash-the-creeps` | `tpsdemo` | `tps-demo-kanama` |
+| `fps` | `Starter-Kit-FPS` | `web3d` | none; it is built into Kanama |
 
-The export lands in `web-runtime/build/web-export/<demo>/`. It is self-contained
-— no workstation-absolute paths leak into the served HTML — and includes
-`kanama-web/export-report.json` listing every served file, its size, the total
-payload, the renderer, the thread setting, and the source-map policy.
+The property name capitalizes the key: `dodge` takes
+`-PkanamaWebDodgeProjectDir`, `charactercontroller` takes
+`-PkanamaWebCharactercontrollerProjectDir`. Bunnymark also takes
+`-PkanamaWebBunnymarkVariant=BunnymarkV1Sprites`, the variant that runs on the
+Web.
 
-## Serve The Export
+### Running the Export
 
-The export must be served over HTTP (opening `index.html` from disk will not
-load the Wasm modules). Any static server works. The repository ships a minimal
-one that binds an ephemeral localhost port, sends the correct
-`application/wasm` MIME type, and sets `Cache-Control: no-store`:
+Serve the export over HTTP. Opening `index.html` from disk does not load the
+WebAssembly modules. Any static server works; Kanama's sends the right
+`application/wasm` type and listens on this machine only:
 
 ```sh
 python3 scripts/web/serve_export.py web-runtime/build/web-export/match3
-# prints PORT=<n>; open http://127.0.0.1:<n>/
 ```
 
-### Testing On A Phone Or Tablet
+It prints `PORT=<n>`. Open `http://127.0.0.1:<n>/` in your browser.
 
-Loopback is the default so an export server is never reachable from the network
-unless asked for. `--lan` binds every interface — and **must be combined with
-`--https`**, because Godot's Web export requires a secure context: `127.0.0.1`
-is one, but a LAN address over plain HTTP is not, and the engine never starts
-on the device (measured: a fatal error in audio-worklet init right after
-"starting Godot…"; the page now refuses up front instead). `--https` serves
-with a cached self-signed certificate — accept the device's one-time warning
-(iOS Safari: Show Details → visit this website):
+### Testing on a Phone or Tablet
+
+To open the export from another device on your network, serve it over HTTPS.
+Godot's Web export only starts from a secure address, and `127.0.0.1` is the
+only plain-HTTP address that counts as one:
 
 ```sh
 python3 scripts/web/serve_export.py --lan --https web-runtime/build/web-export/match3
-# prints PORT=<n> and LAN=https://<this-machine>:<n>/
 ```
 
-Hand-checking on a device on the same network is the standard recipe. Safari on
-a USB-connected iPhone or iPad can additionally be driven over WebDriver:
-enable Settings → Safari → Advanced → Remote Automation on the device, keep it
-unlocked, and create a `safaridriver` session with `platformName: iOS`, the
-device UDID (`xcrun xctrace list devices`), and `acceptInsecureCerts: true` —
-one session per device at a time. No automated iOS gate exists yet, and mobile
-WebKit remains hand-validated, not gated — see Known Limitations.
+It prints `LAN=https://<this-machine>:<n>/`. Open that address on the device
+and accept the warning about the self-signed certificate once. On iPhone and
+iPad Safari, tap **Show Details**, then **visit this website**.
 
-## Run The Export Smoke
+### Publishing the Demo
 
-`web_export_smoke.sh` serves an already-built export, drives the demo in a real
-browser through a full play + teardown sequence, validates the machine-readable
-result against a versioned schema, and proves the served tree was not mutated. A
-run is never green from page load alone.
+`packageWebExport` zips an export you have already built and tried:
 
 ```sh
-scripts/web_export_smoke.sh \
-  --engine chrome \
-  --export-dir web-runtime/build/web-export/match3 \
-  --demo match3 \
-  --result /tmp/match3-chrome.json
-```
-
-Each gate asserts gameplay deltas, crossing budgets, handle/callback/scheduler
-teardown to baseline, stale-handle rejection, console-error checks, a
-protocol-version match, and — per demo — that the registered script members on
-its required list in `scripts/web/required_members.json` actually dispatched
-during the run (the exercised-member census, task 81).
-
-Read the harness's own `web_export_smoke: PASS` line, not a driver's check count.
-The driver's checks and the envelope schema are two different gates: a demo can
-pass 13/13 of its own checks and still be rejected by the schema (which is what
-enforces `liveAfterTeardown === 0` and the required-member census), and that is
-exactly how one demo stayed un-gated on every engine for weeks.
-
-## Publishing A Web Export
-
-`packageWebExport` turns an already-built, smoke-validated export into a
-publishable zip. It never builds or refreshes an export — a missing or stale
-one (wrong demo, wrong protocol version, a report that no longer matches the
-served bytes) fails loudly, so the artifact is always the export you
-validated:
-
-```sh
+cd /path/to/kanama
 ./gradlew --no-daemon -Pkotlin.compiler.execution.strategy=in-process \
   :web-runtime:packageWebExport -PkanamaWebDemo=match3
 ```
 
-The zip lands in
-`web-runtime/build/distributions/kanama-web-<demo>-v<version>.zip` with
-`index.html` at the zip root. Before zipping, the gate:
+The zip lands in `web-runtime/build/distributions/kanama-web-<demo>-v<version>.zip`,
+with `index.html` at its root. The task builds nothing. It fails when the
+export is missing or older than the current build, when the export contains a
+path from your machine, or when it exceeds itch.io's limits of 500 MB and 1000
+files.
 
-- quotes the export's `buildId` and protocol version from
-  `kanama-web/export-report.json` and rejects a stale export;
-- checks the payload against **itch.io's HTML5 defaults — at most 500 MB and
-  1000 files** — printing the measured size and file count either way; and
-- scans every served byte for workstation-absolute paths with
-  `scripts/web/check_no_local_paths.py`, the fresh-checkout gate's scanner.
-
-Validate the artifact itself — not the export directory it came from — before
-uploading. `web_package_smoke.sh` unzips the artifact to a scratch directory,
-serves that copy, and drives it through the full export smoke:
+To publish on **itch.io**, upload the zip with
+[butler](https://itch.io/docs/butler/):
 
 ```sh
-scripts/web_package_smoke.sh \
-  --zip web-runtime/build/distributions/kanama-web-match3-v<version>.zip \
-  --demo match3 --engine chrome --result /tmp/match3-package.json
-```
-
-Read the inner `web_export_smoke: PASS` line, as always.
-
-### itch.io
-
-Upload the zip with [butler](https://itch.io/docs/butler/) (it unpacks zips
-server-side; the channel name marks the upload as HTML5):
-
-```sh
-butler push web-runtime/build/distributions/kanama-web-<demo>-v<version>.zip \
+butler push web-runtime/build/distributions/kanama-web-match3-v<version>.zip \
   <user>/<game>:html5
 ```
 
-Then on the project's edit page, confirm the upload is set to **"This file
-will be played in the browser"**. Leave the SharedArrayBuffer support toggle
-**off**: exports use the `web_nothreads` template, so they need no
-cross-origin isolation and no COOP/COEP headers (see
-[Renderer And Thread Constraints](#renderer-and-thread-constraints)). That is
-also why itch.io-style hosting works at all — it serves games over HTTPS from
-a subpath inside an iframe, and the nothreads export is compatible with
-exactly that shape.
+On the game's edit page, set the upload to **This file will be played in the
+browser**. Leave **SharedArrayBuffer support** off: the export uses a single
+thread and needs no special headers.
 
-### Any Static HTTPS Host
+To publish on **any other static host**, unzip the zip into a folder the host
+serves over HTTPS, with the `application/wasm` content type for `.wasm` files.
 
-Any static file host works if it serves two things:
+## Web-Compatible Scripts
 
-- **HTTPS.** Godot's Web export requires a secure context — `127.0.0.1` is
-  one, a plain-HTTP LAN or internet address is not, and the engine never
-  starts without one (the same constraint as
-  [Testing On A Phone Or Tablet](#testing-on-a-phone-or-tablet)).
-- A correct `application/wasm` MIME type for `.wasm` files.
+The Web build compiles the same `kotlin-src/` folder as desktop, and most
+scripts need no change. If you plan to ship on the Web later, avoid what the
+Web build stops on, with an error that names the script:
 
-No COOP/COEP headers, no special subpath handling, and no server-side code
-are needed: unzip the artifact into any directory the host serves.
+- uses Java classes such as `java.io.File`, which do not exist in the browser;
+- compares raw handles with `handle.address()`; use `isSameInstance()`;
+- calls a Godot method the Web build does not have;
+- gives an exported property a default that is not a literal or a constant
+  expression. `Mathf.PI / 3.0` works; another property's value does not;
+- exports a property type the Web build does not carry.
 
-### The tps-demo Exception
+For a script that must differ on the Web, a file with the same name in
+`web/kotlin-src/` replaces the shared file in the Web build only. A
+desktop-only script is left out by listing its path, relative to
+`kotlin-src/`, in `web/kotlin-src-excludes.txt`, one per line. The demos use
+both.
 
-tps-demo serves ~638 MB (570 MB of upstream demo assets in `index.pck`) and
-exceeds the itch.io defaults; `packageWebExport` fails it by name rather than
-producing an artifact nobody could upload. This is the same known exception
-recorded in `scripts/web/budgets.json` — shrinking it is asset work in the
-demo, not a packaging concern.
+## Troubleshooting
 
-Publishing changes nothing about the backend's tier (see
-[Version Support → Web](../reference/version-support.md#web)), and exporting a
-game still requires a Kanama source checkout.
+| Problem | Fix |
+| --- | --- |
+| The page loads but the game never starts, on a phone or another computer. | Serve with `--lan --https`. A plain-HTTP network address is not secure, so Godot does not start. |
+| The page is blank when opened from disk. | Serve the folder over HTTP as in [Running the Export](#running-the-export). |
+| The Gradle build runs out of memory. | Add `--no-daemon -Pkotlin.compiler.execution.strategy=in-process`. |
+| `exportWeb` fails with `Unsupported -PkanamaWebDemo=...`. | Use one of the demo keys in the table. |
+| `packageWebExport` says the export is stale. | Run `exportWeb` again, then package. |
+| `packageWebExport` rejects `tpsdemo`. | Its assets exceed itch.io's 500 MB limit. Serve it from your own host instead. |
+| Enemies pile up and never leave the screen. | See the open defect under [Limitations](../reference/limitations.md#web). |
 
-## Browser Matrix
+## On Other Platforms
 
-`web_ci_matrix.sh` is the corpus-wide gate: it exports each demo and drives it in
-each requested browser through `web_export_smoke.sh`, then aggregates every cell
-into one evidence JSON plus a Markdown summary.
-
-```sh
-scripts/web_ci_matrix.sh \
-  --godot /absolute/path/to/godot \
-  --template "$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable/web_nothreads_release.zip" \
-  --demos-dir /absolute/path/to/kanama-demos \
-  --demo-set full \
-  --engine chrome --engine firefox \
-  --evidence /tmp/web-matrix.json
-```
-
-Every cell runs even after an earlier one fails, so a red run reports the whole
-picture. `--demo-set pr` is the per-PR subset (`match3`, `web3d`, `dodge` — a
-pointer-drag demo, a 3D demo needing no demos checkout, and a full-lifecycle
-demo); `--demo-set full` is the 12-demo corpus plus the gated spike benchmark
-cell (as is `ci`, minus what a hosted runner cannot build — see the Spike
-Benchmark Cell below). Per-demo budgets live in `scripts/web/demos.sh`; scale
-them for a slower host with `--timeout-scale` rather than editing them, so local
-and CI numbers stay comparable.
-
-**Chrome and Firefox are the CI cells** (`.github/workflows/web.yml`): the PR
-subset on every Web-relevant pull request, the full corpus on push to `main` and
-nightly. **Safari is a local pre-promotion gate, not a CI cell** — see Known
-Limitations. Run it with the same script, `--engine safari`, one run at a time.
-
-### Regression Cadence
-
-Which gate runs when, and where, is derived from the workflow files,
-`local_ci.sh`, and the `evidence/gates.json` ledger by the generated
-[Gates Index](../reference/generated/gates.md): the PR subset and the `ci` corpus on
-Chrome + Firefox, the nightly soak and spike cells, and the local-only Safari,
-tps-demo, and fresh-checkout gates each appear there with their cadence and
-last recorded run. Two policies sit on top of that list:
-
-- **Browser floor re-bisect** — when a floor is claimed to move, or a browser
-  major ships that breaks a cell (local).
-- **Everything above on a Godot baseline bump** — the export template,
-  generated proxy, and bridge protocol all move together (local + CI).
-
-The nightly run matters because two of the inputs change without anyone touching
-the repository: the browsers on the runner image, and the runner itself. A red
-nightly on an unchanged tree is a browser-side regression, which is exactly the
-class of failure a per-PR gate can never see.
-
-### Soak Gate
-
-```sh
-KANAMA_WEB_SOAK_SECONDS=600 scripts/web_ci_matrix.sh \
-  --godot /absolute/path/to/godot --template <web_nothreads_release.zip> \
-  --demos-dir /absolute/path/to/kanama-demos --demo soak --engine chrome
-```
-
-The soak driver runs against the **dodge** export for ten minutes, restarting the
-round every sixty seconds. Dodge is the choice on purpose: leak detection wants
-churn, not polygons — a mob is instantiated every half second and frees itself on
-leaving the screen, so a ten-minute run is hundreds of full node create/free
-cycles through the handle registry, the signal-connection table and the
-deferred-free path.
-
-It splits its samples in half and compares high-water marks, so it fails on a
-*trend* rather than on a threshold: live handles, pending signal callbacks and
-registered coroutine jobs must not be higher in the second half than the first
-(plus a few handles of sampling slack), gameplay must still be running at the
-end, and teardown must still drain to zero after a long run rather than only
-after a short one.
-
-### Spike Benchmark Cell
-
-```sh
-scripts/web_ci_matrix.sh --godot /absolute/path/to/godot \
-  --template <web_nothreads_release.zip> --demo spike --engine chrome --engine firefox
-```
-
-The spike is the synthetic transport benchmark (the staged in-repo
-`webSpikeGodot` project — it needs no demos checkout and exports through its own
-`:web-runtime:exportWebSpike` task). It is **opt-in**: the bridge's frame
-fallthrough is the real `_process`, and only a page that stamps
-`globalThis.KanamaWebMode = "spike"` reaches the benchmark transport. This cell
-is what keeps the opt-in path from rotting. Its driver asserts the staging still
-names the mode (an export that loses the mode line falls back to gameplay and
-fails here, loudly), that the benchmark branch's own counters advanced while the
-real `_process` path stayed at exactly zero — the inverse of the demo drivers'
-`realProcessPathDispatched` — folds the page's structural verdict (the
-10000-mutation batch must cross the boundary exactly ONCE) into the envelope,
-and quits the SceneTree to drain live handles to zero. Transport cost is gated
-structurally rather than by a ratio: the spike never takes the
-`_process`/`_physics_process` tick paths, so crossings-per-tick is exempt in
-`scripts/web/budgets.json` with the reason recorded.
-
-## Performance Budgets
-
-Every smoke run is checked against a per-demo budget declared in
-`scripts/web/budgets.json`, so a demo cannot quietly grow a payload, stop
-starting, or start doing per-frame work at the module boundary.
-
-| Budget | Unit | Why |
-|---|---|---|
-| Payload | bytes | Host-independent by construction |
-| Startup | ms | Wall-clock, so deliberately loose — it catches a demo that stopped booting, not a slow runner |
-| **Crossings per engine tick** | ratio | The real invariant: what batching and snapshots exist to bound |
-
-**Why per engine.** The ratio is engine-stable across most of the corpus — Chrome
-vs Firefox: bunnymark 2.22/1.97, dodge 0.19/0.20, fps 1.10/1.02 — but *not* for
-the input-heavy demos, where Firefox reports several times the boundary work
-(charactercontroller 4.50/**19.58**, thirdperson 1.15/**6.01**). Budgets are
-therefore measured and declared per engine. The asymmetry itself is settled
-(task 74): nothing paces `requestAnimationFrame` in headless Firefox, so
-render-frame-driven (`_process`) command emission multiplies freely while
-physics-driven work tracks the wall-capped physics step — a per-opcode
-histogram shows the multiplier concentrated in per-render-frame emissions,
-with physics-driven calls at exactly the tick ratio on both engines. The
-number is a property of the headless environment, not of Firefox as users run
-it (display-paced, it sits near Chrome); per-engine budgets bound regressions
-within each environment's own baseline.
-
-**Why the headline budget is per tick rather than per second.** Godot's Web main
-loop is paced by `requestAnimationFrame` and advances a fixed step per iteration,
-so the same build runs at very different rates depending on the host — measured
-between roughly **2× and 8.7× real time** across four hosts on one day. A budget
-denominated in wall-clock seconds would grade the machine rather than the
-backend. Crossings per tick means the same thing everywhere.
-
-A **tick** is one engine dispatch into the script layer, counting **both**
-`_process` and `_physics_process`. Counting render frames alone reported *zero*
-ticks for a third of the corpus, because the character-controller, racing and
-third-person demos do all their work in the physics tick.
-
-Every number in `budgets.json` was measured, and each demo records the run it
-came from in its `measured` block. Re-baseline by running the corpus and
-regenerating, never by nudging a number until a run passes:
-
-```sh
-scripts/web_ci_matrix.sh --godot <godot> --skip-export --demo-set full --engine chrome \
-  --result-dir /tmp/budgets
-python3 scripts/web/check_budgets.py /tmp/budgets/<demo>-chrome.json --report
-```
-
-**One demo is exempt from the ratio, with its reason recorded.** `match3` is
-input-driven — the driver spends its run on pointer gestures and settle waits, so
-the script layer is dispatched only ~20–50 times per run (53 locally, 23 on a CI
-Chrome). A ratio whose denominator swings 2× with host speed is not a
-measurement, and failing on it would grade the runner. Its payload and startup
-budgets still apply, and an exemption without a stated reason is a hard error in
-the checker rather than a quiet pass.
-
-**One demo is over any sane budget and says so**: tps-demo serves **638 MB**, of
-which 570 MB is upstream demo assets in `index.pck`. It runs, but nobody would
-download it. The budget file records that as a known exception rather than
-blessing it — fixing it is asset work in the demo, which 60f puts out of scope,
-because budgets are not met by editing gameplay or scene content.
-
-### What CI Runs, And What Stays Local
-
-Not everything can or should run on a hosted runner, and the two reasons are
-different:
-
-- **Local-only** — CI *structurally cannot* do it, and no fix changes that.
-  **Safari** (no headless mode; it needs a logged-in GUI session) is in this
-  tier: a release gate a maintainer runs by hand. (tps-demo used to be listed
-  here for a reported out-of-memory compile on hosted runners; it compiles and
-  passes there, and is in the `ci` corpus.)
-- **Quarantined** — a real defect, temporary, tied to a task. See below.
-
-`--demo-set ci` is the corpus minus any local-only demos (none today) and is what the workflow
-runs; `--demo-set full` always means the full corpus, so a local run is never
-quietly narrowed. Skipped demos are **announced and written into the evidence
-JSON** with their reason, because a corpus that silently shrinks is how "the
-corpus is green" stops meaning anything.
-
-### Quarantined Cells
-
-A known-failing `demo:engine` pair can be **quarantined** in
-`scripts/web/demos.sh` with a reason that names a task and an expiry date; past
-the date the matrix prints `QUARANTINE EXPIRED` on every run until the cell is
-lifted or the date is renewed. A quarantined cell still
-exports, still runs and still reports — it just does not fail the build. Deleting
-the demo from the matrix instead would be the trap this gate exists to close: the
-corpus would look green because nobody was looking.
-
-A quarantined cell that **passes** is reported just as loudly, with an explicit
-"lift the quarantine" line, because a stale quarantine is worse than none.
-Lifting one is a one-line deletion.
-
-<!-- KANAMA-BLOCKED(since:2026-07-28, issue:370): the dodge quarantine below -->
-Currently quarantined: `dodge:firefox` — `screen_exited` never fires for dodge's
-mobs on the Linux runner's Firefox (dodge passes in Firefox on macOS, and
-`dodge:chrome` passes on Linux), so the cell fails `mobsFreedOffScreen` there and
-nothing else (the next game's `queue_free` still frees every mob); the quarantine
-runs until 2027-03-31. `squash:firefox` was lifted on
-2026-08-11 (the [#370](https://github.com/falcon4ever/kanama/issues/370) signature stopped reproducing there and the cell passes
-outright under the task-81 gameplay checks, death path included).
-`squash:chrome` was lifted on 2026-08-12: its quarantine covered the
-death-phase choreography only (the parked player waited for a randomly-heading
-mob, 1-for-2 on the slow runner), and the driver now steers the player into a
-mob instead of parking — deterministic by construction, 3/3 Chrome + 3/3
-Firefox local repeats green; the runner-scale proof is the lifting PR's own CI
-plus the next main full-corpus run.
-
-### Bumping The Demos Pin
-
-The workflow checks out `kanama-demos` at the `DEMOS_REF` commit pinned in
-`.github/workflows/web.yml`. This is deliberate: an unpinned checkout lets an
-unrelated demo-repo commit redden every Kanama pull request. When a demo port
-lands in `kanama-demos`, bump `DEMOS_REF` in the same pass — a Kanama change that
-needs new demo code is not green until both sides are pinned together.
-
-## Fresh-Checkout Gate
-
-`web_fresh_checkout_smoke.sh` answers a different question from the export smoke:
-not "does this export run?" but "can anyone reproduce it?". It clones Kanama (and
-kanama-demos, when the selected demo lives there) into a throwaway workspace with
-its own `HOME`, Gradle home and Maven-local, exports from that clone, and then
-asserts what a promotion review needs to see:
-
-1. **no build-machine path in any served file** — the whole export tree is
-   scanned byte-for-byte, not just `index.html`;
-2. **the demo source tree is untouched** — checksummed before and after, plus a
-   `git status` check on the demo checkout; and
-3. **the artifact really runs** — the export smoke drives it in a real browser
-   using the harness *from the fresh clone*, so the tooling is proven to ship.
-
-```sh
-scripts/web_fresh_checkout_smoke.sh \
-  --template "$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable/web_nothreads_release.zip" \
-  --demo web3d --demo match3 \
-  --evidence /tmp/web-fresh-checkout.json \
-  /absolute/path/to/godot
-```
-
-The default demo set is `web3d` (an in-repo fixture, so the Kanama clone alone is
-enough) plus `match3` (an external demo, exercising the demos checkout);
-`--demo all` runs the whole corpus. `--kanama-source` / `--demos-source` accept a
-local path for validating an unmerged branch, and `--skip-browser` reduces the
-run to the export and artifact checks. The `--evidence` JSON records the clone
-commits, per-demo checksums, payload sizes, protocol version and driver results.
-
-## Browser Debugging
-
-- **Chrome** — the driver self-launches headless Chrome and drives it over the
-  DevTools Protocol. Godot's Compatibility renderer needs a WebGL context, which
-  in headless Chrome comes from ANGLE's SwiftShader software path
-  (`--enable-unsafe-swiftshader --use-angle=swiftshader`); do **not** pass
-  `--disable-gpu`, which disables it. It collects console/exception events.
-- **Firefox** — driven over WebDriver BiDi; console errors via
-  `log.entryAdded`.
-- **Safari** — driven over classic W3C WebDriver; needs a one-time
-  `safaridriver --enable` and "Allow Remote Automation" in the Develop menu.
-  SafariDriver exposes no browser-log endpoint, so the Safari gate asserts bridge
-  callback/telemetry plus every gameplay and teardown invariant. Three traps,
-  all of which have cost real debugging time:
-    - **Retina coordinates.** Pointer coordinates are CSS client pixels (W3C),
-      and Godot's own coordinate space is CSS pixels too. A driver that derives
-      screen geometry from `canvas.width` — the `devicePixelRatio`-scaled
-      backing store — is correct only at DPR 1, so it passes headless
-      Chrome/Firefox and silently misses on a Retina Safari. Use
-      `getBoundingClientRect()`.
-    - **One `POST /actions` per gesture.** SafariDriver dispatches a pointer
-      sequence on the trailing `DELETE /actions`, and does not carry pointer
-      position across requests — a press sent in its own request lands at
-      `0,0`. Put the whole press/move/release in a single request.
-    - **The browser outlives its driver.** The automation Safari is not a child
-      of `safaridriver`, so killing the driver leaks it; the driver reaps it by
-      PID instead.
-
-## Renderer And Thread Constraints
-
-- **Compatibility renderer only** (`rendering_method = gl_compatibility`). The
-  Forward+/Mobile renderers are not used for Web.
-- **Single thread.** The export uses the `web_nothreads` template and does not
-  require COOP/COEP cross-origin isolation, so it can be served from a plain
-  static host. Threaded Godot Web is out of scope for the preview.
-
-## Payload And Source Maps
-
-- The Kotlin gameplay Wasm is **content-hashed by the build** (its filename is
-  its hash), so it is cache-busted automatically when gameplay changes.
-- The two fixed-name entry scripts (`kanama-web-spike.js`,
-  `kanama-web-bridge.js`) are cache-busted with a content-derived `?v=<hash>`
-  query string stamped into `index.html`.
-- **No source maps ship** (webpack `sourceMaps = false`); both
-  `buildWebScripts` and `exportWeb` fail loudly if a `.map` file appears.
-- `kanama-web/export-report.json` reports the full payload for budget tracking.
-
-## Known Limitations
-
-- **Safari cannot run headless.** Chrome and Firefox gate the corpus headless, so
-  they run unattended; `safaridriver` drives a real Safari window on a logged-in
-  GUI session. The Safari gate is therefore a **local** gate, not a CI cell, and
-  two Safari runs must not be started concurrently on one machine.
-- **Safari on iOS/iPadOS is hand-checked only, and no mobile-WebKit version
-  floor is claimed.** Every iOS browser is WebKit. `safaridriver` can drive
-  Safari on a USB-connected device (see Testing On A Phone Or Tablet), but no
-  automated iOS gate exists and mobile WebKit is not part of the validated
-  claim.
-- **A script error names the callback, not a Kotlin file and line.** An exception in a script
-  callback (`_ready`, `_process`, a signal handler, a `@Function` call, a coroutine, a
-  constructor) is reported once through Godot's error log (`SCRIPT ERROR: <type>: <message>`,
-  `at: <Script>.<callback>`) and contained: the call returns its default and the frame loop and the
-  other scripts go on. The production Wasm module has no name section and publishes no source
-  maps, so a Kotlin/Wasm stack trace is only anonymous `wasm-function[n]` frames; the report
-  therefore names the script and the callback, with no `File.kt:line` as desktop, Android and iOS
-  give.
-- **Lifecycle virtuals are limited to what the proxy dispatches**: `_enter_tree`,
-  `_ready`, `_process`, `_physics_process`, `_draw`, `_exit_tree`, `_input`, and
-  `_unhandled_input`. Anything else is rejected at build time with a KSP error
-  naming the script and the function, rather than compiling and then never
-  running. Move the work into one of the dispatched virtuals.
-- **Single-thread only** — exports use Godot's `nothreads` Web template: no
-  threads, no SharedArrayBuffer, no cross-origin-isolation requirement. This is
-  deliberate: any static HTTPS server can host the export (itch.io-style hosts
-  included, whose COOP/COEP support is experimental). It is also a double gate:
-  even with Godot's threads template, gameplay runs on Kotlin/Wasm, whose own
-  threading support is immature — threads are not one fix away.
-- **Compatibility renderer only** — Forward+/Mobile are not used for Web, so
-  renderer-dependent features are absent: no volumetric fog, no global
-  illumination, and first-use shader compiles can hitch once.
-- **No multiplayer** — ENet is unavailable in browsers, and Godot's
-  WebSocket/WebRTC multiplayer peers are not wired into the Kanama Web backend.
-  Web builds are single-player (tps-demo's online lobby is deliberately inert
-  for this reason). The multiplayer API answers a local session as desktop's
-  does before a game sets a network peer: it starts with a connected
-  `OfflineMultiplayerPeer` (`hasMultiplayerPeer()` is true), this is peer 1 and
-  the server, and an ENet peer never connects, so shared scripts that read it
-  compile and run unchanged.
-- No Web editor, no compiler, no hot reload, no Web GDExtension, and no TeaVM or
-  Kotlin/JS production path. Gameplay is AOT-compiled into the Wasm payload, so
-  a script edit means rebuild + re-export.
-- A packaged/addon install path (exporting without the Kanama checkout) is not
-  yet available; the current workflow is a source-checkout export.
-<!-- KANAMA-BLOCKED(since:2026-07-28, issue:370): the unexplained-defect entry below -->
-- **One defect is unexplained, not solved ([issue #370](https://github.com/falcon4ever/kanama/issues/370)).** On one Linux CI host,
-  spawned mobs in two demos travel far off screen yet
-  `VisibleOnScreenNotifier2D.screen_exited` never fires, so they are never
-  freed and live handles plateau. Five hypotheses have been eliminated by
-  measurement across three hosts, and a plain-GDScript control shows the
-  notifier itself firing on that host under Chrome — nothing measured
-  implicates the Kanama backend, but "not our bug" has not been earned either.
-  The affected cells are quarantined, not hidden (see Quarantined Cells above).
-  If enemies accumulate without despawning in a Web export, check that task
-  before assuming a project bug.
-- Not a Supported target — the tier and what would move it are in
-  [Version Support → Web](../reference/version-support.md#web).
+On **Windows**, run `.\gradlew.bat` wherever this page says `./gradlew`.

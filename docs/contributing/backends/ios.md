@@ -8,7 +8,166 @@ hand-written/stub registry see
 > This page describes the shipped architecture. The support tier and the device
 > evidence behind it live in
 > [Version Support → iOS](../../reference/version-support.md#ios); the
-> user-facing export workflow is [Exporting → iOS](../../exporting/ios.md).
+> user-facing export workflow is [Export for iOS](../../exporting/ios.md).
+
+## Runtime Shape
+
+Kanama's iOS backend runs full Kanama project scripts through a C GDExtension
+shim plus a Kotlin/Native static `.xcframework` — no JVM, GraalVM, or TeaVM on
+device, and the same generated Godot API wrappers as desktop/Android.
+
+Godot's iOS export loads the C shim, which bridges to the Kotlin/Native runtime;
+the generated wrappers call Godot through `ObjectCalls` over a generic `ptrcall`
+dispatch in the shim. Each instance-taking entry point that an `ObjectCalls` helper
+can reach with the static marker comes in two flavours — the guarded instance entry
+and a `_static` sibling for Godot's static methods, which ptrcall with a null object
+— and the iOS `ObjectCalls` picks between them per call. Entry points no helper
+reaches that way (`kanama_ios_godot_ptrcall_string_arg` and the object-handle
+entries, whose zero
+check guards a live engine handle rather than a static marker) keep their single
+guarded form; `scripts/check_ios_static_dispatch.py` derives that split from the shim
+and fails if it stops holding. The component diagram, the dispatch contract, and the
+generator rules are below; see
+[Architecture: iOS](../architecture.md#ios) for how this maps onto
+the desktop/Android runtime model.
+
+## Toolchain
+
+| Tool | Version / Setting |
+|---|---|
+| Xcode | 26.5 or newer enough to provide the installed iOS SDK (27.0 validated for the runtime build; it refuses any deployment target below 15.0) |
+| iOS runtime | Kotlin/Native static library inside an `.xcframework` |
+| Device architecture | `arm64` |
+| Minimum iOS version | 15.0 — Godot 4.7.2's exporter default (`application/min_ios_version`); Xcode 27 rejects a lower pin |
+
+Install the Godot iOS export templates for the same Godot version that opens or
+exports the project. If `xcode-select` points at Command Line Tools, set
+`DEVELOPER_DIR` for Gradle and Xcode commands so Kotlin/Native and Xcode use the
+full Xcode app.
+
+## Building the Device Libraries
+
+From the Kanama checkout, build the device `.xcframework` artifacts:
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
+./gradlew assembleIosDeviceKanamaXcframework \
+  -PkanamaXcodeDeveloperDir=/Applications/Xcode.app/Contents/Developer
+```
+
+The task writes:
+
+```text
+build/ios/xcframework-device/debug/kanama_ios.debug.xcframework
+build/ios/xcframework-device/release/kanama_ios.release.xcframework
+```
+
+`installIosAddon` also defaults to device-only xcframeworks. Pass
+`-PkanamaIosXcframeworkMode=full` only when intentionally building the optional
+device plus simulator xcframeworks.
+
+`installIosAddon` installs these iOS descriptor entries into the project's
+`addons/kanama/kanama.gdextension`, keeping the desktop entries and, when the
+project has them, the Android AAR entries:
+
+```ini
+[configuration]
+entry_symbol = "kanama_entry"
+compatibility_minimum = "4.7"
+
+[libraries]
+ios.debug.arm64 = "res://addons/kanama/bin/ios/kanama_ios.debug.xcframework"
+ios.release.arm64 = "res://addons/kanama/bin/ios/kanama_ios.release.xcframework"
+```
+
+## Export-Time Script Binding
+
+`-PkanamaIosProjectScriptsDir` registers the scripts for **both** targets: the
+iOS runtime gets its registrars, and the same sources are compiled into the
+desktop `kanama-scripts.jar` the export-time editor loads. The editor needs
+that jar to know the scripts' `@Export` names — Godot's export instantiates and
+re-packs every scene when it converts text resources to binary and keeps only
+the properties the script instance reports, so an unknown script would lose
+every scene-stored value without any error. Godot's iOS exporter ignores an
+export plugin's error, so on a command-line export (`--export-debug iOS …`)
+the Kanama Tools plugin ends the editor process before any file is written
+(verified on a macOS host); in the editor's Export dialog the error marks the
+export failed but leaves the files Godot wrote, and a one-click deploy has its
+temporary Xcode archive removed before the install step.
+`-PkanamaProjectScriptsDir` may still be passed explicitly (for example with a
+different desktop source set); it wins when both are given. Godot caches each
+converted scene in `.godot/exported/`, keyed by the source file's md5 and
+mtime, and reuses a stripped conversion until the `.tscn` itself changes,
+which is why the user page deletes that directory before exporting.
+
+The demos' iOS runner and the starter smoke run
+`scripts/check_exported_scene_properties.gd` after every export.
+
+## iOS Type Checks
+
+The KSP processor (the compiler plugin that generates Kanama's registration
+code) checks every export and registered method for iOS ahead of time, and
+fails the build instead of dropping a member on the device. An exported
+property whose value type has no iOS path (such as `RID`) fails like this:
+
+```text
+e: [ksp] [kanama:ksp] [kanama-ios] Grid.cell (RID) — no iOS @Export
+path for this value type, would keep its Kotlin default. On iOS the scene and inspector value of
+this property would be dropped. ...
+```
+
+Every Godot value type (`Vector2`/`2i`, `Vector3`/`3i`, `Vector4`/`4i`,
+`Rect2`/`2i`, `Plane`, `AABB`, `Quaternion`, `Basis`, `Transform2D`/`3D`,
+`Projection`, `Color`), `NodePath`, the scalars, `String`, object references,
+`List<String>` and `Map` exports (`Map<Int, String>`, `Map<Vector2i, Long>`,
+`Map<String, Texture2D>`, keys kept as on desktop) reach iOS.
+
+A registered function's parameters and return already use the types every
+platform supports (`FunctionRegistration.SUPPORTED_FUNCTION_TYPES`: no `List`,
+`Map`, `ByteArray` or `Any?`). The iOS check matters for engine virtuals and
+the iOS call path: a parameter type the iOS call path does not pass (a `Map`,
+a `List`, a `Packed*Array`), or an `@OverrideVirtual` whose return type iOS
+does not marshal, fails the same way:
+
+```text
+e: [ksp] [kanama:ksp] [kanama-ios] Board.apply (godot: apply): argument table: Map<String, Any?>
+has a type iOS does not pass to a script method. On iOS a call to this method from Godot would
+not run. Use a supported parameter type (Long, Double, Boolean, String, ...), or accept the skip
+with -PkanamaIosAllowSkips=true (KSP option kanamaIosAllowSkips).
+```
+
+The iOS call path passes the scalar types, `String`, `NodePath`, every value
+type, `Color`, `RID`, object wrappers, Godot enums and `Any?`. An `Any?`
+parameter that receives a Variant type iOS does not marshal (a `Dictionary`,
+an `Array`, a `Packed*Array`) fails that call with a script error naming the
+type, instead of seeing `null`. `-PkanamaIosAllowSkips=true` is the one opt-in
+for every iOS skip, exports and methods alike; each skipped member is then a
+warning.
+
+## FAULT Reasons
+
+The word after the colon in a `[kanama][ios][c] FAULT` line is a fixed reason
+token. The user-facing advice is in
+[Export for iOS → FAULT Lines in the Log](../../exporting/ios.md#fault-lines-in-the-log);
+the sink that prints them is described under
+[Contract: no silent paths](#contract-no-silent-paths-the-fault-sink).
+
+| Reason | What went wrong |
+|---|---|
+| `api-unresolved` | A Godot interface function was not found: the Godot version does not match, or the call came before the extension started. |
+| `bind-lookup-failed` | Godot has no method with that class, name and hash. Almost always a stale Kanama build after a Godot upgrade. |
+| `null-bind` | The call used a method that failed its lookup; an earlier `bind-lookup-failed` line names it. |
+| `null-instance` | An instance method was called on a null object. |
+| `null-handle` | An engine object, such as a node, a tween or a signal target, was null. |
+| `null-arg` | A required string argument, named in the line, was null. |
+| `pending-protocol` | A value was read before the call that produces it succeeded. |
+| `callable-build` | A bound `Callable` could not be built for the named method. |
+| `unknown-tag` | The call carried an argument type the iOS layer does not know. |
+| `encode-failed` | A container argument could not be converted for Godot. |
+| `short-payload` | A value inside a container was shorter than its type needs. |
+| `alloc-failed` | The call could not allocate memory for its arguments. |
+| `too-many-args` | A call or signal emission had more arguments than iOS carries. |
+| `progress-readback` | `ResourceLoader.load_threaded_get_status` returned no progress value. |
 
 ## Why iOS is different from desktop/Android
 

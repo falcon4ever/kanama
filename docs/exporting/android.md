@@ -1,267 +1,142 @@
-# Android
+# Export for Android
 
-Kanama runs inside a stock Godot Android export through a Godot Android plugin
-AAR, without a Godot fork and without custom JNI in game code. This page is the
-export workflow: the toolchain, the build/install/export commands, the smoke
-script, and the boundaries you meet while shipping. The support tier, the
-device evidence behind it, and the caveats it carries (validated Android
-versions per build type, the runtime-only packaged addon, the PanamaPort fork,
-no mobile hot reload) are recorded once in
-[Version Support → Android](../reference/version-support.md#android); the
-runtime design and its audits are in
-[Android Internals](../contributing/backends/android.md).
+Kanama runs inside a normal Godot Android export as an Android plugin. Your
+scripts run on the phone's own Java runtime. You need no Godot fork and no
+Android or native code of your own.
 
-Use the pinned Godot release from
-[Version Support → Requirements](../reference/version-support.md#requirements)
-for both the editor binary and the Android export templates.
+## Requirements
 
-## What Gets Installed
+- Your project runs in the editor, built from a checkout of the Kanama
+  repository. The Android build compiles your scripts from that checkout; see
+  [Install from a Source Checkout](../getting-started/source-checkout.md).
+- Godot's Android export templates for 4.7.2, installed from **Editor > Manage
+  Export Templates**.
+- A JDK 21 for Godot's Android build, set in **Editor Settings > Export >
+  Android > Java SDK Path**. Kanama and your scripts still build with your
+  JDK 25.
+- The Android SDK, set in **Editor Settings > Export > Android > Android SDK
+  Path**, or with `ANDROID_HOME`. Install these packages with Android Studio's
+  SDK Manager or `sdkmanager`:
 
-The Android deliverable is two AARs (runtime/scripts split, mirroring
-desktop's `kanama.jar` / `kanama-scripts.jar`):
+    | SDK package | Version |
+    | --- | --- |
+    | SDK Platform | 36 |
+    | Build-Tools | 36.1.0 |
+    | NDK | 29.0.14206865 |
+    | CMake | 3.22.1 |
 
-- **Runtime AAR** (`KanamaAndroid.debug.aar`, project-agnostic): the Godot
-  Android plugin class, a Java bootstrap that loads `libkanama_bootstrap.so`,
-  the Android native bootstrap library, remapped Kanama runtime classes, and
-  `.gdextension` metadata for Android AAR loading.
-- **Scripts AAR** (`KanamaAndroidScripts.debug.aar`, per project): the game's
-  Kotlin scripts and generated KSP registrars, remapped and compiled against
-  the runtime classes. The runtime plugin's `.gdap` references it as a local
-  dependency, so both AARs land in the exported APK.
+- A phone with USB debugging on, or an emulator, and `adb` from the SDK's
+  `platform-tools`.
 
-PanamaPort dependency metadata is declared in the `.gdap`. The exported game
-runs on Android ART with [PanamaPort](https://github.com/vova7878/PanamaPort)
-as the FFM layer rather than on a desktop JVM — how that works, and how the
-source remap is audited, is in
-[Android Internals](../contributing/backends/android.md). Game projects should
-not need JNI code, a custom Godot fork, or hand-edited Android native code.
+## Installing Kanama into the Project
 
-## Toolchain
-
-Kanama itself builds on the desktop JDK and Godot's Android Gradle export runs
-on its own JDK; both versions, and the Godot pin, are in
-[Version Support → Requirements](../reference/version-support.md#requirements).
-The Android game runtime is ART plus PanamaPort, not a desktop JDK. This table
-owns the Android tool versions:
-
-| Tool | Version / Setting |
-|---|---|
-| Godot Android export template AGP | 8.6.1 |
-| Godot Android export template compile SDK | 36 |
-| Godot Android export template target SDK | 36 |
-| Godot Android export template min SDK | 24 |
-| Godot Android export template build tools | 36.1.0 |
-| Godot Android export template NDK | 29.0.14206865 |
-| Kanama Android plugin AGP | 9.2.1 |
-| Kanama Android plugin compile SDK | 36 |
-| Kanama Android plugin min SDK | 26 |
-| Kanama Android plugin CMake | 3.22+ (`cmake_minimum_required`; AGP's default 3.22.1 is what builds it) |
-| Kanama AAR ABIs | `arm64-v8a`, `x86_64` |
-| Demo APK export ABI | `arm64-v8a` |
-
-Configure Android SDK, NDK, CMake, and JDK locations through Godot editor
-settings or standard environment variables such as `ANDROID_HOME`,
-`ANDROID_SDK_ROOT`, and `JAVA_HOME`. Godot's export-template build needs the
-SDK platform, build-tools, and NDK versions in the table installed. Do not
-commit workstation-local paths.
-
-## Godot Export Requirements
-
-Godot Android exports that use local Android plugins must use the Gradle export
-path, not the plain template-only path.
-
-Requirements:
-
-- Android export templates installed for the same Godot release as the editor
-  (the pinned release in
-  [Version Support → Requirements](../reference/version-support.md#requirements)).
-- Android build template installed for the project, either from the editor or
-  with `--install-android-build-template` (on 4.7.2 that flag only takes effect
-  together with an export; the smoke scripts install the template by hand from
-  `android_source.zip` when it is missing).
-- **The desktop Kanama addon installed in the project** (`addons/kanama/kanama.jar`,
-  the project's `kanama-scripts.jar`, the bootstrap library): the export runs in
-  the desktop editor, which needs them to load the project's `.kt` scripts. Without
-  them the editor has no `.kt` loader (`No loader found for resource: res://….kt`):
-  the export leaves the scripts out and ships the scenes that use them unconverted.
-  With a `kanama-scripts.jar` that predates a script, Godot's export re-packs the
-  scenes that use it with **no script properties**. Godot finishes either export
-  without an error, so the Kanama Tools editor plugin checks, when the export
-  begins, every `.kt` script that the exported scenes and resources attach
-  (see [Export Guard](#export-guard)). The install step below stays necessary; the
-  check only makes forgetting it loud. Install with
-  `./gradlew installAddonJar -PkanamaProjectDir=<project> -PkanamaProjectScriptsDir=<project>/kotlin-src`
-  after the AAR (so the Android `.gdextension` entries are preserved), and verify an
-  export with `scripts/check_exported_scene_properties.gd` (see the iOS guide).
-- Export preset has `gradle_build/use_gradle_build=true`.
-- Project contains `android/plugins/KanamaAndroid.gdap`.
-- Project contains the matching `KanamaAndroid.debug.aar` and
-  `KanamaAndroidScripts.debug.aar`.
-- `addons/kanama/kanama.gdextension` contains Android AAR entries:
-
-```ini
-[configuration]
-android_aar_plugin = true
-
-[libraries]
-android.debug.arm64 = "libkanama_bootstrap.so"
-android.release.arm64 = "libkanama_bootstrap.so"
-android.debug.x86_64 = "libkanama_bootstrap.so"
-android.release.x86_64 = "libkanama_bootstrap.so"
-```
-
-The Android plugin AAR also carries matching `.gdextension` metadata. The
-project file uses Android entries so Godot's export scanner recognizes the
-GDExtension for Android instead of warning about a missing `arm64` library.
-
-## Build And Install The AAR
-
-Build and install the Android plugin into a Godot project:
+Run these from the Kanama checkout. The first command builds the Android
+plugin and compiles the scripts in your project's `kotlin-src/` for Android.
+The second refreshes the desktop addon, which the editor needs during the
+export:
 
 ```sh
-./gradlew installAndroidPluginAar \
-  -PkanamaAndroidDemoDir=/absolute/path/to/godot_project
+cd /path/to/kanama
+./gradlew installAndroidPluginAar -PkanamaAndroidProjectDir=/path/to/your-project
+./gradlew installAddonJar \
+  -PkanamaProjectDir=/path/to/your-project \
+  -PkanamaProjectScriptsDir=/path/to/your-project/kotlin-src
 ```
 
-This builds `android/godot-plugin` (both halves), compiles the Android native
-bootstrap from `bootstrap/bootstrap.c`, writes
-`android/plugins/KanamaAndroid.debug.aar` (runtime) and
-`android/plugins/KanamaAndroidScripts.debug.aar` (your project's scripts +
-registrars, generated by this checkout's KSP processor over `kotlin-src/`), and writes `android/plugins/KanamaAndroid.gdap` referencing both.
+Run them in this order: the second keeps the Android entries the first adds
+to `addons/kanama/kanama.gdextension`. The first writes three files to
+`android/plugins/` in your project: `KanamaAndroid.gdap`, which tells Godot
+about the plugin, and two AAR files (Android library archives), one with the
+Kanama runtime and one with your scripts.
 
-The runtime half alone builds without a project directory
-(`./gradlew assembleAndroidPluginAar`), which is what the packaged Android
-add-on zip ships (`./gradlew packageMobileAddonAndroid`; prebuilt runtime
-only — compiling your project's Kotlin scripts still requires this checkout's
-`installAndroidPluginAar`).
+Run both commands again after every change to your scripts, before you export.
 
-## Export A Debug APK
+## Setting Up the Export Preset
 
-With the AAR **and the desktop addon** installed (see Requirements):
+1. In Godot, choose **Project > Install Android Build Template**.
+2. In **Project > Export**, add an **Android** preset.
+3. Under **Gradle Build**, turn on **Use Gradle Build** and set **Min SDK** to
+   `26` or higher.
+4. Under **Architectures**, turn on `arm64-v8a`. Add `x86_64` for an emulator
+   on an Intel or AMD machine.
+5. Set **Package > Unique Name**, for example `com.example.mygame`.
+6. Under **Plugins**, turn on **KanamaAndroid**. It appears there once the
+   install commands above have run.
+
+## Exporting an APK
+
+When the export begins, the Kanama Tools editor plugin checks that every
+Kotlin script the exported scenes use loads in the editor, and stops the
+export if one does not; see [Export Guard](../getting-started/editor-workflow.md#export-guard).
+
+Delete Godot's cache of converted scenes, then export from **Project > Export**
+or from the command line:
 
 ```sh
-rm -rf /absolute/path/to/godot_project/.godot/exported   # never reuse a conversion made without the addon
-godot --headless \
-  --path /absolute/path/to/godot_project \
-  --install-android-build-template \
-  --export-debug Android /absolute/path/to/output.apk
-godot --headless --path /absolute/path/to/godot_project \
+rm -rf /path/to/your-project/.godot/exported
+godot --headless --path /path/to/your-project \
+  --export-debug Android /path/to/build/mygame.apk
+```
+
+`Android` is the preset's name. The cache can hold scenes converted while an
+older `kanama-scripts.jar` was installed, which would lose their script
+property values.
+
+To check that the exported scenes kept their script property values, run
+Kanama's checker in the project:
+
+```sh
+godot --headless --path /path/to/your-project \
   --script /path/to/kanama/scripts/check_exported_scene_properties.gd \
-  -- --require-converted   # fails if a scene lost a script property, or if no scene was converted
+  -- --require-converted
 ```
 
-A project that sets `editor/export/convert_text_resources_to_binary=false` exports its
-scenes as text with their values; the check then passes with a note and compares nothing.
+It names each node and property the export dropped. A project that sets
+`editor/export/convert_text_resources_to_binary=false` exports its scenes as
+text, and the check passes with a note saying so.
 
-Use a Godot binary that matches the project export preset and installed Android
-export templates.
+## Running on a Device
 
-### Export Guard
-
-When a `.kt` script that the export uses does not bind in the export-time editor
-(the desktop addon is missing, or `kanama-scripts.jar` does not contain the script),
-the Kanama Tools editor plugin stops the export with one error that starts with
-`Kanama: Export stopped:` and names the scripts, the reason, the fix and the opt-out
-setting:
-
-- A command-line export (`--export-debug`, `--export-release`, `--export-pack`,
-  `--export-patch`) ends before it writes any file: the exit status is non-zero and
-  there is no APK. Godot's Android exporter ignores an export plugin's error, so the
-  plugin ends the editor process itself; scripts can also look for the
-  `Kanama: Export stopped` line. This is verified on a macOS host (exit 137); Linux
-  and Windows hosts are not tested yet.
-- An export from the editor's Export dialog shows the error and reports the export as
-  failed; the APK it writes is the one Godot would have written without the check, so
-  do not ship it. A one-click deploy (Remote Deploy) has its temporary APK (Godot's
-  `tmpexport.<n>.apk` in the editor's temp folder) removed before the install step, so
-  nothing is installed and the install step fails.
-
-Only the scenes and resources the export preset exports are checked (its export mode,
-selected files and include and exclude filters); a `.kt` file that no scene attaches
-(helper code) is not. `kanama/tools/export_guard_enabled` turns the check off.
-
-## Run A Smoke Test
+Connect the phone, then install and start the APK:
 
 ```sh
-ANDROID_HOME=/path/to/android/sdk \
-ANDROID_SDK_ROOT=/path/to/android/sdk \
-scripts/android_smoke.sh \
-  /path/to/godot \
-  /absolute/path/to/godot_project \
-  com.example.package.name \
-  /tmp/kanama-demo.apk
+adb install -r /path/to/build/mygame.apk
+adb shell monkey -p com.example.mygame 1
+adb logcat -s godot
 ```
 
-The smoke script builds scripts, installs the Kanama Android AAR **and the
-desktop addon** (the export runs in the desktop editor, which needs
-`kanama.jar` plus the project's `kanama-scripts.jar` to load the `.kt` scripts;
-without them the export stops with the Kanama Tools error described under
-Godot Export Requirements), installs the Android build template
-(by hand from the export templates when Godot's `--install-android-build-template
---quit` leaves nothing, as it does on 4.7.2), clears `.godot/exported/`, exports
-a debug APK and fails if the export prints `Kanama: Export stopped`, exits
-non-zero or shows an unbound `.kt` script, runs
-`scripts/check_exported_scene_properties.gd -- --require-converted` on the project, then installs and
-launches the APK with `adb`, checks logcat for Kanama startup signals, verifies a
-captured screenshot is not blank, and force-stops the app before exiting.
-`scripts/android_export_minified.sh` (the R8 release smoke) does the same up to
-the export.
+Your `GD.print` output and script errors appear in the `godot` log. Godot's
+one-click deploy, the Android button in the editor's toolbar, does the same
+in one step.
 
-To run the same smoke under a different renderer, set
-`KANAMA_ANDROID_RENDERER` (`mobile`, `gl_compatibility`, or `forward_plus`).
-The script temporarily overrides the project's `rendering_method.mobile`
-setting for the run (restored afterwards) and asserts in logcat that the
-requested renderer actually initialized, so a silent fallback fails the smoke.
-The device screen must be on and unlocked — a secure lock screen fails renderer
-surface creation at launch.
+## Release Builds
 
-## Boundaries And Troubleshooting
+Export with `--export-release` and a release keystore set in the preset, as
+for any Godot Android game. Release builds have a higher minimum Android
+version than debug builds; see [Limitations](../reference/limitations.md#android).
 
-Constraints that shape how you write and ship an Android game:
+## Performance on Devices
 
-- Android hot reload is not designed and should be considered disabled.
-- Android-targeted game code should avoid nullable Kotlin callback invocation
-  written as `callback?.invoke()`. The source audit rejects that form before
-  remap because the Android compatibility pass can otherwise mistake it for
-  low-level `MethodHandle.invoke(...)`.
-- Android source remapping is guarded by audits, but it is still a generated
-  compatibility path rather than a dedicated source-set design.
-- Several action demos include Android-only touch overlays, D-pad controls, or
-  `VirtualJoystick` controls so smoke runs can exercise real gameplay input on
-  a phone. Mobile polish is still per demo: orientation, screen size, touch
-  controls, and UI scaling are separate from the core runtime path. Godot 4.7
-  `VirtualJoystick` wrappers are available in Kanama, but demo-level
-  touch-control polish remains a project-specific validation claim.
-- Physical devices can show first-use hitches when gameplay first loads or
-  decodes scenes, audio streams, particles, or generated meshes. Mobile demos
-  should preload/cache those resources and avoid rebuilding generated geometry
-  every frame on input-driven paths.
-- Emulator/OpenGL compatibility rendering can differ from desktop Forward+.
-  In the 3D Platformer smoke, gameplay and geometry render correctly, but the
-  skybox/background is darker than the upstream desktop screenshot. Some
-  unsupported ASTC textures may be converted at runtime by the emulator.
+A phone shows a short hitch the first time the game loads a scene, decodes an
+audio stream, starts particles or builds a mesh. Load and cache those during
+startup, and avoid rebuilding generated meshes every frame.
 
-Symptoms and what they mean:
+## Troubleshooting
 
-| Symptom | Likely cause / fix |
-|---|---|
-| A **release** APK (`--export-release`, minified or not) crashes during PanamaPort's FFI bootstrap on Android 12 or older, while the debug APK runs. | Release builds are validated only on Android 13+; debug builds run down to Android 9. The floors, the models they were measured on, and the release-mode ART constraint behind them are in [Version Support → Android](../reference/version-support.md#android). Ship a debug build to older devices or raise the app's minimum SDK. |
-| Any build aborts during the FFI bootstrap on **Android 17** (seen from the September 2026 update, build `CP3A.260905.009`) with `Check failed: IsExceptionPending()` in `MethodHandles.reflectAs` (logcat, before any Kanama script loads). | PanamaPort fork `0.1.5-kanama-r8.1` or newer is required (upstream `v0.1.4`/`v0.1.5` carry the Android 17 QPR fixes; the earlier `0.1.3-kanama-*` forks predate them). Check the coordinate under [PanamaPort](#panamaport). |
-| Any build fails the FFI bootstrap on every device **below Android 16**. | PanamaPort fork `0.1.3-kanama-r8.3` or newer is required (every `0.1.5-kanama-*` fork includes it) (the `SDK_INT_FULL` bootstrap guard); older fork versions and upstream PanamaPort fail there. Check the coordinate under [PanamaPort](#panamaport). |
-| A **minified release** APK crashes in the FFI bootstrap with `AssertionError: Should not reach here` at `nativeLinker().downcallHandle()`, then logs `No loader found for resource: res://kotlin-src/*.kt` and shows a flickering splash. | You are on upstream PanamaPort `v0.1.3`, which Godot's R8 mis-optimizes. Use Kanama's fork coordinate (below); the root cause and the fork's fix are in [Android Internals → PanamaPort](../contributing/backends/android.md#panamaport). |
-| The app segfaults inside the vendor shader compiler (`libllvm-glnext.so`) before any Kanama code runs, on an old device with a factory image. | Old vendor **OpenGL** drivers (a Pixel 3 XL on its factory Android 9 image, 2018 Adreno 630) crash while linking Godot 4.7 Compatibility-renderer shaders. The same device runs the demo smoke with the **Mobile (Vulkan) renderer** (`rendering_method.mobile = "mobile"`; Vulkan 1.1.66 initialized, 2026-07-13). This is an engine-vs-driver constraint, not a Kanama one — the renderer is chosen by Godot from project settings before scripts run, so it cannot be switched from Kanama at runtime. Projects targeting older devices should prefer the Mobile renderer (Godot falls back to GL Compatibility on devices without usable Vulkan) and validate on real hardware. |
-| The smoke fails at launch with a renderer surface error. | The device screen must be on and unlocked — a secure lock screen fails renderer surface creation. |
+| Problem | Fix |
+| --- | --- |
+| `installAndroidPluginAar` fails and names a line that calls `.invoke(` on a Kotlin function value, such as `callback?.invoke()`. | The Android build cannot compile that call. Write `callback()` or `callback?.let { it() }` instead. |
+| The export logs `No loader found for resource: res://….kt`, or scenes lose their property values. | The desktop addon is missing or out of date. Run the two install commands, delete `.godot/exported`, and export again. |
+| A release APK crashes at startup on an older phone, while the debug APK runs. | See the release build limit in [Limitations](../reference/limitations.md#android). |
+| The app crashes at startup before any script runs, in the PanamaPort library Kanama uses to call Godot on Android. | `android/plugins/KanamaAndroid.gdap` names an old PanamaPort build. Run the two install commands again and export again. |
+| The Gradle build cannot resolve `com.github.falcon4ever.PanamaPort`. | The export downloads it from JitPack, so the machine needs network access. If it has access, run the two install commands again to refresh `KanamaAndroid.gdap`. |
+| An older phone crashes inside its graphics driver before any script runs. | Some old OpenGL drivers crash on Godot 4.7's shaders. Use the **Mobile** renderer (`rendering/renderer/rendering_method.mobile="mobile"`), which uses Vulkan. Godot falls back to the Compatibility renderer on phones without Vulkan. |
+| The app fails to create its render surface at launch. | Unlock the phone and keep the screen on. A locked screen stops the app from drawing. |
+| The 3D sky or background looks darker on the emulator than on desktop. | The emulator's OpenGL path renders differently. Check the look on a phone. |
 
-## PanamaPort
+## On Other Platforms
 
-Kanama's Android plugin currently consumes a forked
-[PanamaPort](https://github.com/vova7878/PanamaPort)
-artifact, `com.github.falcon4ever.PanamaPort:Core:0.1.5-kanama-r8.1` (upstream `v0.1.5`
-plus Kanama's patches), published
-via [JitPack](https://jitpack.io) from Kanama's PanamaPort fork. The dependency
-can be overridden with `-PkanamaPanamaPortCore=...`, and the Android export
-scripts inject the JitPack repository (alongside the local Maven repository, for
-fork iteration) into Godot's generated Gradle project. Upstream PanamaPort from
-Maven Central is not an R8-supported release path for Kanama;
-why, and what each fork revision fixed, is in
-[Android Internals → PanamaPort](../contributing/backends/android.md#panamaport).
+On **Windows**, run `.\gradlew.bat` wherever this page says `./gradlew`.
+
+What does not work on Android is listed in
+[Limitations](../reference/limitations.md#android).

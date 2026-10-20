@@ -1016,7 +1016,7 @@ Script: none.
   with `kanama/tools/export_guard_enabled`.
 - **JVM options for desktop games:** `kanama-jvm-options.txt` next to
   `kanama.jar`, the `kanama/jvm/options` project setting, and `KANAMA_JVM_OPTIONS`.
-  See [Desktop and Packaging → JVM Options](../exporting/desktop.md#jvm-options).
+  See [Export for Desktop → JVM Options](../exporting/desktop.md#jvm-options).
 - **Source checkout and contributors.** Kanama is one Kotlin Multiplatform module;
   `:ios-runtime` no longer exists. Task names: `compileKotlin` is
   `compileKotlinJvm`, `test` is `jvmTest`, `jar` is `jvmJar`, `kspKotlin` is

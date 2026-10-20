@@ -1,518 +1,194 @@
-# iOS
+# Export for iOS
 
-Kanama's iOS backend runs full Kanama project scripts through a C GDExtension
-shim plus a Kotlin/Native static `.xcframework` — no JVM, GraalVM, or TeaVM on
-device, and the same generated Godot API wrappers as desktop/Android. This page
-is the export workflow: the toolchain, the build/install/export commands,
-signing, and troubleshooting. The support tier, the device evidence behind it,
-and its caveats (runtime-only packaged addon, no mobile hot reload, the
-tracked non-blocking follow-ups) are recorded once in
-[Version Support → iOS](../reference/version-support.md#ios); the runtime
-design is in [iOS Backend Architecture](../contributing/backends/ios.md).
+On iOS, Kanama compiles your scripts to native code. The game carries no Java
+runtime, and your scripts call the same Godot API as on desktop. Godot writes
+an Xcode project, and you build and run it on an iPhone or iPad from Xcode.
 
-Physical-device export and launch are the validation target; simulator builds
-are optional compile/link checks and are not used as a performance signal.
+## Requirements
 
-## Toolchain
+- A Mac with Xcode 26.5 or newer, the full app and not only the Command Line
+  Tools. If `xcode-select -p` prints a Command Line Tools path, run
+  `sudo xcode-select -s /Applications/Xcode.app`, or put
+  `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer` in front of the
+  commands on this page.
+- Your project runs in the editor, built from a checkout of the Kanama
+  repository. The iOS build compiles your scripts from that checkout; see
+  [Install from a Source Checkout](../getting-started/source-checkout.md).
+- Godot's iOS export templates for 4.7.2, installed from **Editor > Manage
+  Export Templates**.
+- An Apple Developer account, signed in under **Xcode > Settings > Accounts**.
+- An iPhone or iPad with iOS 15 or newer, Developer Mode on, connected and
+  trusted.
 
-The Godot pin and the desktop JDK that builds Kanama are in
-[Version Support → Requirements](../reference/version-support.md#requirements);
-install the Godot iOS export templates for that same release. This table owns
-the iOS tool versions:
+## Installing Kanama into the Project
 
-| Tool | Version / Setting |
-|---|---|
-| Xcode | 26.5 or newer enough to provide the installed iOS SDK (27.0 validated for the runtime build; it refuses any deployment target below 15.0) |
-| iOS runtime | Kotlin/Native static library inside an `.xcframework` |
-| Device architecture | `arm64` |
-| Minimum iOS version | 15.0 — Godot 4.7.2's exporter default (`application/min_ios_version`); Xcode 27 rejects a lower pin |
-
-Install the Godot iOS export templates for the same Godot version that opens or
-exports the project. If `xcode-select` points at Command Line Tools, set
-`DEVELOPER_DIR` for Gradle and Xcode commands so Kotlin/Native and Xcode use the
-full Xcode app.
-
-Configure signing through Xcode, Godot export presets, or standard Apple
-Developer account setup. Do not commit workstation-local paths, device UDIDs,
-team IDs, provisioning profile names, or private maintainer notes.
-
-## Runtime Shape
-
-Godot's iOS export loads the C shim, which bridges to the Kotlin/Native runtime;
-the generated wrappers call Godot through `ObjectCalls` over a generic `ptrcall`
-dispatch in the shim. Each instance-taking entry point that an `ObjectCalls` helper
-can reach with the static marker comes in two flavours — the guarded instance entry
-and a `_static` sibling for Godot's static methods, which ptrcall with a null object
-— and the iOS `ObjectCalls` picks between them per call. Entry points no helper
-reaches that way (`kanama_ios_godot_ptrcall_string_arg` and the object-handle
-entries, whose zero
-check guards a live engine handle rather than a static marker) keep their single
-guarded form; `scripts/check_ios_static_dispatch.py` derives that split from the shim
-and fails if it stops holding. The component diagram, the dispatch contract, and the
-generator rules are in
-[iOS Backend Architecture](../contributing/backends/ios.md); see
-[Architecture: iOS](../contributing/architecture.md#ios) for how this maps onto
-the desktop/Android runtime model.
-
-## Build The iOS Artifacts
-
-From the Kanama checkout, build the device `.xcframework` artifacts:
+Run this from the Kanama checkout:
 
 ```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-./gradlew assembleIosDeviceKanamaXcframework \
-  -PkanamaXcodeDeveloperDir=/Applications/Xcode.app/Contents/Developer
-```
-
-The task writes:
-
-```text
-build/ios/xcframework-device/debug/kanama_ios.debug.xcframework
-build/ios/xcframework-device/release/kanama_ios.release.xcframework
-```
-
-`installIosAddon` also defaults to device-only xcframeworks. Pass
-`-PkanamaIosXcframeworkMode=full` only when intentionally building the optional
-device plus simulator xcframeworks.
-
-## Packaged iOS Addon (prebuilt runtime)
-
-Maintainers can package the prebuilt device runtime as a zip:
-
-```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-./gradlew packageMobileAddonIos \
-  -PkanamaXcodeDeveloperDir=/Applications/Xcode.app/Contents/Developer
-```
-
-This writes `build/distributions/kanama-mobile-addon-ios-v<version>.zip`
-containing both device `arm64` xcframeworks (debug + release — the static libraries are large,
-roughly 168 MB debug / 110 MB release before zip; measured in [Version support](../reference/version-support.md)), <!-- kanama-claim: ios-static-size -->
-a `.gdextension` entries fragment to merge, and an install README.
-
-**Honest caveat:** the packaged addon delivers the *runtime* only. Compiling a
-project's Kotlin scripts for iOS still requires a Kanama source checkout
-(`installIosAddon` runs the Kotlin/Native + KSP build). Use the zip to update
-the prebuilt runtime or for script-less evaluation; the source-checkout flow
-below remains the full workflow.
-
-Validate a packaged zip without a device:
-
-```sh
-scripts/package_install_smoke.sh --ios-addon \
-  build/distributions/kanama-mobile-addon-ios-v<version>.zip
-```
-
-## Install Into A Project
-
-Install the Kanama iOS addon into a Godot project:
-
-```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
+cd /path/to/kanama
 ./gradlew installIosAddon \
-  -PkanamaIosProjectDir=/absolute/path/to/godot_project \
-  -PkanamaXcodeDeveloperDir=/Applications/Xcode.app/Contents/Developer
+  -PkanamaIosProjectDir=/path/to/your-project \
+  -PkanamaIosProjectScriptsDir=/path/to/your-project/kotlin-src
 ```
 
-If the project has Kotlin scripts in `kotlin-src/`, also pass the script source
-directory so the iOS Kotlin/Native runtime is built with the project's generated
-registrars:
+It compiles the scripts in `kotlin-src/` twice: to native code for iOS, and
+into the desktop `kanama-scripts.jar` that the editor needs during the export.
+It writes the iOS libraries to `addons/kanama/bin/ios/` as two `.xcframework`
+bundles, Apple's format for a prebuilt library, one debug and one release. It
+adds their entries to `addons/kanama/kanama.gdextension` and keeps the desktop
+and Android entries already there.
+
+Run it again after every change to your scripts, before you export. When the
+export begins, the Kanama Tools editor plugin checks that every Kotlin script
+the exported scenes use loads in the editor; see
+[Export Guard](../getting-started/editor-workflow.md#export-guard).
+
+If Xcode is not in `/Applications`, add
+`-PkanamaXcodeDeveloperDir=/path/to/Xcode.app/Contents/Developer`.
+
+### Unsupported Types on iOS
+
+The iOS build checks every export and script function ahead of time. If iOS
+cannot carry a type, such as an `RID` export, the build stops with an error
+that names the member and its type. Change that type. To build anyway and
+leave those members out on iOS, add `-PkanamaIosAllowSkips=true` to the
+`installIosAddon` command; each skipped member then prints a warning. The
+types iOS does not carry are in [Limitations](../reference/limitations.md#ios).
+
+## Setting Up the Export Preset
+
+In **Project > Export**, add an **iOS** preset and set:
+
+- **Application > Bundle Identifier**: an id your Apple team owns, such as
+  `com.example.mygame`.
+- **Application > App Store Team ID**: your team, as shown in your Apple
+  Developer account.
+- **Application > Export Project Only**: on. Godot then writes an Xcode
+  project for you to build, instead of an `.ipa`. Script errors name the file
+  and line only in a debug build made this way.
+- **Architectures > arm64**: on.
+
+Save the preset before you use the command line below.
+
+## Exporting the Xcode Project
+
+Delete Godot's cache of converted scenes, then export from **Project > Export**
+or from the command line:
 
 ```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-./gradlew installIosAddon \
-  -PkanamaIosProjectDir=/absolute/path/to/godot_project \
-  -PkanamaIosProjectScriptsDir=/absolute/path/to/godot_project/kotlin-src \
-  -PkanamaXcodeDeveloperDir=/Applications/Xcode.app/Contents/Developer
+rm -rf /path/to/your-project/.godot/exported
+godot --headless --path /path/to/your-project \
+  --export-debug iOS /path/to/export/MyGame.ipa
 ```
 
-That one property registers the scripts for **both** targets: the iOS runtime
-gets its registrars, and the same sources are compiled into the desktop
-`kanama-scripts.jar` the export-time editor loads. The editor needs that jar to
-know the scripts' `@Export` names — Godot's export instantiates and
-re-packs every scene when it converts text resources to binary and keeps only
-the properties the script instance reports, so an unknown script would lose every
-scene-stored value without any error. The Kanama Tools editor plugin checks, when
-the export begins, that every `.kt` script the exported scenes and resources
-attach binds in the export-time editor. When one does not, it prints one error starting
-with `Kanama: Export stopped:` that names the scripts, the fix (`installIosAddon` with
-the script-dir properties above) and the opt-out setting. Godot's iOS exporter ignores
-an export plugin's error, so on a command-line export (`--export-debug iOS …`) the
-plugin ends the editor process before any file is written: the exit status is non-zero
-and there is no Xcode project (verified on a macOS host). In the editor's Export dialog
-the error marks the export failed, but the files Godot writes are left as they are; do
-not build them. A one-click deploy has its temporary Xcode archive removed before the
-install step, so nothing is installed. The plugin must be enabled (the
-starter projects do); `kanama/tools/export_guard_enabled` switches the check off.
-`-PkanamaProjectScriptsDir` may still be
-passed explicitly (for example with a different desktop source set); it wins
-when both are given. If the export log prints
-`[kanama:kt] WARNING: no Kotlin class bound for res://…`, the jar in
-`addons/kanama/` does not match the project: fix the install, then delete the
-project's `.godot/exported/` directory before exporting again — Godot caches
-each converted scene there keyed by the source file's md5 and mtime and reuses
-a stripped conversion until the `.tscn` itself changes.
+`iOS` is the preset's name. With **Export Project Only** on, Godot writes
+`MyGame.xcodeproj` and its files into `/path/to/export/`. The cache can hold
+scenes converted while an older `kanama-scripts.jar` was installed, which
+would lose their script property values.
 
-An exported property (`@Export`) that the iOS backend cannot deliver — a value
-type without an iOS path such as `RID` — fails this build and names the property.
-`Map` exports (`Map<Int, String>`, `Map<Vector2i, Long>`, `Map<String, Texture2D>`)
-are delivered, keys kept as on desktop:
-
-```text
-e: [ksp] [kanama:ksp] [kanama-ios] Grid.cell (RID) — no iOS @Export
-path for this value type, would keep its Kotlin default. On iOS the scene and inspector value of
-this property would be dropped. ...
-```
-
-Before task 131 this was a warning and the property silently kept its Kotlin
-default on the phone. Change the property's type, or accept the skip by adding
-`-PkanamaIosAllowSkips=true` (`1` also works) to the `installIosAddon`
-command; each skipped property is then a warning again. Every Godot value type
-(`Vector2`/`2i`, `Vector3`/`3i`, `Vector4`/`4i`, `Rect2`/`2i`, `Plane`, `AABB`,
-`Quaternion`, `Basis`, `Transform2D`/`3D`, `Projection`, `Color`), `NodePath`, the
-scalars, `String`, object references and `List<String>` exports reach iOS
-(`Vector2i` and `Color` since task 133 C2, the others since task 133's value-type
-parcel).
-
-A script method the iOS backend cannot dispatch fails the build the same way
-(task 131 N7): a registered function or virtual with a parameter type the iOS
-call path does not pass (a `Map`, a `List`, a `Packed*Array`), or an
-`@OverrideVirtual` whose return type iOS does not marshal. The error names the
-method, the parameter and the supported types:
-
-```text
-e: [ksp] [kanama:ksp] [kanama-ios] Board.apply (godot: apply): argument table: Map<String, Any?>
-has a type iOS does not pass to a script method. On iOS a call to this method from Godot would
-not run. Use a supported parameter type (Long, Double, Boolean, String, ...), or accept the skip
-with -PkanamaIosAllowSkips=true (KSP option kanamaIosAllowSkips).
-```
-
-Before task 131 this was a warning, and on the phone the method silently never
-ran while it worked on desktop. Parameters of the scalar types, `String`,
-`NodePath`, every value type, `Color`, `RID`, object wrappers, Godot enums and
-`Any?` are passed; every script type can be returned. An `Any?` parameter that
-receives a Variant type iOS does not marshal yet (a `Dictionary`, an `Array`, a
-`Packed*Array`) fails that call with a script error naming the type, instead of
-seeing `null`. `-PkanamaIosAllowSkips=true` is
-the one opt-in for every iOS skip, exports and methods alike.
-
-To verify an export directly, run the parity check from the exported project
-(it needs the Kanama addon loaded, so run it where the export ran):
+To check that the exported scenes kept their script property values, run
+Kanama's checker in the project:
 
 ```sh
-godot --headless --path /absolute/path/to/godot_project \
+godot --headless --path /path/to/your-project \
   --script /path/to/kanama/scripts/check_exported_scene_properties.gd \
   -- --require-converted
 ```
 
-It loads every converted scene next to its source `.tscn` and fails, naming the
-node and property, when a script-declared property was dropped; with
-`--require-converted` it also fails when no scene was converted. A project that sets
-`editor/export/convert_text_resources_to_binary=false` exports its scenes as text with
-their values, so the check passes with a note saying so. The demos' iOS runner and the
-starter smoke run it after every export.
+It names each node and property the export dropped. A project that sets
+`editor/export/convert_text_resources_to_binary=false` exports its scenes as
+text, and the check passes with a note saying so.
 
-`System.getenv` works on iOS: the value comes from the app's process
-environment, which `xcrun devicectl device process launch --environment-variables
-'{"NAME":"value"}'` can set for a development launch. The device gate uses this to
-run each demo's smoke script (the `kotlin-src/Smoke*.kt` that reads it)
-on the phone (`KANAMA_DEMO_SMOKE_QUIT=1`). A
-shipped app has no such variables, so a `getenv` check is a debugging switch, not
-a configuration mechanism.
+## Running on a Device
 
-This installs the iOS descriptor entries:
+Open `MyGame.xcodeproj` in Xcode, select your iPhone as the run destination,
+check the team under **Signing & Capabilities**, and press **Run**.
 
-```ini
-[configuration]
-entry_symbol = "kanama_entry"
-compatibility_minimum = "4.7"
-
-[libraries]
-ios.debug.arm64 = "res://addons/kanama/bin/ios/kanama_ios.debug.xcframework"
-ios.release.arm64 = "res://addons/kanama/bin/ios/kanama_ios.release.xcframework"
-```
-
-### Coexistence With Desktop And Android
-
-`installIosAddon` writes the iOS xcframeworks and preserves the normal desktop
-Kanama library entries in `addons/kanama/kanama.gdextension`. If the project
-already has Android plugin metadata, the task also preserves the Android AAR
-entries instead of replacing them.
-
-After install, one Kanama addon can contain desktop, Android, and iOS entries.
-Do not hand-edit the `.gdextension` file to remove another platform unless the
-project is intentionally dropping that platform.
-
-For simulator experiments, add `-PkanamaIosXcframeworkMode=full`.
-
-## Godot Export Requirements
-
-An iOS export needs the normal Godot iOS setup plus the installed Kanama iOS
-addon:
-
-- The pinned Godot editor or headless binary and its iOS export templates
-  (see [Version Support → Requirements](../reference/version-support.md#requirements)).
-- A Godot export preset named `iOS`, or the equivalent preset name used in your
-  command.
-- `architectures/arm64=true` for physical-device builds.
-- `application/export_project_only=true` if you want Godot to write an Xcode
-  project that you build and install yourself.
-- A unique `application/bundle_identifier`.
-- A valid Apple Development team, signing certificate, and provisioning setup
-  for the target device.
-- `addons/kanama/kanama.gdextension` registered in `.godot/extension_list.cfg`.
-
-For a fresh project, create the export preset in Godot's Export window, choose
-iOS, set the bundle identifier, select signing/team values, and save the preset
-before using the CLI examples below.
-
-### Signing And Provisioning
-
-iOS device installs require an Apple Development certificate, a provisioning
-profile that includes the connected device, and a bundle identifier owned by the
-selected Apple team. Xcode's automatic signing can create or update development
-profiles when the Apple account has permission; otherwise create the identifier
-and profile in the Apple Developer portal, then select them in Xcode or the
-Godot export preset.
-
-Keep signing values local. Public docs and committed scripts should use
-placeholders for device identifiers, team IDs, and profile names.
-
-Common failures:
-
-| Symptom | Likely Cause / Fix |
-|---|---|
-| Godot cannot export for iOS | Install the iOS export templates for the same Godot release as the editor. |
-| Xcode reports no signing team | Set the Apple Development team in the export preset or Xcode project. |
-| Xcode cannot create a provisioning profile | Sign in to Xcode with an Apple Developer account and allow provisioning updates, or create the profile in the Apple Developer portal. |
-| Device is not a valid destination | Connect and trust the iPhone, enable Developer Mode, and use `xcrun devicectl list devices` to confirm the device identifier. |
-| Kanama scripts load without scene property values (a `PackedScene`/`Texture2D` `@Export` is null in `_ready`) | The export-time editor did not know the scripts: check the export log for `WARNING: no Kotlin class bound`, re-run `installIosAddon` with `-PkanamaIosProjectScriptsDir` (or both script-dir properties), delete `.godot/exported/` and export again. |
-| Godot warns about a missing iOS GDExtension library | Re-run `installIosAddon` and confirm the `ios.debug.arm64` and `ios.release.arm64` entries exist. |
-
-## Export An iOS App
-
-Export from the Godot editor or with the CLI. The CLI form mirrors Godot's
-normal iOS export path. With `application/export_project_only=true`, Godot
-writes an Xcode project into the directory of the export path instead of
-producing an `.ipa`:
+From the command line, build with `xcodebuild`, then install and start the
+app with `devicectl`. Put your own device id, team id and bundle identifier in
+place of the placeholders; `xcrun devicectl list devices` lists the device
+ids:
 
 ```sh
-godot --headless \
-  --path /absolute/path/to/godot_project \
-  --export-debug iOS /absolute/path/to/export/KanamaGame.ipa
-```
-
-Use `--export-release` for a release preset after signing and provisioning are
-configured for release. The generated Xcode project is the next step for device
-install and launch.
-
-## Run On Device
-
-Open the generated `.xcodeproj` in Xcode, select a connected iPhone, confirm the
-signing team, and run the app.
-
-For command-line installs, use the generated Xcode project with your own bundle
-identifier, device identifier, and team value:
-
-```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 xcodebuild \
-  -project /absolute/path/to/export/KanamaGame.xcodeproj \
-  -scheme KanamaGame \
+  -project /path/to/export/MyGame.xcodeproj \
+  -scheme MyGame \
   -configuration Debug \
   -sdk iphoneos \
-  -destination "id=<your-device-udid>" \
-  -derivedDataPath /absolute/path/to/derived-data \
-  CODE_SIGNING_ALLOWED=YES \
+  -destination "id=<your-device-id>" \
+  -derivedDataPath /path/to/derived-data \
+  -allowProvisioningUpdates \
   CODE_SIGN_STYLE=Automatic \
-  DEVELOPMENT_TEAM=<your-apple-team-id> \
+  DEVELOPMENT_TEAM=<your-team-id> \
   build
-```
 
-Then install and launch the built app:
-
-```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 xcrun devicectl device install app \
-  --device <your-device-udid> \
-  /absolute/path/to/derived-data/Build/Products/Debug-iphoneos/KanamaGame.app
+  --device <your-device-id> \
+  /path/to/derived-data/Build/Products/Debug-iphoneos/MyGame.app
 
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 xcrun devicectl device process launch \
-  --device <your-device-udid> \
+  --device <your-device-id> \
   --terminate-existing \
-  com.example.kanamagame
+  com.example.mygame
 ```
 
-If Xcode is allowed to manage profiles for this app, add
-`-allowProvisioningUpdates` to the `xcodebuild` command. For public docs and
-committed scripts, keep device identifiers and Apple team IDs as placeholders.
-Maintainers should keep real values in private handoff notes or their local
-shell environment.
+`-allowProvisioningUpdates` lets Xcode create the provisioning profile.
 
-`GD.print` output goes to Godot's logger, which on the device is the system log:
-read it in Xcode's console or in Console.app, not in the stdout stream that
-`xcrun devicectl ... --console` shows. Kotlin's `println` still writes to stdout.
+`GD.print` output and script errors go to the device's system log. Read them
+in Xcode's console or in Console.app. Kotlin's `println` writes to the app's
+standard output, which Xcode's console also shows.
 
-### When You See A FAULT Line
+For a release build, export with `--export-release` and build with
+`-configuration Release`. Distribution signing and App Store upload work as
+for any Godot game; see Godot's
+[Exporting for iOS](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_ios.html).
 
-A line like
+## Audio and the Silent Switch
 
-```
-[kanama][ios][c] FAULT kanama_ios_godot_ptrcall_dispatch: null-bind
+Kanama sets the app's audio session to the **Ambient** category at startup.
+Game audio plays in Ring mode, is muted by the Silent switch, and mixes with
+audio from other apps. A game that needs background or media playback sets
+its own audio session category in native iOS code after startup.
+
+## Troubleshooting
+
+| Problem | Fix |
+| --- | --- |
+| Godot cannot export for iOS. | Install the iOS export templates for Godot 4.7.2. |
+| Xcode reports no signing team. | Set the team in the preset, or under **Signing & Capabilities** in Xcode. |
+| Xcode cannot create a provisioning profile. | Sign in to your Apple Developer account in Xcode and allow provisioning updates, or create the profile in the Apple Developer portal. |
+| The iPhone is not a valid run destination. | Connect and trust it, turn on Developer Mode, and check that `xcrun devicectl list devices` lists it. |
+| Scenes load without their script property values, such as a `PackedScene` export that is `null` in `_ready`. | The export log shows `[kanama:kt] WARNING: no Kotlin class bound for res://...`. Run `installIosAddon` with `-PkanamaIosProjectScriptsDir`, delete `.godot/exported`, and export again. |
+| The export stops with `Kanama: Export stopped:`. | A scene uses a Kotlin script that the editor cannot load. Run `installIosAddon` with `-PkanamaIosProjectScriptsDir` and export again. See [Export Guard](../getting-started/editor-workflow.md#export-guard). |
+| Godot warns about a missing iOS GDExtension library. | Run `installIosAddon` again, and check that `addons/kanama/kanama.gdextension` has `ios.debug.arm64` and `ios.release.arm64` entries. |
+| The log shows a `FAULT` line. | See [FAULT Lines in the Log](#fault-lines-in-the-log). |
+
+### FAULT Lines in the Log
+
+A line like this means a call from your script did not reach Godot and
+returned an empty value instead:
+
+```text
 [kanama][ios][c] FAULT kanama_ios_godot_get_method_bind: bind-lookup-failed Node3D.set_visible hash=1
 ```
 
-means a call into the Kanama iOS bridge did **not** reach Godot and returned its
-default instead. It is never normal in a shipped game. Before this existed, such a
-call simply returned `0` / `null` / an empty list and nothing said anything — a whole
-family of Godot static methods was a no-op on iOS for six days and neither the
-self-tests nor two demo smokes noticed.
+It is never normal in a shipped game. Read the first `FAULT` line in the log;
+later ones often follow from it. A `bind-lookup-failed` or `api-unresolved`
+line almost always means the iOS libraries were built for another Godot
+version: run `installIosAddon` again and export again. For any other reason,
+report the line with the log. What each reason means is in
+[iOS Backend Architecture](../contributing/backends/ios.md#fault-reasons).
 
-The word after the colon is the reason, and it is a fixed token:
+## On Other Platforms
 
-| Reason | What went wrong |
-|---|---|
-| `api-unresolved` | The Godot interface function named in the detail was not resolved (an engine version mismatch, or a call before extension init). |
-| `bind-lookup-failed` | `ClassDB` has no method with that class, name and hash — the detail gives all three. Almost always a stale method hash after a Godot upgrade. |
-| `null-bind` | The call ran with a zero `MethodBind`; the lookup that produced it reported `bind-lookup-failed` earlier in the log with the names. |
-| `null-instance` | An instance method was called with a null object. |
-| `null-handle` | An engine object handle (a node, a tween, a signal target) was zero. |
-| `null-arg` | A required string parameter — the detail names it — was null. |
-| `pending-protocol` | A value was collected before the call that produces it succeeded. |
-| `callable-build` | A bound `Callable` could not be constructed for the named method. |
-| `unknown-tag` | A ptrcall type tag the shim does not know; the detail carries the number. |
-| `encode-failed` | A container argument could not be encoded for the engine. |
-| `short-payload` | A value inside a container carried fewer bytes than its type needs; the detail gives the tag and both lengths. |
-| `alloc-failed` | The shim could not allocate the argument cells of a call. |
-| `too-many-args` | A call or a signal emission had more arguments than the bridge carries; the detail gives the count. |
-| `progress-readback` | `ResourceLoader.load_threaded_get_status` reported no progress value. |
+The iOS simulator can build and start a Kanama game, but it says nothing
+about frame rate or feel. Use a real device for that.
 
-Seven more you will see **on purpose**, and they carry their own tag — `FAULT-PROBE`
-instead of `FAULT`:
+A Kanama release also carries a prebuilt iOS addon,
+`kanama-mobile-addon-ios-v<version>.zip`, with the iOS runtime only. It cannot
+compile your scripts, so a game still uses `installIosAddon` from a checkout.
+The zip holds both device `arm64` xcframeworks, debug and release. They are large:
+roughly 168 MB debug / 110 MB release before zip. <!-- kanama-claim: ios-static-size -->
 
-```
-[kanama][ios][c] FAULT-PROBE kanama_ios_godot_get_method_bind: bind-lookup-failed Node3D.set_visible hash=1
-[kanama][ios][c] FAULT-PROBE kanama_ios_godot_ptrcall_dispatch: null-bind
-[kanama][ios][c] FAULT-PROBE kanama_ios_godot_take_pending_utf8: pending-protocol g_pending_utf8
-[kanama][ios][c] FAULT-PROBE kanama_ios_godot_take_pending_utf8: pending-protocol g_pending_utf8
-[kanama][ios][c] FAULT-PROBE kanama_ios_godot_take_pending_packed: pending-protocol g_pending_packed (nothing pending)
-[kanama][ios][c] FAULT-PROBE kanama_ios_godot_take_pending_container_blob: pending-protocol g_pending_container_blob
-[kanama][ios][c] FAULT-PROBE kanama_ios_godot_take_pending_blob: pending-protocol g_pending_blob
-```
-
-Your game's own builds carry no self-test: it is a Kanama test hook, compiled only into a build
-made with `-PkanamaIosSelfTest=true` (Kanama's device runners pass it), so the lines below appear
-only in such a run. The self-test deliberately makes seven bad calls — one lookup with a wrong
-hash, one call through the resulting null bind, and five takes from a pending slot that
-has already been drained (one per pending buffer: the UTF-8 string slot twice, then the
-packed, container-blob and array-blob slots) — so a healthy debug run ends with
-`faults=7 expected=7` on both `OBJECTCALLS SELFTEST` summary lines. That is the fault
-sink proving it still works. While it makes them, the self-test puts the sink in probe
-mode, so these seven print as `FAULT-PROBE`; they are still counted, which is why the
-summary says 7. **Every `FAULT` line (without `-PROBE`) is a real one.**
-
-Do not read anything into where the `FAULT-PROBE` lines sit in the log. The self-test
-also prints `OBJECTCALLS SELFTEST fault-probes begin` / `... end` markers, but those go
-to stdout and the fault lines go to stderr, and the device console (`devicectl
---console`) merges the two streams without keeping their relative order — on a phone
-the seven `FAULT-PROBE` lines routinely appear after the `end` marker. The tag on the
-line and the `faults=`/`expected=` count are what to trust.
-
-A build without the self-test (every build of your game, and every release build) prints
-no FAULT-PROBE line and no `OBJECTCALLS SELFTEST` summary line — there is no
-`faults=`/`expected=` pair to read, rather than a pair reading `0`; any `FAULT` line is
-still a real fault.
-
-`kanama-demos/scripts/ios_device_run.sh` fails the device run when the captured console
-contains any `[kanama][ios][c] FAULT ` line, when a summary line's `faults=` does not
-equal its `expected=`, or when a summary line is missing (the runner builds the
-self-test in, so it requires `PTRCALL SELFTEST MATRIX`, `OBJECTCALLS SELFTEST` and
-`OBJECTCALLS SELFTEST (frame 1)`, each with `0 failed`). `FAULT-PROBE` lines do not fail it by themselves —
-the count does that if there are more or fewer than seven. To re-check an existing log
-by hand:
-
-```sh
-scripts/ios_device_run.sh --check-console-faults /path/to/console.log
-```
-
-If you are chasing a fault, the first FAULT line in the log is the one to read: later
-ones are often consequences of it.
-
-## Optional Simulator Template Check
-
-Only do this when deliberately using the simulator path. Before simulator work
-on Apple Silicon, verify that the installed Godot iOS export template has an
-`arm64` simulator engine archive:
-
-```sh
-./gradlew verifyIosGodotTemplate \
-  -PkanamaXcodeDeveloperDir=/Applications/Xcode.app/Contents/Developer
-```
-
-Or run the script directly:
-
-```sh
-scripts/ios_template_preflight.sh \
-  --xcode-developer-dir /Applications/Xcode.app/Contents/Developer
-```
-
-The simulator path remains available for Xcode link checks and loader-debug
-experiments, but it is not a performance gate for Kanama iOS.
-
-If the installed Godot iOS template is missing `arm64` simulator support, build
-a matching Godot simulator library and pass it explicitly to maintainer smoke
-tooling:
-
-```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-scons platform=ios target=template_debug arch=arm64 simulator=yes precision=single
-
-scripts/ios_visual_smoke.sh \
-  --godot /Applications/Godot.app/Contents/MacOS/Godot \
-  --simulator \
-  --godot-simulator-lib /absolute/path/to/libgodot.ios.template_debug.arm64.simulator.a \
-  --kanama-script-probe
-```
-
-Apple Silicon iOS simulators build and run `arm64` simulator binaries. That is
-separate from real-device `arm64`, which uses the `iphoneos` SDK instead of the
-`iphonesimulator` SDK. Use a real iPhone for any playability or performance
-read.
-
-## Optional Maintainer Smoke
-
-The visual smoke script proves the native loader, Xcode device build, app
-install, app launch, and a simple Godot render path. With the Kanama probe flags
-it can also prove Kotlin/Native frame callbacks, script resources, or full
-KSP-generated project script execution. These probes are maintainer validation
-tools; they are not the primary user export workflow.
-
-Set `KANAMA_IOS_DEVICE` and, when needed, `KANAMA_IOS_TEAM` in your shell or
-private maintainer notes before running the script. Do not commit the real
-values.
-
-```sh
-scripts/ios_visual_smoke.sh \
-  --godot /Applications/Godot.app/Contents/MacOS/Godot \
-  --kanama-user-script-probe \
-  --allow-provisioning-updates
-```
-
-Use lighter probe flags such as `--kanama-probe` or `--kanama-script-probe` for
-loader/render checks. None of the modes prove hot reload.
-
-## Current Boundaries
-
-- Physical-device export and launch are the first validation target.
-- Simulator startup is optional for compile/link debugging and should not be
-  used to judge iOS frame rate or gameplay feel.
-- Kanama sets the iOS `AVAudioSession` category to `Ambient` when the iOS shim
-  starts. This makes game audio deterministic with the Ring/Silent switch:
-  audio plays when the device is in Ring mode, is muted by Silent mode, and can
-  mix with other app audio. Projects that intentionally need background/media
-  playback semantics should set their own iOS audio session category in native
-  platform code after startup.
-- Hot reload is out of scope for the iOS backend.
-- Which demos run on device, and the follow-ups still tracked against them, are
-  in [Version Support → iOS](../reference/version-support.md#ios).
+What does not work on iOS is listed in
+[Limitations](../reference/limitations.md#ios).

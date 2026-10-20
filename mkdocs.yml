@@ -66,11 +66,14 @@ nav:
       - Start Here: contributing/index.md
       - Work on Kanama: getting-started/work-on-kanama.md
       - Architecture: contributing/architecture.md
+      - Platform Evidence: contributing/platform-evidence.md
+      - Device and Browser Runs: contributing/device-runs.md
       - Wrapper Generator: contributing/wrapper-maintenance.md
       - Shared Wrapper Tree Design Check: contributing/shared-wrapper-tree-design-check.md
       - Hot Reload Internals: contributing/hot-reload-internals.md
       - Godot Upgrade Runbook: contributing/godot-upgrade.md
       - Demo Porting Rules: contributing/demo-porting-rules.md
+      - Release Process: contributing/release.md
       - Writing These Docs: contributing/docs-style.md
       - Backends:
           - Android: contributing/backends/android.md
