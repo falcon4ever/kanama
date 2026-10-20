@@ -173,6 +173,56 @@ Current rule (since task 134):
   marshalling sizes assume single precision (the hard-coded 24-byte Variant size and the `Rect2`
   cell size in `ObjectCalls`).
 
+### Operators, methods and edge cases
+
+- **Operators** are Kotlin operators with GDScript's meaning: `a + b`, `v * 2.0`, `2.0 * v`, `-v`,
+  `transform * point`, `basis * otherBasis`, `quaternion * vector`, `Vector2i(3, 4) * 2`,
+  `Vector2i(3, 4) * 0.5` (a `Vector2`, as in GDScript), `color * 0.5`, `transform * points` (a
+  `List<Vector3>`), and `<` / `>` on vectors (component by component, as Godot compares).
+  `point * transform` is Godot's inverse transform (`xform_inv`). `2.0 * v` and
+  `points * transform` are extension operators: import `net.multigesture.kanama.types.times`
+  (the IDE offers it) or `net.multigesture.kanama.types.*`.
+- **Methods** are camelCase (`v.directionTo(target)`, `v.snapped(step)`, `basis.getEuler()`,
+  `Projection.createPerspective(...)`, `Color.fromHsv(h, s, v)`); `aabb.intersectsRay(from, dir)`
+  is `null` where GDScript returns `null`. Getters keep `get` (`rect.getCenter()`,
+  `transform.getRotation()`), except `Transform2D.get_origin()`, which is the `origin` property.
+  Constants are the companion values Godot declares (`Vector2i.LEFT`, `Vector3.MODEL_FRONT`,
+  `Basis.FLIP_X`, `Plane.PLANE_XY`, `Vector3.INF`, every named color) and the enums
+  (`Vector3.Axis.X`).
+- **Where a method runs.** Operators and every method whose Godot implementation is plain
+  arithmetic (`abs`, `floor`, `round`, `min`/`max`, `clampf`, `lerp`, `moveToward`,
+  `slide`/`bounce`/`reflect`, `project`, `limitLength`, `Rect2`/`Rect2i`/`AABB`
+  `hasPoint`/`intersects`/`encloses`/`merge`/`grow*`, `Plane.project`,
+  `Transform2D.inverse`/`translated`, `Color.lerp`, ...) run in Kotlin with Godot's formulas at
+  Godot's width, so their results are Godot's to the bit and cost no engine call. Every other method
+  (`angle`, `rotated`, `slerp`, `Basis.getEuler`, `Color.lightened`, ...) is computed by the engine
+  through an allocation-free call, about as fast as the same call from GDScript. The runtime smoke
+  compares all of them with GDScript on every run, over random inputs and over ±0, NaN, ±INF and
+  `.5` ties.
+
+Where Kotlin and GDScript differ:
+
+- Integer division or `%` by zero (`Vector2i(1, 1) / 0`) throws `ArithmeticException`; GDScript
+  reports a division-by-zero error.
+- Godot's debug build checks some arguments and returns a default instead of computing (`slide`,
+  `bounce`, `reflect` with a non-normalized normal; `quaternion * vector` and `vector * quaternion`
+  with a non-normalized quaternion). These are Kotlin math and compute the formula without the
+  check, which is what an exported (release) game does. Engine-computed methods (`slerp`,
+  `rotated`, ...) report the same error as GDScript, and so do `Basis.inverse` of a singular basis,
+  `Basis.getRotationQuaternion` of a basis that is not a rotation and `Transform3D.affineInverse` of
+  a singular one: they compute in Kotlin and hand exactly the input Godot's check rejects to the
+  engine.
+- Comparing vectors with a NaN component: Godot answers `false` to all of `<`, `<=`, `>` and `>=`.
+  Kotlin's comparisons go through one `compareTo`, which sorts a NaN component last, so `<` and
+  `<=` are `false` but `>` and `>=` are `true`.
+- A float that becomes an integer (`Color.toHtml` on a channel of NaN, ±INF or beyond the `int`
+  range): C++ leaves that conversion undefined, so Godot's own result differs by CPU (x86 and
+  arm64 disagree). Kotlin's conversion is defined (NaN gives 0, out-of-range values saturate),
+  which matches Godot on arm64 (Apple silicon, phones). For finite channels every platform agrees.
+
+The Web value types are the same classes; how their engine-computed methods run there is in
+[Web Internals](../contributing/backends/web.md#what-a-web-script-sees).
+
 Kept by: the value types' signatures in `api-snapshots/types.txt` / `web-types.txt`, the
 `RealStorageWidthTest` unit test (storage, equality, `toString` against Godot's strings, real_t
 arithmetic) and the `value_type_storage_smoke` rows of `scripts/runtime_smoke.sh`, which compare
@@ -211,6 +261,12 @@ property Godot types as `enum::X` or `bitfield::X` uses it.
   `Long`; wrap it with `Node.ProcessMode(raw as Long)` when you need the type.
 - **Script members** typed with a Godot enum (`@Export` properties, registered functions,
   `@Signal`, `@Rpc`, engine virtuals) are covered in [Exports and Resources](../game-dev/properties-resources.md#godot-enums-and-bitfields).
+
+- **Engine virtuals** whose parameters or return Godot types as an enum take the value class
+  (`@OverrideVirtual fun _get_shader_mode(): Shader.Mode`); a `Long` there fails the build and
+  names the type.
+- Kanama's runtime also has `net.multigesture.kanama.binding.runtime.VariantType`, an internal
+  marshalling enum; scripts use the `net.multigesture.kanama.api` one.
 
 ```kotlin
 self.setProcessMode(Node.ProcessMode.ALWAYS)
@@ -311,9 +367,44 @@ The full statement is [Resource Ownership](../game-dev/godot-api.md#resource-own
   (C#'s `CSharpInstance` model; desktop, Android 13+ and iOS). For a plain script class the GC
   fallback does not release forgotten wrappers of its owner (until the script is detached or
   shutdown), the lifetime it had before. See
-  [A script object keeps its resource alive](../game-dev/godot-api.md#a-script-object-keeps-its-resource-alive).
+  [Keeping a Resource Through Its Script](../game-dev/properties-resources.md#keeping-a-resource-through-its-script).
 - Wrappers made on any thread get the GC fallback; the release runs on the main thread, after the
   wrapper's last call (`ObjectCalls.keepReachable`).
+
+### The full ownership table
+
+| Category | What it covers | What to do |
+|---|---|---|
+| **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, every element of a returned typed `Array` of `RefCounted` (`getMaterials()`, `actionGetEvents()`, `getProcessedTweens()`, …), every `RefCounted` element of an `Array`/`Dictionary` that `call(...)` (or `callv`, `callDeferred`, `callThreadSafe`, `ClassDB.classCallStatic`, `GodotCallable.call`/`callv`) returns, the `from*` downcasts (`Mesh.fromObject(...)`, `ArrayMesh.fromResource(...)`), the checked casts to a `RefCounted` class (`res.cast<Texture2D>()`, `castOrNull`), and `@Export` reads of resource-typed fields and collections | `close()` it, or `use { }`, to release it early; for a list, each element (`list.forEach { it.close() }`). Forgotten, it is released after the GC drops the wrapper (on Web, the browser's) |
+| **Borrowed view** | A wrapper you build over a raw handle you already have: `Resource.fromHandle(...)`, a wrapper constructor (`Mesh(other.handle)`), a script's own `self`, and the `RefCounted` elements of a container (`Array`/`Dictionary`) that arrives as an argument of a signal lambda or a script method: the caller's Variant holds them for the call, so do not `close()` them or keep them past it | Keep the wrapper you got the handle from while you use the view: the view takes no reference. `close()` on it releases nothing (debug builds warn) |
+| **Engine-owned, live** | A running `Tween` (from `createTween()` or an element of `getProcessedTweens()`), anything living in the scene tree | To stop it use the Godot lifecycle (`kill()`, `queueFree()`): `close()` never stops it. Your wrapper of a tween is still an owned `+1`; close it when you stop using that wrapper |
+| **Nodes and plain `Object`s** | Anything not `RefCounted`: no refcount exists, and `GodotObject` has no `close()` | `Node.queueFree()` |
+
+- **Tweens.** The `SceneTree` holds its own reference to every tween it processes, so a tween runs
+  until it finishes or is killed whatever your wrappers do. `close()` on a tween wrapper releases
+  only your reference; it never stops the tween, and a closed wrapper cannot be called again. So:
+  `kill()` to stop a tween; `close()` (after `kill()`, or once you no longer call it) to release
+  your wrapper; and for the elements of `SceneTree.getProcessedTweens()`, close each one when you
+  are done reading it, which does not affect the tweens.
+- **Sinks.** Handing an owned wrapper to a sink (`setMesh`, `setStream`, `ResourceSaver.save`) does
+  not move it into the engine-owned row: the sink takes its own reference and yours is still yours
+  to close. `ResourceSaver.save` does not take ownership of the scene, so `close()` after it is
+  correct.
+- **`@Export` reads.** When the engine sets a property (a scene or `.tres` loads, the inspector,
+  `set("prop", value)`), each resource value it holds, alone or in an `Array` or `Dictionary`, is
+  kept alive the way GDScript keeps it. The runtime takes one reference per value for the property
+  and releases it when the engine sets the property again or when Godot frees the script instance,
+  also when the garbage collector already dropped the script object. The wrapper the Kotlin field
+  holds has a reference of its own, so a copy you keep elsewhere (`cached = res`) stays valid after
+  the property changes. Assigning the property from Kotlin, or removing an element from a
+  `MutableList` property, does not release the runtime's reference to the old value: it is
+  released at the next engine set of that property or when the instance is freed. A mutable script
+  property releases the previous wrapper before accepting a new value from Godot; this covers
+  `PackedScene?`, `Texture2D?` and `List<Texture2D>` exports.
+- **Received objects.** A Godot object a script receives (a signal or callback argument, a lookup, a
+  call's result) is one value per object, valid while the object lives, on every platform. A value
+  stays valid after the script that obtained it is freed: a node another script stored in a
+  `companion object`, or one a top-level initializer made, keeps working.
 
 Kept by: the generator functions above; `refcounted_ownership_problems` in
 `scripts/audit_generator_shape_policy.py`, which checks every wrapper source for the owned/borrowed
@@ -335,6 +426,43 @@ fallback off, they stay).
 val image = Image.create(64, 64, false, Image.Format.RGBA8)
 if (Input.isActionPressed("jump")) { /* ... */ }
 ```
+
+**`GD`** holds Godot's utility functions, one member per function (all 114), generated like the
+classes and the same on desktop, Android and iOS:
+
+- Names are Godot's in camelCase (`deg_to_rad` is `degToRad`), except `printErr`, `printS`,
+  `printT`, `printRaw`, `typeOf` (`typeof` is a Kotlin keyword) and `isNaN`. Parameter names are
+  Godot's. `float` is `Double`, `int` is `Long`, a `Variant` is `Any?`.
+- The generic `abs`, `sign`, `floor`, `ceil`, `round`, `lerp`, `clamp`, `wrap`, `snapped`, `max` and
+  `min` have typed overloads (`Double` for all; `Long` and `Int` where Godot has an int form: `abs`,
+  `sign`, `max`, `min`, `clamp`, `wrap`). They call the typed functions (`maxf`, `wrapi`, ...),
+  except `clamp`, which is GDScript's `clamp` and runs in Kotlin: it sets the value to `min` if it
+  is less, then to `max` if it is greater, so `GD.clamp(0.0, 3.0, 1.0)` is `1.0` as in GDScript
+  (`clampf` and `clampi` keep Godot's typed result, `3.0`, when `min` is greater than `max`).
+  Vectors, mixed types and three or more values take the `Any?` form, which returns what Godot
+  returns (`GD.abs(Vector3(-1.0, 2.0, -3.0))` is a `Vector3`, as an `Any?`).
+- `print`, `printErr`, `printS`, `printT`, `printRaw`, `printRich`, `printVerbose`, `pushError`,
+  `pushWarning` and `str` take any number of values. Godot formats `null`, strings, booleans and
+  numbers itself; any other value is passed as its `toString()`.
+- Every other `Any?` parameter (`typeOf`, `hash`, `isSame`, `varToStr`, `varToBytes`, `weakref`,
+  `typeConvert`, the `Any?` forms of `max`, `lerp`, `clamp`, ...) needs a value Godot has a Variant
+  for: `null`, `Boolean`, the numbers, `String`, `NodePath`, the value types, `RID`, a
+  `GodotObject`, a `ByteArray`, or a `List` or `Map` of those. Any other Kotlin object throws
+  (`Unsupported Variant value type` on desktop, `unsupported Variant argument type` on iOS);
+  Kanama does not turn it into a string behind your back.
+- `isInstanceValid` takes a `GodotObject?` and answers from the instance id the wrapper captured,
+  so it is safe on a wrapper whose object was freed. `isInstanceIdValid` takes a raw id.
+- The random functions use Godot's one global generator on every platform, like GDScript and C#,
+  so `seed()` from GDScript or Kotlin gives the same sequence. For strict determinism use a
+  `RandomNumberGenerator` with its own seed: the global generator is shared with anything else
+  that draws from it.
+
+**`Mathf`** is the C#-style math object, written once for every platform: `lerp`, `clamp`, `wrap`,
+`snapped`, `moveToward`, `smoothStep`, `pingPong`, `degToRad`, `PI`, `TAU`, ... Where Godot's
+function is plain arithmetic, `Mathf` runs Godot's formula in Kotlin with no engine call and returns
+the same double as GDScript, bit for bit; the transcendental functions (`sin`, `pow`, `exp`, ...)
+and the float-to-int conversions (`roundToInt`, `floorToInt`) call `GD`. Each member also has a
+`Float` overload that computes in `Double`.
 
 Kept by: the drift gate.
 
@@ -382,6 +510,61 @@ and PackedByteArray's as extension functions on `String` / `ByteArray` in
 receiver gets a `godot` prefix: `godotFormat`, `godotSplit`; `check_builtin_coverage.py` checks it
 with `javap`), NodePath's as `NodePath` members, Callable's and Signal's as `GodotCallable` /
 `GodotSignal` members; see [Strings, Node Paths and Bytes](../game-dev/godot-api.md#strings-node-paths-and-bytes).
+
+A `List<String>` script property exports as `Array[String]` and reads back as Kotlin strings,
+including a scene-authored `PackedStringArray` value.
+
+### String, NodePath, ByteArray and Callable methods
+
+- **Godot's semantics.** Each String function runs Godot's implementation in the engine, so it
+  answers what GDScript answers: positions and lengths (`godotFind`, `substr`, `unicodeAt`, `left`,
+  `godotLength`) count Unicode code points like GDScript, where Kotlin's `indexOf` and `length`
+  count UTF-16 units (they differ only outside the Basic Multilingual Plane, such as emoji). The
+  price is one engine call per function, which converts the text both ways: `getExtension()` takes
+  about 0.24 µs on desktop where GDScript's takes 0.08 µs, so in a per-frame loop over many strings
+  Kotlin's own functions are cheaper. Text crosses as UTF-8, so a lone UTF-16 surrogate arrives as
+  `?` and an embedded NUL ends the text. More examples: `"res://levels".pathJoin("one.tscn")`,
+  `String.num(3.14159, 2)` (`"3.14"`), `"7".padZeros(3)`, `text.isValidFloat()`,
+  `"{0} has {1} HP".godotFormat(listOf("Bob", 3))`.
+- **The `godot` prefix.** A star import outranks Kotlin's default imports, so importing the package
+  must never change an existing Kotlin call: a Godot method whose camelCase name kotlin-stdlib or
+  `java.lang.String` already has for `String` is generated as `godot` + the name: `godotLength()`,
+  `godotFind(...)`, `godotCount(...)`, `godotSplit(...)`, `godotFormat(...)`, `godotIndent(...)`,
+  `godotCapitalize()`, `godotHexToInt()`, `godotToInt()` and `godotToFloat()` (the last two parse
+  leniently, like GDScript: `"12abc"` is 12). `scripts/check_builtin_coverage.py` reads the standard
+  library with `javap` and fails on any generated name that collides. The methods Kotlin answers
+  identically are not repeated: `isEmpty()`, `contains(...)`, `startsWith(...)` (`begins_with`),
+  `endsWith(...)`, `replace(...)`, `repeat(n)`, `parts.joinToString(sep)` (`join`) and
+  `removePrefix`/`removeSuffix` (`trim_prefix`/`trim_suffix`). `check_builtin_coverage.py --report`
+  lists every Godot method with its Kotlin member or the reason it has none.
+- **`NodePath`** members are computed in Kotlin by Godot's own parse (ported):
+  `NodePath("Arm/Hand:position:x").getName(1)` is `"Hand"`, `getSubname(1)` is `"x"`, plus
+  `getNameCount()`, `getConcatenatedNames()`, `getConcatenatedSubnames()`, `isAbsolute()`,
+  `isEmpty()`, `slice(begin, end)` and `getAsPropertyPath()`; `hash()` runs in the engine. As in
+  Godot, an invalid path (`"a::b"`) is the empty NodePath and an index out of range answers `""`,
+  each with Godot's error printed. A `NodePath` keeps only its text, so the parse happens when a
+  member first needs it (the last parsed path is remembered): an invalid path's error prints then,
+  where GDScript prints it when the NodePath is built.
+- **`ByteArray`** gets the PackedByteArray methods Kotlin arrays lack: `decodeU8` ... `decodeS64`,
+  `decodeHalf`/`decodeFloat`/`decodeDouble`, the `encode*` twins, `bswap16/32/64`, `hexEncode()`,
+  `toInt32Array()` ... `toColorArray()` (Godot's byte codecs, ported to Kotlin: little-endian,
+  Godot's half-float conversion), and, run by the engine, `getStringFromUtf8()`/`Utf16`/`Utf32`/
+  `Ascii`/`Wchar`, `compress(mode)`, `decompress(size, mode)`, `decompressDynamic(max, mode)`,
+  `decodeVar(offset)` and `decodeVarSize`/`hasEncodedVar`. Where Godot prints an error and returns
+  0 or an empty array, the Kotlin function throws: `IndexOutOfBoundsException` for an offset
+  outside the array, `IllegalArgumentException` for a `to*Array()` of a size that is not a multiple
+  of the element and for a `bswap*` count past the end. `encode_var` writes into the array:
+  `GD.varToBytes(value).copyInto(bytes, offset)` is the same encoding. The other packed arrays'
+  `to_byte_array` is `toByteArray()` on their list types (`listOf(1, 2).toByteArray()`).
+- **`GodotCallable(target, "method")`** has Godot's Callable methods for that object + method
+  form: `call(...)`, `callv(list)`, `callDeferred(...)`, `isValid()`, `getObject()`,
+  `getObjectId()`, `getArgumentCount()`, `rpc(...)` and `rpcId(peer, ...)`; each is the target's
+  Object call that Godot's Callable makes (`rpc` on a target that is not a `Node` is a call error
+  in both). `getObjectId()` answers the id after the target is freed, as Godot's does. It carries no
+  bound arguments, so `bind`/`unbind` and the bound-argument queries are not offered. A
+  `GodotSignal` (`node.signal("name")`, or a typed signal's handle) adds `isConnected(target,
+  "method")`, `getConnections()`, `hasConnections()`, `getObject()` and `getObjectId()` to
+  `connect`/`disconnect`/`emit`.
 
 The table is `SCALAR_KOTLIN_TYPES` in `scripts/generate_api_wrapper.py`; a method whose types
 have no audited helper shape is not generated rather than generated with a wider type (`CALL_SHAPES` in

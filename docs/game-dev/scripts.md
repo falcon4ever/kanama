@@ -1,108 +1,117 @@
-# Writing Kotlin Scripts
+# Writing Scripts
 
-Kanama scripts are Kotlin classes that Godot loads as `.kt` script resources.
-This page highlights the Kotlin script model and the most common differences
-from GDScript.
+A Kanama script is a Kotlin class that Godot attaches to a node, the way it
+attaches a `.gd` file. This page shows what a script is made of, how Godot calls
+into it, and how it reaches other nodes and scripts. For the Godot API itself,
+see [Calling Godot APIs](godot-api.md).
 
-## Naming Conventions
+## A Complete Script
 
-GDScript uses `snake_case` everywhere. Kanama follows Kotlin conventions.
+```kotlin
+package com.mygame
+
+import net.multigesture.kanama.annotations.Export
+import net.multigesture.kanama.annotations.OnPhysicsProcess
+import net.multigesture.kanama.annotations.OnReady
+import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.*
+import net.multigesture.kanama.types.*
+
+@ScriptClass(attachTo = "CharacterBody2D")
+class Player(godotObject: GodotHandle) :
+    KanamaScript<CharacterBody2D>(godotObject, ::CharacterBody2D) {
+
+    @Export var speed: Double = 300.0                  // @export var speed = 300.0
+
+    private val sprite by node<AnimatedSprite2D>("Sprite")   // @onready var sprite = $Sprite
+
+    @OnReady
+    fun ready() {
+        sprite.play("idle")
+    }
+
+    @OnPhysicsProcess
+    fun physicsProcess(delta: Double) {
+        val dir = Input.getVector("move_left", "move_right", "move_up", "move_down")
+        self.velocity = dir * speed
+        self.moveAndSlide()
+    }
+
+    fun heal(amount: Long) { /* GDScript can call this as heal(10) */ }
+}
+```
+
+- `@ScriptClass(attachTo = "CharacterBody2D")` says which node class the script
+  extends, like GDScript's `extends CharacterBody2D`.
+- `KanamaScript<CharacterBody2D>` gives the script a typed `self`, the node it
+  is attached to.
+- `@Export` puts a property in the inspector. See
+  [Exports and Resources](properties-resources.md).
+- `@OnReady` and `@OnPhysicsProcess` mark the functions Godot calls as
+  `_ready` and `_physics_process`.
+- Every public function, such as `heal`, can be called from Godot.
+
+Every script file declares a package. The editor's **New Script** dialog picks
+one for you: the package most scripts in that folder already use, or one
+derived from the folder (`game` at the project root).
+
+## `this` Is Not Your Node
+
+In GDScript `self` is the node. In Kotlin, `this` is the script object, and the
+node is `self`:
+
+```kotlin
+@OnPhysicsProcess
+fun physicsProcess(delta: Double) {
+    if (self.isOnFloor()) self.moveAndSlide()      // not isOnFloor()
+}
+```
+
+The script object holds your fields and functions; the node is the Godot object
+they act on. `selfAs` gives a second view of the same node as another class:
+
+```kotlin
+private val node2d = selfAs(::Node2D)
+```
+
+The constructor parameter is a `GodotHandle`, the identity of the Godot object
+the script is attached to. Pass it on to `KanamaScript`, or to a wrapper
+(`CharacterBody2D(other.handle)`), and otherwise leave it alone. It is the same
+type on every platform, so one script source builds for all of them. See
+[Kotlin Style](style-guide.md#self-and-selfas-caching) for caching `self` and
+`selfAs`.
+
+`KanamaScript` is the only Kanama class you extend. The Godot classes (`Node`,
+`Resource`, `AudioStream`, ...) are views onto Godot objects and cannot be
+subclassed; the build stops you with a pointer to `@ScriptClass(attachTo = ...)`.
+For your own resource types, see
+[Custom Resources](properties-resources.md#custom-resources).
+
+## Names and Types
 
 | GDScript | Kotlin |
 |---|---|
 | `func move_and_slide()` | `fun moveAndSlide()` |
 | `var my_property = 0` | `var myProperty: Long = 0` |
 | `const MAX_SPEED = 10` | `const val MAX_SPEED = 10L` |
-| `class MyNode` | `class MyNode` (same) |
+| `int` | `Long` |
+| `float`, and `delta` | `Double` |
+| `bool` | `Boolean` |
+| `Vector3.x`, `Color.r` | `Double` |
+| `Node.PROCESS_MODE_ALWAYS` | `Node.ProcessMode.ALWAYS` |
 
-Godot's API wrappers convert names automatically — `move_and_slide()` becomes
-`moveAndSlide()`, `get_position()` becomes `getPosition()`. Signal name strings
-keep their original `snake_case` form in the `.Signals` companion objects.
-
-## `this` Is Not Your Node
-
-In GDScript `self` is the node. In Kanama `this` (the implicit Kotlin receiver)
-is the JVM script object — **not** the Godot node the script is attached to.
-
-Extend `KanamaScript<T>` to get a typed `self` wrapper for the attached node:
-
-```kotlin
-@ScriptClass(attachTo = "CharacterBody3D")
-class Player(godotObject: GodotHandle) :
-    KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D) {
-
-    @OnPhysicsProcess
-    fun physicsProcess(delta: Double) {
-        if (self.isOnFloor()) self.moveAndSlide()
-    }
-}
-```
-
-The constructor parameter is a `GodotHandle` (`net.multigesture.kanama.api.GodotHandle`):
-the opaque identity of the Godot object the script is attached to. Pass it on to
-`KanamaScript`, hand it to another wrapper (`CharacterBody3D(other.handle)`), and
-otherwise leave it alone — it is not a pointer you may inspect, keep, or free. Every
-backend declares its own `GodotHandle` under that one name, so the same script source
-compiles for desktop, Android, iOS and Web.
-
-Inside a `KanamaScript<T>`, use `selfAs` for a secondary view of the same
-Godot object:
-
-```kotlin
-private val node3d = selfAs(::Node3D)
-```
-
-See [Kotlin Style — `self` And `selfAs` Caching](style-guide.md#self-and-selfas-caching).
-
-`KanamaScript<T>` is the only Kanama API class meant for subclassing. Never
-extend a generated wrapper (`Node`, `Resource`, `AudioStream`, ...) — wrappers
-are non-owning views (their constructors take a raw handle and never retain), and the build fails with a
-pointer to the `@ScriptClass(attachTo = ...)` pattern. For custom resources
-specifically, see
-[Exports and Resources — Custom Resources](properties-resources.md#custom-resources).
-
-## Scalar Types
-
-| GDScript | Kanama | Note |
-|---|---|---|
-| `int` | `Long` | Use `Long` for the parameters and returns of your own registered (public) functions (`Int` there is a build error); an `@Export` property may also be `Int` (narrowed on read and write). Engine wrappers follow Godot's signature: Godot's `int` is 64-bit, but where the signature is 32-bit (`int32` in `extension_api.json`, such as `GridMap.setCellItem(position, item: Int, orientation: Int)`) the generated wrapper takes and returns `Int`, so expect both `Int` and `Long` when calling the engine |
-| `Node.ProcessMode` (any Godot enum / bitfield) | `Node.ProcessMode` | A typed value class over the `int`; see [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields) |
-| `float` (method args/returns) | `Double` | Godot's ABI uses 64-bit slots for scalar float |
-| `bool` | `Boolean` | |
-| `Vector3.x/y/z`, `Color.r/g/b/a` | `Double` | Like GDScript's 64-bit `float`; stored at Godot's width (`real_t`, float32 for `Color`), as in GDScript |
-| `delta` in `_process` | `Double` | Engine timing is always double-precision |
-
-Every decimal is `Double`, as in GDScript: scalar arguments and returns, `delta`,
-and vector, transform and color components, so `pos.x * delta` or
-`Mathf.lerp(v.y, target, weight)` needs no conversion. As in GDScript, a vector
-stores its components at Godot's width (float32 in normal Godot builds), so a
-vector you write and read back compares `==` to the one you wrote and prints like
-GDScript's `str(v)`, but `Vector2(0.1, 0.2).x == 0.1` is `false`: compare
-decimals with `isEqualApprox`. Packed bulk data stays 32-bit
-(`PackedFloat32Array` is `List<Float>`). See
-[Kotlin Style — Float / Double](style-guide.md#float-double) and
-[API conventions — Decimals](../reference/wrapper-conventions.md#4-decimals).
-
-## Value Type Mutation
-
-GDScript structs modify in-place:
-
-```gdscript
-velocity.y += gravity * delta
-```
-
-Kanama value types (`Vector2`, `Vector3`, etc.) are immutable. Use the `with*`
-helpers or construct a new value:
-
-```kotlin
-body.velocity = body.velocity.withY(body.velocity.y + gravity * delta)
-```
+A function Godot can call takes and returns `Long` for an integer; `Int` there is
+a build error. An exported property may also be `Int`. The engine's own methods
+follow Godot's signatures, so a few of them take `Int` where Godot declares a
+32-bit value. Vectors are immutable: `self.velocity = self.velocity.withY(0.0)`
+instead of `velocity.y = 0`. [Calling Godot APIs](godot-api.md#numbers) covers
+numbers, vectors and enums.
 
 ## Lifecycle Callbacks
 
-GDScript uses overridable virtual methods. Kanama uses annotations:
+GDScript overrides virtual methods. Kotlin marks a function with an annotation:
 
-| GDScript | Kanama annotation |
+| GDScript | Kotlin annotation |
 |---|---|
 | `func _ready():` | `@OnReady` |
 | `func _process(delta):` | `@OnProcess` |
@@ -114,14 +123,13 @@ GDScript uses overridable virtual methods. Kanama uses annotations:
 | `func _shortcut_input(event):` | `@OnShortcutInput` |
 | `func _unhandled_key_input(event):` | `@OnUnhandledKeyInput` |
 
-The function name is up to you — the annotation is what wires it up. Drop the
-leading underscore; `fun ready()` is the convention. A function named like an
-engine virtual without an annotation (`fun _process(delta: Double)`, as a
-GDScript habit would write it) is a build error naming the annotation to add:
-Godot would never call it as the virtual.
+The annotation is what Godot looks for, so the function name is yours; the
+convention drops the underscore (`fun ready()`). A function named like a virtual
+without its annotation (`fun _process(delta: Double)`) is a build error that
+names the annotation to add.
 
-The four input callbacks receive the event typed, as in GDScript; cast it to the
-subclass you handle:
+The input callbacks receive a typed `InputEvent`. Cast it to the event you
+handle:
 
 ```kotlin
 @OnUnhandledInput
@@ -132,22 +140,11 @@ fun unhandledInput(event: InputEvent) {
 }
 ```
 
-(Before Kanama 0.5 the parameter was a `GodotObject`; such a handler is now a
-build error naming the fix.)
-
-On the experimental Web backend, lifecycle dispatch covers `@OnEnterTree` too
-(since protocol 16); a virtual the Web proxy does not dispatch is rejected at build
-time rather than silently never running. See `docs/exporting/web.md`.
-
 ## Overriding Engine Virtuals
 
-Beyond the lifecycle annotations, any engine virtual method (the `_*` override
-points a GDScript would implement — `_get_aabb`, `_input`, `_draw`, …) can be
-overridden with `@OverrideVirtual`. Here the Kotlin function keeps the
-GDScript-style name **including** the leading underscore — that name is how the
-override is matched, and the processor validates the signature against the
-engine's virtual table at build time, so a typo or wrong parameter type fails
-the build instead of silently never being called:
+Any other engine virtual (`_get_aabb`, `_draw`, `_get_configuration_warnings`,
+...) is overridden with `@OverrideVirtual`. Here the function keeps Godot's name,
+underscore included, because the name is how the override is matched:
 
 ```kotlin
 @ScriptClass(attachTo = "Mesh")
@@ -155,261 +152,136 @@ class ProceduralMesh(val godotObject: GodotHandle) {
     @OverrideVirtual
     fun _get_aabb(): AABB = AABB(Vector3.ZERO, Vector3(2.0, 2.0, 2.0))
 }
-```
 
-Return types map GDScript-style: Godot `Array` is `List<Any?>`, `Dictionary`
-is `Map<String, Any?>` (String keys), and `StringName` returns are declared as
-`String`. Every Variant-expressible return family
-works on desktop and Android; a handful of value-type returns are not yet
-mirrored on iOS (see the coverage notes in
-[Wrapper Maintenance](../contributing/wrapper-maintenance.md) if you target
-iOS).
-
-A parameter or return Godot types as an enum or bitfield (`enum::Shader.Mode`,
-`bitfield::TextServer.FontStyle`) is declared with its typed value class, like
-every other Kanama signature of that enum:
-
-```kotlin
 @ScriptClass(attachTo = "Material")
 class FogMaterial(val godotObject: GodotHandle) {
     @OverrideVirtual
     fun _get_shader_mode(): Shader.Mode = Shader.Mode.FOG
 }
-
-@ScriptClass(attachTo = "TextServerExtension")
-class MyTextServer(val godotObject: GodotHandle) {
-    @OverrideVirtual
-    fun _has_feature(feature: TextServer.Feature): Boolean = feature == TextServer.Feature.SHAPING
-}
 ```
 
-An override still written with `Long` (the pre-0.5 spelling) fails the build
-and names the type to use (`declare it as Shader.Mode ... not Long`); wrap a raw
-number with `Shader.Mode(raw)` and read one with `.value`. The two
-`_get_space_state` returns Godot marks required must be declared non-null
-(`GodotObject`, not `GodotObject?`).
+The build checks the signature against Godot's, so a typo or a wrong parameter
+type fails the build instead of never being called. Godot's `Array` is
+`List<Any?>`, a `Dictionary` is `Map<String, Any?>`, a `StringName` is `String`,
+and an enum or bitfield is its typed class (`Shader.Mode`, not `Long`). A return
+Godot marks as required, such as the two `_get_space_state` virtuals, is declared
+non-null.
 
 ## Exports
 
-| GDScript | Kanama |
+| GDScript | Kotlin |
 |---|---|
 | `@export var speed = 5.0` | `@Export var speed: Double = 5.0` |
 | `@export_range(0, 10, 0.5) var speed = 5.0` | `@ExportRange(0.0, 10.0, 0.5) var speed: Double = 5.0` |
 | `@export_file("*.png") var icon: String` | `@ExportFile("*.png") var icon: String = ""` |
 | `@export_flags_3d_physics var mask: int` | `@ExportFlags3DPhysics var mask: Long = 0` |
-| `@export var fov := PI / 3.0` | `@Export var fov: Double = Mathf.PI / 3.0` (the default folds to `1.0471975511965976`) |
-| `@export_group("Movement")` | `@ExportGroup("Movement")` on first property in group |
+| `@export var fov := PI / 3.0` | `@Export var fov: Double = Mathf.PI / 3.0` |
+| `@export_group("Movement")` | `@ExportGroup("Movement")` on the first property of the group |
 | `@export var scene: PackedScene` | `@Export var scene: PackedScene? = null` |
-| `@export_tool_button("Rebuild")` | `@ExportToolButton("Rebuild")` on a zero-argument function |
+| `@export_tool_button("Rebuild")` | `@ExportToolButton("Rebuild")` on a function with no parameters |
 | `@tool` | `@Tool` on the class |
 | `class_name Player` | `@GlobalClass` on the class |
 
-`@Export` is the plain export, on `@ScriptClass` scripts and on `@RegisterClass`
-types alike; every GDScript `@export_*` hint annotation has a typed twin that
-exports by itself. See [Exports and Resources](properties-resources.md#export-hints).
+Every GDScript `@export_*` annotation has a Kotlin twin that exports on its own.
+The full list is in [Exports and Resources](properties-resources.md#export-hints).
 
 ## Functions Godot Can Call
 
-Like a GDScript `func`, **every public function of a script class is registered
-with Godot**, under its Kotlin name converted to snake_case: `fun showMessage(text:
-String)` is `show_message`, callable from GDScript, `call()`, signal connections
-and `Callable`s. No annotation is needed.
+As with a GDScript `func`, every public function of a script is visible to
+Godot, under its name in snake_case: `fun showMessage(text: String)` is
+`show_message` for GDScript, `call()`, signal connections and `Callable`s. No
+annotation is needed.
 
 ```kotlin
 @ScriptClass(attachTo = "CanvasLayer")
 class Hud(godotObject: GodotHandle) : KanamaScript<CanvasLayer>(godotObject, ::CanvasLayer) {
-    fun showMessage(text: String) { ... }          // Godot: show_message
+    fun showMessage(text: String) { /* ... */ }        // Godot: show_message
 
-    @GodotName("_on_start_button_pressed")         // the name the editor saved in the .tscn
-    fun onStartButtonPressed() { ... }
+    @GodotName("_on_start_button_pressed")             // the name the editor saved in the .tscn
+    fun onStartButtonPressed() { /* ... */ }
 
-    private fun layout() { ... }                   // Kotlin-only
-    internal fun debugState(): Map<String, Any> = mapOf()   // Kotlin-only
+    private fun layout() { /* ... */ }                 // Kotlin only
+    internal fun debugState(): Map<String, Any> = mapOf()   // Kotlin only
 }
 ```
 
-- **`@GodotName("...")`** gives a function another Godot-side name, used verbatim.
-  Use it where Godot must find the function under a name its Kotlin spelling does
-  not produce, typically a signal connection the editor saved as
-  `_on_start_button_pressed`.
-- **`private`, `protected` and `internal`** functions stay Kotlin-only. Scripts are
-  compiled as one module, so other scripts still call an `internal` function.
-- A registered function's parameters and return must be types Godot can carry
-  (`Long`, `Double`, `Boolean`, `String`, the value types, Godot enums, the
-  supported node and resource wrappers, `GodotObject`). Any other type in a public
-  function is a build error that names it: make the function `internal` or
-  `private` if Godot never calls it.
-  `InputEvent` is not one of them: a helper that takes the event from an input
-  handler (`fun handleKey(event: InputEvent)`) must be `private` or `internal`.
-- A public function whose snake_case name is already an engine method of the
-  attached class (`fun queueFree()` is `queue_free`, `fun getName()` is
-  `get_name`) is a build error: it would replace the engine's method for scene
-  connections, `call()` and `Callable`s on that node. Rename it, make it `internal`
-  or `private`, or confirm the override with `@GodotName("queue_free")`. A function
-  spelled like an engine virtual (`_process`, or the camelCase
-  `_getConfigurationWarnings`) needs its lifecycle annotation or
+- **`@GodotName("...")`** gives a function the Godot name you write, used as is.
+  You need it when Godot looks for a name the Kotlin spelling does not produce,
+  typically a signal connection the editor saved as `_on_start_button_pressed`.
+- **`private`, `protected` and `internal`** functions are Kotlin only. Your
+  scripts build as one module, so other scripts can still call an `internal`
+  function.
+- **Parameter and return types** must be ones Godot can pass to a script
+  function: `Long`, `Double`, `Boolean`, `String`, `NodePath`, the value types
+  (`Vector2`, `Color`, `Transform3D`, ...), Godot enums, and nodes or other Godot
+  objects. A `List`, `Map`, `ByteArray` or `Any?` is not passed yet, and neither
+  is an `InputEvent`. Any other type in a public function is a build error that
+  names it; make the function `internal` or `private` if Godot never calls it,
+  as in `private fun handleKey(event: InputEvent)`.
+- **Names Godot already uses** are build errors. A public `fun queueFree()` or
+  `fun getName()` would replace the node's own `queue_free` or `get_name` for
+  every caller in Godot. Rename it, make it `internal` or `private`, or confirm
+  the replacement with `@GodotName("queue_free")`. A name spelled like a virtual
+  (`_process`, `_getConfigurationWarnings`) needs its lifecycle annotation or
   `@OverrideVirtual` instead.
-- A public function with a `vararg` parameter is a build error (Godot calls with a
-  fixed argument list); make it `internal` or `private`.
-- `suspend` functions, extension functions, generic functions, and an `override`
-  of a member that is not a script's (`toString()`, an interface method) are
-  Kotlin-only even when public.
-- **Web only:** the Web backend dispatches a registered function only for the
-  argument shapes it has an arm for (no arguments, numeric lists, a single String
-  or object, mixed String/NodePath/Long/Boolean/object lists, a zero-argument
-  value return). Any other public function fails only the Web build, naming the
-  shape; make it `internal` if Godot never calls it.
-- Functions with a lifecycle annotation, `@OverrideVirtual`, `@Signal` or
-  `@ExportToolButton` are wired by that annotation and not registered twice.
-- Two functions on one Godot name (Kotlin overloads, for one) are a build error:
-  Godot has no overloads.
+- **One function per Godot name.** Godot has no overloads, so two Kotlin
+  functions that land on one Godot name are a build error. A `vararg` parameter
+  is a build error too, because Godot calls with a fixed argument list.
+- **Kotlin-only even when public:** `suspend` functions, extension functions,
+  generic functions, and an `override` of something that is not a script member
+  (`toString()`, an interface method).
+- Functions marked with a lifecycle annotation, `@OverrideVirtual`, `@Signal` or
+  `@ExportToolButton` are wired by that annotation.
 
-`@RegisterClass` types follow the same rule; there, `@Export var x` also registers
-`get_x`/`set_x`, so a public `fun getX()` beside it is a build error naming both.
+A caller in Godot that leaves out trailing arguments with Kotlin defaults
+(`call("spawn")` for `fun spawn(delay: Double = 0.5)`) gets the Kotlin defaults.
+A `@RegisterClass` type is stricter: Godot calls its methods with every argument,
+so pass them all. A `@RegisterClass` type's `@Export var x` also defines
+`get_x`/`set_x`, so a public `fun getX()` beside it is a build error.
 
-The annotations Kanama 0.5 removed (`@RegisterFunction`, `@ScriptProperty`,
-`@Process`, … — see the table in [Porting GDScript](porting-gdscript.md)) still
-exist only so that a leftover fails to compile with a message naming the
-replacement; `scripts/migrate_script_annotations.py` rewrites a source tree.
+## Calling Another Script
 
-## Printing and Errors
+A Kotlin script can call another script's public functions directly. KSP
+generates a `<Script>Methods` object for each script that works from a script
+object or from any `GodotObject`:
 
 ```kotlin
-GD.print("Hello from Kotlin")        // Godot's Output panel, like GDScript print()
-GD.pushError("bad state: $value")    // a Godot error (Output + Errors tab), like push_error()
-System.err.println("[debug] $value") // the process stderr only, NOT the editor's Output panel
+import net.multigesture.kanama.generated.PlayerMethods
+
+// in Player
+fun damage(amount: Double) { health -= amount }
+
+// anywhere else
+PlayerMethods.damage(playerScript, 5.0)          // a Player script object
+if (!PlayerMethods.damage(collider, 5.0)) {      // a GodotObject from a collision or lookup
+    // the collider has no Player script
+}
+val label = HudMethods.currentLabel(hudObject) ?: return   // a return value is nullable
 ```
 
-`GD.print` and its siblings go through Godot's logger, so they reach the
-editor's Output panel when you press Play. `println` and `System.err.println`
-write to the game process's stdout/stderr: you see them in the terminal Godot
-was started from, or in a `--headless` log. The editor starts the game without
-capturing either stream, so they never reach its Output panel, and a game
-started from the Dock or Finder shows them nowhere.
-
-On desktop, Android and iOS, an exception that escapes your code at an engine
-boundary (a script method, a lifecycle callback such as `_ready` or `_process`,
-a signal lambda, a property accessor, a `MainThread` task, a script coroutine
-started with `launch`) does not crash the game. Kanama catches it, prints the full stack trace to stderr, and reports it to
-Godot as a script error, the way a GDScript runtime error is reported. Godot's
-log shows (desktop console output):
-
-```text
-SCRIPT ERROR: java.lang.IllegalStateException: no target
-          at: Player.ready (res://kotlin-src/com/example/game/Player.kt:42)
-```
-
-It appears in Godot's log (the Output panel, a terminal, a device log) and, when
-you run from the editor, in the Debugger's Errors tab. The file and line are the
-top frame of your own code: Kanama, generated, Kotlin and JDK frames are
-skipped. When the file is in the project (`res://kotlin-src/<package path>/` or
-the project root) the `res://` path is reported, so the Errors tab can open it;
-otherwise the bare file name. The rest of that call does not run and the caller
-gets `null`, as with a GDScript runtime error; the next frame calls `_process`
-again as usual. On iOS a debug build reports the file and line of your code's
-frame too (`res://kotlin-src/Player.kt:42`): an iPhone app carries no debug info,
-so the debug addon build maps your scripts' functions to their lines ahead of
-time, and the device looks them up by function name. That needs an app that
-keeps its symbol table: build Godot's exported Xcode project (Export Project
-Only, then Run in Xcode or `xcodebuild build`). Godot's `.ipa` export and its
-one-click deploy archive the app, which strips it, and report the failing
-callback with line 0. A release build names the class and method with line 0. In an R8-minified Android release
-build a frame without source info is not attributed, and the error names the
-callback that failed instead. On Web the same report reaches the browser console through
-Godot's error log -- `ERROR: SCRIPT ERROR: kotlin.IllegalStateException: no target`, then
-`at: Player._ready (no source line on Wasm)`, then Godot's own `at: push_error (...)` line (the
-report is printed by `push_error`) -- and the callback returns its default while the game runs on.
-A Web export carries no names or source maps, so the report names the script and the callback
-that failed, not a Kotlin file and line. Only an exception from your code is contained: the
-runtime failing around it (a bridge or protocol fault) still ends the page. A call whose return
-type is a typed GDScript value (`Long`, `Double`, `Boolean`, `String`, `Vector2`) answers that
-type's default (`0`, `0.0`, `false`, `""`, zero) where desktop answers `null`; a Vector3, Color or
-other value-type return answers `null` as on desktop.
-
-Calling a method through a wrapper whose object was freed (a node after
-`queueFree()` took effect) is such an error in debug builds — the editor and
-debug exports: `IllegalStateException: Invalid access to previously freed
-instance (Node3D, instance id …)`, as GDScript reports it. Holding such a
-wrapper is not an error: comparing it, `GD.isInstanceValid(node)`, and handing
-it back to Godot as a value (an exported property, a method's return value, a
-Variant argument) are silent, and Godot receives `null`. A release export does
-not check, and a call is undefined behaviour, so ask `GD.isInstanceValid(node)`
-before using an object that may be gone. Two wrappers of one object are `==`
-(and equal as `Set`/`Map` keys) whatever their class. On Web a call that returns a value or an object
-(`getName()`, `getParent()`, `getNode(...)`, `getChild(i)`, `getChildCount()`, `emitSignal(...)`,
-`connect(...)` on a freed source or target, a `Control` position or size read, and every other
-query that crosses to Godot) on an object the engine freed (a child freed with its parent, a timer,
-a body) throws the same `IllegalStateException: Invalid access to previously freed instance`,
-naming the handle instead of the class. A call that returns nothing (`node.position = ...`,
-`queueFree()`, `addChild(...)`) is queued and applied with the rest of the frame's batch, so it
-cannot throw at the call. On a freed object that one command is skipped and the batch reports the
-same `IllegalStateException` once as a script error (`SCRIPT ERROR: ... at: Script.<queued
-command>`), the other commands of the batch are applied, and the page keeps running, as on desktop
-where the setter throws and the script carries on; the exception is not catchable at the setter.
-A Kanama-scripted object freed while another script holds it behaves the same way (task 138 item
-22): a call on it throws the freed-instance `IllegalStateException`, and a command queued on it
-before it was freed is skipped and reported when the batch applies.
-A command that is malformed for a live object (a protocol fault) still ends the page. A position
-read of a `Node2D`/`Node3D` answers the last snapshot it had. Ask `GD.isInstanceValid(node)` first on Web too.
-
-## Rebuild Required
-
-GDScript changes are live. Kotlin scripts must be compiled before Godot sees
-them. Use the `Build Scripts` toolbar button (Kanama Tools plugin) or:
-
-```sh
-./gradlew installAddonJar -PkanamaProjectDir=... -PkanamaProjectScriptsDir=...
-```
-
-Hot reload reloads the jar without restarting Godot. See
-[The Editor Loop](../getting-started/editor-workflow.md).
-
-## Declare a Package
-
-Every script file should declare a package; the starter script and every demo do.
-The build does not enforce it: a package-less `@ScriptClass` builds, loads and
-runs on desktop. The generated registrars and helper names are derived from the
-fully qualified class name, though, and the iOS emitter builds its imports,
-`*Methods`/`*Signals` helpers and per-package compatibility sources from the
-package, so a package-less script has no tested path there. The editor's
-**New Script** dialog writes one for you: the package most scripts in the target
-folder already use, else one derived from the folder (`game` at the project
-root). A script you create another way needs one too:
-
-```kotlin
-package com.mygame.scripts
-
-@ScriptClass(attachTo = "Node")
-class MyScript(godotObject: GodotHandle) :
-    KanamaScript<Node>(godotObject, ::Node) { ... }
-```
+Use `call()` only when the target is a GDScript object; see
+[Calling Methods by Name](godot-api.md#calling-methods-by-name). The `Methods`,
+`Signals` and `Rpcs` objects appear in your IDE after the first build, so build
+once after adding a public function, a `@Signal` or an `@Rpc`. They live in the
+`net.multigesture.kanama.generated` package, and the IDE adds the import.
 
 ## Signals
 
-See [Signals and Callbacks](signals.md) for the full reference.
-Quick comparison:
-
 ```gdscript
-# GDScript
 signal hit_enemy(damage)
 emit_signal("hit_enemy", 10)
 ```
 
 ```kotlin
-// Kanama
 @Signal
 fun hitEnemy(damage: Long) = Unit
 
 PlayerSignals.hitEnemy(this, 10L)
 ```
 
-For multiplayer RPC methods, KSP also generates typed `*Rpcs` helpers from
-`@Rpc` declarations. See [Multiplayer](multiplayer.md).
-
-A Godot enum works as a registered function's parameter or return, a `@Signal`
-argument and an `@Rpc` argument: it crosses into Godot as the `int` it stands
-for (so GDScript callers pass and receive `Node.PROCESS_MODE_ALWAYS`), and
-Kotlin sees the value class:
+A Godot enum works as a parameter or return of a public function, a `@Signal`
+argument and an `@Rpc` argument. GDScript sees the `int`
+(`Node.PROCESS_MODE_ALWAYS`); Kotlin sees the typed value:
 
 ```kotlin
 fun nextMode(mode: Node.ProcessMode): Node.ProcessMode = Node.ProcessMode(mode.value + 1)
@@ -417,39 +289,12 @@ fun nextMode(mode: Node.ProcessMode): Node.ProcessMode = Node.ProcessMode(mode.v
 @Signal fun modeChanged(mode: Node.ProcessMode) = Unit
 ```
 
-## Registered Method Helpers
-
-KSP generates a `*Methods` helper object for every registered function of a
-Kanama script. Use these helpers when Kotlin code needs
-to invoke another Kanama script's public Godot-facing method:
-
-```kotlin
-fun damage(amount: Double) {
-    health -= amount
-}
-
-// Direct script instance.
-PlayerMethods.damage(playerScript, 5.0)
-
-// Generic GodotObject from a collision or lookup.
-if (!PlayerMethods.damage(collider, 5.0)) {
-    // The collider was not backed by Player.
-}
-```
-
-For non-`Unit` methods, the `GodotObject` overload returns a nullable value:
-
-```kotlin
-val label = HudMethods.currentLabel(hudObject) ?: return
-```
-
-These helpers are for Kanama-to-Kanama calls. For mixed GDScript/Kanama
-projects, keep using signals, registered Godot names, or `GodotObject.call`
-where the target is a GDScript object or an intentionally dynamic autoload.
+[Signals and Await](signals.md) covers connecting, emitting and awaiting, and
+[Multiplayer](multiplayer.md) covers `@Rpc`.
 
 ## Node Lookup
 
-GDScript's `@onready var timer: Timer = $ScoreTimer` is a `node<T>()` delegate:
+GDScript's `@onready var timer: Timer = $ScoreTimer` is a `node<T>()` property:
 
 ```kotlin
 private val scoreTimer by node<Timer>("ScoreTimer")
@@ -458,25 +303,23 @@ private val camera by node<Camera3D>("%Camera3D")          // scene-unique names
 private val player by script<Player>("Player")             // the Kotlin script on that node
 ```
 
-The node is looked up on first read and cached, like an `@onready` variable that
-GDScript assigns just before `_ready`. The read must therefore come once the node
-is ready (in `@OnReady` or later). The cache lasts until the next `_ready`: after
-`request_ready()` and a re-entry, the next read looks the node up again, as GDScript
-re-runs its `@onready` initializers. Every lookup also takes a `NodePath`. Each delegate checks what it finds and throws an
+The node is looked up on the first read and kept, like an `@onready` variable,
+so read it in `@OnReady` or later. After `request_ready()` and a new `_ready`,
+the next read looks the node up again, as GDScript re-runs its `@onready` lines.
+Every lookup also takes a `NodePath`. A failed lookup throws an
 `IllegalStateException` that names the property:
 
-- read before ready: `Main.scoreTimer: node("ScoreTimer") was read before /root/Main was ready`;
+- read too early: `Main.scoreTimer: node("ScoreTimer") was read before /root/Main was ready`;
 - missing node: `Main.scoreTimer: no node at "ScoreTimer" under /root/Main`;
 - wrong class: `Main.scoreTimer: node "ScoreTimer" is a Node2D, not a Timer`;
 - `script<T>()` on a node without that script: `... has no Kotlin script, not Player`.
 
-For a one-off lookup, `self.requireAs<T>(path)` throws the same way and
-`self.getNodeAs<T>(path)` returns `null` when the path is missing or the node is
-another class (GDScript `get_node_or_null(path) as T`). Exported references
-(`@Export var label: Label? = null`) remain the inspector-wired option.
-
-The older `self.requireAs(path, ::Label)` and `getAsOrNull(path, ::Label)` still
-compile; they do not check the class, so prefer the typed forms.
+For a one-off lookup, `self.requireAs<Label>("Hud/Label")` throws the same way,
+and `self.getNodeAs<Label>("Hud/Label")` returns `null` when the node is missing
+or of another class, like GDScript's `get_node_or_null(path) as Label`. An
+exported reference (`@Export var label: Label? = null`) is the inspector-wired
+alternative. The older `requireAs(path, ::Label)` and `getAsOrNull(path, ::Label)`
+do not check the class, so prefer the typed forms.
 
 ## Casts and Script Checks
 
@@ -487,17 +330,12 @@ compile; they do not check the class, so prefer the typed forms.
 | `if body is Player:` | `if (body.isScript<Player>())` |
 | `var p := body as Player` | `val p = body.asScript<Player>()` |
 
-`castOrNull` and `cast` ask Godot (`Object.is_class`) every time, even when the
-wrapper's Kotlin class already matches (a wrapper minted with `Timer(node.handle)`
-proves nothing); only a cast to `GodotObject` skips the question. A cast to a
-`RefCounted` class (`res.cast<Texture2D>()`) returns a new wrapper with a reference
-of its own, like the `from*` downcasts: kept in a field it keeps the object alive,
-and closing it (or forgetting it) releases only that reference, never the
-original's. A cast to any other class returns the same wrapper when it already is
-a `T`, else a new view of the same object. They take a Kanama wrapper class (`Node3D`, `InputEventKey`,
-`PackedScene`, ...); `isScript` / `asScript` take a Kotlin script class.
-Replace hand-written `Node3D(other.handle)` casts with them: an unchecked one
-calls `Node3D` methods on whatever the object really is.
+`castOrNull` and `cast` ask Godot what the object is, so they are right even for
+a wrapper built by hand. Use them instead of `Node3D(other.handle)`, which calls
+`Node3D` methods on whatever the object really is. A cast to a resource class
+(`res.cast<Texture2D>()`) is a new reference of your own: keep it, or close it
+when you are done, without affecting the original. `castOrNull` and `cast` take a
+Godot class; `isScript` and `asScript` take your script class.
 
 ## Preload and Instancing
 
@@ -505,36 +343,36 @@ calls `Node3D` methods on whatever the object really is.
 private val bulletScene by preload<PackedScene>("res://bullet.tscn")   // const BULLET = preload(...)
 
 fun shoot() {
-    val bullet = bulletScene.instantiateAs<RigidBody3D>()   // root node, class-checked
+    val bullet = bulletScene.instantiateAs<RigidBody3D>()   // the root node, class-checked
     val coin = coinScene.instantiateScript<Coin>()          // the Kotlin script on the root
     self.addChild(coin.self)
 }
 ```
 
-`preload` loads the resource on first read and keeps it for the rest of the
-process, shared by every script that preloads the same path, as a GDScript
-`preload` constant does; do not `close()` it. A missing file or a resource of
-another class throws. Give an absolute `res://` or `uid://` path. The cache is keyed
-by the path text, so preloading one resource by both its `res://` path and its
-`uid://` holds it twice; that is harmless, it is the same object. `instantiateAs<T>()` and `instantiateScript<T>()` free the
-instance and throw when its root is not what you asked for.
+`preload` loads the resource on the first read and keeps it for the rest of the
+game, shared by every script that preloads the same path, like a GDScript
+`preload` constant; do not `close()` it. Give an absolute `res://` or `uid://`
+path. A missing file or a resource of another class throws. `instantiateAs<T>()`
+and `instantiateScript<T>()` free the instance and throw when its root is not
+what you asked for.
 
 ## Tree Accessors
 
 `self.tree`, `self.viewport` and `self.parentNode` are the non-null forms of
-`getTree()`, `getViewport()` and `getParent()`: they throw an
-`IllegalStateException` (`Node "Sub" is not inside the tree`, or `... has no
-parent`) where GDScript's `get_tree()` fails. They check the tree membership
-first, so Godot logs no error of its own.
+`getTree()`, `getViewport()` and `getParent()`:
 
 ```kotlin
-self.tree.callGroup("mobs", "queue_free")      // was requireNotNull(self.getTree())
+self.tree.callGroup("mobs", "queue_free")
 ```
+
+They throw an `IllegalStateException` (`Node "Sub" is not inside the tree`, or
+`... has no parent`) where GDScript's `get_tree()` would fail, and Godot logs no
+error of its own.
 
 ## Await
 
-A script launches coroutines on its own scope and suspends in them the way a
-GDScript function `await`s:
+A script starts coroutines with `launch { }` and suspends in them the way a
+GDScript function uses `await`:
 
 | GDScript | Kotlin, inside `launch { }` |
 |---|---|
@@ -554,92 +392,80 @@ fun showGameOver() {
 }
 ```
 
-The scope runs on the main thread and is cancelled when the script's Godot
-object is freed, so a coroutine never touches a freed node. Leaving the tree does
-not cancel it (GDScript does not either); `cancelCoroutines()` does. `wait` uses a
-`SceneTree` timer with GDScript's `create_timer` defaults: it keeps running while the
-tree is paused and follows `Engine.time_scale`. `wait(1.0, processAlways = false)`
-pauses with the game, and `ignoreTimeScale = true` ignores the time scale. On Web it
-is the frame scheduler's delay (the defaults only). `scriptScope` is the scope itself, for other `kotlinx.coroutines` builders.
-See [Kotlin Style → Coroutines](style-guide.md#coroutines).
-
-**Web.** The Web backend has `launch`, `wait`, `nextFrame`, `isScript`,
-`asScript` and the tree accessors; the `node`/`script`/`preload` delegates,
-`castOrNull`/`cast`, `requireAs<T>`/`getNodeAs<T>` and the `instantiate*` helpers
-are desktop, Android and iOS only for now.
+Coroutines run on the main thread and stop when the script's node is freed, so
+a coroutine never touches a freed node. Leaving the tree does not stop them, as
+in GDScript; `cancelCoroutines()` does. `wait` uses a scene-tree timer with
+GDScript's `create_timer` defaults: it keeps running while the game is paused and
+follows `Engine.time_scale`. `wait(1.0, processAlways = false)` pauses with the
+game, and `ignoreTimeScale = true` ignores the time scale. `scriptScope` is the
+scope itself, for other `kotlinx.coroutines` builders. See
+[Kotlin Style](style-guide.md#coroutines).
 
 ## Autoloads
 
-GDScript reaches an autoload by its global name (`Audio.play(...)`); Kanama
-generates the same names as properties of `net.multigesture.kanama.generated.Autoloads`,
-one per enabled (`*`) entry of the `project.godot` `[autoload]` section:
-
-| Autoload | `Autoloads.<Name>` is typed |
-|---|---|
-| a Kotlin script (`Settings="*res://kotlin-src/Settings.kt"`) | to the script class: `Autoloads.Settings.loadSettings()` |
-| a scene (`MusicPlayer="*res://MusicPlayer.tscn"`) | to the root node's script class when it has a Kotlin script, else to its class (`AudioStreamPlayer`) |
-| a GDScript (`Audio="*res://scripts/audio.gd"`) | to the class it `extends` (`Node`): call into it with `call("play", ...)` |
+GDScript reaches an autoload by its global name (`Audio.play(...)`). Kanama
+generates the same names as properties of
+`net.multigesture.kanama.generated.Autoloads`, one for each enabled autoload in
+`project.godot`:
 
 ```kotlin
 import net.multigesture.kanama.generated.Autoloads
 
 Autoloads.Audio.call("play", "res://sounds/coin.ogg")   // GDScript: Audio.play("res://sounds/coin.ogg")
 val settings = Autoloads.Settings                       // the Kotlin script on /root/Settings
+settings.loadSettings()
 ```
+
+| The autoload is | `Autoloads.<Name>` is typed as |
+|---|---|
+| a Kotlin script (`Settings="*res://kotlin-src/Settings.kt"`) | the script class |
+| a scene (`MusicPlayer="*res://MusicPlayer.tscn"`) | the root node's Kotlin script, else the root's class (`AudioStreamPlayer`) |
+| a GDScript (`Audio="*res://scripts/audio.gd"`) | the class it `extends` (`Node`); call into it with `call("play", ...)` |
 
 The first read finds the node at `/root/<Name>`, as GDScript's global does, and
 throws an `IllegalStateException` naming the autoload when the node is missing
-or of another class; later reads reuse that node while it is alive (a freed one
-is looked up again). A worker thread can read an autoload once the main thread
-has read it; before that the read throws, because only the main thread may
-query the scene tree. The
-processor reads `project.godot` above the script sources (the build declares it
-as an input, so editing the autoload list re-runs it); a project laid out
-differently sets the `kanamaGodotProjectDir` KSP option. A class Kanama has no
-wrapper for on the target falls back to its nearest wrapped ancestor. On Web the
-lookup goes through the running script's node, so read an autoload from a script
-callback (a lifecycle handler, a signal, a coroutine), which is where Web code runs.
+or of another class. Later reads reuse that node while it lives. A worker thread
+can read an autoload after the main thread has read it once. A class Kanama has
+no wrapper for on a platform is typed as its nearest wrapped parent class.
+`Engine.getSingleton()` is for engine singletons such as `Input`; autoloads are
+nodes, not engine singletons.
 
-**`@Tool` scripts in the editor.** The editor adds an autoload to its own tree
-only when the autoload's script is a tool script (`@Tool`), as Godot does for
-GDScript. Editor code of a `@Tool` script can read `Autoloads.<Name>` of such an
-autoload; any other autoload is not in the editor's tree, so the read throws
-there (check `Engine.isEditorHint()` first). In the running game every autoload
-is there.
+The build reads `project.godot` from the folder above your script sources, and
+rebuilds when the autoload list changes. A project laid out differently sets the
+`kanamaGodotProjectDir` KSP option. An override for one platform
+(`Music.android="*res://music_mobile.gd"`) is not an autoload of its own: it is
+skipped with a build warning, and `Autoloads.Music` is typed from the base
+entry. An autoload saved by uid (`"*uid://..."`) is typed from the file that owns
+the uid.
 
-**Keys and paths.** A feature-tag override in `project.godot`
-(`Music.android="*res://music_mobile.gd"`) is not an autoload of its own and is
-skipped with a build warning; `Autoloads.Music` is typed from the base entry. An
-autoload saved by uid (`"*uid://…"`) is typed from the file that declares the
-uid (a script's `.uid` file, a scene's header).
+**In the editor**, Godot adds an autoload to the editor's own tree only when its
+script is a tool script (`@Tool`). Editor code of a `@Tool` script can read such
+an autoload; any other one is not there, so check `Engine.isEditorHint()` first.
+In the running game every autoload is there.
 
-**Hot reload.** A desktop hot reload resets each Kotlin autoload in place, so the
-autoload stays the same node: `Autoloads.<Name>`, GDScript's global name and any
-reference other code holds keep working. What survives and what does not:
+**Hot reload** keeps each Kotlin autoload the same node, so `Autoloads.<Name>`,
+GDScript's global name and any reference other code holds keep working:
 
 | Survives the reload | Does not survive |
 |---|---|
-| the node itself (identity, name, place under `/root`, its GDScript global) | the old script object: each Kotlin node of the autoload gets a new one, from the new build |
-| a stored (exported) property whose type did not change: its value is set back | a stored property whose type changed: it takes the new build's default (or the autoload scene's value) |
-| the nodes of the autoload's scene (`.tscn` children) | children created at run time (in `_ready` or later): they are freed |
+| the node itself: its identity, name, place under `/root` and GDScript global | the old script object: each Kotlin node of the autoload gets a new one, from the new build |
+| an exported property whose type did not change: its value is set back | an exported property whose type changed: it takes the new default, or the autoload scene's value |
+| the nodes of the autoload's scene | children created at run time, in `_ready` or later: they are freed |
 | connections other objects made **to** the autoload | lambda connections the autoload made (`signal.connect(self) { ... }`): they are disconnected |
-| | any other lambda connection of the old build, whatever its target: dropped once the old build's last script object is gone, with one warning (see [Signals: hot reload](signals.md#hot-reload)) |
+| | any other lambda connection of the old build: dropped once the old build's last script object is gone, with one warning (see [Signals](signals.md#hot-reload)) |
 | | every other Kotlin field: it starts from its initializer |
 
-Then `_ready` runs again on the reset nodes, children before parents as Godot
-readies a tree, so whatever `_ready` sets up (runtime children, connections)
-exists once, from the new code. This is a scene reload for the autoload, minus
-the new node. Hot reload runs in the editor process too (Build Scripts while
-the editor is open), so a `@Tool` autoload in the editor's tree is reset the
-same way there.
+Then `_ready` runs again on the reset nodes, children before parents, so what
+`_ready` sets up exists once, from the new code. It is a scene reload for the
+autoload, minus the new node. Building while the editor is open reloads the
+editor too, so a `@Tool` autoload in the editor's tree is reset the same way.
 
 ## Script Inheritance
 
-A script class can extend another script class of the project, as a GDScript
-script `extends` another one. The subclass has every member of the chain: the
-exported properties, signals, lifecycle handlers, `@OverrideVirtual`s, tool
-buttons and registered public functions of its superclasses, with no forwarding
-code:
+A script class can extend another script class of your project, as a GDScript
+script `extends` another one. The subclass has every member of the chain:
+exports, signals, lifecycle callbacks, `@OverrideVirtual`s, tool buttons and
+public functions, with no forwarding code:
 
 ```kotlin
 @ScriptClass(attachTo = "Node3D")
@@ -655,7 +481,7 @@ open class Vehicle(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject,
 @ScriptClass(attachTo = "Node3D")
 @GlobalClass
 class VehicleMotorcycle(godotObject: GodotHandle) : Vehicle(godotObject) {
-    override fun ready() {             // still the _ready handler: the annotation is inherited
+    override fun ready() {             // still the _ready callback: the annotation is inherited
         super.ready()
         /* ... */
     }
@@ -663,104 +489,118 @@ class VehicleMotorcycle(godotObject: GodotHandle) : Vehicle(godotObject) {
 }
 ```
 
-The rules:
-
-- **The most derived declaration is the member.** Godot calls the override (Kotlin
-  dispatch is virtual); a superclass's `private` member is not inherited.
-- **Annotations follow the override.** An override without Kanama annotations
-  keeps the overridden declaration's (`override fun ready()` stays `_ready`; the
-  override of an `@Export open var` stays exported). An override with its own
-  annotations uses those: the subclass wins.
-- **Conflicts are build errors.** Two different functions of the chain that land on
-  one Godot name (a base `@OnReady fun ready()` and a subclass `@OnReady fun setup()`)
-  or two exported properties with one Godot name fail the build naming both:
-  override the base member instead of adding a second one.
-
+- **The most derived declaration wins.** Godot calls the override. A
+  superclass's `private` member is not inherited.
+- **Annotations follow the override.** An override without annotations keeps
+  the ones it overrides (`override fun ready()` stays `_ready`, an override of an
+  `@Export open var` stays exported). An override with its own annotations uses
+  those.
+- **Conflicts are build errors.** Two different functions of the chain on one
+  Godot name (a base `@OnReady fun ready()` and a subclass `@OnReady fun setup()`),
+  or two exports with one name, fail the build naming both. Override the base
+  member instead of adding a second one.
 - **Generic bases are typed for the subclass.** On `class Sub : Base<Long>()`, a
-  base's `@Export var amount: T` is a `Long` export and its `open fun f(x: T)` takes
-  a `Long`; `override fun f(x: Long)` overrides it (one Godot method, not two).
+  base's `@Export var amount: T` is a `Long` export, and `override fun f(x: Long)`
+  overrides `open fun f(x: T)`: one Godot method, not two.
 
-The superclass may be a `@ScriptClass` itself or a plain (abstract) class in the
-same build. A class from a library contributes nothing, because annotations are
-read from source; the build warns, naming the library class. Interfaces
-contribute nothing either: only the class chain is collected, so a default
-member of an interface the script implements is not registered (declare it on
-the class, or override it there).
+The superclass may be a `@ScriptClass` or a plain, possibly abstract, class in
+the same build. A class from a library contributes nothing, because annotations
+are read from source; the build warns and names it. Interfaces contribute
+nothing either: declare or override an interface's default member on the class
+to register it.
 
-## Cross-Script References
+To type a property as another of your scripts (`var target: Vehicle?`), mark
+that script `@GlobalClass`. See
+[Global Classes](godot-api.md#global-classes).
 
-To reference another Kanama script type (e.g. `var target: Vehicle?`), both
-classes must be in the same project and the referenced class must be
-`@GlobalClass`. See [Calling Godot APIs — Global Classes](godot-api.md#global-classes).
+## Printing and Errors
+
+```kotlin
+GD.print("Hello from Kotlin")        // Godot's Output panel, like GDScript print()
+GD.pushError("bad state: $value")    // a Godot error (Output and Errors tab), like push_error()
+System.err.println("[debug] $value") // the process's stderr only, not the Output panel
+```
+
+`GD.print` goes through Godot's logger, so it reaches the editor's Output panel.
+`println` and `System.err.println` write to the game process's own streams: you
+see them in the terminal that started Godot or in a `--headless` log, never in
+the Output panel, and nowhere for a game started from the Dock or Finder.
+
+An exception that escapes your code into Godot (a lifecycle callback, a public
+function, a signal lambda, a property accessor, a `MainThread` task, a coroutine
+started with `launch`) does not crash the game. Kanama prints the stack trace to
+stderr and reports a script error, the way Godot reports a GDScript runtime
+error:
+
+```text
+SCRIPT ERROR: java.lang.IllegalStateException: no target
+          at: Player.ready (res://kotlin-src/com/example/game/Player.kt:42)
+```
+
+It appears in Godot's log and, when you run from the editor, in the Debugger's
+Errors tab, which opens the file. The file and line are those of your own code's
+top frame; Kanama, generated, Kotlin and JDK frames are skipped. A file outside
+the project is named without its path. The rest of that call does not run and the caller gets `null`, as with
+a GDScript runtime error; the next frame runs as usual.
+
+Calling a method on a node that was freed is the same kind of error in the
+editor and in debug exports:
+`IllegalStateException: Invalid access to previously freed instance (Node3D, instance id ...)`,
+as GDScript reports it. Holding such a wrapper is not an error: comparing it,
+`GD.isInstanceValid(node)`, and handing it to Godot as a value are silent, and
+Godot receives `null`. A release export does not check, and a call there is
+undefined, so ask `GD.isInstanceValid(node)` before using an object that may be
+gone. Two wrappers of one object are `==`, and equal as `Set` and `Map` keys,
+whatever their class.
+
+## Building Your Scripts
+
+GDScript changes are live; Kotlin scripts are compiled first. Press **Build
+Scripts** in the Godot toolbar, or turn on build on save. A running game picks
+up the new build without a restart. See
+[Edit, Build, Run](../getting-started/editor-workflow.md).
 
 ## Threads
 
-Godot calls into Kanama on whichever thread made the call, and Kanama runs it
-there. For the scene tree that is the engine's main thread: every callback a
-script receives — `@OnReady`, `@OnProcess`, `@OnPhysicsProcess`,
-registered functions called from GDScript, signal callbacks, `@OverrideVirtual` —
-arrives on the main thread, `initialize` ran there, and `MainThread.post` and a
-script's coroutines (`launch { }`) drain their queues there once per frame.
-That is also the rule for your own threads: **hand results back to the main
-thread** with `MainThread.post` or a script coroutine before touching a
-node (see [Kotlin Style → Coroutines](style-guide.md#coroutines)).
+Every callback a script receives arrives on Godot's main thread: lifecycle
+callbacks, public functions called from GDScript, signal callbacks and
+`@OverrideVirtual`s. `MainThread.post { }` and a script's coroutines run there
+too. When you start your own thread, **hand the result back to the main thread**
+with `MainThread.post` or a coroutine before you touch a node (see
+[Kotlin Style](style-guide.md#coroutines)).
 
-`RefCounted` wrappers behave the same on every thread. One you get on a
-worker (a getter result, a loaded resource, a `from*` downcast) is yours, and a
-forgotten one is released by the garbage collector like one made on the main
-thread ([Resource Ownership](godot-api.md#a-forgotten-close-is-a-late-release)).
-The release always runs on the main thread, and a wrapper stays reachable until
-its last call has returned, so it is never released while a worker, or the
-main thread, is still calling through it. `close()` (`use { }`) still releases
-early, from any thread. A view you built over a handle (`fromHandle`, a wrapper
-constructor) takes no reference of its own: it is valid only while the wrapper
-that owns the object is.
+Kanama does not check which thread calls the engine. A wrapper method called
+from a `Dispatchers.Default` coroutine or your own `Thread` calls Godot from
+that thread, exactly as a GDScript `Thread` would. Whether that is safe is
+Godot's rule for that API: the servers and `ResourceLoader` are thread-safe, the
+scene tree is not.
 
-Kanama performs **no thread-affinity checks**. A wrapper method called from a
-`Dispatchers.Default` coroutine or a `Thread` you started ptrcalls the engine
-from that thread, exactly as a GDScript `Thread` would; whether that is safe is
-Godot's rule for the API in question (the servers and `ResourceLoader` are
-thread-safe, the scene tree is not), and nothing in Kanama will stop you.
+A resource you get on a worker thread is yours like one you get on the main
+thread: close it, or the garbage collector releases it later, always on the main
+thread and never while a call through it is still running. A view built over a
+handle (`fromHandle`, a wrapper constructor) has no reference of its own and is
+valid only while the wrapper that owns the object is.
 
-`ResourceLoader.load_threaded_request("res://Thing.kt")` is the case where the
-engine itself leaves the main thread: it runs Kanama's `.kt` loader on a worker
-thread. The loader is written for that — its per-thread state is `ThreadLocal`,
-its script catalog is synchronized, and its create-and-attach path only assumes
-that creation and attach happen on the *same* thread, which Godot guarantees
-because `_instance_create` is synchronous. The consequence for **your** code is
-that a `@ScriptClass` constructor or `init` block reached through such a load
-runs on that worker too. Keep constructors free of scene-tree access and do that
-work in `@OnReady`, which is always dispatched on the main thread.
+`ResourceLoader.load_threaded_request("res://Thing.kt")` loads a script on a
+worker thread, so the script's constructor and `init` blocks run there. Keep
+constructors free of scene-tree access and do that work in `@OnReady`, which
+always runs on the main thread.
 
-To see whether a callback is arriving off the initialize thread, run with
-`KANAMA_THREAD_DIAGNOSTICS=1`. Kanama then logs, **once per site**, when
-`ScriptBridge.siCall` (script method dispatch) or the `.kt` loader's `_load` runs
-on a thread other than the one that ran `initialize`:
+## Common Pitfalls
 
-```
-[kanama:thread] KanamaResourceFormatLoader.callLoad ran on thread id=41 name=..., not the initialize thread (...)
-```
+- **Generated objects are missing in the IDE.** `PlayerMethods`,
+  `PlayerSignals` and `PlayerRpcs` exist after a build. Build, or sync Gradle,
+  after adding a public function, a `@Signal` or an `@Rpc`.
+- **`@Tool` scripts run in the editor.** An exported node reference may be
+  `null` while the editor runs the script, so guard editor-only code. In a
+  `KanamaScript`, `isEditorHint()` tells you that you are in the editor, and
+  `notifyInspectorChanged()` refreshes the inspector after you change what it
+  shows.
 
-It is a diagnostic, not an assertion — nothing is refused — and with the
-variable unset it costs one boolean read per call.
+## On Other Platforms
 
-## Known Gotchas
-
-- **Default arguments depend on how Godot reaches the method.** On a
-  `@ScriptClass` script, a registered function whose trailing parameters
-  have Kotlin defaults is dispatched by argument count: a Godot-side caller that
-  omits them (`call("spawn")`, an untyped `obj.spawn()`, a connection with fewer
-  bound arguments) gets the Kotlin defaults. Desktop, Android and iOS do this
-  (iOS: task 114); the Web backend is not covered here. The method metadata
-  Godot receives lists every parameter. A `@RegisterClass` type's methods are registered in
-  `ClassDB` with no default arguments (`default_argument_count` is 0), so Godot
-  rejects a call that omits any parameter: pass them explicitly or use overloads.
-- **KSP must run** before IntelliJ resolves generated helpers like
-  `PlayerMethods`, `PlayerSignals`, or `PlayerRpcs`. Run a Gradle sync or
-  build after adding new public functions, `@Signal`, or `@Rpc`
-  declarations.
-- **`@Tool` scripts run in the editor.** Guard editor-only code against
-  partially initialized scenes — exported node references may be `null` during
-  editor tool execution. From a `KanamaScript` subclass, use `isEditorHint()`
-  for editor checks and `notifyInspectorChanged()` after changing editor-time
-  property-list state.
+Everything on this page works on desktop, Android and iOS. Web runs a smaller
+set of lifecycle callbacks and function signatures, has no `node`, `script` or
+`preload` properties yet, and reports errors without a Kotlin line. iOS shows
+line 0 for errors in some export modes. [Limitations](../reference/limitations.md)
+lists each case with its workaround.
