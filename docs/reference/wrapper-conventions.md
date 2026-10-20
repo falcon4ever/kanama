@@ -261,6 +261,31 @@ property Godot types as `enum::X` or `bitfield::X` uses it.
   `Long`; wrap it with `Node.ProcessMode(raw as Long)` when you need the type.
 - **Script members** typed with a Godot enum (`@Export` properties, registered functions,
   `@Signal`, `@Rpc`, engine virtuals) are covered in [Exports and Resources](../game-dev/properties-resources.md#godot-enums-and-bitfields).
+- **Export metadata.** An `@Export` of a Godot enum follows the style of the engine's own
+  properties (what `Node.process_mode` shows), not GDScript's: an `int` with `PROPERTY_HINT_ENUM`,
+  or `PROPERTY_HINT_FLAGS` for a bitfield, and a hint string of the value names as Godot
+  capitalizes them, with the values spelled out (`Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4`,
+  `Messages:1,Messages Physics:2,Messages All:3`). GDScript's `@export var mode: Node.ProcessMode`
+  uses the full names (`Process Mode Inherit:0,...`) and exports a bitfield as a `PROPERTY_HINT_ENUM`
+  dropdown of single flags; the stored `int` is the same, so scenes are interchangeable. Whether a
+  type is a bitfield is Godot's call: `BaseMaterial3D.Flags` is an enum of flag indices and exports
+  as a dropdown. As in GDScript, `class_name` is Godot's qualified name (`Node.ProcessMode`) and
+  usage includes `PROPERTY_USAGE_CLASS_IS_ENUM`; a bitfield uses Godot's native
+  `PROPERTY_USAGE_CLASS_IS_BITFIELD`, which GDScript types as a plain `int`, so assigning a
+  combination of flags does not warn. The default may be a value, the raw form
+  (`Node.ProcessMode(3L)`) or an `or` of bitfield values, and is constant-folded. A
+  `List<Node.ProcessMode>` is a typed int array (`"2/2:<hint>"`). A value the hint does not list
+  (a newer Godot's, an extension's) is kept, not clamped. On Web the generated GDScript proxy
+  declares the property with `@export_custom(<hint>, "<hint string>")`, which cannot set
+  `class_name`, so Web reports the hint and hint string only.
+- **Export hint strings.** The processor builds each `@Export*` hint string as GDScript's parser
+  does, so `get_property_list()` reports the same hint and hint string for a Kotlin script and its
+  GDScript twin (`scripts/runtime_smoke.sh` compares them row by row). `@ExportRange` writes its
+  extra flags in GDScript's order: `or_greater`, `or_less`, `exp`, `radians_as_degrees`,
+  `degrees`, `prefer_slider`, `hide_control`, `suffix:<unit>`. Build errors follow GDScript's
+  argument rules: an empty argument, or one with a comma (except placeholder text), a malformed
+  `@ExportFlags` value, an `@ExportNodePath` class that is not a `Node` (an engine class or a
+  `@GlobalClass` script), a hint on a type it does not take, two hints on one property.
 
 - **Engine virtuals** whose parameters or return Godot types as an enum take the value class
   (`@OverrideVirtual fun _get_shader_mode(): Shader.Mode`); a `Long` there fails the build and
@@ -376,6 +401,11 @@ The full statement is [Resource Ownership](../game-dev/godot-api.md#resource-own
   [Keeping a Resource Through Its Script](../game-dev/properties-resources.md#keeping-a-resource-through-its-script).
 - Wrappers made on any thread get the GC fallback; the release runs on the main thread, after the
   wrapper's last call (`ObjectCalls.keepReachable`).
+- **Exported resource slots** are an allowlist, because a resource-typed read is
+  ownership-managed (retained while the script holds it, released on cleanup): `PackedScene`,
+  `Texture`, `Texture2D`, `NoiseTexture2D`, `Material`, `ShaderMaterial`, `Curve`,
+  `FastNoiseLite`, `ButtonGroup`, `LightmapGIData`, `AudioStream`, `Mesh`, `Shape2D`, `Shape3D`,
+  `Font`, `Animation`, `StyleBox`, and any `@GlobalClass` custom resource script.
 
 ### The Full Ownership Table
 

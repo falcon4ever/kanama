@@ -1,156 +1,193 @@
 # Multiplayer
 
-Kanama multiplayer code uses Godot's normal networking stack. Create or join a
-peer with wrappers such as `ENetMultiplayerPeer`, assign it to the scene tree,
-and expose synchronized methods and properties from Kotlin scripts.
+Kanama uses Godot's own networking. You create a peer, give it to the scene
+tree's `MultiplayerAPI`, and mark the functions other peers may call with
+`@Rpc`. Scenes, synchronizers and authority work as they do in GDScript. The
+snippets sit inside a script like the one in
+[Writing Scripts](scripts.md#a-complete-script), which lists the imports.
 
 ## Peer Setup
 
-The common ENet shape mirrors GDScript:
-
 ```kotlin
-val peer = ENetMultiplayerPeer.create()
-peer.createServer(port)
-self.getMultiplayer()?.multiplayerPeer = peer
-```
+fun host(port: Long) {
+    ENetMultiplayerPeer.create().use { peer ->
+        if (peer.createServer(port.toInt()) != GodotError.OK) return
+        self.getMultiplayer()?.use { it.multiplayerPeer = peer }
+    }
+}
 
-For a client:
-
-```kotlin
-val peer = ENetMultiplayerPeer.create()
-peer.createClient(address, port)
-self.getMultiplayer()?.multiplayerPeer = peer
-```
-
-Use `OfflineMultiplayerPeer.create()` or clear the `MultiplayerAPI`'s peer when returning
-to local-only play. Keep the peer owner clear in your code; it is easy to leave
-old connection state behind when switching between menu and gameplay scenes.
-
-## RPC Methods
-
-Declare network-callable methods with `@Rpc` on a public function (every public
-function of a script is registered with Godot):
-
-```kotlin
-@Rpc(callLocal = true)
-fun jump() {
-    queuedJump = true
+fun join(address: String, port: Long) {
+    ENetMultiplayerPeer.create().use { peer ->
+        if (peer.createClient(address, port.toInt()) != GodotError.OK) return
+        self.getMultiplayer()?.use { it.multiplayerPeer = peer }
+    }
 }
 ```
 
-KSP generates typed sender helpers next to the script registrar:
+This is GDScript's `multiplayer.multiplayer_peer = peer`. The `MultiplayerAPI`
+keeps its own reference to the peer, so `use { }` releases only yours (see
+[Resource Ownership](godot-api.md#resource-ownership)). To go back to local
+play, assign `OfflineMultiplayerPeer.create()` the same way. Keep one place in
+your code in charge of the peer: old connection state is easy to leave behind
+when you switch between menu and game scenes.
+
+## RPC Methods
 
 ```kotlin
-PlayerInputSynchronizerRpcs.callLocalJump(input)
-PlayerInputSynchronizerRpcs.rpcJump(input)
-PlayerInputSynchronizerRpcs.rpcIdJump(input, peerId)
+@ScriptClass(attachTo = "MultiplayerSynchronizer")
+class PlayerInput(godotObject: GodotHandle) :
+    KanamaScript<MultiplayerSynchronizer>(godotObject, ::MultiplayerSynchronizer) {
+
+    private var queuedJump = false
+
+    @Rpc(callLocal = true)
+    fun jump() {
+        queuedJump = true
+    }
+
+    @OnProcess
+    fun process(delta: Double) {
+        if (Input.isActionJustPressed("jump")) PlayerInputRpcs.rpcJump(this)
+    }
+}
 ```
 
-The raw `self.rpc("jump")` style still exists for dynamic boundaries, but use
-generated `*Rpcs` helpers for Kanama-owned methods. They keep the Godot method
-name and parameter list tied to the annotated Kotlin declaration, similar to
-generated signal helpers.
+`@Rpc` on a public function is GDScript's `@rpc`. Its settings have the same
+names and defaults as GDScript's:
 
-Kanama delivers the `@Rpc` metadata to Godot when the script is registered, so
-Godot's normal `Node.rpc`, `Node.rpc_id`, and authority checks use the
-annotation's `mode`, `callLocal`, `transferMode`, and `channel` values on
-desktop, Android, and iOS.
+```kotlin
+@Rpc(mode = RpcMode.ANY_PEER, transferMode = RpcTransferMode.UNRELIABLE_ORDERED, channel = 1)
+fun aim(direction: Vector2) {
+    // GDScript: @rpc("any_peer", "unreliable_ordered", "call_remote", 1)
+}
+```
 
-`callLocalX(...)` is generated only for `@Rpc(callLocal = true)` methods. That
-keeps local fallback explicit and prevents accidentally running non-local RPCs
-while offline.
+The build generates a `PlayerInputRpcs` object with one sender per RPC. A
+sender takes the script object, `this`, not the node `self`: it is typed to
+your script class, so the compiler checks that the target has the RPC.
 
-A plain Kotlin call to an `@Rpc` function (`prepareGame()`,
-`robot.hit()`) does not go over the network: it is GDScript's `prepare_game()`,
-not `prepare_game.rpc()`. For a function without `callLocal`, the processor
-warns about such a call and names the sender to use:
+| GDScript | Kotlin | What it does |
+|---|---|---|
+| `jump.rpc()` | `PlayerInputRpcs.rpcJump(this)` | Calls `jump` on the other peers, and here too when the RPC is `callLocal`. |
+| `jump.rpc_id(peer_id)` | `PlayerInputRpcs.rpcIdJump(this, peerId)` | Calls `jump` on one peer. |
+| `jump.rpc()` in a game that also runs without a network | `PlayerInputRpcs.callLocalJump(this)` | Does what `rpcJump` does; when the send fails, for example with no peer, calls `jump` here directly. Generated only for `@Rpc(callLocal = true)`. |
+
+`self.rpc("jump")` still works for a function Godot knows only by name, such
+as one in a GDScript.
+
+A plain Kotlin call, `jump()`, does not go over the network: it is GDScript's
+`jump()`, not `jump.rpc()`. For a function without `callLocal`, the build warns
+about such a call and names the sender to use:
 
 ```text
-w: [ksp] [kanama:ksp] /path/Menu.kt:376: prepareGame() is an @Rpc function of Menu called
-directly, so it runs on this peer only. Send it with MenuRpcs.rpcPrepareGame(instance) or
-MenuRpcs.rpcIdPrepareGame(instance, peerId); to run it here as well, declare
-@Rpc(callLocal = true) and call MenuRpcs.callLocalPrepareGame(instance).
+w: [ksp] [kanama:ksp] /path/to/your-project/kotlin-src/Menu.kt:376: prepareGame() is an @Rpc function of Menu called directly, so it runs on this peer only. Send it with MenuRpcs.rpcPrepareGame(instance) or MenuRpcs.rpcIdPrepareGame(instance, peerId); to run it here as well, declare @Rpc(callLocal = true) and call MenuRpcs.callLocalPrepareGame(instance).
 ```
 
-`@Rpc(callLocal = true)` functions get no warning, because a direct local call
-to one is sometimes what the GDScript original does too (tps `shoot()` calls
-`add_camera_shake_trauma(0.35)` directly). Because of that exemption, port each
-`x.rpc()` line as a sender call yourself: `jump.rpc()` on a `call_local` RPC
-becomes `PlayerRpcs.callLocalJump(this)`, not `jump()`. The check reads the
-source text, so it sees a call in the file that declares the `@Rpc` class, and
-a qualified call (`robot.hit()`) elsewhere only when the name is declared once
-in the sources and is not also a Godot method name.
+The warning skips `callLocal` functions, because calling one directly is
+sometimes what the GDScript original does, and it misses some calls through
+another object. So when you port, turn each `x.rpc()` line into a sender call
+yourself.
 
-## Authority And Synchronizers
+## Authority and Synchronizers
 
-For player input, a useful pattern is:
+```kotlin
+@ScriptClass(attachTo = "Node3D")
+class World(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3D) {
+    @Export var playerScene: PackedScene? = null
 
-- The server owns world simulation and spawning.
-- Each player scene contains a `MultiplayerSynchronizer` for client-owned input.
-- The synchronizer's multiplayer authority is assigned before gameplay starts.
-- The server reads replicated input and writes authoritative movement state.
+    private val players by node<Node>("Players")      // the MultiplayerSpawner's spawn path
 
-Set stable node names for spawned players, usually the peer id as a string, so
-Godot's multiplayer replication can match scene paths across peers.
+    @OnReady
+    fun ready() {
+        self.getMultiplayer()?.use { multiplayer ->
+            if (!multiplayer.isServer()) return
+            multiplayer.peerConnected.connect { id -> addPlayer(id) }
+            addPlayer(1)                                // the host's own player
+        }
+    }
 
-When porting from GDScript, preserve the original authority timing. Moving an
-authority assignment from `_enter_tree` to `_ready`, or from the scene root to a
-child synchronizer, can produce code that compiles but silently drops input.
+    private fun addPlayer(id: Long) {
+        val player = playerScene?.instantiateAs<CharacterBody3D>() ?: return
+        player.name = id.toString()                     // the same name on every peer
+        players.addChild(player)
+    }
+}
+
+@ScriptClass(attachTo = "CharacterBody3D")
+class NetPlayer(godotObject: GodotHandle) :
+    KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D) {
+
+    @OnEnterTree
+    fun enterTree() {
+        // runs on every peer, so every peer agrees who owns this player's input
+        self.requireAs<MultiplayerSynchronizer>("Input").setMultiplayerAuthority(self.name.toInt())
+    }
+}
+```
+
+The server spawns the players, and a `MultiplayerSpawner` whose spawn path is
+`Players` creates them on the clients. Each player is named after its peer id,
+so Godot's replication finds the same node path on every peer. Each player
+scene has a `MultiplayerSynchronizer` named `Input` for the input its client
+owns; its authority is set in `@OnEnterTree`, before the game reads input. The
+server reads the replicated input and writes the authoritative movement.
+
+When you port, set authority at the same point as the original. Moving it from
+`_enter_tree` to `_ready`, or from the scene root to a child synchronizer,
+compiles but silently drops input.
 
 ## Replicated Properties
-
-If a scene's `SceneReplicationConfig` synchronizes `.:motion`, the attached
-Kotlin script must expose that exact property name:
 
 ```kotlin
 @Export
 var motion: Vector2 = Vector2.ZERO
 ```
 
-Use `@Export(name = "...")` when the Kotlin property name differs from
-the serialized scene name. Built-in node properties such as `position`,
-`rotation`, and `transform` are handled by Godot; custom script properties must
-be exposed by Kanama.
+When a scene's `SceneReplicationConfig` synchronizes `.:motion`, the script on
+that node must export a property named `motion`. Use `@Export(name = "...")`
+when the Kotlin name differs from the name in the scene. Godot replicates its
+own properties, such as `position` and `rotation`, without your help.
 
-Run the replication audit on ports that use `MultiplayerSynchronizer`:
+## Checklist for a Ported Game
+
+- Authority is set at the same lifecycle point as in the original, especially
+  for nested `MultiplayerSynchronizer` nodes, because input from a peer without
+  authority is dropped.
+- Spawned player names are the same on every peer, because replication matches
+  nodes by path.
+- Every custom `.:property` in a `SceneReplicationConfig` is exported, because
+  Godot can only replicate a property the script exposes.
+- Every GDScript `x.rpc()` and `x.rpc_id()` became a sender call, because a
+  direct Kotlin call runs on this peer only. Calls between Kotlin scripts are
+  direct Kotlin calls, because the compiler checks those and not strings.
+- Nodes are looked up once, in `@OnReady` or with `node<T>()`, not in
+  `@OnProcess`, `@OnPhysicsProcess`, an RPC or a signal lambda, because a
+  lookup there repeats every frame and a missing node fails in the middle of a
+  game instead of at the start.
+- Each remaining `call`, `rpc` or animation-tree property string is a real
+  dynamic boundary that a host and client test covers, because the compiler
+  cannot check a string.
+
+## Checks
+
+Two scripts in a Kanama checkout find the usual multiplayer porting mistakes:
 
 ```sh
-python3 scripts/audit_replicated_script_properties.py /path/to/godot_project
+python3 /path/to/kanama/scripts/audit_replicated_script_properties.py /path/to/your-project
+python3 /path/to/kanama/scripts/audit_runtime_node_lookups.py /path/to/your-project/kotlin-src
 ```
 
-Pass multiple project roots to audit a demo collection in one run.
+Both take several roots, to check more than one project in one run:
+`audit_replicated_script_properties.py /path/to/game-one /path/to/game-two`.
 
-## Runtime Guardrails
+The first reports a `.:property` in a `SceneReplicationConfig` that the script
+on that node does not export. The second reports raw RPC strings and required
+node lookups inside per-frame callbacks, RPCs, signal lambdas and coroutines.
+It is strict on purpose: treat each finding as a question. A raw RPC string
+usually becomes a sender call, and a call by name inside a callback deserves a
+reason.
 
-Avoid raw RPC strings and required node lookups inside hot callbacks such as
-`@OnPhysicsProcess`, `@OnProcess`, `@Rpc`, signal lambdas, and coroutine bodies.
-Cache required scene nodes during setup, use generated signal/RPC helpers, and
-keep generic string calls at real dynamic boundaries.
+## On Other Platforms
 
-This audit catches common risky shapes:
-
-```sh
-python3 scripts/audit_runtime_node_lookups.py /path/to/godot_project/kotlin-src
-```
-
-Pass multiple source roots when reviewing several ports together.
-
-It is intentionally conservative. Treat findings as review prompts: raw RPC
-calls should usually become generated `*Rpcs` calls, and generic dynamic calls
-inside runtime callbacks deserve a reason.
-
-## Multiplayer Review Checklist
-
-Before treating a multiplayer port as stable, review the same boundaries that
-usually drift during GDScript-to-Kotlin ports:
-
-- authority is assigned at the same lifecycle point as the original project,
-  especially for nested `MultiplayerSynchronizer` nodes;
-- spawned player node names are stable across peers, usually matching peer ids;
-- every custom `.:property` in a `SceneReplicationConfig` is exposed with
-  `@Export` or `@Export(name = "...")`;
-- every GDScript `x.rpc()` / `x.rpc_id()` became a generated `*Rpcs` sender
-  call, not a direct Kotlin call (that runs on this peer only), and known
-  Kotlin script targets use typed calls instead of raw string dispatch; and
-- remaining dynamic `call`, `rpc`, or animation-tree property strings are real
-  dynamic boundaries and are covered by smoke or manual host/client testing.
+`@Rpc` settings reach Godot on desktop, Android and iOS. Web has no
+multiplayer; see [Limitations](../reference/limitations.md#web).
