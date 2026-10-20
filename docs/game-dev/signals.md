@@ -1,13 +1,12 @@
-# Signals and Callbacks
+# Signals and Await
 
-Every Godot signal has a typed Kotlin property, custom signals are declared with
-`@Signal`, and both connect to Kotlin lambdas or to registered methods by name.
+Every Godot signal is a typed Kotlin property, and your own signals are
+declared with `@Signal`. You connect them to lambdas or to functions by name,
+and you `await` them inside a coroutine, as in GDScript. The snippets sit
+inside a script like the one in
+[Writing Scripts](scripts.md#a-complete-script), which lists the imports.
 
 ## Engine Signals
-
-Each engine signal is a property of its class, typed from Godot's API
-(`area.bodyEntered` is a `Signal1<Node3D>`, `timer.timeout` a `Signal0`). Inside a
-`KanamaScript` it reads like GDScript:
 
 ```gdscript
 func _ready():
@@ -18,352 +17,280 @@ func _ready():
 ```
 
 ```kotlin
+private val area by node<Area3D>("Area")
+private val timer by node<Timer>("Timer")
+
 @OnReady
 fun ready() {
-    area.bodyEntered.connect { body -> body.hide() }        // body: Node3D
+    area.bodyEntered.connect { body -> body.hide() }   // body is a Node3D
     timer.timeout.connect(GodotObject.ConnectFlags.ONE_SHOT) { onTimeout() }
     launch {
         timer.timeout.await()
         val body = area.bodyEntered.await()
+        GD.print("entered: ", body.name)
+    }
+}
+
+fun onTimeout() {
+    GD.print("time is up")
+}
+```
+
+`area.bodyEntered` is a `Signal1<Node3D>` and `timer.timeout` a `Signal0`,
+typed from Godot's API:
+
+- **`connect { }`** binds the lambda to your script's node, as a GDScript
+  lambda is bound to its script. Godot drops the connection, and Kanama
+  releases the lambda, when that node or the emitter is freed, or after one
+  call with `ConnectFlags.ONE_SHOT`. `ConnectFlags.DEFERRED` and
+  `or`-combinations work as in Godot. Outside a script, pass the owner
+  yourself: `area.bodyEntered.connect(owner) { body -> }`.
+- **`connect` returns a `SignalConnection`.** `close()` it to disconnect early,
+  or scope it with `use { }`.
+- **`await()`** suspends inside `launch { }`. A one-argument signal returns the
+  value. A signal with two to five arguments returns them to destructure:
+  `val (id, data) = signal.await()`, where GDScript returns an `Array`. If the
+  emitter is freed first, or your script's node is, the wait is cancelled.
+- **`emit(...)`** takes typed arguments: `button.pressed.emit()`.
+- **`connect(target, "method_name")`** connects a function by name, as a scene
+  connection does. See [Connecting by Name](#connecting-by-name).
+
+## Signal Arguments
+
+```kotlin
+private var lastEvent: InputEvent? = null
+
+@OnReady
+fun ready() {
+    val control = self.requireAs<Control>("Panel")
+    control.guiInput.connect { event -> lastEvent = event }   // safe to keep
+}
+```
+
+Arguments follow Godot's API: an `int` is `Long`, a `float` is `Double`,
+`String` and `StringName` are `String`, an object is its class, and a
+`Variant` is `Any?`. Godot does not mark engine signal arguments as enums, so
+an engine signal hands you an enum as a `Long`; wrap it with
+`Node.ProcessMode(value)` when you want the type. An object argument is
+non-null unless Godot can emit null for it, such as the body of
+`Area3D.bodyShapeEntered` when the body has no node.
+
+You can keep any argument, as in GDScript. A `Resource` or `InputEvent`
+argument is a reference of your own: `close()` it when you are done, or the
+garbage collector releases it later (see
+[Resource Ownership](godot-api.md#resource-ownership)). A `Node` argument is the
+node itself: it is `==` to your own reference to it, and it stays usable until
+the node is freed.
+
+A value of the wrong type, from a GDScript `emit_signal` for example, is
+reported as a script error that names the signal, and the lambda is not
+called.
+
+## Custom Signals
+
+```kotlin
+import net.multigesture.kanama.generated.coinCollected
+
+@ScriptClass(attachTo = "Area2D")
+class Coin(godotObject: GodotHandle) : KanamaScript<Area2D>(godotObject, ::Area2D) {
+    @Signal
+    fun coinCollected(value: Long) = Unit
+
+    fun collect() {
+        coinCollected.emit(10L)
     }
 }
 ```
 
-- `connect { }` inside a script binds the lambda to the script's object, as a
-  GDScript lambda is bound to its script: Godot drops the connection (and Kanama
-  releases the lambda and what it captured) when that object or the emitter is
-  freed, or after one call with `ConnectFlags.ONE_SHOT`. Outside a script pass the
-  object explicitly: `area.bodyEntered.connect(owner) { body -> }`.
-  `ConnectFlags.DEFERRED` (and `or`-combinations) work as in Godot.
-- `connect` returns a `SignalConnection`; `close()` disconnects early (or scope it
-  with `use { }`).
-- `await()` suspends inside `launch { }`. A one-argument signal returns the value;
-  two or more return a `SignalArgs2`…`SignalArgs5` to destructure
-  (`val (id, data) = peer.await()`, where GDScript returns an `Array`). If the
-  emitting object is freed first, the waiting coroutine is cancelled, and freeing
-  the script cancels the wait, as for any script coroutine.
-- `emit(…)` emits with typed arguments: `button.pressed.emit()`.
-- `connect(target, "method_name")` connects a registered method by name, like a
-  scene connection.
-
-Argument types follow the API: Godot `int` is `Long`, `float` is `Double`,
-`String` and `StringName` are `String`, an object is its wrapper, value types and
-collections are the usual Kotlin types, and `Variant` is `Any?`. Godot's API does
-not mark engine signal arguments as enums, so they arrive as `Long`. An object is
-non-null unless Godot emits null for it: `Area2D`/`Area3D` `bodyShapeEntered`,
-`bodyShapeExited`, `areaShapeEntered` and `areaShapeExited` give a null body or
-area when it has no node, and the editor's `Resource` arguments may be null.
-
-A `RefCounted` argument (an `InputEvent`, a `Resource`) is owned by its wrapper, so
-keeping it is safe, as in GDScript: `control.guiInput.connect { ev -> lastEvent = ev }`
-and `val ev = control.guiInput.await()` (which resumes a frame later) both hold a
-reference of their own. `close()` it when you are done, or the garbage collector
-releases it (see [Resource Ownership](godot-api.md#resource-ownership)), on Web too,
-where the browser's collector does (see the Web cap in
-[Limitations](../reference/limitations.md#web)). A `Node` or plain `Object` argument is
-a view, as in GDScript, on every platform: you can store it and use it later (it is
-the same value as your own reference to the node), a node freed in the frame its
-signal fired is gone by the time `await()` resumes, and a call through a freed one
-reports the freed object.
-
-A value of another type (a GDScript `emit_signal` is not type-checked) is reported
-as a script error naming the signal, and the lambda is not called. A property that
-would collide with a member of its class gets a `Signal` suffix; no Godot 4.7
-signal does. On iOS a signal with a `Dictionary`, `Array`, packed-array or `Rect2`
-argument is not delivered yet (its KDoc says so; the connection reports a script
-error).
-
-A signal Godot or a GDScript declares at runtime gets a typed handle the same way:
-
-```kotlin
-val healthChanged = Signal1(events, "health_changed", SignalArgType.LONG)
-healthChanged.connect { hp -> bar.value = hp.toDouble() }
+```gdscript
+signal coin_collected(value)
+coin_collected.emit(10)
 ```
 
-`X.Signals` constants (`Area3D.Signals.bodyEntered = "body_entered"`) remain for
-string-based APIs, as does the untyped `signal(name)` handle described below.
+A `@Signal` function declares the signal; Godot sees it as `coin_collected`,
+so saved scene connections to it keep working. The build generates a typed
+handle with the same name, which you emit, connect and await like an engine
+signal. Calling the `@Signal` function itself does nothing: emit with
+`coinCollected.emit(...)`. A property named like the handle would hide it, so
+the build rejects one.
 
-**Web.** The Web bridge delivers every argument of an emission, so Web has the
-same `Signal0` … `Signal5` handles, on every signal its generated classes declare
-and on every `@Signal`: an object, `int`, `float`, `bool`, `String`/`StringName`,
-`NodePath`, `RID`, a `Variant`, a Godot enum, or any value type. `connect`,
-`await`, `emit` and the script's `connect { }` work as above, and an `await` whose
-emitter is freed before the signal fires is cancelled, as on desktop (one whose
-awaiting script is freed first is disconnected from the emitter). An object
-argument is the object, as on desktop: you can keep it, and it is `==` to your own
-reference to the same object (see
-[Resource Ownership](godot-api.md#resource-ownership)). The two
-`NavigationAgent3D` signals with a `Dictionary` argument have no typed handle on
-Web; connect them by method name.
-
-## Custom Signals
-
-Declare custom signals with `@Signal`. KSP generates a typed `*Signals` helper
-for each `@RegisterClass` and `@ScriptClass` declaration:
+From another script, use the handle on the script object:
 
 ```kotlin
-@Signal
-fun pinged(value: Long) = Unit
+import net.multigesture.kanama.generated.coinCollected
 
-fun ping(): Long {
-    HelloScriptSignals.pinged(this, counter)
-    return counter
+private var score = 0L
+private val coin by script<Coin>("Coin")
+
+@OnReady
+fun ready() {
+    coin.coinCollected.connect { value -> score += value }
 }
 ```
 
-These helpers live in `net.multigesture.kanama.generated` and are produced by
-the Kanama KSP processor in the game project. External projects should apply
-the KSP plugin and depend on `net.multigesture.kanama:processor` through KSP;
-then IDEs see the generated source directory after Gradle sync.
+When you hold the emitter as a Godot object rather than as its script, such as
+an autoload node or a node you looked up, the generated `CoinSignals` object
+gives the same handle: `CoinSignals.coinCollected(node).connect { value -> }`.
 
-When porting a GDScript custom signal, declare the signal with a Kotlin
-camelCase method name. KSP exposes it to Godot as snake_case and generates a
-typed emitter:
+A Godot enum works as a signal argument (`@Signal fun modeChanged(mode:
+Node.ProcessMode) = Unit`). GDScript receives the `int`, and the typed handle
+hands Kotlin the `Node.ProcessMode`.
 
-```gdscript
-signal coin_collected
-coin_collected.emit(coins)
-```
+A signal with more than five arguments, or with an argument that has no typed
+form such as a packed array, has no typed handle. Connect it by name, or with
+the `CoinSignals.connectCoinCollected(...)` and `awaitCoinCollected(...)`
+functions the build generates for every signal.
 
-```kotlin
-@Signal
-fun coinCollected(value: Long) = Unit
-
-PlayerSignals.coinCollected(this, coins)
-```
-
-The Kotlin declaration exists so Godot sees `coin_collected` in script metadata
-and saved `.tscn` connections can keep referring to that signal.
-
-Generated signal helpers also include typed handles for code connections and
-awaits. For a `coinCollected(value: Long)` signal, KSP emits
-`PlayerSignals.signalCoinCollected(...)`,
-`PlayerSignals.connectCoinCollected(...)`, and
-`PlayerSignals.awaitCoinCollected(...)` alongside the existing typed emitter.
-The string-based `signal(PlayerNames.Signals.coinCollected)` style remains
-available when you need lower-level Godot API behavior.
-
-KSP also generates a typed handle per signal, an extension property on the
-script class in `net.multigesture.kanama.generated` (the same `Signal0`…`Signal5`
-as the engine signals): `coinCollected.emit(coins)` inside `Player`,
-`player.coinCollected.connect { coins -> }` and `player.coinCollected.await()`
-outside it. When you hold the emitter as a Godot object rather than as the script
-(an autoload node, `get_node`), the `Signals` object has the same handle:
-`EventsSignals.flagReached(eventsNode).connect { }`. The `@Signal fun` only
-declares the signal; calling it runs its empty body and emits nothing, so emit
-with `coinCollected.emit(coins)`. KSP rejects a property of the script named like
-one of these handles, which would shadow it. A signal with an argument that has no typed decode (a primitive
-packed array, a script class) or more than five arguments keeps only the helpers
-above.
-
-A signal argument can be one of Godot's enums (`Node.ProcessMode`,
-`BaseMaterial3D.Flags`, see [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields)).
-It is emitted as the `int` it stands for, which is what a GDScript handler
-connected to the signal receives. The generated `connect*` helper hands its
-Kotlin callback every argument typed, and `await*` returns the typed value for
-a one-argument signal (for two or more arguments `await*` returns the raw
-`List<Any?>`, where an enum is its `Long`):
-
-```kotlin
-@Signal
-fun modeChanged(mode: Node.ProcessMode) = Unit
-
-val connection =
-    PlayerSignals.connectModeChanged(this, self) { mode -> if (mode == Node.ProcessMode.DISABLED) pause() }
-PlayerSignals.modeChanged(this, Node.ProcessMode.DISABLED)
-```
-
-A lambda connected with the lower-level `signal(...).connect { args -> }` sees
-the raw `Long` (as any dynamic call does); wrap it with `Node.ProcessMode(raw)`.
-
-RPC methods follow the same generated-helper pattern. See
-[Multiplayer](multiplayer.md#rpc-methods) for `@Rpc` sender helpers such as
-`PlayerRpcs.rpcJump(...)` and `PlayerRpcs.callLocalJump(...)`.
-
-## Connecting Signals
-
-To connect an engine signal to a registered method by name, use the typed
-property or the untyped `signal(name)` handle:
+## Connecting by Name
 
 ```kotlin
 import net.multigesture.kanama.generated.PlayerNames
 
-fun onBodyEntered(body: GodotObject) {
-    if (body.isClass("CharacterBody3D")) {
-        collectCoin()
-    }
+@OnReady
+fun ready() {
+    val area = self.requireAs<Area3D>("Area")
+    area.bodyEntered.connect(self, PlayerNames.Methods.onBodyEntered)
 }
 
-// PlayerNames.Methods.onBodyEntered is generated for the public function
-// above. It is the Godot-facing name "on_body_entered".
-area.bodyEntered.connect(self, PlayerNames.Methods.onBodyEntered)
-```
-
-The connection layer mirrors Godot's Callable model. The target is a Godot
-object or Kanama script instance, and the method name is the Godot-facing method
-name. Every public function is registered: for `fun onBodyEntered(...)` that
-name is `on_body_entered`; if you give it `@GodotName("...")`, connect to that
-name.
-
-KSP generates `*Names` sidecar objects for Kanama classes, including `Methods`,
-`Properties`, and `Signals` constants. Use those constants when referring to
-Kanama-owned names from string-based Godot APIs. For common Godot-owned
-signals, wrappers expose small `Signals` constant objects as they are added,
-such as `Node.Signals.childEnteredTree`, `Area3D.Signals.bodyEntered`, and
-`BaseButton.Signals.pressed`.
-
-## Scene Connections
-
-Scene files can store signal connections, but you can also wire them explicitly
-from code when you want the relationship to be searchable during a port:
-
-```kotlin
-val player = node.requireAs("Player", ::Node)
-val hud = node.requireAs("HUD", ::Node)
-
-player.signal(PlayerNames.Signals.coinCollected)
-    .connect(hud, HudNames.Methods.onCoinCollected)
-```
-
-Both forms use the same Godot signal system. Scene connections are visible in
-the editor and serialized in `.tscn`; code connections are often easier to
-review because the emitter, receiver, and method name live together.
-
-Saved scene connections are strict because the method name is stored in the
-`.tscn` file. If a scene was created from GDScript and connects to
-`_on_body_entered`, the Kotlin method must expose that exact Godot-facing name:
-
-```kotlin
-@GodotName("_on_body_entered")
-fun onBodyEntered(body: Node) {
-    collect()
-}
-```
-
-Without the explicit name, Kanama exposes the method as `on_body_entered`,
-which does not match the saved scene connection. The same rule applies to
-custom signal receivers such as `_on_coin_collected`.
-
-To catch this during ports, run:
-
-```sh
-python3 /path/to/kanama/scripts/scene_connection_lint.py /path/to/godot_project
-```
-
-The lint walks `.tscn` connections, resolves target nodes with attached Kotlin
-scripts, and verifies the target script registers the method: a public
-function under its snake_case name or its `@GodotName`.
-
-## Dynamic Scene Instances
-
-For dynamically instantiated scenes, code connections often look a little more
-explicit because both sides are Godot objects at runtime. In the Godot 3D
-Squash the Creeps demo, the original GDScript wires each spawned mob to the
-score label like this:
-
-```gdscript
-mob.squashed.connect($UserInterface/ScoreLabel._on_Mob_squashed)
-```
-
-The Kanama equivalent uses explicit objects and Godot-facing names:
-
-```kotlin
-val mob = mobScene?.instantiate() ?: return
-val scoreLabel = self.requireAs("UserInterface/ScoreLabel", ::Label)
-val mobScript = mob.kotlinScriptInstance<Mob>()
-    ?: error("Instantiated mob scene is not backed by Mob")
-
-mobScript.initialize(mobSpawnLocation.position, playerPosition)
-
-mob.signal(MobNames.Signals.squashed)
-    .connect(scoreLabel, ScoreLabelNames.Methods.onMobSquashed)
-```
-
-Read this as:
-
-- `kotlinScriptInstance<Mob>()` retrieves the Kotlin script object attached to
-  the spawned scene root, so Kotlin-to-Kotlin calls can use
-  `mobScript.initialize(...)` instead of `GodotObject.call("initialize", ...)`.
-- `mob` is the specific scene instance that will emit.
-- `mob.signal(MobNames.Signals.squashed)` selects the signal on that instance.
-- `connect(...)` tells Godot which object and Godot-facing method to call when
-  the signal fires.
-
-Prefer typed Kotlin calls when both scripts are Kanama scripts. Use
-`GodotObject.call("method_name", ...)` when crossing a dynamic boundary:
-calling into GDScript, calling editor/runtime APIs whose methods are not
-wrapped yet, or invoking methods discovered by name at runtime.
-
-## Lambda Callbacks And Await
-
-The typed engine signals above are the usual way to connect a lambda. The untyped
-handle remains for a signal known only by name: a Kotlin lambda is connected as a
-Godot Callable bound to a target object, so pass the script's owning object
-(`self`) as the target so the connection has a real object lifetime:
-
-```kotlin
-val connection = area.signal(Area3D.Signals.bodyEntered).connectObject(self) { body ->
-    if (body.isClass("CharacterBody3D")) {
-        collect()
-    }
-}
-
-connection.close()
-```
-
-Lifetime is the same as for the typed form: the connection dies with its target
-or the emitter, or after a one-shot call, and Kanama then releases the lambda.
-This holds on every platform, Web included.
-
-`connect(target, argumentCount) { args -> ... }` receives the first
-`argumentCount` emitted arguments as a `List<Any?>` (no upper limit since task
-134). `connectObject` is the one-argument object shortcut. `await(target,
-argumentCount)` and `awaitObject(target)` are cancellation-aware suspend helpers
-built on the same dispatch path.
-
-For custom Kanama signals, prefer the generated typed helper when both the
-emitter and receiver are Kotlin-visible:
-
-```kotlin
-val connection = PlayerSignals.connectCoinCollected(playerScript, self) { coins ->
-    updateHud(coins)
-}
-```
-
-Generated method dispatch accepts common object wrappers directly, so a method
-connected to `body_entered` can take a typed wrapper:
-
-```kotlin
 fun onBodyEntered(body: Node3D) {
     body.hide()
 }
 ```
 
-### Hot reload
+Every public function of a script can be a signal target under its
+`snake_case` name, here `on_body_entered`. The build generates a `PlayerNames`
+object for each script, with `Methods`, `Properties` and `Signals` constants,
+so you never spell the name by hand. The target function may take the
+argument as its class (`Node3D`) instead of `GodotObject`. Engine classes have
+`Signals` constants too, such as `Area3D.Signals.bodyEntered`.
+
+## Signals Known Only by Name
+
+```kotlin
+@OnReady
+fun ready() {
+    val events = self.requireAs<Node>("/root/Events")         // a GDScript autoload
+    val bar = self.requireAs<ProgressBar>("Hud/Health")
+    val healthChanged = Signal1(events, "health_changed", SignalArgType.LONG)
+    healthChanged.connect { hp -> bar.value = hp.toDouble() }
+}
+```
+
+A signal a GDScript declares, or one Godot adds at runtime, gets a typed handle
+the same way: name its argument types and use it like any other. For a signal
+whose arguments you do not know, `events.signal("health_changed")` is the
+untyped handle. Its `connect(target, argumentCount) { args -> }` receives the
+arguments as a `List<Any?>`, and `await(target, argumentCount)` returns them;
+`connectObject` and `awaitObject` are the shortcuts for one object argument.
+These connections have the same lifetime as the typed ones.
+
+## Scene Connections
+
+A scene can store a signal connection, and the `.tscn` file saves the target
+function's name. A scene made with GDScript usually connects to a name such as
+`_on_body_entered`, so give the Kotlin function that exact name:
+
+```kotlin
+@GodotName("_on_body_entered")
+fun onBodyEntered(body: Node3D) {
+    body.hide()
+}
+```
+
+Without `@GodotName`, the function is `on_body_entered`, and the saved
+connection does not find it. To check every saved connection of a project
+against your scripts, run this from a Kanama checkout:
+
+```sh
+python3 /path/to/kanama/scripts/scene_connection_lint.py /path/to/your-project
+```
+
+It reads each `.tscn` connection, finds the Kotlin script on the target node,
+and reports a connection whose function the script does not have.
+
+## Signals on Instanced Scenes
+
+The GDScript for Squash the Creeps connects each new mob to the score label:
+
+```gdscript
+mob.squashed.connect($UserInterface/ScoreLabel._on_mob_squashed)
+```
+
+In Kotlin, with both sides Kotlin scripts, connect the typed handle to a
+lambda that calls the label's function:
+
+```kotlin
+import net.multigesture.kanama.generated.squashed
+
+@ScriptClass(attachTo = "CharacterBody3D")
+class Mob(godotObject: GodotHandle) : KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D) {
+    @Signal
+    fun squashed() = Unit
+}
+
+@ScriptClass(attachTo = "Label")
+class ScoreLabel(godotObject: GodotHandle) : KanamaScript<Label>(godotObject, ::Label) {
+    private var score = 0L
+
+    fun onMobSquashed() {
+        score += 1
+        self.text = "Score: $score"
+    }
+}
+
+@ScriptClass(attachTo = "Node")
+class Main(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
+    @Export
+    var mobScene: PackedScene? = null
+
+    private val scoreLabel by script<ScoreLabel>("UserInterface/ScoreLabel")
+
+    fun spawnMob() {
+        val mob = mobScene?.instantiateScript<Mob>() ?: return
+        mob.squashed.connect { scoreLabel.onMobSquashed() }
+        self.addChild(mob.self)
+    }
+}
+```
+
+`instantiateScript<Mob>()` returns the Kotlin script on the new scene's root,
+so you call its members directly. The lambda belongs to `Main`, and the
+connection ends when `Main` or the mob is freed. When the receiver is a
+GDScript, connect by name instead:
+`mob.squashed.connect(label, "_on_mob_squashed")`.
+
+## Hot Reload
 
 On desktop, a hot reload loads the new build of your scripts while the old
-build's script objects keep running until they are freed: the scene reload
-frees the scene's, and Kotlin autoloads are reset in place. A lambda connection
+build's objects keep running until they are freed. The scene reload frees the
+scene's objects, and Kotlin autoloads are reset in place. A lambda connection
 belongs to the build that made it. Once the old build's last script object is
-gone, every lambda connection it made is disconnected on the next frame, even
-when its target is still alive (the scene tree, a GDScript autoload, a node that
-was kept), and Kanama prints one warning:
+gone, its lambda connections are disconnected on the next frame, even when the
+target is still alive, and Kanama prints one warning:
 
 ```text
 hot-reload: dropped 2 lambda connection(s) of build 1 whose script objects are gone (SceneTree.process_frame x1, Hud.score_changed x1); the new build's _ready connects again
 ```
 
-So make lambda connections in `_ready` (or later) and never expect one to
-outlive a hot reload: `_ready` of the new objects connects them again, running
-the new code. While some of the old build's objects are still alive (a scene
-you did not reload), its connections stay and run the old code, as those
-objects do.
+So make lambda connections in `@OnReady` or later, and do not expect one to
+outlive a hot reload: the new objects' `@OnReady` connects again, running the
+new code. While some of the old build's objects are still alive, such as those
+of a scene you did not reload, their connections stay and run the old code.
 
-| Connection | GDScript after a reload | Kanama after a desktop hot reload |
+| Connection | GDScript after a reload | Kanama after a hot reload |
 |---|---|---|
-| by name: `connect(target, "onHit")`, a scene connection, GDScript's `hit.connect(on_hit)` | survives and calls the new method | survives and calls the new method once the target has the new build's object (a node of a scene you did not reload keeps its old object and runs the old method) |
-| a lambda | moved to the new code when the lambda is still in the source; otherwise skipped silently | dropped with its build (one warning); `_ready` connects the new one |
+| by name: `connect(target, "on_hit")`, a scene connection | survives and calls the new function | survives and calls the new function once the target has the new build's object; a node of a scene you did not reload keeps the old one |
+| a lambda | moves to the new code when the lambda is still in the source; otherwise it is skipped silently | dropped with its build, with one warning; `@OnReady` connects the new one |
 
-A Kotlin `obj::method` reference is dropped with its build like a lambda. C#
-re-binds a method-reference delegate by instance and method name after a reload;
-Kanama does not, so connect by name when a connection must survive a reload.
+A Kotlin function reference (`::onHit`) is dropped with its build like a
+lambda. C# re-binds such a reference by object and method name after a
+reload; Kanama does not, so connect by name when a connection must survive a
+hot reload.
+
+## On Other Platforms
+
+Signals, connections and `await` work the same on desktop, Android, iOS and
+Web, with a few gaps: iOS does not deliver signal arguments of some container
+types, and Web has no typed handle for two engine signals. Hot reload is
+desktop only. [Limitations](../reference/limitations.md) lists each case with
+its workaround.

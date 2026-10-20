@@ -1,29 +1,29 @@
-# Porting GDScript
+# Porting from GDScript
 
-Use this page when converting an existing Godot project from GDScript to Kanama.
-It focuses on project and scene issues that show up during real ports. For
-language-level translation details, start with
-[Writing Kotlin Scripts](scripts.md).
+This page is for moving an existing Godot project from GDScript to Kotlin, one
+script at a time. It covers the line-by-line mapping and the project and scene
+details that real ports run into. For the script model itself, start with
+[Writing Scripts](scripts.md).
 
 ## Porting Workflow
 
-1. Work in a branch or copy of the original Godot project.
-2. Add the Kanama addon, Gradle project files, and a Kotlin source directory.
-3. Port one script at a time, keeping scene names, exported property names, and
-   signal connections close to the original.
-4. Build the Kotlin scripts and open the project in Godot to let imported assets
-   and script metadata settle.
-5. Run the project headlessly or interactively and compare behavior against the
-   original project.
+1. Work in a branch or a copy of the original project.
+2. Add Kanama to it, as in
+   [Store Addon (Existing Project)](../getting-started/store-addon.md).
+3. Port one script at a time. Keep scene names, exported property names and
+   signal connections as they are.
+4. Build your scripts and open the project in Godot, so imported assets and
+   script metadata settle.
+5. Play the project and compare it with the original.
 
-Ports should stay close to the original GDScript behavior. If a port needs
-different logic to work, prefer fixing Kanama and recording the blocker instead
-of leaving a project-specific workaround.
+A port should behave like the original without different logic. If it needs a
+workaround to work, that is a Kanama bug: please
+[open an issue](https://github.com/falcon4ever/kanama/issues).
 
 ## GDScript to Kotlin Mapping
 
 The everyday script constructs, inside a `KanamaScript<T>` subclass (see
-[Writing Kotlin Scripts](scripts.md) for each one):
+[Writing Scripts](scripts.md) for each one):
 
 | GDScript | Kotlin |
 |---|---|
@@ -90,7 +90,7 @@ script's object is freed.
 - Every public function is registered, like a GDScript `func`:
   `fun onCoinCollected()` registers as `on_coin_collected`. Keep a `.tscn`
   connection to `_on_coin_collected` working with
-  `@GodotName("_on_coin_collected")`, or update the connection. Make helpers Godot
+  `@GodotName("_on_coin_collected")`, or update the connection. Make functions Godot
   never calls `private` (or `internal`).
 - GDScript's `func _ready()`, `_process`, `_input`, … become a lifecycle
   annotation on a function of any name (`@OnReady fun ready()`); a function
@@ -113,31 +113,18 @@ script's object is freed.
   stores the same Godot values, so the scene's `mode = 3` keeps working. A
   GDScript `int` that really holds an enum (`var mode := 3`) is worth typing
   during the port. See [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields).
-- For `@Rpc` methods on Kanama scripts, use generated `*Rpcs` sender helpers
+- For `@Rpc` methods on Kanama scripts, use the generated `*Rpcs` senders
   instead of raw `rpc("method_name")` strings, and port `jump.rpc()` as a
   sender call, never as `jump()`: a direct call runs on this peer only.
 - For scenes with `MultiplayerSynchronizer`, verify every replicated custom
   `.:property` is exposed with `@Export`.
-- If the port will also run on Web: physics loops should derive movement from
-  velocity (`self.velocity` + `moveAndSlide()`), not from re-reading a spatial
-  value they just wrote — Web spatial reads are a start-of-dispatch mirror, not
-  a live engine call. See the Web export guide's Web-Compatible Project Scripts
-  rules.
 
 When a typed lookup fails, check the actual runtime class before changing the
-helper. Godot often imports GLB scene roots as `Node3D`, with the mesh attached
+lookup. Godot often imports GLB scene roots as `Node3D`, with the mesh attached
 as a descendant, even when the visual asset is conceptually a mesh.
 
-For multiplayer ports, run the static guardrails after the first working pass:
-
-```sh
-python3 scripts/audit_runtime_node_lookups.py /path/to/godot_project/kotlin-src
-python3 scripts/audit_replicated_script_properties.py /path/to/godot_project
-```
-
-Both scripts accept multiple roots. Aggregate demo repositories can pass every
-`kotlin-src` or project root in one run; the public `kanama-demos` repo wires
-those checks into `./gradlew check`.
+For a multiplayer game, run the two [multiplayer checks](multiplayer.md#checks)
+after the first working pass.
 
 ## Common Porting Patterns
 
@@ -145,7 +132,7 @@ Mixed projects are valid while you migrate. A Kanama script can call a retained
 GDScript autoload through the normal Godot object API:
 
 ```kotlin
-Autoloads.Audio.call("play", path)   // GDScript: Audio.play(path)
+Autoloads.Audio.call("play", "res://sounds/coin.ogg")   // GDScript: Audio.play("res://sounds/coin.ogg")
 ```
 
 A Kotlin autoload is typed to its script class, so `Autoloads.Settings.save()`
@@ -169,10 +156,9 @@ private val target by lazy {
 Use `@GodotName("saved_signal_name")` when a `.tscn` file already has a
 saved signal connection and you want to preserve the stored method name.
 
-### GDScript annotations in Kanama
+### GDScript Annotations in Kanama
 
-Kanama has one annotation per GDScript concept (Kanama 0.5 removed the older
-aliases; `scripts/migrate_script_annotations.py` rewrites a source tree):
+Kanama has one annotation per GDScript concept:
 
 | GDScript | Kanama |
 |---|---|
@@ -199,19 +185,22 @@ includes ports that can be used as examples for common migration areas:
 
 | Project | Useful For |
 |---|---|
-| Godot 2D Dodge the Creeps | 2D movement, saved scene connections, signals, timers, Android smoke |
+| Godot 2D Dodge the Creeps | 2D movement, saved scene connections, signals, timers, Android |
 | Godot 3D Squash the Creeps | instanced scenes, 3D physics, animation, signal wiring |
 | GDQuest 3D Third Person Controller | camera/control logic and CharacterBody3D movement |
 | Godot 4 3D Character Controller Tutorial | compact 3D movement and input |
-| Godot TPS Demo | larger 3D scenes, threaded loading, RPC helpers, multiplayer synchronizers, and scene reload cleanup |
+| Godot TPS Demo | larger 3D scenes, threaded loading, RPC senders, multiplayer synchronizers, and scene reload cleanup |
 | Kenney Starter Kit 3D Platformer | `NodePath` exports, GDScript autoload interop, typed callbacks, coroutine delays |
 | Kenney Starter Kit Match-3 | UI, typed resource lists, textures, scene-authored data |
 | Kenney Starter Kit City Builder | tile/grid workflows and larger scene data |
 | Kenney Starter Kit FPS | input, weapons/resources, 3D gameplay structure |
 
-For Kanama maintainer rules around demo parity, smoke checks, and when a port
-should drive runtime changes, see
-[Demo Porting Rules](../contributing/demo-porting-rules.md).
+For building, reloading and debugging while you port, see
+[Edit, Build, Run](../getting-started/editor-workflow.md).
 
-For editor build, scene reload, and IntelliJ debugging, see
-[The Editor Loop](../getting-started/editor-workflow.md).
+## On Other Platforms
+
+A port runs on desktop, Android and iOS from the same source. Web needs a few
+changes, such as driving movement from `velocity` and `moveAndSlide()` instead
+of re-reading a position you just wrote; see
+[Limitations](../reference/limitations.md#web).
