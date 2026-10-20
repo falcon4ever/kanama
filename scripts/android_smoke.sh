@@ -33,6 +33,10 @@ Optional environment:
   KANAMA_ANDROID_LOG=/path/to/logcat.txt
   KANAMA_ANDROID_SCREENSHOT=/path/to/screenshot.png
   KANAMA_ANDROID_LAUNCH_WAIT=30
+  KANAMA_PANAMAPORT_MAVEN_REPO=file:///path/to/.m2/repository
+      One extra Maven repository for a PanamaPort fork published outside JitPack (with
+      ORG_GRADLE_PROJECT_kanamaPanamaPortCore=<test coordinate>). Unset by default: the export then
+      resolves PanamaPort only through KanamaAndroid.gdap, as a user's editor export does.
   KANAMA_ANDROID_SELFTEST_WAIT=90
       After the launch wait, wait at most this many more seconds for the ownership self-test's
       verdict line (and the API exercise's, when it runs; it ends as soon as the lines are in the
@@ -72,7 +76,7 @@ SCREENSHOT="${KANAMA_ANDROID_SCREENSHOT:-$RUN_DIR/kanama_android_smoke.png}"
 echo "[android_smoke] output: $RUN_DIR"
 LAUNCH_WAIT="${KANAMA_ANDROID_LAUNCH_WAIT:-30}"
 SELFTEST_WAIT="${KANAMA_ANDROID_SELFTEST_WAIT:-90}"
-PANAMAPORT_MAVEN_REPO="${KANAMA_PANAMAPORT_MAVEN_REPO:-file://$HOME/.m2/repository}"
+PANAMAPORT_MAVEN_REPO="${KANAMA_PANAMAPORT_MAVEN_REPO:-}"
 RENDERER_OVERRIDE="${KANAMA_ANDROID_RENDERER:-}"
 API_EXERCISE="${KANAMA_ANDROID_API_EXERCISE:-0}"
 API_EXERCISE_TRACE="${KANAMA_ANDROID_API_EXERCISE_TRACE:-0}"
@@ -231,25 +235,28 @@ ANDROID_HOME="$ANDROID_SDK_DIR" ANDROID_SDK_ROOT="$ANDROID_SDK_DIR" \
 install_desktop_addon
 ensure_android_build_template
 
-set_gradle_property "$DEMO_DIR/android/build/gradle.properties" \
-  "plugins_maven_repos" "$PANAMAPORT_MAVEN_REPO"
+# Repositories: the export resolves PanamaPort through the repository KanamaAndroid.gdap declares
+# (custom_maven_repos), exactly as a user's editor export does; this script adds none by default, so
+# a .gdap that loses it fails here. (Godot passes -Pplugins_maven_repos on its Gradle command line, so a
+# gradle.properties value would be overridden anyway.) KANAMA_PANAMAPORT_MAVEN_REPO=<url> adds one
+# repository for a PanamaPort fork published elsewhere, e.g. file://$HOME/.m2/repository with
+# ORG_GRADLE_PROJECT_kanamaPanamaPortCore=<test coordinate>. Earlier runs' blocks are stripped first.
+for marker in kanama-local-maven kanama-r8-minify; do
+  if grep -q "=== $marker " "$BUILD_GRADLE"; then
+    sed_inplace "$BUILD_GRADLE" "/=== $marker /,\$d"
+  fi
+done
+if [[ -n "$PANAMAPORT_MAVEN_REPO" ]]; then
+  cat >>"$BUILD_GRADLE" <<GRADLE
 
-MARKER="kanama-local-maven"
-if grep -q "$MARKER" "$BUILD_GRADLE"; then
-  sed_inplace "$BUILD_GRADLE" "/=== $MARKER /,\$d"
-fi
-cat >>"$BUILD_GRADLE" <<'GRADLE'
-
-// === kanama-local-maven (injected by scripts/android_smoke.sh) ===
-// Make a locally published PanamaPort fork available to Godot's generated
-// Android Gradle build when the Kanama plugin .gdap points at that coordinate.
+// === kanama-local-maven (injected by scripts/android_smoke.sh, KANAMA_PANAMAPORT_MAVEN_REPO) ===
 allprojects {
     repositories {
-        mavenLocal()
-        maven { url 'https://jitpack.io' }
+        maven { url '$PANAMAPORT_MAVEN_REPO' }
     }
 }
 GRADLE
+fi
 
 # Task 106/116: Godot caches converted scenes under .godot/exported keyed by the .tscn md5 + mtime;
 # a conversion made without the desktop addon (properties stripped) would be reused here.

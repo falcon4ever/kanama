@@ -112,8 +112,17 @@ together with an export; the smoke scripts install the template by hand from
 `android_source.zip` when it is missing. The generated `KanamaAndroid.gdap`
 declares JitPack as a custom Maven repository (`custom_maven_repos`), which
 Godot passes to its Android Gradle build, so the PanamaPort fork resolves in a
-plain editor export. The smoke scripts additionally inject `mavenLocal()` and
-JitPack into the generated `android/build/build.gradle` for fork iteration.
+plain editor export. `android_smoke.sh` and `android_export_minified.sh` add
+no repository of their own, so they exercise exactly what a user's export
+gets and fail if the `.gdap` loses that entry. For a fork published elsewhere
+(for example to `~/.m2` while iterating), set
+`KANAMA_PANAMAPORT_MAVEN_REPO=file://$HOME/.m2/repository` and pass the
+coordinate as `ORG_GRADLE_PROJECT_kanamaPanamaPortCore=<test coordinate>`.
+Godot passes `-Pplugins_maven_repos` on its Gradle command line, so a
+`plugins_maven_repos` value in `android/build/gradle.properties` has no
+effect. The user page names the coordinate only as "PanamaPort";
+`-PkanamaPanamaPortCore=<coordinate>` on `installAndroidPluginAar` selects
+another build, and the coordinate is printed in the Gradle build log.
 
 ## PanamaPort
 

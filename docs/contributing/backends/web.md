@@ -991,7 +991,7 @@ The `exportWeb` task stages a copy of the project without `addons/kanama/`
 and `kotlin-src/` and points every scene at the generated Web proxies, so no staged
 scene attaches a `.kt` script. The Kanama Tools plugin stays enabled in that copy;
 its export check (see the Android guide's
-[Export Guard](../../exporting/android.md#export-guard)) finds no `.kt` script to check and stays
+[Export Guard](../../getting-started/editor-workflow.md#export-guard)) finds no `.kt` script to check and stays
 silent. A plain Godot Web export of the project itself is checked like the other
 platforms and stops with `Kanama: Export stopped: …` when a `.kt` script that its
 scenes attach does not bind in the editor.

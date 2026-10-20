@@ -166,7 +166,7 @@ under `[kanama]`.
 | `kanama/tools/kotlin_sources_dir` | The folder **Open Kotlin** opens, absolute or `res://`. Empty opens the project folder. |
 | `kanama/tools/repo_dir` | Your Kanama checkout, for a project without its own Gradle build. Empty looks in the parent folder, then `../kanama` and `../../kanama`. |
 | `kanama/tools/java_preflight_enabled` | Warns in the editor when Godot cannot find a JDK 25 or newer. On by default. |
-| `kanama/tools/export_guard_enabled` | Stops an export whose scenes use Kotlin scripts that do not load. On by default; see below. |
+| `kanama/tools/export_guard_enabled` | Stops an export whose scenes use Kotlin scripts that do not load. On by default; see [Export Guard](#export-guard). |
 | `kanama/tools/developer_mode` | Shows **Build Runtime**, which rebuilds the Kanama runtime from a checkout. For people working on Kanama itself; games use **Build Scripts**. |
 | `kanama/debug/jdwp_enabled`, `kanama/debug/jdwp_port` | The debugger; see [Debugging](#debugging). |
 | `kanama/jvm/options` | Extra Java options for the game; see [JVM Options](../exporting/desktop.md#jvm-options). |
@@ -174,15 +174,27 @@ under `[kanama]`.
 JDK Path is an editor setting, not a project setting; see
 [JDK Selection](#jdk-selection).
 
-The **export guard** checks every `.kt` script the exported scenes use when an
-export begins. If one does not load in the editor, for example because
-`kanama-scripts.jar` is out of date, it reports
-`Kanama: Export stopped: …` with the script names. Without the guard, Godot
-would ship those scenes without the scripts' property values. A command-line
-export then exits with an error. An export from the Export dialog is marked
-failed, but its files are still written. Turn the guard off only to export
-knowingly without those scripts. [Export Guard](../exporting/android.md#export-guard)
-has the details.
+## Export Guard
+
+When an export begins, on any platform, the Kanama Tools plugin checks every
+`.kt` script that the exported scenes and resources use. If one does not load
+in the editor, for example because `kanama-scripts.jar` is out of date, it
+stops the export with one error that starts with `Kanama: Export stopped:` and
+names the scripts and the fix. Without the check, Godot would ship those
+scenes without the scripts' property values, and say nothing.
+
+- A command-line export ends before it writes any file, with a non-zero exit
+  status.
+- An export from the Export dialog shows the error and is marked failed. The
+  files it writes are the ones Godot would have written without the check, so
+  do not ship them.
+- A one-click deploy installs nothing.
+
+Only the scenes and resources the export preset exports are checked; a `.kt`
+file that no scene uses is not. To fix the error, build your scripts again, as
+the shipping page for your platform shows, and export again. Turn the check
+off with `kanama/tools/export_guard_enabled` only to export knowingly without
+those scripts.
 
 ## On Other Platforms
 

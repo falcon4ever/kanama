@@ -103,6 +103,72 @@ which is why the user page deletes that directory before exporting.
 The demos' iOS runner and the starter smoke run
 `scripts/check_exported_scene_properties.gd` after every export.
 
+## iOS Type Checks
+
+The KSP processor (the compiler plugin that generates Kanama's registration
+code) checks every export and registered method for iOS ahead of time, and
+fails the build instead of dropping a member on the device. An exported
+property whose value type has no iOS path (such as `RID`) fails like this:
+
+```text
+e: [ksp] [kanama:ksp] [kanama-ios] Grid.cell (RID) — no iOS @Export
+path for this value type, would keep its Kotlin default. On iOS the scene and inspector value of
+this property would be dropped. ...
+```
+
+Every Godot value type (`Vector2`/`2i`, `Vector3`/`3i`, `Vector4`/`4i`,
+`Rect2`/`2i`, `Plane`, `AABB`, `Quaternion`, `Basis`, `Transform2D`/`3D`,
+`Projection`, `Color`), `NodePath`, the scalars, `String`, object references,
+`List<String>` and `Map` exports (`Map<Int, String>`, `Map<Vector2i, Long>`,
+`Map<String, Texture2D>`, keys kept as on desktop) reach iOS.
+
+A registered function's parameters and return already use the types every
+platform supports (`FunctionRegistration.SUPPORTED_FUNCTION_TYPES`: no `List`,
+`Map`, `ByteArray` or `Any?`). The iOS check matters for engine virtuals and
+the iOS call path: a parameter type the iOS call path does not pass (a `Map`,
+a `List`, a `Packed*Array`), or an `@OverrideVirtual` whose return type iOS
+does not marshal, fails the same way:
+
+```text
+e: [ksp] [kanama:ksp] [kanama-ios] Board.apply (godot: apply): argument table: Map<String, Any?>
+has a type iOS does not pass to a script method. On iOS a call to this method from Godot would
+not run. Use a supported parameter type (Long, Double, Boolean, String, ...), or accept the skip
+with -PkanamaIosAllowSkips=true (KSP option kanamaIosAllowSkips).
+```
+
+The iOS call path passes the scalar types, `String`, `NodePath`, every value
+type, `Color`, `RID`, object wrappers, Godot enums and `Any?`. An `Any?`
+parameter that receives a Variant type iOS does not marshal (a `Dictionary`,
+an `Array`, a `Packed*Array`) fails that call with a script error naming the
+type, instead of seeing `null`. `-PkanamaIosAllowSkips=true` is the one opt-in
+for every iOS skip, exports and methods alike; each skipped member is then a
+warning.
+
+## FAULT Reasons
+
+The word after the colon in a `[kanama][ios][c] FAULT` line is a fixed reason
+token. The user-facing advice is in
+[Export for iOS → FAULT Lines in the Log](../../exporting/ios.md#fault-lines-in-the-log);
+the sink that prints them is described under
+[Contract: no silent paths](#contract-no-silent-paths-the-fault-sink).
+
+| Reason | What went wrong |
+|---|---|
+| `api-unresolved` | A Godot interface function was not found: the Godot version does not match, or the call came before the extension started. |
+| `bind-lookup-failed` | Godot has no method with that class, name and hash. Almost always a stale Kanama build after a Godot upgrade. |
+| `null-bind` | The call used a method that failed its lookup; an earlier `bind-lookup-failed` line names it. |
+| `null-instance` | An instance method was called on a null object. |
+| `null-handle` | An engine object, such as a node, a tween or a signal target, was null. |
+| `null-arg` | A required string argument, named in the line, was null. |
+| `pending-protocol` | A value was read before the call that produces it succeeded. |
+| `callable-build` | A bound `Callable` could not be built for the named method. |
+| `unknown-tag` | The call carried an argument type the iOS layer does not know. |
+| `encode-failed` | A container argument could not be converted for Godot. |
+| `short-payload` | A value inside a container was shorter than its type needs. |
+| `alloc-failed` | The call could not allocate memory for its arguments. |
+| `too-many-args` | A call or signal emission had more arguments than iOS carries. |
+| `progress-readback` | `ResourceLoader.load_threaded_get_status` returned no progress value. |
+
 ## Why iOS is different from desktop/Android
 
 Kanama desktop uses the JVM + Panama (FFM) to call into Godot. iOS forbids JIT, so

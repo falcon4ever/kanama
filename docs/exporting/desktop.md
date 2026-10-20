@@ -1,4 +1,4 @@
-# Export a Desktop Game
+# Export for Desktop
 
 An exported Kanama game carries its own trimmed Java runtime, so players
 install nothing. You export from Godot as usual, then one script adds the
@@ -15,9 +15,14 @@ Windows, macOS and Linux, from any of the three.
   assembly script. If you started from a release kit or the store addon, clone
   it once as in [Cloning Kanama](../getting-started/source-checkout.md#cloning-kanama);
   you do not need to change your project.
-- An export preset for your target in **Project > Export**.
+- An export preset for your target in **Project > Export**. A macOS preset
+  also needs the settings in [macOS Entitlements and Signing](#macos-entitlements-and-signing).
 
 ## Exporting a Game
+
+These steps export for the machine you work on. To export for another
+platform, do step 1 here, then follow
+[Exporting for Another Platform](#exporting-for-another-platform).
 
 1. Build your scripts. Press **Build Scripts** in the editor, or run:
 
@@ -33,9 +38,7 @@ Windows, macOS and Linux, from any of the three.
     ./gradlew jlinkGameRuntime
     ```
 
-    The runtime lands in `build/game-runtime/runtime`. It is built for the
-    machine you run it on; to export for another platform, see
-    [Exporting for Another Platform](#exporting-for-another-platform).
+    The runtime lands in `build/game-runtime/runtime`.
 
 3. Export the game from Godot with **Project > Export**, or from the command
    line:
@@ -57,23 +60,20 @@ Windows, macOS and Linux, from any of the three.
       /path/to/export
     ```
 
-    The last argument is the folder that holds the exported executable, or,
-    for macOS, the exported `.app` bundle.
+    The last argument is the folder that holds the exported executable.
 
 The export folder now holds everything the game needs:
 
 | File | What it is |
 | --- | --- |
 | The executable and `.pck` | Godot's export, as usual. |
-| `kanama_bootstrap.dll`, `libkanama_bootstrap.so` or `libkanama_bootstrap.dylib` | The Kanama native library. Godot's export copies it. |
+| `libkanama_bootstrap.so` | The Kanama native library. Godot's export copies it. |
 | `kanama.jar` | The Kanama runtime. |
 | `kanama-scripts.jar` | Your compiled scripts. |
 | `runtime/` | The Java runtime the game starts. |
 | `kanama-jvm-options.txt` | Your [JVM options](#jvm-options), when the project sets any. |
 
-On macOS these sit inside the `.app`; see [Signing for macOS](#macos-bundle-layout-entitlements-and-signing).
-
-Ship the whole folder, or the `.app`, as one zip.
+Ship the whole folder as one zip.
 
 ## Running the Exported Game
 
@@ -84,11 +84,9 @@ runtime it loaded:
 [kanama] using libjvm: /path/to/export/runtime/lib/server/libjvm.so
 ```
 
-The path is inside the export folder when the bundled runtime is in place. On
-Windows it ends in `runtime\bin\server\jvm.dll`, and on macOS in
-`Contents/Resources/runtime/lib/server/libjvm.dylib`. If it names a JDK
-installed on your machine instead, the export has no `runtime/` folder: run
-step 4 again.
+The path is inside the export folder when the bundled runtime is in place. If
+it names a JDK installed on your machine instead, the export has no
+`runtime/` folder: run step 4 again.
 
 ## Exporting for Another Platform
 
@@ -130,9 +128,9 @@ property.
 
 ## Download Size
 
-The runtime adds about 31 MB to a Windows or macOS game, and about 40 MB to a
-Linux one. `kanama.jar` adds about 12 MB more. Godot's own executable is
-usually the largest file in the download.
+The bundled runtime adds roughly 30 to 40 MB to the download, depending on
+the platform, and `kanama.jar` roughly 12 MB. Godot's own executable is
+usually the largest file.
 
 ## JVM Options
 
@@ -165,9 +163,10 @@ If frames are slow for a few seconds after your game creates many objects at
 once, such as on a level load, add `-XX:MaxNewSize=128m`. It costs a little
 frame time the rest of the time, so add it only when you see that slowdown.
 
-## macOS Bundle Layout, Entitlements and Signing
+## macOS Entitlements and Signing
 
-A macOS export is an `.app` bundle. The assembly script puts Kanama's files in
+A macOS export is an `.app` bundle; pass the `.app` as the assembly script's
+last argument. The assembly script puts Kanama's files in
 `Contents/Resources/`, beside the `.pck`:
 
 ```text
@@ -243,14 +242,22 @@ Once the runtime carries your own signature, you can drop
 | macOS reports `"libkanama_bootstrap.dylib" Not Opened`. | Gatekeeper quarantined a downloaded copy. On your own machine, run `xattr -dr com.apple.quarantine /path/to/MyGame.app`. For players, sign and notarize the game. |
 | The assembly script refuses the runtime. | The runtime was built for a different platform than the export. Build it with `jlinkGameRuntimeCross` for the export's target. |
 | `jlinkGameRuntimeCross` fails on a version mismatch. | The downloaded Java modules must have the same major version as the JDK running Gradle. Build with a JDK 25. |
-| The export stops with `Kanama: Export stopped:`. | A scene uses a Kotlin script that does not load in the editor. Press **Build Scripts** and export again. See [Settings](../getting-started/editor-workflow.md#settings). |
+| The export stops with `Kanama: Export stopped:`. | A scene uses a Kotlin script that does not load in the editor. Press **Build Scripts** and export again. See [Export Guard](../getting-started/editor-workflow.md#export-guard). |
 | The exported game runs old Kotlin code. | Build your scripts, then run the assembly step again. It copies `kanama-scripts.jar` at the time you run it. |
 
 ## On Other Platforms
 
 On **Windows**, run `.\gradlew.bat` wherever this page says `./gradlew`, and
-run `export_game_assemble.sh` from Git Bash. A Windows game needs no Visual C++
+run `export_game_assemble.sh` from Git Bash. The native library is
+`kanama_bootstrap.dll`, and the runtime line ends in
+`runtime\bin\server\jvm.dll`. A Windows game needs no Visual C++
 redistributable on the player's machine.
+
+On **macOS**, the native library is `libkanama_bootstrap.dylib`, and the
+files sit inside the `.app` as shown in
+[macOS Entitlements and Signing](#macos-entitlements-and-signing). The
+runtime line ends in `Contents/Resources/runtime/lib/server/libjvm.dylib`.
+Ship the `.app` as one zip.
 
 What does not work on desktop is listed in
 [Limitations](../reference/limitations.md).

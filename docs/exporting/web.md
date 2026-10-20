@@ -1,10 +1,10 @@
 # Export for the Web
 
 !!! note "Web is experimental"
-    The Web export builds the Kanama demo projects from a checkout of the
-    Kanama repository. It cannot export your own project. Use it to see
-    how a Kanama game runs in a browser, and to keep your scripts ready for
-    the Web; see [Known Limitations](#known-limitations).
+    This release exports only the Kanama demo projects to the Web. It cannot
+    export your own game. Use this page to try the Web build with a demo, and
+    to keep your scripts ready for the Web. What does not work is listed in
+    [Limitations](../reference/limitations.md#web).
 
 The Web backend compiles Kanama project scripts to **Kotlin/Wasm** and runs
 them against a Godot Web export through a generated per-call proxy and a
@@ -18,14 +18,22 @@ explains how the two talk.
 - A checkout of the Kanama repository, set up as in
   [Install from a Source Checkout](../getting-started/source-checkout.md).
 - A checkout of the [Kanama demos](https://github.com/falcon4ever/kanama-demos).
-- Godot 4.7.2, and its **`web_nothreads_release.zip`** export template. Install
-  the export templates from **Editor > Manage Export Templates**; the file is
-  in Godot's `export_templates/4.7.2.stable/` folder.
-- A recent Chrome, Firefox or Safari. The browser needs WebAssembly garbage
-  collection and exception handling; the minimum versions are on
-  [Requirements and Platform Status](../reference/version-support.md).
+- Godot 4.7.2 and its export templates, installed from **Editor > Manage
+  Export Templates**. The Web export uses `web_nothreads_release.zip` from the
+  templates folder:
 
-## Exporting a Demo
+    | OS | Export templates folder |
+    | --- | --- |
+    | macOS | `~/Library/Application Support/Godot/export_templates/4.7.2.stable/` |
+    | Linux | `~/.local/share/godot/export_templates/4.7.2.stable/` |
+    | Windows | `%APPDATA%\Godot\export_templates\4.7.2.stable\` |
+
+- A desktop browser recent enough to run the WebAssembly features Kanama's
+  scripts use: Chrome 130, Firefox 141 or Safari 26.5, or newer.
+
+## Trying the Web Build with a Demo
+
+### Exporting a Demo
 
 Run this from the Kanama checkout. `-PkanamaWebDemo` picks the demo, and the
 matching `-PkanamaWeb<Demo>ProjectDir` points at its folder in the demos
@@ -61,7 +69,7 @@ The property name capitalizes the key: `dodge` takes
 `-PkanamaWebBunnymarkVariant=BunnymarkV1Sprites`, the variant that runs on the
 Web.
 
-## Running the Export
+### Running the Export
 
 Serve the export over HTTP. Opening `index.html` from disk does not load the
 WebAssembly modules. Any static server works; Kanama's sends the right
@@ -87,7 +95,7 @@ It prints `LAN=https://<this-machine>:<n>/`. Open that address on the device
 and accept the warning about the self-signed certificate once. On iPhone and
 iPad Safari, tap **Show Details**, then **visit this website**.
 
-## Publishing
+### Publishing the Demo
 
 `packageWebExport` zips an export you have already built and tried:
 
@@ -103,9 +111,8 @@ export is missing or older than the current build, when the export contains a
 path from your machine, or when it exceeds itch.io's limits of 500 MB and 1000
 files.
 
-### itch.io
-
-Upload the zip with [butler](https://itch.io/docs/butler/):
+To publish on **itch.io**, upload the zip with
+[butler](https://itch.io/docs/butler/):
 
 ```sh
 butler push web-runtime/build/distributions/kanama-web-match3-v<version>.zip \
@@ -116,20 +123,14 @@ On the game's edit page, set the upload to **This file will be played in the
 browser**. Leave **SharedArrayBuffer support** off: the export uses a single
 thread and needs no special headers.
 
-### Any Static HTTPS Host
+To publish on **any other static host**, unzip the zip into a folder the host
+serves over HTTPS, with the `application/wasm` content type for `.wasm` files.
 
-Unzip the zip into any folder a static host serves. The host needs two things:
+## Web-Compatible Scripts
 
-- HTTPS, for the same reason as on a phone.
-- The `application/wasm` content type for `.wasm` files.
-
-No special headers and no server code are needed.
-
-## Writing Scripts That Also Run on the Web
-
-The Web build compiles the same `kotlin-src/` folder as desktop. Most scripts
-need no change. A script fails the Web build, with an error that names it,
-when it:
+The Web build compiles the same `kotlin-src/` folder as desktop, and most
+scripts need no change. If you plan to ship on the Web later, avoid what the
+Web build stops on, with an error that names the script:
 
 - uses Java classes such as `java.io.File`, which do not exist in the browser;
 - compares raw handles with `handle.address()`; use `isSameInstance()`;
@@ -138,13 +139,11 @@ when it:
   expression. `Mathf.PI / 3.0` works; another property's value does not;
 - exports a property type the Web build does not carry.
 
-For a script that must differ on the Web, put a file with the same name in
-`web/kotlin-src/`. It replaces the shared file in the Web build only. To leave
-a desktop-only script out of the Web build, list its path relative to
-`kotlin-src/` in `web/kotlin-src-excludes.txt`, one per line.
-
-A property initializer may call Godot, as `var x = ...` can in GDScript. On
-the Web the node is usually already in the scene tree when it runs.
+For a script that must differ on the Web, a file with the same name in
+`web/kotlin-src/` replaces the shared file in the Web build only. A
+desktop-only script is left out by listing its path, relative to
+`kotlin-src/`, in `web/kotlin-src-excludes.txt`, one per line. The demos use
+both.
 
 ## Troubleshooting
 
@@ -156,34 +155,8 @@ the Web the node is usually already in the scene tree when it runs.
 | `exportWeb` fails with `Unsupported -PkanamaWebDemo=...`. | Use one of the demo keys in the table. |
 | `packageWebExport` says the export is stale. | Run `exportWeb` again, then package. |
 | `packageWebExport` rejects `tpsdemo`. | Its assets exceed itch.io's 500 MB limit. Serve it from your own host instead. |
-| Enemies pile up and never leave the screen. | See the open defect under [Known Limitations](#known-limitations). |
+| Enemies pile up and never leave the screen. | See the open defect under [Limitations](../reference/limitations.md#web). |
 
-## Known Limitations
+## On Other Platforms
 
-- **Your own project cannot be exported.** The export runs on the demo
-  projects listed above, from a Kanama checkout. No packaged addon exports to
-  the Web.
-- **Single thread.** The export uses Godot's `nothreads` template: no threads,
-  no SharedArrayBuffer, no special headers. In exchange, any static HTTPS host
-  can serve the game, itch.io included.
-- **Compatibility renderer only.** Forward+ and Mobile are not available on
-  the Web, so features that need them, such as volumetric fog and global
-  illumination, are missing. A shader can hitch once the first time it
-  compiles.
-- **No multiplayer.** Browsers have no ENet, and Godot's WebSocket and WebRTC
-  peers are not connected to Kanama on the Web. The multiplayer API answers as
-  an offline single player, as desktop does before a game sets a peer, so
-  shared scripts that read it still run.
-- **No editor and no hot reload.** Every script change needs a new build and
-  export.
-- **Safari on iPhone and iPad** runs the export, but Kanama does not test it
-  automatically or name a minimum version.
-- Script-level limits, such as which callbacks run and what errors report,
-  are in [Limitations](../reference/limitations.md#web).
-<!-- KANAMA-BLOCKED(since:2026-07-28, issue:370): the unexplained-defect entry below -->
-- **One defect is open ([issue #370](https://github.com/falcon4ever/kanama/issues/370)).**
-  On one Linux host, enemies spawned in two demos leave the screen, but
-  `VisibleOnScreenNotifier2D.screen_exited` never fires, so they are never
-  freed. No cause in Kanama has been found, and none is ruled out. If
-  enemies pile up in a Web export, check the issue before you look for a bug
-  in your project.
+On **Windows**, run `.\gradlew.bat` wherever this page says `./gradlew`.

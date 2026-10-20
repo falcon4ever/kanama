@@ -40,8 +40,8 @@ Evidence, so you can judge how far it has been taken:
   resort is a hardcoded `/Library/Java/…/temurin-25.jdk` fallback. No pass yet on
   a second Mac with no JDK installed. **Distribution-grade signing and
   notarization of the bundled runtime is a separate track and is not done** — see
-  [macOS bundle layout, entitlements, and
-  signing](../exporting/desktop.md#macos-bundle-layout-entitlements-and-signing). That caveat is
+  [macOS Entitlements and
+  Signing](../exporting/desktop.md#macos-entitlements-and-signing). That caveat is
   macOS-specific — it does not gate the Windows or Linux path.
 
 ### Cross-Target Runtime Images

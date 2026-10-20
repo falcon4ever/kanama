@@ -25,6 +25,7 @@ script. Most games use `@ScriptClass` only, as in
 
 | What does not work | Why | What to do instead |
 |---|---|---|
+| A release build crashes at startup on Android 12 and older; debug builds run there. | Release builds on those versions hit a constraint in PanamaPort, the library Kanama uses to call Godot on Android. | Set the release preset's **Min SDK** to `33` (Android 13), or ship a debug build to older phones. |
 | On Android 8 to 12, the garbage collector never releases a resource you forget to close. | Those versions lack the Java API Kanama uses to notice a dropped wrapper; this affects debug installs only, because release builds need Android 13. | `close()` or `use { }` what you load, as the [ownership rules](../game-dev/godot-api.md#resource-ownership) recommend. |
 | A script error in a minified release build names the callback, not the file and line. | R8 removes the source information. | Reproduce the error in a debug build to get the line. |
 | Calling a function value with `.invoke()`, such as `callback?.invoke()`, does not compile for Android, and the Android build stops at it. | The Android build rewrites every `.invoke(` call in your scripts for Android's Java runtime. | Call it directly: `callback()`, or `callback?.let { it() }`. See [Kotlin Style](../game-dev/style-guide.md#on-other-platforms). |
@@ -36,20 +37,24 @@ script. Most games use `@ScriptClass` only, as in
 | A script error shows line 0 in an `.ipa` export, a one-click deploy, or a release build. | Those builds strip the symbols the line lookup needs. | Use **Export Project Only** and run the Xcode project, which keeps them, while you debug. See [iOS](../exporting/ios.md). |
 | A `Callable` or `Signal` argument of a signal or script function fails with an error naming the type. | iOS does not pass those types; desktop passes `null`. | Connect with a typed signal property, or pass the target object and method name instead. |
 | An `Array` or `Dictionary` nested more than 8 levels deep arrives as `null` at the deepest level. | The iOS container encoder stops at 8 levels. | Flatten deep data, or store it in a `Resource`. |
-| An export, script function or engine virtual iOS cannot carry fails the iOS build. | The iOS build checks every declaration ahead of time instead of dropping it on the device. | Change the type the error names. `-PkanamaIosAllowSkips=true` builds anyway and leaves those members out on iOS. |
+| An export, script function or engine virtual iOS cannot carry, such as an `RID` export or a `Map` parameter of an engine virtual, fails the iOS build. | The iOS build checks every declaration ahead of time instead of dropping it on the device. | Change the type the error names. `-PkanamaIosAllowSkips=true` builds anyway and leaves those members out on iOS. |
 | A signal with an `Array`, `Dictionary`, packed-array or `Rect2` argument reports a script error when it fires, and your lambda is not called. | The iOS signal path does not carry those argument types. | Avoid those signals in code that runs on iOS. Each one's documentation in your IDE says so. |
 | `newScriptInstance<T>()` throws. | iOS cannot create a script resource from Kotlin. | Create the resource in the editor, or on desktop, save it as a `.tres` file and load it. |
 | Setting a `Boolean`, `Long`, `Double`, `String`, `List` or `Map` property to a value of another type, from GDScript or `set()`, does not follow the conversion rule in [Exports and Resources](../game-dev/properties-resources.md#values-of-the-wrong-type). | iOS checks the type only for value types, `NodePath` and `Color`. | Set the property with a value of its own type. |
 
 ## Web
 
-Web is experimental. Its platform-wide limits (single thread, Compatibility
-renderer, no multiplayer, no hot reload, source-checkout export only) are in
-[Web: Known Limitations](../exporting/web.md#known-limitations). The rows below
-are about scripts.
+Web is experimental. [Export for the Web](../exporting/web.md) shows how to try
+it with a demo.
 
 | What does not work | Why | What to do instead |
 |---|---|---|
+| Your own game cannot be exported to the Web; only the Kanama demo projects can. | The Web export has a build step for each demo and none for another project. | Ship on desktop, Android or iOS, and keep your scripts [Web-compatible](../exporting/web.md#web-compatible-scripts). |
+| Threads and `SharedArrayBuffer` are not available. | The export uses Godot's single-thread Web template. | Keep the work on the main thread. Any static HTTPS host can serve the export, itch.io included. |
+| Forward+ and Mobile rendering, and features that need them such as volumetric fog and global illumination, are missing. A shader can hitch once the first time it compiles. | The Web export uses the Compatibility renderer. | Design the Web build for the Compatibility renderer. |
+| Multiplayer does not connect. | Browsers have no ENet, and Godot's WebSocket and WebRTC peers are not connected to Kanama on the Web. The multiplayer API answers as an offline single player. | Keep Web builds single-player; shared scripts that read the multiplayer API still run. |
+| There is no Web editor and no hot reload. | Scripts are compiled ahead of time into the export. | Build and export again after every change. |
+| Safari on iPhone and iPad runs the export, but no minimum iOS version is named. | Kanama checks it by hand only. | Try your build on the devices you target. |
 | Only `_enter_tree`, `_ready`, `_process`, `_physics_process`, `_draw`, `_exit_tree`, `_input` and `_unhandled_input` run. Any other virtual fails the Web build. | The Web bridge forwards those eight callbacks. | Move the work into one of the eight. |
 | A public function that Godot calls fails the Web build when its parameters are not one of these: none; up to six numbers (a `Vector2` counts as two, a `Vector3` as three); one `String` or object; or a mix of `String`, `NodePath`, numbers, `Boolean`, objects and value types. | The Web build generates a way into the browser for each of those lists only. | Change the parameters, or make the function `internal` if Godot never calls it. The build error names the function. |
 | The `node`, `script` and `preload` properties, `castOrNull`, `cast`, `requireAs<T>`, `getNodeAs<T>` and the `instantiate` functions are missing. | The Web API does not include them. `launch`, `wait`, `nextFrame`, `isScript`, `asScript` and `self.tree` work. | Use `getNodeOrNull` and the wrapper constructors, or keep a Web copy of the script in `web/kotlin-src/`. |
@@ -67,6 +72,12 @@ are about scripts.
 | An exported Godot enum has no enum class in its property info, only the dropdown hint. | The Web build declares the export with `@export_custom`, which cannot set a class name. | Nothing for the inspector, which shows the same dropdown. Code that reads `get_property_list()` sees a plain `int` property. |
 | The two `NavigationAgent3D` signals with a `Dictionary` argument have no typed property. | Web has no typed form for that argument. | Handle them in a small GDScript, or check the agent's state each physics frame. |
 | An autoload read outside a script callback fails. | Web looks the autoload up through the running script. | Read `Autoloads.<Name>` in a lifecycle callback, a signal handler or a coroutine. |
+
+<!-- KANAMA-BLOCKED(since:2026-07-28, issue:370): the unexplained-defect entry below -->
+**One Web defect is open ([issue #370](https://github.com/falcon4ever/kanama/issues/370)).**
+In some runs, enemies that leave the screen are never freed, because
+`VisibleOnScreenNotifier2D.screen_exited` does not fire. If enemies pile up
+in a Web export, check the issue before you look for a bug in your project.
 
 How the Web bridge works, and why these limits exist, is in
 [Web Internals](../contributing/backends/web.md).

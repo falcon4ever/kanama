@@ -50,7 +50,7 @@ The smoke script builds scripts, installs the Kanama Android AAR **and the
 desktop addon** (the export runs in the desktop editor, which needs
 `kanama.jar` plus the project's `kanama-scripts.jar` to load the `.kt` scripts;
 without them the export stops with the Kanama Tools error described under
-[Export Guard](../exporting/android.md#export-guard)), installs the Android build template
+[Export Guard](../getting-started/editor-workflow.md#export-guard)), installs the Android build template
 (by hand from the export templates when Godot's `--install-android-build-template
 --quit` leaves nothing, as it does on 4.7.2), clears `.godot/exported/`, exports
 a debug APK and fails if the export prints `Kanama: Export stopped`, exits
@@ -417,7 +417,7 @@ download it. The budget file records that as a known exception rather than
 blessing it — fixing it is asset work in the demo, which 60f puts out of scope,
 because budgets are not met by editing gameplay or scene content.
 
-### What CI Runs and What Stays Local
+### CI and Local Runs
 
 Not everything can or should run on a hosted runner, and the two reasons are
 different:
@@ -464,7 +464,7 @@ Firefox local repeats green; the runner-scale proof is the lifting PR's own CI
 plus the next main full-corpus run.
 
 The same signature is the open defect users see under
-[Export for the Web → Known Limitations](../exporting/web.md#known-limitations):
+[Limitations → Web](../reference/limitations.md#web):
 on one Linux CI host, spawned mobs in two demos travel far off screen yet
 `VisibleOnScreenNotifier2D.screen_exited` never fires, so they are never freed
 and live handles plateau. Five hypotheses have been eliminated by measurement

@@ -37,7 +37,7 @@ export:
 
 ```sh
 cd /path/to/kanama
-./gradlew installAndroidPluginAar -PkanamaAndroidDemoDir=/path/to/your-project
+./gradlew installAndroidPluginAar -PkanamaAndroidProjectDir=/path/to/your-project
 ./gradlew installAddonJar \
   -PkanamaProjectDir=/path/to/your-project \
   -PkanamaProjectScriptsDir=/path/to/your-project/kotlin-src
@@ -64,6 +64,10 @@ Run both commands again after every change to your scripts, before you export.
    install commands above have run.
 
 ## Exporting an APK
+
+When the export begins, the Kanama Tools editor plugin checks that every
+Kotlin script the exported scenes use loads in the editor, and stops the
+export if one does not; see [Export Guard](../getting-started/editor-workflow.md#export-guard).
 
 Delete Godot's cache of converted scenes, then export from **Project > Export**
 or from the command line:
@@ -108,27 +112,8 @@ in one step.
 ## Release Builds
 
 Export with `--export-release` and a release keystore set in the preset, as
-for any Godot Android game. Release builds run on Android 13 and newer; to
-ship to older phones, set the preset's Min SDK to `33`, or ship a debug build.
-
-## Export Guard
-
-When the export begins, the Kanama Tools plugin checks every Kotlin script that
-the exported scenes and resources use. If one does not load in the editor, it
-stops the export with one error that starts with `Kanama: Export stopped:` and
-names the scripts. The usual cause is an out-of-date `kanama-scripts.jar`: run
-the two install commands again.
-
-- A command-line export ends before it writes any file, with a non-zero exit
-  status.
-- An export from the Export dialog shows the error and is marked failed. The
-  APK it writes is the one Godot would have written without the check, so do
-  not ship it.
-- A one-click deploy installs nothing.
-
-Only the scenes and resources the preset exports are checked. A `.kt` file
-that no scene uses is not. The project setting
-`kanama/tools/export_guard_enabled` turns the check off.
+for any Godot Android game. Release builds have a higher minimum Android
+version than debug builds; see [Limitations](../reference/limitations.md#android).
 
 ## Performance on Devices
 
@@ -140,29 +125,14 @@ startup, and avoid rebuilding generated meshes every frame.
 
 | Problem | Fix |
 | --- | --- |
-| `installAndroidPluginAar` fails with `Android demo source audit failed before remap`. | A listed line calls a Kotlin function value with `.invoke(`, such as `callback?.invoke()`. Write `callback?.let { it() }` or `callback()` instead. |
+| `installAndroidPluginAar` fails and names a line that calls `.invoke(` on a Kotlin function value, such as `callback?.invoke()`. | The Android build cannot compile that call. Write `callback()` or `callback?.let { it() }` instead. |
 | The export logs `No loader found for resource: res://….kt`, or scenes lose their property values. | The desktop addon is missing or out of date. Run the two install commands, delete `.godot/exported`, and export again. |
-| A release APK crashes at startup on Android 12 or older, while the debug APK runs. | Release builds need Android 13. Raise the preset's Min SDK to `33`, or ship a debug build to older phones. |
-| The app crashes at startup before any script runs, on phones older than Android 16 or on Android 17. | The Android build uses an older PanamaPort, the library that lets Kanama call Godot on Android. Check the version under [PanamaPort](#panamaport). |
-| A minified release APK crashes with `AssertionError: Should not reach here`, then logs `No loader found for resource`. | The build uses the upstream PanamaPort, which code shrinking breaks. Use the version under [PanamaPort](#panamaport). |
-| The Gradle build cannot resolve `com.github.falcon4ever.PanamaPort`. | The export downloads it from JitPack, so the machine needs network access. Run `installAndroidPluginAar` again if `KanamaAndroid.gdap` predates this version of Kanama. |
+| A release APK crashes at startup on an older phone, while the debug APK runs. | See the release build limit in [Limitations](../reference/limitations.md#android). |
+| The app crashes at startup before any script runs, in the PanamaPort library Kanama uses to call Godot on Android. | `android/plugins/KanamaAndroid.gdap` names an old PanamaPort build. Run the two install commands again and export again. |
+| The Gradle build cannot resolve `com.github.falcon4ever.PanamaPort`. | The export downloads it from JitPack, so the machine needs network access. If it has access, run the two install commands again to refresh `KanamaAndroid.gdap`. |
 | An older phone crashes inside its graphics driver before any script runs. | Some old OpenGL drivers crash on Godot 4.7's shaders. Use the **Mobile** renderer (`rendering/renderer/rendering_method.mobile="mobile"`), which uses Vulkan. Godot falls back to the Compatibility renderer on phones without Vulkan. |
 | The app fails to create its render surface at launch. | Unlock the phone and keep the screen on. A locked screen stops the app from drawing. |
 | The 3D sky or background looks darker on the emulator than on desktop. | The emulator's OpenGL path renders differently. Check the look on a phone. |
-
-## PanamaPort
-
-Kanama's Android runtime calls Godot through PanamaPort, a library that brings
-Java's foreign-function API to Android. Kanama uses its own build of it:
-
-```text
-com.github.falcon4ever.PanamaPort:Core:0.1.5-kanama-r8.1
-```
-
-The install command adds it, and Godot's export downloads it from
-[JitPack](https://jitpack.io). You only need this name to check a build log.
-`-PkanamaPanamaPortCore=<coordinate>` on `installAndroidPluginAar` selects a
-different build.
 
 ## On Other Platforms
 

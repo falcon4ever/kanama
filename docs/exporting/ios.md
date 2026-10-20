@@ -38,46 +38,22 @@ bundles, Apple's format for a prebuilt library, one debug and one release. It
 adds their entries to `addons/kanama/kanama.gdextension` and keeps the desktop
 and Android entries already there.
 
-Run it again after every change to your scripts, before you export.
+Run it again after every change to your scripts, before you export. When the
+export begins, the Kanama Tools editor plugin checks that every Kotlin script
+the exported scenes use loads in the editor; see
+[Export Guard](../getting-started/editor-workflow.md#export-guard).
 
 If Xcode is not in `/Applications`, add
 `-PkanamaXcodeDeveloperDir=/path/to/Xcode.app/Contents/Developer`.
 
-### Types iOS Cannot Carry
+### Unsupported Types on iOS
 
-The iOS build checks every exported property and script function ahead of
-time. A type it cannot pass on iOS stops the build with an error that names
-the member:
-
-```text
-e: [ksp] [kanama:ksp] [kanama-ios] Grid.cell (RID) — no iOS @Export
-path for this value type, would keep its Kotlin default. On iOS the scene and inspector value of
-this property would be dropped. ...
-```
-
-```text
-e: [ksp] [kanama:ksp] [kanama-ios] Board.apply (godot: apply): argument table: Map<String, Any?>
-has a type iOS does not pass to a script method. On iOS a call to this method from Godot would
-not run. Use a supported parameter type (Long, Double, Boolean, String, ...), or accept the skip
-with -PkanamaIosAllowSkips=true (KSP option kanamaIosAllowSkips).
-```
-
-These reach iOS:
-
-- **Exports:** the numbers, `Boolean`, `String`, `NodePath`, every Godot
-  value type (`Vector2`, `Vector3i`, `Rect2`, `Transform3D`, `Color` and the
-  rest), object references, `List<String>`, and `Map` exports such as
-  `Map<String, Texture2D>`. `RID` does not.
-- **Script function parameters:** the numbers, `Boolean`, `String`,
-  `NodePath`, every value type, `RID`, objects, Godot enums and `Any?`. A
-  `List`, `Map` or packed array parameter does not.
-- **Return values:** any type a script function returns. An engine virtual you
-  override fails the build when iOS cannot carry its return type.
-
-Change the type the error names. To build anyway and leave those members out
-on iOS, add `-PkanamaIosAllowSkips=true` to the `installIosAddon` command;
-each skipped member then prints a warning instead. The same flag covers
-exports and functions.
+The iOS build checks every export and script function ahead of time. If iOS
+cannot carry a type, such as an `RID` export, the build stops with an error
+that names the member and its type. Change that type. To build anyway and
+leave those members out on iOS, add `-PkanamaIosAllowSkips=true` to the
+`installIosAddon` command; each skipped member then prints a warning. The
+types iOS does not carry are in [Limitations](../reference/limitations.md#ios).
 
 ## Setting Up the Export Preset
 
@@ -156,15 +132,16 @@ xcrun devicectl device process launch \
   com.example.mygame
 ```
 
-`-allowProvisioningUpdates` lets Xcode create the provisioning profile. Keep
-device ids and team ids out of files you commit.
+`-allowProvisioningUpdates` lets Xcode create the provisioning profile.
 
 `GD.print` output and script errors go to the device's system log. Read them
 in Xcode's console or in Console.app. Kotlin's `println` writes to the app's
-standard output instead, which `devicectl ... --console` shows.
+standard output, which Xcode's console also shows.
 
 For a release build, export with `--export-release` and build with
-`-configuration Release`, once signing is set up for distribution.
+`-configuration Release`. Distribution signing and App Store upload work as
+for any Godot game; see Godot's
+[Exporting for iOS](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_ios.html).
 
 ## Audio and the Silent Switch
 
@@ -182,7 +159,7 @@ its own audio session category in native iOS code after startup.
 | Xcode cannot create a provisioning profile. | Sign in to your Apple Developer account in Xcode and allow provisioning updates, or create the profile in the Apple Developer portal. |
 | The iPhone is not a valid run destination. | Connect and trust it, turn on Developer Mode, and check that `xcrun devicectl list devices` lists it. |
 | Scenes load without their script property values, such as a `PackedScene` export that is `null` in `_ready`. | The export log shows `[kanama:kt] WARNING: no Kotlin class bound for res://...`. Run `installIosAddon` with `-PkanamaIosProjectScriptsDir`, delete `.godot/exported`, and export again. |
-| The export stops with `Kanama: Export stopped:`. | A scene uses a Kotlin script that the editor cannot load. Run `installIosAddon` with `-PkanamaIosProjectScriptsDir` and export again. See [Export Guard](android.md#export-guard). |
+| The export stops with `Kanama: Export stopped:`. | A scene uses a Kotlin script that the editor cannot load. Run `installIosAddon` with `-PkanamaIosProjectScriptsDir` and export again. See [Export Guard](../getting-started/editor-workflow.md#export-guard). |
 | Godot warns about a missing iOS GDExtension library. | Run `installIosAddon` again, and check that `addons/kanama/kanama.gdextension` has `ios.debug.arm64` and `ios.release.arm64` entries. |
 | The log shows a `FAULT` line. | See [FAULT Lines in the Log](#fault-lines-in-the-log). |
 
@@ -195,28 +172,12 @@ returned an empty value instead:
 [kanama][ios][c] FAULT kanama_ios_godot_get_method_bind: bind-lookup-failed Node3D.set_visible hash=1
 ```
 
-It is never normal in a shipped game. The word after the colon is the reason:
-
-| Reason | What went wrong |
-|---|---|
-| `api-unresolved` | A Godot interface function was not found: the Godot version does not match, or the call came before the extension started. |
-| `bind-lookup-failed` | Godot has no method with that class, name and hash. Almost always a stale Kanama build after a Godot upgrade. |
-| `null-bind` | The call used a method that failed its lookup; an earlier `bind-lookup-failed` line names it. |
-| `null-instance` | An instance method was called on a null object. |
-| `null-handle` | An engine object, such as a node, a tween or a signal target, was null. |
-| `null-arg` | A required string argument, named in the line, was null. |
-| `pending-protocol` | A value was read before the call that produces it succeeded. |
-| `callable-build` | A bound `Callable` could not be built for the named method. |
-| `unknown-tag` | The call carried an argument type the iOS layer does not know. |
-| `encode-failed` | A container argument could not be converted for Godot. |
-| `short-payload` | A value inside a container was shorter than its type needs. |
-| `alloc-failed` | The call could not allocate memory for its arguments. |
-| `too-many-args` | A call or signal emission had more arguments than iOS carries. |
-| `progress-readback` | `ResourceLoader.load_threaded_get_status` returned no progress value. |
-
-Read the first `FAULT` line in the log: later ones often follow from it.
-`FAULT-PROBE` lines appear only in Kanama's own test builds and are not
-faults.
+It is never normal in a shipped game. Read the first `FAULT` line in the log;
+later ones often follow from it. A `bind-lookup-failed` or `api-unresolved`
+line almost always means the iOS libraries were built for another Godot
+version: run `installIosAddon` again and export again. For any other reason,
+report the line with the log. What each reason means is in
+[iOS Backend Architecture](../contributing/backends/ios.md#fault-reasons).
 
 ## On Other Platforms
 
