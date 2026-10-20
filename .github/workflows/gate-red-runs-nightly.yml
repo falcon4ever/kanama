@@ -24,9 +24,14 @@ env:
 
 jobs:
   slow:
-    name: gate red runs (--slow)
+    # Sharded like ci.yml's fast set: the whole --slow set outgrew one 90-minute job (cancelled 2026-10-18..20).
+    name: gate red runs (--slow) (${{ matrix.shard }}/4)
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -80,4 +85,4 @@ jobs:
           godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
           chmod +x "$godot_bin"
           # sync_kdoc needs a Godot docs checkout, which this runner does not have: skipped by name.
-          KANAMA_GODOT_BIN="$godot_bin" python3 scripts/gate_red_runs.py --slow --strict --allow-skip sync_kdoc
+          KANAMA_GODOT_BIN="$godot_bin" python3 scripts/gate_red_runs.py --slow --strict --allow-skip sync_kdoc --shard ${{ matrix.shard }}/4
