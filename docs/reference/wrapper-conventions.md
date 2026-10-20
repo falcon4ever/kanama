@@ -16,7 +16,7 @@ source (`src/commonMain/kotlin/net/multigesture/kanama/api`). The Web backend ha
 surface; [Platform parity](#13-platform-parity) lists where it follows the same rules and where
 it differs. Not covered here: the [annotations](../game-dev/scripts.md) you write scripts with
 (the reverse of rule 1 for your own scripts, a public `fun showMessage()` registered as Godot's
-`show_message`, is in [Functions Godot Can Call](../game-dev/scripts.md#functions-godot-can-call)),
+`show_message`, is in [Exposing Functions to Godot](../game-dev/scripts.md#exposing-functions-to-godot)),
 the builtin value types' own methods (`Vector3.lerp`, `Basis.inverse`), and `@Tool` /
 editor-only APIs. The signature gate reaches further than these rules: it also holds the value
 types, the annotations, each platform's own classes and the Web facades to a snapshot (see
@@ -173,7 +173,7 @@ Current rule (since task 134):
   marshalling sizes assume single precision (the hard-coded 24-byte Variant size and the `Rect2`
   cell size in `ObjectCalls`).
 
-### Operators, methods and edge cases
+### Operators, Methods and Edge Cases
 
 - **Operators** are Kotlin operators with GDScript's meaning: `a + b`, `v * 2.0`, `2.0 * v`, `-v`,
   `transform * point`, `basis * otherBasis`, `quaternion * vector`, `Vector2i(3, 4) * 2`,
@@ -221,7 +221,7 @@ Where Kotlin and GDScript differ:
   which matches Godot on arm64 (Apple silicon, phones). For finite channels every platform agrees.
 
 The Web value types are the same classes; how their engine-computed methods run there is in
-[Web Internals](../contributing/backends/web.md#what-a-web-script-sees).
+[Web Internals](../contributing/backends/web.md#the-web-script-environment).
 
 Kept by: the value types' signatures in `api-snapshots/types.txt` / `web-types.txt`, the
 `RealStorageWidthTest` unit test (storage, equality, `toString` against Godot's strings, real_t
@@ -345,7 +345,13 @@ The full statement is [Resource Ownership](../game-dev/godot-api.md#resource-own
   disconnect early (task 131; every platform). See
   [Signals](../game-dev/signals.md).
 - An exception thrown from a script callback is reported as a Godot script error with the Kotlin
-  file and line, and the call returns `null` (task 131; desktop, Android and iOS). On Web the same
+  file and line, and the call returns `null` (task 131; desktop, Android and iOS). Containment
+  covers lifecycle callbacks, public functions, signal lambdas, property accessors, `MainThread`
+  tasks and coroutines started with `launch`; the full stack trace goes to stderr. The reported
+  frame is the top frame of game code (Kanama, generated, Kotlin and JDK frames are skipped), as a
+  `res://` path when the file is in the project, else the bare file name. A wrapper of a freed
+  object handed to Godot as a value (an export, a return, a Variant argument) is silently `null`,
+  as in GDScript. On Web the same
   report reaches the Godot log, but the production build cannot name the Kotlin line (it names the
   containment site, see [Web internals](../contributing/backends/web.md)).
 
@@ -371,7 +377,7 @@ The full statement is [Resource Ownership](../game-dev/godot-api.md#resource-own
 - Wrappers made on any thread get the GC fallback; the release runs on the main thread, after the
   wrapper's last call (`ObjectCalls.keepReachable`).
 
-### The full ownership table
+### The Full Ownership Table
 
 | Category | What it covers | What to do |
 |---|---|---|
@@ -514,7 +520,7 @@ with `javap`), NodePath's as `NodePath` members, Callable's and Signal's as `God
 A `List<String>` script property exports as `Array[String]` and reads back as Kotlin strings,
 including a scene-authored `PackedStringArray` value.
 
-### String, NodePath, ByteArray and Callable methods
+### String, NodePath, ByteArray and Callable Methods
 
 - **Godot's semantics.** Each String function runs Godot's implementation in the engine, so it
   answers what GDScript answers: positions and lengths (`godotFind`, `substr`, `unicodeAt`, `left`,
@@ -587,7 +593,8 @@ Kept by: `scripts/audit_wrapper_signatures.py`, `scripts/audit_variant_marshalli
 - **Checked casts** (task 133) re-type a wrapper safely: `body.castOrNull<CharacterBody3D>()` asks
   Godot (`Object.is_class`) and returns `null` when the object is another class, `cast<T>()`
   throws a `ClassCastException`, and `Node.requireAs<T>(path)` / `getNodeAs<T>(path)` check the
-  node they find. They ask Godot every time, also when the wrapper's Kotlin class already matches
+  node they find. The untyped `requireAs(path, ::Label)` and `getAsOrNull(path, ::Label)` do not
+  check the class. They ask Godot every time, also when the wrapper's Kotlin class already matches
   (only `GodotObject` is not asked). A `RefCounted` result is a new wrapper with a reference of
   its own, like the `from*` downcasts (close it or let the GC release it; the original is
   unaffected); any other result is the same wrapper when it already is a `T`, else a new view. They are inline

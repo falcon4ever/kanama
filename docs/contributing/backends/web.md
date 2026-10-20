@@ -865,7 +865,7 @@ quote and a backslash) plus a live object handle, and a second call passes a
 `null` object so the nullable lane is proven to deliver `null` rather than a
 wrapper around handle 0.
 
-### What a Web Script Sees
+### The Web Script Environment
 
 The script-facing differences from desktop, with their mechanism. The user-facing list is
 [Limitations → Web](../../reference/limitations.md#web).

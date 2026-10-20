@@ -8,7 +8,9 @@ types, typed enums, and `close()`.
 
 ## From Godot Names to Kotlin Names
 
-Take a GDScript line and its Kotlin twin:
+Take a few GDScript lines from a `CharacterBody2D` script and their Kotlin
+twin. The snippets on this page sit inside a script like the one in
+[Writing Scripts](scripts.md#a-complete-script), which lists the imports:
 
 ```gdscript
 if Input.is_action_pressed("jump") and is_on_floor():
@@ -17,6 +19,9 @@ if Input.is_action_pressed("jump") and is_on_floor():
 ```
 
 ```kotlin
+@Export var jumpVelocity: Double = -400.0
+
+// in @OnPhysicsProcess:
 if (Input.isActionPressed("jump") && self.isOnFloor()) {
     self.velocity = self.velocity.withY(jumpVelocity)
     self.requireAs<Label>("Hud/Label").text = "jump"
@@ -37,7 +42,7 @@ The rules behind it:
   [Signals and Await](signals.md).
 - **`self`** is the node your script is attached to. Kotlin's `this` is the
   script object, so `isOnFloor()` on its own does not compile; write
-  `self.isOnFloor()`. [Writing Scripts](scripts.md#this-is-not-your-node)
+  `self.isOnFloor()`. [Writing Scripts](scripts.md#using-self)
   explains why.
 
 Your IDE shows Godot's own documentation on every method, so you rarely need
@@ -71,12 +76,16 @@ are immutable. You cannot write `velocity.y += 10`; you make a new value and
 assign it:
 
 ```kotlin
-// GDScript: velocity.y += gravity * delta
-self.velocity = self.velocity.withY(self.velocity.y + gravity * delta)
+@OnPhysicsProcess
+fun physicsProcess(delta: Double) {
+    // GDScript: velocity.y += gravity * delta
+    self.velocity = self.velocity.withY(self.velocity.y + 980.0 * delta)
 
-val dir = (target - self.position).normalized()
-self.position = self.position + dir * speed * delta
-if (dir.length() > 0.0 && dir.isEqualApprox(Vector2.UP)) jump()
+    val target = self.getGlobalMousePosition()
+    val dir = (target - self.position).normalized()
+    if (dir.isEqualApprox(Vector2.UP)) GD.print("straight up")
+    self.position = self.position + dir * 200.0 * delta
+}
 ```
 
 Every operator and method Godot declares exists with its GDScript meaning:
@@ -93,15 +102,23 @@ Every Godot enum is a type. `PROCESS_MODE_ALWAYS` is `Node.ProcessMode.ALWAYS`,
 number where Godot wants a mode:
 
 ```kotlin
-self.processMode = Node.ProcessMode.ALWAYS
-Input.setMouseMode(Input.MouseMode.CAPTURED)
-if (key.getKeycode() == Key.ESCAPE) quit()
+@OnReady
+fun ready() {
+    self.processMode = Node.ProcessMode.ALWAYS
+    Input.setMouseMode(Input.MouseMode.CAPTURED)
 
-val flags = Control.SizeFlags.EXPAND or Control.SizeFlags.FILL   // a bitfield
-if (Control.SizeFlags.FILL in flags) { /* ... */ }
+    val box = self.requireAs<Control>("Hud/Box")
+    box.sizeFlagsHorizontal = Control.SizeFlags.EXPAND or Control.SizeFlags.FILL   // a bitfield
+    if (Control.SizeFlags.FILL in box.sizeFlagsHorizontal) { /* ... */ }
+}
 
-val err: GodotError = ResourceSaver.save(scene, path)
-if (err != GodotError.OK) GD.pushError("save failed: $err")
+@OnUnhandledInput
+fun unhandledInput(event: InputEvent) {
+    val key = event.castOrNull<InputEventKey>() ?: return
+    if (key.getKeycode() != Key.ESCAPE) return
+    val err: GodotError = self.tree.changeSceneToFile("res://menu.tscn")
+    if (err != GodotError.OK) GD.pushError("cannot open the menu: $err")
+}
 ```
 
 The value names drop the enum's common prefix and keep the rest, the way
@@ -117,10 +134,11 @@ available on it after one import:
 ```kotlin
 import net.multigesture.kanama.builtins.*
 
+val path = "res://art/hero.png"
 val ext = path.getExtension()                  // "png"
 val folder = path.getBaseDir()                 // "res://art"
 val id = "PlayerScore".toSnakeCase()           // "player_score"
-val words = csv.godotSplit(",", false)
+val words = "a,b,,c".godotSplit(",", false)    // ["a", "b", "c"]
 ```
 
 Where Kotlin already has a method of that name with a different meaning,
@@ -130,7 +148,7 @@ Godot's version gets a `godot` prefix: `godotSplit`, `godotFind`,
 `NodePath` has Godot's path methods (`getName(1)`, `getSubname(1)`), and a
 `ByteArray` has `PackedByteArray`'s (`decodeU32(0)`, `getStringFromUtf8()`).
 
-## Null Values and Returns That Are Never Null
+## Nullability
 
 A method that returns an object returns a nullable type, because Godot
 promises nothing about it:
@@ -140,19 +158,28 @@ val tree = self.getTree() ?: return            // SceneTree?
 val label = self.getNodeOrNull("Hud/Label")    // Node?
 ```
 
-The exceptions are returns Godot itself marks as required: `self.getTree()`'s
-`getRoot()`, `node.createTween()`, and the fluent tween setters. Those are
-non-null, so a chain reads `tween.tweenProperty(icon, "modulate", Color.WHITE, 0.2)
-.setTrans(Tween.TransitionType.SINE)` with no `?.`. Inside a script, `self.tree`,
-`self.viewport` and `self.parentNode` are the non-null forms of `getTree()`,
-`getViewport()` and `getParent()`; they throw a clear error when the node is
-not in the tree.
+The exceptions are returns Godot itself marks as required, such as
+`SceneTree.getRoot()`, `createTween()` and the tween setters. Those are
+non-null, so a chain needs no `?.`:
+
+```kotlin
+val root: Window = self.tree.getRoot()
+self.createTween()
+    .tweenProperty(self, "modulate", Color.WHITE, 0.2)
+    .setTrans(Tween.TransitionType.SINE)
+```
+
+Inside a script, `self.tree`, `self.viewport` and `self.parentNode` are the
+non-null forms of `getTree()`, `getViewport()` and `getParent()`; they throw a
+clear error when the node is not in the tree.
 
 To check or narrow a type, ask Godot:
 
 ```kotlin
-val cam = other.castOrNull<Camera3D>() ?: return     // GDScript: other as Camera3D
-if (body.isScript<Player>()) { /* a node with your Player script */ }
+fun onBodyEntered(body: Node3D) {
+    val rigid = body.castOrNull<RigidBody3D>() ?: return   // GDScript: body as RigidBody3D
+    if (body.isScript<Player>()) { /* a node with your Player script */ }
+}
 ```
 
 ## Calling Methods by Name
@@ -162,8 +189,8 @@ by name:
 
 ```kotlin
 Autoloads.Audio.call("play", "res://sounds/jump.ogg")   // a GDScript autoload
-node.set("process_mode", Node.ProcessMode.ALWAYS)
-val raw = node.get("process_mode") as Long               // dynamic reads come back untyped
+self.set("process_mode", Node.ProcessMode.ALWAYS)
+val raw = self.get("process_mode") as Long               // dynamic reads come back untyped
 ```
 
 `Autoloads.<Name>` is generated from your `project.godot`: a Kotlin autoload is
@@ -178,9 +205,10 @@ error. Between two Kotlin scripts, prefer a direct Kotlin call over `call()`;
 A `Node` is freed by Godot: `queueFree()` it and forget it. A `Resource`, or any
 `RefCounted`, is reference-counted, and a wrapper you hold is one reference.
 **`close()` releases your reference. It never destroys an object someone else
-still holds.** Everything else about resources follows from that sentence.
+still holds.**
 
 ```kotlin
+val meshInstance = self.requireAs<MeshInstance3D>("Body")
 val mesh = meshInstance.getMesh()     // the node holds one reference, you hold another
 mesh?.close()                         // yours is gone; the node's mesh is unaffected
 
@@ -192,10 +220,10 @@ material.close()                             // release yours; the material live
 `use { }` closes for you at the end of the block, so the usual pattern is:
 
 ```kotlin
+val player = self.requireAs<AudioStreamPlayer>("JumpSound")
 ResourceLoader.loadAudioStream("res://sounds/jump.ogg")?.use { stream ->
-    player.stream = stream
+    player.stream = stream          // the player keeps its own reference
 }
-player.setStreamFromPath("res://sounds/jump.ogg")   // the same, in one call
 
 FileAccess.open("user://save.txt", FileAccess.ModeFlags.WRITE)?.use { file ->
     file.storeLine("score=42")
@@ -203,6 +231,9 @@ FileAccess.open("user://save.txt", FileAccess.ModeFlags.WRITE)?.use { file ->
 val text = FileAccess.getFileAsString("user://save.txt")
 val saves = DirAccess.getFilesAt("user://")
 ```
+
+`AudioStreamPlayer.setStreamFromPath(path)` is a Kanama shortcut that does
+the same load, assign and release in one call.
 
 Close every file you open. In GDScript a file closes when its variable goes out
 of scope; in Kotlin it stays open, with its writes unflushed, until you close
@@ -218,21 +249,14 @@ Which wrappers are yours to close:
 | a running `Tween` from `createTween()`, anything in the scene tree | **engine-owned, live** | stop it through Godot (`kill()`, `queueFree()`); `close()` never stops it |
 | a `Node` or any plain `Object` | not reference-counted | `queueFree()`; there is no `close()` |
 
-Two consequences worth knowing:
-
-- **A forgotten `close()` is a late release, not a leak.** When the collector
-  drops the wrapper, Kanama releases the reference on the main thread at the
-  next frame. The collector does not see the texture or mesh behind a wrapper,
-  so a few big resources can stay alive far longer than their size suggests.
-  Close big resources and anything you create in a loop. The project setting
-  `kanama/debug/log_gc_releases` logs each release the collector had to make,
-  with the line that created the wrapper.
-- **An exported resource field is yours to keep.** `@Export var scene: PackedScene?`
-  stays valid as long as the script instance does. Close only a temporary you
-  read out of it and discard. A script object that extends `KanamaScript`
-  also keeps its own resource alive, as in GDScript, so holding a `Weapon`
-  script keeps the weapon resource usable
-  ([details](properties-resources.md#keeping-a-resource-through-its-script)).
+A forgotten `close()` is a late release, not a leak: the reference is released
+after the garbage collector drops the wrapper, which can take a long time for a
+game that allocates little. Close big resources and anything you create in a
+loop; the project setting `kanama/debug/log_gc_releases` names each line whose
+wrapper the collector had to release. An exported field such as
+`@Export var scene: PackedScene?` is yours to keep for as long as the script
+lives, and a custom resource's script object keeps its resource alive
+([details](properties-resources.md#keeping-a-resource-through-its-script)).
 
 An object you receive, as a signal argument, a lookup or a call's result, stays
 valid as long as the object lives. A handler can keep it (`lastHit = body`) and
@@ -245,6 +269,7 @@ previously freed instance"), as GDScript reports it; ask
 Saving part of a scene needs both cleanups in one function, one per kind:
 
 ```kotlin
+val someNode = self.requireAs<Node2D>("Level")
 val scene = PackedScene.create()
 scene.pack(someNode)                          // only sub-nodes with an owner are saved
 ResourceSaver.save(scene, "user://thing.tscn")
@@ -261,12 +286,14 @@ GDScript's global functions are members of `GD`, all of them, with Godot's
 documentation:
 
 ```kotlin
+val score = 42L
 GD.print("score: ", score)             // Godot's output panel, on every platform
-GD.pushError("bad state: $value")      // the Errors tab, like push_error()
+GD.pushError("bad state: $score")      // the Errors tab, like push_error()
 GD.seed(42)                            // Godot's global generator, same sequence as GDScript
 val roll = GD.randiRange(1, 6)
 val t = GD.inverseLerp(0.0, 10.0, 2.5)
-if (GD.isInstanceValid(node)) node.show()
+val enemy = self.getNodeAs<Node2D>("Enemy")
+if (GD.isInstanceValid(enemy)) enemy?.show()
 ```
 
 `typeof` is `GD.typeOf` (a Kotlin keyword), `deg_to_rad` is `GD.degToRad`. The
@@ -296,13 +323,7 @@ they differ. One script can export another global class
 
 ## On Other Platforms
 
-Everything above works the same on desktop, Android and iOS: it is one API,
-compiled from one source. On **Web**, every engine call crosses from
-WebAssembly into the browser. A node's position and rotation are read from a
-snapshot taken at the start of each `_process` and `_physics_process`, and
-`castOrNull`, `requireAs<T>` and the other typed lookups are not available yet.
-The [Web guide](../exporting/web.md#web-compatible-project-scripts) has the
-rules for scripts that must run there.
-
-[Limitations](../reference/limitations.md) is the one page that lists what
-differs, per platform, with the workaround for each.
+This is one API, compiled from one source, on desktop, Android, iOS and Web. A
+few calls behave differently on iOS and Android, and Web is missing some of
+them. [Limitations](../reference/limitations.md) lists each difference, per
+platform, with the workaround.
