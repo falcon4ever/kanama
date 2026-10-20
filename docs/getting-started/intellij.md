@@ -44,8 +44,9 @@ Edit a script and save. Then either:
 Either way, `addons/kanama/kanama-scripts.jar` is rebuilt and Godot picks it
 up. To skip that step, turn on build on save in Godot
 (`kanama/tools/auto_build_on_save`): every save in IntelliJ then starts a build
-by itself. [Edit, Build, Run](editor-workflow.md#how-long-the-loop-takes) has the
-numbers.
+by itself, and the build takes a few seconds.
+[Edit, Build, Run](editor-workflow.md#reloading-after-a-build) covers what
+happens after it.
 
 ## Debug the running game
 

@@ -21,7 +21,11 @@ skim. They copy the code before they read the prose around it.
    "Installation", "Next Steps", "Troubleshooting". Otherwise name the task as
    a noun phrase or a gerund ("Changing a Vector", "Calling a GDScript
    Autoload"), not the internal feature name ("Value Type Mutation"). Never a
-   spoken fragment such as "What you need", "Where next" or "What just ran".
+   spoken fragment such as "What you need", "Where next" or "What just ran",
+   and never a question ("How Long the Loop Takes"). In a title, lowercase
+   articles, "and"/"or" and prepositions such as "from", "in", "on", "to",
+   "with", "after" and "without", unless they are the first or last word:
+   "Install from a Source Checkout".
 3. **Example before rule.** Show the five-line snippet, then state the one rule
    it demonstrates. A rule without code is not finished.
 4. **Short sentences, one idea each.** No parenthesis inside a parenthesis. A

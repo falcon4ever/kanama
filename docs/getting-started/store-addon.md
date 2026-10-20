@@ -1,5 +1,11 @@
 # Add Kanama to an Existing Project
 
+!!! note "Until Kanama 0.5.0 is released"
+    The addons published so far are for Kanama 0.4, whose scripts look
+    different from the ones in these docs. Until the 0.5.0 addon is out,
+    [build the addon from source](#building-the-addon-from-source) and follow
+    the same steps with it.
+
 The store addon adds Kanama to a Godot project you already have. The zip only
 writes under `addons/`. A setup script then adds a Gradle build and a starter
 Kotlin script, and keeps any file that is already there.
@@ -11,57 +17,50 @@ You need Godot 4.7.2 and a JDK 25 or newer, as listed in
 every desktop platform and the Gradle wrapper. The first build downloads
 Gradle and the Kotlin compiler, so it needs a network connection.
 
-!!! note "Until Kanama 0.5.0 is released"
-    The addons published so far are for Kanama 0.4, whose scripts look
-    different from the ones in these docs. Until the 0.5.0 addon is out, use
-    [a source checkout](source-checkout.md#adding-kanama-to-an-existing-project).
-
 ## Installation
 
 1. Download `kanama-store-addon-v<version>.zip` from the
    [releases page](https://github.com/falcon4ever/kanama/releases) and unzip
-   it at the root of your Godot project, next to `project.godot`. It adds:
+   it at the root of your Godot project, next to `project.godot`. On macOS,
+   also clear the download quarantine; see
+   [On Other Platforms](#on-other-platforms). The zip adds:
     - `addons/kanama`: the runtime Godot loads, with the Kanama libraries your
       build compiles against in `addons/kanama/maven`;
     - `addons/kanama_tools`: the Kanama Tools editor plugin;
-    - `addons/kanama/templates/release-kit`: the Gradle files the setup script
+    - `addons/kanama/templates/release-kit`: the Gradle build and the Gradle
+      wrapper (`gradlew`, `gradlew.bat`, `gradle/`) that the setup script
       copies.
-2. On macOS, clear the download quarantine once, or Godot refuses to load the
-   addon:
+2. From the project root, run the setup script:
 
     ```sh
-    xattr -dr com.apple.quarantine /path/to/project
-    ```
-
-3. From the project root, run the setup script:
-
-    ```sh
-    cd /path/to/project
+    cd /path/to/your-project
     sh addons/kanama/setup-kanama-project.sh
     ```
 
-    On Windows, run `.\addons\kanama\setup-kanama-project.ps1`. The script
-    copies `build.gradle.kts`, `settings.gradle.kts`, `gradlew` and the
-    `gradle/` folder, adds `kotlin-src/HelloScript.kt`, and registers Kanama in
+    The script copies `build.gradle.kts`, `settings.gradle.kts` and the Gradle
+    wrapper, adds `kotlin-src/HelloScript.kt`, and registers Kanama in
     `.godot/extension_list.cfg`. It skips every file that already exists and
     prints `keeping existing` for it.
 
-4. Build the Kotlin scripts:
+3. Build the Kotlin scripts:
 
     ```sh
     ./gradlew buildScripts
     ```
 
-    On Windows, run `.\gradlew.bat buildScripts`. The build compiles every
-    `.kt` file in `kotlin-src/` into `addons/kanama/kanama-scripts.jar`.
+    The build compiles every `.kt` file in `kotlin-src/` into
+    `addons/kanama/kanama-scripts.jar`.
 
-5. Open the project in Godot, or reopen it if it was open. In
-   **Project > Project Settings > Plugins**, enable **Kanama Tools**. It adds
-   **Build Scripts** and **Open Kotlin** to the editor toolbar.
+4. Open the project in Godot, or reopen it if it was open. If you have set the
+   JDK Path editor setting, Godot asks you to restart the editor the first
+   time it opens the project; restart it once.
+5. In **Project > Project Settings > Plugins**, enable **Kanama Tools**. It
+   adds **Build Scripts** and **Open Kotlin** to the editor toolbar.
 6. Select a `Node2D` in a scene. In the inspector, load
    `res://kotlin-src/HelloScript.kt` into its **Script** property, the same way
-   you attach a `.gd` file. Run the scene: the node rotates, and the Output
-   panel shows `[kanama:starter] Hello from Kanama`.
+   you attach a `.gd` file. Press **Run Current Scene** (F6, or Cmd+R on
+   macOS): the node rotates, and the Output panel shows
+   `[kanama:starter] Hello from Kanama`.
 
 From here the loop is the same as in any Kanama project: edit in IntelliJ IDEA,
 press **Build Scripts**, press **Play**. [Open in IntelliJ IDEA](intellij.md)
@@ -70,42 +69,74 @@ and [Edit, Build, Run](editor-workflow.md) cover it.
 ## Projects That Already Have a Gradle Build
 
 If your project already has a `build.gradle.kts`, the setup script keeps it.
-Add the Kanama parts to it yourself. The kit's own build is short:
+It still adds the Gradle wrapper if the project has none, so
+`./gradlew buildScripts` works once your build has the Kanama parts:
 
-```kotlin
-plugins {
-    kotlin("jvm") version "2.4.21"
-    id("com.google.devtools.ksp") version "2.3.12"
-}
+1. Copy the `plugins { }` block from
+   `addons/kanama/templates/release-kit/build.gradle.kts` into your build. It
+   applies Kotlin and KSP, the Kotlin compiler plugin that generates the code
+   that registers your scripts with Godot, at the versions this Kanama release
+   is built with.
+2. Add the rest:
 
-kotlin {
-    jvmToolchain(25)
-    sourceSets.named("main") {
-        kotlin.srcDir("kotlin-src")
-        kotlin.srcDir(layout.buildDirectory.dir("generated/ksp/main/kotlin"))
+    ```kotlin
+    kotlin {
+        jvmToolchain(25)
+        sourceSets.named("main") {
+            kotlin.srcDir("kotlin-src")
+            kotlin.srcDir(layout.buildDirectory.dir("generated/ksp/main/kotlin"))
+        }
     }
-}
 
-apply(from = "addons/kanama/kanama-project.gradle.kts")
-```
+    apply(from = "addons/kanama/kanama-project.gradle.kts")
+    ```
 
 The last line does the rest: `addons/kanama/kanama-project.gradle.kts` adds
 the `addons/kanama/maven` repository, the Kanama dependencies and the
-`buildScripts` task. Copy `settings.gradle.kts` from
-`addons/kanama/templates/release-kit` too if your build has none; it lets
-Gradle download a JDK 25 when only another JDK is installed.
+`buildScripts` task. If your build has no `settings.gradle.kts`, the setup
+script has copied the template's; it lets Gradle download a JDK 25 when only
+another JDK is installed.
 
-To replace the root Gradle files with the template instead, run the script
-with `--force` (`-Force` on Windows). It overwrites `build.gradle.kts`, `settings.gradle.kts`, the
-Gradle wrapper and `kotlin-src/HelloScript.kt`, so only use it when nothing in
-those files is yours.
+To replace the root Gradle files with the template instead, run the setup
+script with `--force`. It overwrites `build.gradle.kts`, `settings.gradle.kts`,
+the Gradle wrapper and `kotlin-src/HelloScript.kt`, so only use it when nothing
+in those files is yours.
+
+## Building the Addon from Source
+
+Until the 0.5.0 addon is published, build it from a checkout of Kanama. This
+needs CMake and a C compiler as well; see the
+[source checkout requirements](source-checkout.md#requirements).
+
+```sh
+git clone https://github.com/falcon4ever/kanama
+cd kanama
+./gradlew packageStoreAddon
+```
+
+The zip is written to `build/distributions/kanama-store-addon-v<version>.zip`.
+Use it in step 1 of [Installation](#installation). It holds the runtime for
+your own machine's platform only.
 
 ## Troubleshooting
 
 | Problem | Fix |
 | --- | --- |
-| Godot cannot find `libjvm`. | Install a JDK 25 or newer. Kanama looks in the usual install folders; if yours is elsewhere, set `JAVA_HOME`, or the editor setting **Kanama > Build > JDK Path**, to the JDK folder and restart Godot. See [Which JDK Kanama Uses](editor-workflow.md#which-jdk-kanama-uses). |
-| macOS reports `"libkanama_bootstrap.dylib" Not Opened`. | Gatekeeper quarantined the zip. Run `xattr -dr com.apple.quarantine /path/to/project` and open the project again. |
+| Godot cannot find `libjvm`. | Install a JDK 25 or newer. Kanama looks in the usual install folders; if yours is elsewhere, set **Editor Settings > Kanama > Build > JDK Path** (`kanama/build/jdk_path`) to the JDK folder, or set `JAVA_HOME`, and restart Godot. See [JDK Selection](editor-workflow.md#jdk-selection). |
+| macOS reports `"libkanama_bootstrap.dylib" Not Opened`. | Gatekeeper quarantined the zip. Clear the quarantine as shown in [On Other Platforms](#on-other-platforms) and open the project again. |
 | Gradle cannot resolve the Kanama libraries. | Check that `addons/kanama/maven` exists and that `build.gradle.kts` ends with `apply(from = "addons/kanama/kanama-project.gradle.kts")`. |
 | Godot does not recognize `.kt` scripts. | Check that `.godot/extension_list.cfg` contains `res://addons/kanama/kanama.gdextension`, then reopen the project. |
 | The game still runs your old Kotlin code. | Press **Build Scripts** or run `./gradlew buildScripts`, then run the scene again. |
+
+## On Other Platforms
+
+On **macOS**, clear the download quarantine once after unzipping, before you
+open the project. Otherwise Godot refuses to load the addon:
+
+```sh
+xattr -dr com.apple.quarantine /path/to/your-project
+```
+
+On **Windows**, run the PowerShell setup script,
+`.\addons\kanama\setup-kanama-project.ps1` (with `-Force` in place of
+`--force`), and `.\gradlew.bat` wherever this page says `./gradlew`.

@@ -59,6 +59,47 @@ What sits under them:
   and is the local smoke-test path for it: the counterpart of `installAddonJar`
   for that project.
 
+### JDK Lookup
+
+The user rules are on [JDK Selection](../getting-started/editor-workflow.md#jdk-selection).
+The Kanama Tools plugin (`plugin.gd`) and the native runtime (`bootstrap.c`)
+resolve the JDK the same way; `scripts/check_jdk_locations_parity.py` keeps
+their install-folder tables equal and `scripts/check_jdk_lookup_parity.sh`
+compares their picks.
+
+- **Order.** The `kanama/build/jdk_path` editor setting, then `JAVA_HOME` from
+  the editor's environment, then the best JDK in the install folders.
+- **Install folders.** A JDK counts when its `release` file says 25 or newer
+  and `lib/server/libjvm.*` exists. Among those, a GA release beats an
+  early-access one, exactly 25 beats a newer major version, then the newer
+  version wins, then the path that sorts first.
+- **The editor setting** must be an absolute path; `~/` is expanded. A wrong
+  value is an error, never silently replaced by another JDK. A `JAVA_HOME`
+  older than 25 is skipped, not an error, since it is usually set for another
+  project.
+- **Build Scripts** needs a full JDK with `include/jni.h`, because a JRE
+  cannot compile the native bootstrap. If none qualifies, the build stops
+  before it starts with an error that names `kanama/build/jdk_path` and
+  `JAVA_HOME`. The bootstrap's CMake step also checks that `jni.h` defines
+  `JNI_VERSION_21` (a JDK 21 or newer header) and names the JDK when it does
+  not.
+- **The runtime** cannot read editor settings when Godot loads it. The plugin
+  writes a valid `kanama/build/jdk_path` to `.godot/kanama_jdk_home` in the
+  project, and removes the file when the setting is empty or invalid; the
+  runtime reads that file first. If the JDK it names has been removed or is
+  older than 25, the runtime logs `[kanama] ignoring .godot/kanama_jdk_home=...`
+  with the reason and goes on with `JAVA_HOME` and the install folders. The
+  runtime reads the file once, when Godot loads the extension, which is before
+  the plugin can write it. So on the first open of a project (a fresh clone, a
+  deleted `.godot`) with the setting set, and after any change to the setting,
+  the plugin warns "Restart the editor to use JDK ..." instead of reporting OK.
+- **Gradle** runs on any JDK 25+. The build pins `jvmToolchain(25)`; with only
+  another JDK installed (a JDK 26-only machine, say), the foojay toolchain
+  resolver in `settings.gradle.kts`, and in the release kit's
+  `settings.gradle.kts`, downloads a JDK 25 once into `~/.gradle/jdks`.
+- **An exported game** with a bundled runtime ignores all of this and uses its
+  own `runtime/` folder.
+
 Use the narrowest useful check while iterating, then run the broader local gate
 before release-facing changes:
 

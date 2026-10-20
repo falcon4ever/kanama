@@ -90,7 +90,7 @@ lambda: the sweep runs on the next frame tick.
 
 The optional `res://addons/kanama_tools` plugin provides `Build Scripts`,
 debounced build-on-save, scene reload after sync, and JDWP settings. See
-[The Editor Loop](../getting-started/editor-workflow.md) for the daily
+[Edit, Build, Run](../getting-started/editor-workflow.md) for the daily
 workflow.
 
 After a sync, existing `KanamaScript` resources are rebound to the newest
@@ -105,6 +105,42 @@ another Kanama process holds the port's lock, or on macOS and Linux when
 something else listens on it); attach IntelliJ with a **Remote JVM Debug**
 configuration pointed at `localhost:PORT`. Editor processes skip the runtime
 port so pressing Play does not create a port conflict.
+
+## Edit Loop Timing
+
+Measured on a fresh starter: save `HelloScript.kt` with a changed print line,
+then time until the change shows.
+
+| From saving a `.kt` file until | Median | p90 |
+| --- | --- | --- |
+| `./gradlew buildScripts` has finished (build only) | 2.0 s | 2.1 s |
+| a newly started game prints the new line (build, then Play again) | 2.4 s | 2.5 s |
+| the editor shows it: build on save, then the scene reloads | 3.7 s | 3.8 s |
+| a running game has loaded the new build | 2.6 s | 2.9 s |
+
+Five runs each after one warm-up run, with the Gradle daemon running (the first
+build after starting it took 4.3 s). Machine: Apple M1 Max, 64 GB, macOS 26.6,
+Godot 4.7.2, JDK 25, headless editor and game; measured 2026-10-18.
+
+About 1.5 s of the editor number is build on save waiting for you to stop
+saving: it scans for changed files every 0.6 s and builds once
+`kanama/tools/auto_build_debounce_ms` (800 ms) has passed without another
+change. A running game checks for a new build every 0.5 s, but the nodes it
+already has keep running their old code until their scene reloads; new
+instances and Kotlin autoloads use the new code at once. For a change you want
+to see in the game, restarting it is the fastest path.
+
+The budget is a median of 5 s or less from save to the change showing in the
+editor. To measure your own machine, run this from the root of your Kanama
+checkout:
+
+```sh
+python3 scripts/measure_edit_loop.py /path/to/godot --runs 5
+```
+
+It creates a fresh starter from the checkout, runs the four measurements, and
+prints the median, the p90 and a budget line. The budget line is a report: the
+script fails only when it cannot take a measurement.
 
 ## Verification
 

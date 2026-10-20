@@ -28,9 +28,9 @@ use the source checkout.
 !!! note "Until Kanama 0.5.0 is released"
     The kits published so far are for Kanama 0.4, whose scripts look different
     from the ones in these docs. Until the 0.5.0 kits are out, use
-    [Option 2: Build Kanama From Source](#option-2-build-kanama-from-source).
+    [Option 2: Build Kanama from Source](#option-2-build-kanama-from-source).
 
-## Option 1: Start From the Desktop Release Kit
+## Option 1: Start from the Desktop Release Kit
 
 A desktop kit is a complete Godot project with Kanama inside it.
 
@@ -62,7 +62,7 @@ You should see a label that says *Hello from Kanama* and *Kotlin script is
 running for 1.2s*, and the whole scene slowly rotating. That text comes from
 Kotlin. Skip to [Making Your First Change](#making-your-first-change).
 
-## Option 2: Build Kanama From Source
+## Option 2: Build Kanama from Source
 
 This path also needs **CMake 3.22 or newer** and a C compiler (the Xcode
 command line tools, `build-essential`, or Visual Studio with the C++
@@ -184,7 +184,7 @@ IntelliJ debugger to a running game.
 
 | Godot says | Do this |
 | --- | --- |
-| It cannot find `libjvm`, or the Kanama Tools plugin warns about Java. | Install a JDK 25 or newer. Kanama looks in the usual install folders; if yours is elsewhere, set `JAVA_HOME`, or set the editor setting **Kanama > Build > JDK Path** to the JDK folder, then restart Godot. [Which JDK Kanama Uses](editor-workflow.md#which-jdk-kanama-uses) lists the folders. |
+| It cannot find `libjvm`, or the Kanama Tools plugin warns about Java. | Install a JDK 25 or newer. Kanama looks in the usual install folders; if yours is elsewhere, set **Editor Settings > Kanama > Build > JDK Path** (`kanama/build/jdk_path`) to the JDK folder, or set `JAVA_HOME`, then restart Godot. [JDK Selection](editor-workflow.md#jdk-selection) lists the folders. |
 | `"libkanama_bootstrap.dylib" Not Opened` (macOS). | The zip was quarantined by Gatekeeper. Run `xattr -dr com.apple.quarantine /path/to/project` and open the project again. |
 | The game runs, but your edit does not show. | The build did not run. Press **Build Scripts** or run `./gradlew buildScripts`, then Play again. |
 | `res://kotlin-src/HelloScript.kt` is missing, or the node has no script. | The addon is not registered. Check that `.godot/extension_list.cfg` contains `res://addons/kanama/kanama.gdextension`, then reopen the project. On the source checkout path, run `installAddonJar` again. |
