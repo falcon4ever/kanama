@@ -2449,6 +2449,9 @@ tasks.register("installAndroidPluginAar") {
       rename { "KanamaAndroidScripts.debug.aar" }
     }
 
+    // custom_maven_repos: the PanamaPort fork is published on JitPack, which Godot's Android build
+    // template does not list; Godot passes this repo to its Gradle build, so a plain editor export
+    // resolves the remote dependency without patching android/build.
     pluginsDir
       .resolve("KanamaAndroid.gdap")
       .writeText(
@@ -2462,6 +2465,7 @@ tasks.register("installAndroidPluginAar") {
             |[dependencies]
             |local=["KanamaAndroidScripts.debug.aar"]
             |remote=["${panamaPortCoreDependency.get()}"]
+            |custom_maven_repos=["https://jitpack.io"]
             |"""
           .trimMargin()
       )
@@ -2575,6 +2579,7 @@ val prepareMobileAddonAndroidExtras by
             |
             |[dependencies]
             |remote=["${panamaPortCoreDependency.get()}"]
+            |custom_maven_repos=["https://jitpack.io"]
             |"""
             .trimMargin()
         )

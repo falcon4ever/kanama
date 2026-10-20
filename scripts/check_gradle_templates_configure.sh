@@ -12,7 +12,7 @@
 # store-addon project by running the real setup script over the files packageStoreAddon ships -- and in each:
 #   1. `gradlew`, `gradlew.bat` and the wrapper exist,
 #   2. `./gradlew tasks --all` configures (no dependency resolution, no compile),
-#   3. every task the getting-started pages and the README Quick Start tell the user to run in a project exists there,
+#   3. every task the getting-started and shipping pages and the README Quick Start tell the user to run in a project exists there,
 #      and every task they tell the user to run in the Kanama checkout exists in the repo build.
 # The templates are used as shipped (only @KANAMA_VERSION@ is substituted, as the packaging tasks do).
 #
@@ -53,6 +53,10 @@ PAGES = {
     "docs/getting-started/editor-workflow.md": "repo",
     "docs/getting-started/release-kit.md": "project",
     "docs/getting-started/store-addon.md": "project",
+    "docs/exporting/desktop.md": "repo",
+    "docs/exporting/android.md": "repo",
+    "docs/exporting/ios.md": "repo",
+    "docs/exporting/web.md": "repo",
     "templates/release-kit/README.md": "project",
     "templates/starter/project-README.md": "project",
     "templates/starter/README.md": "repo",

@@ -19,7 +19,7 @@ name: web
 # Safari is NOT a cell here and cannot become one: it has no headless mode, needs
 # a logged-in GUI session with an unoccluded window, and two concurrent Safari
 # gates defeat the driver's PID-diff browser reaping. It is a documented local
-# pre-promotion gate -- see docs/exporting/web.md.
+# pre-promotion gate -- see docs/contributing/device-runs.md.
 on:
   pull_request:
   push:
@@ -48,7 +48,7 @@ env:
   # The kanama-demos commit the matrix runs against. Pinned on purpose: an
   # unpinned demos checkout means an unrelated demo-repo commit can redden every
   # Kanama PR. Bump it deliberately when a demo port lands (see
-  # docs/exporting/web.md, "Bumping the demos pin").
+  # docs/contributing/device-runs.md, "Bumping the Demos Pin").
   # Task 64: thirdperson single-source slice 2 (kanama-demos#34 merge).
   # Task 64: adds the converged Icone (demos#40), which calls PropertyTweener.from -- an arm
   # that only exists from kanama#204 onward. Both sides pin together or neither is green.

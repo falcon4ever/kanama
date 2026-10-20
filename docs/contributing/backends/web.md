@@ -46,7 +46,7 @@ representative members:
   swap, match/collapse/refill, particles, audio, restart, and two full
   zero-state teardowns.
 
-The full list is in [Exporting → Web](../../exporting/web.md).
+The full list is in [Export for the Web](../../exporting/web.md#exporting-a-demo).
 
 Each run asserts gameplay deltas, crossing budgets, and handle/callback/scheduler
 teardown to baseline, and fails on stale-handle use.
@@ -966,6 +966,140 @@ scheduler's delay, with the defaults only. Tweens: `node.createTween()` only (no
 running script's node, so an autoload is read from a script callback (a lifecycle callback, a signal,
 a coroutine), which is where Web code runs.
 
+## Export Workflow Internals
+
+### Building the Web Scripts
+
+`buildWebScripts` generates the GDScript proxy bundle (proxies + manifest +
+protocol descriptor) and collects the Kotlin/Wasm runtime a project attaches:
+
+```sh
+./gradlew --no-daemon -Pkotlin.compiler.execution.strategy=in-process \
+  :web-runtime:buildWebScripts
+```
+
+The bundle lands in `web-runtime/build/web-scripts/` with a
+`build-web-scripts.report.json` recording the protocol version, renderer, and
+files. No source maps are published.
+
+`exportWeb` depends on `buildWebScripts`, so the user page runs `exportWeb`
+only.
+
+### Export Staging
+
+The `exportWeb` task stages a copy of the project without `addons/kanama/`
+and `kotlin-src/` and points every scene at the generated Web proxies, so no staged
+scene attaches a `.kt` script. The Kanama Tools plugin stays enabled in that copy;
+its export check (see the Android guide's
+[Export Guard](../../exporting/android.md#export-guard)) finds no `.kt` script to check and stays
+silent. A plain Godot Web export of the project itself is checked like the other
+platforms and stops with `Kanama: Export stopped: …` when a `.kt` script that its
+scenes attach does not bind in the editor.
+
+`exportWeb` stages a disposable copy of the project, runs the Godot Web export,
+installs the Kotlin/Wasm runtime and bridge, cache-busts the entry scripts, and
+writes a self-contained served directory plus a release payload report. Point it
+at a **clean checkout** of the demo (never a shared working tree); the Web script
+root is auto-derived from `<project>/web`.
+
+Each demo has its own staging task (`stageWeb<Demo>Project`), selected by
+`-PkanamaWebDemo`; an unknown key fails with the list of supported keys. There
+is no staging path for an arbitrary project, which is why the user page says a
+game cannot be exported to the Web. The export also writes
+`kanama-web/export-report.json` listing every served file, its size, the total
+payload, the renderer, the thread setting, and the source-map policy; no
+workstation-absolute paths leak into the served HTML.
+
+### Payload and Source Maps
+
+- The Kotlin gameplay Wasm is **content-hashed by the build** (its filename is
+  its hash), so it is cache-busted automatically when gameplay changes.
+- The two fixed-name entry scripts (`kanama-web-spike.js`,
+  `kanama-web-bridge.js`) are cache-busted with a content-derived `?v=<hash>`
+  query string stamped into `index.html`.
+- **No source maps ship** (webpack `sourceMaps = false`); both
+  `buildWebScripts` and `exportWeb` fail loudly if a `.map` file appears.
+- `kanama-web/export-report.json` reports the full payload for budget tracking.
+
+The production Wasm module has no name section and publishes no source maps,
+so a Kotlin/Wasm stack trace is only anonymous `wasm-function[n]` frames. A
+script error is therefore reported once through Godot's error log
+(`SCRIPT ERROR: <type>: <message>`, `at: <Script>.<callback>`) and contained:
+the call returns its default, and the frame loop and the other scripts go on.
+
+### Threads
+
+Exports use Godot's `nothreads` Web template. Threaded Godot Web is out of
+scope, and it is a double gate: even with Godot's threads template, gameplay
+runs on Kotlin/Wasm, whose own threading support is immature, so threads are
+not one fix away. itch.io-style hosts' COOP/COEP support is experimental, which
+is another reason the single-thread export is the one that ships.
+
+### Script Portability Details
+
+A script in the shared `<project>/kotlin-src/` root is directly
+Wasm-compatible when written portably: the constructor takes `GodotHandle` (a
+zero-cost value class over the backend's own handle — an FFM `MemorySegment` on
+JVM/Android and iOS, a generation-tagged registry id on Web); vector and color
+components are `Double` on every backend, so no numeric conversion is needed;
+raw pointer identity (`handle.address()`) is replaced by `isSameInstance()`;
+and no JVM-only APIs are used.
+
+The Web build compiles gameplay from a merged view of `<project>/kotlin-src/`
+and the per-file overrides in `<project>/web/kotlin-src/`. The
+`web/kotlin-src-excludes.txt` merge fails loudly on a stale or contradictory
+entry (a listed file that does not exist, or one that is also overridden).
+Anything a shared script calls that the Web API surface does not model fails
+the Web compile — that is the fail-loud coverage gate working as intended.
+Files under the merged root resolve to `res://kotlin-src/*.kt` and match the
+scene script attachments on both platforms.
+
+`@Export` declarations are portable including `NodePath`
+properties and hint metadata (a typed hint annotation such as `@ExportRange`
+reaches the generated proxy verbatim as `@export_custom(hint, "hint string")`,
+and `@ExportStorage` as `@export_storage`). The generated `Autoloads` object works
+on Web too (the processor is pointed at the demo's `project.godot`); read an
+autoload from a script callback. Two Web-specific rules fail the build loudly
+instead of silently mis-hydrating: a property default must be a literal or a
+constant expression the processor folds (`Mathf.PI / 3.0` is fine; a reference to
+another property is not — the proxy re-emits the default into GDScript and pushes
+it back into Kotlin at hydration), and a property type outside the supported Web
+set is rejected with an error naming the property.
+
+**A script's property initializers may call the engine**, as GDScript's `var x = ...` can. The
+constructor runs with the script's proxy wired and its handle-keyed snapshots seeded, so an
+initializer can call an engine singleton (`RenderingServer.getCurrentRenderingDriverName()`,
+`RenderingServer.getCurrentRenderingMethod()`), construct a `RefCounted` (`ConfigFile.create()`),
+and use `self`: `self.getTree()`, `self.getNodeOrNull(...)`, `self.addChild(...)` and the mirrored
+spatial reads (`self.position`). Two Web differences from desktop: the node is usually already in the
+tree when its initializers run (the proxy builds the script at `_enter_tree`/`_ready`; desktop runs
+them at `.new()`, before it is), and the `self` reads see
+the value mirrored when the proxy was wired, not a later engine change. A script that calls into
+its own script instance from an initializer fails with "still constructing". If an initializer
+throws, the script is not built and not retried: the failure is reported once, and any other
+script that looks it up gets an error, not a half-built instance.
+
+A **companion-object or top-level property** is initialized on first access, inside whichever
+script's callback touches it first; what it keeps outlives that script, as on desktop (a node lives
+until it is freed, a `RefCounted` while Kotlin holds it). Engine code that runs with no script
+running at all (a call outside any callback) fails with "No Kanama Web proxy owns handle=0" or "A
+Kanama Web singleton call was made outside a script callback".
+
+**Physics loops should derive movement from velocity, not from re-reading a
+spatial value they just wrote.** On Web, spatial reads (`self.position`,
+`self.rotation`, …) come from a mirrored snapshot rather than a live engine
+call. The snapshot refreshes at the start of every `_process` **and** (since
+task 87) every `_physics_process` dispatch, so a per-tick read is coherent with
+the previous tick — but it is still a start-of-dispatch mirror: a value the
+engine changes *inside* the current tick (after `moveAndSlide()`, for example)
+is not visible until the next dispatch. Desktop reads the engine live, so a
+spelling that re-reads a just-written spatial value can be subtly
+platform-different even when it works. Preferred spelling: accumulate movement
+in `self.velocity` + `moveAndSlide()`, and derive orientation from the intended
+direction (as squash's Player does with `lookAtFromPosition(self.position,
+self.position + direction, UP)` — the *direction* is the input, not a read-back
+of engine physics).
+
 ## Validation Fixtures
 
 The current fixtures are per-demo driver scripts
@@ -1058,6 +1192,7 @@ mkdocs build --strict
 ## Out of Scope
 
 No Web editor or compiler, no hot reload, no threads, no TeaVM or Kotlin/JS
-production path, and no Supported status. The user-facing export workflow lives
-in [Exporting → Web](../../exporting/web.md); promotion past Experimental is a
-separate decision, gated on the browser matrix and budgets described there.
+production path, no Web GDExtension, and no Supported status. The user-facing export workflow lives
+in [Export for the Web](../../exporting/web.md); promotion past Experimental is a
+separate decision, gated on the browser matrix and budgets described in
+[Device and Browser Runs](../device-runs.md#web-runs).

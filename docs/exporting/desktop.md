@@ -1,462 +1,256 @@
-# Desktop and Packaging
+# Export a Desktop Game
 
-Kanama has two desktop distribution shapes:
+An exported Kanama game carries its own trimmed Java runtime, so players
+install nothing. You export from Godot as usual, then one script adds the
+runtime and your compiled scripts to the export. The same steps work for
+Windows, macOS and Linux, from any of the three.
 
-- **Desktop kit**: a complete starter Godot project for new users.
-- **Store addon**: an install-safe addon zip for existing projects and future
-  Godot Asset Store submission.
+## Requirements
 
-Source checkout installs remain supported for development. See
-[Use a Source Checkout](../getting-started/source-checkout.md) for that path.
-The package tasks below produce local zips today; they become public download
-flows only when matching GitHub release artifacts are published.
+- The project runs in the editor: Godot 4.7.2 and a JDK 25 or newer, as in
+  [Get Started](../getting-started/index.md#requirements).
+- Godot's export templates for 4.7.2, installed from **Editor > Manage Export
+  Templates**.
+- A checkout of the Kanama repository, which builds the runtime and holds the
+  assembly script. If you started from a release kit or the store addon, clone
+  it once as in [Cloning Kanama](../getting-started/source-checkout.md#cloning-kanama);
+  you do not need to change your project.
+- An export preset for your target in **Project > Export**.
 
-## Desktop Kit
+## Exporting a Game
 
-A desktop kit is built per platform:
+1. Build your scripts. Press **Build Scripts** in the editor, or run:
 
-```sh
-./gradlew packageDesktopKit
-```
+    ```sh
+    cd /path/to/your-project
+    ./gradlew buildScripts
+    ```
 
-The output is:
+2. Build the Java runtime in the Kanama checkout:
+
+    ```sh
+    cd /path/to/kanama
+    ./gradlew jlinkGameRuntime
+    ```
+
+    The runtime lands in `build/game-runtime/runtime`. It is built for the
+    machine you run it on; to export for another platform, see
+    [Exporting for Another Platform](#exporting-for-another-platform).
+
+3. Export the game from Godot with **Project > Export**, or from the command
+   line:
+
+    ```sh
+    godot --headless --path /path/to/your-project \
+      --export-release "Windows Desktop" /path/to/export/MyGame.exe
+    ```
+
+    Use your preset's name in place of `"Windows Desktop"`.
+
+4. Add the runtime and your scripts to the export, from the Kanama checkout:
+
+    ```sh
+    cd /path/to/kanama
+    scripts/export_game_assemble.sh \
+      --kanama-jar /path/to/your-project/addons/kanama/kanama.jar \
+      --scripts-jar /path/to/your-project/addons/kanama/kanama-scripts.jar \
+      /path/to/export
+    ```
+
+    The last argument is the folder that holds the exported executable, or,
+    for macOS, the exported `.app` bundle.
+
+The export folder now holds everything the game needs:
+
+| File | What it is |
+| --- | --- |
+| The executable and `.pck` | Godot's export, as usual. |
+| `kanama_bootstrap.dll`, `libkanama_bootstrap.so` or `libkanama_bootstrap.dylib` | The Kanama native library. Godot's export copies it. |
+| `kanama.jar` | The Kanama runtime. |
+| `kanama-scripts.jar` | Your compiled scripts. |
+| `runtime/` | The Java runtime the game starts. |
+| `kanama-jvm-options.txt` | Your [JVM options](#jvm-options), when the project sets any. |
+
+On macOS these sit inside the `.app`; see [Signing for macOS](#macos-bundle-layout-entitlements-and-signing).
+
+Ship the whole folder, or the `.app`, as one zip.
+
+## Running the Exported Game
+
+Run the exported executable from a terminal once. Kanama prints which Java
+runtime it loaded:
 
 ```text
-build/distributions/kanama-desktop-kit-v<version>-<platform>.zip
+[kanama] using libjvm: /path/to/export/runtime/lib/server/libjvm.so
 ```
 
-The zip is rooted at the Godot project directory and contains:
+The path is inside the export folder when the bundled runtime is in place. On
+Windows it ends in `runtime\bin\server\jvm.dll`, and on macOS in
+`Contents/Resources/runtime/lib/server/libjvm.dylib`. If it names a JDK
+installed on your machine instead, the export has no `runtime/` folder: run
+step 4 again.
 
-- `project.godot`, `main.tscn`, and `kotlin-src/HelloScript.kt`,
-- `build.gradle.kts`, `settings.gradle.kts`, `gradlew`, and Gradle wrapper
-  files,
-- `addons/kanama/kanama.jar`,
-- `addons/kanama/maven` with Kanama runtime, annotations, and processor
-  Gradle artifacts,
-- `addons/kanama/bin/<platform>/` with the native bootstrap,
-- `addons/kanama/kanama.gdextension`,
-- `addons/kanama_tools`, and
-- `.godot/extension_list.cfg`.
+## Exporting for Another Platform
 
-Validate a kit from a temporary project:
+You can build the runtime for any desktop target from any desktop host.
+`jlinkGameRuntimeCross` builds it for the target you name, and the assembly
+script takes it with `--runtime`:
 
 ```sh
-scripts/package_install_smoke.sh \
-  build/distributions/kanama-desktop-kit-v<version>-<platform>.zip \
-  /absolute/path/to/godot-4.7.2-stable
+cd /path/to/kanama
+./gradlew jlinkGameRuntimeCross -PkanamaRuntimeTarget=windows-x64
+scripts/export_game_assemble.sh \
+  --runtime build/game-runtime/windows-x64/runtime \
+  --kanama-jar /path/to/your-project/addons/kanama/kanama.jar \
+  --scripts-jar /path/to/your-project/addons/kanama/kanama-scripts.jar \
+  /path/to/windows-export
 ```
 
-The smoke unzips the kit, runs `./gradlew buildScripts`, confirms
-`kanama-scripts.jar`, and launches Godot when a binary is provided.
+The targets are `windows-x64`, `linux-x64`, `linux-arm64` and `macos-arm64`.
+The first build for a target downloads that platform's Java modules (about
+80 MB). They are kept in `~/.gradle/kanama-target-jmods`, so later builds skip
+the download. Set `-PkanamaTargetJmodsCacheDir` or `KANAMA_TARGET_JMODS_CACHE`
+to keep them somewhere else.
 
-## Store Addon
+The assembly script refuses a runtime built for a different platform than the
+export, because that game would not start on a player's machine.
 
-The store addon is intentionally safer for existing projects. It does not place
-files at the project root. It contains:
+## Adding Java Modules
 
-- `addons/kanama`,
-- `addons/kanama_tools`,
-- all available desktop native bootstrap binaries under
-  `addons/kanama/bin/<platform>/`,
-- the local Maven repo under `addons/kanama/maven`, and
-- release-kit Gradle and wrapper templates under
-  `addons/kanama/templates/release-kit`.
-
-The store addon intentionally does not include nested `project.godot` or
-`main.tscn` files under `addons/`, so installing it into an existing Godot
-project does not create a second embedded Godot project.
-
-Build a local host-only store addon:
+The runtime holds the Java modules every Kanama game needs and nothing more.
+If your scripts use another part of the JDK, such as `java.net.http`, add its
+module when you build the runtime:
 
 ```sh
-./gradlew packageStoreAddon
+./gradlew jlinkGameRuntime -PkanamaRuntimeAdditionalModules=java.net.http
 ```
 
-The all-platform store addon is assembled by the GitHub package workflow after
-the matrix builds macOS arm64, Linux x64, Linux ARM64, and Windows x64 native
-artifacts. The workflow smokes every desktop kit and the assembled store addon
-before uploading artifacts.
+Separate several modules with commas. `jlinkGameRuntimeCross` takes the same
+property.
 
-Validate a store addon from a temporary project:
+## Download Size
 
-```sh
-scripts/package_install_smoke.sh \
-  --store-addon \
-  --require-all-store-platforms \
-  build/distributions/kanama-store-addon-v<version>.zip \
-  /absolute/path/to/godot-4.7.2-stable
-```
-
-For a local host-only `packageStoreAddon` build, omit
-`--require-all-store-platforms`.
-
-## GitHub Release Workflow
-
-The package workflow runs only on manual dispatch and `v*` tags. It does not
-run on pull requests.
-
-Matrix targets:
-
-| Platform | Runner | Artifact classifier |
-| --- | --- | --- |
-| macOS arm64 | `macos-15` | `macos-arm64` |
-| Linux x64 | `ubuntu-24.04` | `linux-x64` |
-| Linux ARM64 | `ubuntu-24.04-arm` | `linux-arm64` |
-| Windows x64 | `windows-2025` | `windows-x64` |
-
-The release job grants `contents: write` only when publishing assets for a tag.
-All other package jobs use read-only repository permissions.
-
-## Runtime Requirements
-
-Desktop Kanama development needs a JDK distribution that contains `libjvm`
-(the JDK floor is in [Version Support → Requirements](../reference/version-support.md#requirements)). The native bootstrap checks for a bundled app-relative `runtime/`
-image first (exported games, see below), then `JAVA_HOME`, then platform
-fallback locations. The optional `addons/kanama_tools` editor plugin runs the
-same preflight and warns inside Godot if it cannot find `libjvm`.
-
-Native bootstrap libraries are generated build artifacts. Source repositories
-ignore `kanama_bootstrap.dll`, `libkanama_bootstrap.so`, and
-`libkanama_bootstrap.dylib`; rebuild the matching library locally for the
-platform under test instead of committing it.
-
-Current macOS GitHub artifacts are not Apple-notarized. If Gatekeeper reports
-`"libkanama_bootstrap.dylib" Not Opened` after unzipping a downloaded desktop
-kit or store addon, clear quarantine on the project copy you trust:
-
-```sh
-xattr -dr com.apple.quarantine /absolute/path/to/project
-```
+The runtime adds about 31 MB to a Windows or macOS game, and about 40 MB to a
+Linux one. `kanama.jar` adds about 12 MB more. Godot's own executable is
+usually the largest file in the download.
 
 ## JVM Options
 
-The native bootstrap starts the JVM inside Godot's process with only the options
-Kanama needs (classpath, native access, its exit hook, JDWP when enabled); heap
-and GC sizes are HotSpot's defaults. Your own options come from three places,
-applied in this order, so a later one wins:
+Kanama starts Java with its default heap and garbage collector settings. To
+pass your own options, such as a heap size or a GC log, set them in one of
+three places. A later one wins:
 
-1. `kanama-jvm-options.txt` next to `kanama.jar` — how an **exported game**
-   carries them, since a player sets no environment variable and the export has
-   no `project.godot` on disk. `scripts/export_game_assemble.sh` writes it from
-   the project setting below (or from `--jvm-options "…"`); lines starting with
-   `#` are comments.
-2. The project setting **`kanama/jvm/options`** (listed in Project Settings once
-   the `kanama_tools` plugin is enabled, or `[kanama]` `jvm/options="…"` in
-   `project.godot`) — editor and source-tree runs. Restart the game after
-   changing it.
-3. The `KANAMA_JVM_OPTIONS` environment variable — one-off runs.
+1. `kanama-jvm-options.txt` next to `kanama.jar`. This is how an exported game
+   carries them. The assembly script writes it from the project setting below,
+   or from `--jvm-options "..."`. Lines that start with `#` are comments.
+2. The project setting `kanama/jvm/options`, in **Project > Project Settings >
+   Kanama** with **Advanced Settings** on, or as `jvm/options="..."` under
+   `[kanama]` in `project.godot`. It applies when you run the game from the
+   editor. Restart the game after you change it.
+3. The `KANAMA_JVM_OPTIONS` environment variable, for one run:
 
-Options are separated by whitespace and may quote a part with `"…"` or `'…'`, as
-in `JAVA_TOOL_OPTIONS`: `-Dgame.title="My Game"`, or a path with spaces. A word
-that does not start with `-` is reported and skipped; more than 64 options in all
-are reported and the rest dropped.
+    ```sh
+    KANAMA_JVM_OPTIONS="-Xmx512m -Xlog:gc" godot --path /path/to/your-project
+    ```
 
-```sh
-KANAMA_JVM_OPTIONS="-XX:MaxNewSize=128m -Xlog:gc" godot --path my_game
-```
+Separate options with spaces. Quote a part that contains spaces with `"..."`
+or `'...'`, as in `-Dgame.title="My Game"`. A word that does not start with `-`
+is reported and skipped, and options after the 64th are dropped.
 
-They reach the JVM as JNI options, which HotSpot treats exactly like
-command-line options. `JAVA_TOOL_OPTIONS` works as for any JVM, with one HotSpot
-rule to know: the JVM reads it as environment options, and G1 sizes its young
-generation only from command-line ones, so a `-XX:MaxNewSize` or `-XX:NewSize`
-there is silently discarded. Use one of the three above for those (`-Xmn` works
-anywhere).
+`JAVA_TOOL_OPTIONS` also works, with one exception: Java ignores
+`-XX:MaxNewSize` and `-XX:NewSize` there. Put those in one of the three places
+above; `-Xmn` works in all of them.
 
-### Slow frames after a large spawn
+If frames are slow for a few seconds after your game creates many objects at
+once, such as on a level load, add `-XX:MaxNewSize=128m`. It costs a little
+frame time the rest of the time, so add it only when you see that slowdown.
 
-After a game creates many script objects at once (a level load, 10,000 Bunnymark
-sprites), frames that walk those objects can run ~20–30 % slower until the next
-young garbage collection, and with HotSpot's defaults that collection can be
-seconds away. The cause is memory layout: the new objects sit in eden interleaved
-with the garbage the spawn produced (~2–6 KB per Bunnymark bunny), and G1, seeing
-a small live set and short pauses, grows eden to ~450–600 MiB, so it fills slowly.
-The first young collection copies the survivors together and the frames recover
-at once. Measured on Bunnymark V1 Sprites (100-frame windows after the spawn):
-the phase lasts ~900 frames at ~2,250 µs per frame instead of ~1,750 µs; forcing a
-young collection right after the spawn removes it; adding 4 KB of garbage per
-bunny makes it ~15 % worse.
+## macOS Bundle Layout, Entitlements and Signing
 
-**Recommendation for games that spawn many objects at once:**
-`-XX:MaxNewSize=128m` (in `kanama/jvm/options` or `KANAMA_JVM_OPTIONS`). Capping
-the young generation makes that collection come after at most 128 MiB of
-allocation (~200 frames in Bunnymark). It is not the default because it costs
-steady-state frame time, and the cost grows with how much the game allocates and
-with how loaded the machine is: ~5× more, shorter young pauses (~1.1 ms instead
-of ~2.6 ms each). On Bunnymark V3, which allocates ~0.9 GB/s, four interleaved
-runs of 10–12 rounds each measured +0.4 % and +0.9 % (load average 4–7) and
-+4.6 % and +7.6 % (load 4–6 with other builds running, one spike to 103): plan
-for ~5–8 % on a busy machine in a game that allocates like V3. V2 (~0.5 GB/s)
-measured −1 % to +3.5 %, V1 Sprites +1.5 % to +3.5 %. A game that allocates less
-pays less — and, without the cap, waits longer for that first collection.
-
-`-Xmn64m` ends the phase as well, but measured head to head with the 128m cap
-(10 interleaved rounds, load 4–7) it costs as much or more in steady state (V3
-+1.4 %, V2 +1.4 %, V1 Sprites −1 % against the cap), runs twice the collections
-and has the worse p99 frames, so the cap is the one recommended.
-
-| Young generation (Bunnymark, 10,000 bunnies) | Frames 100–800 after the spawn vs steady state (V1 Sprites) | Steady state vs G1 default, V3 / V2 / V1 Sprites | Young GCs per second (V3) | Rounds |
-| --- | --- | --- | --- | --- |
-| G1 default | +22–30 % | — | ~1.4 | — |
-| `-XX:MaxNewSize=128m` (recommended for spawn-heavy games) | +1 % | +0.4…+7.6 % / −1…+3.5 % / +1.5…+3.5 % | ~7 | 4 runs of 10–12 |
-| `-Xmn64m` | −1 % | +1 % / +2 % / +3 % | ~14 | 10 |
-| `-XX:MaxNewSize=256m` | +17–24 % | +2.5 % / +1 % / −1 % | ~3.3 | 12 |
-| `-XX:MaxNewSize=64m` | 0 % | +3 % / −5 % / +1.5 % | ~15 | 4 |
-| `-Xms64m` | +1 % | +3 % / −2 % / +3 % | ~6 (falling as the heap grows) | 4 |
-
-Apple M1 Max, editor binary, median frame time after a 1,500–3,000-frame
-warm-up, each option interleaved with the default in the same rounds on a
-machine shared with other builds; at 4 rounds ±3 % is noise. `-Xms64m` ends the
-phase only while the heap is small: G1 grows the heap (and eden with it, to
-~300 MiB in V3) as the game runs, so a later spawn is slow again. ZGC and
-generational Shenandoah were dropped after one screening run each (Shenandoah:
-V3 frames ~2× slower; ZGC: the slow phase lasted ~2,000 frames and V3 had 70 ms
-p99 frames).
-
-## Exported Games
-
-The decided end state (issue #102) is **unpack-and-play**: exported desktop
-games ship a bundled, jlink-trimmed JVM runtime that the native bootstrap
-finds app-relative, so players never install a JDK. The system JDK stays the
-**developer** path — like C# development needs the .NET SDK while Godot/.NET
-exports bundle the .NET runtime.
-
-Status: implemented for Windows, Linux, and macOS, and **cross-target** — a
-developer on any desktop host can produce the runtime for any other.
-
-Evidence, so you can judge how far it has been taken:
-
-- **Windows** — a game exported with a runtime **cross-built on macOS arm64**
-  was run on real Windows hardware (2026-08-10) and booted from its own bundled
-  runtime. That machine had a JDK installed and the app-relative probe still
-  won (`[kanama] using libjvm: <export>\runtime\bin\server\jvm.dll`, no
-  `checked JAVA_HOME` line), so this is not a case of a system JVM standing in.
-  Real GPU path (`Vulkan 1.2.175 - Forward+`), no VC++ redistributable needed,
-  clean teardown.
-- **Linux** — the same cross-built-on-macOS proof runs on the CI runner with
-  `JAVA_HOME` unset. No dedicated real-hardware pass yet.
-- **macOS** — validated on macOS arm64 (2026-09-10, Godot `4.7.2.stable`,
-  Temurin 25.0.4.1+1): the exported `.app` boots headless with `JAVA_HOME` unset
-  and `PATH` stripped, from
-  `<app>/Contents/Resources/runtime/lib/server/libjvm.dylib`. Proven twice —
-  once against a host-jlinked image and once against one linked from the pinned
-  `macos-arm64` Temurin jmods, 31.7 MB either way. The path in that line is the
-  proof, not the fact that the game ran: with the bundled `runtime/` deleted the
-  same `.app` still starts on a developer Mac, because the bootstrap's last
-  resort is a hardcoded `/Library/Java/…/temurin-25.jdk` fallback. No pass yet on
-  a second Mac with no JDK installed. **Distribution-grade signing and
-  notarization of the bundled runtime is a separate track and is not done** — see
-  [macOS bundle layout, entitlements, and
-  signing](#macos-bundle-layout-entitlements-and-signing). That caveat is
-  macOS-specific — it does not gate the Windows or Linux path.
-
-An exported game needs four pieces next to each other: the platform bootstrap
-library referenced by `kanama.gdextension` (Godot's export copies it),
-`kanama.jar`, the project `kanama-scripts.jar`, and the `runtime/` image — plus
-`kanama-jvm-options.txt` when the project sets [JVM options](#jvm-options).
-Assembly is three steps:
-
-```sh
-./gradlew jlinkGameRuntime
-# export the game from Godot (editor or `godot --headless --export-release ...`)
-scripts/export_game_assemble.sh \
-  --scripts-jar /path/to/project/addons/kanama/kanama-scripts.jar \
-  /path/to/exported-game
-```
-
-`jlinkGameRuntime` builds `build/game-runtime/runtime` for **this** platform
-from the local JDK 25+ with a pinned module set (`java.base`,
-`java.instrument`, `jdk.unsupported` — one recipe for every Kanama game). A
-game that needs an extra JDK module adds
-`-PkanamaRuntimeAdditionalModules=java.net.http,...`; the default path
-requires nothing.
-
-### Exporting for another platform
-
-Godot's export templates are cross-platform, and so is Kanama's bundled
-runtime. `jlinkGameRuntimeCross` builds the runtime image for a target other
-than the host:
-
-```sh
-./gradlew jlinkGameRuntimeCross -PkanamaRuntimeTarget=windows-x64
-# export the game for Windows from Godot
-scripts/export_game_assemble.sh \
-  --runtime build/game-runtime/windows-x64/runtime \
-  --scripts-jar /path/to/project/addons/kanama/kanama-scripts.jar \
-  /path/to/windows-export-dir
-```
-
-Targets are the same classifiers the release artifacts use: `windows-x64`,
-`linux-x64`, `linux-arm64`, `macos-arm64`.
-
-The task downloads that platform's Temurin **jmods** (about 80 MB compressed,
-SHA-256 pinned in `build.gradle.kts`) and links against them. Note that a
-Temurin JDK install no longer contains jmods at all — since JDK 24's JEP 493
-the JDK links from its own run-time image, which only ever produces an image
-for the platform it is running on — so the jmods come from Adoptium's separate
-per-platform download. They are cached outside `build/` (default
-`~/.gradle/kanama-target-jmods`, override with `-PkanamaTargetJmodsCacheDir` or
-`KANAMA_TARGET_JMODS_CACHE`), so the download happens once, not per build.
-
-The jmods must be the same JDK **feature** version as the JDK doing the
-linking; patch levels may differ. `kanamaTargetJdkRelease` in
-`gradle.properties` pins which Temurin release is fetched, and the task fails
-with a clear message if it does not match the build JDK.
-
-`export_game_assemble.sh` refuses to pair a runtime image with an export built
-for a different platform — a mismatch would only surface as a dead game on a
-player's machine.
-
-### Size
-
-The bundled runtime is the whole download cost of unpack-and-play. Measured
-with the pinned module set, cross-built from macOS arm64 against Temurin
-25.0.4+7:
-
-| Target | Runtime image |
-| --- | --- |
-| `windows-x64` | 31 MB |
-| `linux-x64` | 42 MB |
-| `macos-arm64` | 31 MB |
-| `linux-arm64` | 40 MB |
-
-(Sum of file sizes; `du` reports 1-2 MB more from block rounding.)
-
-In a finished bundle the runtime is not the biggest item. The macOS validation
-export of the example project (universal binary) measured 206 MB in total:
-162 MB of Godot's own universal executable, 31.7 MB of `runtime/`, 12 MB of
-`kanama.jar`, and under 1 MB of scripts jar plus `.pck`.
-
-Plus `kanama.jar` and the project's `kanama-scripts.jar`. That is the accepted
-trade: every shipped commercial Java game bundles its runtime, and a smaller
-download that asks players to install Java is effectively fatal for a game.
-Module stripping and compression are later tuning knobs, not blockers.
-
-### Layout notes
-
-`export_game_assemble.sh` anchors on the exported bootstrap library and
-places the payload where the bootstrap probes before `JAVA_HOME`:
-next to the library on Windows/Linux, and inside `Contents/Resources/` for a
-macOS `.app` (the bundle location that survives re-signing). On macOS it also
-re-seals the bundle ad-hoc, because adding files after Godot's export breaks
-the code signature.
-
-Windows keeps the server JVM at `runtime\bin\server\jvm.dll`, not
-`runtime/lib/server` as macOS and Linux do, and jvm.dll's CRT dependencies sit
-one level up in `runtime\bin`. The bootstrap registers that directory with the
-loader before loading the JVM, so a bundled Windows runtime works on a machine
-with no Visual C++ redistributable installed.
-
-macOS needs more than a copy step — the payload changes the `.app` layout and
-the embedded JVM needs hardened-runtime entitlements. That is the next section.
-
-### macOS bundle layout, entitlements, and signing
-
-A macOS export is an `.app` bundle, so "next to the executable" is not somewhere
-the payload can go. `export_game_assemble.sh` puts it in `Contents/Resources/`,
-beside the exported `.pck`:
+A macOS export is an `.app` bundle. The assembly script puts Kanama's files in
+`Contents/Resources/`, beside the `.pck`:
 
 ```text
-<Game>.app/Contents
+MyGame.app/Contents
 ├── Frameworks/libkanama_bootstrap.dylib   # where Godot's export puts it
-├── MacOS/<Game>                           # the exported Godot binary
+├── MacOS/MyGame                           # the exported Godot executable
 ├── Resources
-│   ├── <Game>.pck
+│   ├── MyGame.pck
 │   ├── kanama.jar
 │   ├── kanama-scripts.jar
-│   └── runtime/                           # the bundled jlink image
+│   └── runtime/                           # the bundled Java runtime
 │       ├── bin/{java,keytool}
 │       └── lib/server/libjvm.dylib
 └── _CodeSignature/CodeResources
 ```
 
-The bootstrap anchors on its own dylib (`dladdr`) and walks up two parent levels,
-probing a `Resources/` subdirectory at each level, so a library in
-`Contents/Frameworks/` finds `Contents/Resources/runtime`. `Resources/` is the
-only location that works: when `codesign` seals the bundle it rejects jars and
-loose runtime files under `Contents/` or `Contents/Frameworks/` as unsigned
-**nested code**, while everything under `Resources/` is sealed by hash as a plain
-resource.
-
-Adding files after Godot's export invalidates the signature Godot wrote, so the
-assembly script re-seals the bundle ad-hoc:
+`Resources/` is the one place where `codesign` accepts the jars and the
+runtime. Adding files after Godot's export breaks the signature Godot wrote,
+so the script signs the bundle again with an ad-hoc signature:
 
 ```sh
-codesign --force --sign - --preserve-metadata=entitlements,flags,identifier <Game>.app
+codesign --force --sign - --preserve-metadata=entitlements,flags,identifier MyGame.app
 ```
 
-Without it macOS kills the app at launch. That reseal is **ad-hoc**, so it
-replaces a Developer ID signature if the export had one: for a signed build the
-order is export → assemble → sign, never export-and-sign → assemble.
+### Entitlements
 
-#### Entitlements the embedded JVM needs
+The macOS export preset needs **Import ETC2 ASTC** turned on in the project's
+VRAM compression settings, for any universal or arm64 export. It also needs
+three hardened-runtime entitlements in the preset's codesign section, because
+Java writes and runs its own machine code:
 
-A macOS export preset needs the `Import ETC2 ASTC` VRAM compression project
-setting (for any universal/arm64 export) and three hardened-runtime exceptions
-from the preset's codesign entitlements (`allow_jit_code_execution`,
-`allow_unsigned_executable_memory`, `disable_library_validation`):
+| Preset option | Entitlement in the signed app | Why Java needs it |
+| --- | --- | --- |
+| `allow_jit_code_execution` | `com.apple.security.cs.allow-jit` | Without it Java crashes before it starts. |
+| `allow_unsigned_executable_memory` | `com.apple.security.cs.allow-unsigned-executable-memory` | Java runs code it generated itself. |
+| `disable_library_validation` | `com.apple.security.cs.disable-library-validation` | The runtime's libraries are signed by the JDK vendor, not by your team. |
 
-| Entitlement in the signed bundle | Why the JVM needs it |
+Check a build with `codesign -dv --entitlements - MyGame.app`. It should list
+those three entitlements, and `codesign --verify --deep --strict MyGame.app`
+should pass.
+
+### Signing for Distribution
+
+The ad-hoc signature is fine for your own machine. A game downloaded from the
+internet meets Gatekeeper, which needs a Developer ID signature and Apple's
+notarization. Kanama does not sign or notarize for you. To do it yourself:
+
+1. Export, then assemble. The assembly step replaces any signature the export
+   had, so sign last.
+2. Sign every executable file inside `Contents/Resources/runtime/` first:
+   every `.dylib`, plus `bin/java`, `bin/keytool` and `lib/jspawnhelper`.
+   Signing the `.app` does not sign them.
+
+    ```sh
+    codesign --force --timestamp --options runtime \
+      --sign "Developer ID Application: Your Name (TEAMID)" <file>
+    ```
+
+3. Sign the `.app` itself last, the same way. Changing any file inside it
+   afterwards breaks the signature again.
+4. Zip the `.app`, submit it with `xcrun notarytool submit`, then run
+   `xcrun stapler staple MyGame.app`.
+
+Once the runtime carries your own signature, you can drop
+`disable_library_validation`.
+
+## Troubleshooting
+
+| Problem | Fix |
 | --- | --- |
-| `com.apple.security.cs.allow-jit` | HotSpot's code cache is `MAP_JIT` memory. Without it `JNI_CreateJavaVM` dies (SIGTRAP in `pthread_jit_write_protect_np`) before the VM exists. |
-| `com.apple.security.cs.allow-unsigned-executable-memory` | HotSpot executes pages it wrote itself, which the hardened runtime otherwise refuses. |
-| `com.apple.security.cs.disable-library-validation` | The runtime image's dylibs are signed by a different team than the game (a Temurin-derived image carries `Developer ID Application: Eclipse Foundation, Inc.`). Library validation loads only nested code signed by the app's own team or Apple, so it would refuse `libjvm.dylib`. |
+| The exported game cannot find Java, or uses a JDK installed on your machine. | The export has no `runtime/` folder. Run the assembly step on the folder that holds the executable, or on the `.app`. |
+| macOS kills the game at launch. | A file changed after the last signature. Run the assembly step again, which re-signs, and sign for distribution only after it. |
+| macOS reports `"libkanama_bootstrap.dylib" Not Opened`. | Gatekeeper quarantined a downloaded copy. On your own machine, run `xattr -dr com.apple.quarantine /path/to/MyGame.app`. For players, sign and notarize the game. |
+| The assembly script refuses the runtime. | The runtime was built for a different platform than the export. Build it with `jlinkGameRuntimeCross` for the export's target. |
+| `jlinkGameRuntimeCross` fails on a version mismatch. | The downloaded Java modules must have the same major version as the JDK running Gradle. Build with a JDK 25. |
+| The export stops with `Kanama: Export stopped:`. | A scene uses a Kotlin script that does not load in the editor. Press **Build Scripts** and export again. See [Settings](../getting-started/editor-workflow.md#settings). |
+| The exported game runs old Kotlin code. | Build your scripts, then run the assembly step again. It copies `kanama-scripts.jar` at the time you run it. |
 
-Check a build with `codesign -dv --entitlements - <Game>.app`. The macOS
-validation export reports `flags=0x10002(adhoc,runtime)` with exactly those three
-entitlements, and `codesign --verify --deep --strict` passes on the assembled
-bundle.
+## On Other Platforms
 
-#### What signed distribution additionally requires (not implemented)
+On **Windows**, run `.\gradlew.bat` wherever this page says `./gradlew`, and
+run `export_game_assemble.sh` from Git Bash. A Windows game needs no Visual C++
+redistributable on the player's machine.
 
-Kanama signs nothing with a real identity, and notarizing the bundled runtime is
-an explicit non-goal of this work. What a developer shipping a macOS build has to
-do themselves — recorded here so the size of the gap is known, not because
-Kanama does any of it:
-
-- **Every Mach-O file inside `runtime/` is code and needs its own signature.**
-  The pinned module set produces 16 of them: 13 dylibs (including
-  `lib/server/libjvm.dylib` and `lib/server/libjsig.dylib`) plus `bin/java`,
-  `bin/keytool` and `lib/jspawnhelper`. Signing the `.app` does **not** sign
-  them — files under `Resources/` are only hashed into `CodeResources` and keep
-  whatever signature the JDK vendor shipped.
-- **Sign inside-out**: every nested binary first (`codesign --force --timestamp
-  --options runtime --sign "Developer ID Application: …"`), the bundle last.
-  Signing the bundle and then touching a nested file breaks the seal again.
-- Re-signing the runtime with your own Developer ID is also what would let you
-  drop `disable_library_validation`; keeping the vendor's signatures means
-  keeping that exception.
-- Then the usual distribution steps on top: hardened runtime and a secure
-  timestamp everywhere, `xcrun notarytool submit` on a zipped `.app`, and
-  `xcrun stapler staple`.
-- Until that lands the `.app` is ad-hoc signed: fine for local runs and for an
-  unzipped copy that was never quarantined, but a downloaded build meets
-  Gatekeeper. The `xattr -dr com.apple.quarantine` workaround above is a
-  developer convenience, not something to ask players to do.
-
-### The gate
-
-`scripts/export_game_smoke.sh /path/to/godot` proves the whole story: it
-exports the example project, assembles the runtime, and launches the export
-headless with `JAVA_HOME` unset and `PATH` carrying no JDK, asserting the game
-boots from the app-relative runtime. `--runtime DIR` points it at an image
-built elsewhere.
-
-The `package` workflow runs it that way on purpose: a macOS job cross-builds
-the Windows and Linux runtimes, uploads them, and the `windows-2025` and
-`ubuntu-24.04` jobs export and boot a game against those exact artifacts. A
-runner that jlinked its own runtime would be green and would still prove
-nothing about exporting from another host. The matrix carries a `macos-arm64`
-row as well; host and target coincide there, so it proves something narrower —
-that an image linked from the pinned per-platform Temurin jmods (the recipe
-every cross target uses, rather than the build JDK's own run-time image) boots a
-real export.
-
-The desktop kits still validate editor/runtime onboarding only; the export
-smoke is the exported-game gate.
-
-## Android Track
-
-Android exports use a different runtime path: a Godot Android plugin AAR, ART,
-PanamaPort, and Android-specific packaging. See [Android](android.md) for the
-workflow and [Version Support](../reference/version-support.md) for the tier
-and its caveats.
+What does not work on desktop is listed in
+[Limitations](../reference/limitations.md).

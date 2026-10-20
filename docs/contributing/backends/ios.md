@@ -8,7 +8,100 @@ hand-written/stub registry see
 > This page describes the shipped architecture. The support tier and the device
 > evidence behind it live in
 > [Version Support → iOS](../../reference/version-support.md#ios); the
-> user-facing export workflow is [Exporting → iOS](../../exporting/ios.md).
+> user-facing export workflow is [Export for iOS](../../exporting/ios.md).
+
+## Runtime Shape
+
+Kanama's iOS backend runs full Kanama project scripts through a C GDExtension
+shim plus a Kotlin/Native static `.xcframework` — no JVM, GraalVM, or TeaVM on
+device, and the same generated Godot API wrappers as desktop/Android.
+
+Godot's iOS export loads the C shim, which bridges to the Kotlin/Native runtime;
+the generated wrappers call Godot through `ObjectCalls` over a generic `ptrcall`
+dispatch in the shim. Each instance-taking entry point that an `ObjectCalls` helper
+can reach with the static marker comes in two flavours — the guarded instance entry
+and a `_static` sibling for Godot's static methods, which ptrcall with a null object
+— and the iOS `ObjectCalls` picks between them per call. Entry points no helper
+reaches that way (`kanama_ios_godot_ptrcall_string_arg` and the object-handle
+entries, whose zero
+check guards a live engine handle rather than a static marker) keep their single
+guarded form; `scripts/check_ios_static_dispatch.py` derives that split from the shim
+and fails if it stops holding. The component diagram, the dispatch contract, and the
+generator rules are below; see
+[Architecture: iOS](../architecture.md#ios) for how this maps onto
+the desktop/Android runtime model.
+
+## Toolchain
+
+| Tool | Version / Setting |
+|---|---|
+| Xcode | 26.5 or newer enough to provide the installed iOS SDK (27.0 validated for the runtime build; it refuses any deployment target below 15.0) |
+| iOS runtime | Kotlin/Native static library inside an `.xcframework` |
+| Device architecture | `arm64` |
+| Minimum iOS version | 15.0 — Godot 4.7.2's exporter default (`application/min_ios_version`); Xcode 27 rejects a lower pin |
+
+Install the Godot iOS export templates for the same Godot version that opens or
+exports the project. If `xcode-select` points at Command Line Tools, set
+`DEVELOPER_DIR` for Gradle and Xcode commands so Kotlin/Native and Xcode use the
+full Xcode app.
+
+## Building the Device Libraries
+
+From the Kanama checkout, build the device `.xcframework` artifacts:
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
+./gradlew assembleIosDeviceKanamaXcframework \
+  -PkanamaXcodeDeveloperDir=/Applications/Xcode.app/Contents/Developer
+```
+
+The task writes:
+
+```text
+build/ios/xcframework-device/debug/kanama_ios.debug.xcframework
+build/ios/xcframework-device/release/kanama_ios.release.xcframework
+```
+
+`installIosAddon` also defaults to device-only xcframeworks. Pass
+`-PkanamaIosXcframeworkMode=full` only when intentionally building the optional
+device plus simulator xcframeworks.
+
+`installIosAddon` installs these iOS descriptor entries into the project's
+`addons/kanama/kanama.gdextension`, keeping the desktop entries and, when the
+project has them, the Android AAR entries:
+
+```ini
+[configuration]
+entry_symbol = "kanama_entry"
+compatibility_minimum = "4.7"
+
+[libraries]
+ios.debug.arm64 = "res://addons/kanama/bin/ios/kanama_ios.debug.xcframework"
+ios.release.arm64 = "res://addons/kanama/bin/ios/kanama_ios.release.xcframework"
+```
+
+## Export-Time Script Binding
+
+`-PkanamaIosProjectScriptsDir` registers the scripts for **both** targets: the
+iOS runtime gets its registrars, and the same sources are compiled into the
+desktop `kanama-scripts.jar` the export-time editor loads. The editor needs
+that jar to know the scripts' `@Export` names — Godot's export instantiates and
+re-packs every scene when it converts text resources to binary and keeps only
+the properties the script instance reports, so an unknown script would lose
+every scene-stored value without any error. Godot's iOS exporter ignores an
+export plugin's error, so on a command-line export (`--export-debug iOS …`)
+the Kanama Tools plugin ends the editor process before any file is written
+(verified on a macOS host); in the editor's Export dialog the error marks the
+export failed but leaves the files Godot wrote, and a one-click deploy has its
+temporary Xcode archive removed before the install step.
+`-PkanamaProjectScriptsDir` may still be passed explicitly (for example with a
+different desktop source set); it wins when both are given. Godot caches each
+converted scene in `.godot/exported/`, keyed by the source file's md5 and
+mtime, and reuses a stripped conversion until the `.tscn` itself changes,
+which is why the user page deletes that directory before exporting.
+
+The demos' iOS runner and the starter smoke run
+`scripts/check_exported_scene_properties.gd` after every export.
 
 ## Why iOS is different from desktop/Android
 
