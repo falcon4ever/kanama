@@ -21,6 +21,7 @@ theme:
     - content.code.copy
 markdown_extensions:
   - admonition
+  - pymdownx.details
   - tables
   - pymdownx.superfences:
       custom_fences:

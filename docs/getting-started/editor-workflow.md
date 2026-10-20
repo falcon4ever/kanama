@@ -1,171 +1,104 @@
-# The Editor Loop
+# Edit, Build, Run
 
-Kanama projects can include two addons:
-
-- `res://addons/kanama`: the runtime GDExtension addon loaded by Godot.
-- `res://addons/kanama_tools`: an optional editor plugin for build and reload
-  workflow shortcuts.
-
-The tools plugin is not required at runtime. It exists to make the editor loop
-less manual while developing Kotlin scripts.
-
-When enabled, the plugin also registers a basic Kotlin syntax highlighter for
-`.kt` files in Godot's script editor. This is intended for quick inspection and
-small edits; IntelliJ IDEA remains the recommended editor for Kotlin navigation,
-completion, refactoring, and debugging.
-
-The plugin also checks desktop Java setup when it loads. Kanama needs a JDK 25+
-distribution that contains `libjvm`. The check mirrors exactly what the native
-runtime does to find it (same order, same install locations, same version rule;
-see [Which JDK Kanama Uses](#which-jdk-kanama-uses)), so a Godot started without
-`JAVA_HOME` does not warn while the runtime can find a JDK 25+, and warns when it
-cannot. The warning names the `kanama/build/jdk_path` editor setting.
+You edit a script in IntelliJ IDEA, build it, and play it in Godot:
 
 ```mermaid
 flowchart LR
-    EDIT["Edit .kt in IntelliJ"]
-    BUILD["Build Scripts<br/>or auto-build on save"]
-    SYNC["kanama-scripts.jar<br/>and addon sync"]
-    RELOAD["Scene reload<br/>or script template reload"]
-    PLAY["Run from Godot"]
-    DEBUG["IntelliJ Remote JVM Debug<br/>breakpoints and step-through"]
+    EDIT["Edit a .kt file<br/>in IntelliJ IDEA"]
+    BUILD["Build Scripts<br/>or build on save"]
+    JAR["kanama-scripts.jar<br/>is rebuilt"]
+    RELOAD["The open scene<br/>reloads"]
+    PLAY["Play in Godot"]
+    DEBUG["Debugger in IntelliJ IDEA<br/>breakpoints and stepping"]
 
-    EDIT --> BUILD --> SYNC --> RELOAD --> PLAY
-    PLAY -. JDWP .-> DEBUG
+    EDIT --> BUILD --> JAR --> RELOAD --> PLAY
+    PLAY -. attach .-> DEBUG
     DEBUG -. inspect and step .-> EDIT
 ```
 
-## Build Scripts
+## The Kanama Tools Plugin
 
-Enable `Kanama Tools` in **Project > Project Settings > Plugins** to add a
-`Build Scripts` toolbar button and matching tool-menu action. The toolbar also
-includes `Open Kotlin`, which opens the configured Kotlin source folder in the
-operating system so you can jump back to IntelliJ IDEA or another external
-editor workflow quickly.
+A Kanama project has two addons:
 
-In a project with its own Gradle wrapper (a starter from
-`createStarterProject`, a release kit, or a project set up from the store
-addon), `Build Scripts` runs `./gradlew buildScripts` in the project folder. It
-compiles the project's `kotlin-src` against the Kanama API in
-`addons/kanama/maven` and writes `addons/kanama/kanama-scripts.jar`.
+- `addons/kanama` is the runtime. Godot loads it, and your game needs it.
+- `addons/kanama_tools` is the **Kanama Tools** editor plugin. It runs only in
+  the editor, and a game runs without it.
 
-In a project without one, `Build Scripts` runs from the Kanama checkout:
+The release kit and a starter project have the plugin enabled. Elsewhere,
+enable it in **Project > Project Settings > Plugins**. It adds:
 
-```sh
-./gradlew -p <kanama repo> installAddonJar \
-  -PkanamaProjectDir=<current Godot project> \
-  -PkanamaProjectScriptsDir=<current Godot project>
-```
+- **Build Scripts** to the editor toolbar and to **Project > Tools**;
+- **Open Kotlin**, which opens your Kotlin source folder in the file manager;
+- build on save and scene reload after a build, both described below;
+- Kotlin syntax colors in Godot's script editor, for a quick look or a small
+  edit. IntelliJ IDEA is where you get completion, navigation and the
+  debugger; see [Open in IntelliJ IDEA](intellij.md).
+- a Java check when the editor starts. It warns when Godot cannot find a
+  JDK 25 or newer, and tells you which setting to change. See
+  [JDK Selection](#jdk-selection).
 
-That command builds `kanama.jar`, builds the host native bootstrap with CMake,
-compiles project Kotlin scripts into `kanama-scripts.jar`, copies the addon
-files into `addons/kanama`, and ensures `.godot/extension_list.cfg` loads
-`res://addons/kanama/kanama.gdextension`.
+## Building Scripts
 
-For the checked-in Kanama example project, the equivalent local command is:
+Press **Build Scripts**, or run the same build in a terminal in the project
+folder:
 
 ```sh
-./gradlew syncExampleAddonJar
+cd /path/to/your-project
+./gradlew buildScripts
 ```
 
-## Which JDK Kanama Uses
+The build compiles every `.kt` file in `kotlin-src/` against the Kanama
+libraries in `addons/kanama/maven`, and writes
+`addons/kanama/kanama-scripts.jar`. Godot picks the new jar up by itself. You
+can also run `buildScripts` from IntelliJ's Gradle tool window. The release
+kit, the starter and the store addon all set up that task; a project with a
+`gradlew` of its own needs it too.
 
-Kanama uses a JDK in two places: **Build Scripts** runs Gradle (and, through it,
-the CMake step that compiles the native bootstrap against the JDK's `jni.h`), and
-the **runtime** loads that JDK's `libjvm` into Godot. Both need JDK 25 or newer.
-On Linux and Windows, Godot started from a desktop launcher (an application menu
-entry, a desktop shortcut, a file manager) does **not** inherit the `JAVA_HOME`
-from your shell profile, so without help the system's default JDK, often an older
-one, would be used. Both therefore pick the JDK the same way, in this order:
+To build without pressing anything, turn on `kanama/tools/auto_build_on_save`
+in **Project > Project Settings** (switch on **Advanced Settings** to see it).
+The plugin then watches your `.kt` files and builds once you stop saving for
+`kanama/tools/auto_build_debounce_ms` (800 ms by default).
 
-1. The **`kanama/build/jdk_path`** editor setting (empty means automatic). It is
-   an *Editor Setting* (**Editor > Editor Settings > Kanama > Build**), stored
-   per machine rather than in the project, so an absolute path is not committed
-   with it. It must be an absolute path (`~/` is expanded), to the JDK's home
-   directory: the folder that contains `bin/` and `lib/`. A wrong value is an
-   error; it is never silently replaced by another JDK.
-2. `JAVA_HOME` from the environment Godot was started with. One that points at a
-   JDK older than 25 is skipped, not an error.
-3. The best JDK found in the usual install locations. A JDK counts when its
-   `release` file says 25 or newer. Among those, a GA release beats an
-   early-access one, exactly 25 beats a newer major, then the newer version wins.
+### Projects without Their Own Gradle Build
 
-   | OS | Searched |
-   | --- | --- |
-   | Linux | `/usr/lib/jvm`, `/usr/lib64/jvm`, `/usr/java`, `/usr/local/java`, `/opt/java`, `/opt/jdk` |
-   | macOS | `/Library/Java/JavaVirtualMachines/*/Contents/Home`, `~/Library/Java/JavaVirtualMachines/*/Contents/Home`, Homebrew `openjdk*` under `/opt/homebrew/opt` and `/usr/local/opt` |
-   | Windows | `%ProgramFiles%\{Java, Eclipse Adoptium, Microsoft, Zulu, BellSoft, Amazon Corretto, Semeru, Temurin}`, Scoop `~\scoop\apps\*\current` |
-   | All | `~/.jdks` (IntelliJ), `~/.sdkman/candidates/java` |
+A project set up from a checkout with `installStarterTemplate` has no
+`gradlew` of its own. There, **Build Scripts** runs this from your Kanama
+checkout:
 
-For **Build Scripts** the JDK must be a full JDK (it needs `include/jni.h`; a JRE
-cannot compile the native bootstrap). The output panel names the JDK used
-(`[kanama:tools] Build JDK: ... from ...`). If none qualifies, Build Scripts stops
-with an error that names `kanama/build/jdk_path` and `JAVA_HOME` instead of
-starting a build that fails inside the native compile.
-
-The native **runtime** cannot read editor settings at load time, so the plugin
-writes a valid `kanama/build/jdk_path` to `.godot/kanama_jdk_home` in the project
-(and removes the file when the setting is empty or invalid), which the runtime
-reads first. If that JDK has since been removed or is older than 25, the runtime
-logs `[kanama] ignoring .godot/kanama_jdk_home=...` with the reason and continues
-with `JAVA_HOME` and the install locations. The runtime reads the file once, when
-Godot loads the extension, which is before the plugin can write it: on the first
-open of a project (a fresh clone, or a deleted `.godot`) and after you change the
-setting, the plugin warns **"Restart the editor to use JDK ..."** instead of
-reporting OK. A game exported with a bundled runtime ignores all of this and uses
-its own `runtime/` folder.
-
-**Gradle itself** can run on any JDK 25+. The build pins its toolchain to JDK 25;
-if only another JDK (a JDK 26-only machine, say) is installed, Gradle downloads a
-JDK 25 once into `~/.gradle/jdks` and reuses it (the foojay toolchain resolver in
-`settings.gradle.kts`, and in the release kit's `settings.gradle.kts`). That needs
-network access the first time; install a JDK 25 to avoid the download. The
-native bootstrap is compiled against that JDK 25 when Gradle runs the build.
-
-Editors installed as a **Flatpak or Snap** run in a sandbox that cannot see
-`/usr/lib/jvm` or your shell's `JAVA_HOME`. Grant the sandbox access to the JDK
-folder (for Flatpak, `flatpak override --user --filesystem=<jdk dir>:ro`), point
-`kanama/build/jdk_path` at a JDK inside a path the sandbox can read, or use the
-unsandboxed Godot build. A shell build (`./gradlew ...`) is not affected: it
-uses the shell's `JAVA_HOME`. The native bootstrap's CMake step checks, on every
-OS, that the JDK it found has a `jni.h` that defines `JNI_VERSION_21` (a JDK 21
-or newer header) and names the JDK when it does not.
-
-## Project Settings
-
-External projects may need to tell the plugin where the Kanama source checkout
-lives:
-
-```ini
-[kanama]
-tools/repo_dir="/absolute/path/to/kanama"
+```sh
+./gradlew -p /path/to/kanama installAddonJar \
+  -PkanamaProjectDir=/path/to/your-project \
+  -PkanamaProjectScriptsDir=/path/to/your-project
 ```
 
-A project without its own Gradle wrapper (one prepared with
-`installStarterTemplate`) builds through `installAddonJar` from the Kanama
-source checkout resolved through `kanama/tools/repo_dir` or the sibling checkout
-autodetection. A project with its own Gradle wrapper must provide a
-`buildScripts` task; the starter, release-kit and store-addon builds do.
+That rebuilds the Kanama runtime and native loader too, and copies them into
+`addons/kanama`. The plugin finds the checkout at `../kanama` or
+`../../kanama` from the project, or where `kanama/tools/repo_dir` points.
+[Adding Kanama to an Existing Project](source-checkout.md#adding-kanama-to-an-existing-project)
+sets this up.
 
-Useful editor settings:
+## Reloading after a Build
 
-| Setting | Purpose |
-| --- | --- |
-| `kanama/tools/kotlin_sources_dir` | Optional absolute or `res://` source folder opened by `Open Kotlin`. Empty defaults to the project root. |
-| `kanama/tools/auto_build_on_save` | Watches `.kt` files and runs a debounced script build. |
-| `kanama/tools/reload_scene_after_sync` | Reloads the current scene after a successful sync. |
-| `kanama/tools/developer_mode` | Shows runtime build actions intended for Kanama maintainers. |
-| `kanama/build/jdk_path` (Editor Setting) | JDK 25+ home directory (absolute) used by Build Scripts and the runtime. Empty tries `JAVA_HOME`, then the usual install locations. See [Which JDK Kanama Uses](#which-jdk-kanama-uses). |
-| `kanama/tools/java_preflight_enabled` | Shows editor warnings when desktop `libjvm` cannot be found. |
-| `kanama/tools/export_guard_enabled` | Default on. When an export begins, reports an error (`Kanama: Export stopped: …`) naming the `.kt` scripts the exported scenes attach that do not bind in the editor (desktop addon missing, or `kanama-scripts.jar` stale), because Godot would otherwise ship those scenes without the scripts' property values or unconverted. A command-line export then ends at once and exits non-zero; an export from the Export dialog is marked failed but its files are written; see [Export Guard](../exporting/android.md#export-guard). Turn it off only to export knowingly without them. |
+**In the editor**, a build switches every Kotlin script the editor has loaded
+to the new code. Nodes already in the open scene keep their old code until the
+scene reloads, so the plugin reloads the current scene after each build. The
+setting for that is **Reload Scene After Sync**
+(`kanama/tools/reload_scene_after_sync`; "sync" is the plugin's word for a
+finished build), and it is on by default.
 
-`Build Runtime` is hidden unless `developer_mode` is enabled. Normal game
-projects should use `Build Scripts`; runtime rebuilds are mainly for Kanama
-development.
+**In a running game**, Kanama checks for a new build every half second. Nodes
+the game already has keep running their old code until their scene reloads.
+New instances and Kotlin autoloads use the new code at once. To see a change
+in the game, restarting it is the fastest path. From saving a file to the
+change showing takes a few seconds either way.
+
+This covers scripts you attach to nodes, the `@ScriptClass` classes. A class
+you register with `@RegisterClass` becomes a Godot class, and Godot only
+reads those at startup: restart the editor after changing one.
 
 ## Debugging
 
-The plugin registers the runtime/game JDWP settings:
+The plugin adds two project settings for the debugger:
 
 ```ini
 [kanama]
@@ -173,70 +106,96 @@ debug/jdwp_enabled=true
 debug/jdwp_port=5005
 ```
 
-Restart the game process after changing either setting. Kanama reads these
-settings before starting the embedded JVM. When launching from the Godot editor,
-the editor process skips the runtime JDWP port so the spawned game process can
-bind it. The port listens on `localhost` only; a game instance that finds the
-port taken starts without the debugger and says so.
-
-Create an IntelliJ **Remote JVM Debug** run configuration for `localhost:5005`
-or the configured port, then press Play in Godot and attach the debugger. You
-can set breakpoints in Kotlin scripts and step through lifecycle callbacks,
-signal handlers, and ordinary gameplay code while the game is running.
+Turn them on, then create an IntelliJ **Remote JVM Debug** run configuration
+for `localhost:5005`. Press **Play** in Godot and attach the debugger. You can
+set breakpoints in your scripts and step through callbacks, signal handlers
+and the rest of your game code while it runs.
 [Open in IntelliJ IDEA](intellij.md#debug-the-running-game) walks through it,
 including how to stop before `_ready` runs.
 
-For one-off launches, `KANAMA_JDWP_PORT=5005` overrides the project setting; a
-full address (`KANAMA_JDWP_PORT='*:5005'`) opens the port to other machines.
-Other JVM options (a GC log, heap sizes) go in `KANAMA_JVM_OPTIONS`, for example
-`KANAMA_JVM_OPTIONS="-Xlog:gc"`; see
-[JVM Options](../exporting/desktop.md#jvm-options).
+Restart the game after changing either setting: Kanama reads them when it
+starts Java. When you press **Play**, the editor leaves the port free so the
+game can take it. The port listens on `localhost` only. A second game instance
+that finds the port taken starts without the debugger and says so.
 
-## Script Reload
+For a single launch, the `KANAMA_JDWP_PORT=5005` environment variable
+overrides the port setting. A full address, `KANAMA_JDWP_PORT='*:5005'`,
+opens the port to other machines. Other Java options, such as a GC log or heap
+sizes, go in `KANAMA_JVM_OPTIONS`, for example `KANAMA_JVM_OPTIONS="-Xlog:gc"`;
+see [JVM Options](../exporting/desktop.md#jvm-options).
 
-After a script sync, existing `KanamaScript` resources are rebound to the newest
-template. Scene reload remains the most reliable editor workflow for live-node
-replacement; enable `kanama/tools/reload_scene_after_sync` when that behavior is
-preferred.
+## JDK Selection
 
-Reload support is for attachable `@ScriptClass` scripts loaded from
-`kanama-scripts.jar`. Permanent `@RegisterClass` types are registered in
-Godot's ClassDB and require an editor restart after changes.
+Kanama needs a JDK 25 or newer twice: **Build Scripts** builds with it, and the
+game runs your scripts on it inside Godot. Both use the first of these that
+works:
 
-For maintainer-level details and smoke scripts, see
-[Hot Reload Internals](../contributing/hot-reload-internals.md).
+1. **Editor Settings > Kanama > Build > JDK Path** (`kanama/build/jdk_path`).
+   Set it to the JDK folder, the one that contains `bin/` and `lib/`. It is
+   stored per machine, not in the project.
+2. `JAVA_HOME`, when it points at a JDK 25 or newer.
+3. A JDK 25 or newer in the usual install folders.
 
-## How Long the Loop Takes
+To use a particular JDK, set JDK Path. After you change it, and the first time
+you open a project while it is set, restart the editor once; the plugin
+reminds you with **"Restart the editor to use JDK ..."**. The Output panel
+names the JDK each build used.
 
-Measured on a fresh starter: save `HelloScript.kt` with a changed print line,
-then time until the change shows.
+??? note "Install folders Kanama searches"
+    | OS | Searched |
+    | --- | --- |
+    | Linux | `/usr/lib/jvm`, `/usr/lib64/jvm`, `/usr/java`, `/usr/local/java`, `/opt/java`, `/opt/jdk` |
+    | macOS | `/Library/Java/JavaVirtualMachines/*/Contents/Home`, `~/Library/Java/JavaVirtualMachines/*/Contents/Home`, Homebrew `openjdk*` under `/opt/homebrew/opt` and `/usr/local/opt` |
+    | Windows | `%ProgramFiles%\{Java, Eclipse Adoptium, Microsoft, Zulu, BellSoft, Amazon Corretto, Semeru, Temurin}`, Scoop `~\scoop\apps\*\current` |
+    | All | `~/.jdks` (IntelliJ), `~/.sdkman/candidates/java` |
 
-| From saving a `.kt` file until | Median | p90 |
-| --- | --- | --- |
-| `./gradlew buildScripts` has finished (build only) | 2.0 s | 2.1 s |
-| a newly started game prints the new line (build, then Play again) | 2.4 s | 2.5 s |
-| the editor shows it: build on save, then the scene reloads | 3.7 s | 3.8 s |
-| a running game has loaded the new build | 2.6 s | 2.9 s |
+    When several qualify, Kanama prefers a JDK 25 release. An exported game
+    does not search at all: it uses the Java runtime it ships with.
 
-Five runs each after one warm-up run, with the Gradle daemon running (the first
-build after starting it took 4.3 s). Machine: Apple M1 Max, 64 GB, macOS 26.6,
-Godot 4.7.2, JDK 25, headless editor and game; measured 2026-10-18.
+## Settings
 
-About 1.5 s of the editor number is build on save waiting for you to stop
-saving: it scans for changed files every 0.6 s and builds once
-`kanama/tools/auto_build_debounce_ms` (800 ms) has passed without another
-change. A running game checks for a new build every 0.5 s, but the nodes it
-already has keep running their old code until their scene reloads; new
-instances and Kotlin autoloads use the new code at once. For a change you want
-to see in the game, restarting it is the fastest path.
+The plugin adds these to **Project > Project Settings** under **Kanama**
+(switch on **Advanced Settings** to see them). In `project.godot` they sit
+under `[kanama]`.
 
-The budget is a median of 5 s or less from save to the change showing in the
-editor. To measure your own machine:
+| Setting | What it does |
+| --- | --- |
+| `kanama/tools/auto_build_on_save` | Builds your scripts when you save a `.kt` file. Off by default. |
+| `kanama/tools/auto_build_debounce_ms` | How long build on save waits after the last save. Default 800 ms. |
+| `kanama/tools/reload_scene_after_sync` | Reloads the current scene after a successful build. On by default. |
+| `kanama/tools/kotlin_sources_dir` | The folder **Open Kotlin** opens, absolute or `res://`. Empty opens the project folder. |
+| `kanama/tools/repo_dir` | Your Kanama checkout, for a project without its own Gradle build. Empty looks in the parent folder, then `../kanama` and `../../kanama`. |
+| `kanama/tools/java_preflight_enabled` | Warns in the editor when Godot cannot find a JDK 25 or newer. On by default. |
+| `kanama/tools/export_guard_enabled` | Stops an export whose scenes use Kotlin scripts that do not load. On by default; see below. |
+| `kanama/tools/developer_mode` | Shows **Build Runtime**, which rebuilds the Kanama runtime from a checkout. For people working on Kanama itself; games use **Build Scripts**. |
+| `kanama/debug/jdwp_enabled`, `kanama/debug/jdwp_port` | The debugger; see [Debugging](#debugging). |
+| `kanama/jvm/options` | Extra Java options for the game; see [JVM Options](../exporting/desktop.md#jvm-options). |
 
-```sh
-python3 scripts/measure_edit_loop.py /path/to/godot --runs 5
-```
+JDK Path is an editor setting, not a project setting; see
+[JDK Selection](#jdk-selection).
 
-It creates a fresh starter from your checkout, runs the four measurements, and
-prints the median, the p90 and a budget line. The budget line is a report: the
-script fails only when it cannot take a measurement.
+The **export guard** checks every `.kt` script the exported scenes use when an
+export begins. If one does not load in the editor, for example because
+`kanama-scripts.jar` is out of date, it reports
+`Kanama: Export stopped: …` with the script names. Without the guard, Godot
+would ship those scenes without the scripts' property values. A command-line
+export then exits with an error. An export from the Export dialog is marked
+failed, but its files are still written. Turn the guard off only to export
+knowingly without those scripts. [Export Guard](../exporting/android.md#export-guard)
+has the details.
+
+## On Other Platforms
+
+On **Windows**, run `.\gradlew.bat` wherever this page says `./gradlew`.
+
+On **Linux and Windows**, Godot started from an application menu, a desktop
+shortcut or a file manager does not see the `JAVA_HOME` from your shell
+profile. If that `JAVA_HOME` is the only way Kanama could find your JDK, set
+JDK Path instead.
+
+Editors installed as a **Flatpak or Snap** run in a sandbox that cannot see
+`/usr/lib/jvm` or your shell's `JAVA_HOME`. Grant the sandbox access to the JDK
+folder (for Flatpak, `flatpak override --user --filesystem=<jdk dir>:ro`),
+point JDK Path at a JDK inside a path the sandbox can read, or use the
+unsandboxed Godot build. A build you run in a terminal is not affected: it
+uses the shell's `JAVA_HOME`.

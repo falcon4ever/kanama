@@ -1005,7 +1005,7 @@ Script: none.
   block to your own `settings.gradle.kts` if you copied one. The editor picks the
   JDK itself (the `kanama/build/jdk_path` editor setting, then `JAVA_HOME`, then
   the usual install locations), and a `JAVA_HOME` older than 25 is skipped. See
-  [Which JDK Kanama Uses](editor-workflow.md#which-jdk-kanama-uses).
+  [JDK Selection](editor-workflow.md#jdk-selection).
 - **`addons/kanama/kanama-project.gradle.kts`** gains the KSP inputs that make
   `Autoloads` regenerate when `project.godot` changes. It ships inside the addon,
   so the new addon brings it; a copy you edited by hand needs the same block.
