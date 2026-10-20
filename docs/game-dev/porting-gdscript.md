@@ -1,9 +1,7 @@
 # Porting from GDScript
 
-This page is for moving an existing Godot project from GDScript to Kotlin, one
-script at a time. It covers the line-by-line mapping and the project and scene
-details that real ports run into. For the script model itself, start with
-[Writing Scripts](scripts.md).
+Move a Godot project from GDScript to Kotlin one script at a time; the script
+model itself is on [Writing Scripts](scripts.md).
 
 ## Porting Workflow
 
@@ -16,9 +14,9 @@ details that real ports run into. For the script model itself, start with
    script metadata settle.
 5. Play the project and compare it with the original.
 
-A port should behave like the original without different logic. If it needs a
-workaround to work, that is a Kanama bug: please
-[open an issue](https://github.com/falcon4ever/kanama/issues).
+A port should behave like the original without changing its logic. If it only
+works with a workaround that [Limitations](../reference/limitations.md) does
+not list, please [open an issue](https://github.com/falcon4ever/kanama/issues).
 
 ## GDScript to Kotlin Mapping
 
@@ -37,9 +35,9 @@ The everyday script constructs, inside a `KanamaScript<T>` subclass (see
 | `var cam: Camera3D = x` | `x.cast<Camera3D>()` |
 | `body is Player` (script class) | `body.isScript<Player>()` |
 | `body as Player` (script class) | `body.asScript<Player>()` |
-| `const BULLET = preload("res://bullet.tscn")` | `private val bullet by preload<PackedScene>("res://bullet.tscn")` |
-| `var b: RigidBody3D = BULLET.instantiate()` | `val b = bullet.instantiateAs<RigidBody3D>()` |
-| `var c: Coin = COIN.instantiate()` (script root) | `val c = coin.instantiateScript<Coin>()`, node: `c.self` |
+| `const BULLET = preload("res://bullet.tscn")` | `private val bulletScene by preload<PackedScene>("res://bullet.tscn")` |
+| `var b: RigidBody3D = BULLET.instantiate()` | `val b = bulletScene.instantiateAs<RigidBody3D>()` |
+| `var c: Coin = COIN.instantiate()` (script root) | `val c = coinScene.instantiateScript<Coin>()`, its node is `c.self` (`coinScene` preloaded as above) |
 | `get_tree()` / `get_viewport()` / `get_parent()` | `self.tree` / `self.viewport` / `self.parentNode` |
 | `await get_tree().create_timer(1.0).timeout` | `launch { wait(1.0); ... }` |
 | `await get_tree().process_frame` | `launch { nextFrame(); ... }` |
@@ -53,31 +51,59 @@ The everyday script constructs, inside a `KanamaScript<T>` subclass (see
 | `func show_message(text):` | `fun showMessage(text: String)` (every public function is registered) |
 | `@export var speed := 5.0` | `@Export var speed = 5.0` |
 | `Vector3(0, 1, 0)`, `Vector3(speed, 0, 0)`, `Color(1, 1, 1, 0.72)` | the same |
-| `velocity.y += gravity * delta` | `velocity = velocity.withY(velocity.y + gravity * delta)` (value types are immutable) |
-| `print(position)` → `(0.1, 0.2)` | `println(position)` → `(0.1, 0.2)` (same `str()` form) |
+| `velocity.y += gravity * delta` | `self.velocity = self.velocity.withY(self.velocity.y + gravity * delta)` (value types are immutable; `gravity` is a property of your script) |
+| `print(position)` → `(0.1, 0.2)` | `GD.print(self.position)` → `(0.1, 0.2)` |
+| `var items: Array[String] = []` | `val items = mutableListOf<String>()` (an `Array` is a `List`) |
+| `var scores := {}` | `val scores = mutableMapOf<String, Any?>()` (a `Dictionary` is a `Map`; see [Collections](../reference/wrapper-conventions.md#10-collections)) |
 | `v.is_equal_approx(w)`, `v == w` | `v.isEqualApprox(w)`, `v == w` (compares the stored components, as in GDScript) |
 | `global_transform * Vector3.FORWARD`, `basis * other_basis`, `quat * dir` | the same operators |
-| `2.0 * v`, `Vector2i(4, 6) / 2`, `-color`, `a < b` (vectors) | the same (`2.0 * v` is an extension operator: `import net.multigesture.kanama.types.*`, which new scripts already have) |
+| `2.0 * v` | the same, with `import net.multigesture.kanama.types.*`, which new scripts have |
+| `Vector2i(4, 6) / 2`, `-color`, `a < b` (vectors) | the same |
 | `x ** y` | `x.pow(y)` (`kotlin.math`) or `GD.pow(x, y)` (Godot's `pow`): Kotlin has no power operator |
 | `Color.RED`, `Vector2i.LEFT`, `Vector3.MODEL_FRONT` | the same |
 | `v.direction_to(t)`, `rect.get_center()`, `Color.from_hsv(h, s, v)` | `v.directionTo(t)`, `rect.getCenter()`, `Color.fromHsv(h, s, v)` |
-| `path.get_extension()`, `name.to_snake_case()`, `String.num(x, 2)` | the same in camelCase, after `import net.multigesture.kanama.builtins.*` (Godot's String methods on Kotlin's `String`) |
-| `text.begins_with("a")`, `", ".join(parts)`, `"%d" % n` | Kotlin's `startsWith("a")`, `parts.joinToString(", ")`, `"$n"` ([the list](godot-api.md#strings-node-paths-and-bytes)) |
-| `text.length()`, `text.find("x")`, `text.split(",")`, `"ff".hex_to_int()`, `"12abc".to_int()` | `godotLength()`, `godotFind("x")`, `godotSplit(",")`, `"ff".godotHexToInt()`, `"12abc".godotToInt()` (a name Kotlin already has gets the `godot` prefix; Kotlin's `length`, `indexOf`, `split`, `toLong()` also work, with Kotlin's semantics) |
+| `path.get_extension()`, `name.to_snake_case()` | `path.getExtension()`, `name.toSnakeCase()`, with `import net.multigesture.kanama.builtins.*` |
+| `String.num(x, 2)` | `String.num(x, 2)`, same import |
+| `text.begins_with("a")` | `text.startsWith("a")` (Kotlin's own; [the list](godot-api.md#strings-node-paths-and-bytes)) |
+| `", ".join(parts)` | `parts.joinToString(", ")` |
+| `"%d" % n` | `"$n"` |
+| `text.length()`, `text.find("x")`, `text.split(",")` | `text.godotLength()`, `text.godotFind("x")`, `text.godotSplit(",")`: a name Kotlin already has gets a `godot` prefix |
+| `"ff".hex_to_int()`, `"12abc".to_int()` | `"ff".godotHexToInt()`, `"12abc".godotToInt()` |
 | `"{name}".format({"name": n})` | `"{name}".godotFormat(mapOf("name" to n))` (same package) |
 | `bytes.decode_u32(0)`, `bytes.get_string_from_utf8()` | `bytes.decodeU32(0)`, `bytes.getStringFromUtf8()` (a `ByteArray`, same package) |
 | `NodePath("a/b:x").get_name(1)` | `NodePath("a/b:x").getName(1)` |
 | `Callable(obj, "m").call(1)` | `GodotCallable(obj, "m").call(1)` (no `bind`) |
 
-Decimals behave as in GDScript: every decimal is `Double` (GDScript's `float`), and a vector,
-transform or color stores its components at Godot's width (float32 in normal builds), so equality,
-printing and vector arithmetic give the same results as the GDScript you port, including the
-caveat that `Vector2(0.1, 0.2).x == 0.1` is `false`. See
-[API conventions — Decimals](../reference/wrapper-conventions.md#4-decimals).
+`Vector2(0.1, 0.2).x == 0.1` is `false` in Kotlin, as in GDScript. Every
+decimal is a `Double`, and a vector, transform or color stores its components
+as 32-bit floats, as Godot does, so equality, printing and arithmetic match the
+GDScript you port. Compare with `isEqualApprox`. See
+[API Conventions](../reference/wrapper-conventions.md#4-decimals).
 
 A function that `await`s in GDScript becomes a `launch { }` block: everything
 after the first suspension runs on a later frame, and the block stops when the
 script's object is freed.
+
+### Annotations and Declarations
+
+Each GDScript annotation and declaration has one Kotlin form:
+
+| GDScript | Kanama |
+|---|---|
+| `func f()` (callable from Godot) | a public `fun f()`; `@GodotName("...")` for another name |
+| `@export var x` | `@Export var x` |
+| `@export var area: Rect2`, `var pose: Transform3D = Transform3D.IDENTITY`, `func f(p: Plane) -> AABB`, `signal moved(t: Transform2D)` | the same types: every Godot value type (`Vector4`/`4i`, `Rect2`/`2i`, `Plane`, `AABB`, `Quaternion`, `Basis`, `Transform2D`/`3D`, `Projection`) is an export, parameter, return and signal type ([Exports](properties-resources.md#export-hints)) |
+| `@export_category` / `_group` / `_subgroup` | `@ExportCategory` / `@ExportGroup` / `@ExportSubgroup` |
+| `@export_tool_button("Label")` | `@ExportToolButton("Label")` |
+| `signal hit(damage)` | `@Signal fun hit(damage: Long) = Unit`; typed handle `player.hit` (`hit.emit(5)`, `player.hit.connect { damage -> }`) |
+| `@rpc(...)` | `@Rpc(...)` on a public function |
+| `jump.rpc()` / `jump.rpc_id(id)` on a `call_local` RPC | `PlayerRpcs.callLocalJump(this)` / `PlayerRpcs.rpcIdJump(this, id)`; `this` is the script object ([Multiplayer](multiplayer.md#rpc-methods)) |
+| `@tool` | `@Tool` |
+| `class_name Player` | `@GlobalClass` |
+| `func _ready()`, `_enter_tree`, `_exit_tree` | `@OnReady`, `@OnEnterTree`, `@OnExitTree` |
+| `func _process(delta)`, `_physics_process` | `@OnProcess`, `@OnPhysicsProcess` |
+| `func _input(event)`, `_unhandled_input`, `_shortcut_input`, `_unhandled_key_input` | `@OnInput`, `@OnUnhandledInput`, `@OnShortcutInput`, `@OnUnhandledKeyInput` (`event: InputEvent`) |
+| any other `func _virtual()` | `@OverrideVirtual fun _virtual()` |
 
 ## Porting Checklist
 
@@ -142,40 +168,22 @@ forwarding overrides (see [Scripts → Script Inheritance](scripts.md#script-inh
 and each `@export_*` annotation has a typed twin
 ([Exports and Resources](properties-resources.md#export-hints)).
 
-Exported `NodePath` values are a good first step when the original script used
-`@export var target: NodePath`:
+When the original exported a node (`@export var target: Node3D`), export it
+as its class, `@Export var target: Node3D? = null`. When it exported a path on
+purpose, keep the `NodePath` and look the node up with it:
 
 ```kotlin
 @Export var targetPath: NodePath = NodePath(".")
+private var target: Node3D? = null
 
-private val target by lazy {
-    self.requireAs<Node3D>(targetPath.path)
+@OnReady
+fun ready() {
+    target = self.requireAs<Node3D>(targetPath)
 }
 ```
 
 Use `@GodotName("saved_signal_name")` when a `.tscn` file already has a
 saved signal connection and you want to preserve the stored method name.
-
-### GDScript Annotations in Kanama
-
-Kanama has one annotation per GDScript concept:
-
-| GDScript | Kanama |
-|---|---|
-| `func f()` (callable from Godot) | a public `fun f()`; `@GodotName("...")` for another name |
-| `@export var x` | `@Export var x` |
-| `@export var area: Rect2`, `var pose: Transform3D = Transform3D.IDENTITY`, `func f(p: Plane) -> AABB`, `signal moved(t: Transform2D)` | the same types: every Godot value type (`Vector4`/`4i`, `Rect2`/`2i`, `Plane`, `AABB`, `Quaternion`, `Basis`, `Transform2D`/`3D`, `Projection`) is an export, parameter, return and signal type, on Web too ([Exports](properties-resources.md#export-hints)) |
-| `@export_category` / `_group` / `_subgroup` | `@ExportCategory` / `@ExportGroup` / `@ExportSubgroup` |
-| `@export_tool_button("Label")` | `@ExportToolButton("Label")` |
-| `signal hit(damage)` | `@Signal fun hit(damage: Long) = Unit`; typed handle `player.hit` (`hit.emit(5)`, `player.hit.connect { damage -> }`) |
-| `@rpc(...)` | `@Rpc(...)` on a public function |
-| `jump.rpc()` / `jump.rpc_id(id)` on a `call_local` RPC | `PlayerRpcs.callLocalJump(this)` / `PlayerRpcs.rpcIdJump(this, id)` ([Multiplayer](multiplayer.md#rpc-methods)) |
-| `@tool` | `@Tool` |
-| `class_name Player` | `@GlobalClass` |
-| `func _ready()`, `_enter_tree`, `_exit_tree` | `@OnReady`, `@OnEnterTree`, `@OnExitTree` |
-| `func _process(delta)`, `_physics_process` | `@OnProcess`, `@OnPhysicsProcess` |
-| `func _input(event)`, `_unhandled_input`, `_shortcut_input`, `_unhandled_key_input` | `@OnInput`, `@OnUnhandledInput`, `@OnShortcutInput`, `@OnUnhandledKeyInput` (`event: InputEvent`) |
-| any other `func _virtual()` | `@OverrideVirtual fun _virtual()` |
 
 ## Example Ports
 

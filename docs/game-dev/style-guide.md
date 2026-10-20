@@ -114,8 +114,10 @@ wrapper, which is cheap but adds up every frame.
 @Export var range: Double = 3.0
 ```
 
-Put `@ExportGroup` on the first property of its group, not on a line of its
-own.
+`@ExportGroup` annotates the first property of its group, on the line above
+it; the properties after it join the group until the next one. GDScript's
+`@export_group` line on its own has no Kotlin form, because a Kotlin
+annotation needs a property to sit on.
 
 ## Null Safety and Tool Scripts
 
@@ -144,10 +146,9 @@ fun physicsProcess(delta: Double) {
 }
 ```
 
-- Write decimals as `Double`: `Vector3(0.0, 1.0, 0.0)`, `Color(1.0, 0.5, 0.0)`,
-  with no `f` suffix and no `.toFloat()` between components, `delta` and other
-  arguments.
-- Integer components need no `.0`, as in GDScript: `Vector3(0, 1, 0)`.
+- Write decimals as `Double` literals: `Vector3(0.0, 1.0, 0.0)`,
+  `Color(1.0, 0.5, 0.0)`, with no `f` suffix and no `.toFloat()` between
+  components, `delta` and other arguments.
 - Change one component with `withX()`, `withY()` or `withZ()`.
 - Compare decimals with `isEqualApprox`, as in GDScript. Components are stored
   as 32-bit floats, so `Vector2(0.1, 0.2).x == 0.1` is `false`.
@@ -166,20 +167,6 @@ calls `private`, or `internal` when another script calls them. Use
 `@GodotName` only to match a name a scene already saved. Prefer the generated
 typed signal handles and `Names` constants to strings. See
 [Signals and Await](signals.md).
-
-## Calling Function Values
-
-```kotlin
-private var onFinished: (() -> Unit)? = null
-
-fun finish() {
-    onFinished?.let { it() }
-}
-```
-
-Call a function value directly, `callback()` or `callback?.let { it() }`,
-never with `.invoke()`. A `.invoke()` call does not compile for Android; see
-[Limitations](../reference/limitations.md#android).
 
 ## Coroutines
 
@@ -276,3 +263,17 @@ Every other resource you create or read back follows the ownership rule:
 `mesh.close()` releases only yours. A wrapper you forget is released later,
 after the garbage collector drops it, so prefer `use { }` for big resources and
 anything you make in a loop.
+
+## On Other Platforms
+
+```kotlin
+private var onFinished: (() -> Unit)? = null
+
+fun finish() {
+    onFinished?.let { it() }
+}
+```
+
+Call a function value directly, `callback()` or `callback?.let { it() }`,
+never with `.invoke()`: a `.invoke()` call does not compile for Android. See
+[Limitations](../reference/limitations.md#android).

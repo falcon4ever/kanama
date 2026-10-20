@@ -31,13 +31,13 @@ fun ready() {
     }
 }
 
-fun onTimeout() {
+private fun onTimeout() {
     GD.print("time is up")
 }
 ```
 
-`area.bodyEntered` is a `Signal1<Node3D>` and `timer.timeout` a `Signal0`,
-typed from Godot's API:
+Each signal's type comes from Godot's API: `area.bodyEntered` is a
+`Signal1<Node3D>`, so `body` is a `Node3D`.
 
 - **`connect { }`** binds the lambda to your script's node, as a GDScript
   lambda is bound to its script. Godot drops the connection, and Kanama
@@ -167,9 +167,11 @@ argument as its class (`Node3D`) instead of `GodotObject`. Engine classes have
 ## Signals Known Only by Name
 
 ```kotlin
+import net.multigesture.kanama.generated.Autoloads
+
 @OnReady
 fun ready() {
-    val events = self.requireAs<Node>("/root/Events")         // a GDScript autoload
+    val events = Autoloads.Events                     // a GDScript autoload
     val bar = self.requireAs<ProgressBar>("Hud/Health")
     val healthChanged = Signal1(events, "health_changed", SignalArgType.LONG)
     healthChanged.connect { hp -> bar.value = hp.toDouble() }
@@ -232,7 +234,7 @@ class Mob(godotObject: GodotHandle) : KanamaScript<CharacterBody3D>(godotObject,
 class ScoreLabel(godotObject: GodotHandle) : KanamaScript<Label>(godotObject, ::Label) {
     private var score = 0L
 
-    fun onMobSquashed() {
+    internal fun onMobSquashed() {
         score += 1
         self.text = "Score: $score"
     }
@@ -254,15 +256,16 @@ class Main(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
 ```
 
 `instantiateScript<Mob>()` returns the Kotlin script on the new scene's root,
-so you call its members directly. The lambda belongs to `Main`, and the
+so you call its members directly. `onMobSquashed` is `internal` because only
+Kotlin calls it. The lambda belongs to `Main`, and the
 connection ends when `Main` or the mob is freed. When the receiver is a
 GDScript, connect by name instead:
 `mob.squashed.connect(label, "_on_mob_squashed")`.
 
 ## Hot Reload
 
-On desktop, a hot reload loads the new build of your scripts while the old
-build's objects keep running until they are freed. The scene reload frees the
+Hot reload runs on desktop only. It loads the new build of your scripts while
+the old build's objects keep running until they are freed. The scene reload frees the
 scene's objects, and Kotlin autoloads are reset in place. A lambda connection
 belongs to the build that made it. Once the old build's last script object is
 gone, its lambda connections are disconnected on the next frame, even when the

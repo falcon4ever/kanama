@@ -52,19 +52,26 @@ class PlayerInput(godotObject: GodotHandle) :
 }
 ```
 
-`@Rpc` on a public function is GDScript's `@rpc`, with the same `mode`,
-`callLocal`, `transferMode` and `channel` settings. The build generates a
-`PlayerInputRpcs` object with one sender per RPC:
+`@Rpc` on a public function is GDScript's `@rpc`. Its settings have the same
+names and defaults as GDScript's:
 
-| GDScript | Kotlin |
-|---|---|
-| `jump.rpc()` | `PlayerInputRpcs.rpcJump(this)` |
-| `jump.rpc_id(peer_id)` | `PlayerInputRpcs.rpcIdJump(this, peerId)` |
-| `jump.rpc()` on a `call_local` RPC | `PlayerInputRpcs.callLocalJump(this)` |
+```kotlin
+@Rpc(mode = RpcMode.ANY_PEER, transferMode = RpcTransferMode.UNRELIABLE_ORDERED, channel = 1)
+fun aim(direction: Vector2) {
+    // GDScript: @rpc("any_peer", "unreliable_ordered", "call_remote", 1)
+}
+```
 
-`callLocalJump` exists only for an `@Rpc(callLocal = true)` function. It sends
-the RPC like `rpcJump` and, when the send fails because no network is
-connected, runs the function here instead, so local play keeps working.
+The build generates a `PlayerInputRpcs` object with one sender per RPC. A
+sender takes the script object, `this`, not the node `self`: it is typed to
+your script class, so the compiler checks that the target has the RPC.
+
+| GDScript | Kotlin | What it does |
+|---|---|---|
+| `jump.rpc()` | `PlayerInputRpcs.rpcJump(this)` | Calls `jump` on the other peers, and here too when the RPC is `callLocal`. |
+| `jump.rpc_id(peer_id)` | `PlayerInputRpcs.rpcIdJump(this, peerId)` | Calls `jump` on one peer. |
+| `jump.rpc()` in a game that also runs without a network | `PlayerInputRpcs.callLocalJump(this)` | Does what `rpcJump` does; when the send fails, for example with no peer, calls `jump` here directly. Generated only for `@Rpc(callLocal = true)`. |
+
 `self.rpc("jump")` still works for a function Godot knows only by name, such
 as one in a GDScript.
 
@@ -73,30 +80,57 @@ A plain Kotlin call, `jump()`, does not go over the network: it is GDScript's
 about such a call and names the sender to use:
 
 ```text
-w: [ksp] [kanama:ksp] /path/to/your-project/kotlin-src/Menu.kt:376: prepareGame() is an @Rpc function of Menu called
-directly, so it runs on this peer only. Send it with MenuRpcs.rpcPrepareGame(instance) or
-MenuRpcs.rpcIdPrepareGame(instance, peerId); to run it here as well, declare
-@Rpc(callLocal = true) and call MenuRpcs.callLocalPrepareGame(instance).
+w: [ksp] [kanama:ksp] /path/to/your-project/kotlin-src/Menu.kt:376: prepareGame() is an @Rpc function of Menu called directly, so it runs on this peer only. Send it with MenuRpcs.rpcPrepareGame(instance) or MenuRpcs.rpcIdPrepareGame(instance, peerId); to run it here as well, declare @Rpc(callLocal = true) and call MenuRpcs.callLocalPrepareGame(instance).
 ```
 
-A `callLocal` function gets no warning, because calling one directly is
-sometimes what the GDScript original does too. So when you port, turn each
-`x.rpc()` line into a sender call yourself. The warning sees direct calls in
-the file that declares the RPC, and calls through another object (`robot.hit()`)
-elsewhere when no other function or Godot method has that name.
+The warning skips `callLocal` functions, because calling one directly is
+sometimes what the GDScript original does, and it misses some calls through
+another object. So when you port, turn each `x.rpc()` line into a sender call
+yourself.
 
 ## Authority and Synchronizers
 
-A pattern that works for player input:
+```kotlin
+@ScriptClass(attachTo = "Node3D")
+class World(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3D) {
+    @Export var playerScene: PackedScene? = null
 
-- The server owns the world simulation and spawns the players.
-- Each player scene has a `MultiplayerSynchronizer` for the input its client
-  owns.
-- The synchronizer's multiplayer authority is set before the game starts.
-- The server reads the replicated input and writes the authoritative movement.
+    private val players by node<Node>("Players")      // the MultiplayerSpawner's spawn path
 
-Give each spawned player a name that is the same on every peer, usually its
-peer id as a string, so Godot's replication can match scene paths.
+    @OnReady
+    fun ready() {
+        self.getMultiplayer()?.use { multiplayer ->
+            if (!multiplayer.isServer()) return
+            multiplayer.peerConnected.connect { id -> addPlayer(id) }
+            addPlayer(1)                                // the host's own player
+        }
+    }
+
+    private fun addPlayer(id: Long) {
+        val player = playerScene?.instantiateAs<CharacterBody3D>() ?: return
+        player.name = id.toString()                     // the same name on every peer
+        players.addChild(player)
+    }
+}
+
+@ScriptClass(attachTo = "CharacterBody3D")
+class NetPlayer(godotObject: GodotHandle) :
+    KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D) {
+
+    @OnEnterTree
+    fun enterTree() {
+        // runs on every peer, so every peer agrees who owns this player's input
+        self.requireAs<MultiplayerSynchronizer>("Input").setMultiplayerAuthority(self.name.toInt())
+    }
+}
+```
+
+The server spawns the players, and a `MultiplayerSpawner` whose spawn path is
+`Players` creates them on the clients. Each player is named after its peer id,
+so Godot's replication finds the same node path on every peer. Each player
+scene has a `MultiplayerSynchronizer` named `Input` for the input its client
+owns; its authority is set in `@OnEnterTree`, before the game reads input. The
+server reads the replicated input and writes the authoritative movement.
 
 When you port, set authority at the same point as the original. Moving it from
 `_enter_tree` to `_ready`, or from the scene root to a child synchronizer,
@@ -117,26 +151,34 @@ own properties, such as `position` and `rotation`, without your help.
 ## Checklist for a Ported Game
 
 - Authority is set at the same lifecycle point as in the original, especially
-  for nested `MultiplayerSynchronizer` nodes.
-- Spawned player names are the same on every peer.
-- Every custom `.:property` in a `SceneReplicationConfig` is exported.
-- Every GDScript `x.rpc()` and `x.rpc_id()` became a sender call, not a direct
-  Kotlin call, and calls between Kotlin scripts are direct Kotlin calls, not
-  strings.
-- Look up nodes once, in `@OnReady` or with `node<T>()`, not in `@OnProcess`,
-  `@OnPhysicsProcess`, an RPC or a signal lambda.
+  for nested `MultiplayerSynchronizer` nodes, because input from a peer without
+  authority is dropped.
+- Spawned player names are the same on every peer, because replication matches
+  nodes by path.
+- Every custom `.:property` in a `SceneReplicationConfig` is exported, because
+  Godot can only replicate a property the script exposes.
+- Every GDScript `x.rpc()` and `x.rpc_id()` became a sender call, because a
+  direct Kotlin call runs on this peer only. Calls between Kotlin scripts are
+  direct Kotlin calls, because the compiler checks those and not strings.
+- Nodes are looked up once, in `@OnReady` or with `node<T>()`, not in
+  `@OnProcess`, `@OnPhysicsProcess`, an RPC or a signal lambda, because a
+  lookup there repeats every frame and a missing node fails in the middle of a
+  game instead of at the start.
 - Each remaining `call`, `rpc` or animation-tree property string is a real
-  dynamic boundary, and a host and client test covers it.
+  dynamic boundary that a host and client test covers, because the compiler
+  cannot check a string.
 
 ## Checks
 
-Two scripts in a Kanama checkout find the usual multiplayer porting mistakes.
-Both take several roots, so you can check more than one project in one run.
+Two scripts in a Kanama checkout find the usual multiplayer porting mistakes:
 
 ```sh
 python3 /path/to/kanama/scripts/audit_replicated_script_properties.py /path/to/your-project
 python3 /path/to/kanama/scripts/audit_runtime_node_lookups.py /path/to/your-project/kotlin-src
 ```
+
+Both take several roots, to check more than one project in one run:
+`audit_replicated_script_properties.py /path/to/game-one /path/to/game-two`.
 
 The first reports a `.:property` in a `SceneReplicationConfig` that the script
 on that node does not export. The second reports raw RPC strings and required

@@ -1,9 +1,7 @@
 # Exports and Resources
 
 An exported property is a field the inspector can edit and a scene can save,
-as with GDScript's `@export`. This page covers exports and their inspector
-hints, enums, lists and dictionaries, resource slots, and your own resource
-types. The snippets sit inside a script like the one in
+as with GDScript's `@export`. The snippets sit inside a script like the one in
 [Writing Scripts](scripts.md#a-complete-script), which lists the imports.
 
 ## Exported Properties
@@ -46,8 +44,8 @@ inspector shows no default for it.
 ```kotlin
 @OnReady
 fun ready() {
-    self.set("hp", "42")                        // a numeric String: stored as 42
-    self.set("hp", Vector2(1.0, 2.0))           // refused: hp keeps its value
+    self.set("hp", "42")                 // a numeric String: stored as 42
+    self.set("hp", Vector2(1.0, 2.0))    // refused: hp keeps its value
 }
 ```
 
@@ -57,7 +55,9 @@ is stored. A value Godot can convert to the declared type is converted: an
 `int` for a `Double` and back, a numeric `String` for a number, a `Vector2i`
 for a `Vector2`, a colour name for a `Color`. Anything else is refused: the
 property keeps its value and Godot prints a script error such as
-`Expected Vector3 for property 'velocity' but the Variant holds Vector2`.
+`Expected int for property 'hp' but the Variant holds Vector2`. iOS applies
+this rule to value types, `NodePath` and `Color` only; see
+[Limitations](../reference/limitations.md#ios).
 
 ## Export Hints
 
@@ -119,13 +119,8 @@ applies to each element, as on a GDScript `Array[String]`. `@ExportRange`
 without a step uses the editor's default: 1 for an integer. `@ExportCustom` takes any
 `PropertyHint` value, for a hint no typed annotation covers.
 
-`Color` and every other Godot value type (`Vector2` to `Vector4i`, `Rect2`,
-`Rect2i`, `Plane`, `AABB`, `Quaternion`, `Basis`, `Transform2D`, `Transform3D`,
-`Projection`) can be exported. A Kotlin `enum class` or a Godot enum needs no
+Every Godot value type exports, as `tint` and `area` show. An enum needs no
 hint: it shows as a dropdown on its own.
-
-Coming from Kanama 0.4? [Typed Export Hints](../getting-started/upgrading-0.4-to-0.5.md#typed-export-hints)
-converts the old annotations.
 
 ## Exporting Enums
 
@@ -225,12 +220,11 @@ var icons: List<Texture2D> = emptyList()
 
 An exported resource is nullable with a `= null` default. A slot of a base
 class accepts its subclasses: an `AudioStreamWAV` or `AudioStreamOggVorbis`
-goes into an `AudioStream` slot. The resource classes you can export are
-`PackedScene`, `Texture`, `Texture2D`, `NoiseTexture2D`, `Material`,
-`ShaderMaterial`, `Curve`, `FastNoiseLite`, `ButtonGroup`, `LightmapGIData`,
-`AudioStream`, `Mesh`, `Shape2D`, `Shape3D`, `Font`, `Animation`, `StyleBox`,
-and your own [custom resources](#custom-resources). If you need another one,
-please [open an issue](https://github.com/falcon4ever/kanama/issues).
+goes into an `AudioStream` slot. The common resource classes, such as
+`PackedScene`, `Texture2D`, `Material`, `Mesh` and `AudioStream`, and your own
+[custom resources](#custom-resources) can be exported; the full list is in
+[API Conventions](../reference/wrapper-conventions.md#7-ownership). If you need
+another one, please [open an issue](https://github.com/falcon4ever/kanama/issues).
 
 Do not use `lateinit var` for an export. It has no inspector default, and
 reading it before the scene assigns it crashes. The build warns and suggests
@@ -357,27 +351,11 @@ class WeaponSlot(godotObject: GodotHandle) :
 }
 ```
 
-Holding the script object of a resource keeps the resource alive, as holding
-the resource does in GDScript, however you got the script object and whatever
+`kotlinScriptInstance<T>()` returns the Kotlin script object attached to a
+Godot object, or `null` when it has none. Holding that script object keeps
+the resource alive, as holding the resource does in GDScript, whatever
 happened to the wrapper you reached it through. Drop your last reference to
 the script object and the resource is released like any forgotten wrapper.
-
-The garbage collector can drop the script object while Godot still caches the
-resource. If the resource is then loaded again before the next frame, its
-script object is rebuilt on first use and reads its values from the resource's
-file, as a GDScript resource would:
-
-- the constructor and `init` blocks run again, once for the rebuilt script
-  object and once for an uncached copy of the file that the rebuild reads;
-- if the file changed on disk since the load, the engine properties keep their
-  values in memory and the script properties come from the file;
-- a resource that was never saved, or one stored inside another file
-  (`res://level.tres::Resource_x`), starts from its defaults, with a warning.
-
-A plain class (`class Weapon(val godotObject: GodotHandle)`) also works as a
-resource script, but its script object does not keep the resource alive: a
-wrapper you close releases at once, and a wrapper you forget stays alive until
-the script is detached or the game ends.
 
 ## Saving Custom Resources
 
@@ -400,8 +378,7 @@ class WeaponForge(godotObject: GodotHandle) :
 
 A custom resource script is not itself a `Resource`, so pass its `self` to an
 API that takes one, such as `ResourceSaver.save`. `self` takes no reference of
-its own, so there is nothing to close. For a plain script class,
-`Resource.fromHandle(weapon.godotObject)` is the same kind of view.
+its own, so there is nothing to close.
 
 Calling the constructor yourself, `Weapon(someNode.handle)`, does not
 create a resource. It wraps the handle you pass, which gives a view of the
@@ -448,7 +425,8 @@ attach the script to a new resource:
 
 Exports and custom resources work the same way on desktop and Android. iOS
 and Web cannot carry a few export types, and the build stops and names the
-property when you use one. iOS has no `newScriptInstance`, and on Web a custom
+property when you use one. iOS converts a value of the wrong type only for
+value types, `NodePath` and `Color`. iOS has no `newScriptInstance`, and on Web a custom
 resource's script object does not keep its resource alive. On Android 8 to 12
 the garbage collector does not release a resource you forget to close.
 [Limitations](../reference/limitations.md) lists each case with its workaround.

@@ -481,8 +481,21 @@ the collector's thread. The details the user page summarizes:
 **A script object keeps its owner alive.** A `KanamaScript` on a `RefCounted` owner holds a `+1`,
 and its native link is strong above count 1 and weak at 1 (C#'s `CSharpInstance` model), so holding
 the Kotlin object keeps the resource alive and dropping it releases the resource like any other
-forgotten wrapper. The user-facing rules, including the cache-reload edge, are in
+forgotten wrapper. The user-facing rule is in
 [Custom Resources](../game-dev/properties-resources.md#keeping-a-resource-through-its-script).
+
+**The cache-reload edge.** The garbage collector can drop the script object while Godot still
+caches the resource. If the resource is loaded again from the cache before the next frame, its
+script object is rebuilt on first use and re-reads its values from the resource's file, which is
+what GDScript's re-parse gives:
+
+- re-reading the file loads an uncached copy of the resource, so the script class's constructor
+  and `init` blocks run once more for that copy, besides once for the rebuilt script object;
+- if the file changed on disk since the load, the result is mixed: the engine properties keep their
+  in-memory values, the script properties come from the file;
+- a resource that was never saved, or a sub-resource stored inside another file
+  (`res://level.tres::Resource_x`), is not re-read: its script object starts from its defaults,
+  with a warning.
 
 **`ResourceSaver.save` does not take ownership.** The scene wrapper is still live after `save`
 returns, so `close()` after it is the caller's to make. An early port got this wrong (issue #81);

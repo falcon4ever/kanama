@@ -401,6 +401,11 @@ The full statement is [Resource Ownership](../game-dev/godot-api.md#resource-own
   [Keeping a Resource Through Its Script](../game-dev/properties-resources.md#keeping-a-resource-through-its-script).
 - Wrappers made on any thread get the GC fallback; the release runs on the main thread, after the
   wrapper's last call (`ObjectCalls.keepReachable`).
+- **Exported resource slots** are an allowlist, because a resource-typed read is
+  ownership-managed (retained while the script holds it, released on cleanup): `PackedScene`,
+  `Texture`, `Texture2D`, `NoiseTexture2D`, `Material`, `ShaderMaterial`, `Curve`,
+  `FastNoiseLite`, `ButtonGroup`, `LightmapGIData`, `AudioStream`, `Mesh`, `Shape2D`, `Shape3D`,
+  `Font`, `Animation`, `StyleBox`, and any `@GlobalClass` custom resource script.
 
 ### The Full Ownership Table
 
