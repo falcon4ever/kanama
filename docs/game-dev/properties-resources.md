@@ -405,10 +405,10 @@ next frame, never on the collector's thread). Closing is therefore about
 *when*: `use { }` releases now, the collector releases eventually. The project
 setting `kanama/debug/log_gc_releases` names every creation site the collector
 had to clean up after. See
-[Resource Ownership](godot-api.md#a-forgotten-close-is-a-late-release). Holding a
+[Resource Ownership](godot-api.md#resource-ownership). Holding a
 custom resource's script object (`kotlinScriptInstance<T>()`,
 `newScriptInstance<T>().instance`) keeps the resource itself alive, as in GDScript
-([details](godot-api.md#a-script-object-keeps-its-resource-alive)).
+([details](#keeping-a-resource-through-its-script)).
 
 The **Web (Kotlin/Wasm)** backend reaches Godot over a JavaScript *handle bridge*
 rather than an FFI pointer boundary, with the same rule: every `RefCounted` is
@@ -417,9 +417,9 @@ engine calls you made before it, so `ButtonGroup.create().use { button.buttonGro
 leaves the button its group), and a wrapper you forget is released after the
 browser's garbage collector drops it. A second `close()` does nothing. The
 script-object owner links above are not implemented on Web yet (see
-[A script object keeps its resource alive](godot-api.md#a-script-object-keeps-its-resource-alive)).
-See [Objects you receive](godot-api.md#objects-you-receive) for the Web rule and its
-4096-event cap, and
+[Keeping a Resource Through Its Script](#keeping-a-resource-through-its-script)).
+See [Limitations](../reference/limitations.md#web) for the Web cap of 4096
+kept events, and
 [Web internals → RefCounted resource ownership](../contributing/backends/web.md#refcounted-resource-ownership-createclose-on-the-handle-bridge).
 
 For more detail, see [Calling Godot APIs](godot-api.md#resource-ownership).
@@ -490,12 +490,50 @@ Extending `KanamaScript` is what lets the script object keep its resource
 alive: holding a `Weapon` keeps the weapon resource usable however you got it
 (`kotlinScriptInstance<Weapon>()`, `newScriptInstance<Weapon>().instance`), and
 dropping it lets the resource go, as in GDScript
-([details](godot-api.md#a-script-object-keeps-its-resource-alive)). A **plain
+([details](#keeping-a-resource-through-its-script)). A **plain
 class** (`class Weapon(val godotObject: GodotHandle)`) also works as a resource
 script, but cannot carry that link: a resource with a plain script keeps the
 lifetime it had before the garbage-collector fallback — wrappers you close
 release at once, while a forgotten wrapper of it stays alive until its script is
 detached or the game ends.
+
+### Keeping a Resource Through Its Script
+
+Holding the Kotlin object of a resource's script keeps the resource alive, as
+holding the resource does in GDScript, whatever happened to the wrapper you
+reached it through:
+
+```kotlin
+// Keep only the script object; the loaded wrapper is dropped (or closed).
+map = ResourceLoader.load("user://map.res")?.kotlinScriptInstance<DataMap>() ?: return
+// ... frames later, after any number of collections:
+Resource.fromObject(GodotObject(map.godotObject))?.use { ResourceSaver.save(it, "user://map.res") }
+```
+
+The same holds for `newScriptInstance<T>().instance` kept without its handle.
+Kanama follows C#'s model: the script object holds a reference on its
+resource, the engine keeps the script object alive while it holds the resource
+itself, and once only your code can reach the script object, dropping it
+releases the resource like any other forgotten wrapper.
+
+One edge: if the garbage collector drops the script object and the engine
+loads the resource from its cache again before the next frame, the script
+object is rebuilt on its first use and re-reads its values from the resource's
+file, which is what GDScript's re-parse would give. Three details follow:
+
+- re-reading the file loads an uncached copy of the resource, so the script
+  class's constructor (and `init` blocks) runs once more for that copy, besides
+  once for the rebuilt script object;
+- if the file changed on disk since the resource was loaded, the result is
+  mixed: the resource's engine properties keep their in-memory values, its
+  script properties come from the file;
+- a resource that was never saved, or a sub-resource stored inside another
+  file (`res://level.tres::Resource_x`), is not re-read: its script object
+  starts from its defaults, with a warning.
+
+On Web the script object does not keep its resource alive yet: keep your
+reference to the resource while you use the script object (see
+[Limitations](../reference/limitations.md#web)).
 
 Generated wrappers (`net.multigesture.kanama.api.Resource`, `AudioStream`,
 ...) are non-owning views (constructors take a raw handle and never retain) and **cannot be

@@ -60,7 +60,7 @@ and `val ev = control.guiInput.await()` (which resumes a frame later) both hold 
 reference of their own. `close()` it when you are done, or the garbage collector
 releases it (see [Resource Ownership](godot-api.md#resource-ownership)), on Web too,
 where the browser's collector does (see the Web cap in
-[Objects you receive](godot-api.md#objects-you-receive)). A `Node` or plain `Object` argument is
+[Limitations](../reference/limitations.md#web)). A `Node` or plain `Object` argument is
 a view, as in GDScript, on every platform: you can store it and use it later (it is
 the same value as your own reference to the node), a node freed in the frame its
 signal fired is gone by the time `await()` resumes, and a call through a freed one
@@ -92,7 +92,7 @@ emitter is freed before the signal fires is cancelled, as on desktop (one whose
 awaiting script is freed first is disconnected from the emitter). An object
 argument is the object, as on desktop: you can keep it, and it is `==` to your own
 reference to the same object (see
-[Objects you receive](godot-api.md#objects-you-receive)). The two
+[Resource Ownership](godot-api.md#resource-ownership)). The two
 `NavigationAgent3D` signals with a `Dictionary` argument have no typed handle on
 Web; connect them by method name.
 

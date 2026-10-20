@@ -865,6 +865,107 @@ quote and a backslash) plus a live object handle, and a second call passes a
 `null` object so the nullable lane is proven to deliver `null` rather than a
 wrapper around handle 0.
 
+### The Web Script Environment
+
+The script-facing differences from desktop, with their mechanism. The user-facing list is
+[Limitations → Web](../../reference/limitations.md#web).
+
+**Value types.** The Web value types are the same classes as native. The methods that run in
+Kotlin natively (on every platform that includes `Basis`/`Transform3D` `inverse`, `affineInverse`,
+`transposed`, `determinant`, `getScale`, `scaled`, `orthonormalized` and `getRotationQuaternion`)
+run the same Kotlin, with the same results, and the engine-computed ones reach the engine through
+the bridge (one crossing per call, so prefer the Kotlin ones in a hot loop). A few engine-computed
+ones that gameplay calls every tick run in Kotlin on Web, at no crossing, as ports of Godot's own
+code: `Vector2.angle`/`rotated`, `Vector3.rotated`/`signedAngleTo`, `Quaternion.slerp`,
+`Basis.rotated`/`getEuler`/`fromEuler`/`lookingAt` and `Transform3D.lookingAt`/`interpolateWith`.
+Those built on `sin`/`cos`/`atan2` match the engine except where math libraries round differently
+in the last bit (they also differ between the engine's own builds on different CPUs): by at most
+one float32 step, and `interpolateWith` by at most 64 (measured against Godot on every build); the
+two `lookingAt` use no such function and match to the bit. Web exports are release builds, so these
+ports skip the debug-only argument checks, as the engine does there.
+
+**Strings, NodePath, ByteArray, Callable.** They compile from the same source: the byte codecs run
+in Kotlin/Wasm (checked against Godot's recorded results), the engine-run ones cross the bridge,
+which carries text, numbers, `NodePath`, `ByteArray`, the packed returns, objects, Callables, a
+`List`/`Map` argument (`godotFormat`) and an `Array`/`Dictionary` result (as a `List`/`Map`).
+`GodotCallable` is the same class on Web, and `GodotSignal` has the same queries; each is a Godot
+call by name there. Two differences: `getObjectId()` (and `GodotObject.instanceId`) asks the
+engine, so it fails on a freed target instead of answering its old id, and in `getConnections()` a
+Kotlin lambda connection's `callable` is its own guard object's `fire` method (each lambda
+connection has its own callable, so two lambdas can connect one signal).
+
+**RIDs and ray queries.** A `RID` is the same value class and crosses the bridge as its id.
+`body.getRid()`, `PhysicsRayQueryParameters3D.create(from, to, mask, listOf(body.getRid()))` with
+every query property, and `node.getWorld3d()?.directSpaceState?.intersectRay(query)` (desktop's
+`Map`; empty on a miss) are the same code as desktop. A ray is one engine crossing and makes no
+handle; `getRid()` crosses once per object. `RayCast3D.addExceptionRid` and
+`SpringArm3D.addExcludedObject(rid)` take the RID too.
+
+**`GD` and `Mathf`.** Web compiles the same `GD` and `Mathf` and runs the math in Kotlin, with no
+bridge call: everything `Mathf` has, and `GD`'s arithmetic, rounding, interpolation and
+transcendental functions (`sin`, `pow`, `exp`, `ease`, `dbToLinear`, ...). The arithmetic ones
+return GDScript's double bit for bit; the transcendental ones can differ from the engine's in the
+last bit or two (Kotlin/Wasm computes `kotlin.math` with its own fdlibm port, not the engine's libm;
+`ease` is within 2^-52 absolute, since some of its branches subtract from 1). The rest of `GD` runs
+in the engine: printing and `pushError`, `str` and the `varTo*` / `bytesTo*` conversions, `typeOf`,
+`hash`, `weakref`, `instanceFromId`, and the random functions (`randf`, `randi`, `randfRange`,
+`randiRange`, `randfn`, `seed`, `randomize`, `randFromSeed`). Each of those is one bridge crossing
+(about 10-30 µs), so draw thousands of random numbers per frame with care.
+
+**Kept `RefCounted` arguments.** A `RefCounted` you keep (an `InputEvent` argument, a loaded
+`Resource`, a `create()` result) is released when the browser collects your last wrapper of it, or
+when you `close()` it; `close()` ends that wrapper only, so another wrapper of the same object stays
+valid. A dropped one is released when the browser's collector runs (Chrome collects within about a
+second under game load, Firefox only under allocation pressure). At most 4096 `RefCounted`
+arguments that only Kotlin holds stay alive this way (`RC_LENT_CAP`): past that the oldest are
+released first, and using one still kept throws "Invalid access to previously freed instance". C#
+has no such cap; it is Kanama's bound for Firefox, which in a quiet scene would otherwise keep
+every mouse-motion event until it collects. A script object does not keep its `RefCounted` owner
+alive on Web (the native `KanamaScript` owner link is not built here).
+
+**Script errors.** A contained exception reaches the browser console through Godot's error log:
+`ERROR: SCRIPT ERROR: kotlin.IllegalStateException: no target`, then
+`at: Player._ready (no source line on Wasm)`, then Godot's own `at: push_error (...)` line (the
+report is printed by `push_error`), and the callback returns its default while the game runs on.
+Only an exception from script code is contained: the runtime failing around it (a bridge or
+protocol fault) still ends the page. A call whose return type is a typed GDScript value (`Long`,
+`Double`, `Boolean`, `String`, `Vector2`) answers that type's default (`0`, `0.0`, `false`, `""`,
+zero) where desktop answers `null`; a `Vector3`, `Color` or other value-type return answers `null`
+as on desktop.
+
+**Freed objects.** A call that returns a value or an object (`getName()`, `getParent()`,
+`getNode(...)`, `getChild(i)`, `getChildCount()`, `emitSignal(...)`, `connect(...)` on a freed
+source or target, a `Control` position or size read, and every other query that crosses to Godot)
+on an object the engine freed throws the same `IllegalStateException: Invalid access to previously
+freed instance` as desktop, naming the handle instead of the class. A call that returns nothing
+(`node.position = ...`, `queueFree()`, `addChild(...)`) is queued and applied with the rest of the
+frame's batch, so it cannot throw at the call. On a freed object that one command is skipped and the
+batch reports the same `IllegalStateException` once as a script error
+(`SCRIPT ERROR: ... at: Script.<queued command>`), the other commands of the batch are applied, and
+the page keeps running; the exception is not catchable at the setter. A Kanama-scripted object freed
+while another script holds it behaves the same way. A command that is malformed for a live object
+(a protocol fault) still ends the page. A position read of a `Node2D`/`Node3D` answers the last
+snapshot it had.
+
+**Registered functions.** The bridge dispatches a registered function only for the argument lists
+it has an arm for (`WebMethodArm`): no arguments, all-numeric lists up to `NUMERIC_ARG_SLOTS` (6)
+scalar slots, a single String or object, mixed String/NodePath/Long/Double/Boolean/object/value-type
+lists with or without a value return, and a zero-argument value return. Any other public function
+fails only the Web build (`undispatchedMemberErrors`), naming the shape. Lifecycle virtuals are
+limited to `DISPATCHED_VIRTUALS`. Whether a Godot-side call that omits Kotlin default arguments gets
+the defaults is not covered on Web.
+
+**Script API not on Web yet.** `launch`, `wait`, `nextFrame`, `isScript`, `asScript` and the tree
+accessors exist (`WebScriptAccess.kt`); the `node`/`script`/`preload` delegates, `castOrNull`/`cast`,
+`requireAs<T>`/`getNodeAs<T>` and the `instantiate*` functions do not. `wait` is the frame
+scheduler's delay, with the defaults only. Tweens: `node.createTween()` only (no
+`SceneTree.createTween()`, `getProcessedTweens()` or `tweenAwait`). There is no
+`Engine.registerSingleton`.
+
+**Autoloads.** The generated `Autoloads` object works on Web, but the lookup goes through the
+running script's node, so an autoload is read from a script callback (a lifecycle callback, a signal,
+a coroutine), which is where Web code runs.
+
 ## Validation Fixtures
 
 The current fixtures are per-demo driver scripts

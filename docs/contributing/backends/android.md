@@ -304,6 +304,13 @@ The current Android path is intentionally narrow:
   ports should warm up these resources during startup when Android smoke shows
   a hitch that is not visible on desktop.
 
+- The garbage-collector release of forgotten `RefCounted` wrappers needs
+  `java.lang.ref.Cleaner`, which Android 8-12 do not have: on those debug
+  installs `close()` stays the only release (release builds need Android 13
+  anyway). Android 8 also lacks the reachability fence that keeps a wrapper
+  alive through its last call, and the fallback stays off without it. See
+  [Architecture → Object lifetime](../architecture.md#object-lifetime).
+
 The smoke script force-stops the launched package on exit so emulator runs do
 not leave demo processes alive after validation.
 

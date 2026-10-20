@@ -350,6 +350,10 @@ committed scripts, keep device identifiers and Apple team IDs as placeholders.
 Maintainers should keep real values in private handoff notes or their local
 shell environment.
 
+`GD.print` output goes to Godot's logger, which on the device is the system log:
+read it in Xcode's console or in Console.app, not in the stdout stream that
+`xcrun devicectl ... --console` shows. Kotlin's `println` still writes to stdout.
+
 ### When You See A FAULT Line
 
 A line like

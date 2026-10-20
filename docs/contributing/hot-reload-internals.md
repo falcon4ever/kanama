@@ -86,6 +86,27 @@ at once (receiver-keyed); the build sweep covers every other target. An
 emission in the same frame as the build's last free still reaches the old
 lambda: the sweep runs on the next frame tick.
 
+## Autoloads Across A Reload
+
+A desktop hot reload resets each Kotlin autoload in place, so the autoload stays the same node:
+`Autoloads.<Name>`, GDScript's global name and any reference other code holds keep working.
+
+| Survives the reload | Does not survive |
+|---|---|
+| the node itself: its identity, name, place under `/root` and GDScript global | the old script object: each Kotlin node of the autoload gets a new one, from the new build |
+| an exported property whose type did not change: its value is set back | an exported property whose type changed: it takes the new default, or the autoload scene's value |
+| the nodes of the autoload's scene (`.tscn` children) | children created at run time, in `_ready` or later: they are freed |
+| connections other objects made **to** the autoload | lambda connections the autoload made (`signal.connect(self) { ... }`): they are disconnected |
+| | any other lambda connection of the old build: dropped once the old build's last script object is gone, with one warning |
+| | every other Kotlin field: it starts from its initializer |
+
+Then `_ready` runs again on the reset nodes, children before parents as Godot readies a tree, so
+whatever `_ready` sets up exists once, from the new code. This is a scene reload for the autoload,
+minus the new node. Hot reload runs in the editor process too (Build Scripts while the editor is
+open), so a `@Tool` autoload in the editor's tree is reset the same way. The editor adds an
+autoload to its own tree only when the autoload's script is a tool script (`@Tool`), as Godot does
+for GDScript; reading any other autoload from editor code throws there.
+
 ## Editor Workflow
 
 The optional `res://addons/kanama_tools` plugin provides `Build Scripts`,

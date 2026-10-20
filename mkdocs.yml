@@ -54,6 +54,7 @@ nav:
           - Android: exporting/android.md
           - iOS: exporting/ios.md
           - Web (Experimental): exporting/web.md
+      - Limitations: reference/limitations.md
       - Upgrading from 0.4: getting-started/upgrading-0.4-to-0.5.md
       - Reference:
           - Requirements and Platform Status: reference/version-support.md
