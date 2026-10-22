@@ -770,11 +770,10 @@ everywhere. See [Resource Ownership](../game-dev/godot-api.md#resource-ownership
 - **A forgotten `close()` is a late release, not a leak.** An owned `RefCounted`
   wrapper you never close is released on the main thread at the next frame after
   the garbage collector drops it, for wrappers made on any thread, on desktop,
-  Android 13+ and iOS, and on Web through the browser's collector. `close()` and
-  `use { }` still release at once. Android 8-12 debug installs have no
-  `java.lang.ref.Cleaner`, so there `close()` stays the only release. Close big
-  resources (meshes, textures, audio) and anything you make in a loop yourself:
-  native memory is invisible to the collector. `kanama/debug/log_gc_releases` logs
+  Android and iOS, and on Web through the browser's collector. `close()` and
+  `use { }` still release at once. Close big resources (meshes, textures,
+  audio) and anything you make in a loop yourself: native memory is invisible
+  to the collector. `kanama/debug/log_gc_releases` logs
   each collector release with the creation site.
 - **`@ManualGodotLifetimeApi` is deprecated and no longer applied.** `close()`
   carried a `RequiresOptIn` warning in 0.4. Delete `@OptIn(ManualGodotLifetimeApi::class)`;
@@ -992,8 +991,9 @@ Script: none.
 - The class-token tables behind `castOrNull`, `requireAs` and `node<T>()` keep
   every wrapper class's constructor reachable, so **R8 can no longer drop unused
   wrapper classes**: expect a larger minified release build.
-- Release builds still require Android 13+; debug installs are validated to
-  Android 9, where `close()` stays the only release (see [Ownership](#ownership-and-close)).
+- **Android 13 is now the minimum**, for debug and release builds. Set **Min
+  SDK** to `33` under **Gradle Build** in your Android export preset; an export
+  with a lower or empty Min SDK stops with a message that says so.
 
 Script: none.
 

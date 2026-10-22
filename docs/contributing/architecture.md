@@ -473,9 +473,8 @@ the collector's thread. The details the user page summarizes:
 - **Diagnostics.** `kanama/debug/log_gc_releases` (off by default) logs each release the collector
   made, once per creation site: `released by GC: Mesh (created at Player.kt:42)`.
   `KANAMA_GC_RELEASES=0` in the game's environment turns the fallback off, for measurements.
-- **Platforms.** Desktop, Android 13+ and iOS run the same mechanism; the desktop runtime smoke
-  checks it on every run, and the Android and iOS device self-tests check it on the phones. Android
-  8-12 lack `java.lang.ref.Cleaner` (see [Android](backends/android.md#current-boundaries)). Web
+- **Platforms.** Desktop, Android and iOS run the same mechanism; the desktop runtime smoke
+  checks it on every run, and the Android and iOS device self-tests check it on the phones. Web
   releases through the browser's collector (see [Web](backends/web.md#the-web-script-environment)).
 
 **A script object keeps its owner alive.** A `KanamaScript` on a `RefCounted` owner holds a `+1`,

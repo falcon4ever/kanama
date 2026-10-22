@@ -284,7 +284,8 @@ Device-validated across four models: **Pixel 7** (Android 16; Android 17 on
 2026-09-15; the September Android 17 update on 2026-10-01 with PanamaPort fork
 `0.1.5-kanama-r8.1`) and **Moto g 5G 2023** (Android 14) pass the full gate
 (nine-demo debug matrix + R8-minified Match3 release); **Galaxy S10+**
-(Android 12) and **Pixel 3 XL** (Android 9, Vulkan/Mobile) add debug breadth.
+(Android 12) and **Pixel 3 XL** (Android 9, Vulkan/Mobile) added debug breadth
+before Android 13 became the minimum.
 The R8/release path is tied to the PanamaPort fork
 `com.github.falcon4ever.PanamaPort:Core:0.1.5-kanama-r8.1` (Android 17 needs
 it), not upstream. The packaged Android addon is runtime-only (a debug AAR;
@@ -303,8 +304,8 @@ PanamaPort. On 2026-10-01 the nine-demo debug matrix and the R8-minified Match3
 release passed again on the Pixel 7 after its September **Android 17** update
 (API 37, build `CP3A.260905.009`), on fork `0.1.5-kanama-r8.1`; the earlier
 fork aborts in the FFI bootstrap on that build (it had passed on the phone's
-earlier Android 17 build on 2026-09-15). The Android 9/12/14 rows below are
-carried from the `0.1.3-kanama-*` fork era and were not re-run on
+earlier Android 17 build on 2026-09-15). The Android 14 (Moto g 5G 2023)
+results are carried from the `0.1.3-kanama-*` fork era and were not re-run on
 `0.1.5-kanama-r8.1` (no such device at hand).
 
 | Demo | Result |
@@ -332,14 +333,30 @@ coverage would still strengthen the claim.
 
 ### Validated Android Versions
 
-The plugin's declared `minSdk` is 26, but the *validated* floor is
-build-type-specific (2026-07-13 four-model matrix: Pixel 3 XL, Galaxy S10+,
-Moto g 5G 2023 and Pixel 7, on Android 9, 12, 14 and 16):
+Android 13 (API 33) is the minimum, for debug and release builds alike. The
+plugin declares `minSdk` 33, and the Kanama Tools export guard stops an
+Android Gradle export whose preset sets **Min SDK** below 33 or leaves it
+empty. Debug and release builds are validated on Android 14 (Moto g 5G 2023)
+and Android 16 and 17 (Pixel 7).
 
-| Build type | Floor | Evidence |
-|---|---|---|
-| **Debug** (`--export-debug`) | **Android 9** (API 28) | Nine-demo matrix green on Android 12 + 14 + 16 + 17; Android 9 validated via the dodge smoke (Vulkan/Mobile renderer; the factory OpenGL driver on that device crashes before Kanama runs, see [Other Android Findings](#other-android-findings)) |
-| **Release** (`--export-release`, minified or not) | **Android 13** (API 33); validated on 14 + 16 + 17 | On Android 12 and below, release-mode (`android:debuggable=false`) builds crash during PanamaPort's upcall-stub generation into the system `libLLVM_android.so` (argument marshalling lands shifted under release-mode ART's invocation of PanamaPort's runtime-bound native methods; debug-mode ART invokes them compatibly). Android 13 replaced that code path. Characterized with a full tombstone 2026-07-13; the fix is upstream-shaped and deferred |
+The minimum comes from release builds. On Android 12 and below, release-mode
+(`android:debuggable=false`) builds crash during PanamaPort's upcall-stub
+generation into the system `libLLVM_android.so` (argument marshalling lands
+shifted under release-mode ART's invocation of PanamaPort's runtime-bound
+native methods; debug-mode ART invokes them compatibly). Android 13 replaced
+that code path. Characterized with a full tombstone 2026-07-13.
+
+Until 2026-10-21 the plugin declared `minSdk` 26 and the floor was per build
+type (2026-07-13 four-model matrix: Pixel 3 XL, Galaxy S10+, Moto g 5G 2023
+and Pixel 7, on Android 9, 12, 14 and 16): debug builds were validated down to
+Android 9 (the dodge smoke on the Vulkan/Mobile renderer; the factory OpenGL
+driver on that device crashes before Kanama runs, see
+[Other Android Findings](#other-android-findings)) and Android 12 (the
+nine-demo matrix), while release builds already needed Android 13. A game
+therefore installed on phones it could not run on as a release build, so one
+floor replaced the two. The Android 8-12 code paths went with it: the
+reachability-fence probe (API 28) and the `java.lang.ref.Cleaner` probe
+(API 33) that turned the garbage-collector release off on older phones.
 
 Pre-16 devices additionally require fork `0.1.3-kanama-r8.3`+ (the
 `SDK_INT_FULL` bootstrap guard); older fork versions and upstream PanamaPort
@@ -366,8 +383,7 @@ Android 17 QPR fixes); every earlier fork aborts in the bootstrap there.
   `SDK_INT_FULL` bootstrap guard every device below Android 16 needs.
 - **Export guard.** The command-line stop is verified on a macOS host (exit
   137); Linux and Windows hosts are not tested.
-- **Plugin minimum.** The Kanama plugin's declared `minSdk` is 26; the
-  validated floors per build type are in
+- **Plugin minimum.** The Kanama plugin declares `minSdk` 33 (Android 13); see
   [Validated Android Versions](#validated-android-versions).
 
 ## iOS

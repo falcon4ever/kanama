@@ -162,9 +162,9 @@ collapses a one-element `byte[]...` varargs call into `filled-new-array` of
 `byte[][]`, which the ART interpreter below Android 13 segfaults on; the
 fork's `NativeCodeBlob.makeCodeBlobSingle` removes the only such site. Fork
 r8.3 added the `SDK_INT_FULL` bootstrap guard that every device below
-Android 16 needs. Release builds below Android 13 remain blocked by a
-separate release-mode PanamaPort constraint — the floors and their evidence
-are in [Platform Evidence → Validated Android Versions](../platform-evidence.md#validated-android-versions).
+Android 16 needs. Release builds below Android 13 crash on a separate
+release-mode PanamaPort constraint, which is why Android 13 (API 33) is
+Kanama's minimum; the evidence is in [Platform Evidence → Validated Android Versions](../platform-evidence.md#validated-android-versions).
 
 ### Keeping the fork close to upstream
 
@@ -184,7 +184,7 @@ The Kanama patches carried on top of upstream (none of them is in upstream `v0.1
 | Sealed-type `switch`es rewritten as `instanceof` chains (+ R8 annotations) | Godot's R8 miscompiles the pattern switches into `shouldNotReachHere` (minified release builds). |
 | JitPack publishing (single release variant, unsigned local publish) | JitPack serves the classified multi-variant AARs as 404s. |
 | `ArtVersion.SDK_INT_FULL_COMPAT` | Upstream reads the Android-16-only `SDK_INT_FULL` unconditionally; every device below 16 fails the bootstrap. |
-| `NativeCodeBlob.makeCodeBlobSingle` | R8 turns a one-element `byte[]...` call into `filled-new-array [[B`, which crashes ART's interpreter below Android 13. |
+| `NativeCodeBlob.makeCodeBlobSingle` | R8 turns a one-element `byte[]...` call into `filled-new-array [[B`, which crashes ART's interpreter below Android 13. Below Kanama's minimum (API 33) since 2026-10-21, so a rebase may drop it. |
 | `compileSdk` kept at 36 | Upstream's 37 stamps `minCompileSdk=37` into the AARs, which Godot 4.7.2's export template (compileSdk 36) rejects. |
 
 **Rebase routine:** before every Kanama release, compare the fork's upstream base with
@@ -266,7 +266,6 @@ cost on ART). A clean run logs
 
 Every frame does a bounded step (a slice of the id checks, one microbench round), because an FFI
 call costs several times more on ART than on HotSpot; the whole test takes about 15 s on a Pixel 7.
-On Android 8-12 (no `java.lang.ref.Cleaner`, so no fallback) the worker rows print `skipped`.
 `scripts/android_smoke.sh` waits for the verdict line after the launch wait (at most
 `KANAMA_ANDROID_SELFTEST_WAIT` more seconds, default 90) and fails on a missing verdict, a `failed`
 count above zero or an `OWNERSHIP SELFTEST FAIL` line.
@@ -396,13 +395,6 @@ The current Android path is intentionally narrow:
   scenes, decodes audio, starts particles, or builds generated meshes. Demo
   ports should warm up these resources during startup when Android smoke shows
   a hitch that is not visible on desktop.
-
-- The garbage-collector release of forgotten `RefCounted` wrappers needs
-  `java.lang.ref.Cleaner`, which Android 8-12 do not have: on those debug
-  installs `close()` stays the only release (release builds need Android 13
-  anyway). Android 8 also lacks the reachability fence that keeps a wrapper
-  alive through its last call, and the fallback stays off without it. See
-  [Architecture → Object lifetime](../architecture.md#object-lifetime).
 
 The smoke script force-stops the launched package on exit so emulator runs do
 not leave demo processes alive after validation.

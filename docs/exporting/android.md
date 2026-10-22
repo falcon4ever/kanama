@@ -25,8 +25,8 @@ Android or native code of your own.
     | NDK | 29.0.14206865 |
     | CMake | 3.22.1 |
 
-- A phone with USB debugging on, or an emulator, and `adb` from the SDK's
-  `platform-tools`.
+- A phone or emulator with Android 13 or newer, USB debugging on, and `adb`
+  from the SDK's `platform-tools`.
 
 ## Installing Kanama into the Project
 
@@ -56,7 +56,8 @@ Run both commands again after every change to your scripts, before you export.
 1. In Godot, choose **Project > Install Android Build Template**.
 2. In **Project > Export**, add an **Android** preset.
 3. Under **Gradle Build**, turn on **Use Gradle Build** and set **Min SDK** to
-   `26` or higher.
+   `33`. Kanama needs Android 13 or newer, and the export stops with a message
+   if Min SDK is lower or empty.
 4. Under **Architectures**, turn on `arm64-v8a`. Add `x86_64` for an emulator
    on an Intel or AMD machine.
 5. Set **Package > Unique Name**, for example `com.example.mygame`.
@@ -112,8 +113,7 @@ in one step.
 ## Release Builds
 
 Export with `--export-release` and a release keystore set in the preset, as
-for any Godot Android game. Release builds have a higher minimum Android
-version than debug builds; see [Limitations](../reference/limitations.md#android).
+for any Godot Android game.
 
 ## Performance on Devices
 
@@ -127,7 +127,8 @@ startup, and avoid rebuilding generated meshes every frame.
 | --- | --- |
 | `installAndroidPluginAar` fails and names a line that calls `.invoke(` on a Kotlin function value, such as `callback?.invoke()`. | The Android build cannot compile that call. Write `callback()` or `callback?.let { it() }` instead. |
 | The export logs `No loader found for resource: res://….kt`, or scenes lose their property values. | The desktop addon is missing or out of date. Run the two install commands, delete `.godot/exported`, and export again. |
-| A release APK crashes at startup on an older phone, while the debug APK runs. | See the release build limit in [Limitations](../reference/limitations.md#android). |
+| The export stops with `Kanama: Export stopped: Kanama needs Android 13 or newer`. | Set **Min SDK** to `33` under **Gradle Build** in the Android preset. |
+| The Gradle build fails with `uses-sdk:minSdkVersion 26 cannot be smaller than version 33`. | The same fix: set **Min SDK** to `33` in the Android preset. |
 | The app crashes at startup before any script runs, in the PanamaPort library Kanama uses to call Godot on Android. | `android/plugins/KanamaAndroid.gdap` names an old PanamaPort build. Run the two install commands again and export again. |
 | The Gradle build cannot resolve `com.github.falcon4ever.PanamaPort`. | The export downloads it from JitPack, so the machine needs network access. If it has access, run the two install commands again to refresh `KanamaAndroid.gdap`. |
 | An older phone crashes inside its graphics driver before any script runs. | Some old OpenGL drivers crash on Godot 4.7's shaders. Use the **Mobile** renderer (`rendering/renderer/rendering_method.mobile="mobile"`), which uses Vulkan. Godot falls back to the Compatibility renderer on phones without Vulkan. |

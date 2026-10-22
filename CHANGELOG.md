@@ -41,6 +41,16 @@ only `--write`.
 
 Upgrading from 0.4? See [Upgrading from 0.4 to 0.5](docs/getting-started/upgrading-0.4-to-0.5.md).
 
+### Changed — Android 13 is now the minimum — BREAKING
+
+Android 13 (API 33) is now the minimum; set **Min SDK** to `33` in your Android export preset
+(**Gradle Build > Min SDK**). Release builds already crashed at startup on Android 12 and older, so a
+shipped game installed on phones it could not run on. The Android plugin now declares `minSdk` 33,
+and the Kanama Tools export guard stops an Android Gradle export whose Min SDK is lower or empty with
+one line that says what to set (`Kanama: Export stopped: Kanama needs Android 13 or newer, ...`); the
+Export dialog shows the same warning on the Min SDK field. The Android 8-12 fallbacks are gone: the
+garbage-collector release of forgotten wrappers is always on for Android.
+
 ### Added — docs: Open in IntelliJ IDEA, and how long the edit loop takes
 
 A new page, [Open in IntelliJ IDEA](docs/getting-started/intellij.md), takes a starter from
