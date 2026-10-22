@@ -1114,7 +1114,7 @@ case("tool_smoke.sh (export guard Android Min SDK)", ["bash", "scripts/tool_smok
              '[preset.0]\n\nname="Android"\nplatform="Android"\nrunnable=true\nexport_filter="all_resources"\n'
              'export_path="build/game.apk"\n\n[preset.0.options]\n\ngradle_build/use_gradle_build=true\n'
              'gradle_build/min_sdk="26"\nplugins/KanamaAndroid=true\n')],
-     "Min SDK is 26. Set Min SDK to 33", "an Android Gradle preset sets Min SDK 26: the editor export guard's check must stop it and say to set 33",
+     "preset's Min SDK is 26. Set Min SDK to 33", "an Android Gradle preset sets Min SDK 26: the editor export guard's check must stop it and say to set 33",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 GUARD_ONE_CLICK_NAME = ("    return RegEx.create_from_string(ONE_CLICK_EXPORT_PATTERN).search(target.substr(prefix.length())) != null\n",
                         "    return true\n")
@@ -1126,6 +1126,11 @@ case("tool_smoke.sh (export guard one-click clean-up)", ["bash", "scripts/tool_s
 case("export_guard_selftest.sh",["bash", "scripts/export_guard_selftest.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", "    if not problems.is_empty():\n        messages.append", "    if false:\n        messages.append")],
      "the stale export exited 0", "the export guard stops finding problems: a stale-jar export must still exit non-zero with the message (its own green and red exports are inside the self-test)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("export_guard_selftest.sh (Android Min SDK)", ["bash", "scripts/export_guard_selftest.sh", GODOT],
+     [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd",
+           '            messages.append("Export stopped: " + sdk_problem)', "            pass")],
+     "the min_sdk export did not print the guard's Min SDK line", "the export guard's _export_begin drops its Android Min SDK check: a real headless Android Gradle export with Min SDK 26 must still stop with the line",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("check_jdk_lookup_parity.sh", ["bash", "scripts/check_jdk_lookup_parity.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/plugin.gd", '["all", "~/.jdks", "", ""]', '["all", "~/.jdkz", "", ""]')],

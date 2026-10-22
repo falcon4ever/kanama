@@ -9,8 +9,10 @@ package net.multigesture.kanama.binding.runtime
  * - iOS: `kotlin.native.ref.createCleaner` and a Treiber stack over an atomic reference.
  *
  * [register] runs on whichever thread builds the owned wrapper (task 138 item 6); [poll] only on
- * the engine main thread. A worker's wrapper is safe to register only because
- * `ObjectCalls.keepReachable` keeps it reachable through each engine call it makes.
+ * the engine main thread. A worker's wrapper is safe to register only while it stays reachable
+ * through each engine call it makes: on desktop/Android `ObjectCalls.keepReachable` fences it
+ * (`Reference.reachabilityFence`); on iOS that function is empty and Kotlin/Native's frame rooting
+ * keeps the local alive until the call returns.
  *
  * Files named `*.expect.kt` hold `expect` declarations only (the Android remap skips them), and no
  * member has a default argument.

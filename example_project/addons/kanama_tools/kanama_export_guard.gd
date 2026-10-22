@@ -32,7 +32,8 @@ extends EditorExportPlugin
 ## The same stop applies to an Android Gradle export whose preset sets Min SDK below 33 or leaves it empty.
 ## Kanama's Android plugin declares minSdk 33 (Android 13; ANDROID_MIN_SDK), so Godot's Gradle build would
 ## fail later with a manifest-merger error that does not say what to change. The Export dialog also shows
-## the warning on the Min SDK field itself (_get_export_option_warning).
+## the warning on the Min SDK field itself (_get_export_option_warning, which Godot calls only because
+## _supports_platform returns true).
 ##
 ## Opt out with the project setting `kanama/tools/export_guard_enabled` (default true).
 
@@ -65,6 +66,14 @@ var _discard_on_end := ""
 
 func _get_name() -> String:
     return "KanamaExportGuard"
+
+
+## Every platform: Godot 4.7 calls a plugin's per-platform hooks only when this returns true, among them
+## _get_export_option_warning for the Export dialog (EditorExportPreset::_get_property_warning). The guard
+## overrides no other per-platform hook, so the rest return Godot's neutral defaults (no options, no
+## Android libraries or manifest contents, no Apple project step). _export_begin runs either way.
+func _supports_platform(_platform: EditorExportPlatform) -> bool:
+    return true
 
 
 func _export_begin(_features: PackedStringArray, _is_debug: bool, path: String, _flags: int) -> void:
@@ -111,7 +120,7 @@ static func android_min_sdk_problem(use_gradle_build: Variant, min_sdk: Variant)
     if value.is_valid_int() and value.to_int() >= ANDROID_MIN_SDK:
         return ""
     var current: String = "empty" if value.is_empty() else value
-    return "Kanama needs Android 13 or newer, and this Android preset's Min SDK is %s. Set Min SDK to %d in the Android export preset (Gradle Build > Min SDK)." % [current, ANDROID_MIN_SDK]
+    return "Android 13 or newer is required, and this preset's Min SDK is %s. Set Min SDK to %d in the Android export preset (Gradle Build > Min SDK)." % [current, ANDROID_MIN_SDK]
 
 
 func _export_end() -> void:

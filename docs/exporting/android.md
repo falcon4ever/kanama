@@ -127,7 +127,7 @@ startup, and avoid rebuilding generated meshes every frame.
 | --- | --- |
 | `installAndroidPluginAar` fails and names a line that calls `.invoke(` on a Kotlin function value, such as `callback?.invoke()`. | The Android build cannot compile that call. Write `callback()` or `callback?.let { it() }` instead. |
 | The export logs `No loader found for resource: res://….kt`, or scenes lose their property values. | The desktop addon is missing or out of date. Run the two install commands, delete `.godot/exported`, and export again. |
-| The export stops with `Kanama: Export stopped: Kanama needs Android 13 or newer`. | Set **Min SDK** to `33` under **Gradle Build** in the Android preset. |
+| The export stops with `Kanama: Export stopped: Android 13 or newer is required`. | Set **Min SDK** to `33` under **Gradle Build** in the Android preset. |
 | The Gradle build fails with `uses-sdk:minSdkVersion 26 cannot be smaller than version 33`. | The same fix: set **Min SDK** to `33` in the Android preset. |
 | The app crashes at startup before any script runs, in the PanamaPort library Kanama uses to call Godot on Android. | `android/plugins/KanamaAndroid.gdap` names an old PanamaPort build. Run the two install commands again and export again. |
 | The Gradle build cannot resolve `com.github.falcon4ever.PanamaPort`. | The export downloads it from JitPack, so the machine needs network access. If it has access, run the two install commands again to refresh `KanamaAndroid.gdap`. |

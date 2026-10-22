@@ -47,7 +47,7 @@ Android 13 (API 33) is now the minimum; set **Min SDK** to `33` in your Android 
 (**Gradle Build > Min SDK**). Release builds already crashed at startup on Android 12 and older, so a
 shipped game installed on phones it could not run on. The Android plugin now declares `minSdk` 33,
 and the Kanama Tools export guard stops an Android Gradle export whose Min SDK is lower or empty with
-one line that says what to set (`Kanama: Export stopped: Kanama needs Android 13 or newer, ...`); the
+one line that says what to set (`Kanama: Export stopped: Android 13 or newer is required, ...`); the
 Export dialog shows the same warning on the Min SDK field. The Android 8-12 fallbacks are gone: the
 garbage-collector release of forgotten wrappers is always on for Android.
 

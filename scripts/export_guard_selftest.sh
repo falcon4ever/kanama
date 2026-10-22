@@ -6,7 +6,10 @@
 #   stale          — Web: the scene attaches NotInJar.kt, which the jar does not contain;
 #   missing        — Web: the desktop addon (addons/kanama) is removed;
 #   stale android  — Android APK (no Gradle), when the Android export template is installed;
-#   stale macos    — macOS, when the macOS export template is installed.
+#   stale macos    — macOS, when the macOS export template is installed;
+#   min sdk        — Android Gradle build with Min SDK 26 and a script that binds: the guard's Android 13
+#                    rule must stop it (a stand-in build.gradle satisfies Godot's template check; the guard
+#                    ends the export before Gradle would run).
 # Every red export must print the guard's stable line `Kanama: Export stopped` with the reason, exit
 # non-zero, and leave nothing behind: no file in the export folder and no converted scene in the cache.
 # Godot's Android, iOS and macOS exporters and --export-pack ignore a plugin's error and exit 0, so the
@@ -128,4 +131,30 @@ platform_row() {
 platform_row stale_android Android game.apk android_debug.apk debug
 platform_row stale_macos macOS game.zip macos.zip release
 
-echo "[export_guard_selftest] PASS (green exported; stale jar and missing addon stopped every export with the message and no artifact)"
+if [[ ! -f "$templates/android_debug.apk" ]]; then
+  echo "[export_guard_selftest] SKIP min_sdk: no Android export template ($templates/android_debug.apk)"
+else
+  echo "[export_guard_selftest] red (Android Gradle): Min SDK 26 must stop the export"
+  project min_sdk SelfSmoke.kt
+  mkdir -p "$work/min_sdk/android/build"
+  : >"$work/min_sdk/android/build/.gdignore"
+  printf '// stand-in: the guard stops the export before Gradle runs\n' >"$work/min_sdk/android/build/build.gradle"
+  export_project min_sdk AndroidGradle game.apk debug
+  if grep -q "due to configuration errors" "$work/min_sdk.log"; then
+    echo "[export_guard_selftest] SKIP min_sdk: this editor cannot export Android at all (configuration errors before the guard runs):"
+    grep -A3 "due to configuration errors" "$work/min_sdk.log" | sed 's/^/    /'
+  else
+    [[ "$rc" -ne 0 ]] || fail "the min_sdk export exited 0, expected non-zero" "$work/min_sdk.log"
+    grep -qF "$STOP_LINE Android 13 or newer is required, and this preset's Min SDK is 26. Set Min SDK to 33" "$work/min_sdk.log" ||
+      fail "the min_sdk export did not print the guard's Min SDK line" "$work/min_sdk.log"
+    if grep -q "not in kanama-scripts.jar" "$work/min_sdk.log"; then
+      fail "the min_sdk export reported a script problem; only the Min SDK may stop it" "$work/min_sdk.log"
+    fi
+    if find "$work/min_sdk/build" -mindepth 1 | grep -q .; then
+      fail "the min_sdk export left files in its export folder"
+    fi
+    echo "[export_guard_selftest]   stopped: exit $rc, the Min SDK line, export folder empty"
+  fi
+fi
+
+echo "[export_guard_selftest] PASS (green exported; stale jar, missing addon and Android Min SDK 26 stopped every export with the message and no artifact)"
