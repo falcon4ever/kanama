@@ -1,10 +1,11 @@
 # Coming from C#
 
-If you write Godot games in C#, Kanama will feel familiar: the same classes, a
-`GD` and a `Mathf` object, attributes for exports and signals, and typed
-signals you connect with a lambda. The names are Kotlin's lowerCamelCase
-instead of PascalCase, and there are no C#-style aliases. This page maps the
-C# you know to Kotlin and lists where the two differ.
+Kanama has what you use in Godot's C# API: the same classes, a `GD` and a
+`Mathf` object, attributes for exports and signals, and typed signals you
+connect with a lambda. The names are Kotlin's lowerCamelCase instead of
+PascalCase, and only that spelling exists: there is no `MoveAndSlide()` beside
+`moveAndSlide()`. This page maps the C# you know to Kotlin and lists where the
+two differ.
 
 ## A Script Side by Side
 

@@ -22,14 +22,14 @@ and how far each platform is supported. The current release is Kanama
 | Windows x64 | Supported | Edit, build and export. Players need no Java and no Visual C++ redistributable. |
 | Linux x64 | Supported | Edit, build and export. |
 | Linux arm64 | Supported | Edit, build and export. |
-| Android | Supported | Export from a source checkout. Debug builds run on Android 9 and newer, release builds on Android 13 and newer. |
-| iOS | Supported | Export from a source checkout to an iPhone or iPad with iOS 15 or newer. |
+| Android | Supported | Export from a source checkout. Debug builds need Android 8 (API 26) or newer, release builds Android 13 (API 33) or newer. |
+| iOS | Supported | Export from a source checkout. Requires iOS 15 or newer on the iPhone or iPad. |
 | Web | Experimental | Exports the Kanama demo projects to desktop Chrome 130, Firefox 141 and Safari 26.5 or newer. Your own game cannot be exported to the Web. |
 
-**Supported** means Kanama's demo games are checked on that platform, on real
-hardware, and you can build and ship your own game there. **Experimental**
-means the platform runs the Kanama demos, but nothing is promised for your own
-game.
+**Supported** means you can build and ship your own game on that platform.
+**Experimental** means the platform runs the Kanama demos, but nothing is
+promised for your own game. The runs behind each status are on
+[Platform Evidence](../contributing/platform-evidence.md).
 
 A desktop export carries its own Java runtime, and you can build it for any
 of the four desktop platforms from any of them. What does not work on

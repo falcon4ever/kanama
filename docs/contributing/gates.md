@@ -186,10 +186,33 @@ generator.
 
 ## Source Breaks
 
-The policy and the CHANGELOG line format are on
-[API Conventions](../reference/wrapper-conventions.md#source-breaks).
+A source break is any change that can stop a script from compiling: a removed
+or renamed member, class or parameter, a changed type or nullability, a removed
+default argument, a member that is no longer `open`. Additions are not breaks,
+and neither are the source-compatible changes the check recognises: a parameter
+that gains a default, a declaration that becomes `open`, a class that gains a
+supertype.
+
+Before 1.0 a break is allowed when it serves the long-term shape of the API,
+but never silently. Every break gets an entry in `CHANGELOG.md` under
+`## Unreleased` that says what changed and how to migrate, with a line that
+starts with the prefix below. The line may be indented, as a nested bullet, and
+it **names the owner of every declaration it breaks**: the class or object
+(`Node`, or `Node.removeChild`), or `top-level` for a top-level declaration; an
+extension may name its receiver class instead. Names match as whole words, so
+`Node` does not announce `Node3D`, and a qualified name announces that member
+only: `Node.removeChild` does not announce `Node.setProcessMode`.
+
+```text
+- **Source break:** `Node.removeChild` takes a nullable `Node?` ...
+```
+
+Keep a `## Unreleased` section, even an empty one: with none, no break counts
+as announced. The user-facing summary of this policy is the stability
+paragraph on [API Conventions](../reference/wrapper-conventions.md).
+
 `scripts/check_public_signature_changes.py` (a `local_ci.sh` stage) enforces
-them: it compares the public surface with checked-in snapshots in the
+the policy: it compares the public surface with checked-in snapshots in the
 repository's `api-snapshots/` directory, one line per declaration, one file per
 surface (every source directory is read recursively):
 
