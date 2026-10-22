@@ -27,7 +27,7 @@ adds a `Build Scripts` button that runs the same Gradle task.
 ## Requirements
 
 The Godot release and JDK this kit targets are listed once, in Kanama's
-[Version Support → Requirements](https://falcon4ever.github.io/kanama/reference/version-support/#requirements).
+[Requirements and Platform Status](https://falcon4ever.github.io/kanama/reference/version-support/#requirements).
 Set `JAVA_HOME` if Kanama cannot find `libjvm`.
 
 ## macOS Gatekeeper

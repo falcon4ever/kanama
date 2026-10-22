@@ -41,5 +41,5 @@ cd /path/to/kanama
 ## Requirements
 
 The Godot release and JDK Kanama targets are listed once, in Kanama's
-[Version Support → Requirements](https://falcon4ever.github.io/kanama/reference/version-support/#requirements).
+[Requirements and Platform Status](https://falcon4ever.github.io/kanama/reference/version-support/#requirements).
 Set `JAVA_HOME` if Kanama cannot find `libjvm`.

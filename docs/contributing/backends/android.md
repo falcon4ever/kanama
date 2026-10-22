@@ -3,7 +3,7 @@
 This page records the current Android implementation path: the runtime design,
 the PanamaPort fork, and the audits that guard the source remap. The support
 tier and the device evidence behind it are in
-[Version Support → Android](../../reference/version-support.md#android); the
+[Platform Evidence → Android](../platform-evidence.md#android); the
 user-facing export workflow is [Export for Android](../../exporting/android.md).
 The API/build flow is less settled than the desktop path.
 
@@ -12,7 +12,7 @@ The API/build flow is less settled than the desktop path.
 The nine Android smoke targets (the eight starter/creeps demos plus Bunnymark;
 `tps-demo-kanama` also carries an Android preset but sits outside the automated
 matrix) and their device results are the
-[Android demo matrix](../../reference/version-support.md#android-demo-matrix).
+[Android demo matrix](../platform-evidence.md#android-demo-matrix).
 The 3D Platformer and third-person controller runs are the stronger signals
 because they exercise larger scenes, Android input overlays, and gameplay
 warmup paths. The exported APK path:
@@ -29,13 +29,13 @@ warmup paths. The exported APK path:
 
 This proves the Kanama runtime path on Android, including the forked-PanamaPort
 minified path. The validated Android version floors per build type are in
-[Version Support → Validated Android versions](../../reference/version-support.md#validated-android-versions).
+[Platform Evidence → Validated Android Versions](../platform-evidence.md#validated-android-versions).
 
 ## Toolchain Versions
 
 Kanama itself builds on the desktop JDK and Godot's Android Gradle export runs
 on its own JDK; both versions, and the Godot pin, are in
-[Version Support → Requirements](../../reference/version-support.md#requirements).
+[Requirements and Platform Status](../../reference/version-support.md#requirements).
 The Android game runtime is ART plus PanamaPort, not a desktop JDK. The full
 set of Android tool versions:
 
@@ -164,7 +164,7 @@ fork's `NativeCodeBlob.makeCodeBlobSingle` removes the only such site. Fork
 r8.3 added the `SDK_INT_FULL` bootstrap guard that every device below
 Android 16 needs. Release builds below Android 13 remain blocked by a
 separate release-mode PanamaPort constraint — the floors and their evidence
-are in [Version Support → Validated Android versions](../../reference/version-support.md#validated-android-versions).
+are in [Platform Evidence → Validated Android Versions](../platform-evidence.md#validated-android-versions).
 
 ### Keeping the fork close to upstream
 
@@ -206,7 +206,7 @@ package.
 The build tools are also separate from the runtime: Kanama itself builds on
 the desktop JDK, Godot's Android Gradle export flow runs on its own JDK, and
 the exported game runs on ART and PanamaPort, not on a desktop JVM. The
-versions are in [Version Support → Requirements](../../reference/version-support.md#requirements)
+versions are in [Requirements and Platform Status](../../reference/version-support.md#requirements)
 and the [Android toolchain table](#toolchain-versions).
 
 Native heap pointers on Android are tagged: the top byte is `0xB4` (Android 11+

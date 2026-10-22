@@ -7,7 +7,7 @@ hand-written/stub registry see
 
 > This page describes the shipped architecture. The support tier and the device
 > evidence behind it live in
-> [Version Support → iOS](../../reference/version-support.md#ios); the
+> [Platform Evidence → iOS](../platform-evidence.md#ios); the
 > user-facing export workflow is [Export for iOS](../../exporting/ios.md).
 
 ## Runtime Shape

@@ -28,7 +28,7 @@ docstring on first CI contact -- the claim auditor auditing the claim auditor's
 documentation, and behaving exactly as designed.)
 
 Kinds: `protocol` (the Web bridge protocol, from WebScriptCodeEmitter) and `ios-static-size` (the iOS static
-library sizes measured in version-support.md's iOS row; the packaged iOS add-on README's size line in
+library sizes measured in version-support.md's "iOS Library Size" section; the packaged iOS add-on README's size line in
 build.gradle.kts is checked without a marker).
 
 Adding a claim kind: give it an extractor here and mark the doc line. The check fails
@@ -63,7 +63,7 @@ def _current_protocol(root: Path) -> int:
     return int(match.group(1))
 
 
-# The iOS static library sizes are measured once, in version-support.md's iOS row (with the command); every
+# The iOS static library sizes are measured once, in version-support.md (the command is in platform-evidence.md); every
 # other statement of them repeats those numbers, rounded to whole MB: marked doc lines, and the size line of the
 # packaged iOS add-on README that build.gradle.kts writes (a shipped file cannot carry the marker).
 IOS_SIZE_SOURCE = Path("docs/reference/version-support.md")

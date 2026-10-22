@@ -213,7 +213,8 @@ Android is Supported on Godot 4.7 stable (promoted from Experimental
 Kanama's PanamaPort fork), and the nine-demo Vulkan/Mobile renderer smoke have
 all passed, alongside debug breadth on three more models. Note that release
 builds require Android 13+ and packaged addons are runtime-only; see
-`docs/reference/version-support.md` for the full support claim.
+`docs/reference/version-support.md` for the support status and
+`docs/contributing/platform-evidence.md` for the evidence behind it.
 
 Known constraints:
 - Android uses ART, so the GDExtension library must attach to the existing VM

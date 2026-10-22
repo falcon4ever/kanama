@@ -66,6 +66,7 @@ nav:
       - Start Here: contributing/index.md
       - Work on Kanama: getting-started/work-on-kanama.md
       - Architecture: contributing/architecture.md
+      - Gates and Claims: contributing/gates.md
       - Platform Evidence: contributing/platform-evidence.md
       - Device and Browser Runs: contributing/device-runs.md
       - Wrapper Generator: contributing/wrapper-maintenance.md
