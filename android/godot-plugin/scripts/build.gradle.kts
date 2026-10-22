@@ -80,7 +80,9 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        minSdk = 26
+        // Android 13: release builds crash at startup below it (PanamaPort). The export guard's
+        // ANDROID_MIN_SDK (templates/starter/addons/kanama_tools/kanama_export_guard.gd) must match.
+        minSdk = 33
     }
 
     compileOptions {

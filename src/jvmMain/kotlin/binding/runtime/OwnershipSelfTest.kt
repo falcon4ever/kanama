@@ -120,7 +120,7 @@ internal object OwnershipSelfTest {
     private val started = System.nanoTime()
     private var passed = 0
     private var failed = 0
-    private val fallback = OwnedReleases.enabled && OwnedReleaseCleaner.available
+    private val fallback = OwnedReleases.enabled
     private var phase = if (fallback) Phase.DROP_START else Phase.BENCH
 
     // Phase DROP: the worker writes the ids, then sets dropped; the main thread reads after.
@@ -273,7 +273,7 @@ internal object OwnershipSelfTest {
             if (!fallback) {
               print(
                 "worker-owned GC releases: skipped (owned-reference GC releases are off: " +
-                  "${OwnedReleaseCleaner.unavailableReason.ifEmpty { OwnedReleases.ENVIRONMENT_VARIABLE + "=0" }})"
+                  "${OwnedReleases.ENVIRONMENT_VARIABLE}=0)"
               )
             }
             Bench().also { bench = it }

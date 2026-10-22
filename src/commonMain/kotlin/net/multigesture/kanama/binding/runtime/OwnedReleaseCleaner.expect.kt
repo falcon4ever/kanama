@@ -5,25 +5,17 @@ package net.multigesture.kanama.binding.runtime
  * owned wrapper is unreachable, and the lock-free queue that action feeds and the main thread
  * drains.
  * - desktop/Android: one shared `java.lang.ref.Cleaner` (one daemon thread) and a
- *   `ConcurrentLinkedQueue`; Android before API 33 has no `java.lang.ref.Cleaner`, so the fallback
- *   is off there ([available] false) and `close()` stays the only release;
+ *   `ConcurrentLinkedQueue` (Android has both from API 33, Kanama's Android minimum);
  * - iOS: `kotlin.native.ref.createCleaner` and a Treiber stack over an atomic reference.
  *
  * [register] runs on whichever thread builds the owned wrapper (task 138 item 6); [poll] only on
- * the engine main thread. A runtime that cannot keep a wrapper reachable through an engine call
- * (`ObjectCalls.keepReachable` is a no-op there) must report [available] false: a worker's wrapper
- * could otherwise be released while the worker is still inside a call through it.
+ * the engine main thread. A worker's wrapper is safe to register only because
+ * `ObjectCalls.keepReachable` keeps it reachable through each engine call it makes.
  *
  * Files named `*.expect.kt` hold `expect` declarations only (the Android remap skips them), and no
  * member has a default argument.
  */
 internal expect object OwnedReleaseCleaner {
-  /** False when this runtime has no cleaner mechanism; [unavailableReason] says why. */
-  val available: Boolean
-
-  /** Why [available] is false (`""` when it is true). */
-  val unavailableReason: String
-
   /** The mechanism's name for the status line (`java.lang.ref.Cleaner`, ...). */
   val mechanism: String
 

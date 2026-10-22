@@ -33,12 +33,6 @@ internal actual object OwnedReleaseCleaner {
   /** Main thread only: the batch taken from [pushed], oldest first. */
   private var batch: ArrayDeque<PendingRelease> = ArrayDeque()
 
-  actual val available: Boolean
-    get() = true
-
-  actual val unavailableReason: String
-    get() = ""
-
   actual val mechanism: String
     get() = "kotlin.native.ref.createCleaner"
 

@@ -29,6 +29,11 @@ extends EditorExportPlugin
 ##   install step fails.
 ## Every message starts with the stable line `Kanama: Export stopped`.
 ##
+## The same stop applies to an Android Gradle export whose preset sets Min SDK below 33 or leaves it empty.
+## Kanama's Android plugin declares minSdk 33 (Android 13; ANDROID_MIN_SDK), so Godot's Gradle build would
+## fail later with a manifest-merger error that does not say what to change. The Export dialog also shows
+## the warning on the Min SDK field itself (_get_export_option_warning).
+##
 ## Opt out with the project setting `kanama/tools/export_guard_enabled` (default true).
 
 const SETTING_ENABLED := "kanama/tools/export_guard_enabled"
@@ -45,6 +50,13 @@ const COMMAND_LINE_EXPORT_ARGS := ["--export-release", "--export-debug", "--expo
 ## `tmpexport.<unix time>/export.ipa` (editor/export/editor_export_platform_apple_embedded.cpp, run()).
 const ONE_CLICK_EXPORT_PATTERN := "^tmpexport\\.[0-9]+(\\.apk|/export\\.ipa)$"
 
+## Kanama's Android minimum (Android 13). Keep it equal to minSdk in android/godot-plugin/plugin/build.gradle.kts
+## and android/godot-plugin/scripts/build.gradle.kts: release builds crash at startup below it (PanamaPort).
+const ANDROID_MIN_SDK := 33
+const ANDROID_OS_NAME := "Android"
+const OPTION_GRADLE_BUILD := "gradle_build/use_gradle_build"
+const OPTION_MIN_SDK := "gradle_build/min_sdk"
+
 const REASON_NO_LOADER := "no .kt loader: the desktop addon (addons/kanama) is missing or did not load, so the export would leave the script out and could not convert or check the scenes that use it"
 const REASON_NOT_BOUND := "not in kanama-scripts.jar: the scenes that use it would be exported without its property values"
 
@@ -59,17 +71,47 @@ func _export_begin(_features: PackedStringArray, _is_debug: bool, path: String, 
     _discard_on_end = ""
     if not bool(ProjectSettings.get_setting(SETTING_ENABLED, true)):
         return
+    var messages := PackedStringArray()
+    var platform := get_export_platform()
+    if platform != null and platform.get_os_name() == ANDROID_OS_NAME:
+        var sdk_problem := android_min_sdk_problem(get_option(OPTION_GRADLE_BUILD), get_option(OPTION_MIN_SDK))
+        if not sdk_problem.is_empty():
+            messages.append("Export stopped: " + sdk_problem)
     var problems := find_unbound_scripts(get_export_preset())
-    if problems.is_empty():
+    if not problems.is_empty():
+        messages.append(format_message(problems))
+    if messages.is_empty():
         return
-    var message := format_message(problems)
-    get_export_platform().add_message(EditorExportPlatform.EXPORT_MESSAGE_ERROR, CATEGORY, message)
+    for message in messages:
+        platform.add_message(EditorExportPlatform.EXPORT_MESSAGE_ERROR, CATEGORY, message)
     if is_command_line_export():
         printerr("%s: ending the export process (the exit status is non-zero)." % STOP_LINE)
         end_process()
         return
     if is_one_click_deploy(path):
         _discard_on_end = path
+
+
+## The Export dialog's warning on the Android preset's Min SDK field, before anyone exports.
+func _get_export_option_warning(platform: EditorExportPlatform, option: String) -> String:
+    if option != OPTION_MIN_SDK or platform == null or platform.get_os_name() != ANDROID_OS_NAME:
+        return ""
+    if not bool(ProjectSettings.get_setting(SETTING_ENABLED, true)):
+        return ""
+    return android_min_sdk_problem(get_option(OPTION_GRADLE_BUILD), get_option(OPTION_MIN_SDK))
+
+
+## "" when an Android preset with these two option values can ship Kanama, else one line that says what to
+## set. Only a Gradle build reads Min SDK, and only a Gradle build can include the Kanama plugin. Min SDK is
+## a string option; empty means Godot's own default, which is below Android 13.
+static func android_min_sdk_problem(use_gradle_build: Variant, min_sdk: Variant) -> String:
+    if not (use_gradle_build is bool and use_gradle_build):
+        return ""
+    var value: String = "" if min_sdk == null else str(min_sdk).strip_edges()
+    if value.is_valid_int() and value.to_int() >= ANDROID_MIN_SDK:
+        return ""
+    var current: String = "empty" if value.is_empty() else value
+    return "Kanama needs Android 13 or newer, and this Android preset's Min SDK is %s. Set Min SDK to %d in the Android export preset (Gradle Build > Min SDK)." % [current, ANDROID_MIN_SDK]
 
 
 func _export_end() -> void:
