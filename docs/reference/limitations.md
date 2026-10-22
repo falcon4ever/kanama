@@ -21,6 +21,15 @@ script. Most games use `@ScriptClass` only, as in
 | `GodotCallable` has no `bind` or `unbind`. | It carries a target and a method name only. | Capture the extra values in a Kotlin lambda connection instead. |
 | A `@RegisterClass` type's `@Export` can only be a `Long`, `Double`, `Boolean`, `String`, `NodePath`, value type or `GodotObject`; an enum, `Int`, `List`, `Map` or other class fails the build. | `@RegisterClass` properties are registered through a smaller set of types than script properties. | Put those properties on a `@ScriptClass` script. |
 
+## Desktop
+
+| What does not work | Why | What to do instead |
+|---|---|---|
+| A change to a `@RegisterClass` type takes effect only after you restart the editor. | Godot reads extension classes once, at startup, so hot reload covers `@ScriptClass` scripts only. | Restart the editor after changing one, and keep code you change often in `@ScriptClass` scripts. |
+| A macOS export downloaded from the internet does not open on a player's Mac. | Kanama signs the `.app` for your own machine only, and Gatekeeper wants a Developer ID signature and Apple's notarization. | Sign and notarize the game yourself, as [Signing for Distribution](../exporting/desktop.md#signing-for-distribution) shows. |
+| A macOS export does not run on an Intel Mac, and there is no Windows on Arm export. | The bundled Java runtime is built for `macos-arm64`, `windows-x64`, `linux-x64` and `linux-arm64` only. | Export macOS games for `arm64`, and ship Windows games for x64. |
+| A Godot build compiled with `precision=double` does not work with Kanama. | Parts of Kanama's value passing assume Godot's default single-precision sizes. | Use the official Godot 4.7.2 builds, which are single precision. |
+
 ## Android
 
 | What does not work | Why | What to do instead |
@@ -28,12 +37,19 @@ script. Most games use `@ScriptClass` only, as in
 | A release build crashes at startup on Android 12 and older; debug builds run there. | Release builds on those versions hit a constraint in PanamaPort, the library Kanama uses to call Godot on Android. | Set the release preset's **Min SDK** to `33` (Android 13), or ship a debug build to older phones. |
 | On Android 8 to 12, the garbage collector never releases a resource you forget to close. | Those versions lack the Java API Kanama uses to notice a dropped wrapper; this affects debug installs only, because release builds need Android 13. | `close()` or `use { }` what you load, as the [ownership rules](../game-dev/godot-api.md#resource-ownership) recommend. |
 | A script error in a minified release build names the callback, not the file and line. | R8 removes the source information. | Reproduce the error in a debug build to get the line. |
+| Exporting needs a checkout of the Kanama repository; a project made from the release kit or the store addon cannot export to Android on its own. | The Android build compiles your scripts from the checkout. The prebuilt Android addon in a release carries the runtime only. | Install Kanama from a [source checkout](../getting-started/source-checkout.md) and run the Android install commands from it, as [Export for Android](../exporting/android.md) shows. |
+| Hot reload and the IntelliJ debugger do not work on a phone. | Kanama starts the reload watcher and the debugger port on desktop only. | Iterate and debug on desktop, then export. |
+| A Kotlin standard library or coroutines function newer than Kotlin 2.1 or kotlinx.coroutines 1.6.4 fails the Android build. | An APK runs on the Kotlin libraries of Godot's Android template, so scripts compile against those versions for Android. | Use an older equivalent. The build error names the call. |
 | Calling a function value with `.invoke()`, such as `callback?.invoke()`, does not compile for Android, and the Android build stops at it. | The Android build rewrites every `.invoke(` call in your scripts for Android's Java runtime. | Call it directly: `callback()`, or `callback?.let { it() }`. See [Kotlin Style](../game-dev/style-guide.md#on-other-platforms). |
 
 ## iOS
 
 | What does not work | Why | What to do instead |
 |---|---|---|
+| Exporting needs a checkout of the Kanama repository; a project made from the release kit or the store addon cannot export to iOS on its own. | The iOS build compiles your scripts to native code from the checkout. The prebuilt iOS addon in a release carries the runtime only. | Install Kanama from a [source checkout](../getting-started/source-checkout.md) and run `installIosAddon` from it, as [Export for iOS](../exporting/ios.md) shows. |
+| Hot reload and the IntelliJ debugger do not work on an iPhone or iPad. | iOS runs your scripts as native code, with no Java runtime to reload or attach to. | Iterate and debug on desktop, then export. |
+| A Godot call that cannot reach the engine returns an empty value and logs a `FAULT` line, instead of throwing. | The iOS bridge reports a failed call in the log and goes on. | Treat every `FAULT` line as a bug; [FAULT Lines in the Log](../exporting/ios.md#fault-lines-in-the-log) says what to do. |
+| An `Any?` parameter of an engine virtual you override fails the call with a script error naming the type when Godot passes it an `Array`, `Dictionary` or packed array. | The iOS call path does not pass those Variant types into an `Any?` parameter. | Keep container values in exported `List` or `Map` properties, which iOS carries. |
 | A script error shows line 0 in an `.ipa` export, a one-click deploy, or a release build. | Those builds strip the symbols the line lookup needs. | Use **Export Project Only** and run the Xcode project, which keeps them, while you debug. See [iOS](../exporting/ios.md). |
 | A `Callable` or `Signal` argument of a signal or script function fails with an error naming the type. | iOS does not pass those types; desktop passes `null`. | Connect with a typed signal property, or pass the target object and method name instead. |
 | An `Array` or `Dictionary` nested more than 8 levels deep arrives as `null` at the deepest level. | The iOS container encoder stops at 8 levels. | Flatten deep data, or store it in a `Resource`. |

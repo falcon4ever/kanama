@@ -40,7 +40,7 @@ you write now.
     - *Release kit:* a kit is for new projects. Copy your `kotlin-src` into a
       project made from the 0.5 kit, or apply the store-addon steps above.
     - Use the **Godot 4.7.2** editor and export templates for the build
-      (see [Version Support → Requirements](../reference/version-support.md#requirements)).
+      (see [Requirements and Platform Status](../reference/version-support.md#requirements)).
 3. **Run the migration scripts on your Kotlin sources, in this order.** They are
    Python 3 files in the `scripts/` folder of a Kanama checkout (the packaged
    kits do not carry them) and take your source folder as the argument:

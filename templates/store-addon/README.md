@@ -33,7 +33,7 @@ already has Gradle files, merge the small template build shape manually or run
 with `--force` only when replacing those files is safe.
 
 The Godot release and JDK this addon targets are listed once, in Kanama's
-[Version Support → Requirements](https://falcon4ever.github.io/kanama/reference/version-support/#requirements).
+[Requirements and Platform Status](https://falcon4ever.github.io/kanama/reference/version-support/#requirements).
 Set `JAVA_HOME` if Kanama cannot find `libjvm`.
 
 On macOS, downloaded Kanama zips may be quarantined by Gatekeeper. If Godot

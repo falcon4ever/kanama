@@ -19,7 +19,8 @@ release shape.
   mobile addons are runtime-only (compiling project scripts needs the Kanama
   checkout), the Android release path depends on the JitPack PanamaPort fork,
   and there is no mobile hot reload. See
-  `docs/reference/version-support.md` for the full claims and validation dates.
+  `docs/reference/version-support.md` for the status and
+  `docs/contributing/platform-evidence.md` for the validation runs and dates.
 - Release artifacts use two shapes: desktop kits for new projects and store
   add-ons for existing projects. See `docs/exporting/desktop.md`.
 

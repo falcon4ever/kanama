@@ -1,90 +1,194 @@
-# C# Parity Matrix
+# Coming from C#
 
-This page answers a different question than the wrapper coverage reports:
-can a Godot C# user expect the same broad workflows in Kanama?
+If you write Godot games in C#, Kanama will feel familiar: the same classes, a
+`GD` and a `Mathf` object, attributes for exports and signals, and typed
+signals you connect with a lambda. The names are Kotlin's lowerCamelCase
+instead of PascalCase, and there are no C#-style aliases. This page maps the
+C# you know to Kotlin and lists where the two differ.
 
-- [API Coverage](generated/api-coverage.md) is the numeric API surface: promoted
-  classes/methods and generator reach.
-- [Wrapper Generator Report](generated/wrapper-generator-report.md) is generator
-  internals: skip categories, helper-shape gaps, and complete draft classes.
-- This page is capability parity: scripting model, editor workflow, data
-  marshalling, resources, signals, coroutines, and debugging.
+## A Script Side by Side
 
-Kanama follows the same broad principle as Godot C# — idiomatic host-language
-naming, `GD`/`Mathf` helpers, attribute-driven exports, signals, and typed API
-wrappers — but for Kotlin/JVM through GDExtension and Panama FFM. Public Kanama
-API uses Kotlin lower-camel names; it does not provide PascalCase C# aliases.
+```csharp
+using Godot;
 
-Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
-`PARTIAL` means usable with caveats. `MISSING` means not implemented yet.
+public partial class Player : CharacterBody2D
+{
+    [Export] public float Speed = 300.0f;
 
-## Scripting Model
+    [Signal] public delegate void HitEventHandler(int damage);
 
-| Capability | Status | Notes |
-|---|---|---|
-| Attach Kotlin scripts to Godot nodes/resources | SUPPORTED | `.kt` resources load through Kanama's ScriptLanguage and resource loader/saver. |
-| Register new Godot classes | SUPPORTED | `@RegisterClass` registers permanent ClassDB types. |
-| Lifecycle callbacks | SUPPORTED | `@OnReady`, `@OnProcess`, `@OnPhysicsProcess`, `@OnEnterTree`, `@OnExitTree`. |
-| Tool scripts | SUPPORTED | `@Tool` works for both `@ScriptClass` and `@RegisterClass`. |
-| Global classes | SUPPORTED | `@GlobalClass` registers in the editor's global class list: the class appears in the Create New Resource dialog and its `.tres` instances match typed export slots (GUI-validated, [#39](https://github.com/falcon4ever/kanama/issues/39)). One constraint: the file must be named after the class. |
-| Hot reload | PARTIAL | Desktop only (no mobile or Web reload, see [Version Support](version-support.md)). Build + scene reload is the reliable workflow; in-place live-node replacement still has edge cases, and `@RegisterClass` types need an editor restart. |
+    public override void _PhysicsProcess(double delta)
+    {
+        Vector2 dir = Input.GetVector("move_left", "move_right", "move_up", "move_down");
+        Velocity = dir * Speed;
+        MoveAndSlide();
+    }
 
-## Editor And Build Workflow
+    public void TakeDamage(int amount) => EmitSignal(SignalName.Hit, amount);
+}
+```
 
-| Capability | Status | Notes |
-|---|---|---|
-| Kotlin project build | SUPPORTED | External projects use Gradle + KSP and resolve Kanama artifacts from the kit's bundled `addons/kanama/maven` repository, or from `mavenLocal()` after `publishKanamaToMavenLocal` on a source checkout. |
-| Editor build button | SUPPORTED | Optional Kanama Tools plugin adds `Build Scripts`. |
-| Auto build on save | SUPPORTED | Debounced and opt-in through project settings. |
-| Scene reload after script sync | SUPPORTED | Enabled through the Kanama Tools plugin. |
-| IntelliJ debugging | PARTIAL | Desktop only. Enable JDWP, restart the game process, attach a Remote JVM Debug configuration ([Open in IntelliJ IDEA](../getting-started/intellij.md#debug-the-running-game)). Verified by hand on 2026-10-18 by attaching a JDWP client (`jdb`, the JDK's debugger) to a headless starter project started with the project setting and with `KANAMA_JDWP_PORT`; IntelliJ itself is not driven by any automated check, and the CI stage only greps that the settings are wired through `bootstrap.c` and the editor plugins. |
-| Rider support | MISSING | Rider does not support Kotlin/JVM project editing the way IntelliJ IDEA does. |
+```kotlin
+package com.mygame
 
-## API Surface
+import net.multigesture.kanama.annotations.Export
+import net.multigesture.kanama.annotations.OnPhysicsProcess
+import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.annotations.Signal
+import net.multigesture.kanama.api.*
+import net.multigesture.kanama.generated.hit
+import net.multigesture.kanama.types.*
 
-| Capability | Status | Notes |
-|---|---|---|
-| Promoted Kotlin wrappers | SUPPORTED | Generated wrapper promotion is the main coverage path. See [API Coverage](generated/api-coverage.md) for current percentages and per-class details. |
-| Generated KDoc | SUPPORTED | Wrapper docs are synced from Godot `doc/classes/*.xml` where available. |
-| Core singletons and utilities | SUPPORTED | `GD`, `Mathf`, `Input`, `OS`, `Engine`, `Time`, `ProjectSettings`, `DisplayServer`, and related helpers are available. |
-| 2D/3D gameplay APIs | PARTIAL | Broad promoted coverage exists, and real demo ports exercise common movement, physics, animation, particles, UI, audio, files, scenes, resources, and tween use cases. Space-state ray queries take and return `RID`s on every platform, as C#'s `Rid` does (`PhysicsRayQueryParameters3D.Create(from, to, mask, exclude)`, `IntersectRay(): Dictionary`). Use the coverage reports for exact wrapper availability. |
-| Dynamic fallback | PARTIAL | `GodotObject.call(...)`, `signal(...)`, and typed object wrappers cover mixed GDScript/Kanama edges. Prefer typed wrappers when available. |
-| Networking/multiplayer parity | PARTIAL | `ENetMultiplayerPeer` host/join, `@Rpc` registration and dispatch, and `MultiplayerSynchronizer` `@Export` replication are implemented. The TPS demo sends each RPC its GDScript original sends through the generated `*Rpcs` senders (lobby in `Menu.kt`; `jump`, `land`, `shoot`, `hit`, `explode`, `play_shoot` and `destroy` in gameplay), and the processor warns about a direct call to an `@Rpc` function without `callLocal` ([Multiplayer](../game-dev/multiplayer.md#rpc-methods)). One desktop smoke (`kanama-demos` `tpsBuildAndMultiplayerSmokeGodot`, run locally, not in CI) starts a headless host and a headless client over localhost ENet. It checks that the lobby RPCs work in both directions and that, after a real-bullet robot kill on the host, the server's part `destroy` RPC reaches the client. Not covered: Android or iOS peers, more than two peers, client input RPCs during gameplay, latency or packet loss, and a clean shutdown with a peer still connected (the smoke kills both processes). Web has no multiplayer. Less-common multiplayer APIs follow the general wrapper-coverage path. |
+@ScriptClass(attachTo = "CharacterBody2D")
+class Player(godotObject: GodotHandle) :
+    KanamaScript<CharacterBody2D>(godotObject, ::CharacterBody2D) {
 
-## Data And Marshalling
+    @Export var speed: Double = 300.0
 
-| Capability | Status | Notes |
-|---|---|---|
-| Scalars and strings | SUPPORTED | `Boolean`, `Long`/`Int`, `Double`/`Float`, `String`, and `null` cross common Variant paths. |
-| Godot value types | SUPPORTED | Vectors, transforms, colors, planes, AABB, `NodePath`, `RID`, and related helpers are covered for current promoted APIs, on Web too. |
-| Object/resource handles | PARTIAL | Typed wrappers and closeable `Resource`/`RefCounted` handles are available; ownership-sensitive returns still require explicit policy. |
-| Packed strings and bytes | SUPPORTED | `PackedStringArray` maps to `List<String>` in supported APIs; `PackedByteArray` maps to `ByteArray` in file helpers. |
-| Typed exported arrays | PARTIAL | `List<String>`, `List<Texture2D>`, custom-enum arrays (`List<MyEnum>`), and same-project global resource-script arrays are supported. Broader typed arrays remain policy work. |
-| Typed exported dictionaries | PARTIAL | `Map<K, V>` exports as a typed `Dictionary` (`PROPERTY_HINT_DICTIONARY_TYPE`): `String`, `Long`, `Int`, `Double`, `Float`, `Boolean`, enum, and Godot value-type keys (`Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Color`); with scalar/value-type/resource/node-wrapper/custom-script/enum values. Decode is fail-soft (wrong-typed entries skipped). Nil-value handling mirrors C#'s engine-backed `Dictionary`: `Map<K, V?>` keeps the key with `null`; non-null `Map<K, V>` drops the entry (Kotlin cannot hold null). Nullable object-value maps are rejected. iOS delivers the same key and value types. See [Exporting Dictionaries](../game-dev/properties-resources.md#exporting-dictionaries). |
-| General Array/Dictionary/Variant APIs | PARTIAL | Selected dictionary/list shapes exist. Fully general heterogeneous containers are still a deliberate policy bucket. |
-| Callable | PARTIAL | Signal connections, lambda callbacks, and tween callable helpers exist for bounded shapes. General public Callable ownership remains intentionally constrained. |
+    @Signal fun hit(damage: Long) = Unit
 
-## Signals, Resources, And Async
+    @OnPhysicsProcess
+    fun physicsProcess(delta: Double) {
+        val dir = Input.getVector("move_left", "move_right", "move_up", "move_down")
+        self.velocity = dir * speed
+        self.moveAndSlide()
+    }
 
-| Capability | Status | Notes |
-|---|---|---|
-| Custom signal declarations | SUPPORTED | `@Signal` metadata and generated `*Signals` emit helpers are available. |
-| Godot signal connections | SUPPORTED | Every engine signal is a typed property (`area.bodyEntered: Signal1<Node3D>`, like C#'s generated signal events) with `connect`, `await` and `emit`; `connect(target, "method")` and generated method-name constants for method connections. Desktop, Android, iOS and Web (on Web the classes it generates). |
-| Lambda signal callbacks | SUPPORTED | Typed lambdas up to five arguments (every engine signal), untyped `List<Any?>` lambdas with any number. A lambda connection is a Godot custom Callable bound to its target and is released when Godot drops the connection (desktop, Android, iOS). |
-| Runtime custom resources | SUPPORTED | `newScriptInstance<T>()` creates a script-backed `Resource` from Kotlin (GDScript `.new()` parity); or create a Godot `Resource`, attach a loaded Kanama script, then resolve `kotlinScriptInstance<T>()`. `newScriptInstance` is desktop/Android only (deferred on iOS; use the attach-then-resolve path there). |
-| Inspector exports | PARTIAL | Scalars (including `Int`/`Float` narrow slots), strings, enums, enum lists, `NodePath`, groups/subgroups, common object/resource wrappers, typed node references, and selected arrays are supported across desktop, Android, and iOS, typed `Map` (Dictionary) exports included. Flags and broader resource arrays remain intentionally conservative. |
-| Coroutines | SUPPORTED | Each `KanamaScript` has a main-thread scope cancelled when its object is freed: `launch { }`, `wait(seconds)`, `nextFrame()`, `MainThread.awaitNextFrame`, `SceneTree.delaySeconds`, and signal awaits are available. |
+    fun takeDamage(amount: Long) {
+        hit.emit(amount)
+    }
+}
+```
 
-## Intentional Differences From C#
+- In C#, the script class *is* the node, so `Velocity` and `MoveAndSlide()`
+  need no receiver. In Kotlin, the script is a separate object and the node is
+  `self`: `self.velocity`, `self.moveAndSlide()`.
+- `@ScriptClass(attachTo = ...)` takes the place of the base class, and there
+  is no `partial`.
+- Every decimal is a `Double`, including `Speed` and vector components, and an
+  integer Godot can see is a `Long`.
+- A signal is a `@Signal` function. The build generates a typed handle with the
+  same name, `hit`, that you emit, connect and await.
+- `[Export]`, `_PhysicsProcess` and the other members map one to one; the
+  tables below list them.
 
-| Difference | Rationale |
+## Scripts and Attributes
+
+| C# | Kotlin |
 |---|---|
-| Kotlin script object is separate from the Godot node | Keeps JVM script lifetime, Godot object lifetime, hot reload, and editor placeholders explicit. Use `KanamaScript<T>.self` for the attached node/resource. |
-| Lower-camel Kotlin API only | Matches Kotlin style and avoids maintaining duplicate C#-style aliases. |
-| Explicit install paths | Desktop kits cover new packaged projects, store addons cover existing packaged projects, and source checkouts remain the development path for unreleased Kanama changes. |
-| Desktop-first runtime | Kanama embeds a normal JVM in a desktop Godot process. Android runs through ART and PanamaPort, iOS through a Kotlin/Native `.xcframework`, and Web through Kotlin/Wasm (no on-device JVM on either); platform tiers are in [Version Support](version-support.md). |
+| `public partial class Player : CharacterBody3D` | `@ScriptClass(attachTo = "CharacterBody3D") class Player(godotObject: GodotHandle) : KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D)` |
+| `this.Position`, `Position` | `self.position` (`this` is the Kotlin script object) |
+| `public override void _Ready()` | `@OnReady fun ready()` |
+| `_Process(double delta)`, `_PhysicsProcess` | `@OnProcess fun process(delta: Double)`, `@OnPhysicsProcess` |
+| `_EnterTree()`, `_ExitTree()` | `@OnEnterTree`, `@OnExitTree` |
+| `_Input(InputEvent @event)`, `_UnhandledInput` | `@OnInput fun input(event: InputEvent)`, `@OnUnhandledInput` |
+| any other virtual, such as `_GetAabb()` | `@OverrideVirtual fun _get_aabb(): AABB`, with Godot's own name |
+| a public method GDScript calls | a public `fun`; every public function is visible to Godot |
+| `[Export] public float Speed = 5.0f;` | `@Export var speed = 5.0` |
+| `[ExportGroup("Movement")]`, `[ExportCategory]`, `[ExportSubgroup]` | `@ExportGroup("Movement")`, `@ExportCategory`, `@ExportSubgroup` |
+| `[ExportToolButton("Bake")]` | `@ExportToolButton("Bake")` on a function |
+| `[Tool]` | `@Tool` |
+| `[GlobalClass]` | `@GlobalClass`; as in C#, the file is named after the class |
+| `[Rpc]` | `@Rpc` on a public function. `ENetMultiplayerPeer` and `MultiplayerSynchronizer` work as in C#; see [Multiplayer](../game-dev/multiplayer.md) |
+| `[Signal] public delegate void HitEventHandler(int damage);` | `@Signal fun hit(damage: Long) = Unit` |
 
-## Coverage References
+[Writing Scripts](../game-dev/scripts.md) covers each of these, and
+[Exports and Resources](../game-dev/properties-resources.md) every export
+attribute.
 
-For exact wrapper coverage, use [API Coverage](generated/api-coverage.md). For
-generator blockers, use [Wrapper Generator Report](generated/wrapper-generator-report.md).
+## Nodes and Resources
+
+| C# | Kotlin |
+|---|---|
+| `GetNode<Timer>("ScoreTimer")` | `self.requireAs<Timer>("ScoreTimer")`, or a field: `private val timer by node<Timer>("ScoreTimer")` |
+| `GetNodeOrNull<Timer>("Path")` | `self.getNodeAs<Timer>("Path")` |
+| `body as CharacterBody3D` | `body.castOrNull<CharacterBody3D>()` |
+| `(CharacterBody3D)body` | `body.cast<CharacterBody3D>()` |
+| `body is Player`, where `Player` is a script | `body.isScript<Player>()`, and `body.asScript<Player>()` to get it |
+| `GD.Load<PackedScene>("res://mob.tscn")` | `private val mobScene by preload<PackedScene>("res://mob.tscn")` |
+| `mobScene.Instantiate<RigidBody3D>()` | `mobScene.instantiateAs<RigidBody3D>()`, or `instantiateScript<Mob>()` for a scene whose root has a script |
+| `GetTree()`, `GetParent()` | `self.tree`, `self.parentNode` |
+| `GetNode<Global>("/root/Global")` for an autoload | `Autoloads.Global`, typed |
+| `node.Call("method", 1)` | `node.call("method", 1)` |
+| `QueueFree()` | `self.queueFree()` |
+| `new Weapon()` for a resource script | `newScriptInstance<Weapon>()` |
+| `material.Dispose()`, `using var file = ...` | `material.close()`, `FileAccess.open(...)?.use { }` |
+
+A resource you create or load holds a reference until you `close()` it, or
+until the garbage collector drops your last use of it, as a C# finalizer would.
+[Resource Ownership](../game-dev/godot-api.md#resource-ownership) has the
+rules.
+
+## Signals and Await
+
+| C# | Kotlin |
+|---|---|
+| `timer.Timeout += OnTimeout;` | `timer.timeout.connect { onTimeout() }` |
+| `area.BodyEntered += body => { };` | `area.bodyEntered.connect { body -> }`, with `body` typed as `Node3D` |
+| `EmitSignal(SignalName.Hit, 5)` | `hit.emit(5L)` |
+| `player.Hit += OnHit;` | `player.hit.connect { damage -> onHit(damage) }` |
+| `Callable.From(() => Fire())` | a Kotlin lambda, passed to `connect` |
+| `await ToSignal(timer, Timer.SignalName.Timeout);` | `launch { timer.timeout.await() }` |
+| `await ToSignal(GetTree().CreateTimer(1.0), SceneTreeTimer.SignalName.Timeout);` | `launch { wait(1.0) }` |
+
+A `launch { }` block is the `async` method: code after the first `await` or
+`wait` runs on a later frame, and the block stops when the script's node is
+freed. See [Signals and Await](../game-dev/signals.md).
+
+## Types
+
+| C# | Kotlin |
+|---|---|
+| `float`, `double` | `Double` |
+| `int`, `long` | `Long`; a few engine methods take `Int` where Godot declares a 32-bit value |
+| `string`, `StringName` | `String` |
+| `Godot.Collections.Array<Node3D>` | `List<Node3D>` |
+| `Godot.Collections.Dictionary` | `Map<String, Any?>` |
+| `Godot.Collections.Dictionary<string, int>` export | `Map<String, Long>` export |
+| `Variant` | `Any?` |
+| `byte[]` | `ByteArray` |
+| `Rid` | `RID` |
+| `Node.ProcessModeEnum.Always` | `Node.ProcessMode.ALWAYS` |
+| `Key.Escape`, `Error.Ok` | `Key.ESCAPE`, `GodotError.OK` |
+| `GD.Print(x)`, `GD.PushError(msg)` | `GD.print(x)`, `GD.pushError(msg)` |
+| `Mathf.Lerp(a, b, t)` | `Mathf.lerp(a, b, t)` |
+| `PhysicsRayQueryParameters3D.Create(from, to)` | `PhysicsRayQueryParameters3D.create(from, to)` |
+| `spaceState.IntersectRay(query)` | `spaceState.intersectRay(query)`, a `Map<String, Any?>` |
+
+Vectors are immutable, as in C#, so you assign a new one:
+`self.velocity = self.velocity.withY(0.0)`. An exported `Map<K, V?>` keeps a
+key whose value is `null`, as C#'s `Dictionary` does; a `Map<K, V>` drops it.
+[Calling Godot APIs](../game-dev/godot-api.md) covers numbers, enums and
+collections.
+
+## Building and Editing
+
+There is no `.csproj` and no .NET SDK. Your scripts are a Gradle project that
+IntelliJ IDEA opens directly, and Kotlin's annotation processor generates the
+signal handles, the `Autoloads` object and the code Godot calls. Press
+**Build Scripts** in the Godot toolbar, or turn on building on save in the
+project settings. IntelliJ shows Godot's own class reference as the
+documentation of the generated classes and methods. See
+[Edit, Build, Run](../getting-started/editor-workflow.md) and
+[Open in IntelliJ IDEA](../getting-started/intellij.md).
+
+A desktop export carries its own Java runtime, the way a C# export carries the
+.NET runtime, so players install nothing. See
+[Export for Desktop](../exporting/desktop.md).
+
+## Debugging and Hot Reload
+
+You attach IntelliJ's **Remote JVM Debug** to the running game, set
+breakpoints and step through your scripts; see
+[Debugging](../getting-started/editor-workflow.md#debugging). A build reloads
+your scripts in the editor and in a running game. Both work on desktop only.
+A `@RegisterClass` type, a Kotlin class registered as a new Godot class, needs
+an editor restart instead; see
+[Limitations](limitations.md).
+
+## Next Steps
+
+- [Writing Scripts](../game-dev/scripts.md) walks through a script in detail.
+- [API Coverage](generated/api-coverage.md) lists every generated class and
+  method.
+- [Limitations](limitations.md) lists what each platform cannot do.

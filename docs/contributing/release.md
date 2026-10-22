@@ -116,7 +116,7 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 
 This writes `build/distributions/kanama-mobile-addon-ios-v<version>.zip`
 containing both device `arm64` xcframeworks (debug + release — the static libraries are large,
-roughly 168 MB debug / 110 MB release before zip; measured in [Version support](../reference/version-support.md)), <!-- kanama-claim: ios-static-size -->
+roughly 168 MB debug / 110 MB release before zip; measured in [Requirements and Platform Status](../reference/version-support.md#ios-library-size)), <!-- kanama-claim: ios-static-size -->
 a `.gdextension` entries fragment to merge, and an install README.
 
 **Honest caveat:** the packaged addon delivers the *runtime* only. Compiling a
@@ -155,3 +155,10 @@ Native bootstrap libraries are generated build artifacts. Source repositories
 ignore `kanama_bootstrap.dll`, `libkanama_bootstrap.so`, and
 `libkanama_bootstrap.dylib`; rebuild the matching library locally for the
 platform under test instead of committing it.
+
+## Version Bumps
+
+The Gradle artifact version is `version` in `build.gradle.kts`. Change it
+together with the matching Gradle coordinates, docs snippets, demo project
+versions, badges and changelog headings, and only with a passing smoke matrix
+for every claimed target ([Platform Evidence](platform-evidence.md)).
