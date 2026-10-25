@@ -422,7 +422,9 @@ step() {
 }
 
 # What a dry run must leave as it found it: the status, the tracked diff, the content of every
-# untracked file and of the jextract output (ignored, but the refresh rewrites it).
+# untracked file and of the jextract output (ignored, but the refresh rewrites it). On a fresh clone
+# there is no jextract output yet; the refresh creates it, as the build would, and it is not compared.
+FINGERPRINT_JEXTRACT=0
 tree_fingerprint() {
   (
     cd "$ROOT_DIR" || exit 1
@@ -430,7 +432,7 @@ tree_fingerprint() {
       git status --porcelain --untracked-files=all
       git diff HEAD --binary
       git ls-files --others --exclude-standard | git hash-object --stdin-paths
-      if [[ -d src/generated/godot ]]; then
+      if [[ $FINGERPRINT_JEXTRACT -eq 1 ]]; then
         find src/generated/godot -type f | LC_ALL=C sort | git hash-object --stdin-paths
       fi
     } | git hash-object --stdin
@@ -478,6 +480,9 @@ if [[ "$MODE" == dry-run ]]; then
   UNTRACKED_BEFORE="$(mktemp "${TMPDIR:-/tmp}/kanama-untracked.XXXXXX")"
   UNTRACKED_AFTER="$(mktemp "${TMPDIR:-/tmp}/kanama-untracked.XXXXXX")"
   (cd "$ROOT_DIR" && git ls-files --others --exclude-standard) | LC_ALL=C sort >"$UNTRACKED_BEFORE"
+  if [[ -d "$ROOT_DIR/src/generated/godot" ]]; then
+    FINGERPRINT_JEXTRACT=1
+  fi
   FINGERPRINT_BEFORE="$(tree_fingerprint)"
   DRY_RUN_ARMED=1
 fi

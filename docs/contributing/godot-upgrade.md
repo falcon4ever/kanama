@@ -254,7 +254,8 @@ The dry run starts from a clean tree, runs every step in write mode, requires
 the API diff to be a no-op and every gate (the three human-decision checks
 included) to pass, and fails unless the tree is byte-identical afterwards: the
 status, the tracked diff, every untracked file's content and the jextract
-output under `src/generated/godot`. It writes in place, so on every exit, a
+output under `src/generated/godot` (on a fresh clone, which has none yet, the
+dry run creates it as the build would). It writes in place, so on every exit, a
 failure included, it lists what it changed and restores it. It installs no
 export templates. Run it after a toolchain or generator change, so the next
 real bump starts from a proven pipeline.

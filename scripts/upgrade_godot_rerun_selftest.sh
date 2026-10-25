@@ -39,7 +39,12 @@ fi
 
 WORK="$(mktemp -d "${TMPDIR:-/tmp}/kanama-upgrade-rerun.XXXXXX")"
 TREE="$WORK/tree"
+KEEP=0
 cleanup() {
+  if [[ $KEEP -eq 1 ]]; then
+    echo "$TAG logs kept in $WORK (remove the worktree with: git -C \"$ROOT_DIR\" worktree remove --force \"$TREE\")" >&2
+    return
+  fi
   # justified: best effort; the rm and the prune below finish the job when the worktree is half-gone.
   git -C "$ROOT_DIR" worktree remove --force "$TREE" >/dev/null 2>&1 || true
   rm -rf "$WORK"
@@ -78,13 +83,14 @@ snapshot() {
   git -C "$TREE" reset -q
 }
 
+# The indented class lines right under "classes this Godot added" (none when the bump adds no class).
 added_list() {
-  # justified: a bump that adds no class lists none; the comparison of the (empty) lists still runs.
-  sed -n '/classes this Godot added/,/^\[upgrade_godot\] [^ ]/p' "$1" | grep '^    ' || true
+  awk '/classes this Godot added/ { on = 1; next } on && /^    / { print; next } on { exit }' "$1"
 }
 
 fail() {
   echo "$TAG FAIL $*" >&2
+  KEEP=1
   exit 1
 }
 
