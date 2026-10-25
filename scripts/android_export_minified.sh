@@ -254,7 +254,7 @@ fi
 "$ADB_BIN" logcat -c
 # justified: the app may not be running yet; the launch below and the pid check after it decide.
 "$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 || true
-"$ADB_BIN" shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null
+"$ADB_BIN" shell monkey --pct-syskeys 0 -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null
 PACKAGE_LAUNCHED=1
 # Task 118: take the app's FIRST pid as soon as it appears and judge `logcat --pid <pid>` after the launch wait,
 # instead of requiring the process to be alive at the end of it (a demo may quit on its own; a crash is read

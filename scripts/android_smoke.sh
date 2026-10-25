@@ -323,7 +323,7 @@ adb_retry shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 || true
 adb_retry shell input keyevent KEYCODE_WAKEUP >/dev/null 2>&1 || true
 # justified: best effort; a screen that stayed locked fails the launch/renderer/screenshot checks below.
 adb_retry shell wm dismiss-keyguard >/dev/null 2>&1 || true
-adb_retry shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null
+adb_retry shell monkey --pct-syskeys 0 -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null
 PACKAGE_LAUNCHED=1
 # Task 118: take the app's FIRST pid as soon as it appears and judge `logcat --pid <pid>` after the launch wait,
 # instead of requiring the process to be alive at the end of it (a demo may quit on its own; a crash is read
