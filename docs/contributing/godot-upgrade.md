@@ -94,16 +94,25 @@ releases follow the same runbook; the diff is just smaller.
    - *Adopted-list classes.* `check_wrapper_generator.py` holds a list of
      classes to "no skipped method". When Godot gives one of them a method whose
      call shape has no `ObjectCalls` helper yet, the drift gate prints it as
-     pending, with the `PENDING_HELPER_SKIPS` row to paste. Add the helper (see
-     [Wrapper Maintenance](wrapper-maintenance.md)), or the row with its reason.
-     Do not take the class out of its list.
+     pending, with the `PENDING_HELPER_SKIPS` row to paste: the reason, the task
+     or issue that adds the helper (replace the `task <n>` placeholder) and
+     today's date. Add the helper (see [Wrapper Maintenance](wrapper-maintenance.md)),
+     or the row. Do not take the class out of its list. This item only appears
+     when the drift gate itself passed; a real drift failure is listed as a
+     failure.
    - *Gate evidence.* A pin move makes every entry of `evidence/gates.json`
      stale. Re-run each gate on the new pin, or accept it stale with a reason and
      an expiry date.
 
-   The adopted classes are printed by step 5, each with its count of skipped
-   methods. They are generated like every other class; review the list, and the
-   new rows they get on the API exercise page.
+   The summary also lists the classes this Godot added, all adopted by step 5,
+   with the editor-only ones (`api_type` editor) marked; step 5's own output
+   gives each one's count of skipped methods. They are generated like every
+   other class; review the list, and the new rows they get on the API exercise
+   page.
+
+   The exit status says where you are: `0` when every gate is green, `3` when
+   the mechanical work is done and only the listed decisions remain (local CI
+   stays red until you make them), `1` when a step or gate failed.
 
 ## After the Script
 
@@ -176,10 +185,52 @@ clone built on the new pin; see
 [Regression Cadence](device-runs.md#regression-cadence) for which gate runs
 when.
 
+## When a Bump Stops Half-Way
+
+A bump that stops (a hard step failed, the machine slept, you pressed Ctrl-C)
+leaves a half-regenerated tree, and the preflight refuses to start on it. Every
+step regenerates its outputs from scratch, so the fix is always to run the
+whole bump again, from one of two starting points:
+
+- **Nothing committed yet: reset, then re-run.** `--reset` restores every
+  tracked file except the pin files and deletes the untracked wrapper and
+  generated-page files a run created (it lists them). It needs no binary.
+  Anything else you changed by hand since the bump started is discarded too, so
+  commit that first.
+
+  ```sh
+  scripts/upgrade_godot.sh --reset
+  JEXTRACT_HOME=/absolute/path/to/jextract-25 \
+  scripts/upgrade_godot.sh --godot-docs /absolute/path/to/godot-source/doc/classes \
+    /absolute/path/to/new_godot_binary
+  ```
+
+- **You committed the half-done result: re-run against the pre-bump commit.**
+  `--baseline-ref` names the commit whose `extension_api.json` is the previous
+  Godot. The classification, the drift gate's pending-helper report and the
+  list of added classes all diff against it, so they come out as on the first
+  run instead of empty:
+
+  ```sh
+  JEXTRACT_HOME=/absolute/path/to/jextract-25 \
+  scripts/upgrade_godot.sh --baseline-ref <commit before the bump> \
+    --godot-docs /absolute/path/to/godot-source/doc/classes \
+    /absolute/path/to/new_godot_binary
+  ```
+
+Either way the re-run ends with the same tree, the same exit status and the
+same lists as a bump that never stopped.
+`scripts/upgrade_godot_rerun_selftest.sh` proves it: from a checkout carrying a
+pin edit, with the options you give the bump, it runs the bump once start to
+end, once stopped after step 5 then reset and re-run, and once stopped after
+step 6, committed and re-run with `--baseline-ref`, and compares the three
+(10 to 15 minutes). With `--dry-run` it checks that a stopped dry run restores
+the tree.
+
 ## Never Finish With a Red Gate
 
 The drift gate is the safety net: a botched bump leaves wrappers drifted, the
-gate catches it, and the fix is to re-run the step, so mistakes are
+gate catches it, and the fix is to re-run the bump as above, so mistakes are
 recoverable. But a bump is never "done" over a red gate. Step 9 runs the
 generator gates; the full set is local CI:
 
@@ -193,14 +244,20 @@ mkdocs build --strict
 Run the pipeline against the **current** pin as a no-op bump:
 
 ```sh
-scripts/upgrade_godot.sh --dry-run /absolute/path/to/current_godot_binary
+JEXTRACT_HOME=/absolute/path/to/jextract-25 \
+scripts/upgrade_godot.sh --dry-run \
+  --godot-docs /absolute/path/to/godot-source/doc/classes \
+  /absolute/path/to/current_godot_binary
 ```
 
 The dry run starts from a clean tree, runs every step in write mode, requires
 the API diff to be a no-op and every gate (the three human-decision checks
-included) to pass, and fails unless the tree is byte-identical afterwards. Run
-it after a toolchain or generator change, so the next real bump starts from a
-proven pipeline.
+included) to pass, and fails unless the tree is byte-identical afterwards: the
+status, the tracked diff, every untracked file's content and the jextract
+output under `src/generated/godot`. It writes in place, so on every exit, a
+failure included, it lists what it changed and restores it. It installs no
+export templates. Run it after a toolchain or generator change, so the next
+real bump starts from a proven pipeline.
 
 ## Trying a Prerelease
 

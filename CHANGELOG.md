@@ -122,8 +122,9 @@ gate to one summary instead of stopping at the first. A method the new Godot rem
 rather than stopping the run. `generate_api_wrapper.py --write-tree` adopts each class a new Godot
 adds and keeps the desktop `ObjectCalls` `actual` modifiers in step with the generated expect, so
 neither needs a hand edit. New options: `--plan` prints the steps and changes nothing,
-`--prerelease-trial` accepts a beta or rc pin on a trial branch, and `--templates` installs the
-export templates. `./gradlew ktfmtFormat` now always runs; it could skip a file that a regen had
+`--prerelease-trial` accepts a beta or rc pin on a trial branch, `--templates` installs the export
+templates, and `--reset` and `--baseline-ref` re-run a bump that stopped half-way to the same result.
+Exit status 3 means only human decisions are left. `./gradlew ktfmtFormat` now always runs; it could skip a file that a regen had
 rewritten. See the [Godot Upgrade Runbook](docs/contributing/godot-upgrade.md).
 
 ### Changed — tooling: a `KANAMA-BLOCKED` marker can name a GitHub issue

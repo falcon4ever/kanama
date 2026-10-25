@@ -478,8 +478,10 @@ of the gate covers it transitively. Adopted classes with skipped methods are onl
 accepted when every skip is a Godot virtual callback that belongs to the
 override-registration design rather than the public ptrcall wrapper surface. When Godot gives one
 of the listed classes a method whose call shape has no helper yet, the class stays in its list: the
-method gets a `PENDING_HELPER_SKIPS` row with its reason in `check_wrapper_generator.py` until the
-helper lands (a row whose method generates again fails as stale). Under `--baseline-api <previous
+method gets a `PENDING_HELPER_SKIPS` row in `check_wrapper_generator.py` until the helper lands:
+`(reason, owner, since)`, where the owner is the task or issue that adds the helper and `since` the
+ISO date of the row. A row whose method generates again, or with no task or issue, fails as stale;
+one older than 60 days warns on every run. Under `--baseline-api <previous
 extension_api.json>`, which `upgrade_godot.sh` passes, such a method is reported with the row to
 paste instead of failing. How the
 two trees were merged, and what the KMP `expect/actual` form would still take, is
