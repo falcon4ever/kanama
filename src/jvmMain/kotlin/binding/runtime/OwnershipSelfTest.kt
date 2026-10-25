@@ -83,9 +83,27 @@ internal object OwnershipSelfTest {
   private const val BENCH_WARMUP = 5
   private const val STRESS_MILLIS = 5_000L
   private const val PREFIX = "[kanama] OWNERSHIP SELFTEST"
+  private const val WORKER_JOIN_MILLIS = 5_000L
 
   @Volatile private var decided = false
   private var run: Run? = null
+
+  // Set by [shutdown]; the worker loops stop at the next wrapper they would make.
+  @Volatile private var stopping = false
+  private val workers = java.util.concurrent.CopyOnWriteArrayList<Thread>()
+
+  /**
+   * Engine shutdown (KanamaBinding.deinitializeCallback, at the first level): stops the worker
+   * threads and waits for them. A run that quits while the test is going (an editor `--script`
+   * check quits after a few frames) otherwise left a worker making `Resource`s while Godot tore
+   * down the ObjectDB and its allocator: thousands of leaked instances at exit, and now and then an
+   * abort in `realloc` ("pointer being freed was not allocated").
+   */
+  fun shutdown() {
+    stopping = true
+    run = null
+    for (worker in workers) worker.join(WORKER_JOIN_MILLIS)
+  }
 
   /** Called on every main-loop frame (after the drain); the test advances one step per frame. */
   fun onFrame() {
@@ -150,7 +168,10 @@ internal object OwnershipSelfTest {
           Phase.DROP_START -> {
             worker("drop") {
               try {
-                for (i in 0 until CREATED) ids[i] = Resource.create().instanceId
+                for (i in 0 until CREATED) {
+                  if (stopping) break
+                  ids[i] = Resource.create().instanceId
+                }
               } catch (t: Throwable) {
                 dropError = t
               } finally {
@@ -208,7 +229,7 @@ internal object OwnershipSelfTest {
         val deadline = System.nanoTime() + STRESS_MILLIS * 1_000_000
         var sink = 0L
         try {
-          while (System.nanoTime() < deadline) {
+          while (!stopping && System.nanoTime() < deadline) {
             // Bounded so the drain (about 1 ms a frame) keeps up and the registration cap is
             // never reached: about 100,000 wrappers a second.
             repeat(100) {
@@ -381,7 +402,10 @@ internal object OwnershipSelfTest {
     }
 
     private fun worker(name: String, body: () -> Unit) {
-      Thread(body, "kanama-ownership-selftest-$name").apply { isDaemon = true }.start()
+      if (stopping) return
+      val thread = Thread(body, "kanama-ownership-selftest-$name").apply { isDaemon = true }
+      workers += thread
+      thread.start()
     }
 
     // The best round: a collection or a scheduler hiccup only ever makes a round slower.

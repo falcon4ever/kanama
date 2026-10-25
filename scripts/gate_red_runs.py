@@ -1048,6 +1048,11 @@ case("tool_smoke.sh (throwing @Tool constructor)", ["bash", "scripts/tool_smoke.
      [Edit(KANAMA_SCRIPT, *CTOR_PLACEHOLDER)],
      "missing pattern", "a @Tool script constructor that throws in the editor returns NULL instead of a placeholder: Godot drops the script from the node (get_script() reads through the instance) and saving the scene writes it without the script",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+case("runtime_smoke.sh (self-test workers at shutdown)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/jvmMain/kotlin/binding/runtime/OwnershipSelfTest.kt", "  fun shutdown() {\n    stopping = true\n",
+           "  fun shutdown() {\n    return\n    stopping = true\n")],
+     "self-test quick quit leaked or aborted at exit", "engine shutdown no longer stops the ownership self-test's worker: a run that quits while it makes Resources leaks thousands of ObjectDB instances at exit and can abort in realloc (the Android Platformer scene check); the race leaks most runs, and the smoke runs it three times",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("processor ScriptNameClashTest", ["./gradlew", "-p", ".", ":processor:test", "--tests", "*ScriptNameClashTest*"],
      [Edit("processor/src/main/kotlin/net/multigesture/kanama/processor/KanamaProcessor.kt",
            'VariantType")\n    sb.appendLine("import net.multigesture.kanama.api.kotlinScriptInstance")\n    sb.appendLine("import ${model.fqName} as $SCRIPT_TYPE_ALIAS")',

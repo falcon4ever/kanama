@@ -73,6 +73,16 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 # A script whose constructor throws, attached with set_script (constructor_error_smoke.tscn); the
 # scene quits itself once both attaches have printed, --quit-after is only the cap.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://constructor_error_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
+# The ownership self-test (forced on) with a run that quits one frame after its worker started, as
+# the Android smoke's editor `--script` scene check does: three runs, each with its own log, so the
+# exit status and Godot's exit-time leak report are this run's alone.
+QUICK_QUIT_LOG="${LOG_FILE}.selftest_quick_quit"
+quick_quit_status=""
+for quick_quit_run in 1 2 3; do
+  quick_quit_rc=0
+  KANAMA_OWNERSHIP_SELFTEST=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --script res://selftest_quick_quit.gd >"$QUICK_QUIT_LOG.$quick_quit_run" 2>&1 || quick_quit_rc=$?
+  quick_quit_status="$quick_quit_status $quick_quit_run:$quick_quit_rc"
+done
 # task 131 items 2 + 6 -- wrapper equality and a call through a wrapper of a freed object.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 134 D4 -- typed engine signals (connect, close, one-shot, deferred, await, freed receiver,
@@ -472,6 +482,23 @@ check "\[kanama-smoke\] constructor_error attach in_tree script=true instance=fa
 check "\[kanama-smoke\] constructor_error attach detached script=true instance=false"
 check "\[kanama-smoke\] constructor_error gdscript_twin script=true instance=true"
 check "\[kanama-smoke\] constructor_error done"
+# A run that quits while the ownership self-test's worker makes Resources: shutdown stops and joins
+# the worker first (OwnershipSelfTest.shutdown). Before, it kept calling into Godot while the
+# ObjectDB was torn down: thousands of leaked instances at exit and, now and then, an abort in
+# realloc (the Android smoke's Platformer scene check, kanama-demos 9903ceb). The race leaks most
+# runs without the fix, so three runs make a miss unlikely.
+for quick_quit_run in 1 2 3; do
+  quick_quit_log="$QUICK_QUIT_LOG.$quick_quit_run"
+  if ! grep -q "\[kanama-smoke\] selftest_quick_quit quitting" "$quick_quit_log"; then
+    smoke_fail "self-test quick quit did not run (run $quick_quit_run)" "$quick_quit_log"
+  fi
+  if grep -qE "ObjectDB instances were leaked at exit|Abort trap|pointer being freed was not allocated" "$quick_quit_log"; then
+    smoke_fail "self-test quick quit leaked or aborted at exit (run $quick_quit_run)" "$(grep -E 'were leaked at exit|Abort|pointer being freed' "$quick_quit_log" | head -3 | tr '\n' ' ')"
+  fi
+done
+if [[ "$quick_quit_status" != " 1:0 2:0 3:0" ]]; then
+  smoke_fail "self-test quick quit exit status (want 0 each)" "$quick_quit_status"
+fi
 # task 131 (F9) -- a lambda connection's closure is released whenever Godot drops the connection's
 # custom Callable: the receiver freed, the emitter freed, a ONE_SHOT connection fired. The registry
 # returns to its size before the connect. Before task 131 every *_released was false (only
