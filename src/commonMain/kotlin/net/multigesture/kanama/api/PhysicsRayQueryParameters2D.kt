@@ -255,12 +255,6 @@ class PhysicsRayQueryParameters2D(handle: GodotHandle) : RefCounted(handle) {
             if (handle.address() == 0L) null else PhysicsRayQueryParameters2D(GodotHandle(handle))
 
         /** A new PhysicsRayQueryParameters2D, GDScript's `PhysicsRayQueryParameters2D.new()`. You own the reference: `close()` or `use { }`. */
-        /**
-         * Returns a new, pre-configured `PhysicsRayQueryParameters2D` object. Use it to quickly create
-         * query parameters using the most common options.
-         *
-         * Generated from Godot docs: PhysicsRayQueryParameters2D.create
-         */
         @JvmStatic
         fun create(): PhysicsRayQueryParameters2D =
             RefCounted.owned(PhysicsRayQueryParameters2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PhysicsRayQueryParameters2D"), "PhysicsRayQueryParameters2D"))))

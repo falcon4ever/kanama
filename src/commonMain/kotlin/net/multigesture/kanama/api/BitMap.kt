@@ -187,11 +187,6 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
             if (handle.address() == 0L) null else BitMap(GodotHandle(handle))
 
         /** A new BitMap, GDScript's `BitMap.new()`. You own the reference: `close()` or `use { }`. */
-        /**
-         * Creates a bitmap with the specified size, filled with `false`.
-         *
-         * Generated from Godot docs: BitMap.create
-         */
         @JvmStatic
         fun create(): BitMap =
             RefCounted.owned(BitMap(GodotHandle(requireConstructed(ObjectCalls.constructObject("BitMap"), "BitMap"))))

@@ -1651,12 +1651,6 @@ class Image(handle: GodotHandle) : Resource(handle) {
             if (handle.address() == 0L) null else Image(GodotHandle(handle))
 
         /** A new Image, GDScript's `Image.new()`. You own the reference: `close()` or `use { }`. */
-        /**
-         * Creates an empty image of the given size and format. If `use_mipmaps` is `true`, generates
-         * mipmaps for this image (see `generate_mipmaps`).
-         *
-         * Generated from Godot docs: Image.create
-         */
         @JvmStatic
         fun create(): Image =
             RefCounted.owned(Image(GodotHandle(requireConstructed(ObjectCalls.constructObject("Image"), "Image"))))

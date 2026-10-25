@@ -5,8 +5,8 @@ import kotlin.math.pow as kotlinPow
 /**
  * Godot/C#-style math helpers, written once for every platform (task 129 B).
  *
- * Every body is Godot's formula in Godot's operand order (core/math/math_funcs.h), in Kotlin: no
- * call crosses into the engine, so `Mathf` costs what `kotlin.math` costs. Where Godot's function is
+ * The bodies are Godot's formulas in Godot's operand order (core/math/math_funcs.h), in Kotlin, so
+ * `Mathf` costs what `kotlin.math` costs (the exceptions that call [GD] are below). Where Godot's function is
  * plain arithmetic (lerp, clamp, wrap, snapped, move_toward, smoothstep, ...) the result is the same
  * double, bit for bit, as GDScript's. The transcendentals (sin, cos, tan, asin, acos, atan, atan2,
  * sinh, cosh, tanh, pow, exp, log, and ease, dbToLinear, linearToDb over them) are the C library
