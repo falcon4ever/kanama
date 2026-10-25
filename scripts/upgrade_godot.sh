@@ -10,7 +10,9 @@ PRERELEASE=0
 GODOT_DOCS_DIR="${GODOT_DOCS:-}"
 GODOT_BIN=""
 TEMPLATES=""
-# Gradle runs once (ktfmtFormat); a hung build fails the step instead of waiting forever.
+# Gradle runs twice (ktfmtFormat, ktfmtCheck), through the build daemon as local_ci.sh does: a
+# --no-daemon build waits on the Gradle home's journal lock that an idle daemon holds and times out.
+# A hung build fails the step instead of waiting forever.
 GRADLE_TIMEOUT="${KANAMA_UPGRADE_GRADLE_TIMEOUT:-1200}"
 
 usage() {
@@ -491,7 +493,7 @@ run_soft "iOS handwritten report" python3 "$ROOT_DIR/scripts/ios_handwritten_rep
 run_hard python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --write
 
 step "step 7: ktfmtFormat (the regen leaves ktfmt-formatted files unformatted)"
-run_soft "ktfmtFormat" run_with_timeout "$GRADLE_TIMEOUT" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon --quiet ktfmtFormat
+run_soft "ktfmtFormat" run_with_timeout "$GRADLE_TIMEOUT" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --quiet ktfmtFormat
 
 step "step 8: gates index"
 run_soft "gates index" python3 "$ROOT_DIR/scripts/generate_gates_index.py" \
@@ -502,7 +504,7 @@ run_soft "gates index" python3 "$ROOT_DIR/scripts/generate_gates_index.py" \
 step "step 9: gates"
 run_soft "API constants vs the new extension_api.json" python3 "$ROOT_DIR/scripts/validate_godot_api.py"
 run_soft "wrapper drift gate" python3 "$ROOT_DIR/scripts/check_wrapper_generator.py" --baseline-api "$BASELINE_API"
-run_soft "ktfmt formatting" run_with_timeout "$GRADLE_TIMEOUT" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon --quiet ktfmtCheck
+run_soft "ktfmt formatting" run_with_timeout "$GRADLE_TIMEOUT" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --quiet ktfmtCheck
 run_soft "KDoc staleness" python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --check
 run_soft "Godot version pins (with the new API header)" python3 "$ROOT_DIR/scripts/check_godot_version_pin.py"
 run_soft "virtual-method signature table" python3 "$ROOT_DIR/scripts/generate_virtual_signature_table.py" --check
