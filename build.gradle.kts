@@ -984,6 +984,15 @@ val packageMavenGdignore by
     doLast { out.get().asFile.apply { parentFile.mkdirs() }.writeText("") }
   }
 
+// addons/kanama/checks: the export check a user runs on an exported project (Export for Android),
+// with a .gdignore so Godot neither imports it as a resource nor ships it in exports. `--script`
+// still loads it by path.
+val kanamaChecksSpec = copySpec {
+  into("checks")
+  from(layout.projectDirectory.file("scripts/check_exported_scene_properties.gd"))
+  from(packageMavenGdignore)
+}
+
 // The editor tools as every layout gets them: plugin.cfg states this Kanama version.
 fun CopySpec.kanamaToolsFiles() {
   filesMatching("plugin.cfg") {
@@ -1058,6 +1067,7 @@ tasks.register<Zip>("packageDesktopKit") {
   from(layout.buildDirectory.file("libs/kanama.jar")) { into("addons/kanama") }
   from(packageMavenRepositoryDir) { into("addons/kanama/maven") }
   from(packageMavenGdignore) { into("addons/kanama/maven") }
+  into("addons/kanama") { with(kanamaChecksSpec) }
   from(nativeBootstrapArtifact) { into("addons/kanama/bin/${packagePlatformClassifier.get()}") }
   from(packageExtensionListFile) {
     into(".godot")
@@ -1122,6 +1132,7 @@ tasks.register<Zip>("packageStoreAddon") {
   // The template's kotlin-src/HelloScript.kt is the setup script's input, not a resource: Godot
   // would register it as a second HelloScript class and export it.
   from(packageMavenGdignore) { into("addons/kanama/templates") }
+  into("addons/kanama") { with(kanamaChecksSpec) }
   from(layout.projectDirectory.file("LICENSE")) { into("addons/kanama") }
   from(layout.projectDirectory.file("templates/store-addon/README.md")) { into("addons/kanama") }
   from(layout.projectDirectory.file("templates/store-addon/setup-kanama-project.sh")) {
@@ -2271,6 +2282,7 @@ tasks.register<Copy>("installAddonJar") {
   }
   // The version lock (task 143 item 1): the addon's version, and the stamp of the version the
   // kanama-scripts.jar copied above was built with (this checkout's).
+  with(kanamaChecksSpec)
   from(kanamaVersionFile) { kanamaVersionSubstitution() }
   from(kanamaVersionFile) {
     kanamaVersionSubstitution()

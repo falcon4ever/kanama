@@ -40,6 +40,9 @@ const KT_SCAN_INTERVAL_SEC := 0.6
 const ADDON_VERSION_FILE := "res://addons/kanama/kanama.version"
 const SCRIPTS_VERSION_FILE := "res://addons/kanama/kanama-scripts.version"
 const SYNC_ADDON_TEXT := "Sync Addon"
+# While the editor has the project open: its process id, so the Kanama Gradle plugin can warn that an
+# edit it makes to project.godot needs Project > Reload Current Project (Godot leaves no such mark).
+const EDITOR_PID_FILE := "res://.godot/kanama_editor.pid"
 const KotlinSyntaxHighlighter := preload("res://addons/kanama_tools/kotlin_syntax_highlighter.gd")
 const KanamaExportGuard := preload("res://addons/kanama_tools/kanama_export_guard.gd")
 
@@ -78,11 +81,14 @@ func _enter_tree() -> void:
     _install_toolbar_buttons()
     _known_kt_mtimes = _collect_kt_mtimes()
     call_deferred("_check_addon_version")
+    _write_editor_pid()
     set_process(true)
 
 
 func _exit_tree() -> void:
     set_process(false)
+    if FileAccess.file_exists(EDITOR_PID_FILE):
+        DirAccess.remove_absolute(ProjectSettings.globalize_path(EDITOR_PID_FILE))
     _finish_pending_editor_docs()
     var editor_settings := get_editor_interface().get_editor_settings()
     if editor_settings != null and editor_settings.settings_changed.is_connected(_on_editor_settings_changed):
@@ -161,6 +167,12 @@ static func addon_version_mismatch(addon_version_text: String, scripts_version_t
     if addon.is_empty() or scripts.is_empty() or addon == scripts:
         return ""
     return "Kanama: your scripts were built for Kanama %s, but the addon is Kanama %s. Press %s to rebuild them for the addon." % [scripts, addon, SYNC_ADDON_TEXT]
+
+
+func _write_editor_pid() -> void:
+    var file := FileAccess.open(EDITOR_PID_FILE, FileAccess.WRITE)
+    if file != null:
+        file.store_line(str(OS.get_process_id()))
 
 
 func _check_addon_version() -> void:

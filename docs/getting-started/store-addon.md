@@ -72,12 +72,14 @@ If your project already has a `build.gradle.kts`, the setup script keeps it.
 It still adds the Gradle wrapper if the project has none, so
 `./gradlew buildScripts` works once your build has the Kanama parts:
 
-1. Copy the `pluginManagement { }` block from
-   `addons/kanama/templates/release-kit/settings.gradle.kts` to the top of
-   your `settings.gradle.kts`. It reads the Kanama version from
-   `addons/kanama/kanama.version` and finds the Kanama Gradle plugin in
-   `addons/kanama/maven`, so a newer addon updates both.
-2. Copy the `plugins { }` block from
+1. Merge the `pluginManagement { }` block of
+   `addons/kanama/templates/release-kit/settings.gradle.kts` into your
+   `settings.gradle.kts`: add its lines to your own `pluginManagement { }`
+   block, or add the whole block at the top of the file if it has none. It
+   reads the Kanama version from `addons/kanama/kanama.version` and finds the
+   Kanama Gradle plugin in `addons/kanama/maven`, so a newer addon updates
+   both.
+2. Merge the `plugins { }` block of
    `addons/kanama/templates/release-kit/build.gradle.kts` into your build. It
    applies Kotlin, KSP (the Kotlin compiler plugin that generates the code
    that registers your scripts with Godot) and the Kanama Gradle plugin, which

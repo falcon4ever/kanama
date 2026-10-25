@@ -89,7 +89,7 @@ class Case:
     env: dict[str, str] = field(default_factory=dict)
     timeout: int = 600
     pre: list[list[str]] = field(default_factory=list)  # commands run (must succeed) before the baseline
-    requires_env: str = ""  # an environment variable that must name an existing path, else the case is skipped
+    requires_env: str = ""  # environment variables (comma-separated) that must each name an existing path, else the case is skipped
     slow: bool = False  # needs a Godot binary / Gradle and runs for minutes: only with --slow
 
 
@@ -1253,14 +1253,14 @@ case("tool_smoke.sh (addon version lock)", ["bash", "scripts/tool_smoke.sh", GOD
       Edit("example_project/addons/kanama_tools/plugin.gd", "    if addon.is_empty() or scripts.is_empty() or addon == scripts:", "    if true:")],
      "addon version lock test failed", "the editor plugin stops noticing a kanama-scripts.jar built for another Kanama than the addon",
      pre=[WARM_EXAMPLE], requires_env="KANAMA_GODOT_BIN", slow=True)
-# The desktop kit from this tree (packaging builds the Android runtime AAR too, so it needs the Android SDK), then the
-# smoke's pack export: without build/.gdignore Godot exports KSP's .kt registrars from build/.
+# The desktop kit from this tree (packaging builds the Android runtime AAR too, so it needs the Android SDK, NDK and
+# CMake: ANDROID_HOME), then the smoke's pack export: without build/.gdignore Godot exports KSP's .kt registrars from build/.
 KIT_SMOKE = ["bash", "-c", './gradlew -p . -q packageDesktopKit && '
              f'scripts/package_install_smoke.sh --desktop-kit build/distributions/kanama-desktop-kit-*.zip "{GODOT}"']
 case("package_install_smoke.sh (build/.gdignore)", KIT_SMOKE,
      [Edit("templates/consumer-gradle/kanama-project.gradle.kts", '.configureEach { dependsOn(ignoreBuildDirInGodot) }', '.configureEach { }')],
      "the export carries", "the kit build stops writing build/.gdignore: a pack export then carries KSP's generated .kt registrars from build/",
-     timeout=3600, requires_env="KANAMA_GODOT_BIN", slow=True)
+     timeout=3600, requires_env="KANAMA_GODOT_BIN,ANDROID_HOME", slow=True)
 
 case("web/scaffold_selftest.sh", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_budgets.py" "$RESULT"; then', 'if false; then')],
@@ -1429,12 +1429,15 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
     skipped: list[str] = []
     for c in cases:
         print(f"== {c.gate}: {c.how}", flush=True)
-        if c.requires_env and not Path(os.environ.get(c.requires_env, "/nonexistent")).exists():
-            print(f"SKIP: {c.gate}: needs {c.requires_env} to name an existing path", flush=True)
+        missing_env = [name for name in filter(None, c.requires_env.split(","))
+                       if not Path(os.environ.get(name, "/nonexistent")).exists()]
+        if missing_env:
+            needs = " and ".join(missing_env)
+            print(f"SKIP: {c.gate}: needs {needs} to name an existing path", flush=True)
             skipped.append(c.gate)
-            rows.append(f"| `{c.gate}` | {c.how} | SKIPPED: needs {c.requires_env} | - |")
+            rows.append(f"| `{c.gate}` | {c.how} | SKIPPED: needs {needs} | - |")
             if strict and not any(a in c.gate for a in allowed_skips):
-                failures.append(f"{c.gate}: SKIPPED (needs {c.requires_env}) in a strict run; set it, or pass --allow-skip")
+                failures.append(f"{c.gate}: SKIPPED (needs {needs}) in a strict run; set it, or pass --allow-skip")
             continue
         for pre in c.pre:
             pre_rc, pre_out, _ = run(Case(c.gate, pre, [], "", "", env=c.env, timeout=c.timeout))

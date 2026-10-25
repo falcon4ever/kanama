@@ -39,7 +39,8 @@ class KanamaPlugin : Plugin<Project> {
 
     /**
      * The plugin and the addon must be the same Kanama. The template's settings.gradle.kts resolves
-     * the plugin from [VERSION_FILE], so a mismatch here means a version was pinned by hand.
+     * the plugin from [VERSION_FILE], so a mismatch here means a build whose own settings lack that
+     * block pinned a version by hand: removing the version alone would leave the plugin unresolved.
      */
     fun checkAddonVersion(projectDir: File) {
       val file = projectDir.resolve(VERSION_FILE)
@@ -52,8 +53,10 @@ class KanamaPlugin : Plugin<Project> {
       if (addon != KanamaVersions.KANAMA) {
         throw GradleException(
           "The Kanama Gradle plugin is ${KanamaVersions.KANAMA} but the addon is $addon " +
-            "($VERSION_FILE). Remove the version from id(\"net.multigesture.kanama\") in " +
-            "build.gradle.kts: settings.gradle.kts takes it from $VERSION_FILE."
+            "($VERSION_FILE). Merge the pluginManagement { } block of " +
+            "addons/kanama/templates/release-kit/settings.gradle.kts into your settings.gradle.kts " +
+            "and drop the version from id(\"net.multigesture.kanama\"): that block takes it from " +
+            "$VERSION_FILE."
         )
       }
     }

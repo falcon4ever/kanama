@@ -67,9 +67,14 @@ Add `--android` to also run `buildAndroidScripts` and a headless Android
 export from the kit alone, and check the APK (no device).
 
 Packaging builds the Android runtime AAR with the nested Android build, so it
-needs the Android SDK (`ANDROID_HOME`). `-PkanamaAndroidPackageDir=<dir>` takes
-a `kanama-android` Maven tree another build published instead; the package
-workflow builds it once and passes it to every kit job.
+needs the Android SDK (`ANDROID_HOME`) with the NDK 29.0.14206865 and CMake
+3.22.1 packages, the ones [Export for Android](../exporting/android.md#requirements)
+lists. Without them, pass `-PkanamaAndroidPackageDir=<dir>`: a directory that
+holds a `kanama-android` Maven tree of the same Kanama version
+(`<dir>/net/multigesture/kanama/kanama-android/<version>/`), such as the
+`addons/kanama/maven` of a kit built elsewhere, or the `kanama-android-maven`
+artifact of a package workflow run. The package workflow builds the AAR once
+and passes it to every kit job this way.
 
 ### Store Addon
 

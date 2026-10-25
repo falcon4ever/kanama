@@ -24,7 +24,6 @@ Android or native code of your own.
     | SDK Platform | 36 |
     | Build-Tools | 36.1.0 |
     | NDK | 29.0.14206865 |
-    | CMake | 3.22.1 |
 
 - A phone or emulator with Android 13 or newer, USB debugging on, and `adb`
   from the SDK's `platform-tools`.
@@ -45,7 +44,9 @@ the editor loads them during the export. Then it compiles the scripts in
 (Android library archives), one with the Kanama runtime and one with your
 scripts. It also adds the Android lines to `addons/kanama/kanama.gdextension`,
 and turns on the ETC2/ASTC texture import in `project.godot`, which Godot's
-Android export needs.
+Android export needs. If the project is open in Godot when that happens,
+choose **Project > Reload Current Project**: until you do, the editor keeps
+its old settings and would write them back over the change.
 
 The Android SDK is the one Godot uses: `ANDROID_HOME`, or **Editor Settings >
 Export > Android > Android SDK Path**. The first run downloads Android's
@@ -87,11 +88,11 @@ older `kanama-scripts.jar` was installed, which would lose their script
 property values.
 
 To check that the exported scenes kept their script property values, run
-Kanama's checker in the project:
+the checker the addon carries:
 
 ```sh
 godot --headless --path /path/to/your-project \
-  --script /path/to/kanama/scripts/check_exported_scene_properties.gd \
+  --script res://addons/kanama/checks/check_exported_scene_properties.gd \
   -- --require-converted
 ```
 
@@ -143,7 +144,8 @@ The first builds the Kanama Android runtime from the checkout and writes the
 same three files to `android/plugins/`. The second refreshes the desktop
 addon and keeps the Android lines the first adds to
 `addons/kanama/kanama.gdextension`. Run both again after every change to your
-scripts.
+scripts. Building the runtime also needs the SDK's **CMake** package,
+version 3.22.1.
 
 ## Troubleshooting
 
@@ -152,8 +154,8 @@ scripts.
 | `buildAndroidScripts` fails and names a line that calls `.invoke(` on a Kotlin function value, such as `callback?.invoke()`. | The Android build cannot compile that call. Write `callback()` or `callback?.let { it() }` instead. |
 | `buildAndroidScripts` stops with `Android SDK not found`. | Set `ANDROID_HOME` to your Android SDK folder, or set **Editor Settings > Export > Android > Android SDK Path** in Godot. |
 | `buildAndroidScripts` stops with `addons/kanama/maven has no Kanama Android runtime`. | The addon is incomplete. Unzip the kit or the store addon into the project again. A project built from a source checkout uses the commands in [From a Source Checkout](#from-a-source-checkout) instead. |
-| Gradle stops with `Task 'buildAndroidScripts' not found`. | The project's Gradle files are older than its addon. Copy `settings.gradle.kts` and the `plugins { }` block of `build.gradle.kts` from `addons/kanama/templates/release-kit`, as [Add Kanama to an Existing Project](../getting-started/store-addon.md#projects-that-already-have-a-gradle-build) shows. |
-| The export stops with `ETC2/ASTC texture compression is required for Android export`. | Run `./gradlew buildAndroidScripts`, which turns the import on, then export again. |
+| Gradle stops with `Task 'buildAndroidScripts' not found`. | The project's Gradle files are older than its addon. Merge the template's `pluginManagement { }` block into your `settings.gradle.kts` and its `plugins { }` block into your `build.gradle.kts`, as [Add Kanama to an Existing Project](../getting-started/store-addon.md#projects-that-already-have-a-gradle-build) shows. |
+| The export stops with `ETC2/ASTC texture compression is required for Android export`. | Run `./gradlew buildAndroidScripts`, which turns the import on, then choose **Project > Reload Current Project** in Godot and export again. Or press **Fix Import** in the export dialog. |
 | The export logs `No loader found for resource: res://….kt`, or scenes lose their property values. | The desktop addon is missing or out of date. Run `./gradlew buildAndroidScripts` again, delete `.godot/exported`, and export again. |
 | The export stops with `Kanama: Export stopped: Android 13 or newer is required`. | Set **Min SDK** to `33` under **Gradle Build** in the Android preset. |
 | The Gradle build fails with `uses-sdk:minSdkVersion 26 cannot be smaller than version 33`. | The same fix: set **Min SDK** to `33` in the Android preset. |

@@ -48,7 +48,9 @@ A project made from a release kit or the store addon now exports for Android wit
 Android runtime AAR and the Kanama Gradle plugin (`net.multigesture.kanama`) in `addons/kanama/maven`;
 the template's `build.gradle.kts` applies the plugin, whose version `settings.gradle.kts` reads from the
 new `addons/kanama/kanama.version`. The Android SDK is found from `ANDROID_HOME` or Godot's own Android
-SDK Path setting. `packageMobileAddonAndroid` and its runtime-only zip are gone. The version lock: a
+SDK Path setting. The addon also carries the exported-scene check
+(`addons/kanama/checks/check_exported_scene_properties.gd`), so checking an export needs no checkout either.
+`packageMobileAddonAndroid` and its runtime-only zip are gone. The version lock: a
 missing or half-unzipped addon stops the Gradle build with one line, and the Kanama Tools plugin offers
 **Sync Addon** when `kanama-scripts.jar` was built for another Kanama version than the addon. Fixed with
 it: Gradle's `build/` folder now carries a `.gdignore`, so the editor no longer registers KSP's generated

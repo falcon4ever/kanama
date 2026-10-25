@@ -18,9 +18,11 @@ val godotBin = providers.gradleProperty("kanama.godot.executable")
     .orElse(providers.environmentVariable("KANAMA_GODOT"))
     .getOrElse(defaultGodotBin)
 
+// Kanama comes only from the addon: no other repository may serve net.multigesture artifacts.
 repositories {
-    maven {
-        url = uri("addons/kanama/maven")
+    exclusiveContent {
+        forRepository { maven { url = uri("addons/kanama/maven") } }
+        filter { includeGroupByRegex("net\\.multigesture(\\..*)?") }
     }
     mavenCentral()
 }

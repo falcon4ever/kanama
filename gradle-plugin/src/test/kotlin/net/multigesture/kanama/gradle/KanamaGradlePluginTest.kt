@@ -97,4 +97,15 @@ class KanamaGradlePluginTest {
     assertTrue("remote=[\"com.example:Core:1\"]" in gdap)
     assertTrue("custom_maven_repos=[\"https://jitpack.io\"]" in gdap)
   }
+
+  @Test
+  fun `an editor that has the project open is noticed by its process id`() {
+    val project = tempDir()
+    kotlin.test.assertFalse(ProjectGodot.isOpenInEditor(project))
+    project.resolve(".godot").mkdirs()
+    project.resolve(ProjectGodot.EDITOR_PID_FILE).writeText("${ProcessHandle.current().pid()}\n")
+    assertTrue(ProjectGodot.isOpenInEditor(project))
+    project.resolve(ProjectGodot.EDITOR_PID_FILE).writeText("not a pid\n")
+    kotlin.test.assertFalse(ProjectGodot.isOpenInEditor(project))
+  }
 }

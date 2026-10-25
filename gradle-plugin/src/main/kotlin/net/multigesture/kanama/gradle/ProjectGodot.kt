@@ -9,6 +9,19 @@ internal object ProjectGodot {
   const val ETC2_ASTC_SETTING = "rendering/textures/vram_compression/import_etc2_astc"
 
   /**
+   * The Kanama Tools editor plugin writes the editor's process id here while the project is open
+   * (`EDITOR_PID_FILE` in plugin.gd); Godot itself leaves no such mark.
+   */
+  const val EDITOR_PID_FILE = ".godot/kanama_editor.pid"
+
+  /** True when a Godot editor that runs the Kanama Tools plugin has this project open. */
+  fun isOpenInEditor(projectDir: File): Boolean {
+    val pid =
+      projectDir.resolve(EDITOR_PID_FILE).takeIf { it.isFile }?.readText()?.trim()?.toLongOrNull()
+    return pid != null && ProcessHandle.of(pid).map { it.isAlive }.orElse(false)
+  }
+
+  /**
    * Godot's Android export refuses to start ("ETC2/ASTC texture compression is required") until the
    * project imports textures for it. Returns true when the file changed.
    */

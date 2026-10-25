@@ -111,9 +111,13 @@ abstract class BuildAndroidScripts : DefaultTask() {
 
     val projectGodot = project.resolve("project.godot")
     if (projectGodot.isFile && ProjectGodot.enableEtc2AstcImport(projectGodot)) {
-      logger.lifecycle(
-        "[kanama] project.godot: turned on ${ProjectGodot.ETC2_ASTC_SETTING}, which Godot's Android export needs."
-      )
+      // An open editor keeps its own copy of the project settings: its export dialog still refuses,
+      // and its next save writes project.godot without the line.
+      val message =
+        "[kanama] project.godot: turned on ${ProjectGodot.ETC2_ASTC_SETTING}, which Godot's " +
+          "Android export needs. If the project is open in Godot, choose Project > Reload Current " +
+          "Project before you export (or press Fix Import in the export dialog)."
+      if (ProjectGodot.isOpenInEditor(project)) logger.warn(message) else logger.lifecycle(message)
     }
     logger.lifecycle(
       "[kanama] Installed ${KanamaAndroidPluginFiles.PLUGINS_DIR}/${KanamaAndroidPluginFiles.GDAP} " +

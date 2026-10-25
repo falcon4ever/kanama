@@ -364,8 +364,34 @@ case "$(uname -s)" in
     ;;
 esac
 
-"$godot_bin" --headless --editor --quit-after 120 --path "$project_dir_for_godot" >"$import_log_file" 2>&1
-"$godot_bin" --headless --path "$project_dir_for_godot" --quit --verbose >"$log_file" 2>&1
+# run_bounded <seconds> <command...>: the command's exit status, or a failure once the limit passed (the command
+# and its children are then stopped). Stock macOS has no `timeout`.
+run_bounded() {
+  local limit="$1" pid watchdog rc=0
+  shift
+  "$@" &
+  pid=$!
+  (
+    sleep "$limit"
+    echo "[package_install_smoke] timed out after ${limit}s: $*" >&2
+    # justified: the command may have exited between the sleep and the kill.
+    pkill -TERM -P "$pid" 2>/dev/null || true
+    # justified: as above.
+    kill -TERM "$pid" 2>/dev/null || true
+  ) &
+  watchdog=$!
+  wait "$pid" || rc=$?
+  # justified: the watchdog and its sleep only have to be gone; it may already have fired.
+  pkill -P "$watchdog" 2>/dev/null || true
+  # justified: as above.
+  kill "$watchdog" 2>/dev/null || true
+  # justified: reaping the watchdog; its status is not the verdict.
+  wait "$watchdog" 2>/dev/null || true
+  return "$rc"
+}
+
+run_bounded 600 "$godot_bin" --headless --editor --quit-after 120 --path "$project_dir_for_godot" >"$import_log_file" 2>&1
+run_bounded 600 "$godot_bin" --headless --path "$project_dir_for_godot" --quit --verbose >"$log_file" 2>&1
 
 if ! grep -Fq "[kanama:starter] Hello from Kanama" "$log_file"; then
   echo "[package_install_smoke] starter script did not run" >&2
@@ -432,7 +458,8 @@ PY
 
 pack="$work_dir/kanama-package-smoke.zip"
 pack_log="$work_dir/godot.pack.log"
-if ! "$godot_bin" --headless --path "$project_dir_for_godot" --export-pack Pack "$pack" >"$pack_log" 2>&1 || [[ ! -f "$pack" ]]; then
+if ! run_bounded 600 "$godot_bin" --headless --path "$project_dir_for_godot" --export-pack Pack "$pack" >"$pack_log" 2>&1 ||
+  [[ ! -f "$pack" ]]; then
   tail -n 40 "$pack_log" >&2
   echo "[package_install_smoke] FAIL -- the pack export failed (log: $pack_log)" >&2
   exit 1
@@ -448,32 +475,6 @@ if [[ "$android_export" -eq 0 ]]; then
 fi
 
 # --- Android from the package alone (task 135 item 5): the commands Export for Android documents. ---
-
-# run_bounded <seconds> <command...>: the command's exit status, or a failure once the limit passed (the command
-# and its children are then stopped). Stock macOS has no `timeout`.
-run_bounded() {
-  local limit="$1" pid watchdog rc=0
-  shift
-  "$@" &
-  pid=$!
-  (
-    sleep "$limit"
-    echo "[package_install_smoke] timed out after ${limit}s: $*" >&2
-    # justified: the command may have exited between the sleep and the kill.
-    pkill -TERM -P "$pid" 2>/dev/null || true
-    # justified: as above.
-    kill -TERM "$pid" 2>/dev/null || true
-  ) &
-  watchdog=$!
-  wait "$pid" || rc=$?
-  # justified: the watchdog and its sleep only have to be gone; it may already have fired.
-  pkill -P "$watchdog" 2>/dev/null || true
-  # justified: as above.
-  kill "$watchdog" 2>/dev/null || true
-  # justified: reaping the watchdog; its status is not the verdict.
-  wait "$watchdog" 2>/dev/null || true
-  return "$rc"
-}
 
 android_log="$work_dir/android.log"
 echo "[package_install_smoke] android: ./gradlew buildAndroidScripts"
@@ -537,6 +538,15 @@ then
 fi
 if ! check_export_contents "$apk" "assets/"; then
   echo "[package_install_smoke] FAIL -- the exported APK holds files from the Gradle build: $apk" >&2
+  exit 1
+fi
+# The scene check Export for Android tells the user to run, as the package ships it.
+check_file "addons/kanama/checks/check_exported_scene_properties.gd"
+scene_check_log="$work_dir/android-scene-check.log"
+if ! run_bounded 600 "$godot_bin" --headless --path "$project_dir_for_godot" \
+  --script res://addons/kanama/checks/check_exported_scene_properties.gd -- --require-converted >"$scene_check_log" 2>&1; then
+  tail -n 40 "$scene_check_log" >&2
+  echo "[package_install_smoke] FAIL -- the exported scenes lost script properties, or the check did not run (log: $scene_check_log)" >&2
   exit 1
 fi
 echo "[package_install_smoke] PASS (android: buildAndroidScripts and a headless export from the package alone)"

@@ -11,7 +11,11 @@ pluginManagement {
         throw GradleException("Kanama addon is incomplete: addons/kanama/maven has no Kanama $kanamaVersion. Unzip the Kanama $kanamaVersion addon into addons/ again.")
     }
     repositories {
-        maven { url = uri("addons/kanama/maven") }
+        // The Kanama Gradle plugin comes only from the addon, never from the plugin portal.
+        exclusiveContent {
+            forRepository { maven { url = uri("addons/kanama/maven") } }
+            filter { includeGroupByRegex("net\\.multigesture(\\..*)?") }
+        }
         gradlePluginPortal()
         mavenCentral()
     }
