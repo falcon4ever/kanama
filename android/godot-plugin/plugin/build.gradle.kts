@@ -1,5 +1,6 @@
 plugins {
     id("com.android.library")
+    `maven-publish`
 }
 
 // Runtime half of the Kanama Android deliverable (task 36 AAR split): the
@@ -140,6 +141,41 @@ android {
             jniLibs.setSrcDirs(emptyList<File>())
         }
     }
+
+    // The runtime AAR as the Maven artifact kits and the store addon carry (task 135 item 5).
+    publishing { singleVariant("debug") }
+}
+
+// net.multigesture.kanama:kanama-android, published into the root build's package repository
+// (build/package/maven, which becomes addons/kanama/maven) by the root task
+// publishKanamaAndroidPackage, which passes -PkanamaVersion. A kit project's buildAndroidScripts
+// compiles the scripts AAR against it and installs it as android/plugins/KanamaAndroid.debug.aar.
+// Debug only, as the checkout's installAndroidPluginAar: a release APK is Godot's R8 over it.
+val kanamaVersion = providers.gradleProperty("kanamaVersion")
+afterEvaluate {
+    extensions.configure<PublishingExtension> {
+        publications {
+            create<MavenPublication>("kanamaAndroid") {
+                from(components["debug"])
+                groupId = "net.multigesture.kanama"
+                artifactId = "kanama-android"
+                version = kanamaVersion.getOrElse("unspecified")
+            }
+        }
+        repositories {
+            maven {
+                name = "kanamaPackage"
+                url = kanamaRoot.dir("build/package/maven").asFile.toURI()
+            }
+        }
+    }
+}
+tasks.matching { it.name.startsWith("publish") }.configureEach {
+    doFirst {
+        if (!kanamaVersion.isPresent) {
+            throw GradleException("Publish kanama-android through the root build: ./gradlew publishKanamaAndroidPackage")
+        }
+    }
 }
 
 // The APK runs on the Kotlin libraries of Godot's Android build template (4.7.2: kotlin-stdlib
@@ -168,7 +204,7 @@ tasks.named("preBuild") {
 
 // A runtime AAR with the API exercise rows (-PkanamaApiExercise=true) is for the debug APK of
 // scripts/android_smoke.sh only: no release variant or publication of it is built (the root build's
-// packageMobileAddonAndroid also reads the AAR it zips for exercise classes).
+// publishKanamaAndroidPackage also reads the AAR it publishes for exercise classes).
 gradle.taskGraph.whenReady {
     if (!kanamaApiExercise) return@whenReady
     val refused = allTasks.map { it.path }.filter { it.contains("Release") || it.substringAfterLast(':').startsWith("publish") }

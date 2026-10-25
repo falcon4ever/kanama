@@ -1,0 +1,40 @@
+// Written by the Kanama Gradle plugin (buildAndroidScripts) on every run. Do not edit.
+//
+// The project's Kotlin scripts as an Android library: kotlin-src and the registrars `buildScripts`
+// generated, remapped for PanamaPort by the plugin into src/main/kotlin, compiled against the
+// prebuilt Kanama Android runtime from addons/kanama/maven. The checkout's counterpart is
+// android/godot-plugin/scripts/build.gradle.kts in the Kanama repository.
+plugins {
+    id("com.android.library") version "@ANDROID_GRADLE_PLUGIN@"
+    // Pins the Kotlin that AGP's built-in Kotlin support compiles with.
+    id("org.jetbrains.kotlin.android") version "@ANDROID_KOTLIN@" apply false
+}
+
+android {
+    namespace = "net.multigesture.kanama.android.scripts"
+    compileSdk = @ANDROID_COMPILE_SDK@
+
+    defaultConfig {
+        minSdk = @ANDROID_MIN_SDK@
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+// The APK runs on the Kotlin stdlib of Godot's Android build template, not the newer one this
+// compiles against, so a newer stdlib API fails here instead of on the phone.
+kotlin {
+    compilerOptions {
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.@ANDROID_KOTLIN_API@)
+    }
+}
+
+dependencies {
+    compileOnly("net.multigesture.kanama:kanama-android:@KANAMA@")
+    compileOnly("@PANAMAPORT_CORE@")
+    // The APK's coroutines come from Godot's template.
+    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:@ANDROID_COROUTINES@")
+}
