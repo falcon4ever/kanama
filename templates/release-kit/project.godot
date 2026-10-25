@@ -16,7 +16,6 @@ enabled=PackedStringArray("res://addons/kanama_tools/plugin.cfg")
 [kanama]
 
 tools/kotlin_sources_dir="res://kotlin-src"
-tools/auto_build_on_save=false
 tools/auto_build_debounce_ms=800
 tools/reload_scene_after_sync=true
 

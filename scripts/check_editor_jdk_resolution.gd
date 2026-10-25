@@ -24,7 +24,7 @@ func _init() -> void:
         printerr("[jdk_test] FAIL cannot load res://addons/kanama_tools/plugin.gd")
         quit(2)
         return
-    for required in ["resolve_build_jdk", "resolve_build_jdk_from_environment", "parse_java_version", "compare_version_parts", "execute_with_java_home", "detect_desktop_jvm", "resolve_runtime_jdk", "resolve_runtime_jdk_from_environment", "write_runtime_jdk_hint", "jdk_install_candidates", "runtime_restart_message", "read_runtime_jdk_hint"]:
+    for required in ["resolve_build_jdk", "resolve_build_jdk_from_environment", "parse_java_version", "compare_version_parts", "spawn_with_java_home", "detect_desktop_jvm", "resolve_runtime_jdk", "resolve_runtime_jdk_from_environment", "write_runtime_jdk_hint", "jdk_install_candidates", "runtime_restart_message", "read_runtime_jdk_hint"]:
         if not _plugin.has_method(required):
             printerr("[jdk_test] FAIL the plugin has no %s()" % required)
             quit(1)
@@ -204,21 +204,40 @@ func _init() -> void:
 
 
 func _check_execute_restores_env(jdk_home: String) -> void:
-    var output: Array = []
-    var code: int
     var windows := OS.get_name() == "Windows"
     var exe := "cmd" if windows else "/bin/sh"
     var args: Array = ["/c", "echo %JAVA_HOME%"] if windows else ["-c", "echo \"$JAVA_HOME\""]
     OS.unset_environment("JAVA_HOME")
-    code = _plugin.execute_with_java_home(jdk_home, exe, args, output)
-    var seen := String("".join(output)).strip_edges()
-    _expect("child sees JAVA_HOME", code == 0 and seen.replace("\\", "/") == jdk_home.replace("\\", "/"))
+    var seen := _spawn_and_read(jdk_home, exe, args)
+    _expect("child sees JAVA_HOME", seen.replace("\\", "/") == jdk_home.replace("\\", "/"))
     _expect("JAVA_HOME restored to unset", not OS.has_environment("JAVA_HOME"))
     OS.set_environment("JAVA_HOME", "/previous/value")
-    output.clear()
-    _plugin.execute_with_java_home(jdk_home, exe, args, output)
+    _spawn_and_read(jdk_home, exe, args)
     _expect("JAVA_HOME restored to previous value", OS.get_environment("JAVA_HOME") == "/previous/value")
     OS.unset_environment("JAVA_HOME")
+
+
+## Runs `exe` through the plugin's spawn_with_java_home and returns its stdout once it exited
+## (at most 10 s), or "<not started>".
+func _spawn_and_read(jdk_home: String, exe: String, args: Array) -> String:
+    var process: Dictionary = _plugin.spawn_with_java_home(jdk_home, exe, args)
+    if process.is_empty():
+        return "<not started>"
+    var pid := int(process["pid"])
+    var deadline := Time.get_ticks_msec() + 10000
+    while OS.is_process_running(pid) and Time.get_ticks_msec() < deadline:
+        OS.delay_msec(10)
+    var stdio: FileAccess = process["stdio"]
+    var bytes := PackedByteArray()
+    while true:
+        var chunk := stdio.get_buffer(4096)
+        if chunk.is_empty():
+            break
+        bytes.append_array(chunk)
+    stdio.close()
+    (process["stderr"] as FileAccess).close()
+    _expect("spawned child exited 0", OS.get_process_exit_code(pid) == 0)
+    return bytes.get_string_from_utf8().strip_edges()
 
 
 # A directory shaped like a JDK home: bin/java(.exe), a release file with JAVA_VERSION, and libjvm.

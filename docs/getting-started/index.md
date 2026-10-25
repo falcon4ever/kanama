@@ -154,15 +154,17 @@ the scene turns there as well, and `@GlobalClass`, which is GDScript's
    sets up the debugger.
 2. In `kotlin-src/HelloScript.kt`, change `"Hello from Kanama"` to anything
    else and save.
-3. Back in Godot, press **Build Scripts** in the toolbar. The Kanama Tools
-   plugin added that button; it runs `./gradlew buildScripts` for you. You can
-   also run that command in a terminal.
+3. Back in Godot, watch the dot at the left of the Kanama row in the toolbar.
+   Saving the file started a build: the dot is yellow while it runs and turns
+   green when your scripts are built. If it turns red, click it to see the
+   compiler's error. **Build Scripts** beside it runs the same build, which is
+   `./gradlew buildScripts` in a terminal.
 4. Press **Play**. The label shows your text.
 
-That is the loop: edit in IntelliJ, build with the button, play in Godot.
-GDScript changes are live; Kotlin changes need the build step, and it takes a
-few seconds. Turn on the `kanama/tools/auto_build_on_save` project setting if
-you prefer not to press the button. [Edit, Build, Run](editor-workflow.md)
+That is the loop: edit in IntelliJ, save, play in Godot. GDScript changes are
+live; Kotlin changes need a build, and build on save starts it for you. It
+takes a few seconds. To build only when you press the button, turn off
+**Editor > Editor Settings > Kanama > Build > Build On Save**. [Edit, Build, Run](editor-workflow.md)
 covers the rest of the loop: scene reload after a build, and attaching the
 IntelliJ debugger to a running game.
 

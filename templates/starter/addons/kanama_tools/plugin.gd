@@ -4,9 +4,13 @@ extends EditorPlugin
 const MENU_BUILD_SYNC := "Kanama Tools: Build Scripts"
 const MENU_BUILD_JAR := "Kanama Tools: Build Runtime Jar"
 const MENU_OPEN_KOTLIN_SOURCES := "Kanama Tools: Open Kotlin Sources"
+const MENU_SETUP_PROJECT := "Kanama Tools: Set Up Kanama Project"
 const SETTING_REPO_DIR := "kanama/tools/repo_dir"
 const SETTING_KOTLIN_SOURCES_DIR := "kanama/tools/kotlin_sources_dir"
-const SETTING_AUTO_BUILD_ON_SAVE := "kanama/tools/auto_build_on_save"
+# An EditorSettings entry (Editor > Editor Settings > Kanama > Build), on by default: whether to build
+# is a habit of the person at the machine, not a property of the project shared through version
+# control. The project setting kanama/tools/auto_build_on_save it replaces is no longer read.
+const SETTING_BUILD_ON_SAVE := "kanama/build/build_on_save"
 const SETTING_AUTO_BUILD_DEBOUNCE_MS := "kanama/tools/auto_build_debounce_ms"
 const SETTING_RELOAD_SCENE_AFTER_SYNC := "kanama/tools/reload_scene_after_sync"
 const SETTING_DEVELOPER_MODE := "kanama/tools/developer_mode"
@@ -43,13 +47,75 @@ const SYNC_ADDON_TEXT := "Sync Addon"
 # While the editor has the project open: its process id, so the Kanama Gradle plugin can warn that an
 # edit it makes to project.godot needs Project > Reload Current Project (Godot leaves no such mark).
 const EDITOR_PID_FILE := "res://.godot/kanama_editor.pid"
+const SCRIPTS_JAR := "res://addons/kanama/kanama-scripts.jar"
+# The .kt files the last successful script build compiled (sources_fingerprint), so the status light
+# is right after an editor restart too. In .godot/: it describes this checkout, not the project.
+const BUILD_STAMP_FILE := "kanama_build_stamp"
+# The build status light: STATUS_CURRENT is green, STATUS_STALE and STATUS_BUILDING are yellow,
+# STATUS_FAILED is red, STATUS_NONE (no Kotlin scripts and no scripts jar) is grey.
+const STATUS_NONE := "none"
+const STATUS_CURRENT := "current"
+const STATUS_STALE := "stale"
+const STATUS_BUILDING := "building"
+const STATUS_FAILED := "failed"
+# Build Release: the Gradle task that builds the scripts for a release, in the project's own build.
+# None exists yet ("" hides the button); name it here when one does.
+const RELEASE_BUILD_TASK := ""
+# The platform builds of the toolbar's Platforms menu. Each entry runs either a task of the Kanama
+# Gradle plugin in the project's own build ("project_task", for a kit or store-addon project whose
+# build.gradle.kts applies net.multigesture.kanama; "" where the plugin has none yet) or the commands
+# the export page documents, in the Kanama checkout the project was set up from ("checkout_tasks";
+# {project} and {scripts} are the project and its Kotlin source folder). The project task wins when
+# both exist. An entry with neither is not shown. "script_build" marks the checkout commands that also
+# rebuild kanama-scripts.jar, so the status light and scene reload follow them.
+const PLATFORM_BUILDS := [
+    {
+        "id": "android",
+        "label": "Android",
+        "project_task": "buildAndroidScripts",
+        "checkout_tasks": [
+            ["installAndroidPluginAar", "-PkanamaAndroidProjectDir={project}"],
+            ["installAddonJar", "-PkanamaProjectDir={project}", "-PkanamaProjectScriptsDir={scripts}"],
+        ],
+        "os": [],
+        "script_build": true,
+    },
+    {
+        "id": "ios",
+        "label": "iOS",
+        "project_task": "",
+        "checkout_tasks": [
+            ["installIosAddon", "-PkanamaIosProjectDir={project}", "-PkanamaIosProjectScriptsDir={scripts}"],
+        ],
+        "os": ["macOS"],
+        "script_build": true,
+    },
+    {
+        "id": "web",
+        "label": "Web",
+        "project_task": "",
+        "checkout_tasks": [
+            [":web-runtime:exportWeb", "-PkanamaWebProjectDir={project}"],
+        ],
+        "os": [],
+        "script_build": false,
+    },
+]
+const SETUP_SCRIPT_SH := "addons/kanama/setup-kanama-project.sh"
+const SETUP_SCRIPT_PS1 := "addons/kanama/setup-kanama-project.ps1"
+const SETUP_TEMPLATE_DIR := "addons/kanama/templates/release-kit"
 const KotlinSyntaxHighlighter := preload("res://addons/kanama_tools/kotlin_syntax_highlighter.gd")
 const KanamaExportGuard := preload("res://addons/kanama_tools/kanama_export_guard.gd")
 
 var _toolbar_container: HBoxContainer
+var _status_button: Button
 var _sync_button: Button
+var _release_button: Button
+var _platform_button: MenuButton
+var _platform_builds: Array = []
 var _sources_button: Button
 var _jar_button: Button
+var _output_dialog: AcceptDialog
 var _kotlin_syntax_highlighter: EditorSyntaxHighlighter
 var _export_guard: EditorExportPlugin
 var _scan_accum_sec := 0.0
@@ -57,6 +123,19 @@ var _known_kt_mtimes: Dictionary = {}
 var _pending_auto_sync := false
 var _last_change_msec := 0
 var _is_build_running := false
+var _status := STATUS_NONE
+var _last_build_failed := false
+# The build in progress: its label, the Gradle steps still to run, the running step's process and
+# pipes, and the output so far. _last_build keeps the finished one for the status light's dialog.
+var _build_label := ""
+var _build_steps: Array = []
+var _build_is_script_build := false
+var _build_fingerprint := ""
+var _build_pid := -1
+var _build_stdio: FileAccess
+var _build_stderr: FileAccess
+var _build_output := PackedByteArray()
+var _last_build: Dictionary = {}
 var _jar_menu_added := false
 var _last_developer_mode_enabled := false
 var _java_preflight_dialog_shown := false
@@ -71,6 +150,7 @@ func _enter_tree() -> void:
     call_deferred("_run_java_preflight")
     add_tool_menu_item(MENU_BUILD_SYNC, _on_build_sync_pressed)
     add_tool_menu_item(MENU_OPEN_KOTLIN_SOURCES, _on_open_kotlin_sources_pressed)
+    add_tool_menu_item(MENU_SETUP_PROJECT, _on_setup_project_pressed)
     _last_developer_mode_enabled = _is_developer_mode_enabled()
     if _last_developer_mode_enabled:
         add_tool_menu_item(MENU_BUILD_JAR, _on_build_jar_pressed)
@@ -82,11 +162,13 @@ func _enter_tree() -> void:
     _known_kt_mtimes = _collect_kt_mtimes()
     call_deferred("_check_addon_version")
     _write_editor_pid()
+    _refresh_build_status()
     set_process(true)
 
 
 func _exit_tree() -> void:
     set_process(false)
+    _stop_running_build()
     if FileAccess.file_exists(EDITOR_PID_FILE):
         DirAccess.remove_absolute(ProjectSettings.globalize_path(EDITOR_PID_FILE))
     _finish_pending_editor_docs()
@@ -95,6 +177,10 @@ func _exit_tree() -> void:
         editor_settings.settings_changed.disconnect(_on_editor_settings_changed)
     remove_tool_menu_item(MENU_BUILD_SYNC)
     remove_tool_menu_item(MENU_OPEN_KOTLIN_SOURCES)
+    remove_tool_menu_item(MENU_SETUP_PROJECT)
+    if _output_dialog != null:
+        _output_dialog.queue_free()
+        _output_dialog = null
     if _jar_menu_added:
         remove_tool_menu_item(MENU_BUILD_JAR)
         _jar_menu_added = false
@@ -129,24 +215,42 @@ func _on_open_kotlin_sources_pressed() -> void:
     _open_kotlin_sources()
 
 
+func _on_release_build_pressed() -> void:
+    var project_gradle_dir := _project_dir_with_gradle_wrapper()
+    if RELEASE_BUILD_TASK.is_empty() or project_gradle_dir.is_empty():
+        return
+    _start_build("Build Release", [_gradle_step(project_gradle_dir, RELEASE_BUILD_TASK, [])], true)
+
+
+func _on_platform_build_selected(index: int) -> void:
+    if index < 0 or index >= _platform_builds.size():
+        return
+    var entry: Dictionary = _platform_builds[index]
+    _start_build(String(entry["label"]), entry["steps"], bool(entry["script_build"]))
+
+
 func _process(delta: float) -> void:
     _refresh_developer_mode_controls()
+    _poll_build()
 
     _scan_accum_sec += delta
     if _scan_accum_sec < KT_SCAN_INTERVAL_SEC:
         return
     _scan_accum_sec = 0.0
 
-    if not _is_auto_build_on_save_enabled():
-        return
-    if _is_build_running:
-        return
+    # Changes are watched with build on save off too: they turn the status light yellow. The light is
+    # refreshed on every scan, so a deleted kanama-scripts.jar turns it yellow without a save.
+    var changed := _detect_kt_changes()
+    _refresh_build_status()
+    if changed:
+        if is_build_on_save_enabled():
+            _pending_auto_sync = true
+            _last_change_msec = Time.get_ticks_msec()
 
-    if _detect_kt_changes():
-        _pending_auto_sync = true
-        _last_change_msec = Time.get_ticks_msec()
-
-    if not _pending_auto_sync:
+    if not _pending_auto_sync or _is_build_running:
+        return
+    if not is_build_on_save_enabled():
+        _pending_auto_sync = false
         return
 
     var debounce_ms := _auto_build_debounce_ms()
@@ -201,11 +305,44 @@ func _install_toolbar_buttons() -> void:
     _toolbar_container = HBoxContainer.new()
     _toolbar_container.name = "KanamaToolsToolbar"
 
+    # The status light: green when the scripts are built and current, yellow while they build or
+    # when a .kt file changed since, red when the last build failed. Pressing it shows that build's
+    # output.
+    _status_button = Button.new()
+    _status_button.name = "KanamaBuildStatus"
+    _status_button.flat = true
+    _status_button.icon = _status_light_texture()
+    _status_button.pressed.connect(_show_last_build_output)
+    _toolbar_container.add_child(_status_button)
+
     _sync_button = Button.new()
+    _sync_button.name = "KanamaBuildScripts"
     _sync_button.text = SYNC_BUTTON_IDLE_TEXT
     _sync_button.tooltip_text = "Build and deploy Kotlin scripts into this Godot project"
     _sync_button.pressed.connect(_on_build_sync_pressed)
     _toolbar_container.add_child(_sync_button)
+
+    if not RELEASE_BUILD_TASK.is_empty() and not _project_dir_with_gradle_wrapper().is_empty():
+        _release_button = Button.new()
+        _release_button.name = "KanamaBuildRelease"
+        _release_button.text = "Build Release"
+        _release_button.tooltip_text = "Build the Kotlin scripts for a release export"
+        _release_button.pressed.connect(_on_release_build_pressed)
+        _toolbar_container.add_child(_release_button)
+
+    _platform_builds = _available_platform_builds()
+    var platforms := _platform_builds
+    if not platforms.is_empty():
+        _platform_button = MenuButton.new()
+        _platform_button.name = "KanamaPlatformBuilds"
+        _platform_button.text = "Platforms"
+        _platform_button.flat = false
+        _platform_button.tooltip_text = "Build your scripts for another platform's export"
+        var popup := _platform_button.get_popup()
+        for i in platforms.size():
+            popup.add_item(String(platforms[i]["menu_text"]), i)
+        popup.id_pressed.connect(_on_platform_build_selected)
+        _toolbar_container.add_child(_platform_button)
 
     _sources_button = Button.new()
     _sources_button.text = "Open Kotlin"
@@ -229,7 +366,10 @@ func _remove_toolbar_buttons() -> void:
     remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, _toolbar_container)
     _toolbar_container.queue_free()
     _toolbar_container = null
+    _status_button = null
     _sync_button = null
+    _release_button = null
+    _platform_button = null
     _sources_button = null
     _jar_button = null
 
@@ -294,6 +434,13 @@ func _ensure_editor_settings() -> void:
         "type": TYPE_STRING,
         "hint": PROPERTY_HINT_GLOBAL_DIR,
     })
+    if not settings.has_setting(SETTING_BUILD_ON_SAVE):
+        settings.set_setting(SETTING_BUILD_ON_SAVE, true)
+    settings.set_initial_value(SETTING_BUILD_ON_SAVE, true, false)
+    settings.add_property_info({
+        "name": SETTING_BUILD_ON_SAVE,
+        "type": TYPE_BOOL,
+    })
 
 
 ## Hand the explicit setting to bootstrap.c (see write_runtime_jdk_hint). Only a valid explicit
@@ -346,8 +493,6 @@ func _ensure_project_settings() -> void:
         ProjectSettings.set_setting(SETTING_REPO_DIR, "")
     if not ProjectSettings.has_setting(SETTING_KOTLIN_SOURCES_DIR):
         ProjectSettings.set_setting(SETTING_KOTLIN_SOURCES_DIR, "")
-    if not ProjectSettings.has_setting(SETTING_AUTO_BUILD_ON_SAVE):
-        ProjectSettings.set_setting(SETTING_AUTO_BUILD_ON_SAVE, false)
     if not ProjectSettings.has_setting(SETTING_AUTO_BUILD_DEBOUNCE_MS):
         ProjectSettings.set_setting(SETTING_AUTO_BUILD_DEBOUNCE_MS, 800)
     if not ProjectSettings.has_setting(SETTING_RELOAD_SCENE_AFTER_SYNC):
@@ -383,10 +528,6 @@ func _ensure_project_settings() -> void:
         "name": SETTING_KOTLIN_SOURCES_DIR,
         "type": TYPE_STRING,
         "hint": PROPERTY_HINT_GLOBAL_DIR,
-    })
-    ProjectSettings.add_property_info({
-        "name": SETTING_AUTO_BUILD_ON_SAVE,
-        "type": TYPE_BOOL,
     })
     ProjectSettings.add_property_info({
         "name": SETTING_AUTO_BUILD_DEBOUNCE_MS,
@@ -434,8 +575,14 @@ func _ensure_project_settings() -> void:
     })
 
 
-func _is_auto_build_on_save_enabled() -> bool:
-    return bool(ProjectSettings.get_setting(SETTING_AUTO_BUILD_ON_SAVE, false))
+## Editor > Editor Settings > Kanama > Build > Build On Save; on when the setting is absent.
+static func is_build_on_save_enabled() -> bool:
+    if not Engine.is_editor_hint():
+        return false
+    var settings := EditorInterface.get_editor_settings()
+    if settings == null or not settings.has_setting(SETTING_BUILD_ON_SAVE):
+        return true
+    return bool(settings.get_setting(SETTING_BUILD_ON_SAVE))
 
 
 func _is_developer_mode_enabled() -> bool:
@@ -472,12 +619,16 @@ func _collect_kt_mtimes() -> Dictionary:
 
 
 # Folders the build-on-save watcher does not scan, the ones the script build does not compile:
-# hidden folders at any depth (.godot, .gradle, .git, .idea), and at the project root Gradle's
-# build/ (KSP rewrites the generated registrar .kt files there on every build, so watching it made
-# each save build twice) and Godot's android/ build template. A build/ or android/ folder deeper
-# in the sources is compiled, so it is watched.
+# hidden folders at any depth (.godot, .gradle, .git, .idea), folders with a .gdignore (Godot does not
+# see them either: the store addon's setup template in addons/kanama/templates holds a HelloScript.kt
+# that is no script of the project), and at the project root Gradle's build/ (KSP rewrites the
+# generated registrar .kt files there on every build, so watching it made each save build twice) and
+# Godot's android/ build template. A build/ or android/ folder deeper in the sources is compiled, so
+# it is watched.
 static func _is_kt_scan_skipped_dir(parent_path: String, name: String) -> bool:
     if name.begins_with("."):
+        return true
+    if FileAccess.file_exists(parent_path.path_join(name).path_join(".gdignore")):
         return true
     return parent_path == "res://" and (name == "build" or name == "android")
 
@@ -505,52 +656,324 @@ func _collect_kt_mtimes_recursive(dir_path: String, sink: Dictionary) -> void:
 func _run_script_build() -> void:
     var project_gradle_dir := _project_dir_with_gradle_wrapper()
     if not project_gradle_dir.is_empty():
-        _run_gradle_task("buildScripts", [], project_gradle_dir)
+        _start_build(SYNC_BUTTON_IDLE_TEXT, [_gradle_step(project_gradle_dir, "buildScripts", [])], true)
         return
-    _run_gradle_task("installAddonJar", _current_project_install_args())
+    _start_build(SYNC_BUTTON_IDLE_TEXT, [_gradle_step(_resolve_repo_dir(), "installAddonJar", _current_project_install_args())], true)
 
 
 func _run_gradle_task(task_name: String, extra_args: Array = [], repo_dir_override: String = "") -> void:
-    if _is_build_running:
-        push_warning("[kanama:tools] Build already running; skipping '%s'" % task_name)
-        return
-
     var repo_dir := repo_dir_override if not repo_dir_override.is_empty() else _resolve_repo_dir()
-    if repo_dir.is_empty():
-        push_error("[kanama:tools] Could not find Kanama repo. Set '%s' in Project Settings." % SETTING_REPO_DIR)
+    _start_build(task_name, [_gradle_step(repo_dir, task_name, extra_args)], _is_script_build_task(task_name))
+
+
+static func _gradle_step(dir: String, task_name: String, args: Array) -> Dictionary:
+    return {"dir": dir, "task": task_name, "args": args}
+
+
+## Starts a build the toolbar shows: `label` names it on the status light and in the output dialog,
+## `steps` are the Gradle runs (_gradle_step) it makes one after the other, stopping at the first that
+## fails. The build runs beside the editor (the editor stays responsive and the light yellow) and
+## _poll_build finishes it. `script_build` marks a build that rebuilds kanama-scripts.jar.
+func _start_build(label: String, steps: Array, script_build: bool) -> void:
+    if _is_build_running:
+        push_warning("[kanama:tools] Build already running; skipping '%s'" % label)
         return
+    _build_label = label
+    _build_steps = steps.duplicate()
+    _build_is_script_build = script_build
+    _build_output = PackedByteArray()
+    _build_fingerprint = sources_fingerprint(_collect_kt_mtimes())
+    _set_build_buttons_busy(true)
+    _refresh_build_status()
+    _start_next_build_step()
+
+
+func _start_next_build_step() -> void:
+    var step: Dictionary = _build_steps.pop_front()
+    var error := _spawn_gradle_step(String(step["dir"]), String(step["task"]), step["args"])
+    if not error.is_empty():
+        _append_build_output(error + "\n")
+        _finish_build(-1)
+
+
+## Starts one Gradle run; returns "" or why it could not start.
+func _spawn_gradle_step(repo_dir: String, task_name: String, extra_args: Array) -> String:
+    if repo_dir.is_empty():
+        return "[kanama:tools] Could not find Kanama repo. Set '%s' in Project Settings." % SETTING_REPO_DIR
 
     var gradlew := repo_dir.path_join("gradlew")
     if OS.get_name() == "Windows":
         gradlew += ".bat"
     if not FileAccess.file_exists(gradlew):
-        push_error("[kanama:tools] gradlew not found at %s" % gradlew)
-        return
+        return "[kanama:tools] gradlew not found at %s" % gradlew
 
     # A desktop launcher does not hand Godot the shell's JAVA_HOME, so gradlew (and the CMake run
     # under it) used to fall back to whatever JDK the system defaulted to (kanama#277). Pick the
     # JDK here and refuse to start a build that cannot work.
     var jdk := resolve_build_jdk_from_environment()
     if not bool(jdk.get("ok", false)):
-        push_error(String(jdk.get("message", "")))
-        return
+        return String(jdk.get("message", ""))
     print("[kanama:tools] Build JDK: %s (JDK %s, from %s)" % [jdk["home"], jdk["version"], jdk["source"]])
 
-    var output: Array = []
     var args := ["-p", repo_dir, task_name]
     args.append_array(extra_args)
-    print("[kanama:tools] Running: %s %s" % [gradlew, " ".join(args)])
-    _set_build_buttons_busy(task_name, true)
-    var code := execute_with_java_home(String(jdk["home"]), gradlew, args, output)
-    _set_build_buttons_busy(task_name, false)
+    var command := "%s %s" % [gradlew, " ".join(args)]
+    print("[kanama:tools] Running: %s" % command)
+    _append_build_output("$ %s\n" % command)
+    var process := spawn_with_java_home(String(jdk["home"]), gradlew, args)
+    if process.is_empty():
+        return "[kanama:tools] Could not start %s" % gradlew
+    _build_pid = int(process["pid"])
+    _build_stdio = process["stdio"]
+    _build_stderr = process["stderr"]
+    return ""
+
+
+## Called every frame: reads the running step's output (a full pipe would stall Gradle) and, once
+## the step has exited, starts the next one or finishes the build.
+func _poll_build() -> void:
+    if _build_pid < 0:
+        return
+    _drain_build_pipes()
+    if OS.is_process_running(_build_pid):
+        return
+    _drain_build_pipes()
+    var code := OS.get_process_exit_code(_build_pid)
+    _close_build_pipes()
+    _build_pid = -1
+    if code == 0 and not _build_steps.is_empty():
+        _start_next_build_step()
+        return
+    _finish_build(code)
+
+
+func _drain_build_pipes() -> void:
+    for pipe in [_build_stdio, _build_stderr]:
+        if pipe == null:
+            continue
+        while true:
+            var chunk: PackedByteArray = pipe.get_buffer(65536)
+            if chunk.is_empty():
+                break
+            _build_output.append_array(chunk)
+
+
+func _close_build_pipes() -> void:
+    if _build_stdio != null:
+        _build_stdio.close()
+    if _build_stderr != null:
+        _build_stderr.close()
+    _build_stdio = null
+    _build_stderr = null
+
+
+func _append_build_output(text: String) -> void:
+    _build_output.append_array(text.to_utf8_buffer())
+
+
+## `code` is the last step's exit status, -1 when a step could not start.
+func _finish_build(code: int) -> void:
+    _build_steps.clear()
+    var output := _build_output.get_string_from_utf8()
+    _last_build = {
+        "label": _build_label,
+        "ok": code == 0,
+        "exit": code,
+        "output": output,
+        "finished": Time.get_datetime_string_from_system(false, true),
+    }
+    _set_build_buttons_busy(false)
     if code == 0:
-        print("[kanama:tools] %s succeeded." % task_name)
-        if _is_script_build_task(task_name):
+        _last_build_failed = false
+        print("[kanama:tools] %s succeeded." % _build_label)
+        if _build_is_script_build:
+            write_build_stamp(ProjectSettings.globalize_path("res://"), _build_fingerprint)
             _check_addon_version()
-        if _is_script_build_task(task_name) and bool(ProjectSettings.get_setting(SETTING_RELOAD_SCENE_AFTER_SYNC, true)):
-            _queue_reload_edited_scene()
+            if bool(ProjectSettings.get_setting(SETTING_RELOAD_SCENE_AFTER_SYNC, true)):
+                _queue_reload_edited_scene()
     else:
-        push_error("[kanama:tools] %s failed (exit=%d)\n%s" % [task_name, code, "\n".join(output)])
+        _last_build_failed = true
+        push_error("[kanama:tools] %s failed (exit=%d)\n%s" % [_build_label, code, output])
+    _refresh_build_status()
+
+
+## Ends a running build when the plugin leaves (the editor quits or the plugin is turned off), so no
+## Gradle client outlives the editor.
+func _stop_running_build() -> void:
+    if _build_pid >= 0 and OS.is_process_running(_build_pid):
+        OS.kill(_build_pid)
+    _close_build_pipes()
+    _build_pid = -1
+    _build_steps.clear()
+    _is_build_running = false
+
+
+## The status light's state (pure, so the smoke can hold every case): see the STATUS_* constants.
+## `sources_built` says the last successful script build compiled the .kt files as they are now.
+## `addon_mismatch`: kanama-scripts.jar was built for another Kanama version than the addon (the
+## version lock): yellow until a build for the addon, the same as a changed .kt file.
+static func build_status(building: bool, last_build_failed: bool, has_sources: bool, jar_exists: bool, sources_built: bool, addon_mismatch: bool = false) -> String:
+    if building:
+        return STATUS_BUILDING
+    if last_build_failed:
+        return STATUS_FAILED
+    if not has_sources and not jar_exists:
+        return STATUS_NONE
+    if jar_exists and sources_built and not addon_mismatch:
+        return STATUS_CURRENT
+    return STATUS_STALE
+
+
+## One value for the set of .kt files and their modification times.
+static func sources_fingerprint(kt_mtimes: Dictionary) -> String:
+    var paths := kt_mtimes.keys()
+    paths.sort()
+    var lines := PackedStringArray()
+    for path in paths:
+        lines.append("%s %d" % [path, int(kt_mtimes[path])])
+    return "\n".join(lines).md5_text()
+
+
+static func read_build_stamp(project_dir: String) -> String:
+    var stamp_path := project_dir.path_join(".godot").path_join(BUILD_STAMP_FILE)
+    if not FileAccess.file_exists(stamp_path):
+        return ""
+    return FileAccess.get_file_as_string(stamp_path).strip_edges()
+
+
+static func write_build_stamp(project_dir: String, fingerprint: String) -> void:
+    var godot_dir := project_dir.path_join(".godot")
+    DirAccess.make_dir_recursive_absolute(godot_dir)
+    var file := FileAccess.open(godot_dir.path_join(BUILD_STAMP_FILE), FileAccess.WRITE)
+    if file == null:
+        push_warning("[kanama:tools] Could not write %s" % godot_dir.path_join(BUILD_STAMP_FILE))
+        return
+    file.store_string(fingerprint + "\n")
+    file.close()
+
+
+## Whether kanama-scripts.jar holds the .kt files as they are now: the stamp of the last successful
+## build in this checkout says so; without one (scripts built in a terminal, or before this plugin
+## kept stamps) the jar must be newer than every .kt file.
+func _sources_built() -> bool:
+    var stamp := read_build_stamp(ProjectSettings.globalize_path("res://"))
+    if not stamp.is_empty():
+        return stamp == sources_fingerprint(_known_kt_mtimes)
+    if not FileAccess.file_exists(SCRIPTS_JAR):
+        return false
+    var jar_time := FileAccess.get_modified_time(SCRIPTS_JAR)
+    for path in _known_kt_mtimes.keys():
+        if int(_known_kt_mtimes[path]) > jar_time:
+            return false
+    return true
+
+
+func _addon_mismatch_message() -> String:
+    if not FileAccess.file_exists(ADDON_VERSION_FILE) or not FileAccess.file_exists(SCRIPTS_VERSION_FILE):
+        return ""
+    return addon_version_mismatch(FileAccess.get_file_as_string(ADDON_VERSION_FILE), FileAccess.get_file_as_string(SCRIPTS_VERSION_FILE))
+
+
+func _refresh_build_status() -> void:
+    _status = build_status(_is_build_running, _last_build_failed, not _known_kt_mtimes.is_empty(), FileAccess.file_exists(SCRIPTS_JAR), _sources_built(), not _addon_mismatch_message().is_empty())
+    if _status_button == null:
+        return
+    _status_button.set_meta("kanama_status", _status)
+    _status_button.add_theme_color_override("icon_normal_color", status_color(_status))
+    _status_button.add_theme_color_override("icon_hover_color", status_color(_status))
+    _status_button.add_theme_color_override("icon_pressed_color", status_color(_status))
+    _status_button.add_theme_color_override("icon_focus_color", status_color(_status))
+    _status_button.tooltip_text = _status_tooltip(_status)
+
+
+## The state of the status light, for tests and tools.
+func get_build_status() -> String:
+    return _status
+
+
+static func status_color(status: String) -> Color:
+    var theme: Theme = EditorInterface.get_editor_theme() if Engine.is_editor_hint() else null
+    var name := ""
+    var fallback := Color(0.6, 0.6, 0.6)
+    match status:
+        STATUS_CURRENT:
+            name = "success_color"
+            fallback = Color(0.45, 0.95, 0.5)
+        STATUS_STALE, STATUS_BUILDING:
+            name = "warning_color"
+            fallback = Color(1.0, 0.87, 0.4)
+        STATUS_FAILED:
+            name = "error_color"
+            fallback = Color(1.0, 0.47, 0.42)
+    if name.is_empty() or theme == null or not theme.has_color(name, "Editor"):
+        return fallback
+    return theme.get_color(name, "Editor")
+
+
+func _status_tooltip(status: String) -> String:
+    match status:
+        STATUS_CURRENT:
+            return "Kotlin scripts are built and current. Click for the last build's output."
+        STATUS_BUILDING:
+            return "Building: %s. Click for the output so far." % _build_label
+        STATUS_FAILED:
+            return "The last build failed. Click for its output."
+        STATUS_STALE:
+            var mismatch := _addon_mismatch_message()
+            if not mismatch.is_empty():
+                return mismatch.trim_prefix("Kanama: ") + " Build Scripts does the same."
+            if is_build_on_save_enabled():
+                return "Kotlin scripts changed since the last build. Build on save builds them; Build Scripts builds them now."
+            return "Kotlin scripts changed since the last build. Press Build Scripts."
+    if FileAccess.file_exists("res://" + SETUP_TEMPLATE_DIR + "/build.gradle.kts") and _project_dir_with_gradle_wrapper().is_empty():
+        return "No Kotlin scripts yet. Project > Tools > %s adds a Gradle build and a starter script." % MENU_SETUP_PROJECT
+    return "No Kotlin scripts yet."
+
+
+## A white disc the status button tints with status_color.
+static func _status_light_texture() -> Texture2D:
+    var size := 16
+    var image := Image.create(size, size, false, Image.FORMAT_RGBA8)
+    var center := Vector2(size / 2.0, size / 2.0)
+    var radius := 5.5
+    for y in size:
+        for x in size:
+            var distance := Vector2(x + 0.5, y + 0.5).distance_to(center)
+            var alpha := clampf(radius + 0.5 - distance, 0.0, 1.0)
+            image.set_pixel(x, y, Color(1, 1, 1, alpha))
+    return ImageTexture.create_from_image(image)
+
+
+func _show_last_build_output() -> void:
+    var text := ""
+    if _is_build_running:
+        text = "%s is running.\n\n%s" % [_build_label, _build_output.get_string_from_utf8()]
+    elif _last_build.is_empty():
+        text = "No build has run since the editor started.\n\n%s" % _status_tooltip(_status)
+    else:
+        var result := "succeeded" if bool(_last_build["ok"]) else "failed (exit %d)" % int(_last_build["exit"])
+        text = "%s %s at %s.\n\n%s" % [_last_build["label"], result, _last_build["finished"], _last_build["output"]]
+    if _output_dialog == null:
+        var base_control := get_editor_interface().get_base_control()
+        if base_control == null:
+            return
+        _output_dialog = AcceptDialog.new()
+        _output_dialog.name = "KanamaBuildOutput"
+        _output_dialog.title = "Kanama Build Output"
+        _output_dialog.min_size = Vector2i(720, 420)
+        var output_text := TextEdit.new()
+        output_text.name = "Output"
+        output_text.editable = false
+        output_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
+        var editor_theme := EditorInterface.get_editor_theme()
+        if editor_theme != null and editor_theme.has_font("source", "EditorFonts"):
+            output_text.add_theme_font_override("font", editor_theme.get_font("source", "EditorFonts"))
+        _output_dialog.add_child(output_text)
+        base_control.add_child(_output_dialog)
+    var text_edit := _output_dialog.get_node("Output") as TextEdit
+    text_edit.text = text
+    text_edit.scroll_vertical = text_edit.get_line_count()
+    _output_dialog.popup_centered()
 
 
 ## JDK lookup (kanama#277). Two questions share one lookup order and one ranking:
@@ -878,30 +1301,36 @@ static func write_runtime_jdk_hint(project_dir: String, home: String) -> void:
     file.close()
 
 
-## Godot's OS.execute has no environment parameter. OS.create_process would not give the exit code
-## and output Build Scripts reports, so JAVA_HOME is set on the editor process around the blocking
-## call and the previous value (or its absence) is restored right after. The editor does nothing
-## else while OS.execute blocks, so the temporary change is not observable elsewhere.
-static func execute_with_java_home(java_home: String, path: String, args: Array, output: Array) -> int:
+## Godot starts a process with no environment parameter, so JAVA_HOME is set on the editor process
+## around the start of the build (the child takes its environment then) and the previous value, or
+## its absence, is restored right after. Nothing else runs between the two. Returns
+## OS.execute_with_pipe's {"stdio", "stderr", "pid"}, with pipes that never block, or {} when the
+## process could not start. The build runs beside the editor, so the editor stays responsive and the
+## status light can show it.
+static func spawn_with_java_home(java_home: String, path: String, args: Array) -> Dictionary:
     var had_previous := OS.has_environment("JAVA_HOME")
     var previous := OS.get_environment("JAVA_HOME")
     OS.set_environment("JAVA_HOME", java_home)
-    var code := OS.execute(path, args, output, true, true)
+    var process := OS.execute_with_pipe(path, PackedStringArray(args), false)
     if had_previous:
         OS.set_environment("JAVA_HOME", previous)
     else:
         OS.unset_environment("JAVA_HOME")
-    return code
+    return process
 
 
-func _set_build_buttons_busy(task_name: String, busy: bool) -> void:
+func _set_build_buttons_busy(busy: bool) -> void:
     _is_build_running = busy
     if _sync_button != null:
         _sync_button.disabled = busy
-        _sync_button.text = SYNC_BUTTON_BUSY_TEXT if busy and _is_script_build_task(task_name) else SYNC_BUTTON_IDLE_TEXT
+        _sync_button.text = SYNC_BUTTON_BUSY_TEXT if busy and _build_label == SYNC_BUTTON_IDLE_TEXT else SYNC_BUTTON_IDLE_TEXT
+    if _release_button != null:
+        _release_button.disabled = busy
+    if _platform_button != null:
+        _platform_button.disabled = busy
     if _jar_button != null:
         _jar_button.disabled = busy
-        _jar_button.text = JAR_BUTTON_BUSY_TEXT if busy and task_name == "jar" else JAR_BUTTON_IDLE_TEXT
+        _jar_button.text = JAR_BUTTON_BUSY_TEXT if busy and _build_label == "jar" else JAR_BUTTON_IDLE_TEXT
 
 
 func _resolve_repo_dir() -> String:
@@ -932,6 +1361,166 @@ func _project_dir_with_gradle_wrapper() -> String:
     if FileAccess.file_exists(gradlew):
         return project_dir
     return ""
+
+
+## The Kanama checkout the project was set up from (kanama/tools/repo_dir, else ../, ../kanama or
+## ../../kanama), or "". Unlike _resolve_repo_dir it never takes the project's own Gradle build for
+## one: the platform commands exist only in a checkout.
+func _find_kanama_checkout() -> String:
+    var candidates: Array = []
+    var configured := String(ProjectSettings.get_setting(SETTING_REPO_DIR, "")).strip_edges()
+    if not configured.is_empty():
+        candidates.append(configured)
+    var project_dir := ProjectSettings.globalize_path("res://")
+    candidates.append_array([project_dir.path_join(".."), project_dir.path_join("../kanama"), project_dir.path_join("../../kanama")])
+    for candidate in candidates:
+        if is_kanama_checkout(String(candidate)):
+            return String(candidate).simplify_path()
+    return ""
+
+
+static func is_kanama_checkout(dir: String) -> bool:
+    return FileAccess.file_exists(dir.path_join("gradlew")) \
+        and DirAccess.dir_exists_absolute(dir.path_join("bootstrap")) \
+        and DirAccess.dir_exists_absolute(dir.path_join("web-runtime")) \
+        and DirAccess.dir_exists_absolute(dir.path_join("templates/starter"))
+
+
+## The PLATFORM_BUILDS entries this project can run, each with its "menu_text" and Gradle "steps".
+func _available_platform_builds() -> Array:
+    var project_dir := ProjectSettings.globalize_path("res://")
+    var scripts_dir := project_dir.path_join("kotlin-src") if DirAccess.dir_exists_absolute(project_dir.path_join("kotlin-src")) else project_dir
+    var plugin_dir := _project_dir_with_gradle_wrapper()
+    if not plugin_dir.is_empty() and not applies_kanama_gradle_plugin(FileAccess.get_file_as_string(plugin_dir.path_join("build.gradle.kts"))):
+        plugin_dir = ""
+    return platform_builds_for(OS.get_name(), plugin_dir, _find_kanama_checkout(), project_dir.trim_suffix("/"), scripts_dir.trim_suffix("/"))
+
+
+## Whether a build.gradle.kts applies the Kanama Gradle plugin (as the release kit's and the store
+## addon's template do), whose tasks the Platforms menu's "project_task" entries run.
+static func applies_kanama_gradle_plugin(build_script: String) -> bool:
+    for raw in build_script.split("\n"):
+        var line := raw.strip_edges()
+        if line.begins_with("//"):
+            continue
+        if line.contains("id(\"net.multigesture.kanama\")"):
+            return true
+    return false
+
+
+## Pure: which platform builds `os_name` can run, from the Kanama Gradle plugin in the project's own
+## build (`project_gradle_dir`, "" when the project has no build that applies it) or a Kanama checkout
+## (`checkout_dir`, "" when none).
+static func platform_builds_for(os_name: String, project_gradle_dir: String, checkout_dir: String, project_dir: String, scripts_dir: String) -> Array:
+    var result: Array = []
+    for entry in PLATFORM_BUILDS:
+        var only_on: Array = entry["os"]
+        if not only_on.is_empty() and not only_on.has(os_name):
+            continue
+        var steps: Array = []
+        var from := ""
+        var script_build := false
+        if not String(entry["project_task"]).is_empty() and not project_gradle_dir.is_empty():
+            steps.append(_gradle_step(project_gradle_dir, String(entry["project_task"]), []))
+            from = "project"
+        elif not checkout_dir.is_empty():
+            script_build = bool(entry["script_build"])
+            for command in entry["checkout_tasks"]:
+                var args: Array = []
+                for i in range(1, command.size()):
+                    args.append(String(command[i]).replace("{project}", project_dir).replace("{scripts}", scripts_dir))
+                steps.append(_gradle_step(checkout_dir, String(command[0]), args))
+            from = "checkout"
+        if steps.is_empty():
+            continue
+        var tasks := PackedStringArray()
+        for step in steps:
+            tasks.append(String(step["task"]))
+        result.append({
+            "id": entry["id"],
+            "label": "%s build" % entry["label"],
+            "menu_text": "%s (%s)" % [entry["label"], ", ".join(tasks)],
+            "steps": steps,
+            "from": from,
+            "script_build": script_build,
+        })
+    return result
+
+
+func _on_setup_project_pressed() -> void:
+    var result := setup_kanama_project(ProjectSettings.globalize_path("res://"), OS.get_name())
+    var created: Array = result["created"]
+    var lines := PackedStringArray()
+    if not bool(result["ok"]):
+        lines.append(String(result["message"]))
+        push_error("[kanama:tools] %s" % String(result["message"]))
+    elif created.is_empty():
+        lines.append("Nothing to add: this project already has every Kanama file. No file was changed.")
+    else:
+        lines.append("Added to this project:")
+        for path in created:
+            lines.append("  " + String(path))
+        lines.append("")
+        lines.append("Existing files were kept. Press Build Scripts to build your Kotlin scripts.")
+    var message := "\n".join(lines)
+    print("[kanama:tools] Set Up Kanama Project: %s" % message.replace("\n", " "))
+    var filesystem := get_editor_interface().get_resource_filesystem()
+    if filesystem != null:
+        filesystem.scan()
+    # The files the setup added are not a save to build: Build Scripts does that when asked.
+    _known_kt_mtimes = _collect_kt_mtimes()
+    _refresh_build_status()
+    _show_setup_result(message)
+
+
+func _show_setup_result(message: String) -> void:
+    var base_control := get_editor_interface().get_base_control()
+    if base_control == null:
+        return
+    var dialog := AcceptDialog.new()
+    dialog.name = "KanamaSetupResult"
+    dialog.title = "Set Up Kanama Project"
+    dialog.dialog_text = message
+    base_control.add_child(dialog)
+    dialog.confirmed.connect(dialog.queue_free)
+    dialog.close_requested.connect(dialog.queue_free)
+    dialog.popup_centered()
+
+
+## "Make this a Kanama project": runs the store addon's setup script (addons/kanama/
+## setup-kanama-project.sh, or .ps1 on Windows; the one copy of the setup logic) without --force, so
+## it adds only what is missing. Returns {"ok", "created": the project paths it added, "message",
+## "output"}.
+static func setup_kanama_project(project_dir: String, os_name: String) -> Dictionary:
+    var dir := project_dir.trim_suffix("/")
+    if not DirAccess.dir_exists_absolute(dir.path_join(SETUP_TEMPLATE_DIR)):
+        var message := "This needs the Kanama store addon: %s is missing. Unzip the store addon into this project and try again." % SETUP_TEMPLATE_DIR
+        if FileAccess.file_exists(dir.path_join("gradlew")) and FileAccess.file_exists(dir.path_join("build.gradle.kts")):
+            message = "This project already has a Gradle build, and its addon carries no setup template (a release kit or starter project is set up already)."
+        return {"ok": false, "created": [], "message": message, "output": ""}
+    var exe := "sh"
+    var args := PackedStringArray([dir.path_join(SETUP_SCRIPT_SH), "--project-dir", dir])
+    if os_name == "Windows":
+        exe = "powershell.exe"
+        args = PackedStringArray(["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", dir.path_join(SETUP_SCRIPT_PS1), "-ProjectDir", dir])
+    var output: Array = []
+    var code := OS.execute(exe, args, output, true)
+    var text := "".join(output)
+    if code != 0:
+        return {"ok": false, "created": [], "message": "The setup script failed (exit %d):\n%s" % [code, text.strip_edges()], "output": text}
+    return {"ok": true, "created": parse_setup_output(text), "message": "", "output": text}
+
+
+## The paths the setup script reports adding: its `[kanama] wrote <path>`, `[kanama] created <path>`
+## and `[kanama] registered <path>` lines.
+static func parse_setup_output(text: String) -> Array:
+    var created: Array = []
+    for raw in text.split("\n"):
+        var line := raw.strip_edges()
+        for prefix in ["[kanama] wrote ", "[kanama] created ", "[kanama] registered "]:
+            if line.begins_with(prefix):
+                created.append(line.substr(prefix.length()).strip_edges())
+    return created
 
 
 func _open_kotlin_sources() -> void:

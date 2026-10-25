@@ -215,4 +215,125 @@ if [[ "$discard_rc" -ne 0 ]] || ! grep -Fq "[export_guard_discard] PASS" "$LOG_F
   smoke_fail "export guard one-click clean-up test failed (exit $discard_rc)" "scripts/check_export_guard_discard.gd (log: $LOG_FILE.discard)"
 fi
 
+# The editor build loop and the setup action (scripts/check_editor_build_loop.gd,
+# scripts/check_editor_project_setup.gd) run as editor plugins beside Kanama Tools in scratch projects.
+# They switch the Build On Save editor setting, so the editor's settings live in the scratch folder:
+# HOME (macOS) and the XDG folders (Linux) point there. --quit-after bounds a run whose check hangs. No
+# `--import` pass first: it would load the check plugins too, and run the setup before the editor session.
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*)
+    echo "[tool_smoke] note: the editor build loop and setup checks use a POSIX fake gradlew; not run on Windows"
+    ;;
+  *)
+    EDITOR_HOME="$JDK_SCRATCH/editor_home"
+    mkdir -p "$EDITOR_HOME"
+    editor_env() {
+      env HOME="$EDITOR_HOME" XDG_CONFIG_HOME="$EDITOR_HOME/.config" XDG_DATA_HOME="$EDITOR_HOME/.local/share" \
+        XDG_CACHE_HOME="$EDITOR_HOME/.cache" "$@"
+    }
+    # A JDK-shaped folder for Build Scripts' JDK check; the fake gradlew never starts it.
+    FAKE_JDK="$JDK_SCRATCH/fake_jdk"
+    mkdir -p "$FAKE_JDK/bin" "$FAKE_JDK/include"
+    printf 'JAVA_VERSION="25.0.1"\n' >"$FAKE_JDK/release"
+    : >"$FAKE_JDK/bin/java"
+    : >"$FAKE_JDK/include/jni.h"
+
+    LOOP_PROJECT="$JDK_SCRATCH/build_loop"
+    LOOP_CONTROL="$JDK_SCRATCH/build_loop_control"
+    mkdir -p "$LOOP_PROJECT/addons/build_loop_test" "$LOOP_PROJECT/kotlin-src" "$LOOP_CONTROL"
+    cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$LOOP_PROJECT/addons/"
+    cp "$ROOT_DIR/scripts/check_editor_build_loop.gd" "$LOOP_PROJECT/addons/build_loop_test/plugin.gd"
+    printf '[plugin]\n\nname="build_loop_test"\ndescription=""\nauthor=""\nversion=""\nscript="plugin.gd"\n' \
+      >"$LOOP_PROJECT/addons/build_loop_test/plugin.cfg"
+    write_loop_project_godot() {
+      printf '%s\n' 'config_version=5' '' '[application]' '' 'config/name="kanama-build-loop"' '' '[editor_plugins]' '' \
+        'enabled=PackedStringArray("res://addons/kanama_tools/plugin.cfg", "res://addons/build_loop_test/plugin.cfg")' '' \
+        '[kanama]' '' 'tools/auto_build_debounce_ms=1500' 'tools/reload_scene_after_sync=false' \
+        'tools/java_preflight_enabled=false' >"$LOOP_PROJECT/project.godot"
+    }
+    write_loop_project_godot
+    cp "$ROOT_DIR/templates/starter/HelloScript.kt" "$LOOP_PROJECT/kotlin-src/HelloScript.kt"
+    # The fake build: `gradlew -p <project> <task>`. It logs the run, takes a second, writes a .kt file
+    # under build/ as KSP does, then fails, hangs (exec, so its pid is the one the plugin started) or
+    # writes the scripts jar, as $KANAMA_FAKE_GRADLE_CONTROL/mode says.
+    cat >"$LOOP_PROJECT/gradlew" <<'EOF'
+#!/bin/sh
+control="$KANAMA_FAKE_GRADLE_CONTROL"
+project="$2"
+echo "$3" >>"$control/runs"
+echo "fake gradle: $3 in $project with JAVA_HOME=$JAVA_HOME"
+mode=$(cat "$control/mode" 2>/dev/null || echo ok)
+if [ "$mode" = hang ]; then
+  echo $$ >"$control/hang.pid"
+  exec sleep 60
+fi
+sleep 1
+mkdir -p "$project/build/generated/ksp/main/kotlin"
+printf 'object HelloScriptRegistrar\n' >"$project/build/generated/ksp/main/kotlin/HelloScriptRegistrar.kt"
+if [ "$mode" = fail ]; then
+  echo "e: file:///kotlin-src/HelloScript.kt:3:5 Unresolved reference 'oops'." >&2
+  echo "BUILD FAILED"
+  exit 1
+fi
+mkdir -p "$project/addons/kanama"
+date >"$project/addons/kanama/kanama-scripts.jar"
+echo "BUILD SUCCESSFUL"
+EOF
+    chmod +x "$LOOP_PROJECT/gradlew"
+    loop_rc=0
+    (cd "$LOOP_PROJECT" && editor_env JAVA_HOME="$FAKE_JDK" KANAMA_FAKE_GRADLE_CONTROL="$LOOP_CONTROL" \
+      "$GODOT_BIN" --headless --editor --path . --quit-after 30000) >"$LOG_FILE.loop" 2>&1 || loop_rc=$?
+    if [[ -f "$LOOP_CONTROL/hang.pid" ]]; then
+      kill "$(cat "$LOOP_CONTROL/hang.pid")" 2>/dev/null || true
+    fi
+    if [[ "$loop_rc" -ne 0 ]] || ! grep -Fq "[build_loop] PASS" "$LOG_FILE.loop" || grep -Fq "SCRIPT ERROR" "$LOG_FILE.loop"; then
+      grep -E "build_loop|kanama:tools|SCRIPT ERROR|ERROR:|at: " "$LOG_FILE.loop" >&2 || tail -n 60 "$LOG_FILE.loop" >&2
+      smoke_fail "editor build loop test failed (exit $loop_rc)" "scripts/check_editor_build_loop.gd (log: $LOG_FILE.loop)"
+    fi
+    # A second editor session: the light is green at once for the scripts the first one built.
+    write_loop_project_godot
+    restart_rc=0
+    (cd "$LOOP_PROJECT" && editor_env JAVA_HOME="$FAKE_JDK" KANAMA_FAKE_GRADLE_CONTROL="$LOOP_CONTROL" \
+      KANAMA_BUILD_LOOP_MODE=restart "$GODOT_BIN" --headless --editor --path . --quit-after 6000) \
+      >"$LOG_FILE.loop_restart" 2>&1 || restart_rc=$?
+    if [[ "$restart_rc" -ne 0 ]] || ! grep -Fq "[build_loop] PASS" "$LOG_FILE.loop_restart"; then
+      grep -E "build_loop|kanama:tools|SCRIPT ERROR|ERROR:|at: " "$LOG_FILE.loop_restart" >&2 || tail -n 60 "$LOG_FILE.loop_restart" >&2
+      smoke_fail "editor build loop restart test failed (exit $restart_rc)" "scripts/check_editor_build_loop.gd (log: $LOG_FILE.loop_restart)"
+    fi
+
+    # Set Up Kanama Project on a plain project with the store addon unzipped: the addon's addons/kanama
+    # as packageStoreAddon lays it out (the desktop runtime this smoke synced, the release-kit template
+    # and the setup scripts), no Kanama file at the root but a settings.gradle.kts of the user's own.
+    SETUP_PROJECT="$JDK_SCRATCH/plain_project"
+    setup_template="$SETUP_PROJECT/addons/kanama/templates/release-kit"
+    mkdir -p "$SETUP_PROJECT/addons/project_setup_test" "$setup_template/kotlin-src" "$setup_template/gradle"
+    cp -R "$PROJECT_DIR/addons/kanama" "$SETUP_PROJECT/addons/"
+    rm -f "$SETUP_PROJECT/addons/kanama/kanama-scripts.jar"
+    cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$SETUP_PROJECT/addons/"
+    for file in settings.gradle.kts build.gradle.kts README.md; do
+      sed 's/@KANAMA_VERSION@/0.0.0/g' "$ROOT_DIR/templates/release-kit/$file" >"$setup_template/$file"
+    done
+    cp "$ROOT_DIR/templates/starter/HelloScript.kt" "$setup_template/kotlin-src/HelloScript.kt"
+    cp "$ROOT_DIR/gradlew" "$ROOT_DIR/gradlew.bat" "$setup_template/"
+    cp -R "$ROOT_DIR/gradle/wrapper" "$setup_template/gradle/wrapper"
+    : >"$SETUP_PROJECT/addons/kanama/templates/.gdignore"
+    cp "$ROOT_DIR/templates/store-addon/setup-kanama-project.sh" "$ROOT_DIR/templates/store-addon/setup-kanama-project.ps1" \
+      "$SETUP_PROJECT/addons/kanama/"
+    cp "$ROOT_DIR/scripts/check_editor_project_setup.gd" "$SETUP_PROJECT/addons/project_setup_test/plugin.gd"
+    printf '[plugin]\n\nname="project_setup_test"\ndescription=""\nauthor=""\nversion=""\nscript="plugin.gd"\n' \
+      >"$SETUP_PROJECT/addons/project_setup_test/plugin.cfg"
+    printf '%s\n' 'config_version=5' '' '[application]' '' 'config/name="kanama-plain-project"' '' '[editor_plugins]' '' \
+      'enabled=PackedStringArray("res://addons/kanama_tools/plugin.cfg", "res://addons/project_setup_test/plugin.cfg")' '' \
+      '[kanama]' '' 'tools/java_preflight_enabled=false' >"$SETUP_PROJECT/project.godot"
+    printf '%s\n' "// the user's own settings.gradle.kts" 'rootProject.name = "mine"' >"$SETUP_PROJECT/settings.gradle.kts"
+    setup_rc=0
+    (cd "$SETUP_PROJECT" && editor_env "$GODOT_BIN" --headless --editor --path . --quit-after 12000) \
+      >"$LOG_FILE.setup" 2>&1 || setup_rc=$?
+    if [[ "$setup_rc" -ne 0 ]] || ! grep -Fq "[project_setup] PASS" "$LOG_FILE.setup" || grep -Fq "SCRIPT ERROR" "$LOG_FILE.setup"; then
+      grep -E "project_setup|kanama:tools|SCRIPT ERROR|ERROR:|at: " "$LOG_FILE.setup" >&2 || tail -n 60 "$LOG_FILE.setup" >&2
+      smoke_fail "Set Up Kanama Project test failed (exit $setup_rc)" "scripts/check_editor_project_setup.gd (log: $LOG_FILE.setup)"
+    fi
+    ;;
+esac
+
 echo "[tool_smoke] PASS"

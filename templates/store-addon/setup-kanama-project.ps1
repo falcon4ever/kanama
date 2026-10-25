@@ -1,14 +1,27 @@
+# Usage: .\addons\kanama\setup-kanama-project.ps1 [-Force] [-ProjectDir DIR]
+# Run from a Godot project root after unzipping the Kanama store addon, or name the project with
+# -ProjectDir (the Kanama Tools menu item Set Up Kanama Project does). Copies the packaged Gradle
+# template when root Gradle files are missing, adds the starter Kotlin script when kotlin-src has no
+# .kt file, adds build/.gdignore so Godot skips Gradle's build folder, and registers the Kanama
+# GDExtension. Prints one "wrote", "created" or "registered" line for each thing it adds; the same
+# logic as setup-kanama-project.sh. -Force replaces existing template files.
 param(
-    [switch]$Force
+    [switch]$Force,
+    [string]$ProjectDir = ""
 )
 
 $ErrorActionPreference = "Stop"
-$ProjectDir = (Get-Location).Path
+if ([string]::IsNullOrEmpty($ProjectDir)) {
+    $ProjectDir = (Get-Location).Path
+} else {
+    $ProjectDir = (Resolve-Path -LiteralPath $ProjectDir).Path
+}
+$ProjectDir = $ProjectDir.TrimEnd('\', '/')
 $TemplateDir = Join-Path $ProjectDir "addons/kanama/templates/release-kit"
 $ExtensionPath = "res://addons/kanama/kanama.gdextension"
 
 if (-not (Test-Path -LiteralPath $TemplateDir -PathType Container)) {
-    Write-Error "[kanama] missing template directory: $TemplateDir. Run this script from the Godot project root where the addon was unzipped."
+    Write-Error "[kanama] missing template directory: $TemplateDir. Run this script from the Godot project root where the addon was unzipped, or pass -ProjectDir."
 }
 
 function Copy-KanamaFile {
@@ -49,8 +62,27 @@ Copy-KanamaFile (Join-Path $TemplateDir "gradlew.bat") (Join-Path $ProjectDir "g
 Copy-KanamaDirectory (Join-Path $TemplateDir "gradle") (Join-Path $ProjectDir "gradle")
 
 $KotlinSrc = Join-Path $ProjectDir "kotlin-src"
-New-Item -ItemType Directory -Force -Path $KotlinSrc | Out-Null
-Copy-KanamaFile (Join-Path $TemplateDir "kotlin-src/HelloScript.kt") (Join-Path $KotlinSrc "HelloScript.kt")
+if (-not (Test-Path -LiteralPath $KotlinSrc -PathType Container)) {
+    New-Item -ItemType Directory -Force -Path $KotlinSrc | Out-Null
+    Write-Host "[kanama] created kotlin-src/"
+}
+# The starter script only goes into a kotlin-src without Kotlin scripts of its own.
+$ExistingScripts = @(Get-ChildItem -LiteralPath $KotlinSrc -Recurse -File -Filter "*.kt")
+if ($Force -or $ExistingScripts.Count -eq 0) {
+    Copy-KanamaFile (Join-Path $TemplateDir "kotlin-src/HelloScript.kt") (Join-Path $KotlinSrc "HelloScript.kt")
+} else {
+    Write-Host "[kanama] keeping existing kotlin-src/ (it has Kotlin scripts)"
+}
+
+# Gradle's build folder holds generated .kt files: Godot must not import or export them.
+$BuildIgnore = Join-Path $ProjectDir "build/.gdignore"
+if (Test-Path -LiteralPath $BuildIgnore) {
+    Write-Host "[kanama] keeping existing build/.gdignore"
+} else {
+    New-Item -ItemType Directory -Force -Path (Join-Path $ProjectDir "build") | Out-Null
+    New-Item -ItemType File -Force -Path $BuildIgnore | Out-Null
+    Write-Host "[kanama] wrote build/.gdignore"
+}
 
 $GodotDir = Join-Path $ProjectDir ".godot"
 New-Item -ItemType Directory -Force -Path $GodotDir | Out-Null

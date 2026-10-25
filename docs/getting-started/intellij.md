@@ -42,9 +42,9 @@ Edit a script and save. Then either:
   (**kanama > buildScripts**), or `./gradlew buildScripts` in a terminal.
 
 Either way, `addons/kanama/kanama-scripts.jar` is rebuilt and Godot picks it
-up. To skip that step, turn on build on save in Godot
-(`kanama/tools/auto_build_on_save`): every save in IntelliJ then starts a build
-by itself, and the build takes a few seconds.
+up. While the Godot editor is open, you can skip that step: build on save is
+on, so every save in IntelliJ starts a build by itself, and the status light
+in Godot's toolbar turns green when it is done. The build takes a few seconds.
 [Edit, Build, Run](editor-workflow.md#reloading-after-a-build) covers what
 happens after it.
 
