@@ -393,7 +393,7 @@ cap: vararg cells past 16 live on the heap). The data is in the generator: `GD_N
 to the typed function), and `GD_MEMBER_SECTIONS`
 (budgeted hand members: the typed `isInstanceValid`, the text helper). `sync_kdoc_from_godot_docs.py`
 documents each member from `@GlobalScope.xml` through the file's `Fn` table. `Mathf` is hand-written
-once in common (`sugar`): Godot's formulas in Kotlin, with no engine call, the transcendentals
+once in common (`sugar`): Godot's formulas in Kotlin, the transcendentals
 through `kotlin.math` with Godot's clamps (its `Float` overloads stay hand-written: generated ones
 would have to be extension functions, which a script importing only `Mathf` would not see). Only
 the float-to-int conversions, `posmod` by zero and asinh / acosh / atanh call `GD`. The runtime

@@ -80,14 +80,19 @@ packages.
 
 When a script's constructor (or a property initializer) threw while the script was attached, Godot
 crashed with signal 11 right after printing the script error. It now reports the error with your
-file and line and leaves the node without a script instance, as GDScript does with an instance it
-cannot build. Desktop, Android and iOS are fixed; Web already handled it.
+file and line. On desktop and Android the node keeps the script with an inert placeholder: its
+`@Export` values stay, an editor save keeps the script (a `@Tool` script whose constructor fails in
+the editor no longer disappears from the scene), and none of its code runs. GDScript keeps a
+half-built instance instead; a Kotlin constructor that threw leaves no object to run. On iOS, which
+has no placeholder instances, the node is left without the script. Web already handled it.
 
-### Changed — `Mathf` never calls into the engine
+### Changed — `Mathf`'s math runs in Kotlin
 
 `Mathf.sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `sinh`, `cosh`, `tanh`, `pow`, `exp`,
 `log`, `ease`, `dbToLinear` and `linearToDb` are now computed in Kotlin with Godot's formulas
-instead of calling Godot, so a math-heavy loop costs what `kotlin.math` costs. On Android and iOS the
+instead of calling Godot, so a math-heavy loop costs what `kotlin.math` costs. Only `asinh`,
+`acosh`, `atanh`, the `floorToInt` / `ceilToInt` / `roundToInt` conversions, `snapped` to a `Long`
+step and `posmod` by zero still call the engine. On Android and iOS the
 results are bit-identical to GDScript's; on desktop and Web the transcendental ones can differ in
 the last bit or two (Kotlin's math library is not the host's). On Web, `GD.asin` and `GD.acos` now
 clamp outside [-1, 1] as Godot does (they answered NaN), and `asinh`, `acosh` and `atanh` run in

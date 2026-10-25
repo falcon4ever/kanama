@@ -307,8 +307,9 @@ generic `abs`, `clamp`, `lerp`, `max` and `min` have typed overloads for
 numbers; for vectors and mixed types they take `Any?` and return what Godot
 returns. `Mathf` is the C#-style math object with the same functions as plain
 Kotlin calls: `Mathf.lerp`, `Mathf.moveToward`, `Mathf.degToRad`, `Mathf.PI`.
-`Mathf` runs in Kotlin and never calls into the engine, so it is as fast in a
-tight loop as `kotlin.math`. Its arithmetic gives GDScript's result to the
+`Mathf`'s math runs in Kotlin, so it is as fast in a tight loop as
+`kotlin.math`; only `asinh`, `acosh`, `atanh`, the `*ToInt` conversions and
+`posmod` by zero call the engine. Its arithmetic gives GDScript's result to the
 bit; `sin`, `pow`, `exp` and the other transcendental functions can differ from
 GDScript's in the last bit or two on desktop and Web, where Kotlin brings its
 own math library (on Android and iOS they are the same calls Godot makes).
