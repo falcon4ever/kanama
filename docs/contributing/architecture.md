@@ -2,7 +2,7 @@
 
 How the pieces fit together.
 
-## The runtime layers
+## Runtime Layers
 
 Desktop and Android share the same high-level Kanama model: Kotlin user code is
 registered through generated metadata, the binding layer implements Godot's
@@ -116,7 +116,9 @@ wrapper API as desktop/Android runs on device with the platform seam isolated in
 [iOS backend architecture](backends/ios.md) for the
 current validation state and remaining support gates.
 
-## Initialization (one-time, when Godot loads us)
+## Initialization
+
+This runs once, when Godot loads the extension.
 
 ```mermaid
 sequenceDiagram
@@ -178,7 +180,7 @@ Key points:
   those classes are known, which is inside the `initialize` upcall. The engine
   offers no earlier registration point.
 
-## Runtime crossings
+## Runtime Crossings
 
 Two directions, both via Panama, each with its own mechanism:
 
@@ -324,11 +326,11 @@ they can be shared: a value type is written into a builtin-call frame slot as it
 the `real_t` storage width (`BuiltinFrame.putReal`; int32 for `Vector2i`-style types, float32 for
 `Color`), while a scalar `float` argument travels as an 8-byte double (`putDouble`).
 
-## The object handle and the raw pointer
+## Object Handle and Raw Pointer
 
 A wrapper's identity is `net.multigesture.kanama.api.GodotHandle`, a zero-cost
-`@JvmInline value class` that is the only handle type a public signature may name
-(task 104 step 1). Since step 3 it is ONE shared file in
+`@JvmInline value class` that is the only handle type a public signature may name.
+It is ONE shared file in
 `src/commonMain/kotlin/net/multigesture/kanama/api`, because what it wraps is now
 also Kanama-named: `net.multigesture.kanama.binding.runtime.RawSegment`, the raw
 engine pointer, declared as a plain `typealias` once per backend — the FFM
@@ -337,7 +339,7 @@ remap), the Kotlin/Native shim of the same name on iOS — with the null pointer
 beside it as a top-level `NULL_SEGMENT`. Web declares its own `GodotHandle` under
 the same fully-qualified name over a generation-tagged registry id.
 
-Nothing in `src/commonMain` — the value types, the seams and, since task 117 P4′, the
+Nothing in `src/commonMain` — the value types, the seams and the
 whole API wrapper tree — names a `java.lang.foreign` type, because a KMP `commonMain`
 can neither declare nor `expect` a JDK package: `RawSegment` is
 `expect sealed interface RawSegment` with `NULL_SEGMENT` an `expect val`, and each
@@ -345,15 +347,15 @@ platform actualizes them over its own pointer type (the FFM `MemorySegment` on d
 the Kotlin/Native shim on iOS). The runtime seam (`ObjectCalls`,
 `GodotObject.requireOpenHandle()`, the KSP glue) carries `RawSegment` throughout.
 
-## Value types
+## Value Types
 
 The 19 Godot builtin value types (`Vector2`, `Vector3`, `Basis`, `Transform3D`,
 `Quaternion`, `AABB`, `Plane`, `RID`, …) are ONE hand-written set under
 `src/commonMain/kotlin/net/multigesture/kanama/types`, the module's KMP common
 fragment beside the generated wrapper tree: the JVM target, the two iOS targets and the Android copy
-task all compile those files (task 104 step 2). Only `Real.kt` is per platform —
+task all compile those files. Only `Real.kt` is per platform —
 generated at build time on desktop, hand-written on iOS, written by the plugin
-build script on Android. The Web build compiles the same files too (task 134 D1):
+build script on Android. The Web build compiles the same files too:
 `web-runtime` adds the whole `types` directory as a source directory and supplies its own
 internal `real_t` half (`WebReal.kt`) and its own `BuiltinFrame` (`web-runtime/.../binding/runtime`),
 which runs an engine-backed method over the bridge (one immediate crossing, answered by the
@@ -379,16 +381,16 @@ signed zero canonicalized in the hash). Methods split by who computes them:
   WARN/ERR reaches a GDScript logger that calls a script); the runtime smoke's builtin re-entry row
   proves a nested call leaves the outer one intact.
 
-Both kinds are generated (`scripts/generate_builtin_ops.py`, task 134 B). The facade is
+Both kinds are generated (`scripts/generate_builtin_ops.py`). The facade is
 `internal expect class BuiltinFrame` / `BuiltinMethod` in the common fragment
 (`src/commonMain/.../binding/runtime/BuiltinFrame.expect.kt`) with one `actual` per backend — one
 unbound FFM downcall called with `invokeExact` for desktop and Android, the C shim
 (`kanama_ios_godot_builtin_call`) for iOS — so the compiler proves the two halves agree. Android
 compiles a remapped copy of the common and JVM sources as a plain Kotlin library: the copy skips
 every `*.expect.kt` file and strips the `actual` modifier, which is also why an `expect`
-declaration carries no default argument (task 117 D24; `scripts/check_expect_no_defaults.py`).
+declaration carries no default argument (`scripts/check_expect_no_defaults.py`).
 
-## Object lifetime
+## Object Lifetime
 
 Godot is reference-counted on the native side. A Godot object can be freed
 the moment its refcount drops to zero — which can happen on any thread, at
@@ -445,7 +447,7 @@ of several references leaves the object alive and the wrapper usable. The
 ownership rules are in
 [RefCounted Return Ownership](wrapper-maintenance.md#refcounted-return-ownership).
 
-### The garbage-collector fallback
+### Garbage-Collector Fallback
 
 An owned `RefCounted` wrapper that is never closed is released after the garbage collector drops
 it: the wrapper registers a cleanup that holds only its handle, and the collector's callback only
@@ -500,7 +502,7 @@ what GDScript's re-parse gives:
 returns, so `close()` after it is the caller's to make. An early port got this wrong (issue #81);
 `scripts/runtime_smoke.sh` asserts the reference count and liveness after `save` to keep it fixed.
 
-### Threads and the script loader
+### Threads and the Script Loader
 
 Godot calls into Kanama on whichever thread made the call, and Kanama runs it there; Kanama makes no
 thread-affinity checks. `ResourceLoader.load_threaded_request("res://Thing.kt")` is the case where
@@ -521,7 +523,7 @@ method dispatch) or the `.kt` loader's `_load` runs on a thread other than the o
 It is a diagnostic, not an assertion: nothing is refused, and with the variable unset it costs one
 boolean read per call.
 
-### Autoload lookup
+### Autoload Lookup
 
 `Autoloads.<Name>` (generated by `AutoloadSource.kt` from `project.godot`) finds the node at
 `/root/<Name>` on the first read and reuses it while it lives; a freed one is looked up again. A
@@ -535,7 +537,7 @@ header). Editing the autoload list re-runs the processor: the build declares `pr
 KSP input. How autoloads behave across a hot reload is in
 [Hot Reload Internals](hot-reload-internals.md#autoloads-across-a-reload).
 
-### Process exit (desktop)
+### Process Exit on Desktop
 
 The desktop JVM is never destroyed: Kanama has no `DestroyJavaVM`. A normal quit runs Godot's
 `Main::cleanup`. That frees the scene tree, and Kanama releases what it owns at the extension
@@ -549,7 +551,7 @@ crashes (SIGBUS in `UpcallStub`) or hangs. `bootstrap.c` therefore passes the JN
 `exit` hook, which flushes stdio and calls `_exit(code)`; the runtime smoke's SIGTERM leg checks it.
 Android (ART, started by the app) and iOS (no JVM) do not have this exit path.
 
-## Script class model
+## Script Class Model
 
 `@ScriptClass` Kotlin types are separate script objects that hold the
 Godot-owned object handle. They do not inherit from the attach type. User code
@@ -631,7 +633,7 @@ within the first few hundred calls; `self` is a cached field, so no lookup
 overhead. Expected build cost: longer KSP + kotlinc time and a slightly larger jar
 (both negligible).
 
-## Script-language no-op callbacks
+## Script-Language No-Op Callbacks
 
 Godot calls script-language virtuals such as `_add_global_constant`,
 `_add_named_global_constant`, and `_remove_named_global_constant` on every
@@ -646,7 +648,7 @@ read). The callbacks are still implemented so Godot sees a complete
 script-language surface, but they are intentionally no-ops: the generated object
 does not need the runtime broadcast.
 
-## Why no engine module, no JNI glue, no mirrored object graph
+## Rejected Designs
 
 Three things this project deliberately does *not* do, and why:
 

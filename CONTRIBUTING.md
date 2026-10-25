@@ -1,7 +1,9 @@
 # Contributing to Kanama
 
 This guide is for anyone changing Kanama: runtime contributors, demo porters,
-and documentation contributors.
+and documentation contributors. It holds the rules; the detail is in the
+**Develop Kanama** half of the docs, starting at
+[Start Here](docs/contributing/index.md).
 
 ## Repo Layout
 
@@ -30,8 +32,8 @@ a separate checkout and contains external Godot projects ported to Kanama.
 
 ## Before You Start
 
-1. Read `docs/contributing/architecture.md` before touching FFI, binding, or
-   script lifetime code.
+1. Read [Architecture](docs/contributing/architecture.md) before touching FFI,
+   binding, or script lifetime code.
 2. Check the open issue, pull request, or maintainer-provided task context for
    the current priority.
 3. Establish a local baseline with:
@@ -64,6 +66,8 @@ Gate scripts follow two rules (`scripts/README-gates.md`): a check that cannot r
 `SKIP: <id>: <reason>` and fails under CI unless the id is listed in `KANAMA_ALLOW_SKIP`, and no
 failure is swallowed (`|| true`, `2>/dev/null`) without a `# justified:` comment. A new gate ships with
 its red run: add a `case(...)` to `scripts/gate_red_runs.py` and a row to that README.
+[Gates and Claims](docs/contributing/gates.md) explains the local gate, the red runs and the
+checks that read the docs.
 
 Before release-facing changes, validate from isolated clones instead of your
 development worktree:
@@ -115,79 +119,25 @@ The knobs live in the `ktfmt { ... }` block in `build.gradle.kts`.
 
 ## Wrapper Work
 
-1. Check `extension_api.json` for method names, hashes, argument metadata, and
-   virtual-method flags.
-2. Check the coverage and candidate reports before adding wrappers:
+- Every Godot class is generated from `extension_api.json`; public wrappers must stay
+  regeneratable. The few hand-written roots and the per-platform table are the exception, and
+  the drift gate (`check_wrapper_generator.py`) fails on any hand edit of generated output.
+- Only add methods whose types have a known `ObjectCalls` marshal path. A method that needs a
+  new ABI shape gets the exact helper and its audit coverage first.
+- Validate method binds after wrapper changes
+  (`python3 scripts/validate_godot_api.py --api extension_api.json`), run the ABI, shape and
+  signature audits that cover the change, and add a smoke or compile fixture for a
+  user-visible API addition.
+- Virtual methods (`"is_virtual": true`) are override points, never generated as callable
+  wrappers; scripts override them with `@OverrideVirtual`.
+- Hand-written code under `api/` is a budget, not a default: `scripts/check_hand_code_budget.py`
+  fails on an unlisted hand-written API file and on growth past its line ratchet. Sugar for a
+  generated class goes into the generator's tables, not into a hand class.
 
-   ```sh
-   python3 scripts/api_wrapper_coverage.py
-   python3 scripts/api_wrapper_candidates.py
-   ```
+The steps, the boundary between generated and hand-written code, and the virtual-return
+coverage are in [Wrapper Maintenance](docs/contributing/wrapper-maintenance.md#working-on-wrappers).
 
-3. Validate method binds after wrapper changes:
-
-   ```sh
-   python3 scripts/validate_godot_api.py --api extension_api.json
-   ```
-
-4. Run the relevant ABI, shape, and signature audits.
-5. Add a smoke or compile fixture for user-visible API additions.
-
-Only add methods whose types have a known `ObjectCalls` marshal path. If a
-method needs a new ABI shape, add the exact helper and audit coverage first.
-
-## Virtual Methods
-
-Methods marked `"is_virtual": true` in `extension_api.json` are override points
-that Godot calls into the extension. They are never generated as normal ptrcall
-wrappers — a script overrides them with `@OverrideVirtual` (the Kotlin function
-name is the virtual's name, GDScript-style), validated against the generated
-signature table (`scripts/generate_virtual_signature_table.py`) and dispatched
-through the script-instance layer.
-
-Current policy:
-- Skip virtual methods in generated wrapper shells (they are not callable API).
-- Lifecycle callbacks (`@OnReady`, `@OnProcess`, …) ride the same dispatch.
-- Return marshalling covers every Variant-expressible family on desktop/Android;
-  see the "Virtual-return coverage" section of
-  `docs/contributing/wrapper-maintenance.md` for the exact bounds and the
-  documented iOS residue.
-
-## Generated vs Hand-Authored Wrappers
-
-Generated wrappers should be fully regeneratable from `extension_api.json`.
-Hand-authored wrappers are reserved for classes with ownership, singleton,
-dynamic-call, or Kanama-specific policy.
-
-Generated candidates:
-- Pure nodes/resources with known helper shapes
-- 1-to-1 MethodBind calls
-- No special lifetime or ownership behavior
-
-Hand-authored candidates:
-- `FileAccess`, `DirAccess`, and similar managed objects
-- Singletons and engine-owned instances
-- Classes using unsupported `Array`, `Dictionary`, `Callable`, or ownership
-  sensitive APIs
-- Classes with Kanama-specific factories, closeable handles, or dynamic
-  behavior
-
-The per-platform table (`PER_PLATFORM_WRAPPERS` in `scripts/generate_api_wrapper.py`;
-`DESKTOP_HANDSHAPED` / `IOS_HANDSHAPED` are views of it) and the generator policy audits
-must stay current when changing this boundary — the full drift-gate fails otherwise.
-Everything else is generated once into the shared tree, `src/commonMain/kotlin/.../api`,
-which is KMP common code: it may name only common declarations (the platform classes it
-needs are `expect`s with one `actual` per platform, and an `expect` carries no default
-argument).
-
-Hand-written code under `api/` is a budget, not a default: `scripts/check_hand_code_budget.py`
-fails on a hand-written API file `scripts/hand_code_budget.json` does not list (with its category:
-seam, runtime-core, sugar, or transitional) and on any file that grows past its line ratchet; a
-legitimate seam/runtime-core/sugar change raises it with `--write --reason "<why>"`. Sugar for a generated class goes into the
-generator's tables (`FACTORY_HELPERS`, `SHARED_MEMBER_SECTIONS`, ...), not into a hand class; see
-"Retiring a per-platform class" in `docs/contributing/wrapper-maintenance.md`.
-
-## Porting And Demo Integration
+## Porting and Demo Integration
 
 Ported demos are integration pressure for real Kanama consumer code. When a
 demo breaks after wrapper generation, decide whether the fix belongs in Kanama
@@ -206,28 +156,15 @@ The demos repository exposes:
 ./gradlew demoParityAudit
 ```
 
-## Android Port Notes
+## Platform Backends
 
-Android is Supported on Godot 4.7 stable (promoted from Experimental
-2026-07-14): the Pixel 7 debug demo matrix, an R8-minified release APK (via
-Kanama's PanamaPort fork), and the nine-demo Vulkan/Mobile renderer smoke have
-all passed, alongside debug breadth on three more models. Note that Android 13
-(API 33) is the minimum and packaged addons are runtime-only; see
-`docs/reference/version-support.md` for the support status and
-`docs/contributing/platform-evidence.md` for the evidence behind it.
-
-Known constraints:
-- Android uses ART, so the GDExtension library must attach to the existing VM
-  instead of creating a desktop JVM.
-- PanamaPort mirrors the FFM API under `com.v7878.foreign`.
-- Android downcall handles must use `invokeWithArguments(...)`; desktop can
-  keep direct `invoke(...)`.
-- Hot reload is desktop-editor-only. Android builds should load Kotlin classes
-  from the APK at startup.
-- `.gdextension` files need Android ABI entries for the bridge library.
-
-See `docs/exporting/android.md` and `docs/contributing/backends/android.md`
-for the current Android workflow and limitations.
+Android, iOS and Web each have an internals page under `docs/contributing/backends/`
+([Android](docs/contributing/backends/android.md), [iOS](docs/contributing/backends/ios.md),
+[Web](docs/contributing/backends/web.md)); the support status of each platform is on
+[Requirements and Platform Status](docs/reference/version-support.md). Android 13 (API 33) is the
+minimum for every Android build, and the packaged mobile addons are runtime-only. Never widen a
+support claim past what the matching device or browser runs validated
+([Release Process](docs/contributing/release.md#support-levels)).
 
 ## Documented Limitations
 
@@ -273,7 +210,8 @@ the claim it guards.
   open and go stale exactly like the prose it replaced.
 
 Run it directly with `python3 scripts/audit_stale_blockers.py --list`; it is a
-`local_ci.sh` stage.
+`local_ci.sh` stage. [Gates and Claims](docs/contributing/gates.md#checked-lines-in-the-docs)
+covers the markers in the docs and the `kanama-claim` checks beside them.
 
 ## Design Rules
 

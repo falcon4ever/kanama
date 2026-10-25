@@ -272,7 +272,7 @@ count above zero or an `OWNERSHIP SELFTEST FAIL` line.
 
 The generated API exercise (`ApiExerciseHook`, one row per `ObjectCalls` helper the shared tree calls;
 see [API Exercise Inventory](../../reference/generated/api-exercise.md) and
-[Wrapper Maintenance](../wrapper-maintenance.md#the-api-exercise-inventory)) is the same JVM code on
+[Wrapper Maintenance](../wrapper-maintenance.md#api-exercise-inventory)) is the same JVM code on
 ART, so it runs on the device on request: `KANAMA_ANDROID_API_EXERCISE=1 scripts/android_smoke.sh ...`
 builds the runtime AAR with `-PkanamaApiExercise=true` (the plugin copy then keeps the `exercise/`
 sources it otherwise excludes), writes `kanama/debug/api_exercise=true` beside the two settings above,
@@ -368,6 +368,9 @@ Android instead of warning that no `arm64` library exists.
 
 The current Android path is intentionally narrow:
 
+- Android runs on ART, so the bootstrap attaches to the VM the app already has
+  instead of creating a desktop JVM, and Kotlin classes load from the APK at
+  startup. Hot reload is desktop-editor-only.
 - The Android source remap is a guarded Gradle step rather than a dedicated
   source-set design.
 - Some JVM APIs used on desktop have Android-compatible replacements.
