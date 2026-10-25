@@ -66,6 +66,22 @@ func _run() -> void:
     _expect(_find_control("KanamaBuildRelease") == null, "Build Release is shown, but no release build of the scripts exists")
     _expect(_find_control("KanamaPlatformBuilds") == null, "the Platforms menu is shown in a project without a Kanama checkout")
 
+    # The Platforms menu beside a Kanama checkout: the commands the export pages give, run in the
+    # checkout; iOS only on macOS; nothing without a checkout or a project task.
+    var mac: Array = _kanama.platform_builds_for("macOS", "/p", "/k", "/p", "/p/kotlin-src")
+    var linux: Array = _kanama.platform_builds_for("Linux", "/p", "/k", "/p", "/p/kotlin-src")
+    _expect(_platform_ids(mac) == ["android", "ios", "web"], "platform builds on macOS beside a checkout: %s" % [_platform_ids(mac)])
+    _expect(_platform_ids(linux) == ["android", "web"], "platform builds on Linux beside a checkout: %s" % [_platform_ids(linux)])
+    _expect(_platform_ids(_kanama.platform_builds_for("macOS", "/p", "", "/p", "/p/kotlin-src")).is_empty(), "platform builds without a checkout")
+    if mac.size() == 3:
+        var android: Array = mac[0]["steps"]
+        _expect(android.size() == 2 and android[0]["dir"] == "/k" and android[0]["task"] == "installAndroidPluginAar"
+            and android[0]["args"] == ["-PkanamaAndroidProjectDir=/p"] and android[1]["task"] == "installAddonJar"
+            and android[1]["args"] == ["-PkanamaProjectDir=/p", "-PkanamaProjectScriptsDir=/p/kotlin-src"],
+            "the Android platform build runs %s, not the two commands of the Android export page" % [android])
+        _expect(mac[2]["steps"][0]["task"] == ":web-runtime:exportWeb" and mac[2]["steps"][0]["args"] == ["-PkanamaWebProjectDir=/p"],
+            "the Web platform build runs %s" % [mac[2]["steps"]])
+
     # 1. A .kt file and no scripts jar: never built.
     _expect_status("stale", "a project with a .kt file and no kanama-scripts.jar")
 
@@ -224,3 +240,10 @@ func _finish() -> void:
     for failure in _failures:
         printerr("%s FAIL: %s" % [TAG, failure])
     get_tree().quit(1)
+
+
+func _platform_ids(builds: Array) -> Array:
+    var ids := []
+    for build in builds:
+        ids.append(String(build["id"]))
+    return ids
