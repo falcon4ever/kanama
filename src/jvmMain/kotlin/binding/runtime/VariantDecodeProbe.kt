@@ -12,18 +12,23 @@ import net.multigesture.kanama.api.Resource
  * that smoke scene only; game code does not call it.
  *
  * Each container decode of [BuiltinTypes] reads the elements one by one through `Array.get` /
- * `Dictionary.get`, and Godot ASSIGNS the Variant result into the buffer Kanama passes. A buffer
- * reused after a plain `variant_destroy`, not [BuiltinTypes.destroyVariantToNil], still holds the
- * previous element, so the assignment releases that element a second time.
+ * `Dictionary.get` (and a Dictionary's keys through `Array.get` of `keys()`), and Godot ASSIGNS the
+ * Variant result into the buffer Kanama passes. A buffer reused after a plain `variant_destroy`,
+ * not [BuiltinTypes.destroyVariantToNil], still holds the previous element, so the assignment
+ * releases that element a second time.
  *
- * Every decode gets a fresh container `[o0, o1, c0, c1, nil]`: two Resources, then two Callables
- * bound (`bindv`) to two more Resources, then nil, so each element is followed by one that
- * overwrites the buffer. A Godot 4.8 Object Variant no longer nulls its pointer on destroy, so it
- * is released twice there; a bound Callable is a custom Callable, released twice on 4.7 as well,
- * which keeps the probe meaningful on 4.7.2. The result per decode is the four Resources' reference
- * counts after the decode (2 each: the probe's wrapper, and the container or the bound Callable),
- * then, after the container is destroyed, 1 each: `2,2,2,2:1,1,1,1`. A wrong count leaves the
- * container undestroyed (`:kept`), because it holds an element already released once too often.
+ * Every decode gets a fresh container. An Array is `[v0, v1, bound(v2), bound(v3), nil]`: two
+ * Resources, then two Callables bound (`bindv`) to two more Resources, then nil, so each element is
+ * followed by one that overwrites the buffer. A Dictionary holds the same values under String keys,
+ * after two entries whose KEYS are a Resource `k0` and `bound(k1)` (values nil), so its key buffer
+ * sees an Object and a custom Callable too. A Godot 4.8 Object Variant no longer nulls its pointer
+ * on destroy, so it is released twice there; a bound Callable is a custom Callable, released twice
+ * on 4.7 as well, which keeps the probe meaningful on 4.7.2. The result per decode is the
+ * Resources' reference counts after the decode (2 each: the probe's wrapper, and the container or
+ * the bound Callable), then, after the container is destroyed, 1 each: `2,2,2,2:1,1,1,1` for an
+ * Array, the same with `k0,k1` appended for a Dictionary. A wrong count leaves the container
+ * undestroyed (`:kept`), because it holds an element already released once too often; its healthy
+ * entries are cleared first, so nothing else leaks.
  */
 object VariantDecodeProbe {
   private class Decoder(
@@ -54,46 +59,49 @@ object VariantDecodeProbe {
   private const val ARRAY_PUSH_BACK_HASH = 3316032543L
   private const val ARRAY_SET_HASH = 3798478031L
   private const val DICTIONARY_SET_HASH = 2175348267L
+  private const val DICTIONARY_ERASE_HASH = 1776646889L
   private const val CALLABLE_BINDV_HASH = 3564560322L
-  private val KEYS = listOf("o0", "o1", "c0", "c1", "n")
+  private val VALUE_KEYS = listOf("v0", "v1", "v2", "v3", "n")
 
   /** `decode_buffers <decode>=<counts after>:<counts after the destroy> ...`; [target] is bound. */
   fun run(target: GodotObject): String =
     decoders.joinToString(" ", prefix = "decode_buffers ") { "${it.name}=${probe(target, it)}" }
 
   private fun probe(target: GodotObject, decoder: Decoder): String {
-    val held = List(4) { Resource.create() }
+    val dictionary = decoder.dictionary
+    // v0..v3, then (a Dictionary) the key Resources k0, k1.
+    val held = List(if (dictionary) 6 else 4) { Resource.create() }
     try {
       Arena.ofConfined().use { arena ->
         val container = arena.allocate(8L, 8L)
-        val type = if (decoder.dictionary) VariantType.DICTIONARY else VariantType.ARRAY
+        val type = if (dictionary) VariantType.DICTIONARY else VariantType.ARRAY
         BuiltinTypes.construct(type, container, constructorIndex = 0)
-        put(container, decoder.dictionary, 0, append = true) {
-          BuiltinTypes.initVariantFromAny(it, held[0], arena)
+        if (dictionary) {
+          setEntry(container, { objectVariant(it, held[4]) }, BuiltinTypes::initNilVariant)
+          setEntry(
+            container,
+            { boundCallable(it, target, held[5], arena) },
+            BuiltinTypes::initNilVariant,
+          )
         }
-        put(container, decoder.dictionary, 1, append = true) {
-          BuiltinTypes.initVariantFromAny(it, held[1], arena)
+        for (i in 0 until 5) {
+          val init: (MemorySegment) -> Unit =
+            when (i) {
+              0,
+              1 -> { out -> objectVariant(out, held[i]) }
+              2,
+              3 -> { out -> boundCallable(out, target, held[i], arena) }
+              else -> BuiltinTypes::initNilVariant
+            }
+          if (dictionary) setEntry(container, stringKey(VALUE_KEYS[i]), init)
+          else arrayCall(container, "push_back", ARRAY_PUSH_BACK_HASH, null, init)
         }
-        put(container, decoder.dictionary, 2, append = true) {
-          boundCallable(it, target, held[2], arena)
-        }
-        put(container, decoder.dictionary, 3, append = true) {
-          boundCallable(it, target, held[3], arena)
-        }
-        put(container, decoder.dictionary, 4, append = true) { BuiltinTypes.initNilVariant(it) }
+        val expected = held.joinToString(",") { "2" }
         val before = counts(held)
         decoder.decode(container, arena)
         val after = counts(held)
-        if (before != "2,2,2,2" || after != before) {
-          // The container keeps the slot released once too often (destroying it would release
-          // that element again); every other slot is set to nil, so nothing else leaks.
-          held.forEachIndexed { i, resource ->
-            if (resource.getReferenceCount() == 2) {
-              put(container, decoder.dictionary, i, append = false) {
-                BuiltinTypes.initNilVariant(it)
-              }
-            }
-          }
+        if (before != expected || after != before) {
+          clearHealthy(container, dictionary, target, held, arena)
           return "$after:kept(before=$before)"
         }
         BuiltinTypes.destroyTyped(type, container)
@@ -104,63 +112,109 @@ object VariantDecodeProbe {
     }
   }
 
+  /**
+   * Drops every entry of [container] whose Resource still counts 2, leaving only the ones released
+   * once too often (destroying or touching those would release them again).
+   */
+  private fun clearHealthy(
+    container: MemorySegment,
+    dictionary: Boolean,
+    target: GodotObject,
+    held: List<Resource>,
+    arena: Arena,
+  ) {
+    held.forEachIndexed { i, resource ->
+      if (resource.getReferenceCount() != 2) return@forEachIndexed
+      when {
+        !dictionary ->
+          arrayCall(container, "set", ARRAY_SET_HASH, i.toLong(), BuiltinTypes::initNilVariant)
+        i < 4 -> setEntry(container, stringKey(VALUE_KEYS[i]), BuiltinTypes::initNilVariant)
+        i == 4 -> eraseEntry(container) { objectVariant(it, resource) }
+        // An equal Callable finds the key: a bound Callable compares by its callable and binds.
+        else -> eraseEntry(container) { boundCallable(it, target, resource, arena) }
+      }
+    }
+  }
+
   private fun counts(held: List<Resource>): String =
     held.joinToString(",") { it.getReferenceCount().toString() }
 
-  /**
-   * Puts the Variant [init] builds into [container]: appended or at [index] of an Array, under key
-   * `KEYS[index]` of a Dictionary.
-   */
-  private fun put(
+  private fun objectVariant(out: MemorySegment, value: Resource) {
+    Arena.ofConfined().use { arena -> BuiltinTypes.initVariantFromAny(out, value, arena) }
+  }
+
+  private fun stringKey(key: String): (MemorySegment) -> Unit = { out ->
+    Arena.ofConfined().use { arena -> BuiltinTypes.initVariantFromAny(out, key, arena) }
+  }
+
+  /** Builds a Variant with [init], runs [use] on it, destroys it. */
+  private inline fun withVariant(init: (MemorySegment) -> Unit, use: (MemorySegment) -> Unit) {
+    Arena.ofConfined().use { arena ->
+      val variant = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
+      init(variant)
+      try {
+        use(variant)
+      } finally {
+        BuiltinTypes.destroyVariant(variant)
+      }
+    }
+  }
+
+  /** `Array.push_back(value)` ([index] null) or `Array.set(index, value)`. */
+  private fun arrayCall(
     container: MemorySegment,
-    dictionary: Boolean,
-    index: Int,
-    append: Boolean,
+    method: String,
+    hash: Long,
+    index: Long?,
     init: (MemorySegment) -> Unit,
   ) {
-    Arena.ofConfined().use { arena ->
-      val value = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
-      init(value)
-      try {
-        if (!dictionary && append) {
-          BuiltinTypes.call(
-            VariantType.ARRAY,
-            "push_back",
-            ARRAY_PUSH_BACK_HASH,
-            container,
-            listOf(value),
-          )
-          return
-        }
-        if (!dictionary) {
+    withVariant(init) { value ->
+      if (index == null) {
+        BuiltinTypes.call(VariantType.ARRAY, method, hash, container, listOf(value))
+      } else {
+        Arena.ofConfined().use { arena ->
           val slot = arena.allocate(JAVA_LONG)
-          slot.set(JAVA_LONG, 0, index.toLong())
-          BuiltinTypes.call(
-            VariantType.ARRAY,
-            "set",
-            ARRAY_SET_HASH,
-            container,
-            listOf(slot, value),
-          )
-          return
+          slot.set(JAVA_LONG, 0, index)
+          BuiltinTypes.call(VariantType.ARRAY, method, hash, container, listOf(slot, value))
         }
-        val key = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
-        BuiltinTypes.initVariantFromAny(key, KEYS[index], arena)
-        try {
-          val ok = arena.allocate(JAVA_BYTE)
+      }
+    }
+  }
+
+  /** `Dictionary.set(key, value)`. */
+  private fun setEntry(
+    container: MemorySegment,
+    key: (MemorySegment) -> Unit,
+    value: (MemorySegment) -> Unit,
+  ) {
+    withVariant(key) { k ->
+      withVariant(value) { v ->
+        Arena.ofConfined().use { arena ->
           BuiltinTypes.call(
             VariantType.DICTIONARY,
             "set",
             DICTIONARY_SET_HASH,
             container,
-            listOf(key, value),
-            ok,
+            listOf(k, v),
+            arena.allocate(JAVA_BYTE),
           )
-        } finally {
-          BuiltinTypes.destroyVariant(key)
         }
-      } finally {
-        BuiltinTypes.destroyVariant(value)
+      }
+    }
+  }
+
+  /** `Dictionary.erase(key)`. */
+  private fun eraseEntry(container: MemorySegment, key: (MemorySegment) -> Unit) {
+    withVariant(key) { k ->
+      Arena.ofConfined().use { arena ->
+        BuiltinTypes.call(
+          VariantType.DICTIONARY,
+          "erase",
+          DICTIONARY_ERASE_HASH,
+          container,
+          listOf(k),
+          arena.allocate(JAVA_BYTE),
+        )
       }
     }
   }

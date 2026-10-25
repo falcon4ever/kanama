@@ -137,6 +137,9 @@ actual object ObjectCalls {
     val doubleRet: MemorySegment = arena.allocate(JAVA_DOUBLE)
     val objectCell: MemorySegment = arena.allocate(ADDRESS)
     val arrayRet: MemorySegment = arena.allocate(8L, 8L)
+    // Reused across calls: the engine ASSIGNS a packed-array return into it, so each use destroys
+    // it and zero-fills it again, never relying on the destroyed value (as a reused Variant buffer
+    // did before Godot 4.8 stopped nulling an Object on destroy; BuiltinTypes.destroyVariantToNil).
     val packedArrayRet: MemorySegment =
       arena.allocate(BuiltinTypes.PACKED_ARRAY_SIZE, BuiltinTypes.PACKED_ARRAY_ALIGN)
     val vector2Cell: MemorySegment = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
@@ -8687,6 +8690,8 @@ actual object ObjectCalls {
       BuiltinTypes.readPackedByteArray(scratch.packedArrayRet)
     } finally {
       BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, scratch.packedArrayRet)
+      // Zero-filled again (an empty packed array) for the next call, which assigns into it.
+      scratch.packedArrayRet.fill(0)
     }
   }
 
@@ -8702,6 +8707,8 @@ actual object ObjectCalls {
       BuiltinTypes.readPackedInt32Array(scratch.packedArrayRet)
     } finally {
       BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, scratch.packedArrayRet)
+      // Zero-filled again (an empty packed array) for the next call, which assigns into it.
+      scratch.packedArrayRet.fill(0)
     }
   }
 
