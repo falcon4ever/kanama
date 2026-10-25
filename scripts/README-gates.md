@@ -159,6 +159,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_script_portability.py:1151` | `except SyntaxError as error:` | justified: reported as a `parse` finding (the return value), the gate stays red |
 | `scripts/check_script_portability.py:1474` | `except UnicodeDecodeError:` | justified: a binary file is not a script; only text files are scanned |
 | `scripts/check_shell_lint.sh:27` | `if ! command -v shellcheck >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/check_wrapper_generator.py:563` | `except ValueError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/export_game_assemble.sh:231` | `if command -v codesign >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/export_game_smoke.sh:133` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
 | `scripts/export_game_smoke.sh:150` | `"$ROOT_DIR/gradlew" --no-daemon -p "$ROOT_DIR" buildNativeBootstrap syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
@@ -171,8 +172,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:205` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:247` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:249` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1336` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:1407` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1342` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1413` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:682` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:725` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -185,10 +186,10 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/generate_api_exercise.py:2103` | `except LiteralError:` | justified: a default this generator cannot write (`Transform3D(1, 0, ...)`, `Callable()`, |
 | `scripts/generate_api_exercise.py:2135` | `except LiteralError as first:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:2141` | `except LiteralError:` | justified: the next site of the same case is tried; with none left, the first error is raised |
-| `scripts/generate_api_wrapper.py:1900` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1905` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1910` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1946` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1901` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1906` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1911` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1947` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
 | `scripts/generate_gates_index.py:378` | `except ValueError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_gates_index.py:422` | `check=False,` | justified: a failed probe reads as "not shallow", and the full-history path then derives the dates itself |
 | `scripts/generate_gates_index.py:446` | `check=False,` | justified: a failed `git log` leaves the date as a dash, which --check reports as a stale page |
@@ -272,12 +273,20 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/tool_smoke.sh:29` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:37` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/tool_smoke.sh:134` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/upgrade_godot.sh:149` | `BIN_VERSION="$(run_with_timeout "${KANAMA_GODOT_DUMP_TIMEOUT:-300}" "$GODOT_BIN" --version 2>/dev/null \| grep ` | justified: a binary that prints no version leaves BIN_VERSION empty, which fails the pin comparison just below. |
-| `scripts/upgrade_godot.sh:174` | `DOCS_VERSION_PY="$(cd "$GODOT_DOCS_DIR/../.." 2>/dev/null && pwd)/version.py"` | justified: an unreachable docs dir yields a version.py path that does not exist, which fails loudly just below. |
-| `scripts/upgrade_godot.sh:212` | `unexpected="$(printf '%s\n' "$STATUS_BEFORE" \| grep -v '^??' \| grep -vE "$allowed_dirty" \| grep -v '^$' \|\| tru` | justified: grep -v exits 1 when it filters every line out, which is the clean case (no unexpected change). |
-| `scripts/upgrade_godot.sh:236` | `TEMPLATES="$(find "$TEMPLATES" -maxdepth 1 -name '*.tpz' \| head -n 1 \|\| true)"` | justified: no .tpz in the directory leaves the path empty, which the -f test below reports. |
-| `scripts/upgrade_godot.sh:252` | `tpz_version="$(unzip -p "$TEMPLATES" templates/version.txt 2>/dev/null \| tr -d '[:space:]' \|\| true)"` | justified: an archive without templates/version.txt leaves the version empty, which the comparison below rejects. |
-| `scripts/upgrade_godot.sh:551` | `status_diff="$(diff <(printf '%s\n' "$STATUS_BEFORE") <(printf '%s\n' "$STATUS_AFTER") \|\| true)"` | justified: diff exits 1 on a difference, which is the very thing being recorded as a failure here. |
+| `scripts/upgrade_godot.sh:150` | `restore="$(git -C "$ROOT_DIR" diff --name-only --diff-filter=MDT HEAD \| grep -vxF "$pins" \|\| true)"` | justified: grep -v exits 1 when every changed file is a pin file, which leaves nothing to restore. |
+| `scripts/upgrade_godot.sh:162` | `left="$(git -C "$ROOT_DIR" status --porcelain \| grep -vc '^??' \|\| true)"` | justified: grep -c prints 0 and exits 1 when no tracked change is left, which is the reset's goal. |
+| `scripts/upgrade_godot.sh:206` | `BIN_VERSION="$(run_with_timeout "${KANAMA_GODOT_DUMP_TIMEOUT:-300}" "$GODOT_BIN" --version 2>/dev/null \| grep ` | justified: a binary that prints no version leaves BIN_VERSION empty, which fails the pin comparison just below. |
+| `scripts/upgrade_godot.sh:231` | `DOCS_VERSION_PY="$(cd "$GODOT_DOCS_DIR/../.." 2>/dev/null && pwd)/version.py"` | justified: an unreachable docs dir yields a version.py path that does not exist, which fails loudly just below. |
+| `scripts/upgrade_godot.sh:258` | `if ! git -C "$ROOT_DIR" cat-file -e "$BASELINE_REF:extension_api.json" 2>/dev/null; then` | justified: output dropped, the command's exit status is the condition of the `if` |
+| `scripts/upgrade_godot.sh:275` | `unexpected="$(printf '%s\n' "$STATUS_BEFORE" \| grep -v '^??' \| grep -vE "$allowed_dirty" \| grep -v '^$' \|\| tru` | justified: grep -v exits 1 when it filters every line out, which is the clean case (no unexpected change). |
+| `scripts/upgrade_godot.sh:299` | `TEMPLATES="$(find "$TEMPLATES" -maxdepth 1 -name '*.tpz' \| head -n 1 \|\| true)"` | justified: no .tpz in the directory leaves the path empty, which the -f test below reports. |
+| `scripts/upgrade_godot.sh:315` | `tpz_version="$(unzip -p "$TEMPLATES" templates/version.txt 2>/dev/null \| tr -d '[:space:]' \|\| true)"` | justified: an archive without templates/version.txt leaves the version empty, which the comparison below rejects. |
+| `scripts/upgrade_godot.sh:446` | `set +e` | justified: the exit status is already decided ($rc); a failing restore step is reported below, not fatal. |
+| `scripts/upgrade_godot.sh:476` | `git -C "$ROOT_DIR" show "$BASELINE_REF:extension_api.json" >"$BASELINE_API" 2>/dev/null \|\| [[ "$MODE" == plan ` | justified: only --plan gets here with a bad --baseline-ref (the preflight listed it); a bump or dry run exited above. |
+| `scripts/upgrade_godot_rerun_selftest.sh:44` | `git -C "$ROOT_DIR" worktree remove --force "$TREE" >/dev/null 2>&1 \|\| true` | justified: best effort; the rm and the prune below finish the job when the worktree is half-gone. |
+| `scripts/upgrade_godot_rerun_selftest.sh:47` | `git -C "$ROOT_DIR" worktree prune >/dev/null 2>&1 \|\| true` | justified: housekeeping of a worktree registration that is already gone. |
+| `scripts/upgrade_godot_rerun_selftest.sh:83` | `sed -n '/classes this Godot added/,/^\[upgrade_godot\] [^ ]/p' "$1" \| grep '^ ' \|\| true` | justified: a bump that adds no class lists none; the comparison of the (empty) lists still runs. |
+| `scripts/upgrade_godot_rerun_selftest.sh:114` | `unexpected="$(git -C "$TREE" status --porcelain \| grep -v '^??' \| grep -vF "$(python3 "$ROOT_DIR/scripts/check` | justified: grep -v exits 1 when only the pin files are left, which is what --reset must leave. |
 | `scripts/validate_godot_api.py:232` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/validate_godot_api.py:254` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/validate_godot_api.py:280` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |

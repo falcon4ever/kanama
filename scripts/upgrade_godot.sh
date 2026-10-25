@@ -5,8 +5,9 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # shellcheck source=scripts/portable.sh
 source "$ROOT_DIR/scripts/portable.sh"
 
-MODE=bump # bump | dry-run | plan
+MODE=bump # bump | dry-run | plan | reset
 PRERELEASE=0
+BASELINE_REF=HEAD
 GODOT_DOCS_DIR="${GODOT_DOCS:-}"
 GODOT_BIN=""
 TEMPLATES=""
@@ -17,10 +18,11 @@ GRADLE_TIMEOUT="${KANAMA_UPGRADE_GRADLE_TIMEOUT:-1200}"
 
 usage() {
   cat <<'EOF'
-usage: scripts/upgrade_godot.sh [--plan | --dry-run] [--prerelease-trial]
+usage: scripts/upgrade_godot.sh [--plan | --dry-run] [--prerelease-trial] [--baseline-ref REF]
                                 [--godot-docs /path/to/godot/doc/classes]
                                 [--templates /path/to/export_templates.tpz]
                                 /absolute/path/to/godot_binary
+       scripts/upgrade_godot.sh --reset
 
 Runs every MECHANICAL step of a Godot baseline bump in order, then stops at the
 human-judgment boundary (device gates, support claims, release wording). The
@@ -52,7 +54,15 @@ Modes:
               `scripts/check_godot_version_pin.py --list-files` names).
   --plan      run the read-only preflight checks and print the steps and commands; change nothing.
   --dry-run   prove the pipeline on the CURRENT pin: a clean tree, the same steps in write mode,
-              a no-op API diff, every gate green, and a byte-identical tree afterwards.
+              a no-op API diff, every gate green, and a byte-identical tree afterwards. A dry run
+              writes in place; whatever it changed is restored on every exit, a failure included.
+  --reset     undo a bump that stopped: restore every tracked file except the pin files, and
+              delete the untracked wrapper and generated-page files a run created. Needs no binary.
+
+--baseline-ref REF   the commit whose extension_api.json is the previous Godot (default HEAD). The
+                     classification, the drift gate's pending-helper report and the list of classes
+                     this Godot added all diff against it, so a bump whose half-done result was
+                     committed can be re-run with the pre-bump commit here and reach the same result.
 
 --prerelease-trial   allow a beta/rc pin (4.8.beta1), for a trial on a throwaway branch. Kanama
                      re-pins only on stable releases; never merge a prerelease pin.
@@ -63,6 +73,13 @@ Requires: JEXTRACT_HOME (jextract 25+), a Godot doc/classes checkout at the
 pinned version (--godot-docs, $GODOT_DOCS, or an auto-discovered checkout).
 Every Godot call runs under a timeout (KANAMA_GODOT_DUMP_TIMEOUT, default 300 s), the Gradle
 call under KANAMA_UPGRADE_GRADLE_TIMEOUT (default 1200 s).
+
+Exit status: 0 when every gate is green and nothing needs a decision; 3 when the mechanical steps
+are done and only the listed human decisions remain (local CI stays red until they are made);
+1 on a failure; 2 on a usage error.
+
+Test hook: KANAMA_UPGRADE_FAIL_AFTER_STEP=<n> stops the run with exit 1 once step <n> is done, the
+way a crash would (scripts/upgrade_godot_rerun_selftest.sh uses it to prove a re-run).
 
 This script never edits support claims, CHANGELOG, badges, or templates, and
 never runs device gates — those are human-judgment steps by design.
@@ -87,6 +104,14 @@ while [[ $# -gt 0 ]]; do
       PRERELEASE=1
       shift
       ;;
+    --reset)
+      MODE=reset
+      shift
+      ;;
+    --baseline-ref)
+      BASELINE_REF="${2:?--baseline-ref needs a commit}"
+      shift 2
+      ;;
     --godot-docs)
       GODOT_DOCS_DIR="${2:?--godot-docs needs a directory}"
       shift 2
@@ -107,6 +132,38 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+log() { echo "[upgrade_godot] $*"; }
+
+# The untracked files a run can create: adopted wrapper placeholders and new wrappers, companions,
+# Web wrappers and generated pages. --reset deletes only these, and only when git does not track them.
+GENERATED_DIRS=(
+  src/commonMain/kotlin/net/multigesture/kanama/api
+  src/jvmMain/kotlin/net/multigesture/kanama/api
+  src/iosMain/kotlin/net/multigesture/kanama/api
+  web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated
+  docs/reference/generated
+)
+
+if [[ "$MODE" == reset ]]; then
+  pins="$(python3 "$ROOT_DIR/scripts/check_godot_version_pin.py" --list-files)"
+  # justified: grep -v exits 1 when every changed file is a pin file, which leaves nothing to restore.
+  restore="$(git -C "$ROOT_DIR" diff --name-only --diff-filter=MDT HEAD | grep -vxF "$pins" || true)"
+  if [[ -n "$restore" ]]; then
+    log "reset: restoring $(printf '%s\n' "$restore" | wc -l | tr -d ' ') tracked file(s) from HEAD (the pin files stay as they are)"
+    printf '%s\n' "$restore" | (cd "$ROOT_DIR" && tr '\n' '\0' | xargs -0 git checkout HEAD --)
+  fi
+  created="$(cd "$ROOT_DIR" && git ls-files --others --exclude-standard -- "${GENERATED_DIRS[@]}")"
+  if [[ -n "$created" ]]; then
+    log "reset: deleting the untracked files a run created:"
+    printf '%s\n' "$created" | sed 's/^/    /'
+    printf '%s\n' "$created" | (cd "$ROOT_DIR" && tr '\n' '\0' | xargs -0 rm -f --)
+  fi
+  # justified: grep -c prints 0 and exits 1 when no tracked change is left, which is the reset's goal.
+  left="$(git -C "$ROOT_DIR" status --porcelain | grep -vc '^??' || true)"
+  log "reset done: $left tracked change(s) left (the pin edit)"
+  exit 0
+fi
+
 if [[ -z "$GODOT_BIN" ]]; then
   echo "[upgrade_godot] missing Godot binary" >&2
   usage
@@ -116,8 +173,6 @@ if [[ ! -x "$GODOT_BIN" ]]; then
   echo "[upgrade_godot] Godot binary is not executable: $GODOT_BIN" >&2
   exit 2
 fi
-
-log() { echo "[upgrade_godot] $*"; }
 
 # ---------------------------------------------------------------------------
 # Step 1: preflight — read-only checks. Every failure is listed, then the run stops before
@@ -200,6 +255,12 @@ EOF
   fi
 fi
 
+if ! git -C "$ROOT_DIR" cat-file -e "$BASELINE_REF:extension_api.json" 2>/dev/null; then
+  preflight_fail "--baseline-ref $BASELINE_REF: no extension_api.json at that commit"
+elif [[ "$BASELINE_REF" != HEAD ]]; then
+  log "baseline: $BASELINE_REF ($(git -C "$ROOT_DIR" rev-parse --short "$BASELINE_REF")), not HEAD"
+fi
+
 # The regen must start from a reviewable state: no tracked modification except the pin edit,
 # whose files the pin check names (none in a dry run). Untracked files are allowed; the dry run
 # asserts the whole status is unchanged at the end.
@@ -254,6 +315,8 @@ elif [[ -n "$TEMPLATES" ]]; then
     tpz_version="$(unzip -p "$TEMPLATES" templates/version.txt 2>/dev/null | tr -d '[:space:]' || true)"
     if [[ "$tpz_version" != "$PIN" ]]; then
       preflight_fail "--templates $TEMPLATES holds version '$tpz_version', not $PIN"
+    elif [[ "$MODE" == dry-run ]]; then
+      log "export templates: $templates_dir is missing; a dry run installs nothing outside the checkout"
     else
       TEMPLATES_INSTALL="$TEMPLATES"
       log "export templates: $templates_dir is missing; will install $TEMPLATES"
@@ -278,7 +341,7 @@ quote_cmd() {
     case "$arg" in
       "$ROOT_DIR") arg="." ;;
       "$ROOT_DIR"/*) arg="${arg#"$ROOT_DIR"/}" ;;
-      "${BASELINE_API:-}") arg="<HEAD:extension_api.json>" ;;
+      "${BASELINE_API:-}") arg="<$BASELINE_REF:extension_api.json>" ;;
     esac
     if [[ "$arg" == *[[:space:]]* ]]; then
       out+=" '$arg'"
@@ -299,23 +362,24 @@ run_hard() {
   if [[ $rc -ne 0 ]]; then
     echo "[upgrade_godot] FAIL $STEP: '$(quote_cmd "$@")' exited $rc" >&2
     echo "[upgrade_godot] the steps after this one render from its output, so the bump stops here." >&2
-    if [[ "$MODE" == dry-run ]]; then
-      echo "[upgrade_godot] the dry run may have left changes: git -C \"$ROOT_DIR\" status" >&2
-    fi
     exit 1
   fi
 }
 
-# run_soft <label> <cmd...>: a failure is recorded under <label> and the run continues.
+# run_soft <label> <cmd...>: a failure is recorded under <label> and the run continues; the exit
+# status is left in LAST_RC.
+LAST_RC=0
 run_soft() {
   local label="$1"
   shift
+  LAST_RC=0
   if [[ "$MODE" == plan ]]; then
     echo "      $(quote_cmd "$@")"
     return 0
   fi
   local rc=0
   (cd "$ROOT_DIR" && "$@") || rc=$?
+  LAST_RC=$rc
   if [[ $rc -ne 0 ]]; then
     echo "[upgrade_godot] FAIL ($STEP) $label: exit $rc" >&2
     SOFT_FAILURES+=("$label  [$(quote_cmd "$@")]")
@@ -344,12 +408,58 @@ run_human() {
 
 step() {
   STEP="$1"
+  local number="${1#step }"
+  number="${number%%:*}"
+  if [[ "$MODE" != plan && -n "${KANAMA_UPGRADE_FAIL_AFTER_STEP:-}" && "$number" -gt "$KANAMA_UPGRADE_FAIL_AFTER_STEP" ]]; then
+    echo "[upgrade_godot] FAIL (test hook KANAMA_UPGRADE_FAIL_AFTER_STEP=$KANAMA_UPGRADE_FAIL_AFTER_STEP): stopping before $1" >&2
+    exit 1
+  fi
   if [[ "$MODE" == plan ]]; then
     echo "  $1"
   else
     log "$1"
   fi
 }
+
+# What a dry run must leave as it found it: the status, the tracked diff, the content of every
+# untracked file and of the jextract output (ignored, but the refresh rewrites it).
+tree_fingerprint() {
+  (
+    cd "$ROOT_DIR" || exit 1
+    {
+      git status --porcelain --untracked-files=all
+      git diff HEAD --binary
+      git ls-files --others --exclude-standard | git hash-object --stdin-paths
+      if [[ -d src/generated/godot ]]; then
+        find src/generated/godot -type f | LC_ALL=C sort | git hash-object --stdin-paths
+      fi
+    } | git hash-object --stdin
+  )
+}
+
+# On any exit of a dry run that got past the preflight: if the tree changed, say what changed and
+# restore it (the preflight proved the tracked tree clean, so HEAD is the state to restore).
+DRY_RUN_ARMED=0
+cleanup() {
+  local rc=$?
+  # justified: the exit status is already decided ($rc); a failing restore step is reported below, not fatal.
+  set +e
+  if [[ $DRY_RUN_ARMED -eq 1 && "$(tree_fingerprint)" != "$FINGERPRINT_BEFORE" ]]; then
+    echo "[upgrade_godot] the dry run changed the tree; restoring it. What changed:" >&2
+    git -C "$ROOT_DIR" status --short >&2
+    (cd "$ROOT_DIR" && git checkout -q HEAD -- .)
+    (cd "$ROOT_DIR" && git ls-files --others --exclude-standard) | LC_ALL=C sort >"$UNTRACKED_AFTER"
+    LC_ALL=C comm -13 "$UNTRACKED_BEFORE" "$UNTRACKED_AFTER" | (cd "$ROOT_DIR" && tr '\n' '\0' | xargs -0 rm -f --)
+    if [[ "$(tree_fingerprint)" == "$FINGERPRINT_BEFORE" ]]; then
+      echo "[upgrade_godot] restored: the tree is as the dry run found it" >&2
+    else
+      echo "[upgrade_godot] NOT fully restored (an untracked file that existed before changed, or the jextract output under src/generated/godot did; re-run scripts/refresh_godot_api.sh): git -C \"$ROOT_DIR\" status" >&2
+    fi
+  fi
+  rm -f "${BASELINE_API:-}" "${UNTRACKED_BEFORE:-}" "${UNTRACKED_AFTER:-}"
+  exit "$rc"
+}
+trap cleanup EXIT
 
 if [[ ${#PREFLIGHT_FAILURES[@]} -gt 0 ]]; then
   echo "[upgrade_godot] preflight: ${#PREFLIGHT_FAILURES[@]} problem(s) above; nothing was changed." >&2
@@ -360,6 +470,16 @@ fi
 
 if [[ "$MODE" == plan ]]; then
   echo "[upgrade_godot] plan (nothing below runs in --plan mode):"
+fi
+BASELINE_API="$(mktemp "${TMPDIR:-/tmp}/kanama-baseline-api.XXXXXX")"
+# justified: only --plan gets here with a bad --baseline-ref (the preflight listed it); a bump or dry run exited above.
+git -C "$ROOT_DIR" show "$BASELINE_REF:extension_api.json" >"$BASELINE_API" 2>/dev/null || [[ "$MODE" == plan ]]
+if [[ "$MODE" == dry-run ]]; then
+  UNTRACKED_BEFORE="$(mktemp "${TMPDIR:-/tmp}/kanama-untracked.XXXXXX")"
+  UNTRACKED_AFTER="$(mktemp "${TMPDIR:-/tmp}/kanama-untracked.XXXXXX")"
+  (cd "$ROOT_DIR" && git ls-files --others --exclude-standard) | LC_ALL=C sort >"$UNTRACKED_BEFORE"
+  FINGERPRINT_BEFORE="$(tree_fingerprint)"
+  DRY_RUN_ARMED=1
 fi
 
 if [[ -n "$TEMPLATES_INSTALL" ]]; then
@@ -384,11 +504,8 @@ fi
 step "step 2: refresh API/header inputs (dump, header, jextract, virtual table)"
 run_hard "$ROOT_DIR/scripts/refresh_godot_api.sh" --skip-validate "$GODOT_BIN"
 
-# Step 3: classify the API diff against HEAD and list what the new Godot removed.
-BASELINE_API="$(mktemp "${TMPDIR:-/tmp}/kanama-baseline-api.XXXXXX")"
-trap 'rm -f "$BASELINE_API"' EXIT
-git -C "$ROOT_DIR" show HEAD:extension_api.json >"$BASELINE_API"
-step "step 3: classify the API diff vs HEAD"
+# Step 3: classify the API diff against the baseline and list what the new Godot removed.
+step "step 3: classify the API diff vs $BASELINE_REF"
 classify() {
   python3 - "$ROOT_DIR/extension_api.json" "$BASELINE_API" <<'EOF'
 import json, sys
@@ -397,7 +514,7 @@ new = json.load(open(sys.argv[1], encoding="utf-8"))
 old = json.load(open(sys.argv[2], encoding="utf-8"))
 if old == new:
     print("classification=none")
-    print("  extension_api.json is identical to HEAD (no-op bump)")
+    print("  extension_api.json is identical to the baseline (no-op bump)")
     sys.exit(0)
 old_body = {k: v for k, v in old.items() if k != "header"}
 new_body = {k: v for k, v in new.items() if k != "header"}
@@ -504,6 +621,7 @@ run_soft "gates index" python3 "$ROOT_DIR/scripts/generate_gates_index.py" \
 step "step 9: gates"
 run_soft "API constants vs the new extension_api.json" python3 "$ROOT_DIR/scripts/validate_godot_api.py"
 run_soft "wrapper drift gate" python3 "$ROOT_DIR/scripts/check_wrapper_generator.py" --baseline-api "$BASELINE_API"
+DRIFT_RC=$LAST_RC
 run_soft "ktfmt formatting" run_with_timeout "$GRADLE_TIMEOUT" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --quiet ktfmtCheck
 run_soft "KDoc staleness" python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --check
 run_soft "Godot version pins (with the new API header)" python3 "$ROOT_DIR/scripts/check_godot_version_pin.py"
@@ -533,8 +651,12 @@ run_soft "enum migration table" python3 "$ROOT_DIR/scripts/migrate_enum_constant
   --table "$ROOT_DIR/docs/reference/generated/enum-migration.md" --check
 run_soft "gates index" python3 "$ROOT_DIR/scripts/generate_gates_index.py" \
   --markdown "$ROOT_DIR/docs/reference/generated/gates.md" --check
-run_human "adopted-list classes: a method the new Godot added has no helper; add it, or the PENDING_HELPER_SKIPS row the drift gate printed" \
-  python3 "$ROOT_DIR/scripts/check_wrapper_generator.py"
+# Only when the drift gate passed under the baseline: then this run fails on nothing but the pending
+# helpers, which are a decision; a real drift failure is already listed above, not as a decision.
+if [[ $DRIFT_RC -eq 0 ]]; then
+  run_human "adopted-list classes: a method the new Godot added has no helper; add it, or the PENDING_HELPER_SKIPS row the drift gate printed" \
+    python3 "$ROOT_DIR/scripts/check_wrapper_generator.py"
+fi
 run_human "public API signatures: announce each source break in CHANGELOG.md, then --write the snapshots" \
   python3 "$ROOT_DIR/scripts/check_public_signature_changes.py"
 run_human "gate-evidence ledger: re-run each stale gate on the new pin, or accept it stale with a reason and a date" \
@@ -549,20 +671,37 @@ if [[ "$MODE" == plan ]]; then
   exit 0
 fi
 
-if [[ "$MODE" == dry-run ]]; then
-  STATUS_AFTER="$(git -C "$ROOT_DIR" status --porcelain)"
-  if [[ "$STATUS_AFTER" != "$STATUS_BEFORE" ]]; then
-    # justified: diff exits 1 on a difference, which is the very thing being recorded as a failure here.
-    status_diff="$(diff <(printf '%s\n' "$STATUS_BEFORE") <(printf '%s\n' "$STATUS_AFTER") || true)"
-    SOFT_FAILURES+=("the dry run changed the tree:
-$status_diff")
-  fi
+if [[ "$MODE" == dry-run && "$(tree_fingerprint)" != "$FINGERPRINT_BEFORE" ]]; then
+  SOFT_FAILURES+=("the dry run changed the tree (tracked files, untracked files or the jextract output; listed and restored on exit)")
 fi
+
+# The classes this Godot added (against the baseline, so a re-run lists them too) and whether each
+# has its wrapper now; an editor-only class (`api_type` editor) exists only in the editor build.
+added_classes() {
+  python3 - "$ROOT_DIR" "$BASELINE_API" <<'EOF'
+import json, sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+new = {c["name"]: c for c in json.loads((root / "extension_api.json").read_text(encoding="utf-8"))["classes"]}
+old = {c["name"] for c in json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))["classes"]}
+shared = root / "src/commonMain/kotlin/net/multigesture/kanama/api"
+added = sorted(set(new) - old)
+if added:
+    editor = sum(1 for n in added if new[n].get("api_type") == "editor")
+    print(f"[upgrade_godot] classes this Godot added: {len(added)} ({editor} editor-only), all adopted into the shared tree:")
+    for n in added:
+        flags = [" [editor only]" if new[n].get("api_type") == "editor" else "",
+                 "" if (shared / f"{n}.kt").is_file() else "  NO WRAPPER"]
+        print(f"    {n}{''.join(flags)}")
+EOF
+}
 
 # ---------------------------------------------------------------------------
 # Summary.
 # ---------------------------------------------------------------------------
 echo
+added_classes
 if [[ ${#HUMAN_ITEMS[@]} -gt 0 ]]; then
   log "human decisions this bump needs (expected on an API change; the gate stays red until done):"
   for item in "${HUMAN_ITEMS[@]}"; do
@@ -574,9 +713,6 @@ if [[ ${#SOFT_FAILURES[@]} -gt 0 ]]; then
   for item in "${SOFT_FAILURES[@]}"; do
     echo "  - $item"
   done
-  if [[ "$MODE" == dry-run ]]; then
-    echo "[upgrade_godot] the dry run may have left changes: git -C \"$ROOT_DIR\" status" >&2
-  fi
   exit 1
 fi
 if [[ "$MODE" == dry-run ]]; then
@@ -584,10 +720,14 @@ if [[ "$MODE" == dry-run ]]; then
   exit 0
 fi
 
+if [[ ${#HUMAN_ITEMS[@]} -gt 0 ]]; then
+  log "mechanical steps complete, every generated output is refreshed; ${#HUMAN_ITEMS[@]} decision(s) above are needed before local CI can pass (exit 3)."
+else
+  log "mechanical steps complete: every generated output is refreshed and every gate is green."
+fi
 cat <<EOF
-[upgrade_godot] mechanical steps complete: every generated output is refreshed and the gates above are green.
 [upgrade_godot] STOPPING at the human-judgment boundary. Remaining (full runbook: docs/contributing/godot-upgrade.md):
-  1. Review the classification above and the classes step 5 adopted (named in its output).
+  1. Review the classification above and the classes this Godot added (listed above).
   2. Run local CI against the new binary: scripts/local_ci.sh $GODOT_BIN
      The runtime smoke re-records nothing: when Godot adds a builtin member, re-record the Web parity
      hashes from its log (generate_builtin_ops.py --record-parity <log>).
@@ -602,3 +742,6 @@ cat <<EOF
   6. Bump the KDoc docs-pin commit hash in docs/contributing/wrapper-maintenance.md.
   7. Before tagging: scripts/fresh_clone_smoke.sh $GODOT_BIN
 EOF
+if [[ ${#HUMAN_ITEMS[@]} -gt 0 ]]; then
+  exit 3
+fi

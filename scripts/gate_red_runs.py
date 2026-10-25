@@ -732,8 +732,14 @@ case("check_wrapper_generator.py (strict-list skip)", py("check_wrapper_generato
      [Edit("scripts/check_wrapper_generator.py", 'ADOPTED_CLASSES = ("Time",', 'ADOPTED_CLASSES = ("GDScriptTextDocument", "Time",')],
      "adopted source GDScriptTextDocument has skipped methods", "a class held to \"no skipped method\" skips one (its Dictionary passthrough): the gate names the method instead of letting the class drop out of its list")
 case("check_wrapper_generator.py (stale pending skip)", py("check_wrapper_generator.py"),
-     [Edit("scripts/check_wrapper_generator.py", "PENDING_HELPER_SKIPS: dict[tuple[str, str], str] = {}", 'PENDING_HELPER_SKIPS: dict[tuple[str, str], str] = {("Time", "get_ticks_msec"): "red run"}')],
-     "stale PENDING_HELPER_SKIPS rows", "a PENDING_HELPER_SKIPS row names a method that generates: the row would excuse a later skip (task 139 P5)")
+     [Edit("scripts/check_wrapper_generator.py", "PENDING_HELPER_SKIPS: dict[tuple[str, str], tuple[str, str, str]] = {}",
+           'PENDING_HELPER_SKIPS: dict[tuple[str, str], tuple[str, str, str]] = {("Time", "get_ticks_msec"): ("red run", "task 139", "2026-10-25")}')],
+     "Time.get_ticks_msec: generates now; delete the row", "a PENDING_HELPER_SKIPS row names a method that generates: the row would excuse a later skip (task 139 P5)")
+case("check_wrapper_generator.py (pending skip without owner)", py("check_wrapper_generator.py"),
+     [Edit("scripts/check_wrapper_generator.py", 'ADOPTED_CLASSES = ("Time",', 'ADOPTED_CLASSES = ("GDScriptTextDocument", "Time",'),
+      Edit("scripts/check_wrapper_generator.py", "PENDING_HELPER_SKIPS: dict[tuple[str, str], tuple[str, str, str]] = {}",
+           'PENDING_HELPER_SKIPS: dict[tuple[str, str], tuple[str, str, str]] = {("GDScriptTextDocument", "resolve"): ("red run", "later", "2026-10-25")}')],
+     "names no task or issue", "a PENDING_HELPER_SKIPS row names no task or issue that adds the helper: it would never expire (task 139 P5)")
 
 # ---- audit_* -----------------------------------------------------------------------------------------------
 case("audit_api_wrapper_inheritance.py", py("audit_api_wrapper_inheritance.py"),

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import functools
+import json
 import re
 import sys
 from contextlib import contextmanager
@@ -6803,22 +6804,28 @@ def tree_main(args: argparse.Namespace) -> int:
             f"{summary}; {passes} pass(es), wrote {written} changed files, removed {removed} stale companions, "
             f"pruned {pruned} copies"
         )
-        report_adoption(tree, adopted, actuals_before)
+        report_adoption(tree, adopted, actuals_before, args.api)
     elif args.prune_copies:
         print(f"{summary}; pruned {_prune_copies(tree, args.prune_copies)} copies")
     return 0
 
 
-def report_adoption(tree: TreeResult, adopted: list[str], actuals_before: set) -> None:
-    """What `--write-tree` decided on its own (task 139 P5, P4): the classes it adopted and the
-    desktop ObjectCalls helpers whose `actual` it moved. Silent when there is nothing to say."""
+def report_adoption(tree: TreeResult, adopted: list[str], actuals_before: set, api_path: Path) -> None:
+    """What `--write-tree` decided on its own (task 139 P5, P4): the classes it adopted (an editor-only
+    class, `api_type` "editor", is marked: it exists only in the editor build) and the desktop
+    ObjectCalls helpers whose `actual` it moved. Silent when there is nothing to say."""
     if adopted:
+        api_types = {
+            c["name"]: c.get("api_type", "core")
+            for c in json.loads(api_path.read_text(encoding="utf-8")).get("classes", [])
+        }
         print(f"[generate_api_wrapper] adopted {len(adopted)} new Godot class(es) into the shared tree "
               "(every API class is generated; ADOPTION_EXCLUDED lists the exceptions):")
         for name in adopted:
             skips = tree.skips.get(name, [])
+            editor = " [editor only]" if api_types.get(name) == "editor" else ""
             note = f", {len(skips)} method(s) skipped (see the skip report)" if skips else ""
-            print(f"    {name}{note}")
+            print(f"    {name}{editor}{note}")
     actuals_after = desktop_actual_state(DESKTOP_OBJECTCALLS.read_text(encoding="utf-8"))[0]
     gained = sorted({name for name, _ in actuals_after - actuals_before})
     lost = sorted({name for name, _ in actuals_before - actuals_after})

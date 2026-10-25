@@ -4,6 +4,7 @@ single-tree drift gate (committed generated wrappers == a fresh regen, on every 
 
 from __future__ import annotations
 
+import datetime as dt
 import re
 import subprocess
 import sys
@@ -244,11 +245,16 @@ ADOPTED_CLASSES_WITH_VIRTUAL_SKIPS = (
 )
 VIRTUAL_SKIP_REASON = "internal/virtual callback methods are not emitted as public wrappers"
 # Methods of a class in the lists above that skip because their call shape has no ObjectCalls helper
-# yet, each with its reason (task 139 P5). The class stays held to "no other skip": a Godot bump that
-# gives a listed class a method of a new shape adds a row here (upgrade_godot.sh prints it) instead of
-# taking the whole class out of its list, which would let every later skip on it through unseen. A
-# row whose method generates again, or that names no listed class, fails as stale.
-PENDING_HELPER_SKIPS: dict[tuple[str, str], str] = {}
+# yet (task 139 P5). The class stays held to "no other skip": a Godot bump that gives a listed class a
+# method of a new shape adds a row here (upgrade_godot.sh prints it) instead of taking the whole class
+# out of its list, which would let every later skip on it through unseen. Each row is
+# (reason, owner, since): the owner is the task or issue that adds the helper ("task 139",
+# "issue 370"), since the ISO date the row was added. A row whose method generates again, that names
+# no listed class, or that has no owner fails as stale; a row older than PENDING_WARN_DAYS warns on
+# every run, like an old KANAMA-BLOCKED marker.
+PENDING_HELPER_SKIPS: dict[tuple[str, str], tuple[str, str, str]] = {}
+PENDING_WARN_DAYS = 60
+_PENDING_OWNER_RE = re.compile(r"^(task|issue) \d+\b")
 _SKIP_METHOD_RE = re.compile(r"(\w+)\(")
 # Strip generated-doc KDoc blocks (single- OR multi-line) so the drift-gate compares wrapper
 # *behavior*, letting `sync_kdoc_from_godot_docs.py` own the prose independently. The lazy
@@ -515,8 +521,8 @@ def check_adopted_skips(
     for line in bad_skips:
         method = _skip_method(line)
         if (class_name, method) in PENDING_HELPER_SKIPS:
-            print(f"[wrapper_generator] pending helper: {class_name}.{method} skips "
-                  f"({PENDING_HELPER_SKIPS[(class_name, method)]})")
+            reason, owner, since = PENDING_HELPER_SKIPS[(class_name, method)]
+            print(f"[wrapper_generator] pending helper: {class_name}.{method} skips ({reason}; {owner}, since {since})")
         elif baseline_methods is not None and method not in baseline_methods.get(class_name, set()):
             if pending is not None:
                 pending.append(f"{class_name}: {line}")
@@ -532,15 +538,34 @@ def check_adopted_skips(
     return 0
 
 
-def stale_pending_skips(tree: TreeResult, listed: set[str]) -> list[str]:
-    """PENDING_HELPER_SKIPS rows whose class is in no list or whose method no longer skips."""
+def stale_pending_skips(tree: TreeResult, listed: set[str], today: dt.date | None = None) -> tuple[list[str], list[str]]:
+    """(problems, warnings) of the PENDING_HELPER_SKIPS rows: a row whose class is in no list, whose
+    method no longer skips, without a task/issue owner or a valid date fails; one older than
+    PENDING_WARN_DAYS warns."""
+    today = today or dt.date.today()
     problems: list[str] = []
-    for (class_name, method), _reason in sorted(PENDING_HELPER_SKIPS.items()):
+    warnings: list[str] = []
+    for (class_name, method), row in sorted(PENDING_HELPER_SKIPS.items()):
+        if not (isinstance(row, tuple) and len(row) == 3):
+            problems.append(f"{class_name}.{method}: a row is (reason, owner, since), not {row!r}")
+            continue
+        reason, owner, since = row
         if class_name not in listed:
             problems.append(f"{class_name}.{method}: {class_name} is in none of the adopted-class lists")
         elif method not in {_skip_method(line) for line in tree.skips.get(class_name, [])}:
             problems.append(f"{class_name}.{method}: generates now; delete the row")
-    return problems
+        if not reason.strip():
+            problems.append(f"{class_name}.{method}: no reason")
+        if not _PENDING_OWNER_RE.match(owner):
+            problems.append(f"{class_name}.{method}: owner {owner!r} names no task or issue (\"task <n>\" or \"issue <n>\")")
+        try:
+            age = (today - dt.date.fromisoformat(since)).days
+        except ValueError:
+            problems.append(f"{class_name}.{method}: since {since!r} is not an ISO date")
+            continue
+        if age > PENDING_WARN_DAYS:
+            warnings.append(f"{class_name}.{method}: pending for {age} days ({owner}, since {since})")
+    return problems, warnings
 
 
 def baseline_api_methods(path: Path) -> dict[str, set[str]]:
@@ -1191,7 +1216,9 @@ def main() -> int:
         + ADOPTED_CLASSES_WITH_HELPERS_AND_VIRTUAL_SKIPS
         + ADOPTED_CLASSES_WITH_VIRTUAL_SKIPS
     )
-    stale = stale_pending_skips(tree, listed)
+    stale, old_rows = stale_pending_skips(tree, listed)
+    for warning in old_rows:
+        print(f"[wrapper_generator] WARN PENDING_HELPER_SKIPS row older than {PENDING_WARN_DAYS} days: {warning}")
     if stale:
         print("[wrapper_generator] FAIL stale PENDING_HELPER_SKIPS rows:", file=sys.stderr)
         for problem in stale:
@@ -1201,9 +1228,12 @@ def main() -> int:
         print(f"[wrapper_generator] PENDING {len(pending)} method(s) the new Godot added to an adopted-list class "
               "skip for want of a helper (reported, not failed, under --baseline-api). Add the helper, or one "
               "PENDING_HELPER_SKIPS row each in scripts/check_wrapper_generator.py:")
+        today = dt.date.today().isoformat()
         for line in pending:
             cls, _, rest = line.partition(": ")
-            print(f'    ("{cls}", "{_skip_method(rest)}"): "{rest.split(": ", 1)[-1]}",')
+            reason = rest.split(": ", 1)[-1].replace('"', "'")
+            print(f'    ("{cls}", "{_skip_method(rest)}"): ("{reason}", "task <n>", "{today}"),')
+        print("    (name the task or issue that adds the helper in place of \"task <n>\"; the gate fails until it does)")
     if rc != 0:
         return rc
     if check_adoption(tree) != 0:

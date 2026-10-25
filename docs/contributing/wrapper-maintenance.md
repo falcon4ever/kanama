@@ -338,7 +338,7 @@ of Godot's 28 methods until task 129 A). To generate one once:
    companion by itself (listed in `ios-shape-gap.md`); do not hand-write it.
 4. Delete what the old copies called and nothing else does: `IosGodot` functions, C shim entry
    points and their `kanama_ios.h` declarations. The `actual` modifiers of the desktop
-   `ObjectCalls` follow by themselves (see [ObjectCalls](#objectcalls-one-object-per-platform-one-generated-region)).
+   `ObjectCalls` follow by themselves (see [ObjectCalls per Platform](#objectcalls-per-platform)).
 5. Run `check_public_signature_changes.py`; announce any break in the CHANGELOG, fix the demos in a
    paired change, then `--write`. A declaration that left `jvm.txt` / `ios.txt` and is in
    `common.txt` now, unchanged or source-compatibly changed, is reported as moved, not as a break;
