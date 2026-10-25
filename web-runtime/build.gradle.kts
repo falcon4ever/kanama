@@ -28,9 +28,26 @@ val webScriptSourceRoot =
 // otherwise it is derived from the selected demo's checkout as <projectDir>/web,
 // where the committed web/kotlin-src/*.kt live. This keeps exportWeb free of any
 // second workstation path -- pointing at the demo checkout is enough.
-val webDemoKey: String = providers.gradleProperty("kanamaWebDemo").orElse("match3").get()
+//
+// Task 142: -PkanamaWebProjectDir=/path/to/your-project exports a user's own project under the
+// key `project` (one slot, like Android's one install target). With -PkanamaWebDemo as well it
+// means "this demo, at this path": it is the fallback for every -PkanamaWeb<Demo>ProjectDir.
+// With neither, the key is empty: the build still configures (and compiles the runtime alone), but
+// an export fails before compiling, naming both properties (checkWebProject).
+val webUserProjectDir: File? =
+    providers.gradleProperty("kanamaWebProjectDir").orNull?.let(rootProject::file)
+val webDemoKey: String =
+    providers.gradleProperty("kanamaWebDemo").orNull
+        ?: if (webUserProjectDir != null) "project" else ""
+
+/** A demo's -PkanamaWeb<Demo>ProjectDir, else -PkanamaWebProjectDir when [key] is the selected demo. */
+fun webDemoDirProperty(property: String, key: String): File? =
+    providers.gradleProperty(property).orNull?.let(rootProject::file)
+        ?: webUserProjectDir?.takeIf { webDemoKey == key }
+
 val webDemoProjectDir: File? =
-    when (webDemoKey) {
+    if (webDemoKey == "project") webUserProjectDir
+    else when (webDemoKey) {
         "match3" -> "kanamaWebMatch3ProjectDir"
         "bunnymark" -> "kanamaWebBunnymarkProjectDir"
         "dodge" -> "kanamaWebDodgeProjectDir"
@@ -45,8 +62,79 @@ val webDemoProjectDir: File? =
         "tpsdemo" -> "kanamaWebTpsdemoProjectDir"
         else -> null
     }
-        ?.let { providers.gradleProperty(it).orNull }
-        ?.let(rootProject::file)
+        ?.let { webDemoDirProperty(it, webDemoKey) }
+// Task 142: the export finds Godot and its Web template where Godot installs them, so the user
+// command needs only -PkanamaWebProjectDir. Each lookup that fails names the one property to pass.
+val webHostOs: String = System.getProperty("os.name").lowercase()
+
+fun webOnPath(vararg names: String): File? =
+    System.getenv("PATH").orEmpty().split(File.pathSeparator).filter { it.isNotBlank() }.firstNotNullOfOrNull { dir ->
+        names.map { File(dir, it) }.firstOrNull { it.isFile && it.canExecute() }
+    }
+
+/** -PkanamaGodotExecutable, else KANAMA_GODOT_BIN, else the standard install (macOS) or `godot` on PATH. */
+fun webGodotExecutable(): String {
+    // A bare name (`godot`) is looked up on PATH by the export; a path must exist.
+    fun named(path: String, source: String): String {
+        if ((File.separatorChar in path || '/' in path) && !File(path).isFile) {
+            throw GradleException("Godot not found at $path ($source). Pass -PkanamaGodotExecutable=/absolute/path/to/godot")
+        }
+        return path
+    }
+    providers.gradleProperty("kanamaGodotExecutable").orNull?.let { return named(it, "-PkanamaGodotExecutable") }
+    providers.environmentVariable("KANAMA_GODOT_BIN").orNull?.takeIf { it.isNotBlank() }?.let {
+        return named(it, "KANAMA_GODOT_BIN")
+    }
+    val home = System.getProperty("user.home")
+    val found =
+        when {
+            "mac" in webHostOs ->
+                listOf("/Applications/Godot.app", "$home/Applications/Godot.app")
+                    .map { File(it, "Contents/MacOS/Godot") }
+                    .firstOrNull { it.isFile } ?: webOnPath("godot", "godot4")
+            "windows" in webHostOs -> webOnPath("godot.exe", "godot4.exe")
+            else -> webOnPath("godot", "godot4")
+        }
+    return found?.absolutePath
+        ?: throw GradleException(
+            "Godot was not found (looked for KANAMA_GODOT_BIN, the standard install and `godot` on PATH). " +
+                "Pass -PkanamaGodotExecutable=/absolute/path/to/godot"
+        )
+}
+
+/** -PkanamaWebTemplateRelease, else `web_nothreads_release.zip` in Godot's export templates folder. */
+fun webTemplateRelease(): File {
+    providers.gradleProperty("kanamaWebTemplateRelease").orNull?.let { path ->
+        return file(path).also {
+            if (!it.isFile) {
+                throw GradleException(
+                    "Godot Web release template not found: $it. " +
+                        "Pass -PkanamaWebTemplateRelease=/absolute/path/to/web_nothreads_release.zip"
+                )
+            }
+        }
+    }
+    val version = providers.gradleProperty("kanamaGodotVersion").get()
+    val home = System.getProperty("user.home")
+    val templates =
+        when {
+            "mac" in webHostOs -> File(home, "Library/Application Support/Godot/export_templates")
+            "windows" in webHostOs ->
+                File(System.getenv("APPDATA") ?: "$home/AppData/Roaming", "Godot/export_templates")
+            else ->
+                File(System.getenv("XDG_DATA_HOME")?.takeIf { it.isNotBlank() } ?: "$home/.local/share", "godot/export_templates")
+        }
+    val template = templates.resolve("$version/web_nothreads_release.zip")
+    if (!template.isFile) {
+        throw GradleException(
+            "Godot's Web export template is not installed at $template. Install the $version export " +
+                "templates from Editor > Manage Export Templates, or pass " +
+                "-PkanamaWebTemplateRelease=/absolute/path/to/web_nothreads_release.zip"
+        )
+    }
+    return template
+}
+
 val explicitWebScriptSourceRoot: File? =
     providers.gradleProperty("kanamaWebExtraScriptSourceDir").orNull?.let(rootProject::file)
 val extraWebScriptSourceRoot: File? =
@@ -292,7 +380,7 @@ val webProxyResources =
 val webSpikeStaging = layout.buildDirectory.dir("web-spike/godot-project")
 val webSpikeExport = layout.buildDirectory.dir("web-spike/export")
 val webBunnymarkSourceProject =
-    providers.gradleProperty("kanamaWebBunnymarkProjectDir").orNull?.let(rootProject::file)
+    webDemoDirProperty("kanamaWebBunnymarkProjectDir", "bunnymark")
 val webBunnymarkVariant =
     providers.gradleProperty("kanamaWebBunnymarkVariant").orElse("BunnymarkV1DrawTexture")
 val webBunnymarkLanguage =
@@ -307,42 +395,41 @@ val webBunnymarkStaging =
 val webBunnymarkExport =
     layout.buildDirectory.dir(webBunnymarkBuildKey.map { "web-bunnymark/$it/export" })
 val webMatch3SourceProject =
-    providers.gradleProperty("kanamaWebMatch3ProjectDir").orNull?.let(rootProject::file)
+    webDemoDirProperty("kanamaWebMatch3ProjectDir", "match3")
 val webMatch3Staging = layout.buildDirectory.dir("web-match3/godot-project")
 val webMatch3Export = layout.buildDirectory.dir("web-match3/export")
 val webDodgeSourceProject =
-    providers.gradleProperty("kanamaWebDodgeProjectDir").orNull?.let(rootProject::file)
+    webDemoDirProperty("kanamaWebDodgeProjectDir", "dodge")
 val webDodgeStaging = layout.buildDirectory.dir("web-dodge/godot-project")
 // The web3d render smoke is a self-contained in-repo fixture (like the webSpike), not an
 // external demo checkout; an explicit -PkanamaWebWeb3dProjectDir can still override it.
 val webWeb3dSourceProject: File =
-    providers.gradleProperty("kanamaWebWeb3dProjectDir").orNull?.let(rootProject::file)
+    webDemoDirProperty("kanamaWebWeb3dProjectDir", "web3d")
         ?: layout.projectDirectory.dir("src/web3dSmoke").asFile
 val webWeb3dStaging = layout.buildDirectory.dir("web-web3d/godot-project")
 val webPlatformerSourceProject =
-    providers.gradleProperty("kanamaWebPlatformerProjectDir").orNull?.let(rootProject::file)
+    webDemoDirProperty("kanamaWebPlatformerProjectDir", "platformer")
 val webPlatformerStaging = layout.buildDirectory.dir("web-platformer/godot-project")
 val webSquashSourceProject =
-    providers.gradleProperty("kanamaWebSquashProjectDir").orNull?.let(rootProject::file)
+    webDemoDirProperty("kanamaWebSquashProjectDir", "squash")
 val webSquashStaging = layout.buildDirectory.dir("web-squash/godot-project")
 val webFpsSourceProject =
-    providers.gradleProperty("kanamaWebFpsProjectDir").orNull?.let(rootProject::file)
+    webDemoDirProperty("kanamaWebFpsProjectDir", "fps")
 val webFpsStaging = layout.buildDirectory.dir("web-fps/godot-project")
 val webCharacterSourceProject =
-    providers.gradleProperty("kanamaWebCharactercontrollerProjectDir").orNull
-        ?.let(rootProject::file)
+    webDemoDirProperty("kanamaWebCharactercontrollerProjectDir", "charactercontroller")
 val webCharacterStaging = layout.buildDirectory.dir("web-charactercontroller/godot-project")
 val webThirdpersonSourceProject =
-    providers.gradleProperty("kanamaWebThirdpersonProjectDir").orNull?.let(rootProject::file)
+    webDemoDirProperty("kanamaWebThirdpersonProjectDir", "thirdperson")
 val webThirdpersonStaging = layout.buildDirectory.dir("web-thirdperson/godot-project")
 val webRacingSourceProject =
-    providers.gradleProperty("kanamaWebRacingProjectDir").orNull?.let(rootProject::file)
+    webDemoDirProperty("kanamaWebRacingProjectDir", "racing")
 val webRacingStaging = layout.buildDirectory.dir("web-racing/godot-project")
 val webCitybuilderSourceProject =
-    providers.gradleProperty("kanamaWebCitybuilderProjectDir").orNull?.let(rootProject::file)
+    webDemoDirProperty("kanamaWebCitybuilderProjectDir", "citybuilder")
 val webCitybuilderStaging = layout.buildDirectory.dir("web-citybuilder/godot-project")
 val webTpsdemoSourceProject =
-    providers.gradleProperty("kanamaWebTpsdemoProjectDir").orNull?.let(rootProject::file)
+    webDemoDirProperty("kanamaWebTpsdemoProjectDir", "tpsdemo")
 val webTpsdemoStaging = layout.buildDirectory.dir("web-tpsdemo/godot-project")
 val webMatch3ImportLog = layout.buildDirectory.file("reports/web-match3-import.log")
 val webMatch3ImportOutput = ByteArrayOutputStream()
@@ -586,14 +673,8 @@ tasks.register<Exec>("exportWebSpike") {
     outputs.dir(webSpikeExport)
 
     doFirst {
-        val godotExecutable =
-            providers.gradleProperty("kanamaGodotExecutable").orNull
-                ?: error("Pass -PkanamaGodotExecutable=/absolute/path/to/godot")
-        val webTemplateRelease =
-            providers.gradleProperty("kanamaWebTemplateRelease").orNull
-                ?: error("Pass -PkanamaWebTemplateRelease=/absolute/path/to/web_nothreads_release.zip")
-        val webTemplateFile = file(webTemplateRelease)
-        check(webTemplateFile.isFile) { "Godot Web release template not found: $webTemplateFile" }
+        val godotExecutable = webGodotExecutable()
+        val webTemplateFile = webTemplateRelease()
         val stagedPreset = webSpikeStaging.get().file("export_presets.cfg").asFile
         stagedPreset.writeText(
             stagedPreset
@@ -2793,7 +2874,298 @@ tasks.register("stageWebThirdpersonProject") {
     }
 }
 
-val webDemo = providers.gradleProperty("kanamaWebDemo").orElse("match3")
+// ---------------------------------------------------------------------------
+// Task 142: the Web export of your own project (-PkanamaWebProjectDir, the key `project`).
+//
+// The compile path above is already project-driven: the merge of kotlin-src with web/kotlin-src,
+// the KSP proxies and the manifest follow webDemoProjectDir. This is the one generic staging
+// task: the project minus its build-only files, plus the generated proxies, manifest and
+// protocol, the bridge and shell assets, and Kanama's Web export preset. The expected sources
+// come from the project's own kotlin-src, not a hand-kept list. The demos keep their own
+// stageWeb<Demo>Project tasks for now.
+// ---------------------------------------------------------------------------
+val webProjectStaging = layout.buildDirectory.dir("web-project/godot-project")
+val webProjectMissingMessage =
+    "Pass -PkanamaWebProjectDir=/absolute/path/to/your-project " +
+        "(or -PkanamaWebDemo=<key> with its -PkanamaWeb<Key>ProjectDir)"
+
+// Excluded from the staged copy: version control, editor and build caches, the Gradle project,
+// the Android build, the Kanama desktop add-on, the Kotlin sources (the proxies replace them),
+// the Web override folder, and the project's own export presets (the export uses Kanama's).
+val webProjectCopyExcludes =
+    listOf(
+        ".git/**", ".godot/**", ".gradle/**", ".kotlin/**", "build/**", ".idea/**", "*.iml",
+        "android/**", "web/**", "kotlin-src/**", "addons/kanama/**", "gradle/**",
+        "build.gradle.kts", "gradle.properties", "gradlew", "gradlew.bat", "settings.gradle.kts",
+        "export_presets.cfg",
+    )
+
+// Left out of the before/after checksum: folders a build, an IDE or the Godot editor may write
+// while the staging runs. Everything else in the project must be byte-identical afterwards.
+val webProjectChecksumExcludes = setOf(".git", ".godot", ".gradle", ".kotlin", "build", ".idea", "android/build")
+
+/** Why `run/main_scene` of [projectDir] does not name a scene file, or null when it does. */
+fun webMainSceneProblem(projectDir: File): String? {
+    val setting =
+        projectDir.resolve("project.godot").readLines().map { it.trim() }
+            .firstOrNull { it.startsWith("run/main_scene=") }
+            ?: return "$projectDir/project.godot has no main scene (run/main_scene). " +
+                "Set one in Project > Project Settings > Application > Run"
+    val scene = setting.substringAfter('=').trim().removeSurrounding("\"")
+    if (scene.startsWith("res://")) {
+        return if (projectDir.resolve(scene.removePrefix("res://")).isFile) null
+        else "The main scene $scene of $projectDir does not exist"
+    }
+    if (scene.startsWith("uid://")) {
+        val skip = setOf(".git", ".godot", ".gradle", ".kotlin", "build", "addons")
+        val scenes =
+            projectDir.walkTopDown().onEnter { it == projectDir || it.name !in skip }
+                .filter { it.isFile && (it.extension == "tscn" || it.extension == "scn") }.toList()
+        val found =
+            scenes.any { file ->
+                file.extension == "tscn" &&
+                    file.bufferedReader().use { it.readLine() }.orEmpty().contains("uid=\"$scene\"")
+            }
+        // A binary .scn keeps its uid inside; with one present the uid cannot be ruled out here.
+        return if (found || scenes.any { it.extension == "scn" }) null
+        else "The main scene $scene of $projectDir matches no scene file"
+    }
+    return "The main scene \"$scene\" of $projectDir is not a res:// or uid:// path"
+}
+
+/** The checks the Web export makes on -PkanamaWebProjectDir, each failure on one line. */
+fun checkWebUserProject(): File {
+    val projectDir = webUserProjectDir ?: throw GradleException(webProjectMissingMessage)
+    if (!projectDir.isDirectory) {
+        throw GradleException(
+            "Web project not found: $projectDir. Pass -PkanamaWebProjectDir=/absolute/path/to/your-project"
+        )
+    }
+    if (!projectDir.resolve("project.godot").isFile) {
+        throw GradleException(
+            "$projectDir has no project.godot. Pass -PkanamaWebProjectDir=<the folder that holds project.godot>"
+        )
+    }
+    if (!projectDir.resolve("kotlin-src").isDirectory) {
+        throw GradleException(
+            "$projectDir has no kotlin-src/ (the Web export compiles the project's Kotlin scripts from there)"
+        )
+    }
+    webMainSceneProblem(projectDir)?.let { throw GradleException(it) }
+    return projectDir
+}
+
+val checkWebProject =
+    tasks.register("checkWebProject") {
+        group = "kanama-web"
+        description = "Checks -PkanamaWebProjectDir before the Web build compiles the project (task 142)."
+        doLast {
+            if (webDemoKey.isEmpty()) throw GradleException(webProjectMissingMessage)
+            check(webDemoKey == "project") {
+                "checkWebProject checks -PkanamaWebProjectDir; drop -PkanamaWebDemo=$webDemoKey"
+            }
+            checkWebUserProject()
+        }
+    }
+
+// A wrong project path, or no project at all, fails before the minutes-long Kotlin/Wasm compile.
+// With no project the runtime alone still compiles (`./gradlew :web-runtime:compileKotlinWasmJs`);
+// an export (which then depends on checkWebProject) orders the check first.
+tasks.configureEach {
+    if (name == "mergeWebGameplayScripts" || name == "kspKotlinWasmJs" || name == "compileKotlinWasmJs") {
+        if (webDemoKey == "project") dependsOn(checkWebProject) else mustRunAfter(checkWebProject)
+    }
+}
+
+tasks.register("stageWebProject") {
+    group = "kanama-web"
+    description =
+        "Stages -PkanamaWebProjectDir with its generated Web proxies, leaving the project unchanged (task 142)."
+    dependsOn(checkWebProject, "kspKotlinWasmJs", "generateWebGameplayCoverage")
+    webUserProjectDir?.takeIf { it.isDirectory }?.let { projectDir ->
+        inputs
+            .files(
+                fileTree(projectDir) {
+                    exclude(".git/**", ".godot/**", ".gradle/**", ".kotlin/**", "build/**", ".idea/**", "android/**")
+                }
+            )
+            .withPropertyName("kanamaWebProjectFiles")
+    }
+    inputs.property("kanamaWebProjectDir", webUserProjectDir?.absolutePath.orEmpty())
+    inputs.file(webSpikeSourceProject.file("export_presets.cfg")).withPropertyName("kanamaWebPreset")
+    inputs.dir(webSpikeAssets)
+    inputs.dir(webProxyResources)
+    inputs.file(webGameplayCoverage)
+    outputs.dir(webProjectStaging)
+
+    doLast {
+        val sourceProject = checkWebUserProject()
+
+        fun sourceChecksum(): String {
+            val digest = MessageDigest.getInstance("SHA-256")
+            sourceProject
+                .walkTopDown()
+                .onEnter { dir ->
+                    val path = dir.relativeTo(sourceProject).invariantSeparatorsPath
+                    path.isEmpty() || path !in webProjectChecksumExcludes
+                }
+                .filter { it.isFile }
+                .map { file -> file.relativeTo(sourceProject).invariantSeparatorsPath to file }
+                .sortedBy { it.first }
+                .forEach { (path, file) ->
+                    digest.update(path.toByteArray(Charsets.UTF_8))
+                    digest.update(0)
+                    digest.update(file.readBytes())
+                    digest.update(0)
+                }
+            return digest.digest().joinToString("") { "%02x".format(it) }
+        }
+
+        val checksumBefore = sourceChecksum()
+        val stagingDir = webProjectStaging.get().asFile
+        delete(stagingDir)
+        copy {
+            from(sourceProject) { webProjectCopyExcludes.forEach { exclude(it) } }
+            into(stagingDir)
+        }
+        copy {
+            from(webSpikeSourceProject.file("export_presets.cfg"))
+            into(stagingDir)
+        }
+        copy {
+            from(webProxyResources)
+            include("*.gd")
+            into(stagingDir.resolve("kanama-web/generated"))
+        }
+        copy {
+            from(webProxyResources)
+            include("KanamaWebProxyManifest.generated.tsv")
+            include("KanamaWebProtocol.generated.json")
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webSpikeAssets)
+            into(stagingDir.resolve("kanama-web"))
+        }
+        copy {
+            from(webGameplayCoverage)
+            into(stagingDir.resolve("kanama-web"))
+        }
+
+        // The expected sources are the project's own: every script KSP found in the merged kotlin-src
+        // (the protocol descriptor lists each @ScriptClass it read, however it is spelled) must have
+        // a proxy row, and every row a script. A script without one means the emitter dropped it; a
+        // row or script whose source is gone is stale KSP output.
+        val manifest = webProxyResources.get().file("KanamaWebProxyManifest.generated.tsv").asFile
+        check(manifest.isFile) { "Missing generated Web proxy manifest: $manifest" }
+        val mappings =
+            manifest
+                .readLines()
+                .filter { it.isNotBlank() && !it.startsWith("#") }
+                .map { line ->
+                    val columns = line.split('\t')
+                    check(columns.size == 3) { "Invalid Web proxy manifest row: $line" }
+                    columns[0] to columns[1]
+                }
+                .filter { (sourcePath, _) -> sourcePath.startsWith("res://kotlin-src/") }
+                .toMap()
+        val mergedSources = mergedWebScriptRoot.get().asFile.resolve("kotlin-src")
+        val protocol = webProxyResources.get().file("KanamaWebProtocol.generated.json").asFile
+        check(protocol.isFile) { "Missing generated Web protocol descriptor: $protocol" }
+        @Suppress("UNCHECKED_CAST")
+        val protocolScripts =
+            ((groovy.json.JsonSlurper().parse(protocol) as? Map<String, Any?>)?.get("scripts") as? List<Map<String, Any?>>)
+                ?: throw GradleException(
+                    "$protocol lists no scripts: the KSP output is stale or missing. Run the same " +
+                        "command again with --rerun-tasks added"
+                )
+        val compiled =
+            protocolScripts
+                .map { it["resourcePath"].toString() }
+                .filter { it.startsWith("res://kotlin-src/") }
+                .toSet()
+        check(compiled.isNotEmpty()) { "$sourceProject/kotlin-src has no @ScriptClass script to export" }
+        val missingSources = compiled.filter { !mergedSources.resolve(it.removePrefix("res://kotlin-src/")).isFile }
+        check(missingSources.isEmpty()) {
+            "Stale Web proxies: the generated protocol lists ${missingSources.sorted()}, which kotlin-src no longer has"
+        }
+        check(compiled == mappings.keys) {
+            "The Web proxies do not match the project's scripts: no proxy for " +
+                "${(compiled - mappings.keys).sorted()}, no script for ${(mappings.keys - compiled).sorted()}"
+        }
+
+        val used = mutableSetOf<String>()
+        fileTree(stagingDir) {
+                include("project.godot")
+                include("**/*.tscn")
+                include("**/*.tres")
+            }
+            .files
+            .forEach { stagedFile ->
+                val original = stagedFile.readText()
+                var rewritten =
+                    mappings.entries.fold(original) { text, (sourcePath, proxyPath) ->
+                        if (text.contains(sourcePath)) used += sourcePath
+                        text.replace(sourcePath, proxyPath)
+                    }
+                rewritten =
+                    rewritten.replace(
+                        Regex(
+                            "(\\[ext_resource type=\"Script\") uid=\"uid://[^\"]*\" " +
+                                "(path=\"res://kanama-web/generated/)"
+                        ),
+                        "$1 $2",
+                    )
+                if (rewritten != original) stagedFile.writeText(rewritten)
+                check(!rewritten.contains("res://kotlin-src/")) {
+                    "Unmapped Kotlin attachment remains in staged file: $stagedFile"
+                }
+            }
+        (mappings.keys - used).takeIf { it.isNotEmpty() }?.let { unattached ->
+            // Not an error: a @GlobalClass script, or one a scene loads by path, has no attachment.
+            logger.lifecycle("[kanama:web] stageWebProject: no scene attaches ${unattached.sorted()}")
+        }
+
+        // The Web export runs the Compatibility renderer: pin it in the staged copy, whatever the
+        // project uses (Forward+, Mobile, or no [rendering] section at all).
+        val stagedProject = stagingDir.resolve("project.godot")
+        var projectText = stagedProject.readText()
+        projectText =
+            projectText.replace(Regex("(config/features=PackedStringArray\\([^)]*)\"(Forward Plus|Mobile)\"")) {
+                "${it.groupValues[1]}\"GL Compatibility\""
+            }
+        projectText =
+            projectText.replace(
+                Regex("(?m)^renderer/rendering_method=\"(forward_plus|mobile)\"$"),
+                "renderer/rendering_method=\"gl_compatibility\"",
+            )
+        if (!Regex("(?m)^renderer/rendering_method=").containsMatchIn(projectText)) {
+            val section = Regex("(?m)^\\[rendering\\][ \\t]*$")
+            projectText =
+                if (section.containsMatchIn(projectText)) {
+                    projectText.replaceFirst(section, "[rendering]\n\nrenderer/rendering_method=\"gl_compatibility\"")
+                } else {
+                    projectText.trimEnd() + "\n\n[rendering]\n\nrenderer/rendering_method=\"gl_compatibility\"\n"
+                }
+        }
+        check(projectText.contains("renderer/rendering_method=\"gl_compatibility\"")) {
+            "Could not pin the Compatibility renderer in the staged $stagedProject"
+        }
+        stagedProject.writeText(projectText)
+
+        val checksumAfter = sourceChecksum()
+        check(checksumAfter == checksumBefore) {
+            "$sourceProject changed during staging: before=$checksumBefore after=$checksumAfter"
+        }
+        val evidence = stagingDir.resolve("kanama-web/SourceChecksum.generated.txt")
+        evidence.writeText("sha256=$checksumAfter\nstatus=unchanged\n")
+        logger.lifecycle(
+            "[kanama:web] stageWebProject staged ${compiled.size} script(s) from $sourceProject at $stagingDir"
+        )
+    }
+}
+
+val webDemo: Provider<String> = providers.provider { webDemoKey }
 
 // The single renderer/thread contract for the Kotlin/Wasm preview backend.
 val webRendererName = "gl_compatibility"
@@ -2880,6 +3252,31 @@ tasks.register("buildWebScripts") {
     }
 }
 
+fun unsupportedWebDemoMessage(demo: String): String =
+    "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|" +
+        "charactercontroller|thirdperson|racing|citybuilder|tpsdemo). For your own project, " +
+        "pass -PkanamaWebProjectDir=/absolute/path/to/your-project instead"
+
+/**
+ * Which project an export of the `project` key came from, recorded in its export report: a hash of
+ * the project's canonical path (so `/tmp/x` and `/private/tmp/x` are one project; the report is
+ * served, so the path itself must not be in it).
+ */
+fun webProjectId(): String =
+    MessageDigest.getInstance("SHA-256")
+        .digest((webUserProjectDir?.canonicalPath ?: "").toByteArray(Charsets.UTF_8))
+        .joinToString("") { "%02x".format(it) }
+        .substring(0, 16)
+
+/** The name a package carries: the demo key, or the project's folder name for `project`. */
+fun webPackageName(demo: String): String =
+    if (demo == "project") webUserProjectDir?.name?.replace(Regex("\\s+"), "-") ?: demo else demo
+
+/** How to rebuild the export of [demo], for the packaging errors. */
+fun webExportCommand(demo: String): String =
+    if (demo == "project") ":web-runtime:exportWeb -PkanamaWebProjectDir=${webUserProjectDir ?: "/absolute/path/to/your-project"}"
+    else ":web-runtime:exportWeb -PkanamaWebDemo=$demo"
+
 fun stageTaskFor(demo: String): String =
     when (demo) {
         "match3" -> "stageWebMatch3Project"
@@ -2894,10 +3291,10 @@ fun stageTaskFor(demo: String): String =
         "racing" -> "stageWebRacingProject"
         "citybuilder" -> "stageWebCitybuilderProject"
         "tpsdemo" -> "stageWebTpsdemoProject"
-        else ->
-            error(
-                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson|racing|citybuilder|tpsdemo)"
-            )
+        "project" -> "stageWebProject"
+        // Neither -PkanamaWebProjectDir nor -PkanamaWebDemo: checkWebProject fails, naming both.
+        "" -> "checkWebProject"
+        else -> error(unsupportedWebDemoMessage(demo))
     }
 
 fun stagingDirFor(demo: String): File =
@@ -2914,20 +3311,22 @@ fun stagingDirFor(demo: String): File =
         "racing" -> webRacingStaging.get().asFile
         "citybuilder" -> webCitybuilderStaging.get().asFile
         "tpsdemo" -> webTpsdemoStaging.get().asFile
-        else ->
-            error(
-                "Unsupported -PkanamaWebDemo=$demo (expected match3|bunnymark|dodge|web3d|platformer|squash|fps|charactercontroller|thirdperson|racing|citybuilder|tpsdemo)"
-            )
+        "project", "" -> webProjectStaging.get().asFile
+        else -> error(unsupportedWebDemoMessage(demo))
     }
 
 tasks.register<Exec>("exportWeb") {
     group = "kanama-web"
     description =
-        "Exports a validated demo (-PkanamaWebDemo=match3|bunnymark) to a self-contained, " +
-            "cache-busted, HTTP-servable directory with a release payload report."
+        "Exports your project (-PkanamaWebProjectDir) or a demo (-PkanamaWebDemo) to a " +
+            "self-contained, cache-busted, HTTP-servable directory with a release payload report."
     dependsOn("buildWebScripts", "wasmJsBrowserDistribution")
     dependsOn(webDemo.map(::stageTaskFor))
     inputs.property("kanamaWebDemo", webDemo)
+    inputs.property("kanamaWebProjectDir", webUserProjectDir?.absolutePath.orEmpty())
+    // An explicit Godot or template override re-exports (the defaults resolve when the task runs).
+    inputs.property("kanamaWebGodot", provider { runCatching { webGodotExecutable() }.getOrDefault("") })
+    inputs.property("kanamaWebTemplate", provider { runCatching { webTemplateRelease().absolutePath }.getOrDefault("") })
     inputs.property("kanamaWebTemplateDebug", providers.gradleProperty("kanamaWebTemplateDebug").orElse(""))
     inputs.dir(webDistribution)
     inputs.dir(webSpikeAssets)
@@ -2939,14 +3338,8 @@ tasks.register<Exec>("exportWeb") {
 
     doFirst {
         val demo = webDemo.get()
-        val godotExecutable =
-            providers.gradleProperty("kanamaGodotExecutable").orNull
-                ?: error("Pass -PkanamaGodotExecutable=/absolute/path/to/godot")
-        val webTemplateRelease =
-            providers.gradleProperty("kanamaWebTemplateRelease").orNull
-                ?: error("Pass -PkanamaWebTemplateRelease=/absolute/path/to/web_nothreads_release.zip")
-        val webTemplateFile = file(webTemplateRelease)
-        check(webTemplateFile.isFile) { "Godot Web release template not found: $webTemplateFile" }
+        val godotExecutable = webGodotExecutable()
+        val webTemplateFile = webTemplateRelease()
         // Local-only: -PkanamaWebTemplateDebug=/abs/web_nothreads_debug.zip exports with Godot's DEBUG
         // template (--export-debug) instead. CI exports release only, and a debug template runs
         // GDScript's DEBUG_ENABLED checks (typed-Object freed-instance aborts, ...) that a release
@@ -3087,6 +3480,7 @@ tasks.register<Exec>("exportWeb") {
             buildString {
                 append("{\n")
                 append("  \"demo\": \"$demo\",\n")
+                if (demo == "project") append("  \"project\": \"${webProjectId()}\",\n")
                 append("  \"protocolVersion\": $protocolVersion,\n")
                 append("  \"buildId\": \"$buildId\",\n")
                 append("  \"renderer\": \"$webRendererName\",\n")
@@ -3150,12 +3544,13 @@ tasks.register("verifyWebExportForPackaging") {
             "(itch.io HTML5 defaults), the stale-export checks, and the no-local-paths scan."
     doLast {
         val demo = webDemo.get()
+        if (demo.isEmpty()) throw GradleException(webProjectMissingMessage)
         stageTaskFor(demo) // key validation only: an unknown demo key fails with the canonical message
 
         val exportDir = webExportRoot.get().dir(demo).asFile
         check(exportDir.isDirectory) {
             "No Web export to package at $exportDir. packageWebExport never builds one -- " +
-                "run :web-runtime:exportWeb -PkanamaWebDemo=$demo (and smoke it) first."
+                "run ${webExportCommand(demo)} (and try it) first."
         }
         val servedFiles = exportDir.walkTopDown().filter { it.isFile }.toList()
         check(servedFiles.isNotEmpty()) {
@@ -3174,8 +3569,16 @@ tasks.register("verifyWebExportForPackaging") {
         val reportBuildId = readExportReportField(report, "buildId")
         val reportProtocol = readExportReportField(report, "protocolVersion").toInt()
         check(reportDemo == demo) {
-            "Stale export: $exportDir reports demo \"$reportDemo\" but -PkanamaWebDemo=$demo " +
-                "was requested -- the directory holds a different demo's export."
+            "Stale export: $exportDir reports demo \"$reportDemo\" but " +
+                (if (demo == "project") "-PkanamaWebProjectDir" else "-PkanamaWebDemo=$demo") +
+                " was requested -- the directory holds a different export."
+        }
+        if (demo == "project") {
+            val reportProject = runCatching { readExportReportField(report, "project") }.getOrDefault("")
+            check(reportProject == webProjectId()) {
+                "Stale export: $exportDir was exported from another project than $webUserProjectDir -- " +
+                    "run ${webExportCommand(demo)} first."
+            }
         }
 
         // Freshness against the repository: the export must carry the protocol the
@@ -3285,7 +3688,7 @@ tasks.register<Zip>("packageWebExport") {
         "Zips an already-built, gate-validated Web export (-PkanamaWebDemo) into the " +
             "publishable player artifact (docs/exporting/web.md, Publishing A Web Export)."
     dependsOn("verifyWebExportForPackaging")
-    archiveFileName.set(webDemo.map { "kanama-web-$it-v${project.version}.zip" })
+    archiveFileName.set(webDemo.map { "kanama-web-${webPackageName(it)}-v${project.version}.zip" })
     destinationDirectory.set(layout.buildDirectory.dir("distributions"))
     duplicatesStrategy = DuplicatesStrategy.FAIL
     isPreserveFileTimestamps = false

@@ -51,6 +51,16 @@ one line that says what to set (`Kanama: Export stopped: Android 13 or newer is 
 Export dialog shows the same warning on the Min SDK field. The Android 8-12 fallbacks are gone: the
 garbage-collector release of forgotten wrappers is always on for Android.
 
+### Added — Web export of your own project
+
+`./gradlew :web-runtime:exportWeb -PkanamaWebProjectDir=/path/to/your-project` exports your own
+project to the Web, from a Kanama checkout; before, only the Kanama demos could be exported. Godot
+and its Web template are found where Godot installs them, and the export needs no memory flags. The
+Web API gains `getNodeAsOrNull`, `requireNodeAs`, `castOrNull`, `cast`, `getNodeAs<T>`,
+`requireAs<T>`, the `node`, `script` and `preload` properties and `instantiateAs`/`instantiateScript`,
+so the starter script and the code the guides teach compile for the Web. See
+[Export for the Web](docs/exporting/web.md).
+
 ### Added — docs: Open in IntelliJ IDEA, and how long the edit loop takes
 
 A new page, [Open in IntelliJ IDEA](docs/getting-started/intellij.md), takes a starter from

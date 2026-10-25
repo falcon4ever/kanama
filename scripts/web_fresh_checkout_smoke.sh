@@ -48,8 +48,17 @@ CREATED_WORK_DIR=0
 # the CI matrix gate so the two can never disagree about what the corpus is.
 # shellcheck source=scripts/web/demos.sh
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/web/demos.sh"
-ALL_DEMOS=("${KANAMA_WEB_ALL_DEMOS[@]}")
-demo_project_dir() { kanama_web_demo_project_dir "$@"; }
+# The starter cell is not a clone-of-the-demos case: it is a project createStarterProject makes on
+# the spot, exported under the user-project key by web_ci_matrix.sh. This gate proves the demos'
+# clean-clone export, so it leaves the starter out (and rejects `--demo starter` by name).
+ALL_DEMOS=()
+for registry_demo in "${KANAMA_WEB_ALL_DEMOS[@]}"; do
+  [[ "$registry_demo" == "starter" ]] || ALL_DEMOS+=("$registry_demo")
+done
+demo_project_dir() {
+  [[ "$1" != "starter" && "$1" != "project" ]] || return 1
+  kanama_web_demo_project_dir "$@"
+}
 demo_project_property() { kanama_web_demo_project_property "$@"; }
 
 die() {

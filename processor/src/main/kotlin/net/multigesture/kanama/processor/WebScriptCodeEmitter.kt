@@ -2802,8 +2802,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     // instance alive across a reparent; this makes Web match Godot and desktop.
     //
     // Because the instance now SURVIVES a tree exit, the latched _kanama_ready_dispatched
-    // becomes CORRECT rather than a bug: Godot's fire-once _ready semantics are exactly
-    // what we want for a node that came back with its state intact.
+    // keeps a node that came back with its state intact from running @OnReady twice, as Godot
+    // does not run _ready again for it. The one exception is Godot's own: after request_ready()
+    // the node enters the tree not ready, _notification clears the latch (task 142), and _ready
+    // and @OnReady run again, as on desktop.
     appendLine("func _exit_tree() -> void:")
     appendLine("\tif _kanama_handle == 0:")
     appendLine("\t\treturn")
@@ -2816,6 +2818,17 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     // reports it and aborts the function, a release build skips it). The helpers it needs are
     // static, and the proxy's callbacks go with its members.
     appendLine("func _notification(what: int) -> void:")
+    // Task 142: after `request_ready()` Godot runs `_ready` again on the next tree entry, and
+    // desktop dispatches @OnReady again (and re-resolves the node/script delegates). The latch
+    // below would skip it, so a node that enters the tree not ready clears it, as desktop's
+    // onEnterTree starts a new ready cycle. 10 is Node.NOTIFICATION_ENTER_TREE, spelled as a number
+    // and called through `call` because the proxy may extend a class that is not a Node.
+    appendLine("\tif what == 10:")
+    appendLine(
+      "\t\tif _kanama_ready_dispatched and has_method(\"is_node_ready\") and not call(\"is_node_ready\"):"
+    )
+    appendLine("\t\t\t_kanama_ready_dispatched = false")
+    appendLine("\t\treturn")
     appendLine("\tif what != NOTIFICATION_PREDELETE:")
     appendLine("\t\treturn")
     appendLine("\tif _kanama_handle == 0:")

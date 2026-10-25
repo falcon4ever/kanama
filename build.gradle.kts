@@ -1138,6 +1138,15 @@ val ktfmtFormatApiExercise by
 tasks.named("ktfmtCheck") { dependsOn(ktfmtCheckApiExercise) }
 tasks.named("ktfmtFormat") { dependsOn(ktfmtFormatApiExercise) }
 
+// The flag changes which sources the Kotlin compilations see (the exercise rows are excluded without
+// it), but an exclusion is not a source change incremental compilation acts on: an unflagged compile
+// after a flagged one kept the exercise classes, and the build cache then stored them under the
+// unflagged key (an installed kanama.jar with the rows; task 142 found it). As a task input, the flag
+// makes every switch a full, non-incremental compile.
+tasks.matching { it.name.startsWith("compileKotlin") || it.name.startsWith("kspKotlin") }.configureEach {
+  inputs.property("kanamaApiExercise", kanamaApiExercise)
+}
+
 // A -PkanamaApiExercise=true build carries the API exercise rows (in kanama.jar and, through
 // commonMain, in the iOS runtime): it is for the smokes only. Every task that publishes, packages or
 // installs Kanama refuses it, at graph time (so `--dry-run` shows it too).

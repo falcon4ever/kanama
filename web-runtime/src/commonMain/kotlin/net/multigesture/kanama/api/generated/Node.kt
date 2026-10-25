@@ -168,6 +168,26 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
   fun <T : GodotObject> requireAs(path: NodePath, ctor: (GodotHandle) -> T): T =
     requireAs(path.path, ctor)
 
+  /**
+   * The node at [path] as [wrapper] when Godot reports that it is an [expectedClass], else `null`
+   * (the path is missing or the class check fails). Desktop's spelling, so a shared script compiles.
+   */
+  fun <T : Node> getNodeAsOrNull(path: String, expectedClass: String, wrapper: (GodotHandle) -> T): T? {
+    val node = getNodeOrNull(path) ?: return null
+    return if (node.isClass(expectedClass)) wrapper(node.handle) else null
+  }
+
+  fun <T : Node> getNodeAsOrNull(path: NodePath, expectedClass: String, wrapper: (GodotHandle) -> T): T? =
+    getNodeAsOrNull(path.path, expectedClass, wrapper)
+
+  /** [getNodeAsOrNull] that throws when the node is missing or not an [expectedClass]. */
+  fun <T : Node> requireNodeAs(path: String, expectedClass: String, wrapper: (GodotHandle) -> T): T =
+    getNodeAsOrNull(path, expectedClass, wrapper)
+      ?: error("Required node '$path' was not found or is not a $expectedClass")
+
+  fun <T : Node> requireNodeAs(path: NodePath, expectedClass: String, wrapper: (GodotHandle) -> T): T =
+    requireNodeAs(path.path, expectedClass, wrapper)
+
   fun hasNode(path: String): Boolean = getNodeOrNull(path) != null
 
   fun getNode(path: String): Node? = getNodeOrNull(path)

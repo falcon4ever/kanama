@@ -579,9 +579,9 @@ yourself, hand the result back with `MainThread.post { }`. See
 
 ## On Other Platforms
 
-The script model is the same on desktop, Android and iOS. Web runs a smaller
-set of lifecycle callbacks and function signatures, has no `node`, `script` or
-`preload` properties yet, and reports errors without a Kotlin line. iOS shows
+The script model is the same on desktop, Android, iOS and the Web. The Web
+runs a smaller set of lifecycle callbacks and function signatures, and reports
+errors without a Kotlin line. iOS shows
 line 0 for errors in some export modes, and a few types cross differently on
 iOS and Android. [Limitations](../reference/limitations.md) lists each case
 with its workaround.

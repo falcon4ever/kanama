@@ -37,6 +37,7 @@ import { runTpsdemo } from "./demos/tpsdemo.mjs";
 import { runSoak } from "./demos/soak.mjs";
 import { runVisibilityprobe } from "./demos/visibilityprobe.mjs";
 import { runSpike } from "./demos/spike.mjs";
+import { runStarter } from "./demos/starter.mjs";
 import {
   buildEnvelope,
   collectExercisedMembers,
@@ -45,7 +46,7 @@ import {
   mergeExercisedMembers,
 } from "./envelope.mjs";
 
-const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak, visibilityprobe: runVisibilityprobe, spike: runSpike };
+const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak, visibilityprobe: runVisibilityprobe, spike: runSpike, starter: runStarter };
 
 function parseArgs(argv) {
   const args = {};

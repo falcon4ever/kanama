@@ -278,11 +278,15 @@ scripts/web_ci_matrix.sh \
 ```
 
 Every cell runs even after an earlier one fails, so a red run reports the whole
-picture. `--demo-set pr` is the per-PR subset (`match3`, `web3d`, `dodge` — a
-pointer-drag demo, a 3D demo needing no demos checkout, and a full-lifecycle
-demo); `--demo-set full` is the 12-demo corpus plus the gated spike benchmark
-cell (as is `ci`, minus what a hosted runner cannot build — see the Spike
-Benchmark Cell below). Per-demo budgets live in `scripts/web/demos.sh`; scale
+picture. `--demo-set pr` is the per-PR subset (`match3`, `web3d`, `dodge`,
+`starter` — a pointer-drag demo, a 3D demo needing no demos checkout, a
+full-lifecycle demo, and the user path: a fresh `createStarterProject` the
+matrix makes in its result directory and exports with
+`-PkanamaWebProjectDir`, driven by `demos/starter.mjs`, which calls
+`HelloScript.greet` and quits the engine to a zero handle count);
+`--demo-set full` is the 12-demo corpus, the starter cell and the gated spike
+benchmark cell (as is `ci`, minus what a hosted runner cannot build — see the
+Spike Benchmark Cell below). Per-demo budgets live in `scripts/web/demos.sh`; scale
 them for a slower host with `--timeout-scale` rather than editing them, so local
 and CI numbers stay comparable.
 

@@ -18,6 +18,10 @@ cleanup() {
   if [[ -n "$bootstrap_build_dir" && -d "$bootstrap_build_dir" ]]; then
     rm -rf "$bootstrap_build_dir"
   fi
+  # The Web stage's temporary starter project goes too, also when that stage failed.
+  if [[ -n "${web_starter_root:-}" && -d "$web_starter_root" ]]; then
+    rm -rf "$web_starter_root"
+  fi
   # The external-addon-install project is removed when its stage passes; a failed run keeps it to inspect.
   if [[ -n "${install_check_dir:-}" && -d "$install_check_dir" && "$status" -ne 0 ]]; then
     echo "[local_ci] exit $status: the external addon install project is kept in $install_check_dir" >&2
@@ -814,6 +818,11 @@ if [[ $skip_web -eq 0 ]]; then
     stage "web bridge simulated-clock self-test"
     node "$ROOT_DIR/scripts/web/bridge_simtime_selftest.mjs"
 
+    # The bridge's live-script census counts a script once from its first _ready to its teardown,
+    # also after request_ready and when a slot's handle value comes back (task 142 review).
+    stage "web bridge live-script census self-test"
+    node "$ROOT_DIR/scripts/web/bridge_live_scripts_selftest.mjs"
+
     # The bridge's RefCounted holds where no browser run reaches them: without a working
     # FinalizationRegistry a snapshot hold or a dropped temporary releases nothing, and the lent cap
     # evicts the least recently wrapped lend and bounds a Variant result, never a typed create().
@@ -874,12 +883,27 @@ if [[ $skip_web -eq 0 ]]; then
   stage "web typed Godot enums and required returns (task 128 C)"
   python3 "$ROOT_DIR/scripts/check_web_typed_enums.py"
 
-  # Kotlin/Wasm compile + the fail-loud gameplay coverage gate. The Web build
-  # needs the in-process Kotlin compiler; the daemon can exhaust memory here.
+  # Kotlin/Wasm compile + the fail-loud gameplay coverage gate, over a project that is not a demo
+  # (task 142): a fresh starter goes through the user path -- the kotlin-src merge, KSP over a real
+  # script, the Wasm compile of it, and the generic stageWebProject with its derived expected-sources
+  # check, plus a shared script compiled for desktop and Web alike. No Godot or export template.
+  # In-process so the run leaves no Kotlin daemon behind.
   stage "web Wasm compile + coverage gate"
+  web_starter_root="$(mktemp -d "${TMPDIR:-/tmp}/kanama_local_ci_web_starter.XXXXXX")"
+  web_starter_dir="$web_starter_root/starter"
+  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon -q createStarterProject \
+    "-PkanamaStarterProjectDir=$web_starter_dir"
+  # One shared script with the starter's explicit imports, using the delegates, the checked casts
+  # and the instancing functions: it must compile for desktop (here) and for the Web (below).
+  cp "$ROOT_DIR/scripts/fixtures/shared-script/SharedScriptAccess.kt" "$web_starter_dir/kotlin-src/"
+  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon -q installAddonJar \
+    "-PkanamaProjectDir=$web_starter_root/desktop-install" \
+    "-PkanamaProjectScriptsDir=$web_starter_dir/kotlin-src"
   "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon \
     -Pkotlin.compiler.execution.strategy=in-process \
-    :web-runtime:compileKotlinWasmJs :web-runtime:generateWebGameplayCoverage
+    "-PkanamaWebProjectDir=$web_starter_dir" \
+    :web-runtime:compileKotlinWasmJs :web-runtime:stageWebProject :web-runtime:generateWebGameplayCoverage
+  rm -rf "$web_starter_root"
 else
   echo "SKIP: web checks: --skip-web was passed"
 fi

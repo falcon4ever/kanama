@@ -24,7 +24,7 @@ and how far each platform is supported. The current release is Kanama
 | Linux arm64 | Supported | Edit, build and export. |
 | Android | Supported | Export from a source checkout. Requires Android 13 (API 33) or newer; set **Min SDK** to `33` in the Android export preset. |
 | iOS | Supported | Export from a source checkout. Requires iOS 15 or newer on the iPhone or iPad. |
-| Web | Experimental | Exports the Kanama demo projects to desktop Chrome 130, Firefox 141 and Safari 26.5 or newer. Your own game cannot be exported to the Web. |
+| Web | Experimental | Exports your project, from a source checkout, to desktop Chrome 130 and Firefox 141 or newer. Safari and phones are checked by hand. |
 
 **Supported** means you can build and ship your own game on that platform.
 **Experimental** means the platform runs the Kanama demos, but nothing is

@@ -84,6 +84,22 @@ def _lan_address() -> str | None:
         return None
 
 
+def _cert_still_valid(cert: str) -> bool:
+    """True while the cached certificate stays valid for at least another day.
+
+    The certificate is made for 30 days; an expired one is made again instead of being served, which
+    a device would refuse (task 142 review). `openssl x509 -checkend` answers with its exit status.
+    """
+    try:
+        result = subprocess.run(
+            ["openssl", "x509", "-checkend", "86400", "-noout", "-in", cert],
+            capture_output=True,
+        )
+    except FileNotFoundError:  # justified: no openssl means no cached certificate is trusted; the generation step below reports the missing openssl
+        return False
+    return result.returncode == 0
+
+
 def _ensure_self_signed_cert(address: str) -> tuple[str, str]:
     """Return (cert, key) paths for ``address``, generating them if missing.
 
@@ -97,7 +113,7 @@ def _ensure_self_signed_cert(address: str) -> tuple[str, str]:
     os.makedirs(cache_dir, exist_ok=True)
     cert = os.path.join(cache_dir, f"cert-{address}.pem")
     key = os.path.join(cache_dir, f"key-{address}.pem")
-    if os.path.isfile(cert) and os.path.isfile(key):
+    if os.path.isfile(cert) and os.path.isfile(key) and _cert_still_valid(cert):
         return cert, key
     san = f"subjectAltName=IP:{address},IP:127.0.0.1,DNS:localhost"
     try:

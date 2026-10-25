@@ -457,7 +457,11 @@ budgets, and handle/callback/scheduler teardown to baseline, and rejects stale
 handles. Gameplay coverage reports zero blocking calls; the families a demo
 calls that the backend does not model (getters of write-only properties, for
 example) stay listed as explicit nonblocking unsupported entries rather than
-being pattern-hidden.
+being pattern-hidden. A thirteenth cell, `starter`, exports a fresh
+`createStarterProject` the way a game developer exports their own project
+(`-PkanamaWebProjectDir`, the generic `stageWebProject`) and passes in Chrome
+and Firefox (2026-10-21, macOS arm64; part of the per-PR Web matrix). It has
+not been run in Safari: the Safari evidence below is the demo corpus.
 
 ### Browser Floors
 
@@ -520,9 +524,9 @@ automated iOS gate exists, so mobile WebKit stays outside the validated claim.
 
 ### Web Gaps
 
-- No packaged or user export workflow: export requires a Kanama source
-  checkout, and there is no runtime-only addon (gameplay is AOT-compiled into
-  the Wasm payload).
+- No packaged export workflow: a project is exported from a Kanama source
+  checkout (`-PkanamaWebProjectDir`), and there is no runtime-only addon
+  (gameplay is AOT-compiled into the Wasm payload).
 - Godot **Compatibility renderer, single-thread** only.
 - No Web editor, no hot reload, no threads, no Kotlin/JS path.
 - Safari has **no headless mode**, so the Safari gate is a local GUI gate rather
@@ -533,9 +537,6 @@ automated iOS gate exists, so mobile WebKit stays outside the validated claim.
   are not freed off screen; the next round's `queue_free` still frees them
   ([issue #370](https://github.com/falcon4ever/kanama/issues/370); the `dodge:firefox` cell is quarantined, not hidden). Nothing measured implicates the Kanama backend, but it has not been ruled
   out; see [Quarantined Cells](device-runs.md#quarantined-cells).
-- Reproducible export builds currently require
-  `--no-daemon -Pkotlin.compiler.execution.strategy=in-process` (Kotlin daemon
-  builds exhausted memory).
 
 ### Other Web Findings
 

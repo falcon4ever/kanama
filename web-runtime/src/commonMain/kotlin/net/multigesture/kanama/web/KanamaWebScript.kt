@@ -29,6 +29,19 @@ data class WebScriptDescriptor(
 abstract class KanamaWebScript(val objectId: WebObjectId) {
   protected val scope = CoroutineScope(SupervisorJob())
 
+  /**
+   * The `_ready` dispatches of this script so far (task 142): 0 before its first `_ready`. The
+   * `node` and `script` delegates re-resolve when it changes, as desktop's ready generation.
+   */
+  @PublishedApi
+  internal var webReadyGeneration: Int = 0
+    private set
+
+  /** The bridge is about to dispatch this script's `_ready`. */
+  internal fun webReadyCycle() {
+    webReadyGeneration++
+  }
+
   internal fun close() {
     scope.cancel("Kanama Web script object was freed")
     onFree()

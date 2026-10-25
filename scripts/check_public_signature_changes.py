@@ -1345,10 +1345,6 @@ WEB_GODOT_OBJECT_DRIFT: dict[str, str] = {
     "web-only GodotObject: override fun hashCode(): Int": "Web hashes the handle token",
     "desktop-only GodotObject: override fun toString(): String":
         "desktop names the class and instance id; Web keeps Any.toString",
-    "desktop-only <top-level>: inline fun <reified T: GodotObject> GodotObject.cast(): T":
-        "desktop's ClassDB-checked reified cast; Web re-types with a wrapper constructor",
-    "desktop-only <top-level>: inline fun <reified T: GodotObject> GodotObject.castOrNull(): T?":
-        "desktop's ClassDB-checked reified cast; Web re-types with a wrapper constructor",
     "desktop-only <top-level>: inline fun <reified T> GodotObject.kotlinScriptInstance(): T?":
         "Web bounds T: Any; only an explicit nullable type argument compiles on desktop alone",
     "web-only <top-level>: inline fun <reified T: Any> GodotObject.kotlinScriptInstance(): T?":

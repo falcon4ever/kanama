@@ -315,7 +315,7 @@ case("check_android_remap_sources.py (address space, NULL_SEGMENT)", py("check_a
              "package net.multigesture.kanama\nval zz = NULL_SEGMENT.reinterpret(Long.MAX_VALUE)\n")],
      "ZzRedRun.kt:2: whole-address-space segment", "Kanama's `NULL_SEGMENT` reinterpreted as the whole address space")
 case("check_doc_claims.py", py("check_doc_claims.py"),
-     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 39)", "versioned JavaScript bridge (protocol 21)")],
+     [Edit("docs/contributing/platform-evidence.md", "the versions the corpus is driven on (protocol 39)", "the versions the corpus is driven on (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
 case("check_doc_claims.py (iOS size, marked doc)", py("check_doc_claims.py"),
      [Edit("docs/exporting/ios.md", "roughly 168 MB debug", "roughly 200 MB debug")],
@@ -1162,6 +1162,43 @@ case("check_gradle_templates_configure.sh (kit README, titled fence)", ["bash", 
      [Edit("templates/release-kit/README.md", "```sh\n./gradlew buildScripts\n```", "```bash title=\"Build\"\n./gradlew buildKotlinScripts\n```")],
      "has no task buildKotlinScripts", "the README a kit ships with tells the user to run a task that does not exist, in a ```bash title=... block", slow=True)
 
+# Task 142: the Web export of a project that is not a demo. Each case stages a fresh starter (made by `pre` inside the
+# work copy) through the generic stageWebProject: KSP and the staging, no Godot, no template. A wrong project path
+# must fail before the Wasm compile, naming what is wrong.
+WEB_STARTER = "build/red-run-starter"
+WEB_STAGE_STARTER = ["./gradlew", "--no-daemon", "-Pkotlin.compiler.execution.strategy=in-process",
+                     ":web-runtime:stageWebProject", f"-PkanamaWebProjectDir={WEB_STARTER}"]
+WEB_MAKE_STARTER = ["bash", "-c", f'rm -rf {WEB_STARTER} && ./gradlew -p . --no-daemon -q createStarterProject '
+                                  f'"-PkanamaStarterProjectDir=$PWD/{WEB_STARTER}"']
+# exportWeb with neither -PkanamaWebProjectDir nor -PkanamaWebDemo (or a misspelled one) must fail before the Wasm
+# compile, naming both. Slow like every case here that starts Gradle: the fast set runs no Gradle at all.
+WEB_NO_PROJECT = ["bash", "-c",
+    'out="$(./gradlew -p . --no-daemon --console=plain :web-runtime:exportWeb 2>&1)"; status=$?; '
+    'if [ "$status" -ne 0 ] && printf "%s" "$out" | grep -q "Pass -PkanamaWebProjectDir=" '
+    '&& printf "%s" "$out" | grep -q "PkanamaWebDemo=<key>" '
+    '&& ! printf "%s" "$out" | grep -q "Task :web-runtime:compileKotlinWasmJs"; then '
+    'echo "exportWeb with no project failed before compiling, naming both properties"; exit 0; fi; '
+    'printf "%s\\n" "$out" | tail -n 20; echo "MISSING-PROJECT MESSAGE LOST"; exit 1']
+case("exportWeb (no project)", WEB_NO_PROJECT,
+     [Edit("web-runtime/build.gradle.kts", '"(or -PkanamaWebDemo=<key> with its -PkanamaWeb<Key>ProjectDir)"', '"(see the docs)"')],
+     "MISSING-PROJECT MESSAGE LOST", "exportWeb with no project stops naming both -PkanamaWebProjectDir and -PkanamaWebDemo",
+     timeout=1800, slow=True)
+case("stageWebProject (project not found)", WEB_STAGE_STARTER,
+     [Rename(WEB_STARTER, f"{WEB_STARTER}-moved")],
+     "Web project not found:", "-PkanamaWebProjectDir names a folder that does not exist: the export must say so before compiling",
+     pre=[WEB_MAKE_STARTER], timeout=1800, slow=True)
+case("stageWebProject (no kotlin-src)", WEB_STAGE_STARTER,
+     [Rename(f"{WEB_STARTER}/kotlin-src", f"{WEB_STARTER}/kotlin-src-moved")],
+     "has no kotlin-src/", "the project has no kotlin-src/ folder: the export must name the folder it compiles from",
+     pre=[WEB_MAKE_STARTER], timeout=1800, slow=True)
+case("stageWebProject (undispatched virtual)", WEB_STAGE_STARTER,
+     [Edit(f"{WEB_STARTER}/kotlin-src/HelloScript.kt", '    fun greet(name: String): String = "$greeting, $name"',
+           "    @net.multigesture.kanama.annotations.OnShortcutInput\n"
+           "    fun shortcut(event: net.multigesture.kanama.api.InputEvent) {}\n\n"
+           '    fun greet(name: String): String = "$greeting, $name"')],
+     "is not dispatched by the Kanama Web backend", "the starter script gains an @OnShortcutInput: the Web build must stop on it through the user path, naming the virtual",
+     pre=[WEB_MAKE_STARTER], timeout=1800, slow=True)
+
 
 case("web/scaffold_selftest.sh", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_budgets.py" "$RESULT"; then', 'if false; then')],
@@ -1202,6 +1239,10 @@ case("web/bridge_simtime_selftest.mjs", ["node", "scripts/web/bridge_simtime_sel
 case("web/bridge_simtime_selftest.mjs (physics)", ["node", "scripts/web/bridge_simtime_selftest.mjs"],
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "      if (handle === this.simPhysicsClockHandle) this.simPhysicsSeconds += delta;\n", "      this.simPhysicsSeconds += delta;\n")],
      "_physics_process", "the bridge adds the physics delta once per scripted handle again")
+case("web/bridge_live_scripts_selftest.mjs", ["node", "scripts/web/bridge_live_scripts_selftest.mjs"],
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "      const firstReady = !this.liveScriptHandles.has(handle);\n",
+           "      const firstReady = this.scriptNameByHandle[handle] === undefined;\n")],
+     "a reused handle value's first _ready", "the bridge reads a script's first _ready from scriptNameByHandle again, which is never cleared: a slot whose handle value comes back is no longer counted live")
 case("web/bridge_rc_ownership_selftest.mjs (fallback hold)", ["node", "scripts/web/bridge_rc_ownership_selftest.mjs"],
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "      if (this.wrapperRegistryWorks === false) return 0;\n      const slot = this.browserHandleSlot(handle);\n      if (!slot?.refCounted) return 0;\n      slot.wrappers = Math.max(0, slot.wrappers + delta);\n", "      const slot = this.browserHandleSlot(handle);\n      if (!slot?.refCounted) return 0;\n      slot.wrappers = Math.max(0, slot.wrappers + delta);\n")],
      "fallback: a texture snapshot's hold", "without a working FinalizationRegistry a Sprite2D texture snapshot's hold counts again, and its end releases a texture a Kotlin wrapper still names")

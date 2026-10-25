@@ -13,19 +13,23 @@
 # Adding a demo means editing THIS file plus the driver wiring listed in
 # docs/contributing/device-runs.md.
 
-# The full corpus, in port order. `web3d` is an in-repo fixture; every other demo
-# lives in the kanama-demos checkout.
+# The full corpus, in port order. `web3d` is an in-repo fixture and `starter` is
+# a fresh `createStarterProject` exported the way a game developer exports their
+# own project (`-PkanamaWebProjectDir`, task 142); every other demo lives in the
+# kanama-demos checkout.
 KANAMA_WEB_ALL_DEMOS=(
   match3 bunnymark dodge web3d platformer squash fps
-  charactercontroller thirdperson racing citybuilder tpsdemo
+  charactercontroller thirdperson racing citybuilder tpsdemo starter
 )
 
 # The per-PR subset (Task 60h). Three demos chosen for coverage, not speed:
 # match3 exercises pointer-drag input and the 2D snapshot path, web3d the 3D
 # renderer from an in-repo fixture (it needs no demos checkout at all), and
-# dodge the full node/signal/scheduler lifecycle to a zero handle count.
+# dodge the full node/signal/scheduler lifecycle to a zero handle count, and
+# starter the user path: a project that is not a demo, through the generic
+# staging task (task 142).
 # The full corpus runs on push to main and on the nightly schedule.
-KANAMA_WEB_PR_DEMOS=(match3 web3d dodge)
+KANAMA_WEB_PR_DEMOS=(match3 web3d dodge starter)
 
 # The soak gate (Task 60h) is a DRIVER, not a thirteenth demo: it drives the
 # DODGE export for a long window and asserts no slow leak. It is deliberately
@@ -41,10 +45,12 @@ KANAMA_WEB_PR_DEMOS=(match3 web3d dodge)
 # checkout. It stays out of the per-PR subset, which is chosen for speed.
 KANAMA_WEB_GATED_BENCHMARKS=(spike)
 
-# demo key -> the export/build key it runs against. Everything but soak is itself.
+# demo key -> the export/build key it runs against. Everything but soak and
+# starter is itself; the starter exports under the user-project key `project`.
 kanama_web_demo_export_key() {
   case "$1" in
     soak) echo "dodge" ;;
+    starter) echo "project" ;;
     *) echo "$1" ;;
   esac
 }
@@ -75,6 +81,7 @@ kanama_web_demo_project_dir() {
     bunnymark) echo "Bunnymark" ;;
     dodge) echo "godot-demo-2d-dodge-the-creeps" ;;
     web3d) echo "" ;;
+    starter|project) echo "" ;;
     platformer) echo "Starter-Kit-3D-Platformer" ;;
     squash) echo "godot-demo-3d-squash-the-creeps" ;;
     fps) echo "Starter-Kit-FPS" ;;
@@ -95,6 +102,7 @@ kanama_web_demo_project_property() {
     bunnymark) echo "kanamaWebBunnymarkProjectDir" ;;
     dodge) echo "kanamaWebDodgeProjectDir" ;;
     web3d) echo "" ;;
+    starter|project) echo "" ;;
     platformer) echo "kanamaWebPlatformerProjectDir" ;;
     squash) echo "kanamaWebSquashProjectDir" ;;
     fps) echo "kanamaWebFpsProjectDir" ;;
@@ -109,9 +117,12 @@ kanama_web_demo_project_property() {
 
 # Extra `exportWeb` arguments a demo needs, one per line (empty for most).
 # Bunnymark's validated Web configuration is the 256-sprite V1Sprites variant.
+# The starter (export key `project`) is the project web_ci_matrix.sh creates
+# with createStarterProject and names in KANAMA_WEB_STARTER_DIR.
 kanama_web_demo_export_args() {
   case "$1" in
     bunnymark) echo "-PkanamaWebBunnymarkVariant=BunnymarkV1Sprites" ;;
+    starter|project) echo "-PkanamaWebProjectDir=${KANAMA_WEB_STARTER_DIR:?KANAMA_WEB_STARTER_DIR names the starter project to export}" ;;
     *) : ;;
   esac
 }
@@ -123,7 +134,7 @@ kanama_web_demo_export_args() {
 # these, so the local and CI numbers stay comparable.
 kanama_web_demo_timeout() {
   case "$1" in
-    match3|bunnymark|dodge|web3d|spike) echo 300 ;;
+    match3|bunnymark|dodge|web3d|spike|starter) echo 300 ;;
     platformer|squash|fps) echo 480 ;;
     charactercontroller|thirdperson|racing|citybuilder|tpsdemo) echo 600 ;;
     # The soak budget is derived from its own duration, never guessed: the driver
@@ -138,8 +149,9 @@ kanama_web_demo_is_known() {
   # fresh-checkout gate validates its --demo arguments against that mapping and
   # cannot export the spike (it has no exportWeb key), so leaving it unknown
   # there keeps that gate's rejection loud instead of failing mid-export.
+  # `project` is the starter's export key, not a driver: a `--demo project` is unknown.
   # justified: a probe; the registry lookup's exit status is the answer (unknown demo), its stdout/stderr are noise.
-  [[ "$1" == "spike" ]] || kanama_web_demo_project_dir "$1" >/dev/null 2>&1
+  [[ "$1" == "spike" ]] || { [[ "$1" != "project" ]] && kanama_web_demo_project_dir "$1" >/dev/null 2>&1; }
 }
 
 # Demos CI structurally cannot run -> the reason. This is NOT quarantine: nothing

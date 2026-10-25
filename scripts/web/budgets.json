@@ -426,6 +426,39 @@
         }
       }
     },
+    "starter": {
+      "maxPayloadBytes": 47000000,
+      "maxCrossingsPerTick": 2.0,
+      "minTicksForVerdict": 30,
+      "measuredOn": "2026-10-21, macOS arm64, Chrome 155 headless, protocol 39",
+      "note": "The user-project cell (task 142): a fresh createStarterProject exported with -PkanamaWebProjectDir. HelloScript sets the root's rotation and the Status label every frame, so about one crossing per tick is its whole cost.",
+      "measured": {
+        "payloadBytes": 40719455,
+        "startupMs": 4734,
+        "crossingsPerTick": 1.02,
+        "ticksObserved": 66
+      },
+      "engines": {
+        "chrome": {
+          "maxCrossingsPerTick": 2.0,
+          "measured": {
+            "crossingsPerTick": 1.02,
+            "ticksObserved": 66,
+            "startupMs": 4734,
+            "on": "macOS arm64, Chrome 155 headless"
+          }
+        },
+        "firefox": {
+          "maxCrossingsPerTick": 2.0,
+          "measured": {
+            "crossingsPerTick": 1.01,
+            "ticksObserved": 78,
+            "startupMs": 5316,
+            "on": "macOS arm64, Firefox 157 headless"
+          }
+        }
+      }
+    },
     "soak": {
       "maxPayloadBytes": 49000000,
       "maxCrossingsPerTick": 1.0,

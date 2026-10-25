@@ -444,6 +444,10 @@
     // decrements on the _exit_tree free, which is what lets the FPS driver assert that a shot
     // enemy actually queue_free()d instead of merely that enemies once existed.
     liveScriptsByClass: {},
+    // The script handles counted in liveScriptsByClass right now: added at their first _ready,
+    // deleted at teardown. A handle value can come back (a slot's 14-bit generation wraps after
+    // about 16k spawns), and scriptNameByHandle is never cleared, so it cannot tell a first _ready.
+    liveScriptHandles: new Set(),
     // Task 81 (census-as-gate): which registered script members actually DISPATCHED across the
     // JS<->Kotlin boundary, per script class: script class name -> { memberKey: dispatchCount }.
     // memberKey is the virtual's name for virtual dispatches, "method#<id>" for registered
@@ -1296,7 +1300,7 @@
       }
       this.match3ScriptNamesByHandle.delete(handle);
       const liveScriptName = this.scriptNameByHandle[handle];
-      if (liveScriptName !== undefined) {
+      if (this.liveScriptHandles.delete(handle) && liveScriptName !== undefined) {
         const remaining = (this.liveScriptsByClass[liveScriptName] ?? 0) - 1;
         this.liveScriptsByClass[liveScriptName] = remaining > 0 ? remaining : 0;
       }
@@ -3345,9 +3349,14 @@
     },
     recordReady(handle, scriptId, scriptName) {
       this.readyCount += 1;
+      // A second _ready of one script (after request_ready, task 142) is a ready, not a new live script.
+      const firstReady = !this.liveScriptHandles.has(handle);
       this.scriptNameByHandle[handle] = scriptName;
       this.match3ReadyByClass[scriptName] = (this.match3ReadyByClass[scriptName] ?? 0) + 1;
-      this.liveScriptsByClass[scriptName] = (this.liveScriptsByClass[scriptName] ?? 0) + 1;
+      if (firstReady) {
+        this.liveScriptHandles.add(handle);
+        this.liveScriptsByClass[scriptName] = (this.liveScriptsByClass[scriptName] ?? 0) + 1;
+      }
       // Task 81: fold in any dispatches that crossed before this handle had a name (the
       // _ready dispatch itself always does -- the proxy calls bridge.ready before recordReady).
       const pendingExercised = this.pendingExercisedByHandle.get(handle);

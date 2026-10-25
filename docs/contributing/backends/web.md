@@ -46,7 +46,7 @@ representative members:
   swap, match/collapse/refill, particles, audio, restart, and two full
   zero-state teardowns.
 
-The full list is in [Export for the Web](../../exporting/web.md#exporting-a-demo).
+The full list is in [Export for the Web](../../exporting/web.md#trying-the-web-build-with-a-demo).
 
 Each run asserts gameplay deltas, crossing budgets, and handle/callback/scheduler
 teardown to baseline, and fails on stale-handle use.
@@ -955,9 +955,24 @@ fails only the Web build (`undispatchedMemberErrors`), naming the shape. Lifecyc
 limited to `DISPATCHED_VIRTUALS`. Whether a Godot-side call that omits Kotlin default arguments gets
 the defaults is not covered on Web.
 
-**Script API not on Web yet.** `launch`, `wait`, `nextFrame`, `isScript`, `asScript` and the tree
-accessors exist (`WebScriptAccess.kt`); the `node`/`script`/`preload` delegates, `castOrNull`/`cast`,
-`requireAs<T>`/`getNodeAs<T>` and the `instantiate*` functions do not. `wait` is the frame
+**Script API on Web.** `launch`, `wait`, `nextFrame`, `isScript`, `asScript` and the tree
+accessors (`WebScriptAccess.kt`), and since task 142 the checked casts `castOrNull`/`cast` and
+`requireAs<T>`/`getNodeAs<T>` (`WebCheckedCasts.kt`), the `node`/`script`/`preload` delegates
+(members of `KanamaScript`, `WebKanamaScript.kt`, as on desktop, so a shared script needs no Web-only
+import; `scripts/fixtures/shared-script/SharedScriptAccess.kt` is compiled for both by local_ci) and
+the `instantiateAs`/`instantiateScript` extensions (`WebScriptDelegates.kt`), and the generated
+`Node.getNodeAsOrNull`/`requireNodeAs`.
+The casts find a class's Godot name and constructor in the generated table `WebGodotClasses.kt`
+(Kotlin/Wasm has no reflection; the table lists the generated classes and the hand-written facades,
+and is dead-code-eliminated from a module that never casts) and ask Godot through `Object.is_class`,
+as desktop does. A node or script delegate resolves on its first read after `_ready` and is cached
+per ready cycle: `KanamaWebScript.webReadyGeneration`, bumped by `kanamaWebReady` before `@OnReady`
+runs, stands in for desktop's `isNodeReady()` and ready generation. After `request_ready()` the
+proxy clears its `_kanama_ready_dispatched` latch when the node enters the tree not ready, so
+`_ready` and @OnReady run again and the delegates re-resolve, as on desktop. The preload cache
+reloads a resource whose handle the bridge released (the last proxy that could route it was freed).
+web3d's `typed_lookup_probe`, `delegate_probe`, `preload_reload_probe` and `re_ready_probe` prove
+them in the matrix. `wait` is the frame
 scheduler's delay, with the defaults only. Tweens: `node.createTween()` only (no
 `SceneTree.createTween()`, `getProcessedTweens()` or `tweenAwait`). There is no
 `Engine.registerSingleton`.
@@ -974,8 +989,7 @@ a coroutine), which is where Web code runs.
 protocol descriptor) and collects the Kotlin/Wasm runtime a project attaches:
 
 ```sh
-./gradlew --no-daemon -Pkotlin.compiler.execution.strategy=in-process \
-  :web-runtime:buildWebScripts
+./gradlew :web-runtime:buildWebScripts
 ```
 
 The bundle lands in `web-runtime/build/web-scripts/` with a
@@ -1002,10 +1016,30 @@ writes a self-contained served directory plus a release payload report. Point it
 at a **clean checkout** of the demo (never a shared working tree); the Web script
 root is auto-derived from `<project>/web`.
 
-Each demo has its own staging task (`stageWeb<Demo>Project`), selected by
-`-PkanamaWebDemo`; an unknown key fails with the list of supported keys. There
-is no staging path for an arbitrary project, which is why the user page says a
-game cannot be exported to the Web. The export also writes
+A user's project goes through the generic `stageWebProject` (task 142), selected by
+`-PkanamaWebProjectDir` alone: the key is then `project`, the staging
+`web-runtime/build/web-project/godot-project/` and the export
+`web-runtime/build/web-export/project/`. With `-PkanamaWebDemo` as well, the
+path is that demo's (`-PkanamaWebProjectDir` is the fallback for every
+`-PkanamaWeb<Demo>ProjectDir`). `checkWebProject` runs before the merge, KSP and
+the Wasm compile, so a wrong path fails in seconds with one line: `Web project
+not found`, `has no project.godot`, `has no kotlin-src/`, or a `run/main_scene`
+that names no scene. The staging copies the project minus the build-only files
+(`.git`, `.godot`, `.gradle`, `.kotlin`, `build`, `.idea`, `android`, `web`,
+`kotlin-src`, `addons/kanama`, the Gradle files and `export_presets.cfg`); the
+Kanama Tools plugin stays. The expected sources are derived, not listed: every
+`.kt` of the merged `kotlin-src` that declares `@ScriptClass` must have a
+manifest row and every `res://kotlin-src/` row a script, so a script the emitter
+dropped and a stale proxy both fail the staging. A script no scene attaches is
+logged, not fatal (a `@GlobalClass` script, or one loaded by path). The
+renderer is pinned to Compatibility whatever the project uses (the starter has
+no `[rendering]` section, so one is added), and a before/after SHA-256 of the
+project proves the staging changed nothing in it
+(`kanama-web/SourceChecksum.generated.txt`).
+
+Each demo still has its own staging task (`stageWeb<Demo>Project`), selected by
+`-PkanamaWebDemo`, with a hand-kept expected-sources list; an unknown key fails
+with the list of supported keys. The export also writes
 `kanama-web/export-report.json` listing every served file, its size, the total
 payload, the renderer, the thread setting, and the source-map policy; no
 workstation-absolute paths leak into the served HTML.
@@ -1174,11 +1208,15 @@ engine shutdown noise, not a Kanama boundary failure.
 
 ## Contributor Workflow
 
-Reproducible export builds currently require
-`--no-daemon -Pkotlin.compiler.execution.strategy=in-process`; two Kotlin daemon
-attempts exhausted memory while the in-process path is stable. Build exports from
-a disposable clean demo archive, and never point a formatting task at a shared
-demo checkout.
+Exports need no memory flags: the Kotlin daemon heap in `gradle.properties`
+(`kotlin.daemon.jvmargs=-Xmx4g`) covers the Kotlin/Wasm compile of the largest
+demo (tpsdemo peaked near 2 GB; a cold export with fresh daemons and no build
+cache passed on 2026-10-21). The gates still pass
+`--no-daemon -Pkotlin.compiler.execution.strategy=in-process`, so a run leaves no
+Gradle or Kotlin daemon behind. Godot and the Web release template default to
+`KANAMA_GODOT_BIN` or the standard install, and to Godot's export templates
+folder for `kanamaGodotVersion`. Build demo exports from a disposable clean demo
+archive, and never point a formatting task at a shared demo checkout.
 
 Narrow checks while iterating, then the broader gate:
 
