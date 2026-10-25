@@ -7,26 +7,13 @@ release shape.
 
 ## Current Baseline
 
-- Kanama release line: `0.4.0` (tagged 2026-07-24; a pre-1.0 preview baseline).
-- Godot baseline: Godot `4.7.2 stable` (re-pin only on stable releases; bumps
-  follow `docs/contributing/godot-upgrade.md`).
-- Desktop runtime/build JDK: JDK `25+`.
-- Mobile is Supported (4.7 stable), promoted from Experimental 2026-07-14 once
-  the §7 mobile promotion bar went green. Android is device-validated across
-  four models (Pixel 7, Moto g 5G 2023, Galaxy S10+, Pixel 3 XL), and
-  **Android 13 (API 33) is the minimum** for every build (plugin `minSdk`, the
-  export guard's Min SDK check). iOS is
-  device-validated on iPhone 12 and iPhone 15 Pro. Carried caveats: packaged
-  mobile addons are runtime-only (compiling project scripts needs the Kanama
-  checkout), the Android release path depends on the JitPack PanamaPort fork,
-  and there is no mobile hot reload. See
-  `docs/reference/version-support.md` for the status and
-  `docs/contributing/platform-evidence.md` for the validation runs and dates.
-- Release artifacts use two shapes: desktop kits for new projects and store
-  add-ons for existing projects. See `docs/exporting/desktop.md`.
-
-Always confirm this section against `README.md`,
-`docs/reference/version-support.md`, and `CHANGELOG.md` before changing release
+The release line is `version` in `build.gradle.kts`, the Godot pin `kanamaGodotVersion` in
+`gradle.properties` (re-pinned only on stable releases, by `docs/contributing/godot-upgrade.md`),
+the JDK floor `jvmToolchain(25)`. **Android 13 (API 33) is the minimum** for every Android build
+(the plugin `minSdk`, and the export guard's Min SDK check). Platform status, requirements and
+per-platform caveats are on `docs/reference/version-support.md` and
+`docs/reference/limitations.md`, the runs behind them on `docs/contributing/platform-evidence.md`.
+Confirm against `README.md`, `version-support.md` and `CHANGELOG.md` before changing release
 wording.
 
 ## First Stop for Implementation Work
@@ -40,20 +27,25 @@ ad-hoc work not covered by a task file, use "Read First By Task" below.
 
 ## Read First By Task
 
-Avoid broad context scans. Start with the smallest doc set that matches the
-task, then use targeted `rg` searches.
+Avoid broad context scans. The docs have two halves (the `mkdocs.yml` nav): **Use Kanama**
+(`docs/getting-started/`, `docs/game-dev/`, `docs/exporting/`, `docs/reference/`) for people
+making games, and **Develop Kanama** (`docs/contributing/`, starting at
+`docs/contributing/index.md`) for people changing Kanama. Start with the smallest doc set that
+matches the task, then use targeted `rg` searches.
 
 - Project status, requirements, and user quick start: `README.md`,
-  `docs/getting-started/index.md`, and
-  `docs/reference/version-support.md`.
-- Contributing to runtime, wrappers, generator, Android, docs, or packaging:
+  `docs/getting-started/index.md`, and `docs/reference/version-support.md`.
+- Contributing to runtime, wrappers, generator, docs, or packaging:
   `CONTRIBUTING.md` and `docs/contributing/index.md`.
 - Bootstrap, FFI, script lifetime, ClassDB registration, script resources, or
   hot reload: `docs/contributing/architecture.md`.
 - Generated wrappers, generator policy, ABI helpers, KDoc sync, or wrapper
   coverage: `docs/contributing/wrapper-maintenance.md`.
-- Android runtime/export support: `docs/exporting/android.md` and
-  `docs/contributing/backends/android.md`.
+- Gates, red runs, doc claims and stale-blocker markers:
+  `docs/contributing/gates.md`; packages, support levels and release cuts:
+  `docs/contributing/release.md`.
+- Android, iOS or Web runtime/export support: the platform's page under
+  `docs/exporting/` and its internals page under `docs/contributing/backends/`.
 - New Kanama game projects: `docs/getting-started/source-checkout.md`,
   `docs/game-dev/scripts.md`, `docs/game-dev/godot-api.md`,
   `docs/game-dev/properties-resources.md`, and `docs/game-dev/signals.md`.
@@ -64,12 +56,12 @@ task, then use targeted `rg` searches.
 
 ## Repository Map
 
-- The root is ONE `kotlin("multiplatform")` module (task 104 step 3) with targets
+- The root is ONE `kotlin("multiplatform")` module with targets
   `jvm()`, `iosArm64()` and `iosSimulatorArm64()`:
     - `src/commonMain/kotlin`: the KMP common fragment — the 19 value types
       (`types/`), the `expect` seams (`binding/runtime/RawSegment.expect.kt`,
       `BuiltinFrame.expect.kt`, `ObjectRuntime.expect.kt`, the GENERATED
-      `ObjectCalls.expect.kt`), the generated `types/Real.kt`, and since task 117 P4′
+      `ObjectCalls.expect.kt`), the generated `types/Real.kt`, and
       the whole Godot API wrapper tree under `api/` (see
       `docs/contributing/wrapper-maintenance.md`): the generated classes,
       `GodotHandle`, the hand-written roots `GodotObject`/`RefCounted`/`GodotCallable`
@@ -83,7 +75,7 @@ task, then use targeted `rg` searches.
       an `actual` declares no public member its `expect` lacks
       (`scripts/check_actual_public_surface.py`; the compiler does not check that).
     - `src/jvmMain/kotlin`: Kanama runtime, bootstrap-facing Kotlin code, the
-      the hand-shaped `FileAccess`/`DirAccess` wrappers with the `<Class>.jvm.kt` companions,
+      `<Class>.jvm.kt` companions,
       the `actual`s of the seams and of `GodotSignal`/`SignalConnection`/`MainThread`,
       and editor/runtime support.
     - `src/iosMain/kotlin`: the Kotlin/Native iOS runtime (see below), `src/jvmTest`:
@@ -98,8 +90,8 @@ task, then use targeted `rg` searches.
 - `android`: the Godot Android plugin (runtime + scripts AARs) and the
   PanamaPort source remap.
 - `ios`: the iOS C shim and headers. The Kotlin/Native runtime lives in
-  `src/iosMain` with its per-platform wrappers (the hand-written `FileAccess` facade,
-  `<Class>.ios.kt` companions, the iOS `actual`s); the shared tree
+  `src/iosMain` with its per-platform wrappers (the `<Class>.ios.kt` companions and
+  the iOS `actual`s); the shared tree
   and the seams come from `src/commonMain`.
 - `web-runtime`: the Kotlin/Wasm Web backend, the Web API wrappers (one
   generated file per Godot class under `api/generated/`, plus the hand-shaped
@@ -131,7 +123,7 @@ demo names, or copied notes.
 
 | File | Generated by | Notes |
 |---|---|---|
-| `src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt` | hand-written (desktop/Android) | The ptrcall helper surface the generated wrappers call. Not generated: `scripts/audit_generator_shape_policy.py` gates its shapes against the generator's call-shape table, and its iOS counterpart `src/iosMain/.../binding/runtime/ObjectCalls.kt` is hand-written outside the `GENERATED MEMBERS` region the generator owns at the end of the object (task 104 step 3b). Both are `actual object ObjectCalls` since step 3cd: the compiler holds them to the GENERATED `expect object` in `src/commonMain/.../ObjectCalls.expect.kt`, and `scripts/check_objectcalls_parity.py` holds that file to the set of helpers the tree calls. |
+| `src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt` | hand-written (desktop/Android) | The ptrcall helper surface the generated wrappers call. Not generated: `scripts/audit_generator_shape_policy.py` gates its shapes against the generator's call-shape table, and its iOS counterpart `src/iosMain/.../binding/runtime/ObjectCalls.kt` is hand-written outside the `GENERATED MEMBERS` region the generator owns at the end of the object. Both are `actual object ObjectCalls`: the compiler holds them to the GENERATED `expect object` in `src/commonMain/.../ObjectCalls.expect.kt`, and `scripts/check_objectcalls_parity.py` holds that file to the set of helpers the tree calls. |
 | The generated wrapper tree: `src/commonMain/kotlin/.../api/*.kt` (shared; the hand roots and the `*.expect.kt` files there are hand-written), `src/jvmMain/kotlin/.../api/<Class>.jvm.kt` and `src/iosMain/.../api/<Class>.ios.kt` companions (the platform halves of shared classes), `src/commonMain/.../binding/runtime/ObjectCalls.expect.kt`, `docs/reference/generated/ios-shape-gap.md` | `scripts/generate_api_wrapper.py --write-tree` (then `sync_kdoc_from_godot_docs.py --write`) | Public wrappers must be regeneratable unless listed as hand-shaped in `PER_PLATFORM_WRAPPERS`; `check_wrapper_generator.py` fails on any hand edit. |
 | `src/generated/godot/*` | `scripts/refresh_godot_api.sh` from Godot headers | Generated Panama bindings. |
 | `web-runtime/src/commonMain/.../api/generated/*.kt` | `scripts/generate_web_wrappers.py` | The Web API wrappers, one class per file, from `scripts/platform_backend_calls.json` + `extension_api.json`. `--check` (in `local_ci.sh` and `:web-runtime:check`) fails on drift and on any hand-written dispatch outside the `WEB_HANDSHAPED` facades. Hand-shaped members live in the generator's `CLASS_POLICY`, not in the output. |
@@ -160,7 +152,7 @@ generated wrappers and focused policy fixes over ad hoc hand wrappers.
   value of any pinned constant you touched.
 - Claims drift the same way constants do, and nothing notices. **When you close
   a task that removes a limitation, grep for the comments citing it** and delete
-  the ones that are now false. Task 30 gave iOS full wrapper breadth and nobody
+  the ones that are now false. When iOS gained full wrapper breadth nobody
   grepped for "missing iOS wrapper types"; that line steered decisions for six
   more weeks. Where the limitation is machine-checkable, write it as a
   `KANAMA-BLOCKED` marker instead — `scripts/audit_stale_blockers.py` fails
@@ -194,7 +186,7 @@ generated wrappers and focused policy fixes over ad hoc hand wrappers.
 | `REFCOUNTED_REFERENCE_HASH == REFCOUNTED_UNREFERENCE_HASH` (both `2240911060`) in `ScriptBridge.kt` | `reference()` and `unreference()` share the `bool()` signature, so their method hashes match by construction. | Verified legitimate against `extension_api.json` (architecture-review verdict; the review is archived in the internal task repo). |
 | `compatibility_minimum = "4.7"` in `.gdextension` descriptors | `classdb_register_extension_class6` is a Godot 4.7 API; 4.3-4.6 loads would fail at class registration. | Keep the 4.7 invariant from architecture review F1. |
 | `<Class>.jvm.kt` companions repeat a class's desktop-only members as extension functions | iOS has no audited `ObjectCalls` helper for those ptrcall shapes yet; the shared file holds the members both platforms can call and the companion header names what it waits on. | Do not move them back by hand: the regen does when the iOS helper lands. `--emit-class` regenerates the whole tree and writes one class, so the old single-class emit-union gotcha is gone. |
-| `ObjectCalls.keepReachable(this)` / `(arg)` after every generated engine call (and `GodotObject.fenced { }` in the hand root) | The JLS §12.6.2 reachability fence: once a body has read `segment` the JIT may treat the wrapper as dead mid-call, and an owned `RefCounted`'s fallback release could destroy the object under a worker-thread call (task 138 item 6). `Reference.reachabilityFence` is free on HotSpot; the iOS actual is empty. | Do not strip it as dead code; `check_wrapper_generator.py` fails a generated body that reads a handle without it. |
+| `ObjectCalls.keepReachable(this)` / `(arg)` after every generated engine call (and `GodotObject.fenced { }` in the hand root) | The JLS §12.6.2 reachability fence: once a body has read `segment` the JIT may treat the wrapper as dead mid-call, and an owned `RefCounted`'s fallback release could destroy the object under a worker-thread call. `Reference.reachabilityFence` is free on HotSpot; the iOS actual is empty. | Do not strip it as dead code; `check_wrapper_generator.py` fails a generated body that reads a handle without it. |
 | PanamaPort textual remap from `java.lang.foreign.*` to `com.v7878.foreign.*` | It is a pragmatic Android ART compatibility path guarded by pre/post audits. | Do not clean it up without replacing the audit mitigation; see the architecture review Android section. |
 
 ## Common Workflows
@@ -233,21 +225,12 @@ Build the host desktop kit and local store add-on:
 ./gradlew packageDistributions
 ```
 
-Validate package install flows without a sibling Kanama checkout:
-
-```sh
-scripts/package_install_smoke.sh \
-  --desktop-kit \
-  build/distributions/kanama-desktop-kit-v<version>-<platform>.zip \
-  /absolute/path/to/godot-4.7.2-stable
-scripts/package_install_smoke.sh \
-  --store-addon \
-  build/distributions/kanama-store-addon-v<version>.zip \
-  /absolute/path/to/godot-4.7.2-stable
-```
-
 Desktop kits are complete starter projects for one platform. Store add-ons are
-install-safe `addons/` zips for existing projects.
+install-safe `addons/` zips for existing projects. Validate them without a
+sibling Kanama checkout with `scripts/package_install_smoke.sh --desktop-kit` /
+`--store-addon` (the full commands are in `docs/contributing/gates.md`, "Local
+Validation"); the package shapes, the mobile addon zips, the package workflow and
+the release cut are in `docs/contributing/release.md`.
 
 ### Port Existing GDScript
 
@@ -309,7 +292,7 @@ backend to the newest variant, and confirm the **desktop/Android JVM** backend
 (`src/jvmMain`) and the **iOS Kotlin/Native** shim (`ios/bootstrap/kanama_ios_shim.c`)
 bind the **same** construct/register/script-instance entry points — they pick these
 independently and have drifted silently before (`construct_object2` vs
-`construct_object3`, issue #91 / task 61). Enforced by
+`construct_object3`, issue #91). Enforced by
 `scripts/check_gdextension_modernization.py` (in `local_ci.sh` and the upgrade
 gates); steps are in the upgrade runbook.
 
@@ -352,7 +335,7 @@ runtime Android shares via PanamaPort. The Android runtime AAR and iOS
 xcframework lanes run on push to `main` and on PRs that touch runtime,
 processor, or mobile paths (docs-only PRs skip them; PRs build the debug device
 xcframework only). It does **not** run on-device: the Android R8-minified runtime
-gate (the task-42 PanamaPort-under-R8 class) and the iOS device runtime are
+gate (PanamaPort under R8) and the iOS device runtime are
 deliberate **local device gates**. A green PR means it builds everywhere and the
 desktop runtime behaves — not that it is device-safe on mobile.
 

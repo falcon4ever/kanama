@@ -272,7 +272,7 @@ count above zero or an `OWNERSHIP SELFTEST FAIL` line.
 
 The generated API exercise (`ApiExerciseHook`, one row per `ObjectCalls` helper the shared tree calls;
 see [API Exercise Inventory](../../reference/generated/api-exercise.md) and
-[Wrapper Maintenance](../wrapper-maintenance.md#the-api-exercise-inventory)) is the same JVM code on
+[Wrapper Maintenance](../wrapper-maintenance.md#api-exercise-inventory)) is the same JVM code on
 ART, so it runs on the device on request: `KANAMA_ANDROID_API_EXERCISE=1 scripts/android_smoke.sh ...`
 builds the runtime AAR with `-PkanamaApiExercise=true` (the plugin copy then keeps the `exercise/`
 sources it otherwise excludes), writes `kanama/debug/api_exercise=true` beside the two settings above,
@@ -368,15 +368,24 @@ Android instead of warning that no `arm64` library exists.
 
 The current Android path is intentionally narrow:
 
+- Android runs on ART, so the bootstrap attaches to the VM the app already has
+  instead of creating a desktop JVM, and Kotlin classes load from the APK at
+  startup. Hot reload is desktop-editor-only.
 - The Android source remap is a guarded Gradle step rather than a dedicated
   source-set design.
 - Some JVM APIs used on desktop have Android-compatible replacements.
-- `MethodHandle.invoke(...)` uses Android-compatible handling through
-  `invokeWithArguments(...)`, and so does `MethodHandle.invokeExact(...)` (task
-  131 item 16): compiled against android.jar, Kotlin emits both as plain
-  varargs calls (`invokeExact(Object[])`), which ART rejects at run time. The
-  hot handles still become `static final` constants on Android; only desktop
-  gets the exact, JIT-folded call.
+- Android downcall handles must go through `invokeWithArguments(...)`; desktop
+  keeps the direct `invoke(...)` and `invokeExact(...)`. Compiled against
+  android.jar, Kotlin emits both direct forms as plain varargs calls
+  (`invokeExact(Object[])`), which ART rejects at run time. The remap rewrites
+  every `.invoke(` and `.invokeExact(` in the Android copy to
+  `.invokeWithArguments(`, and its audit forbids any `.invokeExact(` that
+  survives. So in shared
+  sources never call a Kotlin function value or a reflective `Method` with
+  `.invoke(`: write `f(args)` or go through a `MethodHandle`
+  (`scripts/check_android_remap_sources.py` fails on both). The hot handles
+  still become `static final` constants on Android; only desktop gets the
+  exact, JIT-folded call.
 - Demo Kotlin sources are audited before remap for nullable callback invocation
   such as `callback?.invoke()`, which would otherwise be rewritten like a
   low-level method-handle call.

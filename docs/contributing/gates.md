@@ -5,6 +5,7 @@ Kanama's checks are scripts under `scripts/`. Most run as stages of
 [Device and Browser Runs](device-runs.md). The generated
 [Gates Index](../reference/generated/gates.md) lists every stage and job, what
 it proves and where it runs. This page covers running the local gate, the
+rules every gate script follows, red runs, the checks that read the docs, the
 checks behind the API conventions, and the source-break gate.
 
 ## Local Validation
@@ -133,6 +134,50 @@ The Gradle audit tasks resolve Python as `py`/`python` on Windows (the
 `.gitattributes`); CRLF-rewritten `.tres`/`.tscn` files fail Godot resource
 parsing.
 
+## Gate Script Rules
+
+A gate that swallows a failure is worse than no gate: it reports green for a
+red state. Every gate script follows these rules, and
+[`scripts/README-gates.md`](https://github.com/falcon4ever/kanama/blob/main/scripts/README-gates.md)
+holds the full text, the audit of the tree and the list of skip ids:
+
+- **A skip says so.** A check that cannot run prints `SKIP: <id>: <reason>`
+  through `scripts/gate_skip.sh` or `scripts/gate_skip.py`. Under CI a skip
+  fails unless its id is listed in `KANAMA_ALLOW_SKIP`.
+- **No failure is swallowed.** An `|| true`, `2>/dev/null` or
+  `continue-on-error` either goes, or carries a `# justified:` comment that
+  says why the verdict cannot change.
+- **A path the gate reads must exist, and the set it scans must not be
+  empty.** A file that moved is a failure, not a pass.
+- **One portable path.** A script CI can invoke runs on the tools a Mac and
+  the ubuntu runner both have; `scripts/check_script_portability.py` enforces
+  the list.
+- **A new gate ships with its red run** (next section) and a row in
+  `scripts/README-gates.md`.
+
+## Red Runs
+
+A red run shows a gate failing on a known-bad input. A gate seen only green is
+a claim, not evidence. `scripts/gate_red_runs.py` holds one `case(...)` per
+gate: the gate passes on the tree, fails with the expected text after a
+reversible mutation, and passes again after the revert. Each case runs in a
+throwaway `git worktree` of `HEAD` plus your uncommitted changes, so your
+checkout is never mutated.
+
+```sh
+python3 scripts/gate_red_runs.py --list            # the cases
+python3 scripts/gate_red_runs.py --only doc        # cases whose gate name contains "doc"
+python3 scripts/gate_red_runs.py --strict          # a skipped case fails (implied under CI)
+python3 scripts/gate_red_runs.py --slow            # also the Godot and Gradle smokes
+```
+
+Some cases edit exact sentences in the docs. When you change a page, grep the
+case list for its path and run those cases too.
+
+Gates that need a device, a browser or a long export are not all in the
+harness; they carry their own `--self-test` or recipe in
+`scripts/README-gates.md`.
+
 ## Checked Lines in the Docs
 
 Some doc lines are read by scripts: the `kanama-claim` comments, the
@@ -140,6 +185,27 @@ Some doc lines are read by scripts: the `kanama-claim` comments, the
 `reference/version-support.md`, and the `./gradlew` commands on the Get Started
 pages. [Writing These Docs](docs-style.md#lines-the-checks-read) lists them and
 the checks to run before a docs change.
+
+**Doc claims.** A doc line that states a fact kept elsewhere in the tree opts
+into a check with an HTML `kanama-claim` comment on the same line.
+`scripts/check_doc_claims.py` (in `local_ci.sh` and `scripts/audit_claims.sh`)
+compares the stated value with its source: the `protocol` kind with the Web
+bridge protocol in `WebScriptCodeEmitter`, the `ios-static-size` kind with the
+measured sizes in `reference/version-support.md`. An unmarked mention is
+history and is left alone, so a release never rewrites a correct "before
+protocol N" sentence. The check fails on a marker whose kind it does not know,
+and when no marker exists at all. A new kind needs an extractor in the script.
+
+**Stale-blocker markers.** A comment that says a feature is blocked on X can
+outlive X. A `KANAMA-BLOCKED` comment names the absence it depends on (a
+symbol, a file, a Web call, an open task), and
+`scripts/audit_stale_blockers.py` (a `local_ci.sh` stage) fails the build when
+that absence is gone, so the comment goes red the day it becomes false. In a
+`.md` file the marker is an HTML comment that travels with the paragraph it
+guards. The grammar, with a live example, is "Documented Limitations" in the
+repository's
+[`CONTRIBUTING.md`](https://github.com/falcon4ever/kanama/blob/main/CONTRIBUTING.md#documented-limitations);
+`python3 scripts/audit_stale_blockers.py --list` prints every marker.
 
 ## Godot Upgrade Risks
 

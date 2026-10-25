@@ -29,6 +29,11 @@ you are changing:
   [Web Internals](backends/web.md) (the Kotlin/Wasm backend, its generated
   proxy, and the versioned JS bridge). The user-facing export workflow for
   each lives under Shipping Your Game; these pages hold the design and the gates.
+- [Gates and Claims](gates.md) before adding or changing a check: the local
+  gate, the rules every gate script follows, red runs and the checks that read
+  the docs.
+- [Release Process](release.md) before building packages, changing a
+  platform's support status or cutting a release.
 - [Gates Index](../reference/generated/gates.md) (generated from
   `local_ci.sh`, the workflows, and the ledger) to find what each `local_ci.sh`
   stage, CI job, and local-only device/browser gate proves and where it runs,
@@ -104,11 +109,15 @@ Use the narrowest useful check while iterating, then run the broader local gate
 before release-facing changes:
 
 ```sh
+./gradlew check -PkanamaBuildNativeBootstrap=false
 mkdocs build --strict
 python3 scripts/check_wrapper_generator.py
 ./gradlew jvmJar
 ./scripts/local_ci.sh /path/to/godot-4.7.2-stable
 ```
+
+`-PkanamaBuildNativeBootstrap=false` skips the native bootstrap build, so the
+Gradle checks run without CMake.
 
 For release-facing changes, prefer the fresh-clone gate so the result does not
 depend on your active development checkout or old local build state:

@@ -13,7 +13,12 @@ Kanama has two desktop distribution shapes:
   Godot Asset Store submission.
 
 The package tasks produce local zips; they become public download flows only
-when matching GitHub release artifacts are published.
+when matching GitHub release artifacts are published. Build the host desktop
+kit and the local host store addon together with:
+
+```sh
+./gradlew packageDistributions
+```
 
 ### Desktop Kit
 
@@ -134,8 +139,19 @@ scripts/package_install_smoke.sh --ios-addon \
 
 ## Package Workflow
 
-The package workflow runs only on manual dispatch and `v*` tags. It does not
-run on pull requests.
+The package workflow (`.github/workflows/package.yml`) runs only on manual
+dispatch and `v*` tags. It does not run on pull requests. Its jobs:
+
+- `desktop-kit` builds and smokes a desktop kit per platform, and the store
+  native library for each.
+- `cross-runtimes` builds the Windows and Linux game runtime images on macOS,
+  and `exported-game` boots a real export with each image on its own runner,
+  so cross-target export is proven on every tag.
+- `store-addon` assembles and smokes the all-platform store addon.
+- `publish-release`, on a tag only, creates the GitHub release if it does not
+  exist and uploads the desktop kits and the store addon. The mobile addon
+  zips are not part of the workflow; they are built locally with the tasks
+  above.
 
 Matrix targets:
 
@@ -156,9 +172,57 @@ ignore `kanama_bootstrap.dll`, `libkanama_bootstrap.so`, and
 `libkanama_bootstrap.dylib`; rebuild the matching library locally for the
 platform under test instead of committing it.
 
-## Version Bumps
+## Support Levels
 
-The Gradle artifact version is `version` in `build.gradle.kts`. Change it
-together with the matching Gradle coordinates, docs snippets, demo project
-versions, badges and changelog headings, and only with a passing smoke matrix
-for every claimed target ([Platform Evidence](platform-evidence.md)).
+[Requirements and Platform Status](../reference/version-support.md#platform-status)
+gives each platform one word:
+
+- **Supported**: a user can build and ship their own game on it.
+- **Experimental**: it runs the Kanama demos, and nothing is promised for a
+  user's own game.
+
+A platform moves to Supported only on evidence, on the current Godot pin:
+
+- its smoke path passed: local CI and the desktop demo smokes for a desktop
+  platform, the device matrix for a mobile one, the browser matrix for Web
+  ([Device and Browser Runs](device-runs.md)), recorded in the
+  `evidence/gates.json` ledger that the
+  [Gates Index](../reference/generated/gates.md) shows;
+- for a mobile platform, the bar Android and iOS met: device-matrix breadth
+  (the demo matrix on more than one device model), renderer coverage,
+  release-grade packaging (a release build runs, not only a debug one), and a
+  heavy demo;
+- a user's own project, not only a demo, builds and exports by following the
+  user pages.
+
+The runs, dates and devices go on [Platform Evidence](platform-evidence.md).
+The status word then changes in the same pull request on Requirements and
+Platform Status, in `README.md` and in `CHANGELOG.md`. Never word a claim
+wider than the device or browser runs validated: a package zip that installs
+is not proof that exported games work, and a desktop pass says nothing about
+a device.
+
+## Cutting a Release
+
+The maintainer decides when a release is cut. The steps:
+
+1. **Version.** Change `version` in `build.gradle.kts` together with the
+   Gradle coordinates, docs snippets, demo project versions, the status badge
+   in `README.md`, the package workflow variables and the companion demo
+   defaults. Grep the repository for the old version before you finish.
+2. **Changelog.** Turn `## Unreleased` into the version heading and open a new,
+   empty `## Unreleased` above it: `check_public_signature_changes.py` counts no
+   break as announced without one. Keep every `Source break` line.
+3. **Gates.** Run `scripts/local_ci.sh` with the pinned Godot, then the
+   isolated gates from clean clones: `scripts/fresh_clone_smoke.sh` and, for
+   Web, `scripts/web_fresh_checkout_smoke.sh`. Smoke the packages as
+   [Gates and Claims](gates.md#local-validation) shows.
+4. **Evidence.** Check the [Gates Index](../reference/generated/gates.md)
+   ledger: every local-only gate behind a Supported claim has a passing run on
+   the current Godot pin. Run the ones that do not.
+5. **Tag.** Push a `v<version>` tag. The package workflow builds and smokes
+   every package and publishes the desktop kits and the store addon to the
+   release.
+6. **Check the release page.** Every platform's desktop kit and the store
+   addon are attached. The workflow writes a one-line release note; the
+   changelog section is the full record.

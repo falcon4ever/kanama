@@ -55,6 +55,7 @@ nav:
           - iOS: exporting/ios.md
           - Web (Experimental): exporting/web.md
       - Limitations: reference/limitations.md
+      - Troubleshooting: getting-started/troubleshooting.md
       - Upgrading from 0.4: getting-started/upgrading-0.4-to-0.5.md
       - Reference:
           - Requirements and Platform Status: reference/version-support.md
@@ -64,7 +65,6 @@ nav:
           - Enum Constant Migration: reference/generated/enum-migration.md
   - Develop Kanama:
       - Start Here: contributing/index.md
-      - Work on Kanama: getting-started/work-on-kanama.md
       - Architecture: contributing/architecture.md
       - Gates and Claims: contributing/gates.md
       - Platform Evidence: contributing/platform-evidence.md

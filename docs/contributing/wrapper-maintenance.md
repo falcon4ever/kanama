@@ -28,7 +28,64 @@ snapshots in `api-snapshots/` are regenerated with `--write` (see
 [Source Breaks](gates.md#source-breaks)). Additions and source-compatible
 changes (a default added) only need `--write`; every public declaration must state its type.
 
-## Where the API Conventions Come From
+## Working on Wrappers
+
+1. Check `extension_api.json` for method names, hashes, argument metadata and
+   virtual-method flags.
+2. Check the coverage and candidate reports before adding wrappers:
+
+   ```sh
+   python3 scripts/api_wrapper_coverage.py
+   python3 scripts/api_wrapper_candidates.py
+   ```
+
+3. Validate the method binds after a wrapper change:
+
+   ```sh
+   python3 scripts/validate_godot_api.py --api extension_api.json
+   ```
+
+4. Run the ABI, shape and signature audits that cover the change
+   ([Wrapper Guardrails](#wrapper-guardrails)).
+5. Add a smoke row or a compile fixture for a user-visible API addition.
+
+Only add methods whose types have a known `ObjectCalls` marshal path. A method
+that needs a new ABI shape gets the exact helper and its audit coverage first.
+
+### Virtual Methods
+
+Methods marked `"is_virtual": true` in `extension_api.json` are override points
+that Godot calls into the extension. They are never generated as normal
+ptrcall wrappers, and the generated wrapper classes leave them out. A script
+overrides one with `@OverrideVirtual`: the Kotlin function name is the
+virtual's name, GDScript-style, validated against the generated signature
+table (`scripts/generate_virtual_signature_table.py`) and dispatched through
+the script-instance layer. The lifecycle callbacks (`@OnReady`, `@OnProcess`,
+...) ride the same dispatch. The return types a virtual can have, per
+platform, are in [Virtual-Return Coverage](#virtual-return-coverage).
+
+### Generated and Hand-Written Wrappers
+
+Every Godot class is generated from `extension_api.json`, once, into the shared
+tree `src/commonMain/kotlin/.../api`. That tree is KMP common code: it may name
+only common declarations. The platform classes it needs are `expect`s with one
+`actual` per platform, and an `expect` carries no default argument.
+
+The hand-written exceptions are the roots `GodotObject`, `RefCounted` and
+`GodotCallable` (`SHARED_HAND_ROOTS` in `scripts/generate_api_wrapper.py`) and
+the `expect` seams. `PER_PLATFORM_WRAPPERS` in the same file is the home for a
+class the two native platforms must host differently, with a reason per entry;
+it is empty today (`DESKTOP_HANDSHAPED` and `IOS_HANDSHAPED` are views of it).
+Keep that table and the generator policy audits current when you move this
+boundary: the full drift gate fails otherwise.
+
+Hand-written code under `api/` is a budget, not a default: "The hand-code
+budget" under [Wrapper Guardrails](#wrapper-guardrails) has the rules. Sugar
+for a generated class goes into the generator's tables (`FACTORY_HELPERS`,
+`SHARED_MEMBER_SECTIONS`, ...), not into a hand class, as "Retiring a
+per-platform class" in the same section describes.
+
+## Sources of the API Conventions
 
 Each rule on [API Conventions](../reference/wrapper-conventions.md) is produced
 by generator code, and [Gates and Claims](gates.md#api-convention-checks) lists
@@ -618,7 +675,7 @@ reference transfer). The shared `RefCounted`'s ownership members and the collaps
 locked by `check_ios_policies`, and the on-device self-test matrix carries a
 `refcounted-ret-owns-plus1` refcount probe (duplicate() → refcount 1 → close()).
 
-### Freshly created resources own their reference — *close what you create* (tasks 61/62)
+### Ownership of Freshly Created Resources
 
 `X.create()` factories return an **owning** wrapper. All backends construct via
 `classdb_construct_object3` (Godot 4.7), which returns a RefCounted subtype
@@ -800,7 +857,7 @@ generator capability. Treat low-coverage areas such as variant/dictionary
 helper shapes, typed arrays, and multiplayer/editor methods as API design work:
 add helper policy and audits before promoting wider wrappers.
 
-### Long-tail triage (task 22)
+### Long-Tail Triage
 
 **Desktop-only by design.** A member whose argument types cannot exist on iOS at all (a raw
 `const void*`, a C function pointer) stays in its desktop companion file and is recorded in
@@ -885,7 +942,7 @@ non-virtual skips and the skipped properties found:
   advances only when its *getter method* becomes generatable (a new no-arg return
   shape) or via ergonomic hand-shaping, never by widening property emission.
 
-### Virtual-return coverage (task 29)
+### Virtual-Return Coverage
 
 `@OverrideVirtual` return marshalling covers **every Variant-expressible return
 family** in the 4.7 virtual signature table on desktop/Android. Tasks 13 + 29
@@ -991,7 +1048,7 @@ KDoc refresh never affects drift-gate correctness and only touches comments. The
 sync replaces an existing generated block in place (multi-line **or** the older
 single-line `/** … */` form), so re-running is idempotent.
 
-## ObjectCalls: one object per platform, one generated region
+## ObjectCalls per Platform
 
 `net.multigesture.kanama.binding.runtime.ObjectCalls` is the only seam between the shared
 wrapper tree and the engine, and it exists once per platform under that one
@@ -1073,7 +1130,7 @@ after every regen; `--write-tree` skips rewriting the file for the same reason w
 member set has not changed. `scripts/fixtures/wrapper_generator/ios/ObjectCalls.generated-members.kt.txt`
 locks the region's rendering for one class (Node3D) byte-for-byte.
 
-### The API exercise inventory
+### API Exercise Inventory
 
 A defect in a helper is shared by every call site of it, so the plan for a generated API exercise is
 one row per referenced helper per backend. `scripts/generate_api_exercise.py` keeps the inventory
@@ -1100,7 +1157,7 @@ arguments needs a `STATIC_ARGS` entry; the failure prints the line to add. The r
 against a small made-up API in `scripts/fixtures/api_exercise/` (`--write-fixture` rewrites the
 expected output after an intended rule change).
 
-### The exercise rows
+### Exercise Rows
 
 `--report` also writes the rows, `src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt`,
 and `--check` fails when that file differs from what the generator writes. The rows cover every helper
@@ -1281,7 +1338,7 @@ that does not call the builtin should be treated as suspicious until it is eithe
 bound to Godot's builtin or deliberately added to the reviewed list with focused
 parity evidence.
 
-### Generated operators and methods (task 134 B)
+### Generated Operators and Methods
 
 Every builtin operator and method of the value types is generated by
 `scripts/generate_builtin_ops.py` from `extension_api.json` into two marked regions per class

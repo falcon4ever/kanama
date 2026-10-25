@@ -4,7 +4,7 @@ This guide is for contributors porting Godot demos or writing Kanama gameplay
 code. It records rules learned from the Platformer, Match-3, FPS, and Racing
 ports.
 
-## Start Every Session
+## Starting a Session
 
 Read `CONTRIBUTING.md` before changing code and confirm the current task from
 the issue, pull request, or maintainer handoff. When you finish a slice, run the
@@ -69,7 +69,7 @@ changes; an override without annotations keeps the base's role
 (`override fun ready()` of a base `@OnReady open fun ready()` is still the
 `_ready` handler). See [Scripts](../game-dev/scripts.md#script-inheritance).
 
-## Exports And Scene Data
+## Exports and Scene Data
 
 Keep exported properties aligned with the original GDScript type:
 
@@ -138,7 +138,7 @@ val map = owner.kotlinScriptInstance<DataMap>() ?: error("missing DataMap")
 ```
 
 Keeping only `map` is enough: a script object that extends `KanamaScript` keeps
-its resource alive (task 132), so `owner` may be closed or dropped once the
+its resource alive, so `owner` may be closed or dropped once the
 script object is in hand.
 
 Treat Kanama `.kt` scripts as trusted executable project code. This is the
@@ -182,7 +182,7 @@ or instantiate-and-free warmup behind mobile feature checks, and keep desktop
 startup to resource caches unless a targeted smoke test proves the heavier path
 is needed.
 
-## Resource And Tween Ownership
+## Resource and Tween Ownership
 
 Follow the one rule in
 [Godot API → Resource Ownership](../game-dev/godot-api.md#resource-ownership):
@@ -193,7 +193,7 @@ still holds. Which wrappers are yours is fixed by how you got them:
   `RefCounted`-typed method return, including plain getters such as
   `meshInstance.getMesh()` or `animationPlayer.getAnimation("walk")`. Not
   closing one keeps the reference until the garbage collector drops the
-  wrapper (task 132), so ported demos still close them: the demos are the
+  wrapper, so ported demos still close them: the demos are the
   examples people copy, and Web has no collector fallback yet.
 - **Borrowed — never close it.** A view you minted around a handle you already
   had: `Resource.fromHandle(...)`, or a script-class constructor over an
@@ -227,16 +227,16 @@ crashes on desktop Metal/MoltenVK rather than as a clean Kotlin exception.
 Handing a created resource to a node is safe to follow with `close()`: the
 setter takes its own reference, so after `meshInstance.setMesh(mesh)` a
 `mesh.close()` (or `use { }` around the whole handoff) releases only yours
-(tasks 61/62; issue #91 is what happened before that contract held).
+(issue #91 is what happened before that contract held).
 `RefCounted.close()` needs no opt-in: `@ManualGodotLifetimeApi` is deprecated
 and no longer applied, so drop any `@OptIn` for it from a port. The rule above
 is what `scripts/demo_parity_audit.py` in the demos repository enforces — it
 fails a `close()` on a borrowed view (`fromHandle`) or on a live `Tween`, and
 never flags closing an owned return. A `from*` downcast (`fromObject`,
-`fromResource`) is owned since task 132: it takes its own reference, so closing
+`fromResource`) is owned: it takes its own reference, so closing
 it is correct (and forgetting it is a late release).
 
-## Signals And Callbacks
+## Signals and Callbacks
 
 Scene-connected methods need to be callable from Godot:
 
@@ -300,7 +300,7 @@ Signals are instance-scoped. A receiver knows which object emitted the signal
 through the scene connection or explicit `connect` call, not only by the
 signal name.
 
-Use the typed signal handles (task 134): the engine signal properties and the
+Use the typed signal handles: the engine signal properties and the
 KSP-generated handles of Kanama script signals, connected with `connect { }`
 inside a script so the lambda is bound to it:
 
@@ -417,7 +417,7 @@ node check unless the original code used that broader rule. When Kanama cannot
 express a script class check directly yet, centralize the closest equivalent in
 a small helper and document why it matches the original scene's intent.
 
-## Where The Reference Ports Still Deviate
+## Remaining Deviations in the Reference Ports
 
 The rules above are the target, and the current ports do not all meet them. Each
 deviation below is a gap in Kanama that a port worked around, not a licence to
@@ -437,7 +437,7 @@ copy the workaround (as of `kanama-demos` main `556051c`):
   through the generated `*Rpcs` senders, so those effects do not reach other
   peers. Use the generated `*Rpcs` senders (see [Multiplayer](../game-dev/multiplayer.md)).
 
-## Parity Audit Against The Original
+## Parity Audit against the Original
 
 The side-by-side audit needs the original GDScript, and the demo repository does
 not carry it: the ports replace the GDScript in place. Clone the upstream project
@@ -457,7 +457,7 @@ scripts. `Starter-Kit-3D-Platformer` also keeps `scripts/audio.gd` (the `Audio`
 autoload) and `scripts/main.gd` in GDScript on desktop; its Web build overrides
 `Main` with `web/kotlin-src/Main.kt`.
 
-## Build And Smoke Checklist
+## Build and Smoke Checklist
 
 For a Kanama demo checked out beside the Kanama repo, build scripts with:
 
