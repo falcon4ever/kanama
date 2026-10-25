@@ -308,12 +308,15 @@ described next.
 of Godot's 28 methods until task 129 A). To generate one once:
 
 1. Delete its entry and both hand copies (the desktop file, the iOS file or its block in
-   `IosGodotApi.kt`), and create `src/commonMain/kotlin/.../api/<Class>.kt` holding only the
-   `package` line: the tree universe is the set of committed wrapper files, so the placeholder is
-   what puts the class in it.
-2. Run `generate_api_wrapper.py --write-tree` twice (the first pass writes the class; the second sees
-   its declaration, so the members that return the class itself, such as fluent setters, render
-   too), then `sync_kdoc_from_godot_docs.py --write` and `./gradlew ktfmtFormat`.
+   `IosGodotApi.kt`).
+2. Run `generate_api_wrapper.py --write-tree`, then `sync_kdoc_from_godot_docs.py --write` and
+   `./gradlew ktfmtFormat`. `--write-tree` adopts every class of `extension_api.json` that has no
+   wrapper file (it writes a placeholder, then renders it) and lists what it adopted;
+   `ADOPTION_EXCLUDED` names the classes it never adopts (`Object`, the hand-written
+   `GodotObject`). It repeats until a pass writes nothing, so members that return the new class
+   itself, such as fluent setters, render on the second pass. `--emit-class <Class>
+   --allow-overwrite` adopts one class the same way. The drift gate fails while an API class has no
+   wrapper.
 3. Carry the hand copies' sugar over as data, keeping the desktop names and signatures:
    - `create()` / `from*` downcasts: a `FACTORY_HELPERS` row;
    - parameter names Godot spells differently: `PARAMETER_NAME_OVERRIDES`;
@@ -333,9 +336,9 @@ of Godot's 28 methods until task 129 A). To generate one once:
      `ResourceLoader.loadThreadedGetStatusWithProgress`), not a per-platform class.
    A member the iOS helper set cannot call yet lands in the class's generated `<Class>.jvm.kt`
    companion by itself (listed in `ios-shape-gap.md`); do not hand-write it.
-4. If a desktop helper the shared tree now calls is missing `actual`, add the modifier (the expect is
-   generated from the helpers the tree references). Delete what the old copies called and nothing
-   else does: `IosGodot` functions, C shim entry points and their `kanama_ios.h` declarations.
+4. Delete what the old copies called and nothing else does: `IosGodot` functions, C shim entry
+   points and their `kanama_ios.h` declarations. The `actual` modifiers of the desktop
+   `ObjectCalls` follow by themselves (see [ObjectCalls per Platform](#objectcalls-per-platform)).
 5. Run `check_public_signature_changes.py`; announce any break in the CHANGELOG, fix the demos in a
    paired change, then `--write`. A declaration that left `jvm.txt` / `ios.txt` and is in
    `common.txt` now, unchanged or source-compatibly changed, is reported as moved, not as a break;
@@ -473,7 +476,14 @@ Android has no separate committed tree — `prepareAndroidKanamaSources` copies
 through the PanamaPort remap, so the desktop side
 of the gate covers it transitively. Adopted classes with skipped methods are only
 accepted when every skip is a Godot virtual callback that belongs to the
-override-registration design rather than the public ptrcall wrapper surface. How the
+override-registration design rather than the public ptrcall wrapper surface. When Godot gives one
+of the listed classes a method whose call shape has no helper yet, the class stays in its list: the
+method gets a `PENDING_HELPER_SKIPS` row in `check_wrapper_generator.py` until the helper lands:
+`(reason, owner, since)`, where the owner is the task or issue that adds the helper and `since` the
+ISO date of the row. A row whose method generates again, or with no task or issue, fails as stale;
+one older than 60 days warns on every run. Under `--baseline-api <previous
+extension_api.json>`, which `upgrade_godot.sh` passes, such a method is reported with the row to
+paste instead of failing. How the
 two trees were merged, and what the KMP `expect/actual` form would still take, is
 recorded in [Shared Wrapper Tree: Design Check](shared-wrapper-tree-design-check.md).
 
@@ -1123,6 +1133,15 @@ keeps its type and payload, and the engine's assignment releases them again (an 
 a packed array or a custom Callable on 4.7 too). A loop that reuses one resets it with
 `BuiltinTypes.destroyVariantToNil`; `VariantDecodeProbe` (in the runtime smoke) checks every
 container decode for it.
+
+**The desktop `actual` set is generated.** The desktop file is hand-written, but which of its
+members carry `actual` is not a hand decision: the expect is generated from the helpers the shared
+tree calls, so a Godot bump that adds or drops a method moves that set. `--write-tree` rewrites only
+the modifier (`sync_desktop_actuals` in the generator): `actual` on exactly the members whose name
+and parameter list (names and types, since desktop has overloads that differ in a type only) match
+an expect member, plain on the rest. A helper that lost its last shared caller stays in the file as
+a desktop-only member. The drift gate compares the same set, so a hand-added or hand-dropped
+`actual` fails it and a ktfmt re-wrap does not.
 
 The drift gate (`check_single_tree`) compares the region's MEMBER SET rather than its bytes,
 because the file is ktfmt-formatted outside the region and so the region gets reformatted

@@ -54,6 +54,13 @@ allprojects {
     // (pattern by file name: with -PkanamaIosSelfTest=true iosMain adds the exercise directory as a root)
     exclude("**/ApiExercise.generated.kt")
   }
+  // A format task rewrites its own inputs, so Gradle records the pre-format snapshot: when that
+  // content comes back (a regen re-emits the same unformatted iOS ObjectCalls region), the task is
+  // UP-TO-DATE and leaves it unformatted for ktfmtCheck to fail on (task 139: a second upgrade run).
+  // A formatter that edits in place is never up to date.
+  tasks.withType<com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask>().configureEach {
+    outputs.upToDateWhen { false }
+  }
   // Don't format *.gradle.kts build scripts: ktfmt 0.54 mis-parses the Gradle DSL (it did so in
   // the former ios-runtime/build.gradle.kts), and build scripts aren't the formatting target here.
   tasks.matching { it.name.startsWith("ktfmt") && it.name.endsWith("Scripts") }

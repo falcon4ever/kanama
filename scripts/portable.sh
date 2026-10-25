@@ -17,3 +17,40 @@ sed_inplace() {
   sed -i.portable-bak "$@" "$file" || return
   rm -f "${file}.portable-bak"
 }
+
+#   run_with_timeout <seconds> <cmd...> run a command in its own process group and kill the whole group
+#                                       after <seconds> (exit 124), like coreutils `timeout`, which macOS lacks
+#
+# Used for every Godot or Gradle call a gate script makes that has no timeout of its own: a hung editor
+# must fail the script, not leave a process behind. python3 is on both platforms; the group kill also
+# reaps what the command started, and an interrupt (Ctrl-C, SIGTERM) kills the group before exiting.
+run_with_timeout() {
+  local seconds="$1"
+  shift
+  python3 -c '
+import os, signal, subprocess, sys
+seconds, cmd = float(sys.argv[1]), sys.argv[2:]
+proc = subprocess.Popen(cmd, start_new_session=True)
+def kill_group(sig):
+    try:
+        os.killpg(proc.pid, sig)
+    except ProcessLookupError:  # justified: the group already exited
+        pass
+def on_signal(signum, _frame):
+    kill_group(signal.SIGKILL)
+    sys.exit(128 + signum)
+for signum in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):
+    signal.signal(signum, on_signal)
+try:
+    sys.exit(proc.wait(timeout=seconds))
+except subprocess.TimeoutExpired:
+    kill_group(signal.SIGTERM)
+    try:
+        proc.wait(timeout=10)
+    except subprocess.TimeoutExpired:  # justified: SIGKILL below, then the exit 124
+        pass
+    kill_group(signal.SIGKILL)
+    print("[run_with_timeout] timed out after %gs, process group killed: %s" % (seconds, " ".join(cmd)), file=sys.stderr)
+    sys.exit(124)
+' "$seconds" "$@"
+}

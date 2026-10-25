@@ -224,8 +224,8 @@ Treat these as high-risk when moving to a new Godot version:
   `Engine.registerSingleton` and audits built-in singletons so singleton
   handles remain engine-owned `Object` instances.
 
-The runbook's gate list is in
-[Godot Upgrade Runbook](godot-upgrade.md#gates-never-finish-a-bump-with-any-of-these-red).
+`scripts/upgrade_godot.sh` runs the generator gates as its last step; the runbook's rule is in
+[Godot Upgrade Runbook](godot-upgrade.md#never-finish-with-a-red-gate).
 
 ## API Convention Checks
 

@@ -2,19 +2,30 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=scripts/portable.sh
+source "$ROOT_DIR/scripts/portable.sh"
 OUT_DIR="$ROOT_DIR/gdextension"
 RUN_JEXTRACT=1
+RUN_VALIDATE=1
+# Each headless dump takes seconds; a hung editor fails the refresh instead of waiting forever.
+DUMP_TIMEOUT="${KANAMA_GODOT_DUMP_TIMEOUT:-300}"
 
 usage() {
   cat <<'EOF'
-usage: scripts/refresh_godot_api.sh [--skip-jextract] /absolute/path/to/godot_binary
+usage: scripts/refresh_godot_api.sh [--skip-jextract] [--skip-validate] /absolute/path/to/godot_binary
 
 Dumps Godot's GDExtension API files into Kanama's local inputs:
   - extension_api.json
   - gdextension/gdextension_interface.h
 
-Then runs scripts/jextract.sh and scripts/validate_godot_api.py unless
---skip-jextract is provided.
+Then runs scripts/jextract.sh (unless --skip-jextract), scripts/validate_godot_api.py
+(unless --skip-validate) and the virtual-signature table generator.
+
+--skip-validate is for scripts/upgrade_godot.sh: before the wrapper tree is re-adopted the
+committed wrappers still name the methods the new API removed, so validating here would stop
+every bump that removes a wrapped method. The upgrade validates after the re-adopt instead.
+
+Each Godot dump runs under a timeout (KANAMA_GODOT_DUMP_TIMEOUT seconds, default 300).
 EOF
 }
 
@@ -26,6 +37,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --skip-jextract)
       RUN_JEXTRACT=0
+      shift
+      ;;
+    --skip-validate)
+      RUN_VALIDATE=0
       shift
       ;;
     --*)
@@ -60,8 +75,8 @@ trap cleanup EXIT
 echo "[refresh_godot_api] dumping API from: $GODOT_BIN"
 (
   cd "$TMP_DIR"
-  "$GODOT_BIN" --headless --log-file "$TMP_DIR/godot-extension-api.log" --dump-extension-api
-  "$GODOT_BIN" --headless --log-file "$TMP_DIR/godot-gdextension-interface.log" --dump-gdextension-interface
+  run_with_timeout "$DUMP_TIMEOUT" "$GODOT_BIN" --headless --log-file "$TMP_DIR/godot-extension-api.log" --dump-extension-api
+  run_with_timeout "$DUMP_TIMEOUT" "$GODOT_BIN" --headless --log-file "$TMP_DIR/godot-gdextension-interface.log" --dump-gdextension-interface
 )
 
 mkdir -p "$OUT_DIR"
@@ -75,8 +90,12 @@ else
   echo "[refresh_godot_api] skipping jextract"
 fi
 
-echo "[refresh_godot_api] validating dumped API"
-python3 "$ROOT_DIR/scripts/validate_godot_api.py"
+if [[ $RUN_VALIDATE -eq 1 ]]; then
+  echo "[refresh_godot_api] validating dumped API"
+  python3 "$ROOT_DIR/scripts/validate_godot_api.py"
+else
+  echo "[refresh_godot_api] skipping validation (--skip-validate; the caller validates after the re-adopt)"
+fi
 
 echo "[refresh_godot_api] regenerating virtual-method signature table"
 python3 "$ROOT_DIR/scripts/generate_virtual_signature_table.py"

@@ -2,35 +2,84 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DRY_RUN=0
+# shellcheck source=scripts/portable.sh
+source "$ROOT_DIR/scripts/portable.sh"
+
+MODE=bump # bump | dry-run | plan | reset
+PRERELEASE=0
+BASELINE_REF=HEAD
 GODOT_DOCS_DIR="${GODOT_DOCS:-}"
 GODOT_BIN=""
+TEMPLATES=""
+# Gradle runs twice (ktfmtFormat, ktfmtCheck), through the build daemon as local_ci.sh does: a
+# --no-daemon build waits on the Gradle home's journal lock that an idle daemon holds and times out.
+# A hung build fails the step instead of waiting forever.
+GRADLE_TIMEOUT="${KANAMA_UPGRADE_GRADLE_TIMEOUT:-1200}"
 
 usage() {
   cat <<'EOF'
-usage: scripts/upgrade_godot.sh [--dry-run] [--godot-docs /path/to/godot/doc/classes] /absolute/path/to/godot_binary
+usage: scripts/upgrade_godot.sh [--plan | --dry-run] [--prerelease-trial] [--baseline-ref REF]
+                                [--godot-docs /path/to/godot/doc/classes]
+                                [--templates /path/to/export_templates.tpz]
+                                /absolute/path/to/godot_binary
+       scripts/upgrade_godot.sh --reset
 
-Runs the MECHANICAL steps of a Godot baseline bump in order, then stops at the
+Runs every MECHANICAL step of a Godot baseline bump in order, then stops at the
 human-judgment boundary (device gates, support claims, release wording). The
 full ordered process is docs/contributing/godot-upgrade.md.
 
 Steps:
-  1. preflight   pin/binary/policy/tool/tree checks (fail fast)
-  2. refresh     scripts/refresh_godot_api.sh (API dump, jextract, validation,
+  1. preflight   pin/binary/policy/tool/tree/template checks (fail fast)
+  2. refresh     scripts/refresh_godot_api.sh --skip-validate (API dump, header, jextract,
                  virtual-signature table)
-  3. classify    metadata-only vs real API change vs no-op
-  4. constants   regenerate engine-wide name constants
-  5. re-adopt    regenerate the whole generated wrapper tree (shared tree, per-platform
-                 files, desktop/iOS companions, iOS ObjectCalls GENERATED MEMBERS, gap index:
-                 generate_api_wrapper.py --write-tree) and re-sync KDoc  [skipped with --dry-run]
-  6. reports     refresh coverage + generator reports
-  7. gates       full drift-gate, sync_kdoc --check, version-pin check
+  3. classify    no-op vs metadata-only vs API change; added/removed classes and members
+  4. constants   engine-wide name constants
+  5. tree        the generated wrapper tree (generate_api_wrapper.py --write-tree: re-adopts every
+                 class, adopts the classes the new API adds, sets the desktop ObjectCalls `actual`
+                 set)
+  6. outputs     every other generated output: builtin ops, engine-method table, Web backend,
+                 Web wrappers, Web exercise, API exercise, generator/coverage reports,
+                 enum migration table, iOS handwritten report; then the KDoc sync
+  7. format      ./gradlew ktfmtFormat (the regen leaves the iOS region, the expect and toggled
+                 desktop members unformatted)
+  8. gates index docs/reference/generated/gates.md (last: it reads the gate list and the ledger)
+  9. gates       every drift gate and API check, run to the end and summarised: API validation
+                 (after the re-adopt, so a removed method is an inventory line, not a stop), the
+                 wrapper drift gate, KDoc, pins, the --check form of every generator above. Two
+                 more are listed as human decisions: public signature changes (CHANGELOG source
+                 breaks) and the gate-evidence ledger (every entry goes stale on a pin move).
 
---dry-run validates the process against the CURRENT pin: all steps run in
-check-only mode and the git tree must be byte-identical afterwards.
+Modes:
+  (default)   the bump: run every step. Start from a clean tree plus the pin edit (the files
+              `scripts/check_godot_version_pin.py --list-files` names).
+  --plan      run the read-only preflight checks and print the steps and commands; change nothing.
+  --dry-run   prove the pipeline on the CURRENT pin: a clean tree, the same steps in write mode,
+              a no-op API diff, every gate green, and a byte-identical tree afterwards. A dry run
+              writes in place; whatever it changed is restored on every exit, a failure included.
+  --reset     undo a bump that stopped: restore every tracked file except the pin files, and
+              delete the untracked wrapper and generated-page files a run created. Needs no binary.
+
+--baseline-ref REF   the commit whose extension_api.json is the previous Godot (default HEAD). The
+                     classification, the drift gate's pending-helper report and the list of classes
+                     this Godot added all diff against it, so a bump whose half-done result was
+                     committed can be re-run with the pre-bump commit here and reach the same result.
+
+--prerelease-trial   allow a beta/rc pin (4.8.beta1), for a trial on a throwaway branch. Kanama
+                     re-pins only on stable releases; never merge a prerelease pin.
+--templates PATH     the export templates .tpz (or the directory holding it): installed into the
+                     templates folder for the pin when it is missing, checked against the pin when not.
 
 Requires: JEXTRACT_HOME (jextract 25+), a Godot doc/classes checkout at the
 pinned version (--godot-docs, $GODOT_DOCS, or an auto-discovered checkout).
+Every Godot call runs under a timeout (KANAMA_GODOT_DUMP_TIMEOUT, default 300 s), the Gradle
+call under KANAMA_UPGRADE_GRADLE_TIMEOUT (default 1200 s).
+
+Exit status: 0 when every gate is green and nothing needs a decision; 3 when the mechanical steps
+are done and only the listed human decisions remain (local CI stays red until they are made);
+1 on a failure; 2 on a usage error.
+
+Test hook: KANAMA_UPGRADE_FAIL_AFTER_STEP=<n> stops the run with exit 1 once step <n> is done, the
+way a crash would (scripts/upgrade_godot_rerun_selftest.sh uses it to prove a re-run).
 
 This script never edits support claims, CHANGELOG, badges, or templates, and
 never runs device gates — those are human-judgment steps by design.
@@ -39,16 +88,36 @@ EOF
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --help|-h)
+    --help | -h)
       usage
       exit 0
       ;;
     --dry-run)
-      DRY_RUN=1
+      MODE=dry-run
       shift
       ;;
+    --plan)
+      MODE=plan
+      shift
+      ;;
+    --prerelease-trial)
+      PRERELEASE=1
+      shift
+      ;;
+    --reset)
+      MODE=reset
+      shift
+      ;;
+    --baseline-ref)
+      BASELINE_REF="${2:?--baseline-ref needs a commit}"
+      shift 2
+      ;;
     --godot-docs)
-      GODOT_DOCS_DIR="$2"
+      GODOT_DOCS_DIR="${2:?--godot-docs needs a directory}"
+      shift 2
+      ;;
+    --templates)
+      TEMPLATES="${2:?--templates needs a .tpz or a directory}"
       shift 2
       ;;
     --*)
@@ -63,6 +132,38 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+log() { echo "[upgrade_godot] $*"; }
+
+# The untracked files a run can create: adopted wrapper placeholders and new wrappers, companions,
+# Web wrappers and generated pages. --reset deletes only these, and only when git does not track them.
+GENERATED_DIRS=(
+  src/commonMain/kotlin/net/multigesture/kanama/api
+  src/jvmMain/kotlin/net/multigesture/kanama/api
+  src/iosMain/kotlin/net/multigesture/kanama/api
+  web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated
+  docs/reference/generated
+)
+
+if [[ "$MODE" == reset ]]; then
+  pins="$(python3 "$ROOT_DIR/scripts/check_godot_version_pin.py" --list-files)"
+  # justified: grep -v exits 1 when every changed file is a pin file, which leaves nothing to restore.
+  restore="$(git -C "$ROOT_DIR" diff --name-only --diff-filter=MDT HEAD | grep -vxF "$pins" || true)"
+  if [[ -n "$restore" ]]; then
+    log "reset: restoring $(printf '%s\n' "$restore" | wc -l | tr -d ' ') tracked file(s) from HEAD (the pin files stay as they are)"
+    printf '%s\n' "$restore" | (cd "$ROOT_DIR" && tr '\n' '\0' | xargs -0 git checkout HEAD --)
+  fi
+  created="$(cd "$ROOT_DIR" && git ls-files --others --exclude-standard -- "${GENERATED_DIRS[@]}")"
+  if [[ -n "$created" ]]; then
+    log "reset: deleting the untracked files a run created:"
+    printf '%s\n' "$created" | sed 's/^/    /'
+    printf '%s\n' "$created" | (cd "$ROOT_DIR" && tr '\n' '\0' | xargs -0 rm -f --)
+  fi
+  # justified: grep -c prints 0 and exits 1 when no tracked change is left, which is the reset's goal.
+  left="$(git -C "$ROOT_DIR" status --porcelain | grep -vc '^??' || true)"
+  log "reset done: $left tracked change(s) left (the pin edit)"
+  exit 0
+fi
+
 if [[ -z "$GODOT_BIN" ]]; then
   echo "[upgrade_godot] missing Godot binary" >&2
   usage
@@ -74,38 +175,43 @@ if [[ ! -x "$GODOT_BIN" ]]; then
 fi
 
 # ---------------------------------------------------------------------------
-# Step 1: preflight — fail fast before any regeneration.
+# Step 1: preflight — read-only checks. Every failure is listed, then the run stops before
+# anything is regenerated (in --plan mode the plan is printed anyway).
 # ---------------------------------------------------------------------------
-echo "[upgrade_godot] step 1: preflight"
+PREFLIGHT_FAILURES=()
+preflight_fail() {
+  PREFLIGHT_FAILURES+=("$1")
+  echo "[upgrade_godot] PREFLIGHT FAIL: $1" >&2
+}
 
-PIN="$(sed -nE 's/^kanamaGodotVersion=(.+)$/\1/p' "$ROOT_DIR/gradle.properties")"
+log "step 1: preflight (mode=$MODE)"
+
+PIN="$(sed -nE 's/^kanamaGodotVersion=(.+)$/\1/p' "$ROOT_DIR/gradle.properties" | tr -d '[:space:]')"
 if [[ -z "$PIN" ]]; then
   echo "[upgrade_godot] kanamaGodotVersion missing from gradle.properties" >&2
   exit 1
 fi
 
-# Upgrade policy (maintainer decision, 2026-07-09): Kanama re-pins only on
-# stable Godot releases. dev/beta/rc baselines are not accepted.
-if [[ "$PIN" != *.stable ]]; then
-  echo "[upgrade_godot] POLICY FAIL: kanamaGodotVersion=$PIN is not a stable release." >&2
-  echo "[upgrade_godot] Kanama re-pins only on stable Godot releases (no dev/beta/rc baselines)." >&2
-  exit 1
+# Upgrade policy (maintainer decision, 2026-07-09): Kanama re-pins only on stable Godot releases.
+# --prerelease-trial lets a beta/rc pin through for a trial branch (task 139: the RC re-run).
+if [[ "$PIN" == *.stable ]]; then
+  :
+elif [[ $PRERELEASE -eq 1 && "$PIN" =~ \.(beta|rc)[0-9]+$ ]]; then
+  log "prerelease trial: kanamaGodotVersion=$PIN (a trial branch only; never merge a prerelease pin)"
+else
+  preflight_fail "kanamaGodotVersion=$PIN is not a stable release. Kanama re-pins only on stable Godot releases; --prerelease-trial allows a beta/rc pin on a trial branch"
 fi
 
 # justified: a binary that prints no version leaves BIN_VERSION empty, which fails the pin comparison just below.
-BIN_VERSION="$("$GODOT_BIN" --version 2>/dev/null | grep -E '^[0-9]' | tail -n 1)"
+BIN_VERSION="$(run_with_timeout "${KANAMA_GODOT_DUMP_TIMEOUT:-300}" "$GODOT_BIN" --version 2>/dev/null | grep -E '^[0-9]' | tail -n 1 || true)"
 if [[ "$BIN_VERSION" != "$PIN" && "$BIN_VERSION" != "$PIN".* ]]; then
-  echo "[upgrade_godot] FAIL: binary reports '$BIN_VERSION' but kanamaGodotVersion=$PIN." >&2
-  echo "[upgrade_godot] A bump starts by editing ONLY kanamaGodotVersion in gradle.properties" >&2
-  echo "[upgrade_godot] (plus GODOT_VERSION in .github/workflows/package.yml, dash form)," >&2
-  echo "[upgrade_godot] then running this script with the matching new stable binary." >&2
-  exit 1
+  preflight_fail "binary reports '$BIN_VERSION' but kanamaGodotVersion=$PIN. A bump starts by editing the pin files ($(python3 "$ROOT_DIR/scripts/check_godot_version_pin.py" --list-files | tr '\n' ' ')) and runs this script with the matching binary"
+else
+  log "pin=$PIN binary=$BIN_VERSION"
 fi
-echo "[upgrade_godot] pin=$PIN binary=$BIN_VERSION"
 
 if [[ -z "${JEXTRACT_HOME:-}" || ! -x "${JEXTRACT_HOME:-}/bin/jextract" ]]; then
-  echo "[upgrade_godot] FAIL: JEXTRACT_HOME must point at a jextract 25+ install (bin/jextract)" >&2
-  exit 1
+  preflight_fail "JEXTRACT_HOME must point at a jextract 25+ install (bin/jextract)"
 fi
 
 # KDoc source tree: same discovery order as local_ci.sh.
@@ -118,17 +224,13 @@ if [[ -z "$GODOT_DOCS_DIR" ]]; then
   done
 fi
 if [[ -z "$GODOT_DOCS_DIR" || ! -d "$GODOT_DOCS_DIR" ]]; then
-  echo "[upgrade_godot] FAIL: no Godot doc/classes tree (use --godot-docs or set GODOT_DOCS)." >&2
-  echo "[upgrade_godot] KDoc must be synced from the doc/classes matching the new pin" >&2
-  echo "[upgrade_godot] (never a -rc/latest tree; see docs/contributing/wrapper-maintenance.md)." >&2
-  exit 1
-fi
-
-# Guard against syncing KDoc from a mismatched Godot source tree.
-# justified: an unreachable docs dir yields a version.py path that does not exist, which fails loudly just below.
-DOCS_VERSION_PY="$(cd "$GODOT_DOCS_DIR/../.." 2>/dev/null && pwd)/version.py"
-if [[ -f "$DOCS_VERSION_PY" ]]; then
-  DOCS_VERSION="$(python3 - "$DOCS_VERSION_PY" <<'EOF'
+  preflight_fail "no Godot doc/classes tree (use --godot-docs or set GODOT_DOCS); KDoc syncs from the doc/classes matching the new pin"
+else
+  # Guard against syncing KDoc from a mismatched Godot source tree.
+  # justified: an unreachable docs dir yields a version.py path that does not exist, which fails loudly just below.
+  DOCS_VERSION_PY="$(cd "$GODOT_DOCS_DIR/../.." 2>/dev/null && pwd)/version.py"
+  if [[ -f "$DOCS_VERSION_PY" ]]; then
+    DOCS_VERSION="$(python3 - "$DOCS_VERSION_PY" <<'EOF'
 import re, sys
 text = open(sys.argv[1]).read()
 fields = {k: v.strip('"') for k, v in re.findall(r'^(major|minor|patch|status)\s*=\s*(.+)$', text, re.MULTILINE)}
@@ -141,69 +243,284 @@ if patch not in ('0', '?'):
 print(f"{version}.{fields.get('status','?')}")
 EOF
 )"
-  if [[ "$DOCS_VERSION" != "$PIN" ]]; then
-    echo "[upgrade_godot] FAIL: doc/classes tree is Godot $DOCS_VERSION but the pin is $PIN." >&2
-    echo "[upgrade_godot] Check out the matching stable tag in the Godot source tree first." >&2
-    exit 1
+    # A prerelease source tree spells its status without the number (version.py says `beta`; the
+    # number comes from the build environment), so 4.8.beta matches the pin 4.8.beta1.
+    if [[ "$DOCS_VERSION" == "$PIN" ]] || [[ $PRERELEASE -eq 1 && "$PIN" =~ ^${DOCS_VERSION//./\\.}[0-9]+$ ]]; then
+      log "kdoc source: $GODOT_DOCS_DIR (version $DOCS_VERSION)"
+    else
+      preflight_fail "doc/classes tree is Godot $DOCS_VERSION but the pin is $PIN; check out the matching tag in the Godot source tree"
+    fi
+  else
+    preflight_fail "cannot verify the doc/classes version: no version.py two levels up from $GODOT_DOCS_DIR (point --godot-docs at doc/classes inside a Godot source checkout at the pinned tag)"
   fi
-  echo "[upgrade_godot] kdoc source: $GODOT_DOCS_DIR (version $DOCS_VERSION)"
-else
-  echo "[upgrade_godot] FAIL: cannot verify the doc/classes version — no version.py two levels up from $GODOT_DOCS_DIR." >&2
-  echo "[upgrade_godot] Point --godot-docs at doc/classes inside a real Godot source checkout at the pinned tag;" >&2
-  echo "[upgrade_godot] an unverifiable docs tree risks exactly the KDoc version skew this gate exists to prevent." >&2
-  exit 1
 fi
 
-# The regen must start from a reviewable state: no tracked modifications except
-# the two human pin edits (gradle.properties + CI workflow; none in a dry run).
-# Untracked files don't affect the pipeline and are allowed; the dry run instead
-# asserts the tree state is unchanged at the end.
+if ! git -C "$ROOT_DIR" cat-file -e "$BASELINE_REF:extension_api.json" 2>/dev/null; then
+  preflight_fail "--baseline-ref $BASELINE_REF: no extension_api.json at that commit"
+elif [[ "$BASELINE_REF" != HEAD ]]; then
+  log "baseline: $BASELINE_REF ($(git -C "$ROOT_DIR" rev-parse --short "$BASELINE_REF")), not HEAD"
+fi
+
+# The regen must start from a reviewable state: no tracked modification except the pin edit,
+# whose files the pin check names (none in a dry run). Untracked files are allowed; the dry run
+# asserts the whole status is unchanged at the end.
 STATUS_BEFORE="$(git -C "$ROOT_DIR" status --porcelain)"
-if [[ $DRY_RUN -eq 1 ]]; then
+PIN_FILES_RE="$(python3 "$ROOT_DIR/scripts/check_godot_version_pin.py" --list-files | sed 's/[.]/\\./g' | tr '\n' '|' | sed 's/|$//')"
+if [[ "$MODE" == dry-run ]]; then
   allowed_dirty="^$"
 else
-  allowed_dirty="^..[[:space:]]+(gradle\.properties|\.github/workflows/package\.yml)$"
+  allowed_dirty="^..[[:space:]]+($PIN_FILES_RE)$"
 fi
 # justified: grep -v exits 1 when it filters every line out, which is the clean case (no unexpected change).
 unexpected="$(printf '%s\n' "$STATUS_BEFORE" | grep -v '^??' | grep -vE "$allowed_dirty" | grep -v '^$' || true)"
 if [[ -n "$unexpected" ]]; then
-  echo "[upgrade_godot] FAIL: working tree has unexpected tracked changes:" >&2
-  printf '%s\n' "$unexpected" >&2
-  echo "[upgrade_godot] commit or stash them first (a bump diff must stay reviewable)." >&2
-  exit 1
+  preflight_fail "working tree has tracked changes besides the pin edit (commit them first; a bump diff must stay reviewable):
+$unexpected"
 fi
 
-echo "[upgrade_godot] version pin consistency (fail fast before regenerating)"
-python3 "$ROOT_DIR/scripts/check_godot_version_pin.py" || {
-  echo "[upgrade_godot] fix the pins above (gradle.properties is the single source; CI uses the dash form)" >&2
-  exit 1
+# The header check needs the new dump, so it runs in step 9; here only the pins themselves.
+if ! python3 "$ROOT_DIR/scripts/check_godot_version_pin.py" --skip-api-header; then
+  preflight_fail "the Godot pins disagree (gradle.properties is the single source; CI uses the dash form)"
+fi
+
+# Export templates: the mechanical steps do not need them, the gates after the bump do.
+templates_root="${KANAMA_GODOT_TEMPLATES_DIR:-}"
+if [[ -z "$templates_root" ]]; then
+  if [[ -d "$HOME/Library/Application Support/Godot/export_templates" ]]; then
+    templates_root="$HOME/Library/Application Support/Godot/export_templates"
+  else
+    templates_root="${XDG_DATA_HOME:-$HOME/.local/share}/godot/export_templates"
+  fi
+fi
+templates_dir="$templates_root/$PIN"
+TEMPLATES_INSTALL=""
+if [[ -n "$TEMPLATES" && -d "$TEMPLATES" ]]; then
+  # justified: no .tpz in the directory leaves the path empty, which the -f test below reports.
+  TEMPLATES="$(find "$TEMPLATES" -maxdepth 1 -name '*.tpz' | head -n 1 || true)"
+fi
+if [[ -f "$templates_dir/version.txt" ]]; then
+  installed="$(tr -d '[:space:]' <"$templates_dir/version.txt")"
+  if [[ "$installed" == "$PIN" ]]; then
+    log "export templates: $templates_dir (version.txt $installed)"
+  else
+    preflight_fail "export templates at $templates_dir carry version.txt '$installed', not $PIN"
+  fi
+elif [[ -d "$templates_dir" ]]; then
+  log "export templates: $templates_dir (no version.txt to compare; installed by hand?)"
+elif [[ -n "$TEMPLATES" ]]; then
+  if [[ ! -f "$TEMPLATES" ]]; then
+    preflight_fail "--templates: no .tpz found at the given path"
+  else
+    # justified: an archive without templates/version.txt leaves the version empty, which the comparison below rejects.
+    tpz_version="$(unzip -p "$TEMPLATES" templates/version.txt 2>/dev/null | tr -d '[:space:]' || true)"
+    if [[ "$tpz_version" != "$PIN" ]]; then
+      preflight_fail "--templates $TEMPLATES holds version '$tpz_version', not $PIN"
+    elif [[ "$MODE" == dry-run ]]; then
+      log "export templates: $templates_dir is missing; a dry run installs nothing outside the checkout"
+    else
+      TEMPLATES_INSTALL="$TEMPLATES"
+      log "export templates: $templates_dir is missing; will install $TEMPLATES"
+    fi
+  fi
+else
+  echo "[upgrade_godot] WARN export templates for $PIN are not installed ($templates_dir); the mechanical steps do not need them, the export gates after the bump do (pass --templates <tpz> to install them)" >&2
+fi
+
+# ---------------------------------------------------------------------------
+# The plan. Each step is a function; `run_hard` stops the bump on a failure (later steps would
+# render from a broken input), `run_soft` records it and carries on so one run lists everything
+# that is left. In --plan mode both only print the command.
+# ---------------------------------------------------------------------------
+SOFT_FAILURES=()
+HUMAN_ITEMS=()
+STEP=""
+
+quote_cmd() {
+  local out="" arg
+  for arg in "$@"; do
+    case "$arg" in
+      "$ROOT_DIR") arg="." ;;
+      "$ROOT_DIR"/*) arg="${arg#"$ROOT_DIR"/}" ;;
+      "${BASELINE_API:-}") arg="<$BASELINE_REF:extension_api.json>" ;;
+    esac
+    if [[ "$arg" == *[[:space:]]* ]]; then
+      out+=" '$arg'"
+    else
+      out+=" $arg"
+    fi
+  done
+  printf '%s' "${out# }"
 }
 
-# ---------------------------------------------------------------------------
-# Step 2: refresh API/header inputs (dump, jextract, validate, virtual table).
-# ---------------------------------------------------------------------------
-echo "[upgrade_godot] step 2: refresh API/header inputs"
-"$ROOT_DIR/scripts/refresh_godot_api.sh" "$GODOT_BIN"
+run_hard() {
+  if [[ "$MODE" == plan ]]; then
+    echo "      $(quote_cmd "$@")"
+    return 0
+  fi
+  local rc=0
+  (cd "$ROOT_DIR" && "$@") || rc=$?
+  if [[ $rc -ne 0 ]]; then
+    echo "[upgrade_godot] FAIL $STEP: '$(quote_cmd "$@")' exited $rc" >&2
+    echo "[upgrade_godot] the steps after this one render from its output, so the bump stops here." >&2
+    exit 1
+  fi
+}
 
-# ---------------------------------------------------------------------------
-# Step 3: classify the API diff (metadata-only vs real API change).
-# ---------------------------------------------------------------------------
-echo "[upgrade_godot] step 3: classify the API diff vs HEAD"
-CLASSIFICATION="$(python3 - "$ROOT_DIR" <<'EOF'
-import json, subprocess, sys
-from pathlib import Path
+# run_soft <label> <cmd...>: a failure is recorded under <label> and the run continues; the exit
+# status is left in LAST_RC.
+LAST_RC=0
+run_soft() {
+  local label="$1"
+  shift
+  LAST_RC=0
+  if [[ "$MODE" == plan ]]; then
+    echo "      $(quote_cmd "$@")"
+    return 0
+  fi
+  local rc=0
+  (cd "$ROOT_DIR" && "$@") || rc=$?
+  LAST_RC=$rc
+  if [[ $rc -ne 0 ]]; then
+    echo "[upgrade_godot] FAIL ($STEP) $label: exit $rc" >&2
+    SOFT_FAILURES+=("$label  [$(quote_cmd "$@")]")
+  fi
+}
 
-root = Path(sys.argv[1])
-old = json.loads(subprocess.run(
-    ["git", "-C", str(root), "show", "HEAD:extension_api.json"],
-    check=True, capture_output=True).stdout)
-new = json.loads((root / "extension_api.json").read_text(encoding="utf-8"))
+# run_human <label> <cmd...>: a check whose failure on a real bump is a decision for a person
+# (announce a source break, re-run device evidence), listed separately. In a dry run it is a gate.
+run_human() {
+  local label="$1"
+  shift
+  if [[ "$MODE" == plan ]]; then
+    echo "      $(quote_cmd "$@")   (a failure is a human decision)"
+    return 0
+  fi
+  local rc=0
+  (cd "$ROOT_DIR" && "$@") || rc=$?
+  if [[ $rc -ne 0 ]]; then
+    if [[ "$MODE" == dry-run ]]; then
+      SOFT_FAILURES+=("$label  [$(quote_cmd "$@")]")
+    else
+      HUMAN_ITEMS+=("$label  [$(quote_cmd "$@")]")
+    fi
+  fi
+}
 
+step() {
+  STEP="$1"
+  local number="${1#step }"
+  number="${number%%:*}"
+  if [[ "$MODE" != plan && -n "${KANAMA_UPGRADE_FAIL_AFTER_STEP:-}" && "$number" -gt "$KANAMA_UPGRADE_FAIL_AFTER_STEP" ]]; then
+    echo "[upgrade_godot] FAIL (test hook KANAMA_UPGRADE_FAIL_AFTER_STEP=$KANAMA_UPGRADE_FAIL_AFTER_STEP): stopping before $1" >&2
+    exit 1
+  fi
+  if [[ "$MODE" == plan ]]; then
+    echo "  $1"
+  else
+    log "$1"
+  fi
+}
+
+# What a dry run must leave as it found it: the status, the tracked diff, the content of every
+# untracked file and of the jextract output (ignored, but the refresh rewrites it). On a fresh clone
+# there is no jextract output yet; the refresh creates it, as the build would, and it is not compared.
+FINGERPRINT_JEXTRACT=0
+tree_fingerprint() {
+  (
+    cd "$ROOT_DIR" || exit 1
+    {
+      git status --porcelain --untracked-files=all
+      git diff HEAD --binary
+      git ls-files --others --exclude-standard | git hash-object --stdin-paths
+      if [[ $FINGERPRINT_JEXTRACT -eq 1 ]]; then
+        find src/generated/godot -type f | LC_ALL=C sort | git hash-object --stdin-paths
+      fi
+    } | git hash-object --stdin
+  )
+}
+
+# On any exit of a dry run that got past the preflight: if the tree changed, say what changed and
+# restore it (the preflight proved the tracked tree clean, so HEAD is the state to restore).
+DRY_RUN_ARMED=0
+cleanup() {
+  local rc=$?
+  # justified: the exit status is already decided ($rc); a failing restore step is reported below, not fatal.
+  set +e
+  if [[ $DRY_RUN_ARMED -eq 1 && "$(tree_fingerprint)" != "$FINGERPRINT_BEFORE" ]]; then
+    echo "[upgrade_godot] the dry run changed the tree; restoring it. What changed:" >&2
+    git -C "$ROOT_DIR" status --short >&2
+    (cd "$ROOT_DIR" && git checkout -q HEAD -- .)
+    (cd "$ROOT_DIR" && git ls-files --others --exclude-standard) | LC_ALL=C sort >"$UNTRACKED_AFTER"
+    LC_ALL=C comm -13 "$UNTRACKED_BEFORE" "$UNTRACKED_AFTER" | (cd "$ROOT_DIR" && tr '\n' '\0' | xargs -0 rm -f --)
+    if [[ "$(tree_fingerprint)" == "$FINGERPRINT_BEFORE" ]]; then
+      echo "[upgrade_godot] restored: the tree is as the dry run found it" >&2
+    else
+      echo "[upgrade_godot] NOT fully restored (an untracked file that existed before changed, or the jextract output under src/generated/godot did; re-run scripts/refresh_godot_api.sh): git -C \"$ROOT_DIR\" status" >&2
+    fi
+  fi
+  rm -f "${BASELINE_API:-}" "${UNTRACKED_BEFORE:-}" "${UNTRACKED_AFTER:-}"
+  exit "$rc"
+}
+trap cleanup EXIT
+
+if [[ ${#PREFLIGHT_FAILURES[@]} -gt 0 ]]; then
+  echo "[upgrade_godot] preflight: ${#PREFLIGHT_FAILURES[@]} problem(s) above; nothing was changed." >&2
+  if [[ "$MODE" != plan ]]; then
+    exit 1
+  fi
+fi
+
+if [[ "$MODE" == plan ]]; then
+  echo "[upgrade_godot] plan (nothing below runs in --plan mode):"
+fi
+BASELINE_API="$(mktemp "${TMPDIR:-/tmp}/kanama-baseline-api.XXXXXX")"
+# justified: only --plan gets here with a bad --baseline-ref (the preflight listed it); a bump or dry run exited above.
+git -C "$ROOT_DIR" show "$BASELINE_REF:extension_api.json" >"$BASELINE_API" 2>/dev/null || [[ "$MODE" == plan ]]
+if [[ "$MODE" == dry-run ]]; then
+  UNTRACKED_BEFORE="$(mktemp "${TMPDIR:-/tmp}/kanama-untracked.XXXXXX")"
+  UNTRACKED_AFTER="$(mktemp "${TMPDIR:-/tmp}/kanama-untracked.XXXXXX")"
+  (cd "$ROOT_DIR" && git ls-files --others --exclude-standard) | LC_ALL=C sort >"$UNTRACKED_BEFORE"
+  if [[ -d "$ROOT_DIR/src/generated/godot" ]]; then
+    FINGERPRINT_JEXTRACT=1
+  fi
+  FINGERPRINT_BEFORE="$(tree_fingerprint)"
+  DRY_RUN_ARMED=1
+fi
+
+if [[ -n "$TEMPLATES_INSTALL" ]]; then
+  step "step 1: install the export templates for $PIN"
+  install_templates() {
+    local tmp
+    tmp="$(mktemp -d "${TMPDIR:-/tmp}/kanama-templates.XXXXXX")"
+    unzip -q "$TEMPLATES_INSTALL" -d "$tmp" && mkdir -p "$templates_root" && mv "$tmp/templates" "$templates_dir"
+    local rc=$?
+    rm -rf "$tmp"
+    return $rc
+  }
+  if [[ "$MODE" == plan ]]; then
+    echo "      unzip $TEMPLATES_INSTALL templates/ -> $templates_dir"
+  else
+    run_hard install_templates
+  fi
+fi
+
+# Step 2: refresh the API/header inputs. Validation waits for step 9 (task 139 U3): the committed
+# wrappers still name what the new API removed until step 5 re-adopts them.
+step "step 2: refresh API/header inputs (dump, header, jextract, virtual table)"
+run_hard "$ROOT_DIR/scripts/refresh_godot_api.sh" --skip-validate "$GODOT_BIN"
+
+# Step 3: classify the API diff against the baseline and list what the new Godot removed.
+step "step 3: classify the API diff vs $BASELINE_REF"
+classify() {
+  python3 - "$ROOT_DIR/extension_api.json" "$BASELINE_API" <<'EOF'
+import json, sys
+
+new = json.load(open(sys.argv[1], encoding="utf-8"))
+old = json.load(open(sys.argv[2], encoding="utf-8"))
 if old == new:
     print("classification=none")
-    print("  extension_api.json is identical to HEAD (no-op bump)")
+    print("  extension_api.json is identical to the baseline (no-op bump)")
     sys.exit(0)
-
 old_body = {k: v for k, v in old.items() if k != "header"}
 new_body = {k: v for k, v in new.items() if k != "header"}
 if old_body == new_body:
@@ -211,139 +528,218 @@ if old_body == new_body:
     print(f"  header only: {old.get('header')} -> {new.get('header')}")
     print("  expect: regen/KDoc/report churn limited to version strings")
     sys.exit(0)
-
 print("classification=api-change")
 old_classes = {c["name"]: c for c in old.get("classes", [])}
 new_classes = {c["name"]: c for c in new.get("classes", [])}
 added = sorted(set(new_classes) - set(old_classes))
 removed = sorted(set(old_classes) - set(new_classes))
-changed = sorted(n for n in set(old_classes) & set(new_classes)
-                 if old_classes[n] != new_classes[n])
-print(f"  classes: +{len(added)} -{len(removed)} ~{len(changed)}")
+changed = sorted(n for n in set(old_classes) & set(new_classes) if old_classes[n] != new_classes[n])
+print(f"  classes: +{len(added)} -{len(removed)} ~{len(changed)} (added classes are adopted in step 5)")
 for label, names in (("added", added), ("removed", removed)):
-    for n in names[:20]:
+    for n in names:
         print(f"    {label}: {n}")
-    if len(names) > 20:
-        print(f"    {label}: ... {len(names) - 20} more")
-other = sorted(k for k in set(old_body) | set(new_body)
-               if old_body.get(k) != new_body.get(k) and k != "classes")
+# Removed members are an inventory, not a stop: step 5 drops them from the wrappers, step 9's
+# signature gate lists the source break, and the CHANGELOG line is a human step.
+for kind in ("methods", "properties", "signals", "constants", "enums"):
+    lost = []
+    for n in sorted(set(old_classes) & set(new_classes)):
+        before = {m["name"] for m in old_classes[n].get(kind) or []}
+        after = {m["name"] for m in new_classes[n].get(kind) or []}
+        lost += [f"{n}.{m}" for m in sorted(before - after)]
+    if lost:
+        print(f"  removed {kind}: {', '.join(lost)}")
+other = sorted(k for k in set(old_body) | set(new_body) if old_body.get(k) != new_body.get(k) and k != "classes")
 if other:
     print(f"  other changed sections: {', '.join(other)}")
-print("  expect: wrapper regen churn; NEW classes are coverage/policy work and are NOT auto-adopted")
 EOF
-)"
-printf '%s\n' "$CLASSIFICATION"
-
-if [[ $DRY_RUN -eq 1 ]] && ! printf '%s' "$CLASSIFICATION" | grep -q '^classification=none'; then
-  echo "[upgrade_godot] FAIL: --dry-run expects a no-op API diff on the current pin" >&2
-  exit 1
+}
+if [[ "$MODE" == plan ]]; then
+  echo "      (diff extension_api.json against HEAD; lists added/removed classes and removed members)"
+else
+  CLASSIFICATION="$(classify)"
+  printf '%s\n' "$CLASSIFICATION"
+  if [[ "$MODE" == dry-run ]] && ! printf '%s' "$CLASSIFICATION" | grep -q '^classification=none'; then
+    echo "[upgrade_godot] FAIL: --dry-run expects a no-op API diff on the current pin" >&2
+    exit 1
+  fi
 fi
 
-# ---------------------------------------------------------------------------
-# Step 4: engine-wide name constants.
-# ---------------------------------------------------------------------------
-if [[ $DRY_RUN -eq 1 ]]; then
-  echo "[upgrade_godot] step 4: name constants (--check)"
-  python3 "$ROOT_DIR/scripts/generate_name_constants.py" --check
-else
-  echo "[upgrade_godot] step 4: regenerate name constants"
-  python3 "$ROOT_DIR/scripts/generate_name_constants.py"
-fi
+step "step 4: engine-wide name constants"
+run_hard python3 "$ROOT_DIR/scripts/generate_name_constants.py"
 
-# ---------------------------------------------------------------------------
-# Step 5: re-adopt every committed generated wrapper (all platforms) + KDoc.
-# The drift-gate in step 7 is the authority: committed == fresh regen.
-# ---------------------------------------------------------------------------
-if [[ $DRY_RUN -eq 1 ]]; then
-  echo "[upgrade_godot] step 5: skip re-adopt (--dry-run; the drift-gate performs the same full regen check-only)"
-else
-  echo "[upgrade_godot] step 5: re-adopt the generated wrapper tree (shared tree, per-platform files, companions, iOS ObjectCalls GENERATED MEMBERS, gap index)"
-  python3 "$ROOT_DIR/scripts/generate_api_wrapper.py" --write-tree
-  (cd "$ROOT_DIR" && PYTHONPATH="$ROOT_DIR/scripts" python3 - <<'EOF'
-import json, subprocess
-from generate_api_wrapper import PER_PLATFORM_WRAPPERS
-from wrapper_model import DESKTOP_API_DIR, IOS_API_DIR, ROOT, SHARED_API_DIR, is_companion_file
+# Step 5: the wrapper tree. --write-tree re-renders until a pass writes nothing, adopts every
+# class the new API adds (listed), and moves the desktop ObjectCalls `actual` set with the expect.
+step "step 5: the generated wrapper tree (re-adopt, adopt new classes, desktop actual set)"
+run_hard python3 "$ROOT_DIR/scripts/generate_api_wrapper.py" --write-tree \
+  --skip-report "$ROOT_DIR/build/wrapper-generator/skips.txt"
+report_removed_classes() {
+  PYTHONPATH="$ROOT_DIR/scripts" python3 - "$BASELINE_API" <<'EOF'
+import json, sys
+from generate_api_wrapper import PER_PLATFORM_WRAPPERS, committed_wrapper_stems
+from wrapper_model import ROOT
 
 api = {c["name"] for c in json.loads((ROOT / "extension_api.json").read_text(encoding="utf-8"))["classes"]}
-# "Removed from the API" means it was a class in the PREVIOUS dump and is not one now —
-# not "a .kt file in api/ that is not a Godot class" (GD, GodotObject, the handle aliases
-# are hand-written non-API files and are not removals).
-old_dump = subprocess.run(
-    ["git", "-C", str(ROOT), "show", "HEAD:extension_api.json"],
-    check=True, capture_output=True, text=True,
-).stdout
-old_api = {c["name"] for c in json.loads(old_dump).get("classes", [])}
-committed = {
-    p.stem for d in (SHARED_API_DIR, DESKTOP_API_DIR, IOS_API_DIR) for p in d.glob("*.kt") if not is_companion_file(p)
-}
-removed = sorted((committed & old_api) - api)
-new_classes = sorted(api - committed)
-print(f"[upgrade_godot] classes in the new API without a committed wrapper: {len(new_classes)} "
-      f"(coverage/policy work — deliberately not auto-adopted)")
+# "Removed from the API" means it was a class in the PREVIOUS dump and is not one now --
+# not "a .kt file in api/ that is not a Godot class" (GD, GodotObject, the handle aliases).
+old_api = {c["name"] for c in json.load(open(sys.argv[1], encoding="utf-8")).get("classes", [])}
+removed = sorted((committed_wrapper_stems() & old_api) - api)
 if removed:
-    print("[upgrade_godot] HUMAN: wrappers for classes REMOVED from the API (delete the shared/per-platform "
-          f"file or hand-shape deliberately; PER_PLATFORM_WRAPPERS must not name them): {', '.join(removed)}")
+    print("[upgrade_godot] HUMAN: wrappers for classes REMOVED from the API (delete the file, announce the "
+          f"source break; PER_PLATFORM_WRAPPERS must not name them): {', '.join(removed)}")
 stale_table = sorted(set(PER_PLATFORM_WRAPPERS) - api)
 if stale_table:
     raise SystemExit(f"[upgrade_godot] FAIL: PER_PLATFORM_WRAPPERS names classes no longer in the API: {stale_table}")
 EOF
-  )
+}
+run_hard report_removed_classes
 
-  echo "[upgrade_godot] step 5: re-sync KDoc from Godot doc/classes"
-  python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --write
+# Step 6: every other output generated from extension_api.json or the wrapper tree (task 139 U4:
+# the bump used to leave these stale for the gates to find one per local_ci run). Order matters
+# where one reads another: the coverage page reads the generator report, and the KDoc sync runs
+# after the builtin ops, which rewrite the value types without their KDoc.
+step "step 6: the other generated outputs, then the KDoc sync"
+run_soft "builtin operators and methods" python3 "$ROOT_DIR/scripts/generate_builtin_ops.py" --write
+run_soft "engine method-name table" python3 "$ROOT_DIR/scripts/generate_engine_method_table.py"
+run_soft "Web backend dispatch" python3 "$ROOT_DIR/scripts/generate_web_backend.py" \
+  --output "$ROOT_DIR/web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/WebCommonGodotBackend.generated.kt"
+run_soft "Web wrapper tree" python3 "$ROOT_DIR/scripts/generate_web_wrappers.py"
+run_soft "Web API exercise" python3 "$ROOT_DIR/scripts/generate_web_exercise.py"
+run_soft "API exercise inventory" python3 "$ROOT_DIR/scripts/generate_api_exercise.py" --report
+run_soft "generator report" python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" \
+  --markdown "$ROOT_DIR/docs/reference/generated/wrapper-generator-report.md"
+run_soft "coverage report" python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" \
+  --markdown "$ROOT_DIR/docs/reference/generated/api-coverage.md"
+run_soft "enum migration table" python3 "$ROOT_DIR/scripts/migrate_enum_constants.py" \
+  --table "$ROOT_DIR/docs/reference/generated/enum-migration.md"
+run_soft "iOS handwritten report" python3 "$ROOT_DIR/scripts/ios_handwritten_report.py"
+run_hard python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --write
+
+step "step 7: ktfmtFormat (the regen leaves ktfmt-formatted files unformatted)"
+run_soft "ktfmtFormat" run_with_timeout "$GRADLE_TIMEOUT" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --quiet ktfmtFormat
+
+step "step 8: gates index"
+run_soft "gates index" python3 "$ROOT_DIR/scripts/generate_gates_index.py" \
+  --markdown "$ROOT_DIR/docs/reference/generated/gates.md"
+
+# Step 9: the gates, all of them, then one summary. --baseline-api lets the drift gate report a
+# method the new Godot added to a strict-list class without a helper as pending work (task 139 U7).
+step "step 9: gates"
+run_soft "API constants vs the new extension_api.json" python3 "$ROOT_DIR/scripts/validate_godot_api.py"
+run_soft "wrapper drift gate" python3 "$ROOT_DIR/scripts/check_wrapper_generator.py" --baseline-api "$BASELINE_API"
+DRIFT_RC=$LAST_RC
+run_soft "ktfmt formatting" run_with_timeout "$GRADLE_TIMEOUT" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --quiet ktfmtCheck
+run_soft "KDoc staleness" python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --check
+run_soft "Godot version pins (with the new API header)" python3 "$ROOT_DIR/scripts/check_godot_version_pin.py"
+run_soft "virtual-method signature table" python3 "$ROOT_DIR/scripts/generate_virtual_signature_table.py" --check
+run_soft "engine method-name table" python3 "$ROOT_DIR/scripts/generate_engine_method_table.py" --check
+run_soft "builtin operators and methods" python3 "$ROOT_DIR/scripts/generate_builtin_ops.py" --check
+run_soft "builtin coverage" python3 "$ROOT_DIR/scripts/check_builtin_coverage.py"
+run_soft "ObjectCalls parity" python3 "$ROOT_DIR/scripts/check_objectcalls_parity.py"
+run_soft "typed enums" python3 "$ROOT_DIR/scripts/check_typed_enums.py"
+run_soft "hand-code budget" python3 "$ROOT_DIR/scripts/check_hand_code_budget.py"
+run_soft "GDExtension modernization" python3 "$ROOT_DIR/scripts/check_gdextension_modernization.py"
+run_soft "API exercise inventory" python3 "$ROOT_DIR/scripts/generate_api_exercise.py" --check
+run_soft "Web call descriptors" python3 "$ROOT_DIR/scripts/generate_platform_backend_contract.py" \
+  --api "$ROOT_DIR/extension_api.json" \
+  --output "$ROOT_DIR/kanama-common-api/src/commonMain/kotlin/net/multigesture/kanama/backend/InitialGodotCallDescriptors.generated.kt" \
+  --check
+run_soft "Web backend dispatch" python3 "$ROOT_DIR/scripts/generate_web_backend.py" \
+  --output "$ROOT_DIR/web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/WebCommonGodotBackend.generated.kt" --check
+run_soft "Web wrapper tree" python3 "$ROOT_DIR/scripts/generate_web_wrappers.py" --check
+run_soft "Web API exercise" python3 "$ROOT_DIR/scripts/generate_web_exercise.py" --check
+run_soft "Web typed enums" python3 "$ROOT_DIR/scripts/check_web_typed_enums.py"
+run_soft "coverage report" python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" \
+  --markdown "$ROOT_DIR/docs/reference/generated/api-coverage.md" --check
+run_soft "generator report" python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" \
+  --markdown "$ROOT_DIR/docs/reference/generated/wrapper-generator-report.md" --check
+run_soft "enum migration table" python3 "$ROOT_DIR/scripts/migrate_enum_constants.py" \
+  --table "$ROOT_DIR/docs/reference/generated/enum-migration.md" --check
+run_soft "gates index" python3 "$ROOT_DIR/scripts/generate_gates_index.py" \
+  --markdown "$ROOT_DIR/docs/reference/generated/gates.md" --check
+# Only when the drift gate passed under the baseline: then this run fails on nothing but the pending
+# helpers, which are a decision; a real drift failure is already listed above, not as a decision.
+if [[ $DRIFT_RC -eq 0 ]]; then
+  run_human "adopted-list classes: a method the new Godot added has no helper; add it, or the PENDING_HELPER_SKIPS row the drift gate printed" \
+    python3 "$ROOT_DIR/scripts/check_wrapper_generator.py"
 fi
+run_human "public API signatures: announce each source break in CHANGELOG.md, then --write the snapshots" \
+  python3 "$ROOT_DIR/scripts/check_public_signature_changes.py"
+run_human "gate-evidence ledger: re-run each stale gate on the new pin, or accept it stale with a reason and a date" \
+  python3 "$ROOT_DIR/scripts/check_gate_evidence.py"
 
-# ---------------------------------------------------------------------------
-# Step 6: coverage + generator reports.
-# ---------------------------------------------------------------------------
-if [[ $DRY_RUN -eq 1 ]]; then
-  echo "[upgrade_godot] step 6: reports (--check)"
-  python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/reference/generated/api-coverage.md" --check
-  python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/reference/generated/wrapper-generator-report.md" --check
-else
-  echo "[upgrade_godot] step 6: refresh coverage + generator reports"
-  python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/reference/generated/api-coverage.md"
-  python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/reference/generated/wrapper-generator-report.md"
-fi
-
-# ---------------------------------------------------------------------------
-# Step 7: gates. Never finish a bump with any of these red.
-# ---------------------------------------------------------------------------
-echo "[upgrade_godot] step 7: gate — full drift-gate (committed == fresh regen, per platform)"
-python3 "$ROOT_DIR/scripts/check_wrapper_generator.py"
-
-echo "[upgrade_godot] step 7: gate — KDoc staleness"
-python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --check
-
-echo "[upgrade_godot] step 7: gate — Godot version pin consistency"
-python3 "$ROOT_DIR/scripts/check_godot_version_pin.py"
-
-if [[ $DRY_RUN -eq 1 ]]; then
-  STATUS_AFTER="$(git -C "$ROOT_DIR" status --porcelain)"
-  if [[ "$STATUS_AFTER" != "$STATUS_BEFORE" ]]; then
-    echo "[upgrade_godot] FAIL: --dry-run changed the tree:" >&2
-    # justified: diff exits 1 on a difference, which is the very thing being printed; the next line exits 1.
-    diff <(printf '%s\n' "$STATUS_BEFORE") <(printf '%s\n' "$STATUS_AFTER") >&2 || true
+if [[ "$MODE" == plan ]]; then
+  if [[ ${#PREFLIGHT_FAILURES[@]} -gt 0 ]]; then
+    echo "[upgrade_godot] plan printed; the preflight problems above must be fixed before the bump can run." >&2
     exit 1
   fi
-  echo "[upgrade_godot] dry run PASS — no-op bump left the tree byte-identical and all gates green"
+  log "plan printed; preflight passed. Run again without --plan to perform the bump."
+  exit 0
 fi
 
+if [[ "$MODE" == dry-run && "$(tree_fingerprint)" != "$FINGERPRINT_BEFORE" ]]; then
+  SOFT_FAILURES+=("the dry run changed the tree (tracked files, untracked files or the jextract output; listed and restored on exit)")
+fi
+
+# The classes this Godot added (against the baseline, so a re-run lists them too) and whether each
+# has its wrapper now; an editor-only class (`api_type` editor) exists only in the editor build.
+added_classes() {
+  python3 - "$ROOT_DIR" "$BASELINE_API" <<'EOF'
+import json, sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+new = {c["name"]: c for c in json.loads((root / "extension_api.json").read_text(encoding="utf-8"))["classes"]}
+old = {c["name"] for c in json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))["classes"]}
+shared = root / "src/commonMain/kotlin/net/multigesture/kanama/api"
+added = sorted(set(new) - old)
+if added:
+    editor = sum(1 for n in added if new[n].get("api_type") == "editor")
+    print(f"[upgrade_godot] classes this Godot added: {len(added)} ({editor} editor-only), all adopted into the shared tree:")
+    for n in added:
+        flags = [" [editor only]" if new[n].get("api_type") == "editor" else "",
+                 "" if (shared / f"{n}.kt").is_file() else "  NO WRAPPER"]
+        print(f"    {n}{''.join(flags)}")
+EOF
+}
+
 # ---------------------------------------------------------------------------
-# Human-judgment boundary. The script stops here by design.
+# Summary.
 # ---------------------------------------------------------------------------
+echo
+added_classes
+if [[ ${#HUMAN_ITEMS[@]} -gt 0 ]]; then
+  log "human decisions this bump needs (expected on an API change; the gate stays red until done):"
+  for item in "${HUMAN_ITEMS[@]}"; do
+    echo "  - $item"
+  done
+fi
+if [[ ${#SOFT_FAILURES[@]} -gt 0 ]]; then
+  log "FAIL: ${#SOFT_FAILURES[@]} step(s) or gate(s) failed (output above):"
+  for item in "${SOFT_FAILURES[@]}"; do
+    echo "  - $item"
+  done
+  exit 1
+fi
+if [[ "$MODE" == dry-run ]]; then
+  log "dry run PASS: the whole pipeline ran on the current pin, every gate is green and the tree is byte-identical"
+  exit 0
+fi
+
+if [[ ${#HUMAN_ITEMS[@]} -gt 0 ]]; then
+  log "mechanical steps complete, every generated output is refreshed; ${#HUMAN_ITEMS[@]} decision(s) above are needed before local CI can pass (exit 3)."
+else
+  log "mechanical steps complete: every generated output is refreshed and every gate is green."
+fi
 cat <<EOF
-[upgrade_godot] mechanical steps complete — STOPPING at the human-judgment boundary.
-[upgrade_godot] Remaining steps (full runbook: docs/contributing/godot-upgrade.md):
-  1. Review the API diff classification above. New classes are coverage/policy
-     work (generator policy, audits, adoption) — never bulk-adopt them blindly.
-  2. Run ./gradlew ktfmtFormat: when the iOS helper set changed, step 5 rewrote
-     the iOS ObjectCalls.kt GENERATED MEMBERS region unformatted (that file is not ktfmt-exempt, unlike the
-     api/** wrappers) and ktfmtCheck gates it.
-  3. Run local CI against the new binary: scripts/local_ci.sh $GODOT_BIN
+[upgrade_godot] STOPPING at the human-judgment boundary. Remaining (full runbook: docs/contributing/godot-upgrade.md):
+  1. Review the classification above and the classes this Godot added (listed above).
+  2. Run local CI against the new binary: scripts/local_ci.sh $GODOT_BIN
+     The runtime smoke re-records nothing: when Godot adds a builtin member, re-record the Web parity
+     hashes from its log (generate_builtin_ops.py --record-parity <log>).
+  3. Run the API exercise rows headless and review the new classes' rows (runbook).
   4. Re-run the platform smoke/device gates per the release-gate matrix (§6) in
-     the internal task repo. This script does NOT change support claims; support
-     wording moves only after the matching gate passes.
+     the internal task repo, and record them in evidence/gates.json. This script does NOT change
+     support claims; support wording moves only after the matching gate passes.
   5. Refresh release-facing wording by hand: CHANGELOG.md, README.md, docs
      version badges/wording, templates, companion demo defaults. Review the
      .gdextension compatibility_minimum invariant before touching it
@@ -351,3 +747,6 @@ cat <<EOF
   6. Bump the KDoc docs-pin commit hash in docs/contributing/wrapper-maintenance.md.
   7. Before tagging: scripts/fresh_clone_smoke.sh $GODOT_BIN
 EOF
+if [[ ${#HUMAN_ITEMS[@]} -gt 0 ]]; then
+  exit 3
+fi

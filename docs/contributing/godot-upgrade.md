@@ -1,183 +1,268 @@
 # Godot Upgrade Runbook
 
-This page is the authoritative process for bumping Kanama's Godot engine
-baseline. It is maintainer material; game projects never need it. The
-mechanical steps are automated by `scripts/upgrade_godot.sh` — this page
-explains the order, what to expect, and the judgment calls the script
-deliberately leaves to a human.
+This page is the process for moving Kanama to a new Godot release. It is
+maintainer material; game projects never need it. You edit the pin, run one
+script, and then do the parts that need a person: source-break notes, device
+runs and release wording.
 
 ## Upgrade Policy
 
-Kanama re-pins **only on stable Godot releases**. Dev, beta, and rc builds are
-never adopted as the baseline; `scripts/upgrade_godot.sh` refuses a non-stable
-pin. When a new stable ships, the bump is planned work, not an automatic
-follow — wrapper-coverage pushes in flight should ideally land first.
+Kanama re-pins **only on stable Godot releases**. Dev, beta and rc builds are
+never the baseline, and `scripts/upgrade_godot.sh` refuses a non-stable pin
+unless you ask for a trial (see [Trying a Prerelease](#trying-a-prerelease)).
+When a new stable ships, the bump is planned work, not an automatic follow;
+wrapper-coverage work in flight should land first.
 
-The baseline has exactly one source of truth: `kanamaGodotVersion` in
-`gradle.properties` (dot form, Godot's own spelling: `4.8.stable` for a `.0`
-release, `4.7.2.stable` for a maintenance release). The CI workflows carry the
-same version in dash form (`GODOT_VERSION: 4.8-stable` in
-`.github/workflows/package.yml`, `ci.yml`, and `web.yml`, the GitHub release
-tag), and `web.yml` derives the dot-form export-template folder from it.
-Everything else reads the property; `scripts/check_godot_version_pin.py` fails
-the build if any pin drifts. Maintenance releases are adopted the same way as
-minor releases — the runbook below is identical, only smaller.
+The baseline has one source of truth: `kanamaGodotVersion` in
+`gradle.properties`, in Godot's own spelling (`4.8.stable` for a `.0` release,
+`4.7.2.stable` for a maintenance release). The CI workflows carry the same
+version in dash form (`GODOT_VERSION: 4.8-stable`, the GitHub release tag) in
+`package.yml`, `ci.yml`, `web.yml` and `gate-red-runs-nightly.yml`, and
+`web.yml` derives the export-template folder from it. Everything else reads the
+property. `scripts/check_godot_version_pin.py` fails the build when a pin
+drifts, and `--list-files` prints the files a pin edit touches. Maintenance
+releases follow the same runbook; the diff is just smaller.
 
-## What a Bump Regenerates
+## What You Need
 
-| Input / output | Refreshed by |
-|---|---|
-| `extension_api.json`, `gdextension/gdextension_interface.h` | `scripts/refresh_godot_api.sh` (dumped from the new binary) |
-| `src/generated/godot` (Panama bindings) | `scripts/jextract.sh` (jextract 25+) |
-| Virtual-method signature table (`processor/.../virtual-signatures.tsv`) | `scripts/generate_virtual_signature_table.py` |
-| Engine-wide `MethodName`/`PropertyName`/`SignalName` constants | `scripts/generate_name_constants.py` |
-| Generated wrappers, all platform trees (desktop/Android via one tree, iOS island + the iOS `ObjectCalls.kt` `GENERATED MEMBERS` region) | `scripts/generate_api_wrapper.py` re-adopt |
-| Typed-enum prefix lock (`scripts/enum_prefix_lock.json`) and the processor's enum table (`processor/.../godot-enums.tsv`) | `scripts/generate_api_wrapper.py` re-adopt (same `--write-tree`) |
-| Wrapper KDoc | `scripts/sync_kdoc_from_godot_docs.py --write` |
-| Coverage + generator reports | `scripts/api_wrapper_coverage.py`, `scripts/api_wrapper_generator_report.py` |
-
-## Prerequisites
-
-- The new **stable** Godot editor binary for the host platform.
+- The new **stable** Godot editor binary for your machine, and its export
+  templates (`.tpz`).
 - `JEXTRACT_HOME` pointing at a jextract 25+ install.
-- A Godot **source checkout at the matching stable tag** — KDoc syncs from its
-  `doc/classes`. Never sync from an rc/`latest` tree; the script verifies the
-  checkout's `version.py` against the pin.
-- A clean working tree (the bump diff must stay reviewable).
+- A Godot **source checkout at the matching tag**: KDoc is synced from its
+  `doc/classes`, and the script checks the checkout's `version.py` against the
+  pin. Never sync from an rc or `master` tree.
+- A clean working tree apart from the pin edit, so the bump diff stays
+  reviewable.
 
-## The Runbook
+## The Bump
 
-1. **Edit the pin — and only the pin.** Change `kanamaGodotVersion` in
-   `gradle.properties` and `GODOT_VERSION` in `.github/workflows/package.yml`,
-   `ci.yml`, and `web.yml` (dash form). No other hand edits; scattered version literals are what the
-   pin check guards against.
+1. **Edit the pin, and only the pin.** Change `kanamaGodotVersion` in
+   `gradle.properties` and `GODOT_VERSION` in the four workflows
+   (`python3 scripts/check_godot_version_pin.py --list-files` names them).
 
-2. **Run the mechanical pipeline:**
+2. **Look at the plan** (optional). `--plan` runs the read-only checks and prints
+   every step with its command, changing nothing:
+
+   ```sh
+   JEXTRACT_HOME=/absolute/path/to/jextract-25 \
+   scripts/upgrade_godot.sh --plan \
+     --godot-docs /absolute/path/to/godot-source/doc/classes \
+     /absolute/path/to/new_godot_binary
+   ```
+
+3. **Run the bump** with the same arguments, without `--plan`. Add
+   `--templates /path/to/Godot_vX_export_templates.tpz` to install the export
+   templates when they are not installed yet. A run takes about two to three
+   minutes:
 
    ```sh
    JEXTRACT_HOME=/absolute/path/to/jextract-25 \
    scripts/upgrade_godot.sh \
      --godot-docs /absolute/path/to/godot-source/doc/classes \
+     --templates /absolute/path/to/export_templates.tpz \
      /absolute/path/to/new_godot_binary
    ```
 
-   In order, the script: verifies pin/binary/policy/tooling (fail fast),
-   refreshes the API/header inputs (dump + jextract + validation + virtual
-   table), classifies the API diff, regenerates name constants, **re-adopts
-   every committed generated wrapper on every platform** (desktop
-   `--emit-class`, iOS `--ios-emit-class` plus the iOS `ObjectCalls.kt` `GENERATED MEMBERS` region),
-   re-syncs KDoc, refreshes the coverage/generator reports, and re-runs the
-   gates. It stops at the human-judgment boundary below.
+   The script works through these steps in order:
 
-3. **Read the classification.** The script diffs the new `extension_api.json`
-   against `HEAD` and reports one of:
+   | Step | What it does |
+   |---|---|
+   | 1. preflight | checks the pin policy, the binary's version, jextract, the docs checkout's version, the export templates, and that only the pin files are dirty; lists every problem before stopping |
+   | 2. refresh | `refresh_godot_api.sh --skip-validate`: dumps `extension_api.json` and `gdextension_interface.h` from the binary, runs jextract, regenerates the virtual-signature table |
+   | 3. classify | diffs the new API against `HEAD`: no-op, metadata-only, or an API change with the added and removed classes and the removed methods, properties, signals, constants and enums |
+   | 4. constants | `generate_name_constants.py` |
+   | 5. tree | `generate_api_wrapper.py --write-tree`: re-renders every wrapper on every platform, **adopts every class the new API adds**, keeps the desktop `ObjectCalls` `actual` set in step with the expect, and repeats until a pass writes nothing |
+   | 6. outputs | the builtin operators and methods, the engine-method table, the Web backend, wrappers and exercise, the API exercise, the generator, coverage, enum-migration and iOS-handwritten pages, then the KDoc sync |
+   | 7. format | `./gradlew ktfmtFormat` (the regen leaves the iOS `ObjectCalls` region, the expect and toggled desktop members unformatted) |
+   | 8. gates index | `docs/reference/generated/gates.md`, last because it reads the gate list |
+   | 9. gates | every drift gate, `ktfmtCheck`, and the API validation, run to the end |
 
-    - **Metadata-only** (only the `header` changed, like a rc→stable re-dump):
-      expect churn limited to version strings; the rest of the bump is
-      release-facing wording.
-    - **Real API change**: added/removed/changed classes are listed. Expect
-      wrapper regen churn. **New classes are not auto-adopted** — they are
-      coverage/policy work (generator policy, ABI audits, then adoption).
-      Wrappers whose class was **removed** from the API are flagged for a
-      human decision. A new engine call shape that the generator refuses is a
-      helper/audit task first — do not widen ABI-sensitive types to force a
-      wrapper to generate.
+   API validation runs in step 9, after the re-adopt. Before step 5 the
+   committed wrappers still call the methods the new Godot removed, so a
+   removal is a line in the step 3 inventory and a source break for step 4
+   below, not a reason to stop.
 
-4. **Human-judgment steps** (the script prints this list and exits; it never
-   performs them):
+4. **Read the summary.** A step that fails is listed with its command; nothing
+   is hidden behind the first failure. Three checks are listed as **human
+   decisions** rather than failures, because an API change is expected to trip
+   them:
 
-    - Run `./gradlew ktfmtFormat`. Step 5 re-emits the iOS `ObjectCalls.kt`
-      `GENERATED MEMBERS` region unformatted (that file is not ktfmt-exempt,
-      unlike the `api/**` wrappers), and `ktfmtCheck` in `local_ci.sh` gates it.
-    - Run local CI against the new binary:
-      `scripts/local_ci.sh /absolute/path/to/new_godot_binary`.
-    - **Run the API exercise and its sweep before any device gate.** Regenerate the rows
-      (`python3 scripts/generate_api_exercise.py --report`; `--check` fails on a new Variant type
-      without a `VARIANT_TYPE_VALUES` entry, an exclusion naming a class the new API lacks, or a
-      helper nothing classifies) and review the page's diff: every class the new version adds gets
-      rows it has never run. Then run them headless with the trace on (`runtime_smoke.sh` does,
-      or `KANAMA_API_EXERCISE=1 KANAMA_API_EXERCISE_TRACE=1` on `api_exercise_smoke.tscn` with a
-      `-PkanamaApiExercise=true` addon): a row that crashes (the smoke names it), hangs, writes outside
-      the scratch directory or would change a running game's state on a device gets a
-      `METHOD_OVERRIDES` or exclusion entry with that reason in `scripts/api_exercise_policy.py`;
-      a row that fails is a finding to fix. Only then the iOS and Android device runs, which run the
-      same rows (see "The exercise rows" in `wrapper-maintenance.md`).
-    - Re-run the platform smoke/device gates per the release-gate matrix (§6) in
-      the internal task repo. **Support claims move only after the matching gate
-      passes** — the upgrade tooling never edits support wording.
-    - Refresh release-facing wording by hand: `CHANGELOG.md`, `README.md`,
-      docs badges/version wording, templates, and companion demo defaults.
-      The `.gdextension` `compatibility_minimum` is an invariant with its own
-      rationale (see `AGENTS.md` "Looks Wrong But Isn't") — review it
-      deliberately before touching it.
-    - Bump the KDoc docs-pin commit hash in
-      `docs/contributing/wrapper-maintenance.md` to the new stable tag.
-    - **Scan `gdextension/gdextension_interface.h` for newly `@deprecated`
-      functions and migrate off them.** 4.7 is the baseline — we don't carry
-      deprecated GDExtension callbacks. `grep -B1 '@deprecated'
-      gdextension/gdextension_interface.h | grep '@name'` lists them; cross-check
-      each against the FFI lookups every backend binds (`rg
-      'classdb_construct_object|script_instance_create|register_extension_class|get_godot_version'
-      src ios --glob '*.kt' --glob '*.c'`) and move to the newest variant.
-    - **Assert the backends have not diverged.** The desktop/Android JVM backend
-      (`src/jvmMain`) and the iOS Kotlin/Native shim (`ios/bootstrap/kanama_ios_shim.c`)
-      choose their own GDExtension entry points and *have* silently drifted before
-      (desktop `construct_object2` vs iOS `construct_object3` — issue #91 / task 61).
-      Confirm both bind the **same, newest** construct/register/script-instance
-      functions. Enforced by `scripts/check_gdextension_modernization.py` (in the
-      gates below and in `local_ci.sh`) — it fails on any deprecated binding or a
-      backend divergence.
-    - **Re-check the Android template's Kotlin libraries.** An exported APK runs on
-      the `kotlin-stdlib` and `kotlinx-coroutines` of Godot's Android build template
-      (`kotlinVersion` in `config.gradle` inside the export templates'
-      `android_source.zip`, and `./gradlew :dependencies --configuration
-      standardDebugRuntimeClasspath` there; 4.7.2: stdlib 2.1.21, coroutines 1.6.4),
-      so `android/godot-plugin/{plugin,scripts}/build.gradle.kts` compile with
-      `apiVersion` set to that stdlib version and against that coroutines version
-      (`kanamaAndroidCoroutinesVersion` in `android/godot-plugin/gradle.properties`).
-      Move both with the template. The other direction matters too: Kotlin 2.4
-      already warns that API version 2.1 is deprecated, and a later Kotlin (around
-      2.6, if the usual cycle holds) refuses it. A root Kotlin bump then fails the
-      Android build until Godot's template ships a newer stdlib; keep the older
-      Kotlin until it does, rather than raising the API level past the APK's.
-    - Before tagging:
-      `scripts/fresh_clone_smoke.sh /absolute/path/to/new_godot_binary`.
+   - *Public API signatures.* Each removed or changed signature needs a
+     `- **Source break:**` line in `CHANGELOG.md` under `## Unreleased` (see the
+     top of the CHANGELOG), then
+     `python3 scripts/check_public_signature_changes.py --write`.
+   - *Adopted-list classes.* `check_wrapper_generator.py` holds a list of
+     classes to "no skipped method". When Godot gives one of them a method whose
+     call shape has no `ObjectCalls` helper yet, the drift gate prints it as
+     pending, with the `PENDING_HELPER_SKIPS` row to paste: the reason, the task
+     or issue that adds the helper (replace the `task <n>` placeholder) and
+     today's date. Add the helper (see [Wrapper Maintenance](wrapper-maintenance.md)),
+     or the row. Do not take the class out of its list. This item only appears
+     when the drift gate itself passed; a real drift failure is listed as a
+     failure.
+   - *Gate evidence.* A pin move makes every entry of `evidence/gates.json`
+     stale. Re-run each gate on the new pin, or accept it stale with a reason and
+     an expiry date.
 
-## Gates — Never Finish a Bump With Any of These Red
+   The summary also lists the classes this Godot added, all adopted by step 5,
+   with the editor-only ones (`api_type` editor) marked; step 5's own output
+   gives each one's count of skipped methods. They are generated like every
+   other class; review the list, and the new rows they get on the API exercise
+   page.
 
-The drift-gate is the safety net: a botched bump leaves wrappers drifted, the
-gate catches it, and the fix is to re-adopt — mistakes are recoverable, but an
-upgrade is never "done" over a red gate.
+   The exit status says where you are: `0` when every gate is green, `3` when
+   the mechanical work is done and only the listed decisions remain (local CI
+   stays red until you make them), `1` when a step or gate failed.
 
-```sh
-python3 scripts/check_wrapper_generator.py        # full per-platform drift-gate
-python3 scripts/check_gdextension_modernization.py # no deprecated bindings; backends converged
-python3 scripts/sync_kdoc_from_godot_docs.py --godot-docs <doc/classes> --check
-python3 scripts/check_godot_version_pin.py
-python3 scripts/validate_godot_api.py
-mkdocs build --strict
-./scripts/local_ci.sh /absolute/path/to/new_godot_binary
-```
+## After the Script
+
+These steps need a person or a device, so the script prints them and stops:
+
+- Run local CI against the new binary:
+  `scripts/local_ci.sh /absolute/path/to/new_godot_binary`.
+- **Run the API exercise before any device gate.** The page
+  (`docs/reference/generated/api-exercise.md`) is already regenerated; review its
+  diff, since every new class gets rows that have never run. Then run the rows
+  headless with the trace on (`runtime_smoke.sh` does, or
+  `KANAMA_API_EXERCISE=1 KANAMA_API_EXERCISE_TRACE=1` on `api_exercise_smoke.tscn`
+  with a `-PkanamaApiExercise=true` addon). A row that crashes, hangs, writes
+  outside the scratch directory or would change a running game's state on a
+  device gets a `METHOD_OVERRIDES` or exclusion entry with that reason in
+  `scripts/api_exercise_policy.py`; a row that fails is a finding to fix. Only then
+  the iOS and Android device runs, which run the same rows (see "The exercise rows"
+  in `wrapper-maintenance.md`).
+- When Godot adds a builtin member (a new `Vector2` method, a new operator), the
+  Web builtin parity hashes need re-recording from a runtime smoke log:
+  `python3 scripts/generate_builtin_ops.py --record-parity <log>`.
+- Re-run the platform smoke and device gates per the release-gate matrix (§6) in
+  the internal task repo, and record each run in `evidence/gates.json`.
+  **Support claims move only after the matching gate passes**; the upgrade
+  tooling never edits support wording.
+- Re-import the demos with the new editor, commit the `.import` churn in the demos
+  repo, and move `DEMOS_REF` in `.github/workflows/web.yml`.
+- Refresh release-facing wording by hand: `CHANGELOG.md`, `README.md`, docs
+  badges and version wording, templates, and companion demo defaults. The
+  `.gdextension` `compatibility_minimum` is an invariant with its own rationale
+  (see `AGENTS.md` "Looks Wrong But Isn't"); review it deliberately before
+  touching it.
+- Bump the KDoc docs-pin commit hash in
+  `docs/contributing/wrapper-maintenance.md` to the new stable tag.
+- **Scan `gdextension/gdextension_interface.h` for newly `@deprecated`
+  functions and migrate off them.** 4.7 is the baseline: we don't carry
+  deprecated GDExtension callbacks. `grep -B1 '@deprecated'
+  gdextension/gdextension_interface.h | grep '@name'` lists them; cross-check
+  each against the FFI lookups every backend binds (`grep -rnE
+  'classdb_construct_object|script_instance_create|register_extension_class|get_godot_version'
+  src ios --include '*.kt' --include '*.c'`) and move to the newest variant.
+- **Check the backends have not diverged.** The desktop/Android JVM backend
+  (`src/jvmMain`) and the iOS Kotlin/Native shim (`ios/bootstrap/kanama_ios_shim.c`)
+  choose their own GDExtension entry points and *have* silently drifted before
+  (desktop `construct_object2` vs iOS `construct_object3`, issue #91 / task 61).
+  Both must bind the **same, newest** construct/register/script-instance
+  functions. `scripts/check_gdextension_modernization.py` (step 9 and
+  `local_ci.sh`) fails on a deprecated binding or a divergence.
+- **Re-check the Android template's Kotlin libraries.** An exported APK runs on
+  the `kotlin-stdlib` and `kotlinx-coroutines` of Godot's Android build template
+  (`kotlinVersion` in `config.gradle` inside the export templates'
+  `android_source.zip`, and `./gradlew :dependencies --configuration
+  standardDebugRuntimeClasspath` there; 4.7.2: stdlib 2.1.21, coroutines 1.6.4),
+  so `android/godot-plugin/{plugin,scripts}/build.gradle.kts` compile with
+  `apiVersion` set to that stdlib version and against that coroutines version
+  (`kanamaAndroidCoroutinesVersion` in `android/godot-plugin/gradle.properties`).
+  Move both with the template. The other direction matters too: Kotlin 2.4
+  already warns that API version 2.1 is deprecated, and a later Kotlin (around
+  2.6, if the usual cycle holds) refuses it. A root Kotlin bump then fails the
+  Android build until Godot's template ships a newer stdlib; keep the older
+  Kotlin until it does, rather than raising the API level past the APK's.
+- Before tagging:
+  `scripts/fresh_clone_smoke.sh /absolute/path/to/new_godot_binary`.
 
 A Godot bump also **invalidates the Web evidence**: the export template, the
 generated proxy and the bridge protocol all move with it, and CI's Web matrix
 only covers Chrome and Firefox. Re-run the full corpus on all three browsers,
 including the Safari local gate, and re-run the fresh-checkout gate against a
-clone built on the new pin — see
-[Regression Cadence](device-runs.md#regression-cadence) for exactly which
-gate runs when.
+clone built on the new pin; see
+[Regression Cadence](device-runs.md#regression-cadence) for which gate runs
+when.
 
-## Dry Run
+## When a Bump Stops Half-Way
 
-The pipeline can be exercised against the **current** pin as a no-op bump:
+A bump that stops (a hard step failed, the machine slept, you pressed Ctrl-C)
+leaves a half-regenerated tree, and the preflight refuses to start on it. Every
+step regenerates its outputs from scratch, so the fix is always to run the
+whole bump again, from one of two starting points:
+
+- **Nothing committed yet: reset, then re-run.** `--reset` restores every
+  tracked file except the pin files and deletes the untracked wrapper and
+  generated-page files a run created (it lists them). It needs no binary.
+  Anything else you changed by hand since the bump started is discarded too, so
+  commit that first.
+
+  ```sh
+  scripts/upgrade_godot.sh --reset
+  JEXTRACT_HOME=/absolute/path/to/jextract-25 \
+  scripts/upgrade_godot.sh --godot-docs /absolute/path/to/godot-source/doc/classes \
+    /absolute/path/to/new_godot_binary
+  ```
+
+- **You committed the half-done result: re-run against the pre-bump commit.**
+  `--baseline-ref` names the commit whose `extension_api.json` is the previous
+  Godot. The classification, the drift gate's pending-helper report and the
+  list of added classes all diff against it, so they come out as on the first
+  run instead of empty:
+
+  ```sh
+  JEXTRACT_HOME=/absolute/path/to/jextract-25 \
+  scripts/upgrade_godot.sh --baseline-ref <commit before the bump> \
+    --godot-docs /absolute/path/to/godot-source/doc/classes \
+    /absolute/path/to/new_godot_binary
+  ```
+
+Either way the re-run ends with the same tree, the same exit status and the
+same lists as a bump that never stopped.
+`scripts/upgrade_godot_rerun_selftest.sh` proves it: from a checkout carrying a
+pin edit, with the options you give the bump, it runs the bump once start to
+end, once stopped after step 5 then reset and re-run, and once stopped after
+step 6, committed and re-run with `--baseline-ref`, and compares the three
+(10 to 15 minutes). With `--dry-run` it checks that a stopped dry run restores
+the tree.
+
+## Never Finish With a Red Gate
+
+The drift gate is the safety net: a botched bump leaves wrappers drifted, the
+gate catches it, and the fix is to re-run the bump as above, so mistakes are
+recoverable. But a bump is never "done" over a red gate. Step 9 runs the
+generator gates; the full set is local CI:
 
 ```sh
-scripts/upgrade_godot.sh --dry-run /absolute/path/to/current_godot_binary
+./scripts/local_ci.sh /absolute/path/to/new_godot_binary
+mkdocs build --strict
 ```
 
-Dry-run mode re-dumps and re-validates the inputs, requires the API diff to
-classify as a no-op, runs every remaining step in check-only mode (name
-constants, reports, drift-gate, KDoc, version pin), and fails unless the git
-tree is byte-identical afterwards. Re-run it after toolchain changes (new
-jextract, generator refactors) so the next real bump starts from a proven
-pipeline.
+## Proving the Pipeline: Dry Run
+
+Run the pipeline against the **current** pin as a no-op bump:
+
+```sh
+JEXTRACT_HOME=/absolute/path/to/jextract-25 \
+scripts/upgrade_godot.sh --dry-run \
+  --godot-docs /absolute/path/to/godot-source/doc/classes \
+  /absolute/path/to/current_godot_binary
+```
+
+The dry run starts from a clean tree, runs every step in write mode, requires
+the API diff to be a no-op and every gate (the three human-decision checks
+included) to pass, and fails unless the tree is byte-identical afterwards: the
+status, the tracked diff, every untracked file's content and the jextract
+output under `src/generated/godot` (on a fresh clone, which has none yet, the
+dry run creates it as the build would). It writes in place, so on every exit, a
+failure included, it lists what it changed and restores it. It installs no
+export templates. Run it after a toolchain or generator change, so the next
+real bump starts from a proven pipeline.
+
+## Trying a Prerelease
+
+To see what a beta or rc would break before it ships, run the bump on a
+throwaway branch with `--prerelease-trial`. It accepts a pin such as
+`4.8.beta1` and a source checkout whose `version.py` says `beta`. Never merge a
+prerelease pin.

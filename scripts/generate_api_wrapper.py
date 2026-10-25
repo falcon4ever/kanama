@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import functools
+import json
 import re
 import sys
 from contextlib import contextmanager
@@ -4479,6 +4480,93 @@ def mark_actual_members(text: str, keys: set[tuple[str, tuple[str, ...]]]) -> tu
     return "".join(out), marked
 
 
+# A member of the desktop `actual object ObjectCalls`, with or without its `actual` modifier.
+# ktfmt formats the file, so a member starts at exactly two spaces (the invariant
+# `desktop_objectcalls_declarations` and `check_objectcalls_parity.py` rely on as well).
+_DESKTOP_MEMBER_RE = re.compile(r"^  (actual\s+)?fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(", re.MULTILINE)
+
+
+def typed_member_key(src: str, name: str, open_paren: int) -> tuple[str, tuple[str, ...]]:
+    """(name, `param:Type` per parameter) of the member whose '(' is at [open_paren]. Desktop declares
+    overloads that differ in a parameter's TYPE only (`ptrcallWithIntArgRetVector3` takes `value: Long`
+    and `value: Int`; the expect has the Int one), so the `actual` match keys on the types too. The
+    raw pointer type is compared under its common name (`MemorySegment` is `RawSegment` there)."""
+    params: list[str] = []
+    for param in split_params(_read_parens(src, open_paren)):
+        declared = param.split("=", 1)[0]
+        head, _, typ = declared.partition(":")
+        pname = head.split()[-1] if head.split() else ""
+        params.append(pname + ":" + re.sub(r"\s+", "", typ).replace("MemorySegment", "RawSegment"))
+    return name, tuple(params)
+
+
+def expect_typed_keys(members: list[str]) -> set[tuple[str, tuple[str, ...]]]:
+    """[typed_member_key] of each rendered `expect` member."""
+    keys: set[tuple[str, tuple[str, ...]]] = set()
+    for member in members:
+        match = re.match(r"\s*fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(", member)
+        if match is None:
+            raise SystemExit(f"cannot key expect member: {member[:80]}")
+        keys.add(typed_member_key(member, match.group(1), match.end() - 1))
+    return keys
+
+
+def desktop_actual_state(text: str) -> tuple[set[tuple[str, tuple[str, ...]]], set[tuple[str, tuple[str, ...]]]]:
+    """(members carrying `actual`, members without it) of the desktop ObjectCalls source, keyed like
+    [expect_typed_keys]."""
+    marked: set[tuple[str, tuple[str, ...]]] = set()
+    plain: set[tuple[str, tuple[str, ...]]] = set()
+    for match in _DESKTOP_MEMBER_RE.finditer(text):
+        key = typed_member_key(text, match.group(2), match.end() - 1)
+        (marked if match.group(1) else plain).add(key)
+    return marked, plain
+
+
+def sync_desktop_actuals(
+    text: str, keys: set[tuple[str, tuple[str, ...]]]
+) -> tuple[str, list[str], list[str]]:
+    """The desktop ObjectCalls source with `actual ` on exactly the members whose [typed_member_key]
+    is in [keys], the generated `expect object`'s member set (task 139 P4).
+
+    The file is hand-written, but which of its members actualize the expect is not a hand decision:
+    the expect is generated from the helpers the shared tree calls, so a Godot bump that adds or drops
+    a method moves that set. Only the modifier is rewritten; bodies and layout stay as written (a
+    toggle can change a line's length, which `./gradlew ktfmtFormat` re-wraps). Returns the new text
+    and the helper names that gained and lost the modifier.
+
+    Comments are not parsed: the match runs on the raw text so the rewrite keeps every byte around
+    it, and a member-shaped line inside a comment (which the comment-stripped scans would not see)
+    stops the run instead of being toggled."""
+    raw = len(_DESKTOP_MEMBER_RE.findall(text))
+    stripped = len(_DESKTOP_MEMBER_RE.findall(strip_comments(text)))
+    if raw != stripped:
+        raise SystemExit(
+            f"[generate_api_wrapper] {_rel(DESKTOP_OBJECTCALLS)}: {raw - stripped} member-shaped line(s) "
+            "(`  fun name(` at two spaces) sit inside a comment; indent or reword them so the `actual` "
+            "sync cannot toggle a comment"
+        )
+    out: list[str] = []
+    added: list[str] = []
+    removed: list[str] = []
+    position = 0
+    for match in _DESKTOP_MEMBER_RE.finditer(text):
+        name = match.group(2)
+        want = typed_member_key(text, name, match.end() - 1) in keys
+        has = match.group(1) is not None
+        if want == has:
+            continue
+        out.append(text[position : match.start() + 2])
+        if want:
+            out.append("actual ")
+            position = match.start() + 2
+            added.append(name)
+        else:
+            position = match.start(1) + len(match.group(1))
+            removed.append(name)
+    out.append(text[position:])
+    return "".join(out), sorted(added), sorted(removed)
+
+
 def ios_generated_region(source: str) -> str:
     """The text between the GENERATED MEMBERS markers of an iOS `ObjectCalls.kt`.
 
@@ -4917,21 +5005,54 @@ class TreeResult:
     # Generated iOS helpers that could NOT take the desktop parameter names, with the reason
     # (task 104 step 3: desktop's spelling is canonical, so this should stay empty).
     ios_unnamed: list[str]
+    # Desktop ObjectCalls helpers that gained / lost `actual` against the committed file (task 139 P4).
+    desktop_actuals: tuple[list[str], list[str]] = ((), ())
 
 
 def _rel(path: Path) -> str:
     return str(path.relative_to(ROOT))
 
 
-def tree_universe(api_classes: dict[str, ApiClass]) -> tuple[list[str], list[str], list[str]]:
-    """Which Godot classes have a committed wrapper, and where each one is generated."""
-    api = set(api_classes)
-    committed = {
+def committed_wrapper_stems() -> set[str]:
+    """The class names the committed wrapper files carry: the tree universe's source of truth."""
+    return {
         path.stem
         for directory in (SHARED_API_DIR, DESKTOP_API_DIR, IOS_API_DIR)
         for path in directory.glob("*.kt")
         if not is_companion_file(path)
     }
+
+
+# Godot classes the generator never adopts, with the reason. Every other class of
+# `extension_api.json` is generated into the shared tree (task 139 P5: since task 129 D the tree
+# covers the whole API, so a class a Godot bump adds is adopted by the next `--write-tree`).
+ADOPTION_EXCLUDED: dict[str, str] = {
+    "Object": "Godot's Object is the hand-written root GodotObject (task 117 P3')",
+}
+# What an adopted class's file holds before its first render: the tree universe is the set of
+# committed wrapper files, so this line is what puts the class in it.
+ADOPTION_PLACEHOLDER = "package net.multigesture.kanama.api\n"
+
+
+def unadopted_api_classes(api_classes: dict[str, ApiClass]) -> list[str]:
+    """Classes of the API that have no committed wrapper and are not excluded on purpose."""
+    skip = set(ADOPTION_EXCLUDED) | set(SHARED_HAND_ROOTS) | set(PER_PLATFORM_WRAPPERS)
+    return sorted(set(api_classes) - committed_wrapper_stems() - skip)
+
+
+def adopt_new_classes(api_classes: dict[str, ApiClass]) -> list[str]:
+    """Write the placeholder of every unadopted API class into the shared tree; returns the names.
+    The `--write-tree` passes that follow render them."""
+    adopted = unadopted_api_classes(api_classes)
+    for name in adopted:
+        (SHARED_API_DIR / f"{name}.kt").write_text(ADOPTION_PLACEHOLDER, encoding="utf-8")
+    return adopted
+
+
+def tree_universe(api_classes: dict[str, ApiClass]) -> tuple[list[str], list[str], list[str]]:
+    """Which Godot classes have a committed wrapper, and where each one is generated."""
+    api = set(api_classes)
+    committed = committed_wrapper_stems()
     rot = sorted(set(PER_PLATFORM_WRAPPERS) - api)
     if rot:
         raise SystemExit(f"[generate_api_wrapper] PER_PLATFORM_WRAPPERS names classes not in the API: {rot}")
@@ -5648,6 +5769,7 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
     for path, content in region_files.items():
         files[_rel(path)] = content
 
+    desktop_actual_changes: tuple[list[str], list[str]] = ([], [])
     previous_target = RENDER_TARGET
     try:
         RENDER_TARGET = "desktop"
@@ -5692,6 +5814,13 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
             files[_rel(IOS_OBJECTCALLS)] = splice_ios_generated_members(
                 IOS_OBJECTCALLS.read_text(encoding="utf-8"), region
             )
+            # The desktop object is hand-written, but its `actual` set is the expect's member set
+            # (task 139 P4): the generator owns the modifier, nothing else in the file.
+            desktop_text, gained, lost = sync_desktop_actuals(
+                DESKTOP_OBJECTCALLS.read_text(encoding="utf-8"), expect_typed_keys(expect_members)
+            )
+            files[_rel(DESKTOP_OBJECTCALLS)] = desktop_text
+            desktop_actual_changes = (gained, lost)
     finally:
         RENDER_TARGET = previous_target
     files[_rel(GAP_INDEX_PATH)] = render_gap_index(gap, len(shared))
@@ -5703,6 +5832,7 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
         ios_only=ios_only,
         gap=gap,
         ios_unnamed=sorted(unnamed),
+        desktop_actuals=desktop_actual_changes,
     )
 
 
@@ -6561,9 +6691,88 @@ def render_ios_objectcalls(
     return "\n\n".join(sections) + "\n"
 
 
+# `--write-tree` re-renders until a pass writes nothing: a pass renders from the committed files, so
+# a class adopted or a helper added in one pass is seen by the next (members returning the new class,
+# the expect member set, the desktop `actual` set). Two passes settle a Godot bump; more is a bug.
+WRITE_TREE_MAX_PASSES = 4
+
+
+def _write_tree_files(tree: TreeResult) -> tuple[int, int]:
+    """Write [tree] in place; returns (changed files written, stale companions removed)."""
+    written = 0
+    for rel_path, content in tree.files.items():
+        target = ROOT / rel_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if (
+            target == IOS_OBJECTCALLS
+            and target.exists()
+            and ios_generated_region_key(target.read_text(encoding="utf-8"))
+            == ios_generated_region_key(content)
+        ):
+            # ktfmt reformats the GENERATED MEMBERS region after every regen (the file is
+            # hand-written outside it), so leave the formatted copy alone when the region
+            # differs only in what ktfmt changes -- the drift gate compares the same key.
+            continue
+        if (
+            target == OBJECTCALLS_EXPECT
+            and target.exists()
+            and formatted_code_key(target.read_text(encoding="utf-8")) == formatted_code_key(content)
+        ):
+            # The expect file is ktfmt-formatted; keep the formatted copy when a regen differs
+            # only in what ktfmt changes (the drift gate compares the same key).
+            continue
+        if (
+            target.parent == TYPES_DIR
+            and target.exists()
+            and whitespace_insensitive(target.read_text(encoding="utf-8")) == whitespace_insensitive(content)
+        ):
+            # A value type is ktfmt-formatted around its GENERATED ENUMS region (task 128 A): keep the
+            # formatted copy when only whitespace differs, as the drift gate does.
+            continue
+        if not target.exists() or target.read_text(encoding="utf-8") != content:
+            target.write_text(content, encoding="utf-8")
+            written += 1
+    stale = [path for path in generated_companion_paths() if _rel(path) not in tree.files]
+    for path in stale:
+        path.unlink()
+    return written, len(stale)
+
+
+def _prune_copies(tree: TreeResult, which: str) -> int:
+    dirs = {"desktop": [DESKTOP_API_DIR], "ios": [IOS_API_DIR], "all": [DESKTOP_API_DIR, IOS_API_DIR]}[which]
+    pruned = 0
+    for name in tree.shared:
+        for directory in dirs:
+            copy = directory / f"{name}.kt"
+            if copy.exists():
+                copy.unlink()
+                pruned += 1
+    return pruned
+
+
 def tree_main(args: argparse.Namespace) -> int:
     """--regen-tree / --write-tree: render the whole generated wrapper tree."""
-    tree = regenerate_tree(args.api)
+    adopted: list[str] = []
+    actuals_before = desktop_actual_state(DESKTOP_OBJECTCALLS.read_text(encoding="utf-8"))[0]
+    if args.write_tree and not args.no_adopt:
+        adopted = adopt_new_classes(load_api_classes(args.api))
+    passes = 0
+    written = removed = 0
+    while True:
+        passes += 1
+        tree = regenerate_tree(args.api)
+        if not args.write_tree:
+            break
+        pass_written, pass_removed = _write_tree_files(tree)
+        written += pass_written
+        removed += pass_removed
+        if pass_written == 0 and pass_removed == 0:
+            break
+        if passes == WRITE_TREE_MAX_PASSES:
+            raise SystemExit(
+                f"[generate_api_wrapper] FAIL --write-tree did not settle in {WRITE_TREE_MAX_PASSES} passes "
+                f"(the last one still wrote {pass_written} file(s)): a render depends on its own output"
+            )
     companions = sum(1 for rel in tree.files if rel.endswith(DESKTOP_COMPANION_SUFFIX))
     ios_companions = sum(1 for rel in tree.files if rel.endswith(IOS_COMPANION_SUFFIX))
     members = sum(len(r.desktop_only_members) for r in tree.gap.values())
@@ -6590,63 +6799,43 @@ def tree_main(args: argparse.Namespace) -> int:
             target.write_text(content, encoding="utf-8")
         print(f"{summary} -> {args.regen_tree}")
     if args.write_tree:
-        written = 0
-        for rel_path, content in tree.files.items():
-            target = ROOT / rel_path
-            target.parent.mkdir(parents=True, exist_ok=True)
-            if (
-                target == IOS_OBJECTCALLS
-                and target.exists()
-                and ios_generated_region_key(target.read_text(encoding="utf-8"))
-                == ios_generated_region_key(content)
-            ):
-                # ktfmt reformats the GENERATED MEMBERS region after every regen (the file is
-                # hand-written outside it), so leave the formatted copy alone when the region
-                # differs only in what ktfmt changes -- the drift gate compares the same key.
-                continue
-            if (
-                target == OBJECTCALLS_EXPECT
-                and target.exists()
-                and formatted_code_key(target.read_text(encoding="utf-8")) == formatted_code_key(content)
-            ):
-                # The expect file is ktfmt-formatted; keep the formatted copy when a regen differs
-                # only in what ktfmt changes (the drift gate compares the same key).
-                continue
-            if (
-                target.parent == TYPES_DIR
-                and target.exists()
-                and whitespace_insensitive(target.read_text(encoding="utf-8")) == whitespace_insensitive(content)
-            ):
-                # A value type is ktfmt-formatted around its GENERATED ENUMS region (task 128 A): keep the
-                # formatted copy when only whitespace differs, as the drift gate does.
-                continue
-            if not target.exists() or target.read_text(encoding="utf-8") != content:
-                target.write_text(content, encoding="utf-8")
-                written += 1
-        stale = [path for path in generated_companion_paths() if _rel(path) not in tree.files]
-        for path in stale:
-            path.unlink()
-        pruned = 0
-        if args.prune_copies:
-            dirs = {"desktop": [DESKTOP_API_DIR], "ios": [IOS_API_DIR], "all": [DESKTOP_API_DIR, IOS_API_DIR]}[args.prune_copies]
-            for name in tree.shared:
-                for directory in dirs:
-                    copy = directory / f"{name}.kt"
-                    if copy.exists():
-                        copy.unlink()
-                        pruned += 1
-        print(f"{summary}; wrote {written} changed files, removed {len(stale)} stale companions, pruned {pruned} copies")
+        pruned = _prune_copies(tree, args.prune_copies) if args.prune_copies else 0
+        print(
+            f"{summary}; {passes} pass(es), wrote {written} changed files, removed {removed} stale companions, "
+            f"pruned {pruned} copies"
+        )
+        report_adoption(tree, adopted, actuals_before, args.api)
     elif args.prune_copies:
-        dirs = {"desktop": [DESKTOP_API_DIR], "ios": [IOS_API_DIR], "all": [DESKTOP_API_DIR, IOS_API_DIR]}[args.prune_copies]
-        pruned = 0
-        for name in tree.shared:
-            for directory in dirs:
-                copy = directory / f"{name}.kt"
-                if copy.exists():
-                    copy.unlink()
-                    pruned += 1
-        print(f"{summary}; pruned {pruned} copies")
+        print(f"{summary}; pruned {_prune_copies(tree, args.prune_copies)} copies")
     return 0
+
+
+def report_adoption(tree: TreeResult, adopted: list[str], actuals_before: set, api_path: Path) -> None:
+    """What `--write-tree` decided on its own (task 139 P5, P4): the classes it adopted (an editor-only
+    class, `api_type` "editor", is marked: it exists only in the editor build) and the desktop
+    ObjectCalls helpers whose `actual` it moved. Silent when there is nothing to say."""
+    if adopted:
+        api_types = {
+            c["name"]: c.get("api_type", "core")
+            for c in json.loads(api_path.read_text(encoding="utf-8")).get("classes", [])
+        }
+        print(f"[generate_api_wrapper] adopted {len(adopted)} new Godot class(es) into the shared tree "
+              "(every API class is generated; ADOPTION_EXCLUDED lists the exceptions):")
+        for name in adopted:
+            skips = tree.skips.get(name, [])
+            editor = " [editor only]" if api_types.get(name) == "editor" else ""
+            note = f", {len(skips)} method(s) skipped (see the skip report)" if skips else ""
+            print(f"    {name}{editor}{note}")
+    actuals_after = desktop_actual_state(DESKTOP_OBJECTCALLS.read_text(encoding="utf-8"))[0]
+    gained = sorted({name for name, _ in actuals_after - actuals_before})
+    lost = sorted({name for name, _ in actuals_before - actuals_after})
+    if gained or lost:
+        print(f"[generate_api_wrapper] desktop ObjectCalls `actual` set follows the expect: +{len(gained)} -{len(lost)} "
+              "(run ./gradlew ktfmtFormat: a toggled member may need re-wrapping)")
+        for name in gained:
+            print(f"    + actual {name}")
+        for name in lost:
+            print(f"    - actual {name} (no shared caller left; the helper stays desktop-only)")
 
 
 def main() -> int:
@@ -6707,8 +6896,15 @@ def main() -> int:
     parser.add_argument(
         "--write-tree",
         action="store_true",
-        help="Render the whole generated wrapper tree in place (re-adopt) and delete generated "
+        help="Render the whole generated wrapper tree in place (re-adopt), adopt every API class "
+             "that has no wrapper yet, repeat until a pass writes nothing, and delete generated "
              "companion files a fresh regen no longer produces.",
+    )
+    parser.add_argument(
+        "--no-adopt",
+        action="store_true",
+        help="With --write-tree: do not adopt API classes that have no wrapper yet (by default every "
+             "class outside ADOPTION_EXCLUDED is adopted and listed).",
     )
     parser.add_argument(
         "--prune-copies",
@@ -6744,13 +6940,26 @@ def main() -> int:
             print(content)
 
     if args.emit_classes:
-        tree = regenerate_tree(args.api, only=set(args.emit_classes))
-        for rel_path, content in sorted(tree.files.items()):
-            target = ROOT / rel_path
-            if target.exists() and not args.allow_overwrite and target.read_text(encoding="utf-8") != content:
-                raise SystemExit(f"{target}: exists and differs; pass --allow-overwrite to replace it")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text(content, encoding="utf-8")
+        # A class the API has and the tree does not is adopted first (task 139 P5): its placeholder
+        # puts it in the tree universe, and a second render sees its declaration (fluent setters).
+        unadopted = set(unadopted_api_classes(api_classes))
+        placeholders = {_rel(SHARED_API_DIR / f"{name}.kt") for name in args.emit_classes if name in unadopted}
+        for rel_path in sorted(placeholders):
+            (ROOT / rel_path).write_text(ADOPTION_PLACEHOLDER, encoding="utf-8")
+            print(f"[generate_api_wrapper] adopting new class {Path(rel_path).stem} into the shared tree")
+        for _ in range(2 if placeholders else 1):
+            tree = regenerate_tree(args.api, only=set(args.emit_classes))
+            for rel_path, content in sorted(tree.files.items()):
+                target = ROOT / rel_path
+                if (
+                    target.exists()
+                    and not args.allow_overwrite
+                    and rel_path not in placeholders
+                    and target.read_text(encoding="utf-8") != content
+                ):
+                    raise SystemExit(f"{target}: exists and differs; pass --allow-overwrite to replace it")
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(content, encoding="utf-8")
         for class_name in args.emit_classes:
             skip_lines.extend(f"{class_name}: {skip}" for skip in tree.skips.get(class_name, []))
 
