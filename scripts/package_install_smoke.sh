@@ -344,8 +344,11 @@ check_file "addons/kanama/kanama-scripts.jar"
 jar tf "$project_dir/addons/kanama/kanama-scripts.jar" | grep -Fq "net/multigesture/kanama/generated/KanamaScriptRegistry"
 # The version lock (task 143 item 1): buildScripts stamps the jar with the addon's version.
 check_file "addons/kanama/kanama-scripts.version"
-if ! cmp -s "$project_dir/addons/kanama/kanama.version" "$project_dir/addons/kanama/kanama-scripts.version"; then
-  echo "[package_install_smoke] kanama-scripts.version does not match kanama.version after buildScripts" >&2
+# Compared as the readers compare them (settings.gradle.kts and the editor plugin trim the line).
+addon_version="$(tr -d '[:space:]' <"$project_dir/addons/kanama/kanama.version")"
+scripts_version="$(tr -d '[:space:]' <"$project_dir/addons/kanama/kanama-scripts.version")"
+if [[ -z "$addon_version" || "$addon_version" != "$scripts_version" ]]; then
+  echo "[package_install_smoke] kanama-scripts.version ($scripts_version) does not match kanama.version ($addon_version) after buildScripts" >&2
   exit 1
 fi
 

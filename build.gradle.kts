@@ -1003,12 +1003,21 @@ fun CopySpec.kanamaToolsFiles() {
 // addons/kanama/kanama.version, the one line that ties a project's addon, its Gradle plugin and its
 // runtime dependencies to one Kanama version (task 143 item 1): settings.gradle.kts resolves the
 // plugin from it, kanama-project.gradle.kts the runtime, and the editor plugin compares it with the
-// stamp buildScripts writes beside kanama-scripts.jar.
-val kanamaVersionFile = layout.projectDirectory.file("templates/consumer-gradle/kanama.version")
-
-fun CopySpec.kanamaVersionSubstitution() {
-  filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
-}
+// stamp buildScripts writes beside kanama-scripts.jar. Written here, with a bare `\n`, rather than
+// copied from a template: a Windows checkout would give a template file CRLF line endings.
+val kanamaVersionFileDir = layout.buildDirectory.dir("generated/kanama-version")
+val generateKanamaVersionFile by
+  tasks.registering {
+    val version = project.version.toString()
+    val out = kanamaVersionFileDir
+    inputs.property("version", version)
+    outputs.dir(out)
+    doLast {
+      val dir = out.get().asFile
+      dir.mkdirs()
+      dir.resolve("kanama.version").writeText(version + "\n")
+    }
+  }
 
 // The Gradle project shape of a new Kanama game: the release-kit project and Gradle files, the
 // Gradle wrapper, kotlin-src/HelloScript.kt, the editor tools and the consumer build script that
@@ -1030,10 +1039,7 @@ val kanamaGradleProjectSpec = copySpec {
   from(layout.projectDirectory.file("templates/consumer-gradle/kanama-project.gradle.kts")) {
     into("addons/kanama")
   }
-  from(kanamaVersionFile) {
-    into("addons/kanama")
-    kanamaVersionSubstitution()
-  }
+  from(generateKanamaVersionFile) { into("addons/kanama") }
   from(layout.projectDirectory.file("gradlew")) { filePermissions { unix("rwxr-xr-x") } }
   from(layout.projectDirectory.file("gradlew.bat"))
   from(layout.projectDirectory.dir("gradle")) { into("gradle") }
@@ -1123,10 +1129,7 @@ tasks.register<Zip>("packageStoreAddon") {
   from(layout.projectDirectory.file("templates/consumer-gradle/kanama-project.gradle.kts")) {
     into("addons/kanama")
   }
-  from(kanamaVersionFile) {
-    into("addons/kanama")
-    kanamaVersionSubstitution()
-  }
+  from(generateKanamaVersionFile) { into("addons/kanama") }
   from(packageMavenRepositoryDir) { into("addons/kanama/maven") }
   from(packageMavenGdignore) { into("addons/kanama/maven") }
   // The template's kotlin-src/HelloScript.kt is the setup script's input, not a resource: Godot
@@ -2283,11 +2286,8 @@ tasks.register<Copy>("installAddonJar") {
   // The version lock (task 143 item 1): the addon's version, and the stamp of the version the
   // kanama-scripts.jar copied above was built with (this checkout's).
   with(kanamaChecksSpec)
-  from(kanamaVersionFile) { kanamaVersionSubstitution() }
-  from(kanamaVersionFile) {
-    kanamaVersionSubstitution()
-    rename { "kanama-scripts.version" }
-  }
+  from(generateKanamaVersionFile)
+  from(generateKanamaVersionFile) { rename { "kanama-scripts.version" } }
   into(targetProjectDir.map { file(it).resolve("addons/kanama") })
   outputs.file(extensionListFile)
 
