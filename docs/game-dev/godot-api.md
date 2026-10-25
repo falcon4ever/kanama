@@ -38,6 +38,12 @@ The rules behind it:
 - **Singletons** are Kotlin objects: `Input.isActionPressed(...)`,
   `Time.getTicksMsec()`, `Engine.isEditorHint()`.
 - **Static methods** sit on the companion: `Image.create(...)`.
+- **`X.new()`** is `X.create()`, for every class you can `new` in GDScript:
+  `Label.create()`, `Area2D.create()`, `Timer.create()`,
+  `RandomNumberGenerator.create()`. A new node is yours to add to the tree or
+  `queueFree()`; a new resource or other `RefCounted` is a reference of your
+  own ([Resource Ownership](#resource-ownership)). A plain `Object` such as
+  `UndoRedo` has no `create()`, because Kotlin cannot `free()` it.
 - **Signals** are properties too: `timer.timeout`, `area.bodyEntered`. See
   [Signals and Await](signals.md).
 - **`self`** is the node your script is attached to. Kotlin's `this` is the
@@ -301,6 +307,11 @@ generic `abs`, `clamp`, `lerp`, `max` and `min` have typed overloads for
 numbers; for vectors and mixed types they take `Any?` and return what Godot
 returns. `Mathf` is the C#-style math object with the same functions as plain
 Kotlin calls: `Mathf.lerp`, `Mathf.moveToward`, `Mathf.degToRad`, `Mathf.PI`.
+`Mathf` runs in Kotlin and never calls into the engine, so it is as fast in a
+tight loop as `kotlin.math`. Its arithmetic gives GDScript's result to the
+bit; `sin`, `pow`, `exp` and the other transcendental functions can differ from
+GDScript's in the last bit or two on desktop and Web, where Kotlin brings its
+own math library (on Android and iOS they are the same calls Godot makes).
 Use whichever reads better; `GD.print` and `println` are not the same thing,
 though. `println` goes to the process's stdout, which the editor does not show.
 

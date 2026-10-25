@@ -249,7 +249,7 @@ generator.
 | 8. Statics and Singletons | The drift gate. |
 | 9. Defaults and Overloads | `scripts/check_expect_no_defaults.py` (expect declarations), `api_wrapper_generator_report.py --check` (the "Godot Defaults Not Expressed" list) and the drift gate. |
 | 10. Collections | `scripts/audit_wrapper_signatures.py`, `scripts/audit_variant_marshalling_policy.py`, `scripts/type_coverage_audit.py`, `scripts/check_builtin_coverage.py` (reads the standard library with `javap` and fails on a generated `String` method name that collides; `--report` lists every Godot method with its Kotlin member or the reason it has none) and the drift gate. |
-| 11. Handles and Factories | `check_factory_helpers`, which every regeneration runs (the drift gate's included): a table key must be a class the generator renders, and no factory may be pasted by hand outside the table. `ClassTokenTableTest` checks that the shared class-token table lists every shared class. |
+| 11. Handles and Factories | `check_factory_helpers`, which every regeneration runs (the drift gate's included): a `DOWNCAST_HELPERS` key must be a class the generator renders, and no `create()` or downcast the generator renders may be pasted by hand into a section. The drift gate holds `create()` to `generates_create` (every instantiable Node and RefCounted). `ClassTokenTableTest` checks that the shared class-token table lists every shared class. |
 | 13. Platform Parity | `scripts/check_actual_public_surface.py` keeps an `actual` from adding public members its `expect` lacks; `check_public_signature_changes.py` lists each Web `GodotObject` member that differs from native, with its reason (`WEB_GODOT_OBJECT_DRIFT`), and fails on any it does not list. |
 
 ## Source Breaks
