@@ -60,7 +60,7 @@ Do not unzip a kit into a project you already have. It carries its own
 | `project.godot`, `main.tscn` | The starter scene: a `Node2D` with `HelloScript.kt` attached and a `Status` label. |
 | `kotlin-src/` | Your Kotlin scripts. `buildScripts` compiles every `.kt` file here. |
 | `build.gradle.kts`, `settings.gradle.kts`, `gradlew` | The Gradle build. IntelliJ IDEA opens the folder as a Gradle project; see [Open in IntelliJ IDEA](intellij.md). |
-| `addons/kanama/` | The runtime Godot loads, and in `maven/` the Kanama libraries your build compiles against. |
+| `addons/kanama/` | The runtime Godot loads, and in `maven/` the Kanama libraries your build compiles against. `kanama.version` names the Kanama version; the Gradle build and the editor plugin read it. |
 | `addons/kanama_tools/` | The Kanama Tools editor plugin, already enabled. It adds **Build Scripts** and **Open Kotlin** to the editor toolbar. |
 
 [Edit, Build, Run](editor-workflow.md) covers the plugin: build on save, scene
@@ -74,6 +74,8 @@ reload after a build, and the debugger.
 | macOS reports `"libkanama_bootstrap.dylib" Not Opened`. | Gatekeeper quarantined the zip. Clear the quarantine as shown in [On Other Platforms](#on-other-platforms) and open the project again. |
 | The game still runs your old Kotlin code. | Press **Build Scripts** or run `./gradlew buildScripts`, then press **Play** again. |
 | Gradle cannot resolve the Kanama libraries. | The build reads them from `addons/kanama/maven`. Check that the folder exists; unzip the kit again if it does not. |
+| Gradle stops with `Kanama addon not found` or `Kanama addon is incomplete`. | Part of `addons/kanama` is missing. Unzip the kit's `addons/` folder into the project again. |
+| Godot says `your scripts were built for Kanama` one version `but the addon is` another. | The addon is newer than your last build. Press **Sync Addon** in that message, or **Build Scripts**, to rebuild your scripts for it. |
 | Godot reports a missing `res://kotlin-src/HelloScript.kt`. | Check that `.godot/extension_list.cfg` contains `res://addons/kanama/kanama.gdextension`, then reopen the project. |
 
 ## On Other Platforms

@@ -301,9 +301,10 @@ gates); steps are in the upgrade runbook.
 
 Android is Supported (4.7 stable), but never widen a support claim past what
 the matching APK/emulator or device smoke path has actually validated — the
-Android 13 (API 33) minimum and the runtime-only addon caveat both still hold.
-Use the Gradle AAR workflow documented in `docs/exporting/android.md`; do not
-infer Android support from desktop package success.
+Android 13 (API 33) minimum still holds. Use the Gradle AAR workflow documented
+in `docs/exporting/android.md` (`buildAndroidScripts` in a kit project,
+`installAndroidPluginAar` from a checkout); do not infer Android support from
+desktop package success.
 
 ## Validation
 

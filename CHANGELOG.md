@@ -41,6 +41,21 @@ only `--write`.
 
 Upgrading from 0.4? See [Upgrading from 0.4 to 0.5](docs/getting-started/upgrading-0.4-to-0.5.md).
 
+### Added — Android export from the release kit and the store addon
+
+A project made from a release kit or the store addon now exports for Android without a Kanama checkout:
+`./gradlew buildAndroidScripts`, then export from Godot as before. Kits and the store addon carry the
+Android runtime AAR and the Kanama Gradle plugin (`net.multigesture.kanama`) in `addons/kanama/maven`;
+the template's `build.gradle.kts` applies the plugin, whose version `settings.gradle.kts` reads from the
+new `addons/kanama/kanama.version`. The Android SDK is found from `ANDROID_HOME` or Godot's own Android
+SDK Path setting. `packageMobileAddonAndroid` and its runtime-only zip are gone. The version lock: a
+missing or half-unzipped addon stops the Gradle build with one line, and the Kanama Tools plugin offers
+**Sync Addon** when `kanama-scripts.jar` was built for another Kanama version than the addon. Fixed with
+it: Gradle's `build/` folder now carries a `.gdignore`, so the editor no longer registers KSP's generated
+`.kt` files as a second copy of each script class and exports no longer ship them; the kit's
+`project.godot` turns on the ETC2/ASTC texture import Android export needs; and the editor plugin's
+`plugin.cfg` states the Kanama version instead of `0.1`.
+
 ### Changed — Android 13 is now the minimum — BREAKING
 
 Android 13 (API 33) is now the minimum; set **Min SDK** to `33` in your Android export preset

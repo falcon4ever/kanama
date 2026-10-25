@@ -578,7 +578,7 @@ case("generate_api_exercise.py --check-jar (exercise class in a jar)", API_EXERC
      [Create("scripts/fixtures/api_exercise/jar/net/multigesture/kanama/exercise/ApiExerciseRows.class", "placeholder\n")],
      "carries 1 API exercise class(es)", "a jar with an `exercise/` class (a -PkanamaApiExercise=true build) is published or installed: the check must fail it")
 # The same over a runtime AAR (the jar zipped as its classes.jar): a flagged Android runtime AAR must fail the check
-# packageMobileAddonAndroid, CI's Android lane and android_export_minified.sh run.
+# publishKanamaAndroidPackage, CI's Android lane and android_export_minified.sh run.
 API_EXERCISE_AAR = ["python3", "-c",
     "import io, pathlib, subprocess, sys, tempfile, zipfile\n"
     "root = pathlib.Path('scripts/fixtures/api_exercise/jar')\n"

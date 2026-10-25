@@ -40,8 +40,13 @@ The zip is rooted at the Godot project directory and contains:
 - `build.gradle.kts`, `settings.gradle.kts`, `gradlew`, and Gradle wrapper
   files,
 - `addons/kanama/kanama.jar`,
-- `addons/kanama/maven` with Kanama runtime, annotations, and processor
-  Gradle artifacts,
+- `addons/kanama/kanama.version`, the one line that ties the addon, the Kanama
+  Gradle plugin and the runtime dependencies to one version (the template's
+  `settings.gradle.kts` resolves the plugin from it, and the editor compares it
+  with the `kanama-scripts.version` stamp `buildScripts` writes),
+- `addons/kanama/maven` with the Kanama runtime, annotations and processor,
+  the Kanama Gradle plugin (`net.multigesture.kanama`, which adds
+  `buildAndroidScripts`) and the Android runtime AAR (`kanama-android`),
 - `addons/kanama/bin/<platform>/` with the native bootstrap,
 - `addons/kanama/kanama.gdextension`,
 - `addons/kanama_tools`, and
@@ -56,7 +61,15 @@ scripts/package_install_smoke.sh \
 ```
 
 The smoke unzips the kit, runs `./gradlew buildScripts`, confirms
-`kanama-scripts.jar`, and launches Godot when a binary is provided.
+`kanama-scripts.jar` and its version stamp, and, when a binary is provided,
+launches Godot and checks that a pack export holds nothing from `build/`.
+Add `--android` to also run `buildAndroidScripts` and a headless Android
+export from the kit alone, and check the APK (no device).
+
+Packaging builds the Android runtime AAR with the nested Android build, so it
+needs the Android SDK (`ANDROID_HOME`). `-PkanamaAndroidPackageDir=<dir>` takes
+a `kanama-android` Maven tree another build published instead; the package
+workflow builds it once and passes it to every kit job.
 
 ### Store Addon
 
@@ -67,7 +80,8 @@ files at the project root. It contains:
 - `addons/kanama_tools`,
 - all available desktop native bootstrap binaries under
   `addons/kanama/bin/<platform>/`,
-- the local Maven repo under `addons/kanama/maven`, and
+- the local Maven repo under `addons/kanama/maven`, with the Kanama Gradle
+  plugin and the Android runtime AAR as in the kit, and `kanama.version`,
 - release-kit Gradle and wrapper templates under
   `addons/kanama/templates/release-kit`.
 
@@ -101,15 +115,11 @@ For a local host-only `packageStoreAddon` build, omit
 
 ## Mobile Addon Packages
 
-The mobile addon zips carry a prebuilt runtime only: compiling a project's
-Kotlin scripts for Android or iOS still needs a Kanama source checkout
-(`installAndroidPluginAar`, `installIosAddon`).
-
-### Android
-
-The Android runtime AAR builds without a project directory
-(`./gradlew assembleAndroidPluginAar`); `./gradlew packageMobileAddonAndroid`
-packages it, debug only.
+Android needs no separate zip: kits and the store addon carry the runtime
+AAR, and the Kanama Gradle plugin compiles a project's scripts against it
+(`buildAndroidScripts`; see [Android](backends/android.md#the-kit-path)). The
+iOS zip carries a prebuilt runtime only: compiling a project's Kotlin scripts
+for iOS still needs a Kanama source checkout (`installIosAddon`).
 
 ### iOS
 
@@ -161,6 +171,12 @@ Matrix targets:
 | Linux x64 | `ubuntu-24.04` | `linux-x64` |
 | Linux ARM64 | `ubuntu-24.04-arm` | `linux-arm64` |
 | Windows x64 | `windows-2025` | `windows-x64` |
+
+`android-aar` builds the Android runtime AAR once, on Linux, for every kit job
+and the store addon. `android-export` then unzips the Linux kit and the store
+addon into fresh projects and runs
+`package_install_smoke.sh --android` on each: `buildAndroidScripts` and a
+headless Godot export with a fresh `GRADLE_USER_HOME`, then the APK checks.
 
 The release job grants `contents: write` only when publishing assets for a tag.
 All other package jobs use read-only repository permissions.
