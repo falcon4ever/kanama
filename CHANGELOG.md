@@ -66,6 +66,15 @@ measures it on your machine.
 instead of every network interface: anyone who could reach the port could run code in the game. To
 debug a game on another machine, give a full address: `KANAMA_JDWP_PORT='*:5005'`.
 
+### Fixed — reading an Array of objects could release an element twice
+
+Kanama reads an object Array returned by Godot (`Engine.captureScriptBacktraces()`, for example)
+one element at a time, and it handed Godot the slot it had just freed the previous element from.
+Godot's next write released that element a second time. On Godot 4.7.2 this hit Callables made
+with `bind` or `bindv` in such an Array. On the Godot 4.8 beta it hit every RefCounted element: the
+first backtrace came back freed, and about one game exit in five crashed. Every container read now
+resets the slot to nil after freeing it, on desktop and Android. iOS and Web were not affected.
+
 ### Fixed — debugging a game started from the editor on Linux and Windows
 
 On Linux and Windows the editor took the project's JDWP port itself (only macOS recognised the

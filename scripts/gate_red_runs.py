@@ -1001,7 +1001,13 @@ case("runtime_smoke.sh (call container elements)", ["bash", "scripts/runtime_smo
            "BuiltinTypes.readVariantScalar(retVariant, arena, ownElements = false)")],
      "missing pattern", "the RefCounted elements of an Object.call container result come back borrowed again (task 122 item 3): RegEx.search_all's fresh matches die with the return Variant",
      requires_env="KANAMA_GODOT_BIN", slow=True)
-case("runtime_smoke.sh (typed-signal self-test)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+case("runtime_smoke.sh (decode buffer reuse)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/jvmMain/kotlin/binding/runtime/BuiltinTypes.kt",
+           "            wrapper(handle)?.let(values::add)\n          }\n        } finally {\n          destroyVariantToNil(valueVariant)",
+           "            wrapper(handle)?.let(values::add)\n          }\n        } finally {\n          variantDestroy.invoke(valueVariant)")],
+     "missing pattern: FreedObjectSmoke decode_buffers", "readArrayObjects hands its destroyed Variant buffer to the next Array.get again (no NIL reset): the assignment releases the previous element a second time, a bound Callable on 4.7.2 (array_objects=2,2,1,1), an Object on 4.8",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("runtime_smoke.sh (typed-signal self-test)",["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/jvmMain/kotlin/binding/runtime/SignalEmitFrame.kt", "      if (!send) return\n", "      if (!send || count >= 0) return\n")],
      "SIGNAL SELFTEST: [1-9][0-9]* passed, 0 failed", "a typed `emit(...)` never reaches Godot (the emit frame skips emit_signal): the first-frame self-test must report failures, not pass",
      requires_env="KANAMA_GODOT_BIN", slow=True)
