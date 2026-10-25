@@ -32,10 +32,10 @@ Steps:
   4. constants   engine-wide name constants
   5. tree        the generated wrapper tree (generate_api_wrapper.py --write-tree: re-adopts every
                  class, adopts the classes the new API adds, sets the desktop ObjectCalls `actual`
-                 set), then the KDoc sync
+                 set)
   6. outputs     every other generated output: builtin ops, engine-method table, Web backend,
-                 Web wrappers, Web exercise, API exercise, coverage/generator reports,
-                 enum migration table, iOS handwritten report
+                 Web wrappers, Web exercise, API exercise, generator/coverage reports,
+                 enum migration table, iOS handwritten report; then the KDoc sync
   7. format      ./gradlew ktfmtFormat (the regen leaves the iOS region, the expect and toggled
                  desktop members unformatted)
   8. gates index docs/reference/generated/gates.md (last: it reads the gate list and the ledger)
@@ -202,7 +202,7 @@ fi
 # whose files the pin check names (none in a dry run). Untracked files are allowed; the dry run
 # asserts the whole status is unchanged at the end.
 STATUS_BEFORE="$(git -C "$ROOT_DIR" status --porcelain)"
-PIN_FILES_RE="$(python3 "$ROOT_DIR/scripts/check_godot_version_pin.py" --list-files | sed 's/[.]/\\./g' | paste -sd '|' -)"
+PIN_FILES_RE="$(python3 "$ROOT_DIR/scripts/check_godot_version_pin.py" --list-files | sed 's/[.]/\\./g' | tr '\n' '|' | sed 's/|$//')"
 if [[ "$MODE" == dry-run ]]; then
   allowed_dirty="^$"
 else
@@ -248,6 +248,7 @@ elif [[ -n "$TEMPLATES" ]]; then
   if [[ ! -f "$TEMPLATES" ]]; then
     preflight_fail "--templates: no .tpz found at the given path"
   else
+    # justified: an archive without templates/version.txt leaves the version empty, which the comparison below rejects.
     tpz_version="$(unzip -p "$TEMPLATES" templates/version.txt 2>/dev/null | tr -d '[:space:]' || true)"
     if [[ "$tpz_version" != "$PIN" ]]; then
       preflight_fail "--templates $TEMPLATES holds version '$tpz_version', not $PIN"
@@ -444,7 +445,7 @@ run_hard python3 "$ROOT_DIR/scripts/generate_name_constants.py"
 
 # Step 5: the wrapper tree. --write-tree re-renders until a pass writes nothing, adopts every
 # class the new API adds (listed), and moves the desktop ObjectCalls `actual` set with the expect.
-step "step 5: the generated wrapper tree (re-adopt, adopt new classes, desktop actual set) + KDoc"
+step "step 5: the generated wrapper tree (re-adopt, adopt new classes, desktop actual set)"
 run_hard python3 "$ROOT_DIR/scripts/generate_api_wrapper.py" --write-tree \
   --skip-report "$ROOT_DIR/build/wrapper-generator/skips.txt"
 report_removed_classes() {
@@ -467,11 +468,12 @@ if stale_table:
 EOF
 }
 run_hard report_removed_classes
-run_hard python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --write
 
 # Step 6: every other output generated from extension_api.json or the wrapper tree (task 139 U4:
-# the bump used to leave these stale for the gates to find one per local_ci run).
-step "step 6: the other generated outputs"
+# the bump used to leave these stale for the gates to find one per local_ci run). Order matters
+# where one reads another: the coverage page reads the generator report, and the KDoc sync runs
+# after the builtin ops, which rewrite the value types without their KDoc.
+step "step 6: the other generated outputs, then the KDoc sync"
 run_soft "builtin operators and methods" python3 "$ROOT_DIR/scripts/generate_builtin_ops.py" --write
 run_soft "engine method-name table" python3 "$ROOT_DIR/scripts/generate_engine_method_table.py"
 run_soft "Web backend dispatch" python3 "$ROOT_DIR/scripts/generate_web_backend.py" \
@@ -479,13 +481,14 @@ run_soft "Web backend dispatch" python3 "$ROOT_DIR/scripts/generate_web_backend.
 run_soft "Web wrapper tree" python3 "$ROOT_DIR/scripts/generate_web_wrappers.py"
 run_soft "Web API exercise" python3 "$ROOT_DIR/scripts/generate_web_exercise.py"
 run_soft "API exercise inventory" python3 "$ROOT_DIR/scripts/generate_api_exercise.py" --report
-run_soft "coverage report" python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" \
-  --markdown "$ROOT_DIR/docs/reference/generated/api-coverage.md"
 run_soft "generator report" python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" \
   --markdown "$ROOT_DIR/docs/reference/generated/wrapper-generator-report.md"
+run_soft "coverage report" python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" \
+  --markdown "$ROOT_DIR/docs/reference/generated/api-coverage.md"
 run_soft "enum migration table" python3 "$ROOT_DIR/scripts/migrate_enum_constants.py" \
   --table "$ROOT_DIR/docs/reference/generated/enum-migration.md"
 run_soft "iOS handwritten report" python3 "$ROOT_DIR/scripts/ios_handwritten_report.py"
+run_hard python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --write
 
 step "step 7: ktfmtFormat (the regen leaves ktfmt-formatted files unformatted)"
 run_soft "ktfmtFormat" run_with_timeout "$GRADLE_TIMEOUT" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon --quiet ktfmtFormat
@@ -544,8 +547,10 @@ fi
 if [[ "$MODE" == dry-run ]]; then
   STATUS_AFTER="$(git -C "$ROOT_DIR" status --porcelain)"
   if [[ "$STATUS_AFTER" != "$STATUS_BEFORE" ]]; then
+    # justified: diff exits 1 on a difference, which is the very thing being recorded as a failure here.
+    status_diff="$(diff <(printf '%s\n' "$STATUS_BEFORE") <(printf '%s\n' "$STATUS_AFTER") || true)"
     SOFT_FAILURES+=("the dry run changed the tree:
-$(diff <(printf '%s\n' "$STATUS_BEFORE") <(printf '%s\n' "$STATUS_AFTER") || true)")
+$status_diff")
   fi
 fi
 
