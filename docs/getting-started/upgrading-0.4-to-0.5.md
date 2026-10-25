@@ -1026,6 +1026,12 @@ Script: none.
   `Kanama: Export stopped:` with the script, the reason and the fix, and a
   command-line export ends the editor process with a non-zero exit status. Opt out
   with `kanama/tools/export_guard_enabled`.
+- **Build on save is on, and is an editor setting.** The Kanama Tools plugin builds
+  your scripts when you save a `.kt` file, and a status light in its toolbar row
+  shows the result. Turn it off in **Editor > Editor Settings > Kanama > Build >
+  Build On Save** (`kanama/build/build_on_save`). The project setting
+  `kanama/tools/auto_build_on_save` is no longer read; delete its line from
+  `project.godot`. See [Edit, Build, Run](editor-workflow.md#building-scripts).
 - **JVM options for desktop games:** `kanama-jvm-options.txt` next to
   `kanama.jar`, the `kanama/jvm/options` project setting, and `KANAMA_JVM_OPTIONS`.
   See [Export for Desktop → JVM Options](../exporting/desktop.md#jvm-options).

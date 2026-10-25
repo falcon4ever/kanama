@@ -33,6 +33,7 @@ and `addons/kanama_tools`, so it will not replace an existing `project.godot`
 or main scene.
 
 Open the project in Godot after running `installAddonJar`. The `Kanama Tools`
-plugin adds the `Build Scripts` toolbar button, `Open Kotlin` shortcut, optional
-build-on-save, and a desktop Java preflight warning when `libjvm` cannot be
-found. Install JDK 25+ and set `JAVA_HOME` if that preflight fails.
+plugin adds the `Build Scripts` toolbar button with a build status light, the
+`Open Kotlin` shortcut, build on save (on by default; Editor Settings > Kanama >
+Build > Build On Save), and a desktop Java preflight warning when `libjvm`
+cannot be found. Install JDK 25+ and set `JAVA_HOME` if that preflight fails.

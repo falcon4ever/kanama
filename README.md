@@ -29,8 +29,8 @@ already use.
 - **Desktop, Android and iOS are supported**, Web is experimental. Desktop
   runs your scripts on the JDK and Android on ART; iOS and Web compile them
   ahead of time, with no JVM on the device.
-- **A short edit loop:** press **Build Scripts** in Godot and the running
-  editor picks up your Kotlin. IntelliJ IDEA's debugger attaches to a running game.
+- **A short edit loop:** save a `.kt` file and the Godot editor builds it and
+  picks up your Kotlin; a status light in the toolbar shows when it is done. IntelliJ IDEA's debugger attaches to a running game.
 - **Exported desktop games carry their own Java runtime.** Players install
   nothing, and one machine builds for Windows, Linux and macOS.
 

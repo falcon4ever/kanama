@@ -115,6 +115,40 @@ the last bit or two (Kotlin's math library is not the host's). On Web, `GD.asin`
 clamp outside [-1, 1] as Godot does (they answered NaN), and `asinh`, `acosh` and `atanh` run in
 the engine, since Kotlin's lose precision near zero.
 
+### Added — a build status light, and build on save by default
+
+The Kanama Tools row in the editor toolbar starts with a status light: green when your scripts are
+built and no `.kt` file changed since, yellow while a build runs or when a `.kt` file changed or
+`kanama-scripts.jar` is missing or was built for another Kanama version than the addon, red when the
+last build failed. Click it for the last build's
+output, with the compiler's error. Builds now run beside the editor, so the editor stays usable
+while Gradle works. Build on save is on by default: saving a `.kt` file starts one build, however
+many files you save in a row. Turn it off in **Editor > Editor Settings > Kanama > Build > Build On
+Save** (`kanama/build/build_on_save`). It is an editor setting now; the old project setting
+`kanama/tools/auto_build_on_save` is no longer read, and you can delete it from `project.godot`. A
+**Platforms** menu runs `buildAndroidScripts` in a kit or store-addon project, and the Android, iOS
+and Web commands of the export pages in a project set up from a Kanama checkout. See [Edit, Build, Run](docs/getting-started/editor-workflow.md#the-status-light).
+
+### Added — Set Up Kanama Project, from the editor
+
+**Project > Tools > Kanama Tools: Set Up Kanama Project** turns a Godot project with the store
+addon into a Kanama project without a terminal. It adds only what is missing (the Gradle build and
+wrapper, `kotlin-src/HelloScript.kt` when `kotlin-src/` has no Kotlin script, and
+`build/.gdignore`), never replaces a file, and lists what it added; a second run adds nothing. It
+runs the addon's `setup-kanama-project.sh` (or `.ps1` on Windows), which gains `--project-dir`
+(`-ProjectDir`), adds the starter script only to a `kotlin-src/` without Kotlin scripts (the script
+added it next to your own before), and writes `build/.gdignore`. See
+[Add Kanama to an Existing Project](docs/getting-started/store-addon.md#installation).
+
+### Fixed — a deleted kanama-scripts.jar came back only with --rerun
+
+`installAddonJar` skips copying a jar that is byte-identical to the installed one. Gradle then no
+longer counted that jar as the task's output, so after you deleted `addons/kanama/kanama-scripts.jar`
+(or `kanama.jar`), **Build Scripts** in a project without its own Gradle build reported success and
+left the jar missing until `installAddonJar --rerun`. The task now runs again whenever an installed
+jar is missing. The build-on-save watcher also skips folders with a `.gdignore`, so the store
+addon's setup template no longer counts as one of your scripts.
+
 ### Changed — Android 13 is now the minimum — BREAKING
 
 Android 13 (API 33) is now the minimum; set **Min SDK** to `33` in your Android export preset

@@ -15,7 +15,8 @@ the Kanama API (resolved from `addons/kanama/maven`). The starter script is
 ```
 
 On Windows, use `gradlew.bat buildScripts`. The Kanama Tools editor plugin adds
-a `Build Scripts` button to Godot that runs the same Gradle task.
+a `Build Scripts` button to Godot that runs the same Gradle task, and builds
+your scripts each time you save a `.kt` file while the editor is open.
 
 ## Open in Godot
 

@@ -93,8 +93,7 @@ the export pages give, in that checkout:
 - **Web** runs `:web-runtime:exportWeb`; see
   [Export for the Web](../exporting/web.md).
 
-The light shows these builds like any other. A release kit or store addon
-project has no **Platforms** menu yet.
+The status light follows these builds like any other.
 
 ### Projects without Their Own Gradle Build
 

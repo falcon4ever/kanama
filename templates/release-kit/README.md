@@ -22,7 +22,9 @@ On Windows, use `gradlew.bat buildScripts`.
 ```
 
 You can also open the folder directly in Godot. The Kanama Tools editor plugin
-adds a `Build Scripts` button that runs the same Gradle task.
+adds a `Build Scripts` button that runs the same Gradle task, builds your
+scripts each time you save a `.kt` file, and shows a status light that is
+green when they are built and current.
 
 ## Requirements
 
