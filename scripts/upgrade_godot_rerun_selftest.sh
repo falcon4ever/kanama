@@ -130,3 +130,5 @@ run C -- --baseline-ref "$BASE" "$@"
 added_list "$WORK/C.log" | cmp -s - "$WORK/A.added" || fail "the re-run on the committed half-bump lists other added classes"
 echo "$TAG PASS stop after step 6, commit, re-run with --baseline-ref: same exit ($RC), same tree, same added classes"
 echo "$TAG PASS $(wc -l <"$WORK/A.added" | tr -d ' ') added class(es) listed by every run"
+echo "$TAG the reference run's summary:"
+sed -n '/^\[upgrade_godot\] classes this Godot added/,/^\[upgrade_godot\] STOPPING/p' "$WORK/A.log" | grep -v '^    ' | sed 's/^/    /'
