@@ -382,7 +382,7 @@ val webSpikeExport = layout.buildDirectory.dir("web-spike/export")
 val webBunnymarkSourceProject =
     webDemoDirProperty("kanamaWebBunnymarkProjectDir", "bunnymark")
 val webBunnymarkVariant =
-    providers.gradleProperty("kanamaWebBunnymarkVariant").orElse("BunnymarkV1DrawTexture")
+    providers.gradleProperty("kanamaWebBunnymarkVariant").orElse("BunnymarkDrawTexture")
 val webBunnymarkLanguage =
     providers.gradleProperty("kanamaWebBunnymarkLanguage").orElse("kanama")
 val webBunnymarkBuildKey =
@@ -826,7 +826,7 @@ tasks.register("stageWebBunnymarkProject") {
         }
         val variant = webBunnymarkVariant.get()
         val language = webBunnymarkLanguage.get()
-        check(variant in setOf("BunnymarkV1DrawTexture", "BunnymarkV1Sprites")) {
+        check(variant in setOf("BunnymarkDrawTexture", "BunnymarkSprites")) {
             "Unsupported -PkanamaWebBunnymarkVariant=$variant"
         }
         check(language in setOf("kanama", "gd")) {
@@ -837,6 +837,8 @@ tasks.register("stageWebBunnymarkProject") {
         delete(stagingDir)
         copy {
             from(sourceProject) {
+                // Not scenes/: the harness hands over to scenes/<benchmark>_<language>.tscn when it
+                // exists, and the staged one must run the variant and language selected here.
                 include("Benchmarker.tscn")
                 include("project.godot")
                 include("images/godot_bunny.png")
@@ -874,11 +876,20 @@ tasks.register("stageWebBunnymarkProject") {
         val benchmarker = stagingDir.resolve("scripts/Benchmarker.gd")
         val originalBenchmarker = benchmarker.readText()
         val defaultBenchmark =
-            "var benchmark: String = \"BunnymarkV2\""
+            "var benchmark: String = \"BunnymarkSceneTree\""
         val dynamicKotlinScriptPath =
             "return \"res://kotlin-src/\" + benchmark_name + \"Kanama.kt\""
+        // The harness names the Kotlin port `kt`; -PkanamaWebBunnymarkLanguage keeps `kanama`.
+        val harnessLanguage = if (language == "kanama") "kt" else language
         val defaultLanguage =
-            "var language: String = \"kanama\""
+            "var language: String = \"gd\""
+        val sceneLanguage = "language = \"kt\""
+        val scene = stagingDir.resolve("Benchmarker.tscn")
+        val originalScene = scene.readText()
+        check(originalScene.contains(sceneLanguage)) {
+            "Bunnymark scene language override changed; update the Web staging transform"
+        }
+        scene.writeText(originalScene.replace(sceneLanguage, "language = \"$harnessLanguage\""))
         val adaptiveHarnessStart =
             "if benchmark_node.has_method(\"add_bunny\"):\n        set_process(true)"
         check(originalBenchmarker.contains(defaultBenchmark)) {
@@ -896,7 +907,7 @@ tasks.register("stageWebBunnymarkProject") {
         val stagedBenchmarker =
             originalBenchmarker
                 .replace(defaultBenchmark, "var benchmark: String = \"$variant\"")
-                .replace(defaultLanguage, "var language: String = \"$language\"")
+                .replace(defaultLanguage, "var language: String = \"$harnessLanguage\"")
                 .let { staged ->
                     if (language == "kanama") {
                         staged.replace(dynamicKotlinScriptPath, "return \"$proxyPath\"")
@@ -914,16 +925,21 @@ tasks.register("stageWebBunnymarkProject") {
         benchmarker.writeText(stagedBenchmarker)
 
         if (language == "gd") {
-            check(variant == "BunnymarkV1Sprites") {
-                "The GDScript scaling baseline is only defined for BunnymarkV1Sprites"
+            check(variant == "BunnymarkSprites") {
+                "The GDScript scaling baseline is only defined for BunnymarkSprites"
             }
             val gdscript =
                 stagingDir.resolve("benchmarks/$variant/gd/$variant.gd")
             val originalGdscript = gdscript.readText()
-            val processStart = "func _process(delta):\n"
-            val processEnd = "\t\tbunny[1] = speed\n\nfunc add_bunny():"
-            check(originalGdscript.contains(processStart) && originalGdscript.contains(processEnd)) {
-                "BunnymarkV1Sprites GDScript changed; update the Web baseline instrumentation"
+            val processStart = "func _process(delta: float) -> void:\n"
+            val processEnd = "\t\tbunny.speed = speed\n\nfunc add_bunny() -> void:"
+            val readyStart = "func _ready() -> void:\n"
+            check(
+                originalGdscript.contains(processStart) &&
+                    originalGdscript.contains(processEnd) &&
+                    originalGdscript.contains(readyStart)
+            ) {
+                "BunnymarkSprites GDScript changed; update the Web baseline instrumentation"
             }
             val baselineLifecycle =
                 """
@@ -931,7 +947,7 @@ tasks.register("stageWebBunnymarkProject") {
                 var _kanama_web_baseline_bridge
                 var _kanama_web_baseline_callback
 
-                func _ready() -> void:
+                func _kanama_web_baseline_ready() -> void:
 	                if not OS.has_feature("web"):
 		                return
 	                _kanama_web_baseline_bridge = JavaScriptBridge.get_interface("KanamaWebBridge")
@@ -954,13 +970,14 @@ tasks.register("stageWebBunnymarkProject") {
             gdscript.writeText(
                 originalGdscript
                     .replace("extends Node2D\n", "extends Node2D\n$baselineLifecycle\n")
+                    .replace(readyStart, "${readyStart}\t_kanama_web_baseline_ready()\n")
                     .replace(
                         processStart,
                         "${processStart}\tvar _kanama_web_baseline_started_usec := Time.get_ticks_usec()\n",
                     )
                     .replace(
                         processEnd,
-                        "\t\tbunny[1] = speed\n\n\tif _kanama_web_baseline_bridge != null:\n\t\t_kanama_web_baseline_bridge.recordGdscriptBaselineFrame(float(Time.get_ticks_usec() - _kanama_web_baseline_started_usec) / 1000.0)\n\nfunc add_bunny():",
+                        "\t\tbunny.speed = speed\n\n\tif _kanama_web_baseline_bridge != null:\n\t\t_kanama_web_baseline_bridge.recordGdscriptBaselineFrame(float(Time.get_ticks_usec() - _kanama_web_baseline_started_usec) / 1000.0)\n\nfunc add_bunny() -> void:",
                     )
             )
         }
