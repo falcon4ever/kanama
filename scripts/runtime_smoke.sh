@@ -687,6 +687,13 @@ fi
 # are retained before the Array is destroyed: alive, usable, then closed. Before, each was already
 # freed (valid=false), and closing it was a use-after-free.
 check "FreedObjectSmoke backtraces valid=\[true(, true)*\] languages=\[[A-Za-z]"
+# The Godot 4.8 trial's top break -- every container decode releases each element once
+# (VariantDecodeProbe): a loop that reused a destroyed Variant buffer as the next Array.get /
+# Dictionary.get return released the previous element again (an Object on 4.8, a bound Callable on
+# 4.7.2 too). Counts after the decode, then after the container's destroy.
+decode_ok="2,2,2,2:1,1,1,1"
+dict_ok="2,2,2,2,2,2:1,1,1,1,1,1"
+check "FreedObjectSmoke decode_buffers array_objects=$decode_ok array_scalars=$decode_ok array_vector2i=$decode_ok array_vector3i=$decode_ok array_longs=$decode_ok dictionary_scalars=$dict_ok dictionary_any=$dict_ok$"
 # Task 131 review: custom-script-typed exports (a KanamaScript type, a plain script type, a List
 # and a Map of them) whose nodes were freed read back as nil, without reading the freed owners.
 check "FreedObjectSmoke script_values live_read=true script_target=null script_targets=\[null\] plain_target=null plain_target_map=\{a=null\}"

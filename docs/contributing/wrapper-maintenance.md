@@ -1061,6 +1061,11 @@ Every desktop helper that reads an Array return constructs an empty one in the b
 return directly), and so does the iOS shim, in its typed-array return
 (`kanama_ios_godot_ptrcall_ret_array_blob`) and its container return
 (`kanama_ios_ptrcall_encode_container`). Packed arrays, `String`, `Dictionary` and `Variant` returns take a zero-filled buffer.
+A `Variant` return buffer reused after `variant_destroy` is not zero-filled: the destroyed Variant
+keeps its type and payload, and the engine's assignment releases them again (an Object on Godot 4.8,
+a packed array or a custom Callable on 4.7 too). A loop that reuses one resets it with
+`BuiltinTypes.destroyVariantToNil`; `VariantDecodeProbe` (in the runtime smoke) checks every
+container decode for it.
 
 The drift gate (`check_single_tree`) compares the region's MEMBER SET rather than its bytes,
 because the file is ktfmt-formatted outside the region and so the region gets reformatted

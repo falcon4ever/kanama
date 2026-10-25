@@ -14,6 +14,7 @@ import net.multigesture.kanama.api.Node3D
 import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.kotlinScriptInstance
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.VariantDecodeProbe
 
 /**
  * Task 131 items 2 (F2) and 6 (F23) probe, run by `scripts/runtime_smoke.sh` as its own scene
@@ -33,6 +34,10 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Task 131 S5: the RefCounted elements of a returned typed Array (`captureScriptBacktraces`) are
  * owned by their wrappers: alive, usable and closed here. Before, the Array's destroy had freed
  * them.
+ *
+ * Every container decode releases each element exactly once ([VariantDecodeProbe]): a decode loop
+ * that reused a destroyed Variant buffer released the previous element again (the Godot 4.8 trial
+ * found it through `captureScriptBacktraces`; bound Callables show it on 4.7.2 too).
  */
 @ScriptClass(attachTo = "Node")
 class FreedObjectSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
@@ -114,6 +119,8 @@ class FreedObjectSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObjec
         "script_target=${self.get("script_target")} script_targets=${self.get("script_targets")} " +
         "plain_target=${self.get("plain_target")} plain_target_map=${self.get("plain_target_map")}"
     )
+
+    System.err.println("[kanama:kt] FreedObjectSmoke ${VariantDecodeProbe.run(self)}")
 
     val backtraces = Engine.captureScriptBacktraces()
     val backtracesValid = backtraces.map { GD.isInstanceValid(it) }

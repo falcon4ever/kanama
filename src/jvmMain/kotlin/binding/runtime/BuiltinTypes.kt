@@ -226,6 +226,20 @@ object BuiltinTypes {
   }
 
   /**
+   * Destroy [variant] and leave it a nil Variant: the destroy of a Variant buffer that a decode
+   * loop hands to Godot again as the next `Array.get` / `Dictionary.get` return. A Variant ptrcall
+   * return ASSIGNS into the buffer (`PtrToArg<Variant>::encode`), and a destroyed Variant keeps its
+   * type and payload, so the assignment released the previous element a second time: an Object
+   * since Godot 4.8 (bcbfec6cfc stopped nulling the pointer; the first
+   * `Engine.captureScriptBacktraces()` entry came back freed), a packed array or a custom Callable
+   * on 4.7 as well. `FreedObjectSmoke` holds every decode loop to it.
+   */
+  fun destroyVariantToNil(variant: MemorySegment) {
+    variantDestroy.invoke(variant)
+    variantNewNil.invoke(variant)
+  }
+
+  /**
    * Heap-owned Variant copy for values Godot assigns to editor placeholders. The copied Variant
    * retains Godot-managed resources and typed arrays using the engine's normal Variant lifetime
    * rules.
@@ -1415,7 +1429,7 @@ object BuiltinTypes {
         try {
           values += elementToScalar(valueVariant, arena, ownElements)
         } finally {
-          variantDestroy.invoke(valueVariant)
+          destroyVariantToNil(valueVariant)
         }
       }
       return values
@@ -1568,7 +1582,7 @@ object BuiltinTypes {
             wrapper(handle)?.let(values::add)
           }
         } finally {
-          variantDestroy.invoke(valueVariant)
+          destroyVariantToNil(valueVariant)
         }
       }
       return values
@@ -1647,7 +1661,7 @@ object BuiltinTypes {
         try {
           (variantToScalar(valueVariant, arena) as? Vector2i)?.let(values::add)
         } finally {
-          variantDestroy.invoke(valueVariant)
+          destroyVariantToNil(valueVariant)
         }
       }
       return values
@@ -1687,7 +1701,7 @@ object BuiltinTypes {
         try {
           (variantToScalar(valueVariant, arena) as? Vector3i)?.let(values::add)
         } finally {
-          variantDestroy.invoke(valueVariant)
+          destroyVariantToNil(valueVariant)
         }
       }
       return values
@@ -1730,7 +1744,7 @@ object BuiltinTypes {
             is Int -> values.add(value.toLong())
           }
         } finally {
-          variantDestroy.invoke(valueVariant)
+          destroyVariantToNil(valueVariant)
         }
       }
       return values
@@ -1812,11 +1826,11 @@ object BuiltinTypes {
               )
               result[key] = elementToScalar(valueVariant, arena, ownElements)
             } finally {
-              variantDestroy.invoke(valueVariant)
-              variantDestroy.invoke(defaultVariant)
+              destroyVariantToNil(valueVariant)
+              destroyVariantToNil(defaultVariant)
             }
           } finally {
-            variantDestroy.invoke(keyVariant)
+            destroyVariantToNil(keyVariant)
           }
         }
         return result
@@ -1929,11 +1943,11 @@ object BuiltinTypes {
               // the generated non-null decode still drops via `?: return@mapNotNull`.
               if (keepNullValues || value != null) result[key] = value
             } finally {
-              variantDestroy.invoke(valueVariant)
-              variantDestroy.invoke(defaultVariant)
+              destroyVariantToNil(valueVariant)
+              destroyVariantToNil(defaultVariant)
             }
           } finally {
-            variantDestroy.invoke(keyVariant)
+            destroyVariantToNil(keyVariant)
           }
         }
         return result
