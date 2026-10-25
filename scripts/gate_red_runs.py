@@ -1047,6 +1047,12 @@ case("processor ScriptNameClashTest", ["./gradlew", "-p", ".", ":processor:test"
            'VariantType")\n    sb.appendLine("import net.multigesture.kanama.api.kotlinScriptInstance")\n    sb.appendLine("import ${model.fqName}")')],
      "ScriptNameClashTest", "the desktop registrar imports its script class by its simple name again: a script called Arena (java.lang.foreign.Arena) or Signals does not compile (the Bulletmark port's finding)",
      slow=True)
+case("runtime_smoke.sh (Mathf libm bound)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/commonMain/kotlin/net/multigesture/kanama/api/Mathf.kt",
+           "    fun cos(value: Double): Double = kotlin.math.cos(value)\n",
+           "    fun cos(value: Double): Double = kotlin.math.cos(value) * (1.0 + 1e-12)\n")],
+     "missing pattern", "Mathf.cos drifts from Godot's libm by thousands of ulps: the pure-Kotlin transcendentals must stay within their MATHF_LIBM_BOUNDS bound of the engine's result (`mathfbound=`)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (progress read-back)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit(JVM_OBJECT_CALLS, "(BuiltinTypes.readArrayScalars(argArray).firstOrNull() as? Number)?.toDouble()",
            "(emptyList<Any?>().firstOrNull() as? Number)?.toDouble()"),

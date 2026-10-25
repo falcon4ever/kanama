@@ -22,80 +22,77 @@ internal object WebLocalUtilities {
       "absf" -> 0
       "absi" -> 1
       "acos" -> 2
-      "acosh" -> 3
-      "angle_difference" -> 4
-      "asin" -> 5
-      "asinh" -> 6
-      "atan" -> 7
-      "atan2" -> 8
-      "atanh" -> 9
-      "bezier_derivative" -> 10
-      "bezier_interpolate" -> 11
-      "ceilf" -> 12
-      "ceili" -> 13
-      "clampf" -> 14
-      "clampi" -> 15
-      "cos" -> 16
-      "cosh" -> 17
-      "cubic_interpolate" -> 18
-      "cubic_interpolate_angle" -> 19
-      "cubic_interpolate_angle_in_time" -> 20
-      "cubic_interpolate_in_time" -> 21
-      "db_to_linear" -> 22
-      "deg_to_rad" -> 23
-      "ease" -> 24
-      "exp" -> 25
-      "floorf" -> 26
-      "floori" -> 27
-      "fmod" -> 28
-      "fposmod" -> 29
-      "inverse_lerp" -> 30
-      "is_equal_approx" -> 31
-      "is_finite" -> 32
-      "is_inf" -> 33
-      "is_nan" -> 34
-      "is_zero_approx" -> 35
-      "lerp_angle" -> 36
-      "lerpf" -> 37
-      "linear_to_db" -> 38
-      "log" -> 39
-      "maxf" -> 40
-      "maxi" -> 41
-      "minf" -> 42
-      "mini" -> 43
-      "move_toward" -> 44
-      "nearest_po2" -> 45
-      "pingpong" -> 46
-      "posmod" -> 47
-      "pow" -> 48
-      "rad_to_deg" -> 49
-      "remap" -> 50
-      "rotate_toward" -> 51
-      "roundf" -> 52
-      "roundi" -> 53
-      "signf" -> 54
-      "signi" -> 55
-      "sin" -> 56
-      "sinh" -> 57
-      "smoothstep" -> 58
-      "snappedf" -> 59
-      "snappedi" -> 60
-      "sqrt" -> 61
-      "tan" -> 62
-      "tanh" -> 63
-      "wrapf" -> 64
-      "wrapi" -> 65
-      "abs" -> 66
-      "ceil" -> 67
-      "clamp" -> 68
-      "floor" -> 69
-      "lerp" -> 70
-      "max" -> 71
-      "min" -> 72
-      "round" -> 73
-      "sign" -> 74
-      "snapped" -> 75
-      "wrap" -> 76
+      "angle_difference" -> 3
+      "asin" -> 4
+      "atan" -> 5
+      "atan2" -> 6
+      "bezier_derivative" -> 7
+      "bezier_interpolate" -> 8
+      "ceilf" -> 9
+      "ceili" -> 10
+      "clampf" -> 11
+      "clampi" -> 12
+      "cos" -> 13
+      "cosh" -> 14
+      "cubic_interpolate" -> 15
+      "cubic_interpolate_angle" -> 16
+      "cubic_interpolate_angle_in_time" -> 17
+      "cubic_interpolate_in_time" -> 18
+      "db_to_linear" -> 19
+      "deg_to_rad" -> 20
+      "ease" -> 21
+      "exp" -> 22
+      "floorf" -> 23
+      "floori" -> 24
+      "fmod" -> 25
+      "fposmod" -> 26
+      "inverse_lerp" -> 27
+      "is_equal_approx" -> 28
+      "is_finite" -> 29
+      "is_inf" -> 30
+      "is_nan" -> 31
+      "is_zero_approx" -> 32
+      "lerp_angle" -> 33
+      "lerpf" -> 34
+      "linear_to_db" -> 35
+      "log" -> 36
+      "maxf" -> 37
+      "maxi" -> 38
+      "minf" -> 39
+      "mini" -> 40
+      "move_toward" -> 41
+      "nearest_po2" -> 42
+      "pingpong" -> 43
+      "posmod" -> 44
+      "pow" -> 45
+      "rad_to_deg" -> 46
+      "remap" -> 47
+      "rotate_toward" -> 48
+      "roundf" -> 49
+      "roundi" -> 50
+      "signf" -> 51
+      "signi" -> 52
+      "sin" -> 53
+      "sinh" -> 54
+      "smoothstep" -> 55
+      "snappedf" -> 56
+      "snappedi" -> 57
+      "sqrt" -> 58
+      "tan" -> 59
+      "tanh" -> 60
+      "wrapf" -> 61
+      "wrapi" -> 62
+      "abs" -> 63
+      "ceil" -> 64
+      "clamp" -> 65
+      "floor" -> 66
+      "lerp" -> 67
+      "max" -> 68
+      "min" -> 69
+      "round" -> 70
+      "sign" -> 71
+      "snapped" -> 72
+      "wrap" -> 73
       else -> -1
     }
 
@@ -214,47 +211,32 @@ internal object WebLocalUtilities {
       }
       2 -> { // acos, within 1 ulp
         val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.acos(a1)
+        f.ret[0] = Mathf.acos(a1)
         f.retType = 3
       }
-      3 -> { // acosh, within 1 ulp
-        val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.acosh(a1)
-        f.retType = 3
-      }
-      4 -> { // angle_difference
+      3 -> { // angle_difference
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         f.ret[0] = angleDifference(a1, a2)
         f.retType = 3
       }
-      5 -> { // asin, within 1 ulp
+      4 -> { // asin, within 1 ulp
         val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.asin(a1)
+        f.ret[0] = Mathf.asin(a1)
         f.retType = 3
       }
-      6 -> { // asinh, within 1 ulp
+      5 -> { // atan, within 1 ulp
         val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.asinh(a1)
+        f.ret[0] = Mathf.atan(a1)
         f.retType = 3
       }
-      7 -> { // atan, within 1 ulp
-        val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.atan(a1)
-        f.retType = 3
-      }
-      8 -> { // atan2, within 1 ulp
+      6 -> { // atan2, within 1 ulp
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
-        f.ret[0] = kotlin.math.atan2(a1, a2)
+        f.ret[0] = Mathf.atan2(a1, a2)
         f.retType = 3
       }
-      9 -> { // atanh, within 1 ulp
-        val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.atanh(a1)
-        f.retType = 3
-      }
-      10 -> { // bezier_derivative
+      7 -> { // bezier_derivative
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
@@ -263,7 +245,7 @@ internal object WebLocalUtilities {
         f.ret[0] = bezierDerivative(a1, a2, a3, a4, a5)
         f.retType = 3
       }
-      11 -> { // bezier_interpolate
+      8 -> { // bezier_interpolate
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
@@ -272,43 +254,43 @@ internal object WebLocalUtilities {
         f.ret[0] = bezierInterpolate(a1, a2, a3, a4, a5)
         f.retType = 3
       }
-      12 -> { // ceilf
+      9 -> { // ceilf
         val a1 = f.slots[1][0]
         f.ret[0] = kotlin.math.ceil(a1)
         f.retType = 3
       }
-      13 -> { // ceili
+      10 -> { // ceili
         val a1 = f.slots[1][0]
         val r = kotlin.math.ceil(a1)
         if (!(r >= INT64_LOW && r < INT64_HIGH)) return false
         f.retLongValue = r.toLong()
         f.retType = 2
       }
-      14 -> { // clampf
+      11 -> { // clampf
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
         f.ret[0] = Mathf.clamp(a1, a2, a3)
         f.retType = 3
       }
-      15 -> { // clampi
+      12 -> { // clampi
         val a1 = f.longs[1]
         val a2 = f.longs[2]
         val a3 = f.longs[3]
         f.retLongValue = Mathf.clamp(a1, a2, a3)
         f.retType = 2
       }
-      16 -> { // cos, within 1 ulp
+      13 -> { // cos, within 1 ulp
         val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.cos(a1)
+        f.ret[0] = Mathf.cos(a1)
         f.retType = 3
       }
-      17 -> { // cosh, within 1 ulp
+      14 -> { // cosh, within 1 ulp
         val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.cosh(a1)
+        f.ret[0] = Mathf.cosh(a1)
         f.retType = 3
       }
-      18 -> { // cubic_interpolate
+      15 -> { // cubic_interpolate
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
@@ -317,7 +299,7 @@ internal object WebLocalUtilities {
         f.ret[0] = cubicInterpolate(a1, a2, a3, a4, a5)
         f.retType = 3
       }
-      19 -> { // cubic_interpolate_angle
+      16 -> { // cubic_interpolate_angle
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
@@ -326,7 +308,7 @@ internal object WebLocalUtilities {
         f.ret[0] = cubicInterpolateAngle(a1, a2, a3, a4, a5)
         f.retType = 3
       }
-      20 -> { // cubic_interpolate_angle_in_time
+      17 -> { // cubic_interpolate_angle_in_time
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
@@ -338,7 +320,7 @@ internal object WebLocalUtilities {
         f.ret[0] = cubicInterpolateAngleInTime(a1, a2, a3, a4, a5, a6, a7, a8)
         f.retType = 3
       }
-      21 -> { // cubic_interpolate_in_time
+      18 -> { // cubic_interpolate_in_time
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
@@ -350,169 +332,169 @@ internal object WebLocalUtilities {
         f.ret[0] = cubicInterpolateInTime(a1, a2, a3, a4, a5, a6, a7, a8)
         f.retType = 3
       }
-      22 -> { // db_to_linear, within 1 ulp
+      19 -> { // db_to_linear, within 1 ulp
         val a1 = f.slots[1][0]
         f.ret[0] = kotlin.math.exp(a1 * 0.11512925464970228420089957273422)
         f.retType = 3
       }
-      23 -> { // deg_to_rad
+      20 -> { // deg_to_rad
         val a1 = f.slots[1][0]
         f.ret[0] = Mathf.degToRad(a1)
         f.retType = 3
       }
-      24 -> { // ease, within 2^-52 absolute
+      21 -> { // ease, within 2^-52 absolute
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         f.ret[0] = ease(a1, a2)
         f.retType = 3
       }
-      25 -> { // exp, within 1 ulp
+      22 -> { // exp, within 1 ulp
         val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.exp(a1)
+        f.ret[0] = Mathf.exp(a1)
         f.retType = 3
       }
-      26 -> { // floorf
+      23 -> { // floorf
         val a1 = f.slots[1][0]
         f.ret[0] = kotlin.math.floor(a1)
         f.retType = 3
       }
-      27 -> { // floori
+      24 -> { // floori
         val a1 = f.slots[1][0]
         val r = kotlin.math.floor(a1)
         if (!(r >= INT64_LOW && r < INT64_HIGH)) return false
         f.retLongValue = r.toLong()
         f.retType = 2
       }
-      28 -> { // fmod
+      25 -> { // fmod
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         f.ret[0] = a1 % a2
         f.retType = 3
       }
-      29 -> { // fposmod
+      26 -> { // fposmod
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         f.ret[0] = Mathf.fposmod(a1, a2)
         f.retType = 3
       }
-      30 -> { // inverse_lerp
+      27 -> { // inverse_lerp
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
         f.ret[0] = Mathf.inverseLerp(a1, a2, a3)
         f.retType = 3
       }
-      31 -> { // is_equal_approx
+      28 -> { // is_equal_approx
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         f.ret[0] = if (Mathf.isEqualApprox(a1, a2)) 1.0 else 0.0
         f.retType = 1
       }
-      32 -> { // is_finite
+      29 -> { // is_finite
         val a1 = f.slots[1][0]
         f.ret[0] = if (a1.isFinite()) 1.0 else 0.0
         f.retType = 1
       }
-      33 -> { // is_inf
+      30 -> { // is_inf
         val a1 = f.slots[1][0]
         f.ret[0] = if (a1.isInfinite()) 1.0 else 0.0
         f.retType = 1
       }
-      34 -> { // is_nan
+      31 -> { // is_nan
         val a1 = f.slots[1][0]
         f.ret[0] = if (a1.isNaN()) 1.0 else 0.0
         f.retType = 1
       }
-      35 -> { // is_zero_approx
+      32 -> { // is_zero_approx
         val a1 = f.slots[1][0]
         f.ret[0] = if (Mathf.isZeroApprox(a1)) 1.0 else 0.0
         f.retType = 1
       }
-      36 -> { // lerp_angle
+      33 -> { // lerp_angle
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
         f.ret[0] = Mathf.lerpAngle(a1, a2, a3)
         f.retType = 3
       }
-      37 -> { // lerpf
+      34 -> { // lerpf
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
         f.ret[0] = Mathf.lerp(a1, a2, a3)
         f.retType = 3
       }
-      38 -> { // linear_to_db, within 2 ulp
+      35 -> { // linear_to_db, within 2 ulp
         val a1 = f.slots[1][0]
         f.ret[0] = kotlin.math.ln(a1) * 8.6858896380650365530225783783321
         f.retType = 3
       }
-      39 -> { // log, within 1 ulp
+      36 -> { // log, within 1 ulp
         val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.ln(a1)
+        f.ret[0] = Mathf.log(a1)
         f.retType = 3
       }
-      40 -> { // maxf
+      37 -> { // maxf
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         f.ret[0] = Mathf.max(a1, a2)
         f.retType = 3
       }
-      41 -> { // maxi
+      38 -> { // maxi
         val a1 = f.longs[1]
         val a2 = f.longs[2]
         f.retLongValue = Mathf.max(a1, a2)
         f.retType = 2
       }
-      42 -> { // minf
+      39 -> { // minf
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         f.ret[0] = Mathf.min(a1, a2)
         f.retType = 3
       }
-      43 -> { // mini
+      40 -> { // mini
         val a1 = f.longs[1]
         val a2 = f.longs[2]
         f.retLongValue = Mathf.min(a1, a2)
         f.retType = 2
       }
-      44 -> { // move_toward
+      41 -> { // move_toward
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
         f.ret[0] = Mathf.moveToward(a1, a2, a3)
         f.retType = 3
       }
-      45 -> { // nearest_po2
+      42 -> { // nearest_po2
         val a1 = f.longs[1]
         f.retLongValue = Mathf.nearestPo2(a1)
         f.retType = 2
       }
-      46 -> { // pingpong
+      43 -> { // pingpong
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         f.ret[0] = Mathf.pingPong(a1, a2)
         f.retType = 3
       }
-      47 -> { // posmod
+      44 -> { // posmod
         val a1 = f.longs[1]
         val a2 = f.longs[2]
         if (!(a2 != 0L)) return false
         f.retLongValue = Mathf.posmod(a1, a2)
         f.retType = 2
       }
-      48 -> { // pow, within 1 ulp
+      45 -> { // pow, within 1 ulp
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
-        f.ret[0] = a1.pow(a2)
+        f.ret[0] = Mathf.pow(a1, a2)
         f.retType = 3
       }
-      49 -> { // rad_to_deg
+      46 -> { // rad_to_deg
         val a1 = f.slots[1][0]
         f.ret[0] = Mathf.radToDeg(a1)
         f.retType = 3
       }
-      50 -> { // remap
+      47 -> { // remap
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
@@ -521,59 +503,59 @@ internal object WebLocalUtilities {
         f.ret[0] = Mathf.remap(a1, a2, a3, a4, a5)
         f.retType = 3
       }
-      51 -> { // rotate_toward
+      48 -> { // rotate_toward
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
         f.ret[0] = Mathf.rotateToward(a1, a2, a3)
         f.retType = 3
       }
-      52 -> { // roundf
+      49 -> { // roundf
         val a1 = f.slots[1][0]
         f.ret[0] = Mathf.round(a1)
         f.retType = 3
       }
-      53 -> { // roundi
+      50 -> { // roundi
         val a1 = f.slots[1][0]
         val r = Mathf.round(a1)
         if (!(r >= INT64_LOW && r < INT64_HIGH)) return false
         f.retLongValue = r.toLong()
         f.retType = 2
       }
-      54 -> { // signf
+      51 -> { // signf
         val a1 = f.slots[1][0]
         f.ret[0] = Mathf.sign(a1)
         f.retType = 3
       }
-      55 -> { // signi
+      52 -> { // signi
         val a1 = f.longs[1]
         f.retLongValue = Mathf.sign(a1)
         f.retType = 2
       }
-      56 -> { // sin, within 1 ulp
+      53 -> { // sin, within 1 ulp
         val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.sin(a1)
+        f.ret[0] = Mathf.sin(a1)
         f.retType = 3
       }
-      57 -> { // sinh, within 1 ulp
+      54 -> { // sinh, within 1 ulp
         val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.sinh(a1)
+        f.ret[0] = Mathf.sinh(a1)
         f.retType = 3
       }
-      58 -> { // smoothstep
+      55 -> { // smoothstep
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
         f.ret[0] = Mathf.smoothStep(a1, a2, a3)
         f.retType = 3
       }
-      59 -> { // snappedf
+      56 -> { // snappedf
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         f.ret[0] = Mathf.snapped(a1, a2)
         f.retType = 3
       }
-      60 -> { // snappedi
+      57 -> { // snappedi
         val a1 = f.slots[1][0]
         val a2 = f.longs[2]
         val r = Mathf.snapped(a1, a2.toDouble())
@@ -581,29 +563,29 @@ internal object WebLocalUtilities {
         f.retLongValue = r.toLong()
         f.retType = 2
       }
-      61 -> { // sqrt
+      58 -> { // sqrt
         val a1 = f.slots[1][0]
         f.ret[0] = kotlin.math.sqrt(a1)
         f.retType = 3
       }
-      62 -> { // tan, within 1 ulp
+      59 -> { // tan, within 1 ulp
         val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.tan(a1)
+        f.ret[0] = Mathf.tan(a1)
         f.retType = 3
       }
-      63 -> { // tanh, within 1 ulp
+      60 -> { // tanh, within 1 ulp
         val a1 = f.slots[1][0]
-        f.ret[0] = kotlin.math.tanh(a1)
+        f.ret[0] = Mathf.tanh(a1)
         f.retType = 3
       }
-      64 -> { // wrapf
+      61 -> { // wrapf
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         val a3 = f.slots[3][0]
         f.ret[0] = Mathf.wrap(a1, a2, a3)
         f.retType = 3
       }
-      65 -> { // wrapi
+      62 -> { // wrapi
         val a1 = f.longs[1]
         val a2 = f.longs[2]
         val a3 = f.longs[3]
@@ -618,50 +600,50 @@ internal object WebLocalUtilities {
   /** Runs Variant-form utility [id] on [args]; [NOT_LOCAL]: the engine's. */
   fun callBoxed(id: Int, args: Array<out Any?>): Any? {
     when (id) {
-      66 -> { // abs
+      63 -> { // abs
         if (args.size != 1) return NOT_LOCAL
         doubles(args)?.let { d -> return kotlin.math.abs(d[0]) }
         longs(args)?.let { l -> return kotlin.math.abs(l[0]) }
       }
-      67 -> { // ceil
+      64 -> { // ceil
         if (args.size != 1) return NOT_LOCAL
         doubles(args)?.let { d -> return kotlin.math.ceil(d[0]) }
       }
-      68 -> { // clamp
+      65 -> { // clamp
         if (args.size != 3) return NOT_LOCAL
         doubles(args)?.let { d -> return clampVariant(d[0], d[1], d[2]) }
         longs(args)?.let { l -> return clampVariant(l[0], l[1], l[2]) }
       }
-      69 -> { // floor
+      66 -> { // floor
         if (args.size != 1) return NOT_LOCAL
         doubles(args)?.let { d -> return kotlin.math.floor(d[0]) }
       }
-      70 -> { // lerp
+      67 -> { // lerp
         if (args.size != 3) return NOT_LOCAL
         doubles(args)?.let { d -> return Mathf.lerp(d[0], d[1], d[2]) }
       }
-      71 -> { // max
+      68 -> { // max
         doubles(args)?.let { d -> return maxVariant(d) }
         longs(args)?.let { l -> return maxVariant(l) }
       }
-      72 -> { // min
+      69 -> { // min
         doubles(args)?.let { d -> return minVariant(d) }
         longs(args)?.let { l -> return minVariant(l) }
       }
-      73 -> { // round
+      70 -> { // round
         if (args.size != 1) return NOT_LOCAL
         doubles(args)?.let { d -> return Mathf.round(d[0]) }
       }
-      74 -> { // sign
+      71 -> { // sign
         if (args.size != 1) return NOT_LOCAL
         doubles(args)?.let { d -> return Mathf.sign(d[0]) }
         longs(args)?.let { l -> return Mathf.sign(l[0]) }
       }
-      75 -> { // snapped
+      72 -> { // snapped
         if (args.size != 2) return NOT_LOCAL
         doubles(args)?.let { d -> return Mathf.snapped(d[0], d[1]) }
       }
-      76 -> { // wrap
+      73 -> { // wrap
         if (args.size != 3) return NOT_LOCAL
         doubles(args)?.let { d -> return Mathf.wrap(d[0], d[1], d[2]) }
       }

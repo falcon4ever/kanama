@@ -648,6 +648,9 @@ check "BuiltinParity kotlin const=n=1 [^ ]+=[0-9a-f]+ "
 # the same sequence as GDScript, and the same first value again after a second seed()).
 check "BuiltinParity kotlin mathf=n=256 [^ ]+=[0-9a-f]+ "
 check "BuiltinParity kotlin mathfedge=n=64 [^ ]+=[0-9a-f]+ "
+# The Mathf transcendentals are kotlin.math (no engine call): the rows above mix the engine's result,
+# and each Mathf value, Double and Float overload, must be within its MATHF_LIBM_BOUNDS bound of it.
+check "BuiltinParity kotlin mathfbound=n=[1-9][0-9]* out=none$"
 check "BuiltinParity kotlin gd=n=1 [^ ]+=[0-9a-f]+ "
 check "BuiltinParity kotlin rand=n=8 [^ ]+=[0-9a-f]+ "
 # task 134 D2 -- the PackedByteArray byte codecs ported to Kotlin over 64 random arrays (`bytes=`:

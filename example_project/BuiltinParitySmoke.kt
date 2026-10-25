@@ -48,6 +48,8 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     edge = false
     report("mathfedge=n=64 " + summary())
     hashes.clear()
+    val outOfBound = boundFailures.joinToString(",").ifEmpty { "none" }
+    report("mathfbound=n=$boundChecks out=$outOfBound")
     utilities()
     report("gd=n=1 " + summary())
     hashes.clear()
@@ -1856,7 +1858,12 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   private fun mathf8() {
     val a0 = nv()
     val a1 = nv()
-    mix("Mathf.ease/ease", Mathf.ease(a0, a1))
+    bounded("Mathf.ease/ease", Mathf.ease(a0, a1), GD.ease(a0, a1), 0, MATHF_ABSOLUTE_BOUND)
+    boundedFloat(
+      "Mathf.ease/ease(Float)",
+      Mathf.ease(a0.toFloat(), a1.toFloat()),
+      GD.ease(a0.toFloat().toDouble(), a1.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf9() {
@@ -1960,38 +1967,73 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
 
   private fun mathf25() {
     val a0 = nv()
-    mix("Mathf.sin/sin", Mathf.sin(a0))
+    bounded("Mathf.sin/sin", Mathf.sin(a0), GD.sin(a0), 2, 0.0)
+    boundedFloat(
+      "Mathf.sin/sin(Float)",
+      Mathf.sin(a0.toFloat()),
+      GD.sin(a0.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf26() {
     val a0 = nv()
-    mix("Mathf.cos/cos", Mathf.cos(a0))
+    bounded("Mathf.cos/cos", Mathf.cos(a0), GD.cos(a0), 2, 0.0)
+    boundedFloat(
+      "Mathf.cos/cos(Float)",
+      Mathf.cos(a0.toFloat()),
+      GD.cos(a0.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf27() {
     val a0 = nv()
-    mix("Mathf.tan/tan", Mathf.tan(a0))
+    bounded("Mathf.tan/tan", Mathf.tan(a0), GD.tan(a0), 4, 0.0)
+    boundedFloat(
+      "Mathf.tan/tan(Float)",
+      Mathf.tan(a0.toFloat()),
+      GD.tan(a0.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf28() {
     val a0 = nv()
-    mix("Mathf.asin/asin", Mathf.asin(a0))
+    bounded("Mathf.asin/asin", Mathf.asin(a0), GD.asin(a0), 2, 0.0)
+    boundedFloat(
+      "Mathf.asin/asin(Float)",
+      Mathf.asin(a0.toFloat()),
+      GD.asin(a0.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf29() {
     val a0 = nv()
-    mix("Mathf.acos/acos", Mathf.acos(a0))
+    bounded("Mathf.acos/acos", Mathf.acos(a0), GD.acos(a0), 2, 0.0)
+    boundedFloat(
+      "Mathf.acos/acos(Float)",
+      Mathf.acos(a0.toFloat()),
+      GD.acos(a0.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf30() {
     val a0 = nv()
-    mix("Mathf.atan/atan", Mathf.atan(a0))
+    bounded("Mathf.atan/atan", Mathf.atan(a0), GD.atan(a0), 2, 0.0)
+    boundedFloat(
+      "Mathf.atan/atan(Float)",
+      Mathf.atan(a0.toFloat()),
+      GD.atan(a0.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf31() {
     val a0 = nv()
     val a1 = nv()
-    mix("Mathf.atan2/atan2", Mathf.atan2(a0, a1))
+    bounded("Mathf.atan2/atan2", Mathf.atan2(a0, a1), GD.atan2(a0, a1), 2, 0.0)
+    boundedFloat(
+      "Mathf.atan2/atan2(Float)",
+      Mathf.atan2(a0.toFloat(), a1.toFloat()),
+      GD.atan2(a0.toFloat().toDouble(), a1.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf32() {
@@ -2002,7 +2044,12 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   private fun mathf33() {
     val a0 = nv()
     val a1 = nv()
-    mix("Mathf.pow/pow", Mathf.pow(a0, a1))
+    bounded("Mathf.pow/pow", Mathf.pow(a0, a1), GD.pow(a0, a1), 2, 0.0)
+    boundedFloat(
+      "Mathf.pow/pow(Float)",
+      Mathf.pow(a0.toFloat(), a1.toFloat()),
+      GD.pow(a0.toFloat().toDouble(), a1.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf34() {
@@ -2025,12 +2072,22 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
 
   private fun mathf37() {
     val a0 = nv()
-    mix("Mathf.log/log", Mathf.log(a0))
+    bounded("Mathf.log/log", Mathf.log(a0), GD.log(a0), 2, 0.0)
+    boundedFloat(
+      "Mathf.log/log(Float)",
+      Mathf.log(a0.toFloat()),
+      GD.log(a0.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf38() {
     val a0 = nv()
-    mix("Mathf.exp/exp", Mathf.exp(a0))
+    bounded("Mathf.exp/exp", Mathf.exp(a0), GD.exp(a0), 2, 0.0)
+    boundedFloat(
+      "Mathf.exp/exp(Float)",
+      Mathf.exp(a0.toFloat()),
+      GD.exp(a0.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf39() {
@@ -2085,12 +2142,22 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
 
   private fun mathf49() {
     val a0 = nv()
-    mix("Mathf.dbToLinear/db_to_linear", Mathf.dbToLinear(a0))
+    bounded("Mathf.dbToLinear/db_to_linear", Mathf.dbToLinear(a0), GD.dbToLinear(a0), 2, 0.0)
+    boundedFloat(
+      "Mathf.dbToLinear/db_to_linear(Float)",
+      Mathf.dbToLinear(a0.toFloat()),
+      GD.dbToLinear(a0.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf50() {
     val a0 = nv()
-    mix("Mathf.linearToDb/linear_to_db", Mathf.linearToDb(a0))
+    bounded("Mathf.linearToDb/linear_to_db", Mathf.linearToDb(a0), GD.linearToDb(a0), 3, 0.0)
+    boundedFloat(
+      "Mathf.linearToDb/linear_to_db(Float)",
+      Mathf.linearToDb(a0.toFloat()),
+      GD.linearToDb(a0.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf51() {
@@ -2106,17 +2173,32 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
 
   private fun mathf53() {
     val a0 = nv()
-    mix("Mathf.sinh/sinh", Mathf.sinh(a0))
+    bounded("Mathf.sinh/sinh", Mathf.sinh(a0), GD.sinh(a0), 3, 0.0)
+    boundedFloat(
+      "Mathf.sinh/sinh(Float)",
+      Mathf.sinh(a0.toFloat()),
+      GD.sinh(a0.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf54() {
     val a0 = nv()
-    mix("Mathf.cosh/cosh", Mathf.cosh(a0))
+    bounded("Mathf.cosh/cosh", Mathf.cosh(a0), GD.cosh(a0), 2, 0.0)
+    boundedFloat(
+      "Mathf.cosh/cosh(Float)",
+      Mathf.cosh(a0.toFloat()),
+      GD.cosh(a0.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf55() {
     val a0 = nv()
-    mix("Mathf.tanh/tanh", Mathf.tanh(a0))
+    bounded("Mathf.tanh/tanh", Mathf.tanh(a0), GD.tanh(a0), 3, 0.0)
+    boundedFloat(
+      "Mathf.tanh/tanh(Float)",
+      Mathf.tanh(a0.toFloat()),
+      GD.tanh(a0.toFloat().toDouble()).toFloat(),
+    )
   }
 
   private fun mathf56() {
@@ -2132,6 +2214,44 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   private fun mathf58() {
     val a0 = nv()
     mix("Mathf.atanh/atanh", Mathf.atanh(a0))
+  }
+
+  // A Mathf transcendental (kotlin.math) against the engine's result: the row mixes the engine's,
+  // which GDScript's must equal bit for bit, and `mathfbound=` names every entry beyond its bound
+  // (MATHF_LIBM_BOUNDS in scripts/generate_builtin_ops.py).
+  private val boundFailures = linkedSetOf<String>()
+
+  private var boundChecks = 0
+
+  private fun bounded(key: String, mine: Double, engine: Double, ulps: Int, absolute: Double) {
+    mix(key, engine)
+    boundChecks++
+    if (mine.isNaN() && engine.isNaN()) return
+    if (mine == engine) return
+    if (ulps > 0 && mine.isFinite() && engine.isFinite() && ulpsApart(mine, engine) <= ulps) return
+    if (absolute > 0.0 && kotlin.math.abs(mine - engine) <= absolute) return
+    boundFailures += key.replace(' ', '_')
+  }
+
+  private fun boundedFloat(key: String, mine: Float, engine: Float) {
+    boundChecks++
+    if (mine.isNaN() && engine.isNaN()) return
+    if (mine == engine) return
+    if (mine.isFinite() && engine.isFinite() && ulpsApart(mine, engine) <= 1L) return
+    boundFailures += key.replace(' ', '_')
+  }
+
+  // Neighbouring doubles (floats) are 1 apart in these orderings; opposite signs are never close.
+  private fun ulpsApart(a: Double, b: Double): Long {
+    val x = a.toRawBits().let { if (it < 0L) Long.MIN_VALUE - it else it }
+    val y = b.toRawBits().let { if (it < 0L) Long.MIN_VALUE - it else it }
+    return if ((x xor y) < 0L) Long.MAX_VALUE else kotlin.math.abs(x - y)
+  }
+
+  private fun ulpsApart(a: Float, b: Float): Long {
+    val x = a.toRawBits().let { if (it < 0) Int.MIN_VALUE.toLong() - it else it.toLong() }
+    val y = b.toRawBits().let { if (it < 0) Int.MIN_VALUE.toLong() - it else it.toLong() }
+    return kotlin.math.abs(x - y)
   }
 
   private fun utilities() {
@@ -6264,6 +6384,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
 
   private companion object {
     val SCALES = doubleArrayOf(0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0)
+    const val MATHF_ABSOLUTE_BOUND = 2.220446049250313e-16 // 2^-52
     val EDGE =
       doubleArrayOf(
         0.0,
