@@ -106,6 +106,12 @@ def case(*args, **kwargs) -> None:
     CASES.append(Case(*args, **kwargs))
 
 
+class UnappliableMutation(Exception):
+    """A case's mutation no longer applies (the file it edits changed). The CASE fails with this
+    message; the harness carries on with the next case (task 139 U9: one stale case used to abort the
+    whole run and leave every later case unrun)."""
+
+
 class Mutator:
     """Applies a list of mutations inside WORK and reverts them, byte for byte (modes, created dirs too)."""
 
@@ -139,13 +145,13 @@ class Mutator:
                 self.saved.append((path, original))
                 if isinstance(mutation, Append):
                     if original is None:
-                        raise SystemExit(f"gate_red_runs: cannot append to the missing file {mutation.path}")
+                        raise UnappliableMutation(f"cannot append to the missing file {mutation.path}")
                     path.write_bytes(original + mutation.text.encode("utf-8"))
                 elif isinstance(mutation, Edit):
                     text = original.decode("utf-8") if original is not None else None
                     if text is None or mutation.old not in text:
-                        raise SystemExit(
-                            f"gate_red_runs: cannot apply the mutation, `{mutation.old[:60]!r}` is not in {mutation.path}"
+                        raise UnappliableMutation(
+                            f"cannot apply the mutation, `{mutation.old[:60]!r}` is not in {mutation.path}"
                             " (the file changed; update the case)"
                         )
                     path.write_text(text.replace(mutation.old, mutation.new, 1), encoding="utf-8")
@@ -330,7 +336,7 @@ case("check_gate_evidence.py", py("check_gate_evidence.py"),
      [Edit("evidence/gates.json", '"schemaVersion": 1', '"schemaVersion": 2')],
      "ledger must be an object with schemaVersion 1", "the evidence ledger carries a wrong schema version")
 case("check_godot_version_pin.py", py("check_godot_version_pin.py"),
-     [Edit("gradle.properties", "kanamaGodotVersion=4.7.2.stable", "kanamaGodotVersion=4.7.1.stable")],
+     [Edit("gradle.properties", "kanamaGodotVersion=", "kanamaGodotVersion=0.")],
      "Godot version pins drifted", "gradle.properties pins a different Godot than CI")
 case("check_kotlin_pins.py", py("check_kotlin_pins.py"),
      [Edit("templates/release-kit/build.gradle.kts", 'id("com.google.devtools.ksp") version "', 'id("com.google.devtools.ksp") version "0.')],
@@ -716,6 +722,18 @@ case("check_wrapper_generator.py (keep-reachable sweep)", py("check_wrapper_gene
 case("check_wrapper_generator.py (expect ObjectCalls)", py("check_wrapper_generator.py"),
      [Append(f"{COMMON}/binding/runtime/ObjectCalls.expect.kt", "\nval redRunHandEdit = 1\n")],
      "ObjectCalls.expect.kt", "the generated `expect object ObjectCalls` file is hand-edited (it is in the drift compare since task 119 finding 25)")
+case("check_wrapper_generator.py (desktop actual set)", py("check_wrapper_generator.py"),
+     [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt", "  actual fun ptrcallWithIntArgRetBasis(", "  fun ptrcallWithIntArgRetBasis(")],
+     "ptrcallWithIntArgRetBasis is in the expect but not `actual`", "a desktop ObjectCalls helper the expect declares loses its `actual` by hand: the generator owns that set (task 139 P4)")
+case("check_wrapper_generator.py (unadopted class)", py("check_wrapper_generator.py"),
+     [Delete(f"{COMMON}/api/CanvasModulate.kt")],
+     "have no wrapper: CanvasModulate", "a Godot class of extension_api.json has no wrapper: `--write-tree` adopts every class, so the tree was not re-adopted (task 139 P5)")
+case("check_wrapper_generator.py (strict-list skip)", py("check_wrapper_generator.py"),
+     [Edit("scripts/check_wrapper_generator.py", 'ADOPTED_CLASSES = ("Time",', 'ADOPTED_CLASSES = ("GDScriptTextDocument", "Time",')],
+     "adopted source GDScriptTextDocument has skipped methods", "a class held to \"no skipped method\" skips one (its Dictionary passthrough): the gate names the method instead of letting the class drop out of its list")
+case("check_wrapper_generator.py (stale pending skip)", py("check_wrapper_generator.py"),
+     [Edit("scripts/check_wrapper_generator.py", "PENDING_HELPER_SKIPS: dict[tuple[str, str], str] = {}", 'PENDING_HELPER_SKIPS: dict[tuple[str, str], str] = {("Time", "get_ticks_msec"): "red run"}')],
+     "stale PENDING_HELPER_SKIPS rows", "a PENDING_HELPER_SKIPS row names a method that generates: the row would excuse a later skip (task 139 P5)")
 
 # ---- audit_* -----------------------------------------------------------------------------------------------
 case("audit_api_wrapper_inheritance.py", py("audit_api_wrapper_inheritance.py"),
@@ -1383,8 +1401,14 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
             failures.append(f"{c.gate}: not green before the mutation (exit {rc}):\n{out[-800:]}")
             print(f"   baseline NOT green (exit {rc}); skipped", flush=True)
             continue
-        with Mutator(c.mutations):
-            red_rc, red_out, red_secs = run(c)
+        try:
+            with Mutator(c.mutations):
+                red_rc, red_out, red_secs = run(c)
+        except UnappliableMutation as error:
+            failures.append(f"{c.gate}: {error}")
+            print(f"   UNAPPLIABLE: {error}", flush=True)
+            rows.append(f"| `{c.gate}` | {c.how} | UNPROVEN | - |")
+            continue
         green_rc, green_out, _ = run(c)
         ok = True
         if red_rc == 0:
