@@ -74,17 +74,17 @@ class WebScriptCodeEmitterTest {
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
     assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 39"))
-    assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
-    assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
+    assertTrue(source.contains("1 -> S1_FirstScript(WebObjectId(objectId))"))
+    assertTrue(source.contains("2 -> S2_SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
-    assertTrue(source.contains("(script as FirstScript).process(delta)"))
+    assertTrue(source.contains("(script as S1_FirstScript).process(delta)"))
     assertTrue(source.contains("fun draw(scriptId: Int, script: KanamaWebScript)"))
     assertTrue(source.contains("fun enterTree(scriptId: Int, script: KanamaWebScript)"))
-    assertTrue(source.contains("(script as FirstScript).enterTree()"))
+    assertTrue(source.contains("(script as S1_FirstScript).enterTree()"))
     assertTrue(source.contains("fun exitTree(scriptId: Int, script: KanamaWebScript)"))
-    assertTrue(source.contains("(script as FirstScript).exitTree()"))
-    assertTrue(source.contains("(script as FirstScript).echo(value)"))
-    assertTrue(source.contains("(script as FirstScript).reset()"))
+    assertTrue(source.contains("(script as S1_FirstScript).exitTree()"))
+    assertTrue(source.contains("(script as S1_FirstScript).echo(value)"))
+    assertTrue(source.contains("(script as S1_FirstScript).reset()"))
 
     assertFalse(source.contains("java.lang.foreign"))
     assertFalse(source.contains("MemorySegment"))
@@ -889,17 +889,17 @@ class WebScriptCodeEmitterTest {
     assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=39\n"))
 
     val registry = emitter.registrySource()
-    assertTrue(registry.contains("(script as Main).width = value"))
-    assertTrue(registry.contains("(script as Main).tileScene = handle?.let"))
-    assertTrue(registry.contains("(script as Main).textures = values.map"))
+    assertTrue(registry.contains("(script as S1_Main).width = value"))
+    assertTrue(registry.contains("(script as S1_Main).tileScene = handle?.let"))
+    assertTrue(registry.contains("(script as S1_Main).textures = values.map"))
     // Task 88 K6, NON-nullable element type: 0 cannot be represented, so the generated
     // setter refuses it by name instead of fabricating a wrapper over handle 0.
     assertTrue(registry.contains("holds null, but its element type is non-nullable"))
     assertTrue(registry.contains("declare it List<Texture2D?>"))
-    assertFalse(registry.contains("(script as Main).textures = values.map { if (it == 0) null"))
-    assertTrue(registry.contains("(script as Main).input("))
-    assertTrue(registry.contains("(script as Main).onTilePressed(Vector2i(x, y))"))
-    assertTrue(registry.contains("(script as Tile).inputEvent("))
+    assertFalse(registry.contains("(script as S1_Main).textures = values.map { if (it == 0) null"))
+    assertTrue(registry.contains("(script as S1_Main).input("))
+    assertTrue(registry.contains("(script as S1_Main).onTilePressed(Vector2i(x, y))"))
+    assertTrue(registry.contains("(script as S2_Tile).inputEvent("))
   }
 
   @Test
@@ -1036,7 +1036,7 @@ class WebScriptCodeEmitterTest {
       WebScriptCodeEmitter(listOf(WebScriptInput(model, "res://Player.kt"))).registrySource()
     for (virtual in model.virtuals) {
       assertTrue(
-        registry.contains("(script as Player).${virtual.kotlinMethodName}("),
+        registry.contains("(script as S1_Player).${virtual.kotlinMethodName}("),
         "${virtual.virtualName} is listed as dispatched but never reaches the script",
       )
     }
@@ -1185,10 +1185,10 @@ class WebScriptCodeEmitterTest {
     val registry = emitter.registrySource()
     assertTrue(
       registry.contains(
-        "(script as Task64Script).viewPath = net.multigesture.kanama.types.NodePath(value)"
+        "(script as S1_Task64Script).viewPath = net.multigesture.kanama.types.NodePath(value)"
       )
     )
-    assertTrue(registry.contains("(script as Task64Script).viewPath.path"))
+    assertTrue(registry.contains("(script as S1_Task64Script).viewPath.path"))
   }
 
   @Test
@@ -1483,7 +1483,7 @@ class WebScriptCodeEmitterTest {
       ),
       registry,
     )
-    assertTrue(registry.contains("1 -> (script as Enemy).damage(a0)"), registry)
+    assertTrue(registry.contains("1 -> (script as S1_Enemy).damage(a0)"), registry)
   }
 
   @Test
@@ -1516,12 +1516,12 @@ class WebScriptCodeEmitterTest {
       WebScriptCodeEmitter(listOf(WebScriptInput(task80Model(), "res://Enemy.kt"))).registrySource()
     assertTrue(
       registry.contains(
-        "3 -> (script as Enemy).knockback(net.multigesture.kanama.types.Vector3(a0, a1, a2), " +
+        "3 -> (script as S1_Enemy).knockback(net.multigesture.kanama.types.Vector3(a0, a1, a2), " +
           "net.multigesture.kanama.types.Vector3(a3, a4, a5))"
       ),
       registry,
     )
-    assertTrue(registry.contains("4 -> (script as Enemy).setStunned(a0 != 0.0)"), registry)
+    assertTrue(registry.contains("4 -> (script as S1_Enemy).setStunned(a0 != 0.0)"), registry)
   }
 
   @Test
@@ -1605,13 +1605,13 @@ class WebScriptCodeEmitterTest {
     )
     assertTrue(
       registry.contains(
-        "5 -> (script as Enemy).aimTarget().let { \"\${net.multigesture.kanama.web.WebPackedFloats.encode(it.x)},\${net.multigesture.kanama.web.WebPackedFloats.encode(it.y)},\${net.multigesture.kanama.web.WebPackedFloats.encode(it.z)}\" }"
+        "5 -> (script as S1_Enemy).aimTarget().let { \"\${net.multigesture.kanama.web.WebPackedFloats.encode(it.x)},\${net.multigesture.kanama.web.WebPackedFloats.encode(it.y)},\${net.multigesture.kanama.web.WebPackedFloats.encode(it.z)}\" }"
       ),
       registry,
     )
     assertTrue(
       registry.contains(
-        "6 -> net.multigesture.kanama.web.WebPackedFloats.encode((script as Enemy).currentHealth())"
+        "6 -> net.multigesture.kanama.web.WebPackedFloats.encode((script as S1_Enemy).currentHealth())"
       ),
       registry,
     )
@@ -1866,7 +1866,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(registry.contains("val packedArgs = value.split('\\u001F')"), registry)
     assertTrue(
       registry.contains(
-        "(script as Enemy).retarget(packedArgs[0].replace(\"%1F\", \"\\u001F\")" +
+        "(script as S1_Enemy).retarget(packedArgs[0].replace(\"%1F\", \"\\u001F\")" +
           ".replace(\"%25\", \"%\"), net.multigesture.kanama.api.GodotObject(checkNotNull(" +
           "packedArgs[1].toInt().takeIf { it != 0 }?.let { WebObjectId(it) }) " +
           "{ \"Argument node is not nullable\" }))"
@@ -1876,7 +1876,7 @@ class WebScriptCodeEmitterTest {
     // A nullable object argument delivers null for the 0 handle instead of throwing.
     assertTrue(
       registry.contains(
-        "(script as Enemy).addPlayer(packedArgs[0].toLong(), packedArgs[1].toInt()" +
+        "(script as S1_Enemy).addPlayer(packedArgs[0].toLong(), packedArgs[1].toInt()" +
           ".takeIf { it != 0 }?.let { WebObjectId(it) }?.let " +
           "{ net.multigesture.kanama.api.GodotObject(it) })"
       ),
@@ -1971,7 +1971,7 @@ class WebScriptCodeEmitterTest {
     )
     assertTrue(
       registry.contains(
-        "(script as Enemy).scaleBy((net.multigesture.kanama.web.WebPackedValues.decode(packedArgs[0], " +
+        "(script as S1_Enemy).scaleBy((net.multigesture.kanama.web.WebPackedValues.decode(packedArgs[0], " +
           "net.multigesture.kanama.types.Vector3::class) as net.multigesture.kanama.types.Vector3), " +
           "net.multigesture.kanama.web.WebPackedFloats.decode(packedArgs[1]))"
       ),
