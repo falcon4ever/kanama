@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
@@ -920,7 +921,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         /** A new RigidBody3D, GDScript's `RigidBody3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): RigidBody3D =
-            RigidBody3D(GodotHandle(ObjectCalls.constructObject("RigidBody3D")))
+            RigidBody3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("RigidBody3D"), "RigidBody3D")))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents a key on a keyboard being pressed or released.
@@ -320,7 +321,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
         /** A new InputEventKey, GDScript's `InputEventKey.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): InputEventKey =
-            RefCounted.owned(InputEventKey(GodotHandle(ObjectCalls.constructObject("InputEventKey"))))
+            RefCounted.owned(InputEventKey(GodotHandle(requireConstructed(ObjectCalls.constructObject("InputEventKey"), "InputEventKey"))))
 
         // Downcast a GodotObject to InputEventKey (null if not).
         @JvmStatic

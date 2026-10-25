@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that forces to emit a particle from a sub-emitter.
@@ -99,7 +100,7 @@ class VisualShaderNodeParticleEmit(handle: GodotHandle) : VisualShaderNode(handl
         /** A new VisualShaderNodeParticleEmit, GDScript's `VisualShaderNodeParticleEmit.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeParticleEmit =
-            RefCounted.owned(VisualShaderNodeParticleEmit(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeParticleEmit"))))
+            RefCounted.owned(VisualShaderNodeParticleEmit(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeParticleEmit"), "VisualShaderNodeParticleEmit"))))
     }
 
     private object Binds {

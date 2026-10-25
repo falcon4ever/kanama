@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Returns the vector that points in the direction of refraction. For use within the visual shader
@@ -27,6 +28,6 @@ class VisualShaderNodeVectorRefract(handle: GodotHandle) : VisualShaderNodeVecto
         /** A new VisualShaderNodeVectorRefract, GDScript's `VisualShaderNodeVectorRefract.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeVectorRefract =
-            RefCounted.owned(VisualShaderNodeVectorRefract(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeVectorRefract"))))
+            RefCounted.owned(VisualShaderNodeVectorRefract(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeVectorRefract"), "VisualShaderNodeVectorRefract"))))
     }
 }

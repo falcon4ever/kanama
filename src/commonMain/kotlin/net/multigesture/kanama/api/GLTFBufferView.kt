@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents a glTF buffer view.
@@ -255,7 +256,7 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
         /** A new GLTFBufferView, GDScript's `GLTFBufferView.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GLTFBufferView =
-            RefCounted.owned(GLTFBufferView(GodotHandle(ObjectCalls.constructObject("GLTFBufferView"))))
+            RefCounted.owned(GLTFBufferView(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFBufferView"), "GLTFBufferView"))))
     }
 
     private object Binds {

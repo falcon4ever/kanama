@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
@@ -338,7 +339,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         /** A new SkeletonIK3D, GDScript's `SkeletonIK3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): SkeletonIK3D =
-            SkeletonIK3D(GodotHandle(ObjectCalls.constructObject("SkeletonIK3D")))
+            SkeletonIK3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SkeletonIK3D"), "SkeletonIK3D")))
     }
 
     private object Binds {

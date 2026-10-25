@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Efficiently packs and serializes `Array` or `Dictionary`.
@@ -51,7 +52,7 @@ class PackedDataContainer(handle: GodotHandle) : Resource(handle) {
         /** A new PackedDataContainer, GDScript's `PackedDataContainer.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PackedDataContainer =
-            RefCounted.owned(PackedDataContainer(GodotHandle(ObjectCalls.constructObject("PackedDataContainer"))))
+            RefCounted.owned(PackedDataContainer(GodotHandle(requireConstructed(ObjectCalls.constructObject("PackedDataContainer"), "PackedDataContainer"))))
     }
 
     private object Binds {

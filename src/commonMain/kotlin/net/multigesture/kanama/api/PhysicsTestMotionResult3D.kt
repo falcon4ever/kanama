@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 
@@ -206,7 +207,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
         /** A new PhysicsTestMotionResult3D, GDScript's `PhysicsTestMotionResult3D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PhysicsTestMotionResult3D =
-            RefCounted.owned(PhysicsTestMotionResult3D(GodotHandle(ObjectCalls.constructObject("PhysicsTestMotionResult3D"))))
+            RefCounted.owned(PhysicsTestMotionResult3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PhysicsTestMotionResult3D"), "PhysicsTestMotionResult3D"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2i
 
 /**
@@ -80,7 +81,7 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
         /** A new ImageTexture, GDScript's `ImageTexture.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ImageTexture =
-            RefCounted.owned(ImageTexture(GodotHandle(ObjectCalls.constructObject("ImageTexture"))))
+            RefCounted.owned(ImageTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("ImageTexture"), "ImageTexture"))))
     }
 
     private object Binds {

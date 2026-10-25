@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A 1D texture where the red, green, and blue color channels correspond to points on 3 curves.
@@ -130,7 +131,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
         /** A new CurveXYZTexture, GDScript's `CurveXYZTexture.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): CurveXYZTexture =
-            RefCounted.owned(CurveXYZTexture(GodotHandle(ObjectCalls.constructObject("CurveXYZTexture"))))
+            RefCounted.owned(CurveXYZTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("CurveXYZTexture"), "CurveXYZTexture"))))
     }
 
     private object Binds {

@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Performs a uniform texture lookup with triplanar within the visual shader graph.
@@ -26,6 +27,6 @@ class VisualShaderNodeTextureParameterTriplanar(handle: GodotHandle) : VisualSha
         /** A new VisualShaderNodeTextureParameterTriplanar, GDScript's `VisualShaderNodeTextureParameterTriplanar.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeTextureParameterTriplanar =
-            RefCounted.owned(VisualShaderNodeTextureParameterTriplanar(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTextureParameterTriplanar"))))
+            RefCounted.owned(VisualShaderNodeTextureParameterTriplanar(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTextureParameterTriplanar"), "VisualShaderNodeTextureParameterTriplanar"))))
     }
 }

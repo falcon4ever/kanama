@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
 
@@ -149,7 +150,7 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
         /** A new RootMotionView, GDScript's `RootMotionView.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): RootMotionView =
-            RootMotionView(GodotHandle(ObjectCalls.constructObject("RootMotionView")))
+            RootMotionView(GodotHandle(requireConstructed(ObjectCalls.constructObject("RootMotionView"), "RootMotionView")))
     }
 
     private object Binds {

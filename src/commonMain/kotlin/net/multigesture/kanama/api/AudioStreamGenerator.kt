@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An audio stream with utilities for procedural sound generation.
@@ -179,7 +180,7 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
         /** A new AudioStreamGenerator, GDScript's `AudioStreamGenerator.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioStreamGenerator =
-            RefCounted.owned(AudioStreamGenerator(GodotHandle(ObjectCalls.constructObject("AudioStreamGenerator"))))
+            RefCounted.owned(AudioStreamGenerator(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamGenerator"), "AudioStreamGenerator"))))
     }
 
     private object Binds {

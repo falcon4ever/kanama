@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Positional tracker for our spatial entity anchor extension.
@@ -76,7 +77,7 @@ class OpenXRAnchorTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
         /** A new OpenXRAnchorTracker, GDScript's `OpenXRAnchorTracker.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRAnchorTracker =
-            RefCounted.owned(OpenXRAnchorTracker(GodotHandle(ObjectCalls.constructObject("OpenXRAnchorTracker"))))
+            RefCounted.owned(OpenXRAnchorTracker(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRAnchorTracker"), "OpenXRAnchorTracker"))))
     }
 
     private object Binds {

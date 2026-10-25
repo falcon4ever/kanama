@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * MP3 audio stream driver.
@@ -232,7 +233,7 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
         /** A new AudioStreamMP3, GDScript's `AudioStreamMP3.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioStreamMP3 =
-            RefCounted.owned(AudioStreamMP3(GodotHandle(ObjectCalls.constructObject("AudioStreamMP3"))))
+            RefCounted.owned(AudioStreamMP3(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamMP3"), "AudioStreamMP3"))))
     }
 
     private object Binds {

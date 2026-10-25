@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Holds a reference to an `Object`'s instance ID.
@@ -57,7 +58,7 @@ class EncodedObjectAsID(handle: GodotHandle) : RefCounted(handle) {
         /** A new EncodedObjectAsID, GDScript's `EncodedObjectAsID.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): EncodedObjectAsID =
-            RefCounted.owned(EncodedObjectAsID(GodotHandle(ObjectCalls.constructObject("EncodedObjectAsID"))))
+            RefCounted.owned(EncodedObjectAsID(GodotHandle(requireConstructed(ObjectCalls.constructObject("EncodedObjectAsID"), "EncodedObjectAsID"))))
     }
 
     private object Binds {

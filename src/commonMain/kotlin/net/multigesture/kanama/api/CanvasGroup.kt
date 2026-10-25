@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Merges several 2D nodes into a single draw operation.
@@ -117,7 +118,7 @@ class CanvasGroup(handle: GodotHandle) : Node2D(handle) {
         /** A new CanvasGroup, GDScript's `CanvasGroup.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): CanvasGroup =
-            CanvasGroup(GodotHandle(ObjectCalls.constructObject("CanvasGroup")))
+            CanvasGroup(GodotHandle(requireConstructed(ObjectCalls.constructObject("CanvasGroup"), "CanvasGroup")))
     }
 
     private object Binds {

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -706,7 +707,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
         /** A new AnimationPlayer, GDScript's `AnimationPlayer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): AnimationPlayer =
-            AnimationPlayer(GodotHandle(ObjectCalls.constructObject("AnimationPlayer")))
+            AnimationPlayer(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationPlayer"), "AnimationPlayer")))
     }
 
     private object Binds {

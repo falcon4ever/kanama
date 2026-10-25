@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for all texture types.
@@ -26,6 +27,6 @@ open class Texture(handle: GodotHandle) : Resource(handle) {
         /** A new Texture, GDScript's `Texture.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Texture =
-            RefCounted.owned(Texture(GodotHandle(ObjectCalls.constructObject("Texture"))))
+            RefCounted.owned(Texture(GodotHandle(requireConstructed(ObjectCalls.constructObject("Texture"), "Texture"))))
     }
 }

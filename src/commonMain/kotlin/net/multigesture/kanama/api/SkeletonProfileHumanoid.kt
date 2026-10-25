@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A humanoid `SkeletonProfile` preset.
@@ -26,6 +27,6 @@ class SkeletonProfileHumanoid(handle: GodotHandle) : SkeletonProfile(handle) {
         /** A new SkeletonProfileHumanoid, GDScript's `SkeletonProfileHumanoid.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): SkeletonProfileHumanoid =
-            RefCounted.owned(SkeletonProfileHumanoid(GodotHandle(ObjectCalls.constructObject("SkeletonProfileHumanoid"))))
+            RefCounted.owned(SkeletonProfileHumanoid(GodotHandle(requireConstructed(ObjectCalls.constructObject("SkeletonProfileHumanoid"), "SkeletonProfileHumanoid"))))
     }
 }

@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A container that arranges its child controls vertically and wraps them around at the borders.
@@ -23,6 +24,6 @@ class VFlowContainer(handle: GodotHandle) : FlowContainer(handle) {
         /** A new VFlowContainer, GDScript's `VFlowContainer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): VFlowContainer =
-            VFlowContainer(GodotHandle(ObjectCalls.constructObject("VFlowContainer")))
+            VFlowContainer(GodotHandle(requireConstructed(ObjectCalls.constructObject("VFlowContainer"), "VFlowContainer")))
     }
 }

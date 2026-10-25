@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Provides a low-level interface for creating parsers for XML files.
@@ -293,7 +294,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
         /** A new XMLParser, GDScript's `XMLParser.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): XMLParser =
-            RefCounted.owned(XMLParser(GodotHandle(ObjectCalls.constructObject("XMLParser"))))
+            RefCounted.owned(XMLParser(GodotHandle(requireConstructed(ObjectCalls.constructObject("XMLParser"), "XMLParser"))))
     }
 
     private object Binds {

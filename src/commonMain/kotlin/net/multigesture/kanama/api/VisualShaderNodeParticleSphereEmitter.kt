@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that makes particles emitted in a sphere shape.
@@ -26,6 +27,6 @@ class VisualShaderNodeParticleSphereEmitter(handle: GodotHandle) : VisualShaderN
         /** A new VisualShaderNodeParticleSphereEmitter, GDScript's `VisualShaderNodeParticleSphereEmitter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeParticleSphereEmitter =
-            RefCounted.owned(VisualShaderNodeParticleSphereEmitter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeParticleSphereEmitter"))))
+            RefCounted.owned(VisualShaderNodeParticleSphereEmitter(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeParticleSphereEmitter"), "VisualShaderNodeParticleSphereEmitter"))))
     }
 }

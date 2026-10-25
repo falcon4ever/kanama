@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An internal editor class intended for keeping the data of unrecognized nodes.
@@ -123,7 +124,7 @@ class MissingNode(handle: GodotHandle) : Node(handle) {
         /** A new MissingNode, GDScript's `MissingNode.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): MissingNode =
-            MissingNode(GodotHandle(ObjectCalls.constructObject("MissingNode")))
+            MissingNode(GodotHandle(requireConstructed(ObjectCalls.constructObject("MissingNode"), "MissingNode")))
     }
 
     private object Binds {

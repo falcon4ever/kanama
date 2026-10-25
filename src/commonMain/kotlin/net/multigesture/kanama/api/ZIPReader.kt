@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Allows reading the content of a ZIP file.
@@ -99,7 +100,7 @@ class ZIPReader(handle: GodotHandle) : RefCounted(handle) {
         /** A new ZIPReader, GDScript's `ZIPReader.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ZIPReader =
-            RefCounted.owned(ZIPReader(GodotHandle(ObjectCalls.constructObject("ZIPReader"))))
+            RefCounted.owned(ZIPReader(GodotHandle(requireConstructed(ObjectCalls.constructObject("ZIPReader"), "ZIPReader"))))
     }
 
     private object Binds {

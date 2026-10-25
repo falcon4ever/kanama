@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Generated from Godot docs: FBXState
@@ -55,7 +56,7 @@ class FBXState(handle: GodotHandle) : GLTFState(handle) {
         /** A new FBXState, GDScript's `FBXState.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): FBXState =
-            RefCounted.owned(FBXState(GodotHandle(ObjectCalls.constructObject("FBXState"))))
+            RefCounted.owned(FBXState(GodotHandle(requireConstructed(ObjectCalls.constructObject("FBXState"), "FBXState"))))
     }
 
     private object Binds {

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Collection of `OpenXRAction` resources that make up an action set.
@@ -150,7 +151,7 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
         /** A new OpenXRActionSet, GDScript's `OpenXRActionSet.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRActionSet =
-            RefCounted.owned(OpenXRActionSet(GodotHandle(ObjectCalls.constructObject("OpenXRActionSet"))))
+            RefCounted.owned(OpenXRActionSet(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRActionSet"), "OpenXRActionSet"))))
     }
 
     private object Binds {

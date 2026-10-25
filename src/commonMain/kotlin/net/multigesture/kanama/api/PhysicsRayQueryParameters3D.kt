@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 
@@ -293,7 +294,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
          */
         @JvmStatic
         fun create(): PhysicsRayQueryParameters3D =
-            RefCounted.owned(PhysicsRayQueryParameters3D(GodotHandle(ObjectCalls.constructObject("PhysicsRayQueryParameters3D"))))
+            RefCounted.owned(PhysicsRayQueryParameters3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PhysicsRayQueryParameters3D"), "PhysicsRayQueryParameters3D"))))
     }
 
     private object Binds {

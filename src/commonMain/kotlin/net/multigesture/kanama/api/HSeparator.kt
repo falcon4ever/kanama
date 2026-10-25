@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A horizontal line used for separating other controls.
@@ -23,6 +24,6 @@ class HSeparator(handle: GodotHandle) : Separator(handle) {
         /** A new HSeparator, GDScript's `HSeparator.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): HSeparator =
-            HSeparator(GodotHandle(ObjectCalls.constructObject("HSeparator")))
+            HSeparator(GodotHandle(requireConstructed(ObjectCalls.constructObject("HSeparator"), "HSeparator")))
     }
 }

@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector3
 
@@ -282,7 +283,7 @@ class TwoBoneIK3D(handle: GodotHandle) : IKModifier3D(handle) {
         /** A new TwoBoneIK3D, GDScript's `TwoBoneIK3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): TwoBoneIK3D =
-            TwoBoneIK3D(GodotHandle(ObjectCalls.constructObject("TwoBoneIK3D")))
+            TwoBoneIK3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("TwoBoneIK3D"), "TwoBoneIK3D")))
     }
 
     private object Binds {

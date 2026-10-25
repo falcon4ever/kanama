@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An optimized translation.
@@ -42,7 +43,7 @@ class OptimizedTranslation(handle: GodotHandle) : Translation(handle) {
         /** A new OptimizedTranslation, GDScript's `OptimizedTranslation.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OptimizedTranslation =
-            RefCounted.owned(OptimizedTranslation(GodotHandle(ObjectCalls.constructObject("OptimizedTranslation"))))
+            RefCounted.owned(OptimizedTranslation(GodotHandle(requireConstructed(ObjectCalls.constructObject("OptimizedTranslation"), "OptimizedTranslation"))))
     }
 
     private object Binds {

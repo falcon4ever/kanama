@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents a single manually placed probe for dynamic object lighting with `LightmapGI`.
@@ -23,6 +24,6 @@ class LightmapProbe(handle: GodotHandle) : Node3D(handle) {
         /** A new LightmapProbe, GDScript's `LightmapProbe.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): LightmapProbe =
-            LightmapProbe(GodotHandle(ObjectCalls.constructObject("LightmapProbe")))
+            LightmapProbe(GodotHandle(requireConstructed(ObjectCalls.constructObject("LightmapProbe"), "LightmapProbe")))
     }
 }

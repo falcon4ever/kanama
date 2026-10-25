@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -280,7 +281,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
         /** A new InputEventMouseMotion, GDScript's `InputEventMouseMotion.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): InputEventMouseMotion =
-            RefCounted.owned(InputEventMouseMotion(GodotHandle(ObjectCalls.constructObject("InputEventMouseMotion"))))
+            RefCounted.owned(InputEventMouseMotion(GodotHandle(requireConstructed(ObjectCalls.constructObject("InputEventMouseMotion"), "InputEventMouseMotion"))))
 
         // Downcast a GodotObject to InputEventMouseMotion (null if not).
         @JvmStatic

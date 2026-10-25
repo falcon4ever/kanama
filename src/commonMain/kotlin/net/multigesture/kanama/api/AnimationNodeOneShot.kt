@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Plays an animation once in an `AnimationNodeBlendTree`.
@@ -403,7 +404,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
         /** A new AnimationNodeOneShot, GDScript's `AnimationNodeOneShot.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AnimationNodeOneShot =
-            RefCounted.owned(AnimationNodeOneShot(GodotHandle(ObjectCalls.constructObject("AnimationNodeOneShot"))))
+            RefCounted.owned(AnimationNodeOneShot(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationNodeOneShot"), "AnimationNodeOneShot"))))
     }
 
     private object Binds {

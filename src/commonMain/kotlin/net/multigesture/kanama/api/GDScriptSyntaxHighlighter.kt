@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A GDScript syntax highlighter that can be used with `TextEdit` and `CodeEdit` nodes.
@@ -26,6 +27,6 @@ class GDScriptSyntaxHighlighter(handle: GodotHandle) : EditorSyntaxHighlighter(h
         /** A new GDScriptSyntaxHighlighter, GDScript's `GDScriptSyntaxHighlighter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GDScriptSyntaxHighlighter =
-            RefCounted.owned(GDScriptSyntaxHighlighter(GodotHandle(ObjectCalls.constructObject("GDScriptSyntaxHighlighter"))))
+            RefCounted.owned(GDScriptSyntaxHighlighter(GodotHandle(requireConstructed(ObjectCalls.constructObject("GDScriptSyntaxHighlighter"), "GDScriptSyntaxHighlighter"))))
     }
 }

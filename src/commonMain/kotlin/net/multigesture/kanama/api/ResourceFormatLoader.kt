@@ -4,6 +4,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Loads a specific resource type from a file.
@@ -79,6 +80,6 @@ class ResourceFormatLoader(handle: GodotHandle) : RefCounted(handle) {
         /** A new ResourceFormatLoader, GDScript's `ResourceFormatLoader.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ResourceFormatLoader =
-            RefCounted.owned(ResourceFormatLoader(GodotHandle(ObjectCalls.constructObject("ResourceFormatLoader"))))
+            RefCounted.owned(ResourceFormatLoader(GodotHandle(requireConstructed(ObjectCalls.constructObject("ResourceFormatLoader"), "ResourceFormatLoader"))))
     }
 }

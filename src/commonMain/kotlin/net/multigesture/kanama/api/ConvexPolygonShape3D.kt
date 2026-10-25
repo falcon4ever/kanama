@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -56,7 +57,7 @@ class ConvexPolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
         /** A new ConvexPolygonShape3D, GDScript's `ConvexPolygonShape3D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ConvexPolygonShape3D =
-            RefCounted.owned(ConvexPolygonShape3D(GodotHandle(ObjectCalls.constructObject("ConvexPolygonShape3D"))))
+            RefCounted.owned(ConvexPolygonShape3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("ConvexPolygonShape3D"), "ConvexPolygonShape3D"))))
     }
 
     private object Binds {

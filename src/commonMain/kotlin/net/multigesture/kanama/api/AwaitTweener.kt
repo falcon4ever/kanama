@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Awaits a specified signal.
@@ -42,7 +43,7 @@ class AwaitTweener(handle: GodotHandle) : Tweener(handle) {
         /** A new AwaitTweener, GDScript's `AwaitTweener.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AwaitTweener =
-            RefCounted.owned(AwaitTweener(GodotHandle(ObjectCalls.constructObject("AwaitTweener"))))
+            RefCounted.owned(AwaitTweener(GodotHandle(requireConstructed(ObjectCalls.constructObject("AwaitTweener"), "AwaitTweener"))))
     }
 
     private object Binds {

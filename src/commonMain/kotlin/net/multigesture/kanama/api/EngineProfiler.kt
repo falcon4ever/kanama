@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for creating custom profilers.
@@ -26,6 +27,6 @@ class EngineProfiler(handle: GodotHandle) : RefCounted(handle) {
         /** A new EngineProfiler, GDScript's `EngineProfiler.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): EngineProfiler =
-            RefCounted.owned(EngineProfiler(GodotHandle(ObjectCalls.constructObject("EngineProfiler"))))
+            RefCounted.owned(EngineProfiler(GodotHandle(requireConstructed(ObjectCalls.constructObject("EngineProfiler"), "EngineProfiler"))))
     }
 }

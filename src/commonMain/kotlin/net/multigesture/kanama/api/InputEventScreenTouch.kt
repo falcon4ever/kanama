@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -136,7 +137,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
         /** A new InputEventScreenTouch, GDScript's `InputEventScreenTouch.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): InputEventScreenTouch =
-            RefCounted.owned(InputEventScreenTouch(GodotHandle(ObjectCalls.constructObject("InputEventScreenTouch"))))
+            RefCounted.owned(InputEventScreenTouch(GodotHandle(requireConstructed(ObjectCalls.constructObject("InputEventScreenTouch"), "InputEventScreenTouch"))))
 
         // Downcast a GodotObject to InputEventScreenTouch (null if not).
         @JvmStatic

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for `AnimationNode`s with multiple input ports that must be synchronized.
@@ -57,7 +58,7 @@ open class AnimationNodeSync(handle: GodotHandle) : AnimationNode(handle) {
         /** A new AnimationNodeSync, GDScript's `AnimationNodeSync.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AnimationNodeSync =
-            RefCounted.owned(AnimationNodeSync(GodotHandle(ObjectCalls.constructObject("AnimationNodeSync"))))
+            RefCounted.owned(AnimationNodeSync(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationNodeSync"), "AnimationNodeSync"))))
     }
 
     private object Binds {

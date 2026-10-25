@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -143,7 +144,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
         /** A new RDPipelineColorBlendState, GDScript's `RDPipelineColorBlendState.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): RDPipelineColorBlendState =
-            RefCounted.owned(RDPipelineColorBlendState(GodotHandle(ObjectCalls.constructObject("RDPipelineColorBlendState"))))
+            RefCounted.owned(RDPipelineColorBlendState(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDPipelineColorBlendState"), "RDPipelineColorBlendState"))))
     }
 
     private object Binds {

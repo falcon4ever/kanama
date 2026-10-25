@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -72,7 +73,7 @@ class XRFaceModifier3D(handle: GodotHandle) : Node3D(handle) {
         /** A new XRFaceModifier3D, GDScript's `XRFaceModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): XRFaceModifier3D =
-            XRFaceModifier3D(GodotHandle(ObjectCalls.constructObject("XRFaceModifier3D")))
+            XRFaceModifier3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("XRFaceModifier3D"), "XRFaceModifier3D")))
     }
 
     private object Binds {

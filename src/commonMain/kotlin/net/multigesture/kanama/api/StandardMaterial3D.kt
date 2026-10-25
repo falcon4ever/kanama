@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A PBR (Physically Based Rendering) material to be used on 3D objects.
@@ -26,6 +27,6 @@ class StandardMaterial3D(handle: GodotHandle) : BaseMaterial3D(handle) {
         /** A new StandardMaterial3D, GDScript's `StandardMaterial3D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): StandardMaterial3D =
-            RefCounted.owned(StandardMaterial3D(GodotHandle(ObjectCalls.constructObject("StandardMaterial3D"))))
+            RefCounted.owned(StandardMaterial3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("StandardMaterial3D"), "StandardMaterial3D"))))
     }
 }

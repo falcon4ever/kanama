@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.binding.runtime.requireGodotReturn
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.RID
@@ -2146,7 +2147,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         /** A new Node, GDScript's `Node.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Node =
-            Node(GodotHandle(ObjectCalls.constructObject("Node")))
+            Node(GodotHandle(requireConstructed(ObjectCalls.constructObject("Node"), "Node")))
     }
 
     private object Binds {

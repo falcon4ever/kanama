@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A time-scaling animation node used in `AnimationTree`.
@@ -26,6 +27,6 @@ class AnimationNodeTimeScale(handle: GodotHandle) : AnimationNode(handle) {
         /** A new AnimationNodeTimeScale, GDScript's `AnimationNodeTimeScale.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AnimationNodeTimeScale =
-            RefCounted.owned(AnimationNodeTimeScale(GodotHandle(ObjectCalls.constructObject("AnimationNodeTimeScale"))))
+            RefCounted.owned(AnimationNodeTimeScale(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationNodeTimeScale"), "AnimationNodeTimeScale"))))
     }
 }

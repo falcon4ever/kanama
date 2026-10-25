@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -48,7 +49,7 @@ class OpenXRCompositionLayerQuad(handle: GodotHandle) : OpenXRCompositionLayer(h
         /** A new OpenXRCompositionLayerQuad, GDScript's `OpenXRCompositionLayerQuad.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): OpenXRCompositionLayerQuad =
-            OpenXRCompositionLayerQuad(GodotHandle(ObjectCalls.constructObject("OpenXRCompositionLayerQuad")))
+            OpenXRCompositionLayerQuad(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRCompositionLayerQuad"), "OpenXRCompositionLayerQuad")))
     }
 
     private object Binds {

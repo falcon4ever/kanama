@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a reverberation audio effect to an audio bus. Emulates an echo by playing a blurred version
@@ -273,7 +274,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
         /** A new AudioEffectReverb, GDScript's `AudioEffectReverb.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioEffectReverb =
-            RefCounted.owned(AudioEffectReverb(GodotHandle(ObjectCalls.constructObject("AudioEffectReverb"))))
+            RefCounted.owned(AudioEffectReverb(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectReverb"), "AudioEffectReverb"))))
     }
 
     private object Binds {

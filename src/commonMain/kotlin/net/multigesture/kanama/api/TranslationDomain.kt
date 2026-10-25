@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A self-contained collection of `Translation` resources.
@@ -549,7 +550,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
         /** A new TranslationDomain, GDScript's `TranslationDomain.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): TranslationDomain =
-            RefCounted.owned(TranslationDomain(GodotHandle(ObjectCalls.constructObject("TranslationDomain"))))
+            RefCounted.owned(TranslationDomain(GodotHandle(requireConstructed(ObjectCalls.constructObject("TranslationDomain"), "TranslationDomain"))))
     }
 
     private object Binds {

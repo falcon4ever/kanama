@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 
@@ -1052,7 +1053,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
         /** A new GraphEdit, GDScript's `GraphEdit.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): GraphEdit =
-            GraphEdit(GodotHandle(ObjectCalls.constructObject("GraphEdit")))
+            GraphEdit(GodotHandle(requireConstructed(ObjectCalls.constructObject("GraphEdit"), "GraphEdit")))
     }
 
     private object Binds {

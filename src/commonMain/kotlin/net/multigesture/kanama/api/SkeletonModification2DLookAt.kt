@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -237,7 +238,7 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
         /** A new SkeletonModification2DLookAt, GDScript's `SkeletonModification2DLookAt.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): SkeletonModification2DLookAt =
-            RefCounted.owned(SkeletonModification2DLookAt(GodotHandle(ObjectCalls.constructObject("SkeletonModification2DLookAt"))))
+            RefCounted.owned(SkeletonModification2DLookAt(GodotHandle(requireConstructed(ObjectCalls.constructObject("SkeletonModification2DLookAt"), "SkeletonModification2DLookAt"))))
     }
 
     private object Binds {

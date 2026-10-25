@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2i
@@ -1658,7 +1659,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
          */
         @JvmStatic
         fun create(): Image =
-            RefCounted.owned(Image(GodotHandle(ObjectCalls.constructObject("Image"))))
+            RefCounted.owned(Image(GodotHandle(requireConstructed(ObjectCalls.constructObject("Image"), "Image"))))
     }
 
     private object Binds {

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
@@ -1421,7 +1422,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
         /** A new FontFile, GDScript's `FontFile.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): FontFile =
-            RefCounted.owned(FontFile(GodotHandle(ObjectCalls.constructObject("FontFile"))))
+            RefCounted.owned(FontFile(GodotHandle(requireConstructed(ObjectCalls.constructObject("FontFile"), "FontFile"))))
     }
 
     private object Binds {

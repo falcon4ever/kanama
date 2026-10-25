@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An input field for single-line text.
@@ -1490,7 +1491,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
         /** A new LineEdit, GDScript's `LineEdit.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): LineEdit =
-            LineEdit(GodotHandle(ObjectCalls.constructObject("LineEdit")))
+            LineEdit(GodotHandle(requireConstructed(ObjectCalls.constructObject("LineEdit"), "LineEdit")))
     }
 
     private object Binds {

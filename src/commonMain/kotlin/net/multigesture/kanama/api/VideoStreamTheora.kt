@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * `VideoStream` resource for Ogg Theora videos.
@@ -26,6 +27,6 @@ class VideoStreamTheora(handle: GodotHandle) : VideoStream(handle) {
         /** A new VideoStreamTheora, GDScript's `VideoStreamTheora.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VideoStreamTheora =
-            RefCounted.owned(VideoStreamTheora(GodotHandle(ObjectCalls.constructObject("VideoStreamTheora"))))
+            RefCounted.owned(VideoStreamTheora(GodotHandle(requireConstructed(ObjectCalls.constructObject("VideoStreamTheora"), "VideoStreamTheora"))))
     }
 }

@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Plays positional sound in 3D space.
@@ -753,7 +754,7 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
         /** A new AudioStreamPlayer3D, GDScript's `AudioStreamPlayer3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): AudioStreamPlayer3D =
-            AudioStreamPlayer3D(GodotHandle(ObjectCalls.constructObject("AudioStreamPlayer3D")))
+            AudioStreamPlayer3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamPlayer3D"), "AudioStreamPlayer3D")))
     }
 
     private object Binds {

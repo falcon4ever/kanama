@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Configuration header for April tag markers.
@@ -108,7 +109,7 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXR
         /** A new OpenXRSpatialCapabilityConfigurationAprilTag, GDScript's `OpenXRSpatialCapabilityConfigurationAprilTag.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRSpatialCapabilityConfigurationAprilTag =
-            RefCounted.owned(OpenXRSpatialCapabilityConfigurationAprilTag(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationAprilTag"))))
+            RefCounted.owned(OpenXRSpatialCapabilityConfigurationAprilTag(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationAprilTag"), "OpenXRSpatialCapabilityConfigurationAprilTag"))))
     }
 
     private object Binds {

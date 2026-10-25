@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A CSG node that allows you to combine other CSG modifiers.
@@ -23,6 +24,6 @@ class CSGCombiner3D(handle: GodotHandle) : CSGShape3D(handle) {
         /** A new CSGCombiner3D, GDScript's `CSGCombiner3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): CSGCombiner3D =
-            CSGCombiner3D(GodotHandle(ObjectCalls.constructObject("CSGCombiner3D")))
+            CSGCombiner3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CSGCombiner3D"), "CSGCombiner3D")))
     }
 }

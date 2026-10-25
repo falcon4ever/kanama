@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A physics joint that connects two 3D physics bodies in a way that simulates a ball-and-socket
@@ -127,7 +128,7 @@ class ConeTwistJoint3D(handle: GodotHandle) : Joint3D(handle) {
         /** A new ConeTwistJoint3D, GDScript's `ConeTwistJoint3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): ConeTwistJoint3D =
-            ConeTwistJoint3D(GodotHandle(ObjectCalls.constructObject("ConeTwistJoint3D")))
+            ConeTwistJoint3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("ConeTwistJoint3D"), "ConeTwistJoint3D")))
     }
 
     private object Binds {

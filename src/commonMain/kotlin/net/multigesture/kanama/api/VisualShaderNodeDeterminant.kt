@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Calculates the determinant of a `Transform3D` within the visual shader graph.
@@ -26,6 +27,6 @@ class VisualShaderNodeDeterminant(handle: GodotHandle) : VisualShaderNode(handle
         /** A new VisualShaderNodeDeterminant, GDScript's `VisualShaderNodeDeterminant.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeDeterminant =
-            RefCounted.owned(VisualShaderNodeDeterminant(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeDeterminant"))))
+            RefCounted.owned(VisualShaderNodeDeterminant(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeDeterminant"), "VisualShaderNodeDeterminant"))))
     }
 }

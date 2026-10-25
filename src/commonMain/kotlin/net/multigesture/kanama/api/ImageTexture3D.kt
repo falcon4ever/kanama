@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Texture with 3 dimensions.
@@ -57,7 +58,7 @@ class ImageTexture3D(handle: GodotHandle) : Texture3D(handle) {
          */
         @JvmStatic
         fun create(): ImageTexture3D =
-            RefCounted.owned(ImageTexture3D(GodotHandle(ObjectCalls.constructObject("ImageTexture3D"))))
+            RefCounted.owned(ImageTexture3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("ImageTexture3D"), "ImageTexture3D"))))
     }
 
     private object Binds {

@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Composes a `Transform3D` from four `Vector3`s within the visual shader graph.
@@ -26,6 +27,6 @@ class VisualShaderNodeTransformCompose(handle: GodotHandle) : VisualShaderNode(h
         /** A new VisualShaderNodeTransformCompose, GDScript's `VisualShaderNodeTransformCompose.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeTransformCompose =
-            RefCounted.owned(VisualShaderNodeTransformCompose(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTransformCompose"))))
+            RefCounted.owned(VisualShaderNodeTransformCompose(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTransformCompose"), "VisualShaderNodeTransformCompose"))))
     }
 }

@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A stream peer that handles GZIP and deflate compression/decompression.
@@ -75,7 +76,7 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
         /** A new StreamPeerGZIP, GDScript's `StreamPeerGZIP.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): StreamPeerGZIP =
-            RefCounted.owned(StreamPeerGZIP(GodotHandle(ObjectCalls.constructObject("StreamPeerGZIP"))))
+            RefCounted.owned(StreamPeerGZIP(GodotHandle(requireConstructed(ObjectCalls.constructObject("StreamPeerGZIP"), "StreamPeerGZIP"))))
     }
 
     private object Binds {

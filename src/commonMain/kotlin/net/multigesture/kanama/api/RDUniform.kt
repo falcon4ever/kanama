@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 
 /**
@@ -120,7 +121,7 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
         /** A new RDUniform, GDScript's `RDUniform.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): RDUniform =
-            RefCounted.owned(RDUniform(GodotHandle(ObjectCalls.constructObject("RDUniform"))))
+            RefCounted.owned(RDUniform(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDUniform"), "RDUniform"))))
     }
 
     private object Binds {

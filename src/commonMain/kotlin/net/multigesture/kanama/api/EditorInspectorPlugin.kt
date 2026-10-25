@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Plugin for adding custom property editors on the inspector.
@@ -68,7 +69,7 @@ class EditorInspectorPlugin(handle: GodotHandle) : RefCounted(handle) {
         /** A new EditorInspectorPlugin, GDScript's `EditorInspectorPlugin.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): EditorInspectorPlugin =
-            RefCounted.owned(EditorInspectorPlugin(GodotHandle(ObjectCalls.constructObject("EditorInspectorPlugin"))))
+            RefCounted.owned(EditorInspectorPlugin(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorInspectorPlugin"), "EditorInspectorPlugin"))))
     }
 
     private object Binds {

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A control used for visual representation of a percentage.
@@ -162,7 +163,7 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
         /** A new ProgressBar, GDScript's `ProgressBar.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): ProgressBar =
-            ProgressBar(GodotHandle(ObjectCalls.constructObject("ProgressBar")))
+            ProgressBar(GodotHandle(requireConstructed(ObjectCalls.constructObject("ProgressBar"), "ProgressBar")))
     }
 
     private object Binds {

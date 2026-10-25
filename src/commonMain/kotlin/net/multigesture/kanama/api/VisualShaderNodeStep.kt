@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Calculates a Step function within the visual shader graph.
@@ -116,7 +117,7 @@ class VisualShaderNodeStep(handle: GodotHandle) : VisualShaderNode(handle) {
         /** A new VisualShaderNodeStep, GDScript's `VisualShaderNodeStep.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeStep =
-            RefCounted.owned(VisualShaderNodeStep(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeStep"))))
+            RefCounted.owned(VisualShaderNodeStep(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeStep"), "VisualShaderNodeStep"))))
     }
 
     private object Binds {

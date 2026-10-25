@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Pipeline multisample state (used by `RenderingDevice`).
@@ -228,7 +229,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
         /** A new RDPipelineMultisampleState, GDScript's `RDPipelineMultisampleState.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): RDPipelineMultisampleState =
-            RefCounted.owned(RDPipelineMultisampleState(GodotHandle(ObjectCalls.constructObject("RDPipelineMultisampleState"))))
+            RefCounted.owned(RDPipelineMultisampleState(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDPipelineMultisampleState"), "RDPipelineMultisampleState"))))
     }
 
     private object Binds {

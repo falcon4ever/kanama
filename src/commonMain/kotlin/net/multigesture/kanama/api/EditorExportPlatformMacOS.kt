@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Generated from Godot docs: EditorExportPlatformMacOS
@@ -24,6 +25,6 @@ class EditorExportPlatformMacOS(handle: GodotHandle) : EditorExportPlatform(hand
         /** A new EditorExportPlatformMacOS, GDScript's `EditorExportPlatformMacOS.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): EditorExportPlatformMacOS =
-            RefCounted.owned(EditorExportPlatformMacOS(GodotHandle(ObjectCalls.constructObject("EditorExportPlatformMacOS"))))
+            RefCounted.owned(EditorExportPlatformMacOS(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorExportPlatformMacOS"), "EditorExportPlatformMacOS"))))
     }
 }

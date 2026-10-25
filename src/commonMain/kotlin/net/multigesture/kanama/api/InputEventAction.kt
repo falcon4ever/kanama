@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An input event type for actions.
@@ -134,7 +135,7 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
         /** A new InputEventAction, GDScript's `InputEventAction.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): InputEventAction =
-            RefCounted.owned(InputEventAction(GodotHandle(ObjectCalls.constructObject("InputEventAction"))))
+            RefCounted.owned(InputEventAction(GodotHandle(requireConstructed(ObjectCalls.constructObject("InputEventAction"), "InputEventAction"))))
     }
 
     private object Binds {

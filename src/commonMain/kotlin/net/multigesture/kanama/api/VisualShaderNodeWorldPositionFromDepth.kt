@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that calculates the position of the pixel in world space using the depth
@@ -27,6 +28,6 @@ class VisualShaderNodeWorldPositionFromDepth(handle: GodotHandle) : VisualShader
         /** A new VisualShaderNodeWorldPositionFromDepth, GDScript's `VisualShaderNodeWorldPositionFromDepth.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeWorldPositionFromDepth =
-            RefCounted.owned(VisualShaderNodeWorldPositionFromDepth(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeWorldPositionFromDepth"))))
+            RefCounted.owned(VisualShaderNodeWorldPositionFromDepth(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeWorldPositionFromDepth"), "VisualShaderNodeWorldPositionFromDepth"))))
     }
 }

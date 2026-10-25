@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A container that arranges its child controls in a grid layout.
@@ -49,7 +50,7 @@ class GridContainer(handle: GodotHandle) : Container(handle) {
         /** A new GridContainer, GDScript's `GridContainer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): GridContainer =
-            GridContainer(GodotHandle(ObjectCalls.constructObject("GridContainer")))
+            GridContainer(GodotHandle(requireConstructed(ObjectCalls.constructObject("GridContainer"), "GridContainer")))
     }
 
     private object Binds {

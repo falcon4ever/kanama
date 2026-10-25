@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents a glTF camera.
@@ -232,7 +233,7 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
         /** A new GLTFCamera, GDScript's `GLTFCamera.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GLTFCamera =
-            RefCounted.owned(GLTFCamera(GodotHandle(ObjectCalls.constructObject("GLTFCamera"))))
+            RefCounted.owned(GLTFCamera(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFCamera"), "GLTFCamera"))))
     }
 
     private object Binds {

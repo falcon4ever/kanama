@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -152,7 +153,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
         /** A new CollisionShape3D, GDScript's `CollisionShape3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): CollisionShape3D =
-            CollisionShape3D(GodotHandle(ObjectCalls.constructObject("CollisionShape3D")))
+            CollisionShape3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CollisionShape3D"), "CollisionShape3D")))
     }
 
     private object Binds {

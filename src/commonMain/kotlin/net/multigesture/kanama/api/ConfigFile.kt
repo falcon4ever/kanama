@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Helper class to handle INI-style files.
@@ -249,7 +250,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
         /** A new ConfigFile, GDScript's `ConfigFile.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ConfigFile =
-            RefCounted.owned(ConfigFile(GodotHandle(ObjectCalls.constructObject("ConfigFile"))))
+            RefCounted.owned(ConfigFile(GodotHandle(requireConstructed(ObjectCalls.constructObject("ConfigFile"), "ConfigFile"))))
     }
 
     private object Binds {

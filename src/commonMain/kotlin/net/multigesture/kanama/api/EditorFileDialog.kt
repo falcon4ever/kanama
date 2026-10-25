@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A modified version of `FileDialog` used by the editor.
@@ -58,7 +59,7 @@ class EditorFileDialog(handle: GodotHandle) : FileDialog(handle) {
         /** A new EditorFileDialog, GDScript's `EditorFileDialog.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): EditorFileDialog =
-            EditorFileDialog(GodotHandle(ObjectCalls.constructObject("EditorFileDialog")))
+            EditorFileDialog(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorFileDialog"), "EditorFileDialog")))
     }
 
     private object Binds {

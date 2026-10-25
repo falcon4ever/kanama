@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -401,7 +402,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
         /** A new VirtualJoystick, GDScript's `VirtualJoystick.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): VirtualJoystick =
-            VirtualJoystick(GodotHandle(ObjectCalls.constructObject("VirtualJoystick")))
+            VirtualJoystick(GodotHandle(requireConstructed(ObjectCalls.constructObject("VirtualJoystick"), "VirtualJoystick")))
     }
 
     private object Binds {

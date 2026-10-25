@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A shortcut for binding input.
@@ -96,7 +97,7 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
         /** A new Shortcut, GDScript's `Shortcut.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Shortcut =
-            RefCounted.owned(Shortcut(GodotHandle(ObjectCalls.constructObject("Shortcut"))))
+            RefCounted.owned(Shortcut(GodotHandle(requireConstructed(ObjectCalls.constructObject("Shortcut"), "Shortcut"))))
     }
 
     private object Binds {

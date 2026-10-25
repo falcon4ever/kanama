@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
 
@@ -482,7 +483,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
         /** A new XRHandTracker, GDScript's `XRHandTracker.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): XRHandTracker =
-            RefCounted.owned(XRHandTracker(GodotHandle(ObjectCalls.constructObject("XRHandTracker"))))
+            RefCounted.owned(XRHandTracker(GodotHandle(requireConstructed(ObjectCalls.constructObject("XRHandTracker"), "XRHandTracker"))))
     }
 
     private object Binds {

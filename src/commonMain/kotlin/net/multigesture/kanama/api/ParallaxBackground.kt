@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -174,7 +175,7 @@ class ParallaxBackground(handle: GodotHandle) : CanvasLayer(handle) {
         /** A new ParallaxBackground, GDScript's `ParallaxBackground.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): ParallaxBackground =
-            ParallaxBackground(GodotHandle(ObjectCalls.constructObject("ParallaxBackground")))
+            ParallaxBackground(GodotHandle(requireConstructed(ObjectCalls.constructObject("ParallaxBackground"), "ParallaxBackground")))
     }
 
     private object Binds {

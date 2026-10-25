@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * UDP packet peer.
@@ -205,7 +206,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
         /** A new PacketPeerUDP, GDScript's `PacketPeerUDP.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PacketPeerUDP =
-            RefCounted.owned(PacketPeerUDP(GodotHandle(ObjectCalls.constructObject("PacketPeerUDP"))))
+            RefCounted.owned(PacketPeerUDP(GodotHandle(requireConstructed(ObjectCalls.constructObject("PacketPeerUDP"), "PacketPeerUDP"))))
     }
 
     private object Binds {

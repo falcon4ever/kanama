@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Directional light from a distance, as from the Sun.
@@ -206,7 +207,7 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
         /** A new DirectionalLight3D, GDScript's `DirectionalLight3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): DirectionalLight3D =
-            DirectionalLight3D(GodotHandle(ObjectCalls.constructObject("DirectionalLight3D")))
+            DirectionalLight3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("DirectionalLight3D"), "DirectionalLight3D")))
     }
 
     private object Binds {

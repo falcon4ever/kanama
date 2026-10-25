@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A container that arranges its child controls horizontally and wraps them around at the borders.
@@ -23,6 +24,6 @@ class HFlowContainer(handle: GodotHandle) : FlowContainer(handle) {
         /** A new HFlowContainer, GDScript's `HFlowContainer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): HFlowContainer =
-            HFlowContainer(GodotHandle(ObjectCalls.constructObject("HFlowContainer")))
+            HFlowContainer(GodotHandle(requireConstructed(ObjectCalls.constructObject("HFlowContainer"), "HFlowContainer")))
     }
 }

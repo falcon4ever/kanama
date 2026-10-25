@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An optionally compressed `CubemapArray`.
@@ -26,6 +27,6 @@ class CompressedCubemapArray(handle: GodotHandle) : CompressedTextureLayered(han
         /** A new CompressedCubemapArray, GDScript's `CompressedCubemapArray.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): CompressedCubemapArray =
-            RefCounted.owned(CompressedCubemapArray(GodotHandle(ObjectCalls.constructObject("CompressedCubemapArray"))))
+            RefCounted.owned(CompressedCubemapArray(GodotHandle(requireConstructed(ObjectCalls.constructObject("CompressedCubemapArray"), "CompressedCubemapArray"))))
     }
 }

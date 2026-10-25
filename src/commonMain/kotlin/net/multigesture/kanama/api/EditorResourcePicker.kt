@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Godot editor's control for selecting `Resource` type properties.
@@ -157,7 +158,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
         /** A new EditorResourcePicker, GDScript's `EditorResourcePicker.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): EditorResourcePicker =
-            EditorResourcePicker(GodotHandle(ObjectCalls.constructObject("EditorResourcePicker")))
+            EditorResourcePicker(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorResourcePicker"), "EditorResourcePicker")))
     }
 
     private object Binds {

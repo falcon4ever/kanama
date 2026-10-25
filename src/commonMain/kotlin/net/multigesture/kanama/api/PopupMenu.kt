@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -1214,7 +1215,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
         /** A new PopupMenu, GDScript's `PopupMenu.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): PopupMenu =
-            PopupMenu(GodotHandle(ObjectCalls.constructObject("PopupMenu")))
+            PopupMenu(GodotHandle(requireConstructed(ObjectCalls.constructObject("PopupMenu"), "PopupMenu")))
     }
 
     private object Binds {

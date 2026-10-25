@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Generated from Godot docs: ScriptExtension
@@ -24,6 +25,6 @@ class ScriptExtension(handle: GodotHandle) : Script(handle) {
         /** A new ScriptExtension, GDScript's `ScriptExtension.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ScriptExtension =
-            RefCounted.owned(ScriptExtension(GodotHandle(ObjectCalls.constructObject("ScriptExtension"))))
+            RefCounted.owned(ScriptExtension(GodotHandle(requireConstructed(ObjectCalls.constructObject("ScriptExtension"), "ScriptExtension"))))
     }
 }

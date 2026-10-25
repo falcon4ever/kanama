@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Texture with 2 dimensions, optionally compressed.
@@ -54,7 +55,7 @@ class CompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
         /** A new CompressedTexture2D, GDScript's `CompressedTexture2D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): CompressedTexture2D =
-            RefCounted.owned(CompressedTexture2D(GodotHandle(ObjectCalls.constructObject("CompressedTexture2D"))))
+            RefCounted.owned(CompressedTexture2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CompressedTexture2D"), "CompressedTexture2D"))))
     }
 
     private object Binds {

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A stream peer that handles TLS connections.
@@ -152,7 +153,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
         /** A new StreamPeerTLS, GDScript's `StreamPeerTLS.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): StreamPeerTLS =
-            RefCounted.owned(StreamPeerTLS(GodotHandle(ObjectCalls.constructObject("StreamPeerTLS"))))
+            RefCounted.owned(StreamPeerTLS(GodotHandle(requireConstructed(ObjectCalls.constructObject("StreamPeerTLS"), "StreamPeerTLS"))))
     }
 
     private object Binds {

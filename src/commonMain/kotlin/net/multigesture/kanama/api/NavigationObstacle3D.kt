@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 
@@ -321,7 +322,7 @@ class NavigationObstacle3D(handle: GodotHandle) : Node3D(handle) {
         /** A new NavigationObstacle3D, GDScript's `NavigationObstacle3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): NavigationObstacle3D =
-            NavigationObstacle3D(GodotHandle(ObjectCalls.constructObject("NavigationObstacle3D")))
+            NavigationObstacle3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("NavigationObstacle3D"), "NavigationObstacle3D")))
     }
 
     private object Binds {

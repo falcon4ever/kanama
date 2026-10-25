@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a soft-clip limiter audio effect to an audio bus.
@@ -146,7 +147,7 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
         /** A new AudioEffectLimiter, GDScript's `AudioEffectLimiter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioEffectLimiter =
-            RefCounted.owned(AudioEffectLimiter(GodotHandle(ObjectCalls.constructObject("AudioEffectLimiter"))))
+            RefCounted.owned(AudioEffectLimiter(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectLimiter"), "AudioEffectLimiter"))))
     }
 
     private object Binds {

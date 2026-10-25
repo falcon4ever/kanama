@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Imports comma-separated values as `Translation`s.
@@ -26,6 +27,6 @@ class ResourceImporterCSVTranslation(handle: GodotHandle) : ResourceImporter(han
         /** A new ResourceImporterCSVTranslation, GDScript's `ResourceImporterCSVTranslation.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ResourceImporterCSVTranslation =
-            RefCounted.owned(ResourceImporterCSVTranslation(GodotHandle(ObjectCalls.constructObject("ResourceImporterCSVTranslation"))))
+            RefCounted.owned(ResourceImporterCSVTranslation(GodotHandle(requireConstructed(ObjectCalls.constructObject("ResourceImporterCSVTranslation"), "ResourceImporterCSVTranslation"))))
     }
 }

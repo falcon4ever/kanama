@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An editor feature profile which can be used to disable specific features.
@@ -265,7 +266,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
         /** A new EditorFeatureProfile, GDScript's `EditorFeatureProfile.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): EditorFeatureProfile =
-            RefCounted.owned(EditorFeatureProfile(GodotHandle(ObjectCalls.constructObject("EditorFeatureProfile"))))
+            RefCounted.owned(EditorFeatureProfile(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorFeatureProfile"), "EditorFeatureProfile"))))
     }
 
     private object Binds {

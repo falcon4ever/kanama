@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
@@ -193,7 +194,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
          */
         @JvmStatic
         fun create(): BitMap =
-            RefCounted.owned(BitMap(GodotHandle(ObjectCalls.constructObject("BitMap"))))
+            RefCounted.owned(BitMap(GodotHandle(requireConstructed(ObjectCalls.constructObject("BitMap"), "BitMap"))))
     }
 
     private object Binds {

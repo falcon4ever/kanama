@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Button for touch screen devices for gameplay use.
@@ -300,7 +301,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
         /** A new TouchScreenButton, GDScript's `TouchScreenButton.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): TouchScreenButton =
-            TouchScreenButton(GodotHandle(ObjectCalls.constructObject("TouchScreenButton")))
+            TouchScreenButton(GodotHandle(requireConstructed(ObjectCalls.constructObject("TouchScreenButton"), "TouchScreenButton")))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
 
@@ -296,7 +297,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
         /** A new NavigationLink2D, GDScript's `NavigationLink2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): NavigationLink2D =
-            NavigationLink2D(GodotHandle(ObjectCalls.constructObject("NavigationLink2D")))
+            NavigationLink2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("NavigationLink2D"), "NavigationLink2D")))
     }
 
     private object Binds {

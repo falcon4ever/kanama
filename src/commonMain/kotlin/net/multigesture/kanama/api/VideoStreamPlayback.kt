@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Internal class used by `VideoStream` to manage playback state when played from a
@@ -39,7 +40,7 @@ class VideoStreamPlayback(handle: GodotHandle) : Resource(handle) {
         /** A new VideoStreamPlayback, GDScript's `VideoStreamPlayback.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VideoStreamPlayback =
-            RefCounted.owned(VideoStreamPlayback(GodotHandle(ObjectCalls.constructObject("VideoStreamPlayback"))))
+            RefCounted.owned(VideoStreamPlayback(GodotHandle(requireConstructed(ObjectCalls.constructObject("VideoStreamPlayback"), "VideoStreamPlayback"))))
     }
 
     private object Binds {

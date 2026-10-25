@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Quaternion
@@ -1346,7 +1347,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
         /** A new Animation, GDScript's `Animation.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Animation =
-            RefCounted.owned(Animation(GodotHandle(ObjectCalls.constructObject("Animation"))))
+            RefCounted.owned(Animation(GodotHandle(requireConstructed(ObjectCalls.constructObject("Animation"), "Animation"))))
     }
 
     private object Binds {

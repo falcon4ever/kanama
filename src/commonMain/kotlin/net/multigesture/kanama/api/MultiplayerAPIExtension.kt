@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class used for extending the `MultiplayerAPI`.
@@ -26,6 +27,6 @@ class MultiplayerAPIExtension(handle: GodotHandle) : MultiplayerAPI(handle) {
         /** A new MultiplayerAPIExtension, GDScript's `MultiplayerAPIExtension.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): MultiplayerAPIExtension =
-            RefCounted.owned(MultiplayerAPIExtension(GodotHandle(ObjectCalls.constructObject("MultiplayerAPIExtension"))))
+            RefCounted.owned(MultiplayerAPIExtension(GodotHandle(requireConstructed(ObjectCalls.constructObject("MultiplayerAPIExtension"), "MultiplayerAPIExtension"))))
     }
 }

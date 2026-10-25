@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 
 /**
@@ -114,7 +115,7 @@ class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialCompo
         /** A new OpenXRSpatialComponentMarkerList, GDScript's `OpenXRSpatialComponentMarkerList.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRSpatialComponentMarkerList =
-            RefCounted.owned(OpenXRSpatialComponentMarkerList(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentMarkerList"))))
+            RefCounted.owned(OpenXRSpatialComponentMarkerList(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialComponentMarkerList"), "OpenXRSpatialComponentMarkerList"))))
     }
 
     private object Binds {

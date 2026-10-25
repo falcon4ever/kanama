@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An unsigned scalar integer function to be used within the visual shader graph.
@@ -88,7 +89,7 @@ class VisualShaderNodeUIntFunc(handle: GodotHandle) : VisualShaderNode(handle) {
         /** A new VisualShaderNodeUIntFunc, GDScript's `VisualShaderNodeUIntFunc.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeUIntFunc =
-            RefCounted.owned(VisualShaderNodeUIntFunc(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeUIntFunc"))))
+            RefCounted.owned(VisualShaderNodeUIntFunc(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeUIntFunc"), "VisualShaderNodeUIntFunc"))))
     }
 
     private object Binds {

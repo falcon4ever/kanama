@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Provides occlusion culling for 3D nodes, which improves performance in closed areas.
@@ -159,7 +160,7 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
         /** A new OccluderInstance3D, GDScript's `OccluderInstance3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): OccluderInstance3D =
-            OccluderInstance3D(GodotHandle(ObjectCalls.constructObject("OccluderInstance3D")))
+            OccluderInstance3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("OccluderInstance3D"), "OccluderInstance3D")))
     }
 
     private object Binds {

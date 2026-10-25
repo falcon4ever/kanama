@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Configuration header for spatial anchors.
@@ -38,7 +39,7 @@ class OpenXRSpatialCapabilityConfigurationAnchor(handle: GodotHandle) : OpenXRSp
         /** A new OpenXRSpatialCapabilityConfigurationAnchor, GDScript's `OpenXRSpatialCapabilityConfigurationAnchor.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRSpatialCapabilityConfigurationAnchor =
-            RefCounted.owned(OpenXRSpatialCapabilityConfigurationAnchor(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationAnchor"))))
+            RefCounted.owned(OpenXRSpatialCapabilityConfigurationAnchor(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationAnchor"), "OpenXRSpatialCapabilityConfigurationAnchor"))))
     }
 
     private object Binds {

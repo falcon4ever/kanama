@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A base dialog used for user notification.
@@ -249,7 +250,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
         /** A new AcceptDialog, GDScript's `AcceptDialog.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): AcceptDialog =
-            AcceptDialog(GodotHandle(ObjectCalls.constructObject("AcceptDialog")))
+            AcceptDialog(GodotHandle(requireConstructed(ObjectCalls.constructObject("AcceptDialog"), "AcceptDialog")))
     }
 
     private object Binds {

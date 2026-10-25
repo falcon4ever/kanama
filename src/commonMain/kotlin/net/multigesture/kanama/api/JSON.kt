@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Helper class for creating and parsing JSON data.
@@ -164,7 +165,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
         /** A new JSON, GDScript's `JSON.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): JSON =
-            RefCounted.owned(JSON(GodotHandle(ObjectCalls.constructObject("JSON"))))
+            RefCounted.owned(JSON(GodotHandle(requireConstructed(ObjectCalls.constructObject("JSON"), "JSON"))))
     }
 
     private object Binds {

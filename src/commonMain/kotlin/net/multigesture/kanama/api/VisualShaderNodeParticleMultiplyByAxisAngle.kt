@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader helper node for multiplying position and rotation of particles.
@@ -55,7 +56,7 @@ class VisualShaderNodeParticleMultiplyByAxisAngle(handle: GodotHandle) : VisualS
         /** A new VisualShaderNodeParticleMultiplyByAxisAngle, GDScript's `VisualShaderNodeParticleMultiplyByAxisAngle.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeParticleMultiplyByAxisAngle =
-            RefCounted.owned(VisualShaderNodeParticleMultiplyByAxisAngle(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeParticleMultiplyByAxisAngle"))))
+            RefCounted.owned(VisualShaderNodeParticleMultiplyByAxisAngle(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeParticleMultiplyByAxisAngle"), "VisualShaderNodeParticleMultiplyByAxisAngle"))))
     }
 
     private object Binds {

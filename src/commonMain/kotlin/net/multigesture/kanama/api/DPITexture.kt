@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2i
 
@@ -249,7 +250,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
         /** A new DPITexture, GDScript's `DPITexture.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): DPITexture =
-            RefCounted.owned(DPITexture(GodotHandle(ObjectCalls.constructObject("DPITexture"))))
+            RefCounted.owned(DPITexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("DPITexture"), "DPITexture"))))
     }
 
     private object Binds {

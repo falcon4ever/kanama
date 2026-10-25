@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 
 /**
@@ -56,7 +57,7 @@ class Texture3DRD(handle: GodotHandle) : Texture3D(handle) {
         /** A new Texture3DRD, GDScript's `Texture3DRD.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Texture3DRD =
-            RefCounted.owned(Texture3DRD(GodotHandle(ObjectCalls.constructObject("Texture3DRD"))))
+            RefCounted.owned(Texture3DRD(GodotHandle(requireConstructed(ObjectCalls.constructObject("Texture3DRD"), "Texture3DRD"))))
     }
 
     private object Binds {

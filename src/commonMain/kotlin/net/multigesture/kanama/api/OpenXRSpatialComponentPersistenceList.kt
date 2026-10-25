@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Object for storing the query persistence result data.
@@ -49,7 +50,7 @@ class OpenXRSpatialComponentPersistenceList(handle: GodotHandle) : OpenXRSpatial
         /** A new OpenXRSpatialComponentPersistenceList, GDScript's `OpenXRSpatialComponentPersistenceList.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRSpatialComponentPersistenceList =
-            RefCounted.owned(OpenXRSpatialComponentPersistenceList(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentPersistenceList"))))
+            RefCounted.owned(OpenXRSpatialComponentPersistenceList(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialComponentPersistenceList"), "OpenXRSpatialComponentPersistenceList"))))
     }
 
     private object Binds {

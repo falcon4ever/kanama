@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Mesh with a single point primitive.
@@ -26,6 +27,6 @@ class PointMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         /** A new PointMesh, GDScript's `PointMesh.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PointMesh =
-            RefCounted.owned(PointMesh(GodotHandle(ObjectCalls.constructObject("PointMesh"))))
+            RefCounted.owned(PointMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("PointMesh"), "PointMesh"))))
     }
 }

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Class representing a cylindrical `PrimitiveMesh`.
@@ -253,7 +254,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         /** A new CylinderMesh, GDScript's `CylinderMesh.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): CylinderMesh =
-            RefCounted.owned(CylinderMesh(GodotHandle(ObjectCalls.constructObject("CylinderMesh"))))
+            RefCounted.owned(CylinderMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("CylinderMesh"), "CylinderMesh"))))
     }
 
     private object Binds {

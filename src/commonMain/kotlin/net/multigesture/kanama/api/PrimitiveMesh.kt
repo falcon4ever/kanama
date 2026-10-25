@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.AABB
 
 /**
@@ -213,7 +214,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
         /** A new PrimitiveMesh, GDScript's `PrimitiveMesh.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PrimitiveMesh =
-            RefCounted.owned(PrimitiveMesh(GodotHandle(ObjectCalls.constructObject("PrimitiveMesh"))))
+            RefCounted.owned(PrimitiveMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("PrimitiveMesh"), "PrimitiveMesh"))))
     }
 
     private object Binds {

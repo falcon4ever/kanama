@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Generated from Godot docs: GLTFAnimation
@@ -102,7 +103,7 @@ class GLTFAnimation(handle: GodotHandle) : Resource(handle) {
         /** A new GLTFAnimation, GDScript's `GLTFAnimation.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GLTFAnimation =
-            RefCounted.owned(GLTFAnimation(GodotHandle(ObjectCalls.constructObject("GLTFAnimation"))))
+            RefCounted.owned(GLTFAnimation(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFAnimation"), "GLTFAnimation"))))
     }
 
     private object Binds {

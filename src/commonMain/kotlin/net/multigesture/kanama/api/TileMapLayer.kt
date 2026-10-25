@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2
@@ -755,7 +756,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
         /** A new TileMapLayer, GDScript's `TileMapLayer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): TileMapLayer =
-            TileMapLayer(GodotHandle(ObjectCalls.constructObject("TileMapLayer")))
+            TileMapLayer(GodotHandle(requireConstructed(ObjectCalls.constructObject("TileMapLayer"), "TileMapLayer")))
     }
 
     private object Binds {

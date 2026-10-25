@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
@@ -308,7 +309,7 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
         /** A new PhysicsShapeQueryParameters3D, GDScript's `PhysicsShapeQueryParameters3D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PhysicsShapeQueryParameters3D =
-            RefCounted.owned(PhysicsShapeQueryParameters3D(GodotHandle(ObjectCalls.constructObject("PhysicsShapeQueryParameters3D"))))
+            RefCounted.owned(PhysicsShapeQueryParameters3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PhysicsShapeQueryParameters3D"), "PhysicsShapeQueryParameters3D"))))
     }
 
     private object Binds {

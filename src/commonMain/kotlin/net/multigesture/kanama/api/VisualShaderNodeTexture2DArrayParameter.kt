@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node for shader parameter (uniform) of type `Texture2DArray`.
@@ -26,6 +27,6 @@ class VisualShaderNodeTexture2DArrayParameter(handle: GodotHandle) : VisualShade
         /** A new VisualShaderNodeTexture2DArrayParameter, GDScript's `VisualShaderNodeTexture2DArrayParameter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeTexture2DArrayParameter =
-            RefCounted.owned(VisualShaderNodeTexture2DArrayParameter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTexture2DArrayParameter"))))
+            RefCounted.owned(VisualShaderNodeTexture2DArrayParameter(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTexture2DArrayParameter"), "VisualShaderNodeTexture2DArrayParameter"))))
     }
 }

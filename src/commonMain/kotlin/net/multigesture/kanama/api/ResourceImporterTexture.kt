@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Imports an image for use in 2D or 3D rendering.
@@ -26,6 +27,6 @@ class ResourceImporterTexture(handle: GodotHandle) : ResourceImporter(handle) {
         /** A new ResourceImporterTexture, GDScript's `ResourceImporterTexture.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ResourceImporterTexture =
-            RefCounted.owned(ResourceImporterTexture(GodotHandle(ObjectCalls.constructObject("ResourceImporterTexture"))))
+            RefCounted.owned(ResourceImporterTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("ResourceImporterTexture"), "ResourceImporterTexture"))))
     }
 }

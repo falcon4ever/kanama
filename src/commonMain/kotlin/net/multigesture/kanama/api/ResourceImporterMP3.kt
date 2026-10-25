@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Imports an MP3 audio file for playback.
@@ -26,6 +27,6 @@ class ResourceImporterMP3(handle: GodotHandle) : ResourceImporter(handle) {
         /** A new ResourceImporterMP3, GDScript's `ResourceImporterMP3.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ResourceImporterMP3 =
-            RefCounted.owned(ResourceImporterMP3(GodotHandle(ObjectCalls.constructObject("ResourceImporterMP3"))))
+            RefCounted.owned(ResourceImporterMP3(GodotHandle(requireConstructed(ObjectCalls.constructObject("ResourceImporterMP3"), "ResourceImporterMP3"))))
     }
 }

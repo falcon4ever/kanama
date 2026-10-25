@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Provides a 3D texture parameter within the visual shader graph.
@@ -26,6 +27,6 @@ class VisualShaderNodeTexture3DParameter(handle: GodotHandle) : VisualShaderNode
         /** A new VisualShaderNodeTexture3DParameter, GDScript's `VisualShaderNodeTexture3DParameter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeTexture3DParameter =
-            RefCounted.owned(VisualShaderNodeTexture3DParameter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTexture3DParameter"))))
+            RefCounted.owned(VisualShaderNodeTexture3DParameter(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTexture3DParameter"), "VisualShaderNodeTexture3DParameter"))))
     }
 }

@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A popup with a panel background.
@@ -23,6 +24,6 @@ class PopupPanel(handle: GodotHandle) : Popup(handle) {
         /** A new PopupPanel, GDScript's `PopupPanel.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): PopupPanel =
-            PopupPanel(GodotHandle(ObjectCalls.constructObject("PopupPanel")))
+            PopupPanel(GodotHandle(requireConstructed(ObjectCalls.constructObject("PopupPanel"), "PopupPanel")))
     }
 }

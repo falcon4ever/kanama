@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -105,7 +106,7 @@ class SplineIK3D(handle: GodotHandle) : ChainIK3D(handle) {
         /** A new SplineIK3D, GDScript's `SplineIK3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): SplineIK3D =
-            SplineIK3D(GodotHandle(ObjectCalls.constructObject("SplineIK3D")))
+            SplineIK3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SplineIK3D"), "SplineIK3D")))
     }
 
     private object Binds {

@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -522,7 +523,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
         /** A new EditorDock, GDScript's `EditorDock.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): EditorDock =
-            EditorDock(GodotHandle(ObjectCalls.constructObject("EditorDock")))
+            EditorDock(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorDock"), "EditorDock")))
     }
 
     private object Binds {

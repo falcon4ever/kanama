@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A selector function for use within the visual shader graph.
@@ -122,7 +123,7 @@ class VisualShaderNodeSwitch(handle: GodotHandle) : VisualShaderNode(handle) {
         /** A new VisualShaderNodeSwitch, GDScript's `VisualShaderNodeSwitch.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeSwitch =
-            RefCounted.owned(VisualShaderNodeSwitch(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeSwitch"))))
+            RefCounted.owned(VisualShaderNodeSwitch(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeSwitch"), "VisualShaderNodeSwitch"))))
     }
 
     private object Binds {

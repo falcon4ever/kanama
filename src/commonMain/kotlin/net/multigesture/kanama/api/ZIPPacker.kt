@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Allows the creation of ZIP files.
@@ -207,7 +208,7 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
         /** A new ZIPPacker, GDScript's `ZIPPacker.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ZIPPacker =
-            RefCounted.owned(ZIPPacker(GodotHandle(ObjectCalls.constructObject("ZIPPacker"))))
+            RefCounted.owned(ZIPPacker(GodotHandle(requireConstructed(ObjectCalls.constructObject("ZIPPacker"), "ZIPPacker"))))
     }
 
     private object Binds {

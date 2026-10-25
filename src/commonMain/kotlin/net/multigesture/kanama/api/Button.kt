@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A themed button that can contain text and an icon.
@@ -361,7 +362,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
         /** A new Button, GDScript's `Button.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Button =
-            Button(GodotHandle(ObjectCalls.constructObject("Button")))
+            Button(GodotHandle(requireConstructed(ObjectCalls.constructObject("Button"), "Button")))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -140,7 +141,7 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
         /** A new OpenXRMarkerTracker, GDScript's `OpenXRMarkerTracker.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRMarkerTracker =
-            RefCounted.owned(OpenXRMarkerTracker(GodotHandle(ObjectCalls.constructObject("OpenXRMarkerTracker"))))
+            RefCounted.owned(OpenXRMarkerTracker(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRMarkerTracker"), "OpenXRMarkerTracker"))))
     }
 
     private object Binds {

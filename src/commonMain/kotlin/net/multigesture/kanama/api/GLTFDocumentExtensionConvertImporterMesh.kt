@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Generated from Godot docs: GLTFDocumentExtensionConvertImporterMesh
@@ -24,6 +25,6 @@ class GLTFDocumentExtensionConvertImporterMesh(handle: GodotHandle) : GLTFDocume
         /** A new GLTFDocumentExtensionConvertImporterMesh, GDScript's `GLTFDocumentExtensionConvertImporterMesh.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GLTFDocumentExtensionConvertImporterMesh =
-            RefCounted.owned(GLTFDocumentExtensionConvertImporterMesh(GodotHandle(ObjectCalls.constructObject("GLTFDocumentExtensionConvertImporterMesh"))))
+            RefCounted.owned(GLTFDocumentExtensionConvertImporterMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFDocumentExtensionConvertImporterMesh"), "GLTFDocumentExtensionConvertImporterMesh"))))
     }
 }

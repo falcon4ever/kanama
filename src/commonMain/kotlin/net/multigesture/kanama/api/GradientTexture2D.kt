@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -302,7 +303,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
         /** A new GradientTexture2D, GDScript's `GradientTexture2D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GradientTexture2D =
-            RefCounted.owned(GradientTexture2D(GodotHandle(ObjectCalls.constructObject("GradientTexture2D"))))
+            RefCounted.owned(GradientTexture2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("GradientTexture2D"), "GradientTexture2D"))))
     }
 
     private object Binds {

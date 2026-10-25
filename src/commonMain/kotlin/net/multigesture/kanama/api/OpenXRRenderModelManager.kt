@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Helper node that will automatically manage displaying render models.
@@ -130,7 +131,7 @@ class OpenXRRenderModelManager(handle: GodotHandle) : Node3D(handle) {
         /** A new OpenXRRenderModelManager, GDScript's `OpenXRRenderModelManager.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): OpenXRRenderModelManager =
-            OpenXRRenderModelManager(GodotHandle(ObjectCalls.constructObject("OpenXRRenderModelManager")))
+            OpenXRRenderModelManager(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRRenderModelManager"), "OpenXRRenderModelManager")))
     }
 
     private object Binds {

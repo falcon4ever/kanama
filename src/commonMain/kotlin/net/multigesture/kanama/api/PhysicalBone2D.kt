@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -176,7 +177,7 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
         /** A new PhysicalBone2D, GDScript's `PhysicalBone2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): PhysicalBone2D =
-            PhysicalBone2D(GodotHandle(ObjectCalls.constructObject("PhysicalBone2D")))
+            PhysicalBone2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PhysicalBone2D"), "PhysicalBone2D")))
     }
 
     private object Binds {

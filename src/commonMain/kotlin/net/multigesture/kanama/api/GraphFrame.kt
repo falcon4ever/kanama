@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -193,7 +194,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
         /** A new GraphFrame, GDScript's `GraphFrame.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): GraphFrame =
-            GraphFrame(GodotHandle(ObjectCalls.constructObject("GraphFrame")))
+            GraphFrame(GodotHandle(requireConstructed(ObjectCalls.constructObject("GraphFrame"), "GraphFrame")))
     }
 
     private object Binds {

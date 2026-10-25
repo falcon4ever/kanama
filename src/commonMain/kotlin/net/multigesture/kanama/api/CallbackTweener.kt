@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.binding.runtime.requireGodotReturn
 
 /**
@@ -42,7 +43,7 @@ class CallbackTweener(handle: GodotHandle) : Tweener(handle) {
         /** A new CallbackTweener, GDScript's `CallbackTweener.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): CallbackTweener =
-            RefCounted.owned(CallbackTweener(GodotHandle(ObjectCalls.constructObject("CallbackTweener"))))
+            RefCounted.owned(CallbackTweener(GodotHandle(requireConstructed(ObjectCalls.constructObject("CallbackTweener"), "CallbackTweener"))))
     }
 
     private object Binds {

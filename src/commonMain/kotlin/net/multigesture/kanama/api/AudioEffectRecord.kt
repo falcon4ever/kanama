@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Audio effect used for recording the sound from an audio bus.
@@ -91,7 +92,7 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
         /** A new AudioEffectRecord, GDScript's `AudioEffectRecord.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioEffectRecord =
-            RefCounted.owned(AudioEffectRecord(GodotHandle(ObjectCalls.constructObject("AudioEffectRecord"))))
+            RefCounted.owned(AudioEffectRecord(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectRecord"), "AudioEffectRecord"))))
     }
 
     private object Binds {

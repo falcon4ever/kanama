@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A tracked face.
@@ -955,7 +956,7 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
         /** A new XRFaceTracker, GDScript's `XRFaceTracker.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): XRFaceTracker =
-            RefCounted.owned(XRFaceTracker(GodotHandle(ObjectCalls.constructObject("XRFaceTracker"))))
+            RefCounted.owned(XRFaceTracker(GodotHandle(requireConstructed(ObjectCalls.constructObject("XRFaceTracker"), "XRFaceTracker"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node for shader parameter (uniform) of type unsigned `int`.
@@ -86,7 +87,7 @@ class VisualShaderNodeUIntParameter(handle: GodotHandle) : VisualShaderNodeParam
         /** A new VisualShaderNodeUIntParameter, GDScript's `VisualShaderNodeUIntParameter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeUIntParameter =
-            RefCounted.owned(VisualShaderNodeUIntParameter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeUIntParameter"))))
+            RefCounted.owned(VisualShaderNodeUIntParameter(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeUIntParameter"), "VisualShaderNodeUIntParameter"))))
     }
 
     private object Binds {

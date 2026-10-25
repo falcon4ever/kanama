@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Used to query and configure import format support.
@@ -26,6 +27,6 @@ class EditorFileSystemImportFormatSupportQuery(handle: GodotHandle) : RefCounted
         /** A new EditorFileSystemImportFormatSupportQuery, GDScript's `EditorFileSystemImportFormatSupportQuery.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): EditorFileSystemImportFormatSupportQuery =
-            RefCounted.owned(EditorFileSystemImportFormatSupportQuery(GodotHandle(ObjectCalls.constructObject("EditorFileSystemImportFormatSupportQuery"))))
+            RefCounted.owned(EditorFileSystemImportFormatSupportQuery(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorFileSystemImportFormatSupportQuery"), "EditorFileSystemImportFormatSupportQuery"))))
     }
 }

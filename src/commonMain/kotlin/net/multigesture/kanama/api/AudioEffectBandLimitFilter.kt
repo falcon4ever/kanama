@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a band-limit filter to an audio bus.
@@ -26,6 +27,6 @@ class AudioEffectBandLimitFilter(handle: GodotHandle) : AudioEffectFilter(handle
         /** A new AudioEffectBandLimitFilter, GDScript's `AudioEffectBandLimitFilter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioEffectBandLimitFilter =
-            RefCounted.owned(AudioEffectBandLimitFilter(GodotHandle(ObjectCalls.constructObject("AudioEffectBandLimitFilter"))))
+            RefCounted.owned(AudioEffectBandLimitFilter(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectBandLimitFilter"), "AudioEffectBandLimitFilter"))))
     }
 }

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A language translation that maps a collection of strings to their individual translations.
@@ -192,7 +193,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
         /** A new Translation, GDScript's `Translation.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Translation =
-            RefCounted.owned(Translation(GodotHandle(ObjectCalls.constructObject("Translation"))))
+            RefCounted.owned(Translation(GodotHandle(requireConstructed(ObjectCalls.constructObject("Translation"), "Translation"))))
     }
 
     private object Binds {

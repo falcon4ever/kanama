@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -906,7 +907,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         /** A new LightmapGI, GDScript's `LightmapGI.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): LightmapGI =
-            LightmapGI(GodotHandle(ObjectCalls.constructObject("LightmapGI")))
+            LightmapGI(GodotHandle(requireConstructed(ObjectCalls.constructObject("LightmapGI"), "LightmapGI")))
     }
 
     private object Binds {

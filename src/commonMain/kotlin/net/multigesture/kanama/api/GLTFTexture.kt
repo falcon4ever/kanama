@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * GLTFTexture represents a texture in a glTF file.
@@ -88,7 +89,7 @@ class GLTFTexture(handle: GodotHandle) : Resource(handle) {
         /** A new GLTFTexture, GDScript's `GLTFTexture.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GLTFTexture =
-            RefCounted.owned(GLTFTexture(GodotHandle(ObjectCalls.constructObject("GLTFTexture"))))
+            RefCounted.owned(GLTFTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFTexture"), "GLTFTexture"))))
     }
 
     private object Binds {

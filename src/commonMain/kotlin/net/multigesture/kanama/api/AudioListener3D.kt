@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 
 /**
@@ -131,7 +132,7 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
         /** A new AudioListener3D, GDScript's `AudioListener3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): AudioListener3D =
-            AudioListener3D(GodotHandle(ObjectCalls.constructObject("AudioListener3D")))
+            AudioListener3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioListener3D"), "AudioListener3D")))
     }
 
     private object Binds {

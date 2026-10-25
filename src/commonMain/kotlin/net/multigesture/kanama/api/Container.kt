@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2
 
 /**
@@ -91,7 +92,7 @@ open class Container(handle: GodotHandle) : Control(handle) {
         /** A new Container, GDScript's `Container.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Container =
-            Container(GodotHandle(ObjectCalls.constructObject("Container")))
+            Container(GodotHandle(requireConstructed(ObjectCalls.constructObject("Container"), "Container")))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a limiter audio effect to an audio bus. Prevents audio signals from exceeding a specified
@@ -120,7 +121,7 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
         /** A new AudioEffectHardLimiter, GDScript's `AudioEffectHardLimiter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioEffectHardLimiter =
-            RefCounted.owned(AudioEffectHardLimiter(GodotHandle(ObjectCalls.constructObject("AudioEffectHardLimiter"))))
+            RefCounted.owned(AudioEffectHardLimiter(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectHardLimiter"), "AudioEffectHardLimiter"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -140,7 +141,7 @@ class ColorPickerButton(handle: GodotHandle) : Button(handle) {
         /** A new ColorPickerButton, GDScript's `ColorPickerButton.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): ColorPickerButton =
-            ColorPickerButton(GodotHandle(ObjectCalls.constructObject("ColorPickerButton")))
+            ColorPickerButton(GodotHandle(requireConstructed(ObjectCalls.constructObject("ColorPickerButton"), "ColorPickerButton")))
     }
 
     private object Binds {

@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Performs a 2D texture lookup within the visual shader graph.
@@ -224,7 +225,7 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
         /** A new VisualShaderNodeTexture, GDScript's `VisualShaderNodeTexture.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeTexture =
-            RefCounted.owned(VisualShaderNodeTexture(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTexture"))))
+            RefCounted.owned(VisualShaderNodeTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTexture"), "VisualShaderNodeTexture"))))
     }
 
     private object Binds {

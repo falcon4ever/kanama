@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * GLTFMesh represents a glTF mesh.
@@ -174,7 +175,7 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
         /** A new GLTFMesh, GDScript's `GLTFMesh.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GLTFMesh =
-            RefCounted.owned(GLTFMesh(GodotHandle(ObjectCalls.constructObject("GLTFMesh"))))
+            RefCounted.owned(GLTFMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFMesh"), "GLTFMesh"))))
     }
 
     private object Binds {

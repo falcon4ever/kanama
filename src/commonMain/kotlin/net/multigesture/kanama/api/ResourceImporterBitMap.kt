@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Imports a `BitMap` resource (2D array of boolean values).
@@ -26,6 +27,6 @@ class ResourceImporterBitMap(handle: GodotHandle) : ResourceImporter(handle) {
         /** A new ResourceImporterBitMap, GDScript's `ResourceImporterBitMap.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ResourceImporterBitMap =
-            RefCounted.owned(ResourceImporterBitMap(GodotHandle(ObjectCalls.constructObject("ResourceImporterBitMap"))))
+            RefCounted.owned(ResourceImporterBitMap(GodotHandle(requireConstructed(ObjectCalls.constructObject("ResourceImporterBitMap"), "ResourceImporterBitMap"))))
     }
 }

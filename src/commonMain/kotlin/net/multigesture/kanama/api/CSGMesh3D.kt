@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A CSG Mesh shape that uses a mesh resource.
@@ -92,7 +93,7 @@ class CSGMesh3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         /** A new CSGMesh3D, GDScript's `CSGMesh3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): CSGMesh3D =
-            CSGMesh3D(GodotHandle(ObjectCalls.constructObject("CSGMesh3D")))
+            CSGMesh3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CSGMesh3D"), "CSGMesh3D")))
     }
 
     private object Binds {

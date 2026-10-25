@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -135,7 +136,7 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
         /** A new OccluderPolygon2D, GDScript's `OccluderPolygon2D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OccluderPolygon2D =
-            RefCounted.owned(OccluderPolygon2D(GodotHandle(ObjectCalls.constructObject("OccluderPolygon2D"))))
+            RefCounted.owned(OccluderPolygon2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("OccluderPolygon2D"), "OccluderPolygon2D"))))
     }
 
     private object Binds {

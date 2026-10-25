@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
 
@@ -586,7 +587,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
         /** A new Area2D, GDScript's `Area2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Area2D =
-            Area2D(GodotHandle(ObjectCalls.constructObject("Area2D")))
+            Area2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Area2D"), "Area2D")))
     }
 
     private object Binds {

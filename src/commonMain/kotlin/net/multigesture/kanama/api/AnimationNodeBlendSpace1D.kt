@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A set of `AnimationRootNode`s placed on a virtual axis, crossfading between the two adjacent
@@ -485,7 +486,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
         /** A new AnimationNodeBlendSpace1D, GDScript's `AnimationNodeBlendSpace1D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AnimationNodeBlendSpace1D =
-            RefCounted.owned(AnimationNodeBlendSpace1D(GodotHandle(ObjectCalls.constructObject("AnimationNodeBlendSpace1D"))))
+            RefCounted.owned(AnimationNodeBlendSpace1D(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationNodeBlendSpace1D"), "AnimationNodeBlendSpace1D"))))
     }
 
     private object Binds {

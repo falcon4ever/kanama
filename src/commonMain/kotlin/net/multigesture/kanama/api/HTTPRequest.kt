@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A node with the ability to send HTTP(S) requests.
@@ -438,7 +439,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
         /** A new HTTPRequest, GDScript's `HTTPRequest.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): HTTPRequest =
-            HTTPRequest(GodotHandle(ObjectCalls.constructObject("HTTPRequest")))
+            HTTPRequest(GodotHandle(requireConstructed(ObjectCalls.constructObject("HTTPRequest"), "HTTPRequest")))
     }
 
     private object Binds {

@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A synchronization mechanism used to control access to a shared resource by `Thread`s.
@@ -60,7 +61,7 @@ class Semaphore(handle: GodotHandle) : RefCounted(handle) {
         /** A new Semaphore, GDScript's `Semaphore.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Semaphore =
-            RefCounted.owned(Semaphore(GodotHandle(ObjectCalls.constructObject("Semaphore"))))
+            RefCounted.owned(Semaphore(GodotHandle(requireConstructed(ObjectCalls.constructObject("Semaphore"), "Semaphore"))))
     }
 
     private object Binds {

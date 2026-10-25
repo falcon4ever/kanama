@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A wrapper class for an ENetHost (http://enet.bespin.org/group__host.html).
@@ -412,7 +413,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
         /** A new ENetConnection, GDScript's `ENetConnection.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ENetConnection =
-            RefCounted.owned(ENetConnection(GodotHandle(ObjectCalls.constructObject("ENetConnection"))))
+            RefCounted.owned(ENetConnection(GodotHandle(requireConstructed(ObjectCalls.constructObject("ENetConnection"), "ENetConnection"))))
     }
 
     private object Binds {

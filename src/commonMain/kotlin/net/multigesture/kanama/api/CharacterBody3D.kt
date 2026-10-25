@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -724,7 +725,7 @@ class CharacterBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         /** A new CharacterBody3D, GDScript's `CharacterBody3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): CharacterBody3D =
-            CharacterBody3D(GodotHandle(ObjectCalls.constructObject("CharacterBody3D")))
+            CharacterBody3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CharacterBody3D"), "CharacterBody3D")))
     }
 
     private object Binds {

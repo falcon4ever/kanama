@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Placeholder class for a material.
@@ -26,6 +27,6 @@ class PlaceholderMaterial(handle: GodotHandle) : Material(handle) {
         /** A new PlaceholderMaterial, GDScript's `PlaceholderMaterial.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PlaceholderMaterial =
-            RefCounted.owned(PlaceholderMaterial(GodotHandle(ObjectCalls.constructObject("PlaceholderMaterial"))))
+            RefCounted.owned(PlaceholderMaterial(GodotHandle(requireConstructed(ObjectCalls.constructObject("PlaceholderMaterial"), "PlaceholderMaterial"))))
     }
 }

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -124,7 +125,7 @@ class ParallaxLayer(handle: GodotHandle) : Node2D(handle) {
         /** A new ParallaxLayer, GDScript's `ParallaxLayer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): ParallaxLayer =
-            ParallaxLayer(GodotHandle(ObjectCalls.constructObject("ParallaxLayer")))
+            ParallaxLayer(GodotHandle(requireConstructed(ObjectCalls.constructObject("ParallaxLayer"), "ParallaxLayer")))
     }
 
     private object Binds {

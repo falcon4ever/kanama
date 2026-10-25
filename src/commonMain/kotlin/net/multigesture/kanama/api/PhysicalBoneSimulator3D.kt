@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 
 /**
@@ -72,7 +73,7 @@ class PhysicalBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) 
         /** A new PhysicalBoneSimulator3D, GDScript's `PhysicalBoneSimulator3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): PhysicalBoneSimulator3D =
-            PhysicalBoneSimulator3D(GodotHandle(ObjectCalls.constructObject("PhysicalBoneSimulator3D")))
+            PhysicalBoneSimulator3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PhysicalBoneSimulator3D"), "PhysicalBoneSimulator3D")))
     }
 
     private object Binds {

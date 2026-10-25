@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A control that displays a texture.
@@ -254,7 +255,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
         /** A new TextureRect, GDScript's `TextureRect.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): TextureRect =
-            TextureRect(GodotHandle(ObjectCalls.constructObject("TextureRect")))
+            TextureRect(GodotHandle(requireConstructed(ObjectCalls.constructObject("TextureRect"), "TextureRect")))
     }
 
     private object Binds {

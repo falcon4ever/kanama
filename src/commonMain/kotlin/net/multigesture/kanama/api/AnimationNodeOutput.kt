@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * The animation output node of an `AnimationNodeBlendTree`.
@@ -26,6 +27,6 @@ class AnimationNodeOutput(handle: GodotHandle) : AnimationNode(handle) {
         /** A new AnimationNodeOutput, GDScript's `AnimationNodeOutput.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AnimationNodeOutput =
-            RefCounted.owned(AnimationNodeOutput(GodotHandle(ObjectCalls.constructObject("AnimationNodeOutput"))))
+            RefCounted.owned(AnimationNodeOutput(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationNodeOutput"), "AnimationNodeOutput"))))
     }
 }

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -137,7 +138,7 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
         /** A new AudioStreamPlayback, GDScript's `AudioStreamPlayback.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioStreamPlayback =
-            RefCounted.owned(AudioStreamPlayback(GodotHandle(ObjectCalls.constructObject("AudioStreamPlayback"))))
+            RefCounted.owned(AudioStreamPlayback(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamPlayback"), "AudioStreamPlayback"))))
     }
 
     private object Binds {

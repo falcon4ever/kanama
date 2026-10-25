@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that modifies the rotation of the object using a rotation matrix.
@@ -26,6 +27,6 @@ class VisualShaderNodeRotationByAxis(handle: GodotHandle) : VisualShaderNode(han
         /** A new VisualShaderNodeRotationByAxis, GDScript's `VisualShaderNodeRotationByAxis.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeRotationByAxis =
-            RefCounted.owned(VisualShaderNodeRotationByAxis(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeRotationByAxis"))))
+            RefCounted.owned(VisualShaderNodeRotationByAxis(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeRotationByAxis"), "VisualShaderNodeRotationByAxis"))))
     }
 }

@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for creating `ImageFormatLoader` extensions (adding support for extra image formats).
@@ -48,7 +49,7 @@ class ImageFormatLoaderExtension(handle: GodotHandle) : ImageFormatLoader(handle
         /** A new ImageFormatLoaderExtension, GDScript's `ImageFormatLoaderExtension.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ImageFormatLoaderExtension =
-            RefCounted.owned(ImageFormatLoaderExtension(GodotHandle(ObjectCalls.constructObject("ImageFormatLoaderExtension"))))
+            RefCounted.owned(ImageFormatLoaderExtension(GodotHandle(requireConstructed(ObjectCalls.constructObject("ImageFormatLoaderExtension"), "ImageFormatLoaderExtension"))))
     }
 
     private object Binds {

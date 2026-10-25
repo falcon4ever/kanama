@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Meta class for playing back audio samples.
@@ -26,6 +27,6 @@ class AudioSamplePlayback(handle: GodotHandle) : RefCounted(handle) {
         /** A new AudioSamplePlayback, GDScript's `AudioSamplePlayback.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioSamplePlayback =
-            RefCounted.owned(AudioSamplePlayback(GodotHandle(ObjectCalls.constructObject("AudioSamplePlayback"))))
+            RefCounted.owned(AudioSamplePlayback(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioSamplePlayback"), "AudioSamplePlayback"))))
     }
 }

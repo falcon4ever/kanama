@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Decomposes a `Transform3D` into four `Vector3`s within the visual shader graph.
@@ -26,6 +27,6 @@ class VisualShaderNodeTransformDecompose(handle: GodotHandle) : VisualShaderNode
         /** A new VisualShaderNodeTransformDecompose, GDScript's `VisualShaderNodeTransformDecompose.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeTransformDecompose =
-            RefCounted.owned(VisualShaderNodeTransformDecompose(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTransformDecompose"))))
+            RefCounted.owned(VisualShaderNodeTransformDecompose(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTransformDecompose"), "VisualShaderNodeTransformDecompose"))))
     }
 }

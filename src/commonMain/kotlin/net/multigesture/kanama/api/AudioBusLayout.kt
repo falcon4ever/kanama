@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Stores information about the audio buses.
@@ -26,6 +27,6 @@ class AudioBusLayout(handle: GodotHandle) : Resource(handle) {
         /** A new AudioBusLayout, GDScript's `AudioBusLayout.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioBusLayout =
-            RefCounted.owned(AudioBusLayout(GodotHandle(ObjectCalls.constructObject("AudioBusLayout"))))
+            RefCounted.owned(AudioBusLayout(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioBusLayout"), "AudioBusLayout"))))
     }
 }

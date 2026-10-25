@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -265,7 +266,7 @@ class OpenXRHand(handle: GodotHandle) : Node3D(handle) {
         /** A new OpenXRHand, GDScript's `OpenXRHand.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): OpenXRHand =
-            OpenXRHand(GodotHandle(ObjectCalls.constructObject("OpenXRHand")))
+            OpenXRHand(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRHand"), "OpenXRHand")))
     }
 
     private object Binds {

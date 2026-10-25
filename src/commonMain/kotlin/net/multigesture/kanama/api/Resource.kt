@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 
 /**
@@ -437,7 +438,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
         /** A new Resource, GDScript's `Resource.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Resource =
-            RefCounted.owned(Resource(GodotHandle(ObjectCalls.constructObject("Resource"))))
+            RefCounted.owned(Resource(GodotHandle(requireConstructed(ObjectCalls.constructObject("Resource"), "Resource"))))
 
         // Downcast a GodotObject to Resource (null if not).
         @JvmStatic

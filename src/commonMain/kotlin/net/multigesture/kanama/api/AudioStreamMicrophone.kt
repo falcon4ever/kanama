@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Plays real-time audio input data.
@@ -26,6 +27,6 @@ class AudioStreamMicrophone(handle: GodotHandle) : AudioStream(handle) {
         /** A new AudioStreamMicrophone, GDScript's `AudioStreamMicrophone.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioStreamMicrophone =
-            RefCounted.owned(AudioStreamMicrophone(GodotHandle(ObjectCalls.constructObject("AudioStreamMicrophone"))))
+            RefCounted.owned(AudioStreamMicrophone(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamMicrophone"), "AudioStreamMicrophone"))))
     }
 }

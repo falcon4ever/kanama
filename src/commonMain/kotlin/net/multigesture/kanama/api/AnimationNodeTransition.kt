@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A transition within an `AnimationTree` connecting two `AnimationNode`s.
@@ -210,7 +211,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
         /** A new AnimationNodeTransition, GDScript's `AnimationNodeTransition.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AnimationNodeTransition =
-            RefCounted.owned(AnimationNodeTransition(GodotHandle(ObjectCalls.constructObject("AnimationNodeTransition"))))
+            RefCounted.owned(AnimationNodeTransition(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationNodeTransition"), "AnimationNodeTransition"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A boolean parameter to be used within the visual shader graph.
@@ -84,7 +85,7 @@ class VisualShaderNodeBooleanParameter(handle: GodotHandle) : VisualShaderNodePa
         /** A new VisualShaderNodeBooleanParameter, GDScript's `VisualShaderNodeBooleanParameter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeBooleanParameter =
-            RefCounted.owned(VisualShaderNodeBooleanParameter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeBooleanParameter"))))
+            RefCounted.owned(VisualShaderNodeBooleanParameter(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeBooleanParameter"), "VisualShaderNodeBooleanParameter"))))
     }
 
     private object Binds {

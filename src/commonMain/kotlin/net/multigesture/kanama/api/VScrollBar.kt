@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A vertical scrollbar that goes from top (min) to bottom (max).
@@ -23,6 +24,6 @@ class VScrollBar(handle: GodotHandle) : ScrollBar(handle) {
         /** A new VScrollBar, GDScript's `VScrollBar.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): VScrollBar =
-            VScrollBar(GodotHandle(ObjectCalls.constructObject("VScrollBar")))
+            VScrollBar(GodotHandle(requireConstructed(ObjectCalls.constructObject("VScrollBar"), "VScrollBar")))
     }
 }

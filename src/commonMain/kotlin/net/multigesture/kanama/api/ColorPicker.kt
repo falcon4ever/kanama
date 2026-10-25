@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -495,7 +496,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
         /** A new ColorPicker, GDScript's `ColorPicker.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): ColorPicker =
-            ColorPicker(GodotHandle(ObjectCalls.constructObject("ColorPicker")))
+            ColorPicker(GodotHandle(requireConstructed(ObjectCalls.constructObject("ColorPicker"), "ColorPicker")))
     }
 
     private object Binds {

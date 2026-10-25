@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A scalar floating-point constant to be used within the visual shader graph.
@@ -55,7 +56,7 @@ class VisualShaderNodeFloatConstant(handle: GodotHandle) : VisualShaderNodeConst
         /** A new VisualShaderNodeFloatConstant, GDScript's `VisualShaderNodeFloatConstant.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeFloatConstant =
-            RefCounted.owned(VisualShaderNodeFloatConstant(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeFloatConstant"))))
+            RefCounted.owned(VisualShaderNodeFloatConstant(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeFloatConstant"), "VisualShaderNodeFloatConstant"))))
     }
 
     private object Binds {

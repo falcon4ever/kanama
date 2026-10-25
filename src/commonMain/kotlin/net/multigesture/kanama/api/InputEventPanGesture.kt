@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -56,7 +57,7 @@ class InputEventPanGesture(handle: GodotHandle) : InputEventGesture(handle) {
         /** A new InputEventPanGesture, GDScript's `InputEventPanGesture.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): InputEventPanGesture =
-            RefCounted.owned(InputEventPanGesture(GodotHandle(ObjectCalls.constructObject("InputEventPanGesture"))))
+            RefCounted.owned(InputEventPanGesture(GodotHandle(requireConstructed(ObjectCalls.constructObject("InputEventPanGesture"), "InputEventPanGesture"))))
     }
 
     private object Binds {

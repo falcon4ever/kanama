@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a downward compressor audio effect to an audio bus. Allows control of the dynamic range via
@@ -242,7 +243,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
         /** A new AudioEffectCompressor, GDScript's `AudioEffectCompressor.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioEffectCompressor =
-            RefCounted.owned(AudioEffectCompressor(GodotHandle(ObjectCalls.constructObject("AudioEffectCompressor"))))
+            RefCounted.owned(AudioEffectCompressor(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectCompressor"), "AudioEffectCompressor"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A 3D cylinder shape used for physics collision.
@@ -84,7 +85,7 @@ class CylinderShape3D(handle: GodotHandle) : Shape3D(handle) {
         /** A new CylinderShape3D, GDScript's `CylinderShape3D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): CylinderShape3D =
-            RefCounted.owned(CylinderShape3D(GodotHandle(ObjectCalls.constructObject("CylinderShape3D"))))
+            RefCounted.owned(CylinderShape3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CylinderShape3D"), "CylinderShape3D"))))
     }
 
     private object Binds {

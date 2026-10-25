@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Object for storing OpenXR spatial entity component data.
@@ -49,7 +50,7 @@ open class OpenXRSpatialComponentData(handle: GodotHandle) : RefCounted(handle) 
         /** A new OpenXRSpatialComponentData, GDScript's `OpenXRSpatialComponentData.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRSpatialComponentData =
-            RefCounted.owned(OpenXRSpatialComponentData(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentData"))))
+            RefCounted.owned(OpenXRSpatialComponentData(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialComponentData"), "OpenXRSpatialComponentData"))))
     }
 
     private object Binds {

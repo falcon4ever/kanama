@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 
@@ -906,7 +907,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         /** A new Label3D, GDScript's `Label3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Label3D =
-            Label3D(GodotHandle(ObjectCalls.constructObject("Label3D")))
+            Label3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Label3D"), "Label3D")))
     }
 
     private object Binds {

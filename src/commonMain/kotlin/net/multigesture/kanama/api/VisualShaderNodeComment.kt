@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Only exists for compatibility. Use `VisualShaderNodeFrame` as a replacement.
@@ -57,7 +58,7 @@ class VisualShaderNodeComment(handle: GodotHandle) : VisualShaderNodeFrame(handl
         /** A new VisualShaderNodeComment, GDScript's `VisualShaderNodeComment.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeComment =
-            RefCounted.owned(VisualShaderNodeComment(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeComment"))))
+            RefCounted.owned(VisualShaderNodeComment(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeComment"), "VisualShaderNodeComment"))))
     }
 
     private object Binds {

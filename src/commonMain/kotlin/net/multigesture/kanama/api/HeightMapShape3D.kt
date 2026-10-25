@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A 3D heightmap shape used for physics collision.
@@ -158,7 +159,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
         /** A new HeightMapShape3D, GDScript's `HeightMapShape3D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): HeightMapShape3D =
-            RefCounted.owned(HeightMapShape3D(GodotHandle(ObjectCalls.constructObject("HeightMapShape3D"))))
+            RefCounted.owned(HeightMapShape3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("HeightMapShape3D"), "HeightMapShape3D"))))
     }
 
     private object Binds {

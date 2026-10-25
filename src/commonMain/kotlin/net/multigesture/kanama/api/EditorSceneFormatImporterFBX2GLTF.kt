@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Importer for the `.fbx` scene file format.
@@ -26,6 +27,6 @@ class EditorSceneFormatImporterFBX2GLTF(handle: GodotHandle) : EditorSceneFormat
         /** A new EditorSceneFormatImporterFBX2GLTF, GDScript's `EditorSceneFormatImporterFBX2GLTF.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): EditorSceneFormatImporterFBX2GLTF =
-            RefCounted.owned(EditorSceneFormatImporterFBX2GLTF(GodotHandle(ObjectCalls.constructObject("EditorSceneFormatImporterFBX2GLTF"))))
+            RefCounted.owned(EditorSceneFormatImporterFBX2GLTF(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorSceneFormatImporterFBX2GLTF"), "EditorSceneFormatImporterFBX2GLTF"))))
     }
 }

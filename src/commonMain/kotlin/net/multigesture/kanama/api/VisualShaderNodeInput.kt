@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents the input shader parameter within the visual shader graph.
@@ -79,7 +80,7 @@ class VisualShaderNodeInput(handle: GodotHandle) : VisualShaderNode(handle) {
         /** A new VisualShaderNodeInput, GDScript's `VisualShaderNodeInput.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeInput =
-            RefCounted.owned(VisualShaderNodeInput(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeInput"))))
+            RefCounted.owned(VisualShaderNodeInput(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeInput"), "VisualShaderNodeInput"))))
     }
 
     private object Binds {

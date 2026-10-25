@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2i
 
 /**
@@ -143,7 +144,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
         /** A new TileMapPattern, GDScript's `TileMapPattern.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): TileMapPattern =
-            RefCounted.owned(TileMapPattern(GodotHandle(ObjectCalls.constructObject("TileMapPattern"))))
+            RefCounted.owned(TileMapPattern(GodotHandle(requireConstructed(ObjectCalls.constructObject("TileMapPattern"), "TileMapPattern"))))
     }
 
     private object Binds {

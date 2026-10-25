@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Document related language server functionality.
@@ -152,7 +153,7 @@ class GDScriptTextDocument(handle: GodotHandle) : RefCounted(handle) {
         /** A new GDScriptTextDocument, GDScript's `GDScriptTextDocument.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GDScriptTextDocument =
-            RefCounted.owned(GDScriptTextDocument(GodotHandle(ObjectCalls.constructObject("GDScriptTextDocument"))))
+            RefCounted.owned(GDScriptTextDocument(GodotHandle(requireConstructed(ObjectCalls.constructObject("GDScriptTextDocument"), "GDScriptTextDocument"))))
     }
 
     private object Binds {

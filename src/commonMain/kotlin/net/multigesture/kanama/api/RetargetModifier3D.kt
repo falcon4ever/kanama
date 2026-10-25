@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A modifier to transfer parent skeleton poses (or global poses) to child skeletons in model space
@@ -216,7 +217,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         /** A new RetargetModifier3D, GDScript's `RetargetModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): RetargetModifier3D =
-            RetargetModifier3D(GodotHandle(ObjectCalls.constructObject("RetargetModifier3D")))
+            RetargetModifier3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("RetargetModifier3D"), "RetargetModifier3D")))
     }
 
     private object Binds {

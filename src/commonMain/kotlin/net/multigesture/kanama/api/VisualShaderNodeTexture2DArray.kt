@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A 2D texture uniform array to be used within the visual shader graph.
@@ -59,7 +60,7 @@ class VisualShaderNodeTexture2DArray(handle: GodotHandle) : VisualShaderNodeSamp
         /** A new VisualShaderNodeTexture2DArray, GDScript's `VisualShaderNodeTexture2DArray.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeTexture2DArray =
-            RefCounted.owned(VisualShaderNodeTexture2DArray(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTexture2DArray"))))
+            RefCounted.owned(VisualShaderNodeTexture2DArray(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTexture2DArray"), "VisualShaderNodeTexture2DArray"))))
     }
 
     private object Binds {

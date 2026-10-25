@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -268,7 +269,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
         /** A new CanvasTexture, GDScript's `CanvasTexture.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): CanvasTexture =
-            RefCounted.owned(CanvasTexture(GodotHandle(ObjectCalls.constructObject("CanvasTexture"))))
+            RefCounted.owned(CanvasTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("CanvasTexture"), "CanvasTexture"))))
     }
 
     private object Binds {

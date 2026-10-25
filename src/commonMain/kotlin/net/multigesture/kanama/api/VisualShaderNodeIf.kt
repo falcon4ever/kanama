@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Outputs a 3D vector based on the result of a floating-point comparison within the visual shader
@@ -27,6 +28,6 @@ class VisualShaderNodeIf(handle: GodotHandle) : VisualShaderNode(handle) {
         /** A new VisualShaderNodeIf, GDScript's `VisualShaderNodeIf.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeIf =
-            RefCounted.owned(VisualShaderNodeIf(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeIf"))))
+            RefCounted.owned(VisualShaderNodeIf(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeIf"), "VisualShaderNodeIf"))))
     }
 }

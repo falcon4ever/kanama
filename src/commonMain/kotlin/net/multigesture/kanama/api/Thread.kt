@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A unit of execution in a process.
@@ -161,7 +162,7 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
         /** A new Thread, GDScript's `Thread.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Thread =
-            RefCounted.owned(Thread(GodotHandle(ObjectCalls.constructObject("Thread"))))
+            RefCounted.owned(Thread(GodotHandle(requireConstructed(ObjectCalls.constructObject("Thread"), "Thread"))))
     }
 
     private object Binds {

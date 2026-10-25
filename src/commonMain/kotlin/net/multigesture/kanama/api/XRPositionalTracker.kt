@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
@@ -244,7 +245,7 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
         /** A new XRPositionalTracker, GDScript's `XRPositionalTracker.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): XRPositionalTracker =
-            RefCounted.owned(XRPositionalTracker(GodotHandle(ObjectCalls.constructObject("XRPositionalTracker"))))
+            RefCounted.owned(XRPositionalTracker(GodotHandle(requireConstructed(ObjectCalls.constructObject("XRPositionalTracker"), "XRPositionalTracker"))))
     }
 
     private object Binds {

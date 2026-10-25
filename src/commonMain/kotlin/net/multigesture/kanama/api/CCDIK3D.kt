@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Rotation based cyclic coordinate descent inverse kinematics solver.
@@ -23,6 +24,6 @@ class CCDIK3D(handle: GodotHandle) : IterateIK3D(handle) {
         /** A new CCDIK3D, GDScript's `CCDIK3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): CCDIK3D =
-            CCDIK3D(GodotHandle(ObjectCalls.constructObject("CCDIK3D")))
+            CCDIK3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CCDIK3D"), "CCDIK3D")))
     }
 }

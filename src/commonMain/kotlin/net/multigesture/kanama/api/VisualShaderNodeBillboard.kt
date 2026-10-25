@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A node that controls how the object faces the camera to be used within the visual shader graph.
@@ -130,7 +131,7 @@ class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) 
         /** A new VisualShaderNodeBillboard, GDScript's `VisualShaderNodeBillboard.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeBillboard =
-            RefCounted.owned(VisualShaderNodeBillboard(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeBillboard"))))
+            RefCounted.owned(VisualShaderNodeBillboard(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeBillboard"), "VisualShaderNodeBillboard"))))
     }
 
     private object Binds {

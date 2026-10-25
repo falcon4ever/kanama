@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
@@ -446,7 +447,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
         /** A new RayCast3D, GDScript's `RayCast3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): RayCast3D =
-            RayCast3D(GodotHandle(ObjectCalls.constructObject("RayCast3D")))
+            RayCast3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("RayCast3D"), "RayCast3D")))
     }
 
     private object Binds {

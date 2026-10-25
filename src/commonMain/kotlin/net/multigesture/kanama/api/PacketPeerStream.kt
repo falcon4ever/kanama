@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Wrapper to use a PacketPeer over a StreamPeer.
@@ -95,7 +96,7 @@ class PacketPeerStream(handle: GodotHandle) : PacketPeer(handle) {
         /** A new PacketPeerStream, GDScript's `PacketPeerStream.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PacketPeerStream =
-            RefCounted.owned(PacketPeerStream(GodotHandle(ObjectCalls.constructObject("PacketPeerStream"))))
+            RefCounted.owned(PacketPeerStream(GodotHandle(requireConstructed(ObjectCalls.constructObject("PacketPeerStream"), "PacketPeerStream"))))
     }
 
     private object Binds {

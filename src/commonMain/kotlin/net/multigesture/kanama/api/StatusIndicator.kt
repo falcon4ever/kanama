@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2i
@@ -146,7 +147,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
         /** A new StatusIndicator, GDScript's `StatusIndicator.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): StatusIndicator =
-            StatusIndicator(GodotHandle(ObjectCalls.constructObject("StatusIndicator")))
+            StatusIndicator(GodotHandle(requireConstructed(ObjectCalls.constructObject("StatusIndicator"), "StatusIndicator")))
     }
 
     private object Binds {

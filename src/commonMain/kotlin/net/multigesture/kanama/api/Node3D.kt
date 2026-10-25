@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Quaternion
@@ -984,7 +985,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
         /** A new Node3D, GDScript's `Node3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Node3D =
-            Node3D(GodotHandle(ObjectCalls.constructObject("Node3D")))
+            Node3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Node3D"), "Node3D")))
     }
 
     private object Binds {

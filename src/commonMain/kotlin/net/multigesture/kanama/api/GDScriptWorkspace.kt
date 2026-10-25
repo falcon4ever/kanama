@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Workspace related language server functionality.
@@ -94,7 +95,7 @@ class GDScriptWorkspace(handle: GodotHandle) : RefCounted(handle) {
         /** A new GDScriptWorkspace, GDScript's `GDScriptWorkspace.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GDScriptWorkspace =
-            RefCounted.owned(GDScriptWorkspace(GodotHandle(ObjectCalls.constructObject("GDScriptWorkspace"))))
+            RefCounted.owned(GDScriptWorkspace(GodotHandle(requireConstructed(ObjectCalls.constructObject("GDScriptWorkspace"), "GDScriptWorkspace"))))
     }
 
     private object Binds {

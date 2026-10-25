@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * The DPad binding modifier converts an axis input to a dpad output.
@@ -295,7 +296,7 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
         /** A new OpenXRDpadBindingModifier, GDScript's `OpenXRDpadBindingModifier.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRDpadBindingModifier =
-            RefCounted.owned(OpenXRDpadBindingModifier(GodotHandle(ObjectCalls.constructObject("OpenXRDpadBindingModifier"))))
+            RefCounted.owned(OpenXRDpadBindingModifier(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRDpadBindingModifier"), "OpenXRDpadBindingModifier"))))
     }
 
     private object Binds {

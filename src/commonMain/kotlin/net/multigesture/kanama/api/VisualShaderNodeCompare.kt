@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A comparison function for common types within the visual shader graph.
@@ -271,7 +272,7 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
         /** A new VisualShaderNodeCompare, GDScript's `VisualShaderNodeCompare.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeCompare =
-            RefCounted.owned(VisualShaderNodeCompare(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeCompare"))))
+            RefCounted.owned(VisualShaderNodeCompare(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeCompare"), "VisualShaderNodeCompare"))))
     }
 
     private object Binds {

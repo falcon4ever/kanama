@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -218,7 +219,7 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
         /** A new SceneReplicationConfig, GDScript's `SceneReplicationConfig.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): SceneReplicationConfig =
-            RefCounted.owned(SceneReplicationConfig(GodotHandle(ObjectCalls.constructObject("SceneReplicationConfig"))))
+            RefCounted.owned(SceneReplicationConfig(GodotHandle(requireConstructed(ObjectCalls.constructObject("SceneReplicationConfig"), "SceneReplicationConfig"))))
     }
 
     private object Binds {

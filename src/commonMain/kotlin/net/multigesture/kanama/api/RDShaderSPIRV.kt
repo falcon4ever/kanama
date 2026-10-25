@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * SPIR-V intermediate representation as part of an `RDShaderFile` (used by `RenderingDevice`).
@@ -194,7 +195,7 @@ class RDShaderSPIRV(handle: GodotHandle) : Resource(handle) {
         /** A new RDShaderSPIRV, GDScript's `RDShaderSPIRV.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): RDShaderSPIRV =
-            RefCounted.owned(RDShaderSPIRV(GodotHandle(ObjectCalls.constructObject("RDShaderSPIRV"))))
+            RefCounted.owned(RDShaderSPIRV(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDShaderSPIRV"), "RDShaderSPIRV"))))
     }
 
     private object Binds {

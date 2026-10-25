@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 
 /**
@@ -38,7 +39,7 @@ class OpenXRSpatialComponentParentList(handle: GodotHandle) : OpenXRSpatialCompo
         /** A new OpenXRSpatialComponentParentList, GDScript's `OpenXRSpatialComponentParentList.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRSpatialComponentParentList =
-            RefCounted.owned(OpenXRSpatialComponentParentList(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentParentList"))))
+            RefCounted.owned(OpenXRSpatialComponentParentList(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialComponentParentList"), "OpenXRSpatialComponentParentList"))))
     }
 
     private object Binds {

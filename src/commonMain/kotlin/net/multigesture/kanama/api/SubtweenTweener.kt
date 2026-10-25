@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.binding.runtime.requireGodotReturn
 
 /**
@@ -43,7 +44,7 @@ class SubtweenTweener(handle: GodotHandle) : Tweener(handle) {
         /** A new SubtweenTweener, GDScript's `SubtweenTweener.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): SubtweenTweener =
-            RefCounted.owned(SubtweenTweener(GodotHandle(ObjectCalls.constructObject("SubtweenTweener"))))
+            RefCounted.owned(SubtweenTweener(GodotHandle(requireConstructed(ObjectCalls.constructObject("SubtweenTweener"), "SubtweenTweener"))))
     }
 
     private object Binds {

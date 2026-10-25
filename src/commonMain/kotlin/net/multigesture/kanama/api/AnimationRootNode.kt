@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for `AnimationNode`s that hold one or multiple composite animations. Usually used for
@@ -27,6 +28,6 @@ open class AnimationRootNode(handle: GodotHandle) : AnimationNode(handle) {
         /** A new AnimationRootNode, GDScript's `AnimationRootNode.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AnimationRootNode =
-            RefCounted.owned(AnimationRootNode(GodotHandle(ObjectCalls.constructObject("AnimationRootNode"))))
+            RefCounted.owned(AnimationRootNode(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationRootNode"), "AnimationRootNode"))))
     }
 }

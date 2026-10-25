@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Returns the length of a `Vector3` within the visual shader graph.
@@ -26,6 +27,6 @@ class VisualShaderNodeVectorLen(handle: GodotHandle) : VisualShaderNodeVectorBas
         /** A new VisualShaderNodeVectorLen, GDScript's `VisualShaderNodeVectorLen.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeVectorLen =
-            RefCounted.owned(VisualShaderNodeVectorLen(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeVectorLen"))))
+            RefCounted.owned(VisualShaderNodeVectorLen(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeVectorLen"), "VisualShaderNodeVectorLen"))))
     }
 }

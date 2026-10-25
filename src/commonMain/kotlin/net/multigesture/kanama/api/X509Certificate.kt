@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An X509 certificate (e.g. for TLS).
@@ -74,7 +75,7 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
         /** A new X509Certificate, GDScript's `X509Certificate.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): X509Certificate =
-            RefCounted.owned(X509Certificate(GodotHandle(ObjectCalls.constructObject("X509Certificate"))))
+            RefCounted.owned(X509Certificate(GodotHandle(requireConstructed(ObjectCalls.constructObject("X509Certificate"), "X509Certificate"))))
     }
 
     private object Binds {

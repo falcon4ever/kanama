@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Point sampler for a `Path2D`.
@@ -219,7 +220,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
         /** A new PathFollow2D, GDScript's `PathFollow2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): PathFollow2D =
-            PathFollow2D(GodotHandle(ObjectCalls.constructObject("PathFollow2D")))
+            PathFollow2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PathFollow2D"), "PathFollow2D")))
     }
 
     private object Binds {

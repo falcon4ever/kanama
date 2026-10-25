@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -318,7 +319,7 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
         /** A new GLTFPhysicsShape, GDScript's `GLTFPhysicsShape.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GLTFPhysicsShape =
-            RefCounted.owned(GLTFPhysicsShape(GodotHandle(ObjectCalls.constructObject("GLTFPhysicsShape"))))
+            RefCounted.owned(GLTFPhysicsShape(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFPhysicsShape"), "GLTFPhysicsShape"))))
     }
 
     private object Binds {

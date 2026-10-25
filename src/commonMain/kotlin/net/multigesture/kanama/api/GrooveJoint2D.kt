@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A physics joint that restricts the movement of two 2D physics bodies to a fixed axis.
@@ -75,7 +76,7 @@ class GrooveJoint2D(handle: GodotHandle) : Joint2D(handle) {
         /** A new GrooveJoint2D, GDScript's `GrooveJoint2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): GrooveJoint2D =
-            GrooveJoint2D(GodotHandle(ObjectCalls.constructObject("GrooveJoint2D")))
+            GrooveJoint2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("GrooveJoint2D"), "GrooveJoint2D")))
     }
 
     private object Binds {

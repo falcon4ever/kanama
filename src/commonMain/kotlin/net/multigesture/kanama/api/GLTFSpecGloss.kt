@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -175,7 +176,7 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
         /** A new GLTFSpecGloss, GDScript's `GLTFSpecGloss.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GLTFSpecGloss =
-            RefCounted.owned(GLTFSpecGloss(GodotHandle(ObjectCalls.constructObject("GLTFSpecGloss"))))
+            RefCounted.owned(GLTFSpecGloss(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFSpecGloss"), "GLTFSpecGloss"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Pipeline specialization constant (used by `RenderingDevice`).
@@ -88,7 +89,7 @@ class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle)
         /** A new RDPipelineSpecializationConstant, GDScript's `RDPipelineSpecializationConstant.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): RDPipelineSpecializationConstant =
-            RefCounted.owned(RDPipelineSpecializationConstant(GodotHandle(ObjectCalls.constructObject("RDPipelineSpecializationConstant"))))
+            RefCounted.owned(RDPipelineSpecializationConstant(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDPipelineSpecializationConstant"), "RDPipelineSpecializationConstant"))))
     }
 
     private object Binds {

@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Wraps a pool of audio streams with pitch and volume shifting.
@@ -307,7 +308,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
         /** A new AudioStreamRandomizer, GDScript's `AudioStreamRandomizer.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioStreamRandomizer =
-            RefCounted.owned(AudioStreamRandomizer(GodotHandle(ObjectCalls.constructObject("AudioStreamRandomizer"))))
+            RefCounted.owned(AudioStreamRandomizer(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamRandomizer"), "AudioStreamRandomizer"))))
     }
 
     private object Binds {

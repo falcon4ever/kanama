@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A button that represents a binary choice.
@@ -23,6 +24,6 @@ class CheckBox(handle: GodotHandle) : Button(handle) {
         /** A new CheckBox, GDScript's `CheckBox.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): CheckBox =
-            CheckBox(GodotHandle(ObjectCalls.constructObject("CheckBox")))
+            CheckBox(GodotHandle(requireConstructed(ObjectCalls.constructObject("CheckBox"), "CheckBox")))
     }
 }

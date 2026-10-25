@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Universal Plug and Play (UPnP) functions for network device discovery, querying and port
@@ -471,7 +472,7 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
         /** A new UPNP, GDScript's `UPNP.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): UPNP =
-            RefCounted.owned(UPNP(GodotHandle(ObjectCalls.constructObject("UPNP"))))
+            RefCounted.owned(UPNP(GodotHandle(requireConstructed(ObjectCalls.constructObject("UPNP"), "UPNP"))))
     }
 
     private object Binds {

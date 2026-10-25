@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Playback class used for `AudioStreamOggVorbis`.
@@ -26,6 +27,6 @@ class AudioStreamPlaybackOggVorbis(handle: GodotHandle) : AudioStreamPlaybackRes
         /** A new AudioStreamPlaybackOggVorbis, GDScript's `AudioStreamPlaybackOggVorbis.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioStreamPlaybackOggVorbis =
-            RefCounted.owned(AudioStreamPlaybackOggVorbis(GodotHandle(ObjectCalls.constructObject("AudioStreamPlaybackOggVorbis"))))
+            RefCounted.owned(AudioStreamPlaybackOggVorbis(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamPlaybackOggVorbis"), "AudioStreamPlaybackOggVorbis"))))
     }
 }

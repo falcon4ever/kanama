@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.binding.runtime.requireGodotReturn
 
 /**
@@ -77,7 +78,7 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
         /** A new MethodTweener, GDScript's `MethodTweener.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): MethodTweener =
-            RefCounted.owned(MethodTweener(GodotHandle(ObjectCalls.constructObject("MethodTweener"))))
+            RefCounted.owned(MethodTweener(GodotHandle(requireConstructed(ObjectCalls.constructObject("MethodTweener"), "MethodTweener"))))
     }
 
     private object Binds {

@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
@@ -179,7 +180,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
         /** A new Texture2D, GDScript's `Texture2D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Texture2D =
-            RefCounted.owned(Texture2D(GodotHandle(ObjectCalls.constructObject("Texture2D"))))
+            RefCounted.owned(Texture2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Texture2D"), "Texture2D"))))
     }
 
     private object Binds {

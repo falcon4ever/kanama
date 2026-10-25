@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
 
@@ -434,7 +435,7 @@ class ShapeCast2D(handle: GodotHandle) : Node2D(handle) {
         /** A new ShapeCast2D, GDScript's `ShapeCast2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): ShapeCast2D =
-            ShapeCast2D(GodotHandle(ObjectCalls.constructObject("ShapeCast2D")))
+            ShapeCast2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("ShapeCast2D"), "ShapeCast2D")))
     }
 
     private object Binds {

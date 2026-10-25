@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Abstract base class for GUI buttons.
@@ -418,7 +419,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
         /** A new BaseButton, GDScript's `BaseButton.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): BaseButton =
-            BaseButton(GodotHandle(ObjectCalls.constructObject("BaseButton")))
+            BaseButton(GodotHandle(requireConstructed(ObjectCalls.constructObject("BaseButton"), "BaseButton")))
     }
 
     private object Binds {

@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Imports a collection of textures from a PNG image into an optimized `AtlasTexture` for 2D
@@ -27,6 +28,6 @@ class ResourceImporterTextureAtlas(handle: GodotHandle) : ResourceImporter(handl
         /** A new ResourceImporterTextureAtlas, GDScript's `ResourceImporterTextureAtlas.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ResourceImporterTextureAtlas =
-            RefCounted.owned(ResourceImporterTextureAtlas(GodotHandle(ObjectCalls.constructObject("ResourceImporterTextureAtlas"))))
+            RefCounted.owned(ResourceImporterTextureAtlas(GodotHandle(requireConstructed(ObjectCalls.constructObject("ResourceImporterTextureAtlas"), "ResourceImporterTextureAtlas"))))
     }
 }

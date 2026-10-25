@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * This class allows for a RenderSceneBuffer implementation to be made in GDExtension.
@@ -26,6 +27,6 @@ class RenderSceneBuffersExtension(handle: GodotHandle) : RenderSceneBuffers(hand
         /** A new RenderSceneBuffersExtension, GDScript's `RenderSceneBuffersExtension.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): RenderSceneBuffersExtension =
-            RefCounted.owned(RenderSceneBuffersExtension(GodotHandle(ObjectCalls.constructObject("RenderSceneBuffersExtension"))))
+            RefCounted.owned(RenderSceneBuffersExtension(GodotHandle(requireConstructed(ObjectCalls.constructObject("RenderSceneBuffersExtension"), "RenderSceneBuffersExtension"))))
     }
 }

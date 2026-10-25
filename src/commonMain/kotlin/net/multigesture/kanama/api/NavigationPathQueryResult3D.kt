@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 
@@ -217,7 +218,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
         /** A new NavigationPathQueryResult3D, GDScript's `NavigationPathQueryResult3D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): NavigationPathQueryResult3D =
-            RefCounted.owned(NavigationPathQueryResult3D(GodotHandle(ObjectCalls.constructObject("NavigationPathQueryResult3D"))))
+            RefCounted.owned(NavigationPathQueryResult3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("NavigationPathQueryResult3D"), "NavigationPathQueryResult3D"))))
     }
 
     private object Binds {

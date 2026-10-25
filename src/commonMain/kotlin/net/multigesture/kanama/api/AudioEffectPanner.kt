@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a panner audio effect to an audio bus. Pans the sound left or right.
@@ -57,7 +58,7 @@ class AudioEffectPanner(handle: GodotHandle) : AudioEffect(handle) {
         /** A new AudioEffectPanner, GDScript's `AudioEffectPanner.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioEffectPanner =
-            RefCounted.owned(AudioEffectPanner(GodotHandle(ObjectCalls.constructObject("AudioEffectPanner"))))
+            RefCounted.owned(AudioEffectPanner(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectPanner"), "AudioEffectPanner"))))
     }
 
     private object Binds {

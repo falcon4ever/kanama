@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 
@@ -206,7 +207,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         /** A new PlaneMesh, GDScript's `PlaneMesh.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PlaneMesh =
-            RefCounted.owned(PlaneMesh(GodotHandle(ObjectCalls.constructObject("PlaneMesh"))))
+            RefCounted.owned(PlaneMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("PlaneMesh"), "PlaneMesh"))))
 
         // Downcast a Resource to PlaneMesh (null if not).
         @JvmStatic

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
@@ -257,7 +258,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
         /** A new NavigationMeshSourceGeometryData3D, GDScript's `NavigationMeshSourceGeometryData3D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): NavigationMeshSourceGeometryData3D =
-            RefCounted.owned(NavigationMeshSourceGeometryData3D(GodotHandle(ObjectCalls.constructObject("NavigationMeshSourceGeometryData3D"))))
+            RefCounted.owned(NavigationMeshSourceGeometryData3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("NavigationMeshSourceGeometryData3D"), "NavigationMeshSourceGeometryData3D"))))
     }
 
     private object Binds {

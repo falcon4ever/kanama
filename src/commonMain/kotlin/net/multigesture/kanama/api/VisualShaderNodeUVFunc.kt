@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Contains functions to modify texture coordinates (`uv`) to be used within the visual shader
@@ -89,7 +90,7 @@ class VisualShaderNodeUVFunc(handle: GodotHandle) : VisualShaderNode(handle) {
         /** A new VisualShaderNodeUVFunc, GDScript's `VisualShaderNodeUVFunc.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeUVFunc =
-            RefCounted.owned(VisualShaderNodeUVFunc(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeUVFunc"))))
+            RefCounted.owned(VisualShaderNodeUVFunc(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeUVFunc"), "VisualShaderNodeUVFunc"))))
     }
 
     private object Binds {

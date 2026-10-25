@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Registers a custom resource importer in the editor. Use the class to parse any file and import
@@ -45,7 +46,7 @@ class EditorImportPlugin(handle: GodotHandle) : ResourceImporter(handle) {
         /** A new EditorImportPlugin, GDScript's `EditorImportPlugin.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): EditorImportPlugin =
-            RefCounted.owned(EditorImportPlugin(GodotHandle(ObjectCalls.constructObject("EditorImportPlugin"))))
+            RefCounted.owned(EditorImportPlugin(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorImportPlugin"), "EditorImportPlugin"))))
     }
 
     private object Binds {

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -91,7 +92,7 @@ class Path3D(handle: GodotHandle) : Node3D(handle) {
         /** A new Path3D, GDScript's `Path3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Path3D =
-            Path3D(GodotHandle(ObjectCalls.constructObject("Path3D")))
+            Path3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Path3D"), "Path3D")))
     }
 
     private object Binds {

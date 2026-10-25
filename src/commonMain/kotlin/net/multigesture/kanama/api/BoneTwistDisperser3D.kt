@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Quaternion
 
 /**
@@ -403,7 +404,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         /** A new BoneTwistDisperser3D, GDScript's `BoneTwistDisperser3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): BoneTwistDisperser3D =
-            BoneTwistDisperser3D(GodotHandle(ObjectCalls.constructObject("BoneTwistDisperser3D")))
+            BoneTwistDisperser3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("BoneTwistDisperser3D"), "BoneTwistDisperser3D")))
     }
 
     private object Binds {

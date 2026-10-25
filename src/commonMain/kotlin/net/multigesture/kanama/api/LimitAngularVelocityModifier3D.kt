@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Limit bone rotation angular velocity.
@@ -190,7 +191,7 @@ class LimitAngularVelocityModifier3D(handle: GodotHandle) : SkeletonModifier3D(h
         /** A new LimitAngularVelocityModifier3D, GDScript's `LimitAngularVelocityModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): LimitAngularVelocityModifier3D =
-            LimitAngularVelocityModifier3D(GodotHandle(ObjectCalls.constructObject("LimitAngularVelocityModifier3D")))
+            LimitAngularVelocityModifier3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("LimitAngularVelocityModifier3D"), "LimitAngularVelocityModifier3D")))
     }
 
     private object Binds {

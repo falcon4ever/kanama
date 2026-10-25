@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Virtual class to define custom `VisualShaderNode`s for use in the Visual Shader Editor.
@@ -38,7 +39,7 @@ class VisualShaderNodeCustom(handle: GodotHandle) : VisualShaderNode(handle) {
         /** A new VisualShaderNodeCustom, GDScript's `VisualShaderNodeCustom.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeCustom =
-            RefCounted.owned(VisualShaderNodeCustom(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeCustom"))))
+            RefCounted.owned(VisualShaderNodeCustom(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeCustom"), "VisualShaderNodeCustom"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A dialog used for confirmation of actions.
@@ -58,7 +59,7 @@ open class ConfirmationDialog(handle: GodotHandle) : AcceptDialog(handle) {
         /** A new ConfirmationDialog, GDScript's `ConfirmationDialog.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): ConfirmationDialog =
-            ConfirmationDialog(GodotHandle(ObjectCalls.constructObject("ConfirmationDialog")))
+            ConfirmationDialog(GodotHandle(requireConstructed(ObjectCalls.constructObject("ConfirmationDialog"), "ConfirmationDialog")))
     }
 
     private object Binds {

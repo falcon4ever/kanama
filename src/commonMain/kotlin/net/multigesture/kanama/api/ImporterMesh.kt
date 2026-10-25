@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2i
 
@@ -364,7 +365,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
         /** A new ImporterMesh, GDScript's `ImporterMesh.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ImporterMesh =
-            RefCounted.owned(ImporterMesh(GodotHandle(ObjectCalls.constructObject("ImporterMesh"))))
+            RefCounted.owned(ImporterMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("ImporterMesh"), "ImporterMesh"))))
     }
 
     private object Binds {

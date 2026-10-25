@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a low-pass filter to an audio bus.
@@ -26,6 +27,6 @@ class AudioEffectLowPassFilter(handle: GodotHandle) : AudioEffectFilter(handle) 
         /** A new AudioEffectLowPassFilter, GDScript's `AudioEffectLowPassFilter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioEffectLowPassFilter =
-            RefCounted.owned(AudioEffectLowPassFilter(GodotHandle(ObjectCalls.constructObject("AudioEffectLowPassFilter"))))
+            RefCounted.owned(AudioEffectLowPassFilter(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectLowPassFilter"), "AudioEffectLowPassFilter"))))
     }
 }

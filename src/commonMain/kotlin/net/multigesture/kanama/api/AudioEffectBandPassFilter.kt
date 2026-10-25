@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a band-pass filter to an audio bus.
@@ -26,6 +27,6 @@ class AudioEffectBandPassFilter(handle: GodotHandle) : AudioEffectFilter(handle)
         /** A new AudioEffectBandPassFilter, GDScript's `AudioEffectBandPassFilter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioEffectBandPassFilter =
-            RefCounted.owned(AudioEffectBandPassFilter(GodotHandle(ObjectCalls.constructObject("AudioEffectBandPassFilter"))))
+            RefCounted.owned(AudioEffectBandPassFilter(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectBandPassFilter"), "AudioEffectBandPassFilter"))))
     }
 }

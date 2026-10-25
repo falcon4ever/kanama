@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that modifies the texture UV using polar coordinates.
@@ -26,6 +27,6 @@ class VisualShaderNodeUVPolarCoord(handle: GodotHandle) : VisualShaderNode(handl
         /** A new VisualShaderNodeUVPolarCoord, GDScript's `VisualShaderNodeUVPolarCoord.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeUVPolarCoord =
-            RefCounted.owned(VisualShaderNodeUVPolarCoord(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeUVPolarCoord"))))
+            RefCounted.owned(VisualShaderNodeUVPolarCoord(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeUVPolarCoord"), "VisualShaderNodeUVPolarCoord"))))
     }
 }

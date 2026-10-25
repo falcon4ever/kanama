@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Stream that can be fitted with sub-streams, which will be played in-sync.
@@ -109,7 +110,7 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
         /** A new AudioStreamSynchronized, GDScript's `AudioStreamSynchronized.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioStreamSynchronized =
-            RefCounted.owned(AudioStreamSynchronized(GodotHandle(ObjectCalls.constructObject("AudioStreamSynchronized"))))
+            RefCounted.owned(AudioStreamSynchronized(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamSynchronized"), "AudioStreamSynchronized"))))
     }
 
     private object Binds {

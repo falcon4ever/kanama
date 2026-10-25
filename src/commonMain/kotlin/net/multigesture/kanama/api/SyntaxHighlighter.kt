@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for syntax highlighters. Provides syntax highlighting data to a `TextEdit`.
@@ -77,7 +78,7 @@ open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
         /** A new SyntaxHighlighter, GDScript's `SyntaxHighlighter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): SyntaxHighlighter =
-            RefCounted.owned(SyntaxHighlighter(GodotHandle(ObjectCalls.constructObject("SyntaxHighlighter"))))
+            RefCounted.owned(SyntaxHighlighter(GodotHandle(requireConstructed(ObjectCalls.constructObject("SyntaxHighlighter"), "SyntaxHighlighter"))))
     }
 
     private object Binds {

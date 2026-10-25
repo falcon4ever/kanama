@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 
 /**
@@ -85,7 +86,7 @@ class VisualShaderNodeTransformParameter(handle: GodotHandle) : VisualShaderNode
         /** A new VisualShaderNodeTransformParameter, GDScript's `VisualShaderNodeTransformParameter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeTransformParameter =
-            RefCounted.owned(VisualShaderNodeTransformParameter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTransformParameter"))))
+            RefCounted.owned(VisualShaderNodeTransformParameter(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTransformParameter"), "VisualShaderNodeTransformParameter"))))
     }
 
     private object Binds {

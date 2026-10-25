@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Overrides the location sounds are heard from.
@@ -51,7 +52,7 @@ class AudioListener2D(handle: GodotHandle) : Node2D(handle) {
         /** A new AudioListener2D, GDScript's `AudioListener2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): AudioListener2D =
-            AudioListener2D(GodotHandle(ObjectCalls.constructObject("AudioListener2D")))
+            AudioListener2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioListener2D"), "AudioListener2D")))
     }
 
     private object Binds {

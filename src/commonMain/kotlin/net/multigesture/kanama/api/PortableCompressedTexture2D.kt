@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -172,7 +173,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
         /** A new PortableCompressedTexture2D, GDScript's `PortableCompressedTexture2D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PortableCompressedTexture2D =
-            RefCounted.owned(PortableCompressedTexture2D(GodotHandle(ObjectCalls.constructObject("PortableCompressedTexture2D"))))
+            RefCounted.owned(PortableCompressedTexture2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PortableCompressedTexture2D"), "PortableCompressedTexture2D"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Sampler state (used by `RenderingDevice`).
@@ -499,7 +500,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
         /** A new RDSamplerState, GDScript's `RDSamplerState.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): RDSamplerState =
-            RefCounted.owned(RDSamplerState(GodotHandle(ObjectCalls.constructObject("RDSamplerState"))))
+            RefCounted.owned(RDSamplerState(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDSamplerState"), "RDSamplerState"))))
     }
 
     private object Binds {

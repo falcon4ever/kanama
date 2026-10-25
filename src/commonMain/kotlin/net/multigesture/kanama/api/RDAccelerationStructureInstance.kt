@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
 
@@ -206,7 +207,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
         /** A new RDAccelerationStructureInstance, GDScript's `RDAccelerationStructureInstance.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): RDAccelerationStructureInstance =
-            RefCounted.owned(RDAccelerationStructureInstance(GodotHandle(ObjectCalls.constructObject("RDAccelerationStructureInstance"))))
+            RefCounted.owned(RDAccelerationStructureInstance(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDAccelerationStructureInstance"), "RDAccelerationStructureInstance"))))
     }
 
     private object Binds {

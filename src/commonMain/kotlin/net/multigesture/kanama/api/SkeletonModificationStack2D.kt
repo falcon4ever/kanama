@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A resource that holds a stack of `SkeletonModification2D`s.
@@ -228,7 +229,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
         /** A new SkeletonModificationStack2D, GDScript's `SkeletonModificationStack2D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): SkeletonModificationStack2D =
-            RefCounted.owned(SkeletonModificationStack2D(GodotHandle(ObjectCalls.constructObject("SkeletonModificationStack2D"))))
+            RefCounted.owned(SkeletonModificationStack2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SkeletonModificationStack2D"), "SkeletonModificationStack2D"))))
     }
 
     private object Binds {

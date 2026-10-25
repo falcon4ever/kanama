@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Helper class to implement a DTLS server.
@@ -55,7 +56,7 @@ class DTLSServer(handle: GodotHandle) : RefCounted(handle) {
         /** A new DTLSServer, GDScript's `DTLSServer.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): DTLSServer =
-            RefCounted.owned(DTLSServer(GodotHandle(ObjectCalls.constructObject("DTLSServer"))))
+            RefCounted.owned(DTLSServer(GodotHandle(requireConstructed(ObjectCalls.constructObject("DTLSServer"), "DTLSServer"))))
     }
 
     private object Binds {

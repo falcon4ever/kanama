@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A function to convert an SDF (signed-distance field) to screen UV, to be used within the visual
@@ -27,6 +28,6 @@ class VisualShaderNodeSDFToScreenUV(handle: GodotHandle) : VisualShaderNode(hand
         /** A new VisualShaderNodeSDFToScreenUV, GDScript's `VisualShaderNodeSDFToScreenUV.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeSDFToScreenUV =
-            RefCounted.owned(VisualShaderNodeSDFToScreenUV(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeSDFToScreenUV"))))
+            RefCounted.owned(VisualShaderNodeSDFToScreenUV(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeSDFToScreenUV"), "VisualShaderNodeSDFToScreenUV"))))
     }
 }

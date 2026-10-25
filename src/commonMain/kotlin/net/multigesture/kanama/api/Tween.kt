@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.binding.runtime.requireGodotReturn
 import net.multigesture.kanama.types.NodePath
 
@@ -709,7 +710,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
         /** A new Tween, GDScript's `Tween.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Tween =
-            RefCounted.owned(Tween(GodotHandle(ObjectCalls.constructObject("Tween"))))
+            RefCounted.owned(Tween(GodotHandle(requireConstructed(ObjectCalls.constructObject("Tween"), "Tween"))))
     }
 
     private object Binds {

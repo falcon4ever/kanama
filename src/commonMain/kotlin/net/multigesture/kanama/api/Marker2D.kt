@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Generic 2D position hint for editing.
@@ -47,7 +48,7 @@ class Marker2D(handle: GodotHandle) : Node2D(handle) {
         /** A new Marker2D, GDScript's `Marker2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Marker2D =
-            Marker2D(GodotHandle(ObjectCalls.constructObject("Marker2D")))
+            Marker2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Marker2D"), "Marker2D")))
     }
 
     private object Binds {

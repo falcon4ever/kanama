@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -48,7 +49,7 @@ class ColorRect(handle: GodotHandle) : Control(handle) {
         /** A new ColorRect, GDScript's `ColorRect.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): ColorRect =
-            ColorRect(GodotHandle(ObjectCalls.constructObject("ColorRect")))
+            ColorRect(GodotHandle(requireConstructed(ObjectCalls.constructObject("ColorRect"), "ColorRect")))
     }
 
     private object Binds {

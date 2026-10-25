@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents an object from the Java Native Interface.
@@ -49,7 +50,7 @@ class JavaObject(handle: GodotHandle) : RefCounted(handle) {
         /** A new JavaObject, GDScript's `JavaObject.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): JavaObject =
-            RefCounted.owned(JavaObject(GodotHandle(ObjectCalls.constructObject("JavaObject"))))
+            RefCounted.owned(JavaObject(GodotHandle(requireConstructed(ObjectCalls.constructObject("JavaObject"), "JavaObject"))))
     }
 
     private object Binds {

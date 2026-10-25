@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
@@ -64,7 +65,7 @@ class OpenXRSpatialComponentMesh2DList(handle: GodotHandle) : OpenXRSpatialCompo
         /** A new OpenXRSpatialComponentMesh2DList, GDScript's `OpenXRSpatialComponentMesh2DList.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRSpatialComponentMesh2DList =
-            RefCounted.owned(OpenXRSpatialComponentMesh2DList(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentMesh2DList"))))
+            RefCounted.owned(OpenXRSpatialComponentMesh2DList(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialComponentMesh2DList"), "OpenXRSpatialComponentMesh2DList"))))
     }
 
     private object Binds {

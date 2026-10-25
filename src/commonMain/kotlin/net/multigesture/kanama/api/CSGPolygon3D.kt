@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector2
 
@@ -555,7 +556,7 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         /** A new CSGPolygon3D, GDScript's `CSGPolygon3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): CSGPolygon3D =
-            CSGPolygon3D(GodotHandle(ObjectCalls.constructObject("CSGPolygon3D")))
+            CSGPolygon3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CSGPolygon3D"), "CSGPolygon3D")))
     }
 
     private object Binds {

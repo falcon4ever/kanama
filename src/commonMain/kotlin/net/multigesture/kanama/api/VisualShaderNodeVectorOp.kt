@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A vector operator to be used within the visual shader graph.
@@ -149,7 +150,7 @@ class VisualShaderNodeVectorOp(handle: GodotHandle) : VisualShaderNodeVectorBase
         /** A new VisualShaderNodeVectorOp, GDScript's `VisualShaderNodeVectorOp.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeVectorOp =
-            RefCounted.owned(VisualShaderNodeVectorOp(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeVectorOp"))))
+            RefCounted.owned(VisualShaderNodeVectorOp(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeVectorOp"), "VisualShaderNodeVectorOp"))))
     }
 
     private object Binds {

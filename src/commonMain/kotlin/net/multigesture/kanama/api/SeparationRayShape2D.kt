@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A 2D ray shape used for physics collision that tries to separate itself from any collider.
@@ -88,7 +89,7 @@ class SeparationRayShape2D(handle: GodotHandle) : Shape2D(handle) {
         /** A new SeparationRayShape2D, GDScript's `SeparationRayShape2D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): SeparationRayShape2D =
-            RefCounted.owned(SeparationRayShape2D(GodotHandle(ObjectCalls.constructObject("SeparationRayShape2D"))))
+            RefCounted.owned(SeparationRayShape2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SeparationRayShape2D"), "SeparationRayShape2D"))))
     }
 
     private object Binds {

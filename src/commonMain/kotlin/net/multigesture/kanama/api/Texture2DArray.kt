@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A single texture resource which consists of multiple, separate images. Each image has the same
@@ -42,7 +43,7 @@ class Texture2DArray(handle: GodotHandle) : ImageTextureLayered(handle) {
         /** A new Texture2DArray, GDScript's `Texture2DArray.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Texture2DArray =
-            RefCounted.owned(Texture2DArray(GodotHandle(ObjectCalls.constructObject("Texture2DArray"))))
+            RefCounted.owned(Texture2DArray(GodotHandle(requireConstructed(ObjectCalls.constructObject("Texture2DArray"), "Texture2DArray"))))
     }
 
     private object Binds {

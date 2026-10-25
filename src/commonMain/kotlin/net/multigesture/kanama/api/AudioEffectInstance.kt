@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Manipulates the audio it receives for a given effect.
@@ -26,6 +27,6 @@ open class AudioEffectInstance(handle: GodotHandle) : RefCounted(handle) {
         /** A new AudioEffectInstance, GDScript's `AudioEffectInstance.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioEffectInstance =
-            RefCounted.owned(AudioEffectInstance(GodotHandle(ObjectCalls.constructObject("AudioEffectInstance"))))
+            RefCounted.owned(AudioEffectInstance(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectInstance"), "AudioEffectInstance"))))
     }
 }

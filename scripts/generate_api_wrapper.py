@@ -312,6 +312,7 @@ DEFAULT_IMPORTS = {
 
 # The shared helper every `meta: "required"` object return goes through (task 128 A, decision 9).
 REQUIRE_GODOT_RETURN_IMPORT = "net.multigesture.kanama.binding.runtime.requireGodotReturn"
+REQUIRE_CONSTRUCTED_IMPORT = "net.multigesture.kanama.binding.runtime.requireConstructed"
 
 RESERVED_WORDS = {
     "as",
@@ -486,6 +487,7 @@ def _add_import_if_used(content: str, symbol: str, fqn: str) -> str:
 
 
 def _add_required_import(content: str) -> str:
+    content = _add_import_if_used(content, "requireConstructed", REQUIRE_CONSTRUCTED_IMPORT)
     return _add_import_if_used(content, "requireGodotReturn", REQUIRE_GODOT_RETURN_IMPORT)
 
 
@@ -3648,8 +3650,9 @@ def _article(name: str) -> str:
 
 
 def _construct_object(class_name: str) -> str:
-    """The engine-side `constructObject` call (the same `ObjectCalls` member on every target)."""
-    return f'ObjectCalls.constructObject("{class_name}")'
+    """The engine-side `constructObject` call (the same `ObjectCalls` member on every target), failing
+    loud through `requireConstructed` when Godot cannot instantiate the class here."""
+    return f'requireConstructed(ObjectCalls.constructObject("{class_name}"), "{class_name}")'
 
 
 def _factory_class_universe(class_name: str) -> bool:

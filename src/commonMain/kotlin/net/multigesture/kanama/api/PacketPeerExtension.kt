@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Generated from Godot docs: PacketPeerExtension
@@ -24,6 +25,6 @@ class PacketPeerExtension(handle: GodotHandle) : PacketPeer(handle) {
         /** A new PacketPeerExtension, GDScript's `PacketPeerExtension.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PacketPeerExtension =
-            RefCounted.owned(PacketPeerExtension(GodotHandle(ObjectCalls.constructObject("PacketPeerExtension"))))
+            RefCounted.owned(PacketPeerExtension(GodotHandle(requireConstructed(ObjectCalls.constructObject("PacketPeerExtension"), "PacketPeerExtension"))))
     }
 }

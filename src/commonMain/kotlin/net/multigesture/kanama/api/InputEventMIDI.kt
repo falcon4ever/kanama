@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents a MIDI message from a MIDI device, such as a musical keyboard.
@@ -296,7 +297,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
         /** A new InputEventMIDI, GDScript's `InputEventMIDI.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): InputEventMIDI =
-            RefCounted.owned(InputEventMIDI(GodotHandle(ObjectCalls.constructObject("InputEventMIDI"))))
+            RefCounted.owned(InputEventMIDI(GodotHandle(requireConstructed(ObjectCalls.constructObject("InputEventMIDI"), "InputEventMIDI"))))
     }
 
     private object Binds {

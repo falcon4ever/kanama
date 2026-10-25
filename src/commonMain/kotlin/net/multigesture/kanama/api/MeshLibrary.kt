@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 
 /**
@@ -326,7 +327,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
         /** A new MeshLibrary, GDScript's `MeshLibrary.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): MeshLibrary =
-            RefCounted.owned(MeshLibrary(GodotHandle(ObjectCalls.constructObject("MeshLibrary"))))
+            RefCounted.owned(MeshLibrary(GodotHandle(requireConstructed(ObjectCalls.constructObject("MeshLibrary"), "MeshLibrary"))))
     }
 
     private object Binds {

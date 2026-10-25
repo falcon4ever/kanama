@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Quaternion
 
 /**
@@ -56,7 +57,7 @@ class VisualShaderNodeVec4Constant(handle: GodotHandle) : VisualShaderNodeConsta
         /** A new VisualShaderNodeVec4Constant, GDScript's `VisualShaderNodeVec4Constant.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeVec4Constant =
-            RefCounted.owned(VisualShaderNodeVec4Constant(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeVec4Constant"))))
+            RefCounted.owned(VisualShaderNodeVec4Constant(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeVec4Constant"), "VisualShaderNodeVec4Constant"))))
     }
 
     private object Binds {

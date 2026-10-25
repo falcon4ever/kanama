@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.Vector3
 
@@ -1124,7 +1125,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
         /** A new OpenXRInterface, GDScript's `OpenXRInterface.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRInterface =
-            RefCounted.owned(OpenXRInterface(GodotHandle(ObjectCalls.constructObject("OpenXRInterface"))))
+            RefCounted.owned(OpenXRInterface(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRInterface"), "OpenXRInterface"))))
     }
 
     private object Binds {

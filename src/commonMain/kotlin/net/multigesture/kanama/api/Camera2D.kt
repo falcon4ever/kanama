@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -791,7 +792,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
         /** A new Camera2D, GDScript's `Camera2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Camera2D =
-            Camera2D(GodotHandle(ObjectCalls.constructObject("Camera2D")))
+            Camera2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Camera2D"), "Camera2D")))
     }
 
     private object Binds {

@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 
@@ -470,7 +471,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
         /** A new TextureProgressBar, GDScript's `TextureProgressBar.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): TextureProgressBar =
-            TextureProgressBar(GodotHandle(ObjectCalls.constructObject("TextureProgressBar")))
+            TextureProgressBar(GodotHandle(requireConstructed(ObjectCalls.constructObject("TextureProgressBar"), "TextureProgressBar")))
     }
 
     private object Binds {

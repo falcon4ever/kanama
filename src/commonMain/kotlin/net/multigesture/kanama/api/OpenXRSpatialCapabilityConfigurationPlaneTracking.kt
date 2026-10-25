@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Configuration header for plane tracking.
@@ -78,7 +79,7 @@ class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: GodotHandle) : O
         /** A new OpenXRSpatialCapabilityConfigurationPlaneTracking, GDScript's `OpenXRSpatialCapabilityConfigurationPlaneTracking.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRSpatialCapabilityConfigurationPlaneTracking =
-            RefCounted.owned(OpenXRSpatialCapabilityConfigurationPlaneTracking(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationPlaneTracking"))))
+            RefCounted.owned(OpenXRSpatialCapabilityConfigurationPlaneTracking(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationPlaneTracking"), "OpenXRSpatialCapabilityConfigurationPlaneTracking"))))
     }
 
     private object Binds {

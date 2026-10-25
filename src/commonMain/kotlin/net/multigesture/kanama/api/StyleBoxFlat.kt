@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 
@@ -577,7 +578,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
         /** A new StyleBoxFlat, GDScript's `StyleBoxFlat.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): StyleBoxFlat =
-            RefCounted.owned(StyleBoxFlat(GodotHandle(ObjectCalls.constructObject("StyleBoxFlat"))))
+            RefCounted.owned(StyleBoxFlat(GodotHandle(requireConstructed(ObjectCalls.constructObject("StyleBoxFlat"), "StyleBoxFlat"))))
     }
 
     private object Binds {

@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 
 /**
@@ -94,7 +95,7 @@ class Skin(handle: GodotHandle) : Resource(handle) {
         /** A new Skin, GDScript's `Skin.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Skin =
-            RefCounted.owned(Skin(GodotHandle(ObjectCalls.constructObject("Skin"))))
+            RefCounted.owned(Skin(GodotHandle(requireConstructed(ObjectCalls.constructObject("Skin"), "Skin"))))
     }
 
     private object Binds {

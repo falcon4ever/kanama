@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A container that arranges its child controls vertically.
@@ -23,6 +24,6 @@ open class VBoxContainer(handle: GodotHandle) : BoxContainer(handle) {
         /** A new VBoxContainer, GDScript's `VBoxContainer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): VBoxContainer =
-            VBoxContainer(GodotHandle(ObjectCalls.constructObject("VBoxContainer")))
+            VBoxContainer(GodotHandle(requireConstructed(ObjectCalls.constructObject("VBoxContainer"), "VBoxContainer")))
     }
 }

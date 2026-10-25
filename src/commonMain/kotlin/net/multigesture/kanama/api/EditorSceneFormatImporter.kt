@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Imports scenes from third-parties' 3D files.
@@ -136,7 +137,7 @@ open class EditorSceneFormatImporter(handle: GodotHandle) : RefCounted(handle) {
         /** A new EditorSceneFormatImporter, GDScript's `EditorSceneFormatImporter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): EditorSceneFormatImporter =
-            RefCounted.owned(EditorSceneFormatImporter(GodotHandle(ObjectCalls.constructObject("EditorSceneFormatImporter"))))
+            RefCounted.owned(EditorSceneFormatImporter(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorSceneFormatImporter"), "EditorSceneFormatImporter"))))
     }
 
     private object Binds {

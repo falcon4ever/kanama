@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Attachment format (used by `RenderingDevice`).
@@ -113,7 +114,7 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
         /** A new RDAttachmentFormat, GDScript's `RDAttachmentFormat.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): RDAttachmentFormat =
-            RefCounted.owned(RDAttachmentFormat(GodotHandle(ObjectCalls.constructObject("RDAttachmentFormat"))))
+            RefCounted.owned(RDAttachmentFormat(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDAttachmentFormat"), "RDAttachmentFormat"))))
     }
 
     private object Binds {

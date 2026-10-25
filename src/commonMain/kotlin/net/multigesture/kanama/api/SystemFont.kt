@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A font loaded from a system font. Falls back to a default theme font if not implemented on the
@@ -514,7 +515,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
         /** A new SystemFont, GDScript's `SystemFont.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): SystemFont =
-            RefCounted.owned(SystemFont(GodotHandle(ObjectCalls.constructObject("SystemFont"))))
+            RefCounted.owned(SystemFont(GodotHandle(requireConstructed(ObjectCalls.constructObject("SystemFont"), "SystemFont"))))
     }
 
     private object Binds {

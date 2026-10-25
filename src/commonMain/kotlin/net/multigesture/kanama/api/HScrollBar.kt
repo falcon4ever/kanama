@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A horizontal scrollbar that goes from left (min) to right (max).
@@ -23,6 +24,6 @@ class HScrollBar(handle: GodotHandle) : ScrollBar(handle) {
         /** A new HScrollBar, GDScript's `HScrollBar.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): HScrollBar =
-            HScrollBar(GodotHandle(ObjectCalls.constructObject("HScrollBar")))
+            HScrollBar(GodotHandle(requireConstructed(ObjectCalls.constructObject("HScrollBar"), "HScrollBar")))
     }
 }

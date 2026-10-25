@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -1021,7 +1022,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
         /** A new Theme, GDScript's `Theme.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Theme =
-            RefCounted.owned(Theme(GodotHandle(ObjectCalls.constructObject("Theme"))))
+            RefCounted.owned(Theme(GodotHandle(requireConstructed(ObjectCalls.constructObject("Theme"), "Theme"))))
     }
 
     private object Binds {

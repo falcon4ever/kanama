@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Imports a WAV audio file for playback.
@@ -26,6 +27,6 @@ class ResourceImporterWAV(handle: GodotHandle) : ResourceImporter(handle) {
         /** A new ResourceImporterWAV, GDScript's `ResourceImporterWAV.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ResourceImporterWAV =
-            RefCounted.owned(ResourceImporterWAV(GodotHandle(ObjectCalls.constructObject("ResourceImporterWAV"))))
+            RefCounted.owned(ResourceImporterWAV(GodotHandle(requireConstructed(ObjectCalls.constructObject("ResourceImporterWAV"), "ResourceImporterWAV"))))
     }
 }

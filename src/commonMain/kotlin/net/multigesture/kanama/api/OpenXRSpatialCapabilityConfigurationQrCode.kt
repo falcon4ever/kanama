@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Configuration header for micro QR code markers.
@@ -38,7 +39,7 @@ class OpenXRSpatialCapabilityConfigurationQrCode(handle: GodotHandle) : OpenXRSp
         /** A new OpenXRSpatialCapabilityConfigurationQrCode, GDScript's `OpenXRSpatialCapabilityConfigurationQrCode.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRSpatialCapabilityConfigurationQrCode =
-            RefCounted.owned(OpenXRSpatialCapabilityConfigurationQrCode(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationQrCode"))))
+            RefCounted.owned(OpenXRSpatialCapabilityConfigurationQrCode(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationQrCode"), "OpenXRSpatialCapabilityConfigurationQrCode"))))
     }
 
     private object Binds {

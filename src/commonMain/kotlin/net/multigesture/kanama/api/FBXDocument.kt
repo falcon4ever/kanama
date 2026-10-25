@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Handles FBX documents.
@@ -26,6 +27,6 @@ class FBXDocument(handle: GodotHandle) : GLTFDocument(handle) {
         /** A new FBXDocument, GDScript's `FBXDocument.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): FBXDocument =
-            RefCounted.owned(FBXDocument(GodotHandle(ObjectCalls.constructObject("FBXDocument"))))
+            RefCounted.owned(FBXDocument(GodotHandle(requireConstructed(ObjectCalls.constructObject("FBXDocument"), "FBXDocument"))))
     }
 }

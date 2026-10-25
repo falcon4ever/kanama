@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3i
 
 /**
@@ -56,7 +57,7 @@ class PlaceholderTexture3D(handle: GodotHandle) : Texture3D(handle) {
         /** A new PlaceholderTexture3D, GDScript's `PlaceholderTexture3D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PlaceholderTexture3D =
-            RefCounted.owned(PlaceholderTexture3D(GodotHandle(ObjectCalls.constructObject("PlaceholderTexture3D"))))
+            RefCounted.owned(PlaceholderTexture3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PlaceholderTexture3D"), "PlaceholderTexture3D"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform2D
 
 /**
@@ -141,7 +142,7 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
         /** A new Bone2D, GDScript's `Bone2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Bone2D =
-            Bone2D(GodotHandle(ObjectCalls.constructObject("Bone2D")))
+            Bone2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Bone2D"), "Bone2D")))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -209,7 +210,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         /** A new BoneConstraint3D, GDScript's `BoneConstraint3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): BoneConstraint3D =
-            BoneConstraint3D(GodotHandle(ObjectCalls.constructObject("BoneConstraint3D")))
+            BoneConstraint3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("BoneConstraint3D"), "BoneConstraint3D")))
     }
 
     private object Binds {

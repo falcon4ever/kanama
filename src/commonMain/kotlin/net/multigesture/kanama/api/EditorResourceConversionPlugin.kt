@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Plugin for adding custom converters from one resource format to another in the editor resource
@@ -27,6 +28,6 @@ class EditorResourceConversionPlugin(handle: GodotHandle) : RefCounted(handle) {
         /** A new EditorResourceConversionPlugin, GDScript's `EditorResourceConversionPlugin.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): EditorResourceConversionPlugin =
-            RefCounted.owned(EditorResourceConversionPlugin(GodotHandle(ObjectCalls.constructObject("EditorResourceConversionPlugin"))))
+            RefCounted.owned(EditorResourceConversionPlugin(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorResourceConversionPlugin"), "EditorResourceConversionPlugin"))))
     }
 }

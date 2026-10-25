@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform2D
 
 /**
@@ -337,7 +338,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
         /** A new CameraFeed, GDScript's `CameraFeed.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): CameraFeed =
-            RefCounted.owned(CameraFeed(GodotHandle(ObjectCalls.constructObject("CameraFeed"))))
+            RefCounted.owned(CameraFeed(GodotHandle(requireConstructed(ObjectCalls.constructObject("CameraFeed"), "CameraFeed"))))
     }
 
     private object Binds {

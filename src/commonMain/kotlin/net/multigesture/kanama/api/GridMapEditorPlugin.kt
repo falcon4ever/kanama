@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Vector3i
 
@@ -102,7 +103,7 @@ class GridMapEditorPlugin(handle: GodotHandle) : EditorPlugin(handle) {
         /** A new GridMapEditorPlugin, GDScript's `GridMapEditorPlugin.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): GridMapEditorPlugin =
-            GridMapEditorPlugin(GodotHandle(ObjectCalls.constructObject("GridMapEditorPlugin")))
+            GridMapEditorPlugin(GodotHandle(requireConstructed(ObjectCalls.constructObject("GridMapEditorPlugin"), "GridMapEditorPlugin")))
     }
 
     private object Binds {

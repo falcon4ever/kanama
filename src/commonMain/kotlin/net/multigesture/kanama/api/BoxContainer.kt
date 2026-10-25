@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A container that arranges its child controls horizontally or vertically.
@@ -118,7 +119,7 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
         /** A new BoxContainer, GDScript's `BoxContainer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): BoxContainer =
-            BoxContainer(GodotHandle(ObjectCalls.constructObject("BoxContainer")))
+            BoxContainer(GodotHandle(requireConstructed(ObjectCalls.constructObject("BoxContainer"), "BoxContainer")))
     }
 
     private object Binds {

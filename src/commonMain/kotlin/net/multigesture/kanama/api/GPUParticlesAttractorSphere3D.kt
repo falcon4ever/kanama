@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A spheroid-shaped attractor that influences particles from `GPUParticles3D` nodes.
@@ -49,7 +50,7 @@ class GPUParticlesAttractorSphere3D(handle: GodotHandle) : GPUParticlesAttractor
         /** A new GPUParticlesAttractorSphere3D, GDScript's `GPUParticlesAttractorSphere3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): GPUParticlesAttractorSphere3D =
-            GPUParticlesAttractorSphere3D(GodotHandle(ObjectCalls.constructObject("GPUParticlesAttractorSphere3D")))
+            GPUParticlesAttractorSphere3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("GPUParticlesAttractorSphere3D"), "GPUParticlesAttractorSphere3D")))
     }
 
     private object Binds {

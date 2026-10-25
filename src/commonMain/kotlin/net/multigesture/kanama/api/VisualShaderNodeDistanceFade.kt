@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node representing distance fade effect.
@@ -26,6 +27,6 @@ class VisualShaderNodeDistanceFade(handle: GodotHandle) : VisualShaderNode(handl
         /** A new VisualShaderNodeDistanceFade, GDScript's `VisualShaderNodeDistanceFade.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeDistanceFade =
-            RefCounted.owned(VisualShaderNodeDistanceFade(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeDistanceFade"))))
+            RefCounted.owned(VisualShaderNodeDistanceFade(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeDistanceFade"), "VisualShaderNodeDistanceFade"))))
     }
 }

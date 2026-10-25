@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Wrapper base class for OpenXR Spatial Capability Configuration headers.
@@ -51,7 +52,7 @@ open class OpenXRSpatialCapabilityConfigurationBaseHeader(handle: GodotHandle) :
         /** A new OpenXRSpatialCapabilityConfigurationBaseHeader, GDScript's `OpenXRSpatialCapabilityConfigurationBaseHeader.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRSpatialCapabilityConfigurationBaseHeader =
-            RefCounted.owned(OpenXRSpatialCapabilityConfigurationBaseHeader(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationBaseHeader"))))
+            RefCounted.owned(OpenXRSpatialCapabilityConfigurationBaseHeader(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationBaseHeader"), "OpenXRSpatialCapabilityConfigurationBaseHeader"))))
     }
 
     private object Binds {

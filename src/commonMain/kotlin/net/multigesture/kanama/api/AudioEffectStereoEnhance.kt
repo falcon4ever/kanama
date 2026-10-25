@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a stereo manipulation audio effect to an audio bus. Controls gain of the side channels, and
@@ -120,7 +121,7 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
         /** A new AudioEffectStereoEnhance, GDScript's `AudioEffectStereoEnhance.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioEffectStereoEnhance =
-            RefCounted.owned(AudioEffectStereoEnhance(GodotHandle(ObjectCalls.constructObject("AudioEffectStereoEnhance"))))
+            RefCounted.owned(AudioEffectStereoEnhance(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectStereoEnhance"), "AudioEffectStereoEnhance"))))
     }
 
     private object Binds {

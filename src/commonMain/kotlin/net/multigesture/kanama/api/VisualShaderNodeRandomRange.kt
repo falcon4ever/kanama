@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that generates a pseudo-random scalar.
@@ -26,6 +27,6 @@ class VisualShaderNodeRandomRange(handle: GodotHandle) : VisualShaderNode(handle
         /** A new VisualShaderNodeRandomRange, GDScript's `VisualShaderNodeRandomRange.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeRandomRange =
-            RefCounted.owned(VisualShaderNodeRandomRange(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeRandomRange"))))
+            RefCounted.owned(VisualShaderNodeRandomRange(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeRandomRange"), "VisualShaderNodeRandomRange"))))
     }
 }

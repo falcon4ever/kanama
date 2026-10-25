@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Imports an OBJ 3D model as an independent `Mesh` or scene.
@@ -26,6 +27,6 @@ class ResourceImporterOBJ(handle: GodotHandle) : ResourceImporter(handle) {
         /** A new ResourceImporterOBJ, GDScript's `ResourceImporterOBJ.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ResourceImporterOBJ =
-            RefCounted.owned(ResourceImporterOBJ(GodotHandle(ObjectCalls.constructObject("ResourceImporterOBJ"))))
+            RefCounted.owned(ResourceImporterOBJ(GodotHandle(requireConstructed(ObjectCalls.constructObject("ResourceImporterOBJ"), "ResourceImporterOBJ"))))
     }
 }

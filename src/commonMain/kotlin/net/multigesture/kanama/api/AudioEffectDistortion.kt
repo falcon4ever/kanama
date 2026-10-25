@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a distortion audio effect to an audio bus. Remaps audio samples using a nonlinear function
@@ -225,7 +226,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
         /** A new AudioEffectDistortion, GDScript's `AudioEffectDistortion.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioEffectDistortion =
-            RefCounted.owned(AudioEffectDistortion(GodotHandle(ObjectCalls.constructObject("AudioEffectDistortion"))))
+            RefCounted.owned(AudioEffectDistortion(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectDistortion"), "AudioEffectDistortion"))))
     }
 
     private object Binds {

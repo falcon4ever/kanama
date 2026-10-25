@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -449,7 +450,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
         /** A new ProceduralSkyMaterial, GDScript's `ProceduralSkyMaterial.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ProceduralSkyMaterial =
-            RefCounted.owned(ProceduralSkyMaterial(GodotHandle(ObjectCalls.constructObject("ProceduralSkyMaterial"))))
+            RefCounted.owned(ProceduralSkyMaterial(GodotHandle(requireConstructed(ObjectCalls.constructObject("ProceduralSkyMaterial"), "ProceduralSkyMaterial"))))
 
         // Downcast a Resource to ProceduralSkyMaterial (null if not).
         @JvmStatic

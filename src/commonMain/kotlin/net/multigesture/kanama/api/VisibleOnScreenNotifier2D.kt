@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2
 
 /**
@@ -102,7 +103,7 @@ open class VisibleOnScreenNotifier2D(handle: GodotHandle) : Node2D(handle) {
         /** A new VisibleOnScreenNotifier2D, GDScript's `VisibleOnScreenNotifier2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): VisibleOnScreenNotifier2D =
-            VisibleOnScreenNotifier2D(GodotHandle(ObjectCalls.constructObject("VisibleOnScreenNotifier2D")))
+            VisibleOnScreenNotifier2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisibleOnScreenNotifier2D"), "VisibleOnScreenNotifier2D")))
     }
 
     private object Binds {

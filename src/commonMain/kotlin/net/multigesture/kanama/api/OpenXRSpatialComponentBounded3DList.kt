@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
 
@@ -51,7 +52,7 @@ class OpenXRSpatialComponentBounded3DList(handle: GodotHandle) : OpenXRSpatialCo
         /** A new OpenXRSpatialComponentBounded3DList, GDScript's `OpenXRSpatialComponentBounded3DList.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRSpatialComponentBounded3DList =
-            RefCounted.owned(OpenXRSpatialComponentBounded3DList(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentBounded3DList"))))
+            RefCounted.owned(OpenXRSpatialComponentBounded3DList(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialComponentBounded3DList"), "OpenXRSpatialComponentBounded3DList"))))
     }
 
     private object Binds {

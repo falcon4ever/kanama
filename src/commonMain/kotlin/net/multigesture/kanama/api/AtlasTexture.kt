@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2
 
 /**
@@ -161,7 +162,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
         /** A new AtlasTexture, GDScript's `AtlasTexture.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AtlasTexture =
-            RefCounted.owned(AtlasTexture(GodotHandle(ObjectCalls.constructObject("AtlasTexture"))))
+            RefCounted.owned(AtlasTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("AtlasTexture"), "AtlasTexture"))))
     }
 
     private object Binds {

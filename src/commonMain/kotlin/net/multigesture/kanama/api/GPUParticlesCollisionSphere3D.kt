@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A sphere-shaped 3D particle collision shape affecting `GPUParticles3D` nodes.
@@ -47,7 +48,7 @@ class GPUParticlesCollisionSphere3D(handle: GodotHandle) : GPUParticlesCollision
         /** A new GPUParticlesCollisionSphere3D, GDScript's `GPUParticlesCollisionSphere3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): GPUParticlesCollisionSphere3D =
-            GPUParticlesCollisionSphere3D(GodotHandle(ObjectCalls.constructObject("GPUParticlesCollisionSphere3D")))
+            GPUParticlesCollisionSphere3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("GPUParticlesCollisionSphere3D"), "GPUParticlesCollisionSphere3D")))
     }
 
     private object Binds {

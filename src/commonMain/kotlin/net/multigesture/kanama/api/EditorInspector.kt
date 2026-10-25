@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A control used to edit properties of an object.
@@ -163,7 +164,7 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
         /** A new EditorInspector, GDScript's `EditorInspector.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): EditorInspector =
-            EditorInspector(GodotHandle(ObjectCalls.constructObject("EditorInspector")))
+            EditorInspector(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorInspector"), "EditorInspector")))
     }
 
     private object Binds {

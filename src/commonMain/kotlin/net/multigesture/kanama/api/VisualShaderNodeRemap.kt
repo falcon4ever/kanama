@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node for remap function.
@@ -109,7 +110,7 @@ class VisualShaderNodeRemap(handle: GodotHandle) : VisualShaderNode(handle) {
         /** A new VisualShaderNodeRemap, GDScript's `VisualShaderNodeRemap.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeRemap =
-            RefCounted.owned(VisualShaderNodeRemap(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeRemap"))))
+            RefCounted.owned(VisualShaderNodeRemap(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeRemap"), "VisualShaderNodeRemap"))))
     }
 
     private object Binds {

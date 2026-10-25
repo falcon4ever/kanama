@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A container that arranges child controls horizontally or vertically and provides grabbers for
@@ -451,7 +452,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
         /** A new SplitContainer, GDScript's `SplitContainer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): SplitContainer =
-            SplitContainer(GodotHandle(ObjectCalls.constructObject("SplitContainer")))
+            SplitContainer(GodotHandle(requireConstructed(ObjectCalls.constructObject("SplitContainer"), "SplitContainer")))
     }
 
     private object Binds {

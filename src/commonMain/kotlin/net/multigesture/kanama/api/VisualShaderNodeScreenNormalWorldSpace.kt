@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that unpacks the screen normal texture in World Space.
@@ -26,6 +27,6 @@ class VisualShaderNodeScreenNormalWorldSpace(handle: GodotHandle) : VisualShader
         /** A new VisualShaderNodeScreenNormalWorldSpace, GDScript's `VisualShaderNodeScreenNormalWorldSpace.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeScreenNormalWorldSpace =
-            RefCounted.owned(VisualShaderNodeScreenNormalWorldSpace(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeScreenNormalWorldSpace"))))
+            RefCounted.owned(VisualShaderNodeScreenNormalWorldSpace(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeScreenNormalWorldSpace"), "VisualShaderNodeScreenNormalWorldSpace"))))
     }
 }

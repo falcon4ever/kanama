@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -374,7 +375,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
         /** A new PhysicalSkyMaterial, GDScript's `PhysicalSkyMaterial.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PhysicalSkyMaterial =
-            RefCounted.owned(PhysicalSkyMaterial(GodotHandle(ObjectCalls.constructObject("PhysicalSkyMaterial"))))
+            RefCounted.owned(PhysicalSkyMaterial(GodotHandle(requireConstructed(ObjectCalls.constructObject("PhysicalSkyMaterial"), "PhysicalSkyMaterial"))))
     }
 
     private object Binds {

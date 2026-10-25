@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Defines a binding between an `OpenXRAction` and an XR input or output.
@@ -218,7 +219,7 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
         /** A new OpenXRIPBinding, GDScript's `OpenXRIPBinding.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRIPBinding =
-            RefCounted.owned(OpenXRIPBinding(GodotHandle(ObjectCalls.constructObject("OpenXRIPBinding"))))
+            RefCounted.owned(OpenXRIPBinding(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRIPBinding"), "OpenXRIPBinding"))))
     }
 
     private object Binds {

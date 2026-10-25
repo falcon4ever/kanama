@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -602,7 +603,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
         /** A new GLTFDocument, GDScript's `GLTFDocument.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GLTFDocument =
-            RefCounted.owned(GLTFDocument(GodotHandle(ObjectCalls.constructObject("GLTFDocument"))))
+            RefCounted.owned(GLTFDocument(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFDocument"), "GLTFDocument"))))
     }
 
     private object Binds {

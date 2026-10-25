@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Creates an idle interval in a `Tween` animation.
@@ -26,6 +27,6 @@ class IntervalTweener(handle: GodotHandle) : Tweener(handle) {
         /** A new IntervalTweener, GDScript's `IntervalTweener.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): IntervalTweener =
-            RefCounted.owned(IntervalTweener(GodotHandle(ObjectCalls.constructObject("IntervalTweener"))))
+            RefCounted.owned(IntervalTweener(GodotHandle(requireConstructed(ObjectCalls.constructObject("IntervalTweener"), "IntervalTweener"))))
     }
 }

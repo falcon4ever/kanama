@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A boolean comparison operator to be used within the visual shader graph.
@@ -87,7 +88,7 @@ class VisualShaderNodeIs(handle: GodotHandle) : VisualShaderNode(handle) {
         /** A new VisualShaderNodeIs, GDScript's `VisualShaderNodeIs.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeIs =
-            RefCounted.owned(VisualShaderNodeIs(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeIs"))))
+            RefCounted.owned(VisualShaderNodeIs(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeIs"), "VisualShaderNodeIs"))))
     }
 
     private object Binds {

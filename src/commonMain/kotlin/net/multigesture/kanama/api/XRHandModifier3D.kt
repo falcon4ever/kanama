@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A node for driving hand meshes from `XRHandTracker` data.
@@ -104,7 +105,7 @@ class XRHandModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         /** A new XRHandModifier3D, GDScript's `XRHandModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): XRHandModifier3D =
-            XRHandModifier3D(GodotHandle(ObjectCalls.constructObject("XRHandModifier3D")))
+            XRHandModifier3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("XRHandModifier3D"), "XRHandModifier3D")))
     }
 
     private object Binds {

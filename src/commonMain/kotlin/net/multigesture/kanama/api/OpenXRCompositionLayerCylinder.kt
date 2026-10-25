@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An OpenXR composition layer that is rendered as an internal slice of a cylinder.
@@ -119,7 +120,7 @@ class OpenXRCompositionLayerCylinder(handle: GodotHandle) : OpenXRCompositionLay
         /** A new OpenXRCompositionLayerCylinder, GDScript's `OpenXRCompositionLayerCylinder.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): OpenXRCompositionLayerCylinder =
-            OpenXRCompositionLayerCylinder(GodotHandle(ObjectCalls.constructObject("OpenXRCompositionLayerCylinder")))
+            OpenXRCompositionLayerCylinder(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRCompositionLayerCylinder"), "OpenXRCompositionLayerCylinder")))
     }
 
     private object Binds {

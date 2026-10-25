@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Texture with 3 dimensions, optionally compressed.
@@ -54,7 +55,7 @@ class CompressedTexture3D(handle: GodotHandle) : Texture3D(handle) {
         /** A new CompressedTexture3D, GDScript's `CompressedTexture3D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): CompressedTexture3D =
-            RefCounted.owned(CompressedTexture3D(GodotHandle(ObjectCalls.constructObject("CompressedTexture3D"))))
+            RefCounted.owned(CompressedTexture3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CompressedTexture3D"), "CompressedTexture3D"))))
     }
 
     private object Binds {

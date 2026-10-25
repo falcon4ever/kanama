@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Node used for displaying a `Mesh` in 2D.
@@ -85,7 +86,7 @@ class MeshInstance2D(handle: GodotHandle) : Node2D(handle) {
         /** A new MeshInstance2D, GDScript's `MeshInstance2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): MeshInstance2D =
-            MeshInstance2D(GodotHandle(ObjectCalls.constructObject("MeshInstance2D")))
+            MeshInstance2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("MeshInstance2D"), "MeshInstance2D")))
     }
 
     private object Binds {

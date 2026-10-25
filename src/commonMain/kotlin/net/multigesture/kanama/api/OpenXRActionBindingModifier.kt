@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Binding modifier that applies on individual actions related to an interaction profile.
@@ -26,6 +27,6 @@ open class OpenXRActionBindingModifier(handle: GodotHandle) : OpenXRBindingModif
         /** A new OpenXRActionBindingModifier, GDScript's `OpenXRActionBindingModifier.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRActionBindingModifier =
-            RefCounted.owned(OpenXRActionBindingModifier(GodotHandle(ObjectCalls.constructObject("OpenXRActionBindingModifier"))))
+            RefCounted.owned(OpenXRActionBindingModifier(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRActionBindingModifier"), "OpenXRActionBindingModifier"))))
     }
 }

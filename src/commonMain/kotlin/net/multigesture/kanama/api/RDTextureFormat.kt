@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Texture format (used by `RenderingDevice`).
@@ -376,7 +377,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
         /** A new RDTextureFormat, GDScript's `RDTextureFormat.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): RDTextureFormat =
-            RefCounted.owned(RDTextureFormat(GodotHandle(ObjectCalls.constructObject("RDTextureFormat"))))
+            RefCounted.owned(RDTextureFormat(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDTextureFormat"), "RDTextureFormat"))))
     }
 
     private object Binds {

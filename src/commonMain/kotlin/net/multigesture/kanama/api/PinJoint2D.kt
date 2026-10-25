@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A physics joint that attaches two 2D physics bodies at a single point, allowing them to freely
@@ -170,7 +171,7 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
         /** A new PinJoint2D, GDScript's `PinJoint2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): PinJoint2D =
-            PinJoint2D(GodotHandle(ObjectCalls.constructObject("PinJoint2D")))
+            PinJoint2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PinJoint2D"), "PinJoint2D")))
     }
 
     private object Binds {

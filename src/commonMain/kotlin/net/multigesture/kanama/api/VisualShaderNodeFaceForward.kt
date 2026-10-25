@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Returns the vector that points in the same direction as a reference vector within the visual
@@ -27,6 +28,6 @@ class VisualShaderNodeFaceForward(handle: GodotHandle) : VisualShaderNodeVectorB
         /** A new VisualShaderNodeFaceForward, GDScript's `VisualShaderNodeFaceForward.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeFaceForward =
-            RefCounted.owned(VisualShaderNodeFaceForward(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeFaceForward"))))
+            RefCounted.owned(VisualShaderNodeFaceForward(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeFaceForward"), "VisualShaderNodeFaceForward"))))
     }
 }

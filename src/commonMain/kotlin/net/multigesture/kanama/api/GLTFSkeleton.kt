@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Generated from Godot docs: GLTFSkeleton
@@ -135,7 +136,7 @@ class GLTFSkeleton(handle: GodotHandle) : Resource(handle) {
         /** A new GLTFSkeleton, GDScript's `GLTFSkeleton.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): GLTFSkeleton =
-            RefCounted.owned(GLTFSkeleton(GodotHandle(ObjectCalls.constructObject("GLTFSkeleton"))))
+            RefCounted.owned(GLTFSkeleton(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFSkeleton"), "GLTFSkeleton"))))
     }
 
     private object Binds {

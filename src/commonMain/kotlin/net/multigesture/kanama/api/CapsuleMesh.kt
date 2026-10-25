@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Class representing a capsule-shaped `PrimitiveMesh`.
@@ -150,7 +151,7 @@ class CapsuleMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         /** A new CapsuleMesh, GDScript's `CapsuleMesh.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): CapsuleMesh =
-            RefCounted.owned(CapsuleMesh(GodotHandle(ObjectCalls.constructObject("CapsuleMesh"))))
+            RefCounted.owned(CapsuleMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("CapsuleMesh"), "CapsuleMesh"))))
     }
 
     private object Binds {

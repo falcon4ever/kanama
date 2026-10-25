@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that returns the depth value of the DEPTH_TEXTURE node in a linear space.
@@ -26,6 +27,6 @@ class VisualShaderNodeLinearSceneDepth(handle: GodotHandle) : VisualShaderNode(h
         /** A new VisualShaderNodeLinearSceneDepth, GDScript's `VisualShaderNodeLinearSceneDepth.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeLinearSceneDepth =
-            RefCounted.owned(VisualShaderNodeLinearSceneDepth(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeLinearSceneDepth"))))
+            RefCounted.owned(VisualShaderNodeLinearSceneDepth(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeLinearSceneDepth"), "VisualShaderNodeLinearSceneDepth"))))
     }
 }

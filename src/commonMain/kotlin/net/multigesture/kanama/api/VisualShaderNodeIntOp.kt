@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An integer scalar operator to be used within the visual shader graph.
@@ -151,7 +152,7 @@ class VisualShaderNodeIntOp(handle: GodotHandle) : VisualShaderNode(handle) {
         /** A new VisualShaderNodeIntOp, GDScript's `VisualShaderNodeIntOp.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeIntOp =
-            RefCounted.owned(VisualShaderNodeIntOp(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeIntOp"))))
+            RefCounted.owned(VisualShaderNodeIntOp(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeIntOp"), "VisualShaderNodeIntOp"))))
     }
 
     private object Binds {

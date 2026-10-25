@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -400,7 +401,7 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
         /** A new CodeHighlighter, GDScript's `CodeHighlighter.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): CodeHighlighter =
-            RefCounted.owned(CodeHighlighter(GodotHandle(ObjectCalls.constructObject("CodeHighlighter"))))
+            RefCounted.owned(CodeHighlighter(GodotHandle(requireConstructed(ObjectCalls.constructObject("CodeHighlighter"), "CodeHighlighter"))))
     }
 
     private object Binds {

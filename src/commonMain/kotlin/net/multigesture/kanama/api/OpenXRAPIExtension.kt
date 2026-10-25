@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2i
@@ -682,7 +683,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
         /** A new OpenXRAPIExtension, GDScript's `OpenXRAPIExtension.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRAPIExtension =
-            RefCounted.owned(OpenXRAPIExtension(GodotHandle(ObjectCalls.constructObject("OpenXRAPIExtension"))))
+            RefCounted.owned(OpenXRAPIExtension(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRAPIExtension"), "OpenXRAPIExtension"))))
     }
 
     private object Binds {

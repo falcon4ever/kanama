@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An OpenXR composition layer that is rendered as an internal slice of a sphere.
@@ -147,7 +148,7 @@ class OpenXRCompositionLayerEquirect(handle: GodotHandle) : OpenXRCompositionLay
         /** A new OpenXRCompositionLayerEquirect, GDScript's `OpenXRCompositionLayerEquirect.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): OpenXRCompositionLayerEquirect =
-            OpenXRCompositionLayerEquirect(GodotHandle(ObjectCalls.constructObject("OpenXRCompositionLayerEquirect")))
+            OpenXRCompositionLayerEquirect(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRCompositionLayerEquirect"), "OpenXRCompositionLayerEquirect")))
     }
 
     private object Binds {

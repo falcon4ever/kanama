@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
 
@@ -185,7 +186,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
         /** A new KinematicCollision2D, GDScript's `KinematicCollision2D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): KinematicCollision2D =
-            RefCounted.owned(KinematicCollision2D(GodotHandle(ObjectCalls.constructObject("KinematicCollision2D"))))
+            RefCounted.owned(KinematicCollision2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("KinematicCollision2D"), "KinematicCollision2D"))))
     }
 
     private object Binds {

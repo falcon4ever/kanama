@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
@@ -363,7 +364,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
         /** A new VoxelGIData, GDScript's `VoxelGIData.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VoxelGIData =
-            RefCounted.owned(VoxelGIData(GodotHandle(ObjectCalls.constructObject("VoxelGIData"))))
+            RefCounted.owned(VoxelGIData(GodotHandle(requireConstructed(ObjectCalls.constructObject("VoxelGIData"), "VoxelGIData"))))
     }
 
     private object Binds {

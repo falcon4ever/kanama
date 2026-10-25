@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A container that preserves the proportions of its child controls.
@@ -194,7 +195,7 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
         /** A new AspectRatioContainer, GDScript's `AspectRatioContainer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): AspectRatioContainer =
-            AspectRatioContainer(GodotHandle(ObjectCalls.constructObject("AspectRatioContainer")))
+            AspectRatioContainer(GodotHandle(requireConstructed(ObjectCalls.constructObject("AspectRatioContainer"), "AspectRatioContainer")))
     }
 
     private object Binds {

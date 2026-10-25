@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A countdown timer.
@@ -265,7 +266,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
         /** A new Timer, GDScript's `Timer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Timer =
-            Timer(GodotHandle(ObjectCalls.constructObject("Timer")))
+            Timer(GodotHandle(requireConstructed(ObjectCalls.constructObject("Timer"), "Timer")))
     }
 
     private object Binds {

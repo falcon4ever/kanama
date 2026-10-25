@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Rect2
 
@@ -240,7 +241,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
         /** A new LightmapGIData, GDScript's `LightmapGIData.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): LightmapGIData =
-            RefCounted.owned(LightmapGIData(GodotHandle(ObjectCalls.constructObject("LightmapGIData"))))
+            RefCounted.owned(LightmapGIData(GodotHandle(requireConstructed(ObjectCalls.constructObject("LightmapGIData"), "LightmapGIData"))))
     }
 
     private object Binds {

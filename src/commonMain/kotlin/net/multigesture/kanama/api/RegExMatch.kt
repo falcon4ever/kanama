@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Contains the results of a `RegEx` search.
@@ -133,7 +134,7 @@ class RegExMatch(handle: GodotHandle) : RefCounted(handle) {
         /** A new RegExMatch, GDScript's `RegExMatch.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): RegExMatch =
-            RefCounted.owned(RegExMatch(GodotHandle(ObjectCalls.constructObject("RegExMatch"))))
+            RefCounted.owned(RegExMatch(GodotHandle(requireConstructed(ObjectCalls.constructObject("RegExMatch"), "RegExMatch"))))
     }
 
     private object Binds {

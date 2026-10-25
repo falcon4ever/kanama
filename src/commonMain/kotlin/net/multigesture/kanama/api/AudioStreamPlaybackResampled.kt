@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Playback class used for resampled `AudioStream`s.
@@ -37,7 +38,7 @@ open class AudioStreamPlaybackResampled(handle: GodotHandle) : AudioStreamPlayba
         /** A new AudioStreamPlaybackResampled, GDScript's `AudioStreamPlaybackResampled.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): AudioStreamPlaybackResampled =
-            RefCounted.owned(AudioStreamPlaybackResampled(GodotHandle(ObjectCalls.constructObject("AudioStreamPlaybackResampled"))))
+            RefCounted.owned(AudioStreamPlaybackResampled(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamPlaybackResampled"), "AudioStreamPlaybackResampled"))))
     }
 
     private object Binds {

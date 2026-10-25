@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2
 
 /**
@@ -242,7 +243,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
         /** A new NinePatchRect, GDScript's `NinePatchRect.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): NinePatchRect =
-            NinePatchRect(GodotHandle(ObjectCalls.constructObject("NinePatchRect")))
+            NinePatchRect(GodotHandle(requireConstructed(ObjectCalls.constructObject("NinePatchRect"), "NinePatchRect")))
     }
 
     private object Binds {

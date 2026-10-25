@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Binding modifier editor.
@@ -53,7 +54,7 @@ class OpenXRBindingModifierEditor(handle: GodotHandle) : PanelContainer(handle) 
         /** A new OpenXRBindingModifierEditor, GDScript's `OpenXRBindingModifierEditor.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): OpenXRBindingModifierEditor =
-            OpenXRBindingModifierEditor(GodotHandle(ObjectCalls.constructObject("OpenXRBindingModifierEditor")))
+            OpenXRBindingModifierEditor(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRBindingModifierEditor"), "OpenXRBindingModifierEditor")))
     }
 
     private object Binds {

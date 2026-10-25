@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Visual shader node for randomizing particle values.
@@ -99,7 +100,7 @@ class VisualShaderNodeParticleRandomness(handle: GodotHandle) : VisualShaderNode
         /** A new VisualShaderNodeParticleRandomness, GDScript's `VisualShaderNodeParticleRandomness.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeParticleRandomness =
-            RefCounted.owned(VisualShaderNodeParticleRandomness(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeParticleRandomness"))))
+            RefCounted.owned(VisualShaderNodeParticleRandomness(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeParticleRandomness"), "VisualShaderNodeParticleRandomness"))))
     }
 
     private object Binds {

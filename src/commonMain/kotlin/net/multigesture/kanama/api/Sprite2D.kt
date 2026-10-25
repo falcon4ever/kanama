@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
@@ -385,7 +386,7 @@ class Sprite2D(handle: GodotHandle) : Node2D(handle) {
         /** A new Sprite2D, GDScript's `Sprite2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Sprite2D =
-            Sprite2D(GodotHandle(ObjectCalls.constructObject("Sprite2D")))
+            Sprite2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Sprite2D"), "Sprite2D")))
     }
 
     private object Binds {

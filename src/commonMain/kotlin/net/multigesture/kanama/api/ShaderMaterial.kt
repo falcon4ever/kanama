@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A material defined by a custom `Shader` program and the values of its shader parameters.
@@ -87,7 +88,7 @@ class ShaderMaterial(handle: GodotHandle) : Material(handle) {
         /** A new ShaderMaterial, GDScript's `ShaderMaterial.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ShaderMaterial =
-            RefCounted.owned(ShaderMaterial(GodotHandle(ObjectCalls.constructObject("ShaderMaterial"))))
+            RefCounted.owned(ShaderMaterial(GodotHandle(requireConstructed(ObjectCalls.constructObject("ShaderMaterial"), "ShaderMaterial"))))
 
         // Downcast a GodotObject to ShaderMaterial (null if not).
         @JvmStatic

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A container used for displaying the contents of a `SubViewport`.
@@ -111,7 +112,7 @@ class SubViewportContainer(handle: GodotHandle) : Container(handle) {
         /** A new SubViewportContainer, GDScript's `SubViewportContainer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): SubViewportContainer =
-            SubViewportContainer(GodotHandle(ObjectCalls.constructObject("SubViewportContainer")))
+            SubViewportContainer(GodotHandle(requireConstructed(ObjectCalls.constructObject("SubViewportContainer"), "SubViewportContainer")))
     }
 
     private object Binds {

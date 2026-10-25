@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -167,7 +168,7 @@ class MultiplayerSpawner(handle: GodotHandle) : Node(handle) {
         /** A new MultiplayerSpawner, GDScript's `MultiplayerSpawner.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): MultiplayerSpawner =
-            MultiplayerSpawner(GodotHandle(ObjectCalls.constructObject("MultiplayerSpawner")))
+            MultiplayerSpawner(GodotHandle(requireConstructed(ObjectCalls.constructObject("MultiplayerSpawner"), "MultiplayerSpawner")))
     }
 
     private object Binds {

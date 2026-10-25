@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 
 /**
@@ -37,7 +38,7 @@ class EditorResourcePreviewGenerator(handle: GodotHandle) : RefCounted(handle) {
         /** A new EditorResourcePreviewGenerator, GDScript's `EditorResourcePreviewGenerator.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): EditorResourcePreviewGenerator =
-            RefCounted.owned(EditorResourcePreviewGenerator(GodotHandle(ObjectCalls.constructObject("EditorResourcePreviewGenerator"))))
+            RefCounted.owned(EditorResourcePreviewGenerator(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorResourcePreviewGenerator"), "EditorResourcePreviewGenerator"))))
     }
 
     private object Binds {

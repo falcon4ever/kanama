@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -86,7 +87,7 @@ class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
         /** A new TriangleMesh, GDScript's `TriangleMesh.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): TriangleMesh =
-            RefCounted.owned(TriangleMesh(GodotHandle(ObjectCalls.constructObject("TriangleMesh"))))
+            RefCounted.owned(TriangleMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("TriangleMesh"), "TriangleMesh"))))
     }
 
     private object Binds {

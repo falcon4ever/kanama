@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Low-level hyper-text transfer protocol client.
@@ -959,7 +960,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
         /** A new HTTPClient, GDScript's `HTTPClient.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): HTTPClient =
-            RefCounted.owned(HTTPClient(GodotHandle(ObjectCalls.constructObject("HTTPClient"))))
+            RefCounted.owned(HTTPClient(GodotHandle(requireConstructed(ObjectCalls.constructObject("HTTPClient"), "HTTPClient"))))
     }
 
     private object Binds {

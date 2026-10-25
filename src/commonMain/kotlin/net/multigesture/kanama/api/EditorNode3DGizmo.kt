@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
@@ -200,7 +201,7 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
         /** A new EditorNode3DGizmo, GDScript's `EditorNode3DGizmo.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): EditorNode3DGizmo =
-            RefCounted.owned(EditorNode3DGizmo(GodotHandle(ObjectCalls.constructObject("EditorNode3DGizmo"))))
+            RefCounted.owned(EditorNode3DGizmo(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorNode3DGizmo"), "EditorNode3DGizmo"))))
     }
 
     private object Binds {

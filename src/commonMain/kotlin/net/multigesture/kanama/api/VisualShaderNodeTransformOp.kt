@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A `Transform3D` operator to be used within the visual shader graph.
@@ -109,7 +110,7 @@ class VisualShaderNodeTransformOp(handle: GodotHandle) : VisualShaderNode(handle
         /** A new VisualShaderNodeTransformOp, GDScript's `VisualShaderNodeTransformOp.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): VisualShaderNodeTransformOp =
-            RefCounted.owned(VisualShaderNodeTransformOp(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTransformOp"))))
+            RefCounted.owned(VisualShaderNodeTransformOp(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTransformOp"), "VisualShaderNodeTransformOp"))))
     }
 
     private object Binds {

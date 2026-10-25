@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * The origin point in AR/VR.
@@ -77,7 +78,7 @@ class XROrigin3D(handle: GodotHandle) : Node3D(handle) {
         /** A new XROrigin3D, GDScript's `XROrigin3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): XROrigin3D =
-            XROrigin3D(GodotHandle(ObjectCalls.constructObject("XROrigin3D")))
+            XROrigin3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("XROrigin3D"), "XROrigin3D")))
     }
 
     private object Binds {

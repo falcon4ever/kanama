@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Vibration haptic feedback.
@@ -117,7 +118,7 @@ class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
         /** A new OpenXRHapticVibration, GDScript's `OpenXRHapticVibration.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OpenXRHapticVibration =
-            RefCounted.owned(OpenXRHapticVibration(GodotHandle(ObjectCalls.constructObject("OpenXRHapticVibration"))))
+            RefCounted.owned(OpenXRHapticVibration(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRHapticVibration"), "OpenXRHapticVibration"))))
     }
 
     private object Binds {
