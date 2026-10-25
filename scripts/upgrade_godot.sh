@@ -502,6 +502,7 @@ run_soft "gates index" python3 "$ROOT_DIR/scripts/generate_gates_index.py" \
 step "step 9: gates"
 run_soft "API constants vs the new extension_api.json" python3 "$ROOT_DIR/scripts/validate_godot_api.py"
 run_soft "wrapper drift gate" python3 "$ROOT_DIR/scripts/check_wrapper_generator.py" --baseline-api "$BASELINE_API"
+run_soft "ktfmt formatting" run_with_timeout "$GRADLE_TIMEOUT" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon --quiet ktfmtCheck
 run_soft "KDoc staleness" python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --check
 run_soft "Godot version pins (with the new API header)" python3 "$ROOT_DIR/scripts/check_godot_version_pin.py"
 run_soft "virtual-method signature table" python3 "$ROOT_DIR/scripts/generate_virtual_signature_table.py" --check
@@ -530,6 +531,8 @@ run_soft "enum migration table" python3 "$ROOT_DIR/scripts/migrate_enum_constant
   --table "$ROOT_DIR/docs/reference/generated/enum-migration.md" --check
 run_soft "gates index" python3 "$ROOT_DIR/scripts/generate_gates_index.py" \
   --markdown "$ROOT_DIR/docs/reference/generated/gates.md" --check
+run_human "adopted-list classes: a method the new Godot added has no helper; add it, or the PENDING_HELPER_SKIPS row the drift gate printed" \
+  python3 "$ROOT_DIR/scripts/check_wrapper_generator.py"
 run_human "public API signatures: announce each source break in CHANGELOG.md, then --write the snapshots" \
   python3 "$ROOT_DIR/scripts/check_public_signature_changes.py"
 run_human "gate-evidence ledger: re-run each stale gate on the new pin, or accept it stale with a reason and a date" \
