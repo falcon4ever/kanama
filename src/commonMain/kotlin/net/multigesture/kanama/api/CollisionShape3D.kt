@@ -148,6 +148,11 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): CollisionShape3D? =
             if (handle.address() == 0L) null else CollisionShape3D(GodotHandle(handle))
+
+        /** A new CollisionShape3D, GDScript's `CollisionShape3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CollisionShape3D =
+            CollisionShape3D(GodotHandle(ObjectCalls.constructObject("CollisionShape3D")))
     }
 
     private object Binds {

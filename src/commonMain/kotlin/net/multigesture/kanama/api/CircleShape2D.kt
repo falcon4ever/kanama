@@ -51,6 +51,11 @@ class CircleShape2D(handle: GodotHandle) : Shape2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CircleShape2D? =
             if (handle.address() == 0L) null else CircleShape2D(GodotHandle(handle))
+
+        /** A new CircleShape2D, GDScript's `CircleShape2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CircleShape2D =
+            RefCounted.owned(CircleShape2D(GodotHandle(ObjectCalls.constructObject("CircleShape2D"))))
     }
 
     private object Binds {

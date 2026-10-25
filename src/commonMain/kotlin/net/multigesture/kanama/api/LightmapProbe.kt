@@ -19,5 +19,10 @@ class LightmapProbe(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): LightmapProbe? =
             if (handle.address() == 0L) null else LightmapProbe(GodotHandle(handle))
+
+        /** A new LightmapProbe, GDScript's `LightmapProbe.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): LightmapProbe =
+            LightmapProbe(GodotHandle(ObjectCalls.constructObject("LightmapProbe")))
     }
 }

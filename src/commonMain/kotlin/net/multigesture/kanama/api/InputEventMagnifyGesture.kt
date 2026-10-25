@@ -53,6 +53,11 @@ class InputEventMagnifyGesture(handle: GodotHandle) : InputEventGesture(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventMagnifyGesture? =
             if (handle.address() == 0L) null else InputEventMagnifyGesture(GodotHandle(handle))
+
+        /** A new InputEventMagnifyGesture, GDScript's `InputEventMagnifyGesture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): InputEventMagnifyGesture =
+            RefCounted.owned(InputEventMagnifyGesture(GodotHandle(ObjectCalls.constructObject("InputEventMagnifyGesture"))))
     }
 
     private object Binds {

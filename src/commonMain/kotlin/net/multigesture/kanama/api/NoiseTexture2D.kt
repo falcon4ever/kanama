@@ -372,6 +372,11 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
         internal fun wrapBorrowed(handle: RawSegment): NoiseTexture2D? =
             if (handle.address() == 0L) null else NoiseTexture2D(GodotHandle(handle))
 
+        /** A new NoiseTexture2D, GDScript's `NoiseTexture2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): NoiseTexture2D =
+            RefCounted.owned(NoiseTexture2D(GodotHandle(ObjectCalls.constructObject("NoiseTexture2D"))))
+
         // Downcast a GodotObject to NoiseTexture2D (null if not).
         @JvmStatic
         fun fromObject(value: GodotObject): NoiseTexture2D? =

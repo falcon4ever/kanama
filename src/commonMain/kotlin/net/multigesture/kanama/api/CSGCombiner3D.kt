@@ -19,5 +19,10 @@ class CSGCombiner3D(handle: GodotHandle) : CSGShape3D(handle) {
 
         internal fun wrap(handle: RawSegment): CSGCombiner3D? =
             if (handle.address() == 0L) null else CSGCombiner3D(GodotHandle(handle))
+
+        /** A new CSGCombiner3D, GDScript's `CSGCombiner3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CSGCombiner3D =
+            CSGCombiner3D(GodotHandle(ObjectCalls.constructObject("CSGCombiner3D")))
     }
 }

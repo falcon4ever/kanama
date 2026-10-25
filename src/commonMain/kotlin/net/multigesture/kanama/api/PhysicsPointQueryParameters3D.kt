@@ -181,6 +181,11 @@ class PhysicsPointQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PhysicsPointQueryParameters3D? =
             if (handle.address() == 0L) null else PhysicsPointQueryParameters3D(GodotHandle(handle))
+
+        /** A new PhysicsPointQueryParameters3D, GDScript's `PhysicsPointQueryParameters3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PhysicsPointQueryParameters3D =
+            RefCounted.owned(PhysicsPointQueryParameters3D(GodotHandle(ObjectCalls.constructObject("PhysicsPointQueryParameters3D"))))
     }
 
     private object Binds {

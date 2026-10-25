@@ -33,6 +33,11 @@ class EditorResourcePreviewGenerator(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorResourcePreviewGenerator? =
             if (handle.address() == 0L) null else EditorResourcePreviewGenerator(GodotHandle(handle))
+
+        /** A new EditorResourcePreviewGenerator, GDScript's `EditorResourcePreviewGenerator.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorResourcePreviewGenerator =
+            RefCounted.owned(EditorResourcePreviewGenerator(GodotHandle(ObjectCalls.constructObject("EditorResourcePreviewGenerator"))))
     }
 
     private object Binds {

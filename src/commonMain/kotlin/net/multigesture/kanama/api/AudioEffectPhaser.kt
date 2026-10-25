@@ -178,6 +178,11 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectPhaser? =
             if (handle.address() == 0L) null else AudioEffectPhaser(GodotHandle(handle))
+
+        /** A new AudioEffectPhaser, GDScript's `AudioEffectPhaser.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectPhaser =
+            RefCounted.owned(AudioEffectPhaser(GodotHandle(ObjectCalls.constructObject("AudioEffectPhaser"))))
     }
 
     private object Binds {

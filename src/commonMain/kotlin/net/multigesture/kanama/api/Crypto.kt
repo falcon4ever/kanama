@@ -150,6 +150,11 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Crypto? =
             if (handle.address() == 0L) null else Crypto(GodotHandle(handle))
+
+        /** A new Crypto, GDScript's `Crypto.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Crypto =
+            RefCounted.owned(Crypto(GodotHandle(ObjectCalls.constructObject("Crypto"))))
     }
 
     private object Binds {

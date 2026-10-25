@@ -148,6 +148,11 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerTLS? =
             if (handle.address() == 0L) null else StreamPeerTLS(GodotHandle(handle))
+
+        /** A new StreamPeerTLS, GDScript's `StreamPeerTLS.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): StreamPeerTLS =
+            RefCounted.owned(StreamPeerTLS(GodotHandle(ObjectCalls.constructObject("StreamPeerTLS"))))
     }
 
     private object Binds {

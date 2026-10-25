@@ -291,6 +291,11 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRDpadBindingModifier? =
             if (handle.address() == 0L) null else OpenXRDpadBindingModifier(GodotHandle(handle))
+
+        /** A new OpenXRDpadBindingModifier, GDScript's `OpenXRDpadBindingModifier.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRDpadBindingModifier =
+            RefCounted.owned(OpenXRDpadBindingModifier(GodotHandle(ObjectCalls.constructObject("OpenXRDpadBindingModifier"))))
     }
 
     private object Binds {

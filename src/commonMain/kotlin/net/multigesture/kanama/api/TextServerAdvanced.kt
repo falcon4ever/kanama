@@ -23,5 +23,10 @@ class TextServerAdvanced(handle: GodotHandle) : TextServerExtension(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextServerAdvanced? =
             if (handle.address() == 0L) null else TextServerAdvanced(GodotHandle(handle))
+
+        /** A new TextServerAdvanced, GDScript's `TextServerAdvanced.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TextServerAdvanced =
+            RefCounted.owned(TextServerAdvanced(GodotHandle(ObjectCalls.constructObject("TextServerAdvanced"))))
     }
 }

@@ -357,6 +357,11 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
 
         internal fun wrap(handle: RawSegment): Button? =
             if (handle.address() == 0L) null else Button(GodotHandle(handle))
+
+        /** A new Button, GDScript's `Button.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Button =
+            Button(GodotHandle(ObjectCalls.constructObject("Button")))
     }
 
     private object Binds {

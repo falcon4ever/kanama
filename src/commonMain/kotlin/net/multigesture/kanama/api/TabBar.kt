@@ -802,6 +802,11 @@ class TabBar(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): TabBar? =
             if (handle.address() == 0L) null else TabBar(GodotHandle(handle))
+
+        /** A new TabBar, GDScript's `TabBar.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): TabBar =
+            TabBar(GodotHandle(ObjectCalls.constructObject("TabBar")))
     }
 
     private object Binds {

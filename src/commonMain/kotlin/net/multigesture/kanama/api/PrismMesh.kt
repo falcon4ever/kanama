@@ -170,6 +170,11 @@ class PrismMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PrismMesh? =
             if (handle.address() == 0L) null else PrismMesh(GodotHandle(handle))
+
+        /** A new PrismMesh, GDScript's `PrismMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PrismMesh =
+            RefCounted.owned(PrismMesh(GodotHandle(ObjectCalls.constructObject("PrismMesh"))))
     }
 
     private object Binds {

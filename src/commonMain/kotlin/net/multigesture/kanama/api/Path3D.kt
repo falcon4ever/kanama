@@ -87,6 +87,11 @@ class Path3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): Path3D? =
             if (handle.address() == 0L) null else Path3D(GodotHandle(handle))
+
+        /** A new Path3D, GDScript's `Path3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Path3D =
+            Path3D(GodotHandle(ObjectCalls.constructObject("Path3D")))
     }
 
     private object Binds {

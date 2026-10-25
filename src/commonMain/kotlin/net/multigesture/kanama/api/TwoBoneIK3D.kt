@@ -278,6 +278,11 @@ class TwoBoneIK3D(handle: GodotHandle) : IKModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): TwoBoneIK3D? =
             if (handle.address() == 0L) null else TwoBoneIK3D(GodotHandle(handle))
+
+        /** A new TwoBoneIK3D, GDScript's `TwoBoneIK3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): TwoBoneIK3D =
+            TwoBoneIK3D(GodotHandle(ObjectCalls.constructObject("TwoBoneIK3D")))
     }
 
     private object Binds {

@@ -68,6 +68,11 @@ class XRFaceModifier3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRFaceModifier3D? =
             if (handle.address() == 0L) null else XRFaceModifier3D(GodotHandle(handle))
+
+        /** A new XRFaceModifier3D, GDScript's `XRFaceModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): XRFaceModifier3D =
+            XRFaceModifier3D(GodotHandle(ObjectCalls.constructObject("XRFaceModifier3D")))
     }
 
     private object Binds {

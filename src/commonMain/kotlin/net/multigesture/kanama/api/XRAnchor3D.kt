@@ -39,6 +39,11 @@ class XRAnchor3D(handle: GodotHandle) : XRNode3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRAnchor3D? =
             if (handle.address() == 0L) null else XRAnchor3D(GodotHandle(handle))
+
+        /** A new XRAnchor3D, GDScript's `XRAnchor3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): XRAnchor3D =
+            XRAnchor3D(GodotHandle(ObjectCalls.constructObject("XRAnchor3D")))
     }
 
     private object Binds {

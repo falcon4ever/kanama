@@ -196,6 +196,11 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorNode3DGizmo? =
             if (handle.address() == 0L) null else EditorNode3DGizmo(GodotHandle(handle))
+
+        /** A new EditorNode3DGizmo, GDScript's `EditorNode3DGizmo.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorNode3DGizmo =
+            RefCounted.owned(EditorNode3DGizmo(GodotHandle(ObjectCalls.constructObject("EditorNode3DGizmo"))))
     }
 
     private object Binds {

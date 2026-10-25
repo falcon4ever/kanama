@@ -261,6 +261,11 @@ class OpenXRHand(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): OpenXRHand? =
             if (handle.address() == 0L) null else OpenXRHand(GodotHandle(handle))
+
+        /** A new OpenXRHand, GDScript's `OpenXRHand.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OpenXRHand =
+            OpenXRHand(GodotHandle(ObjectCalls.constructObject("OpenXRHand")))
     }
 
     private object Binds {

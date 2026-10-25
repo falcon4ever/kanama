@@ -53,6 +53,11 @@ class VisualShaderNodeCurveTexture(handle: GodotHandle) : VisualShaderNodeResiza
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeCurveTexture? =
             if (handle.address() == 0L) null else VisualShaderNodeCurveTexture(GodotHandle(handle))
+
+        /** A new VisualShaderNodeCurveTexture, GDScript's `VisualShaderNodeCurveTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeCurveTexture =
+            RefCounted.owned(VisualShaderNodeCurveTexture(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeCurveTexture"))))
     }
 
     private object Binds {

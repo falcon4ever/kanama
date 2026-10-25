@@ -292,6 +292,11 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationLink2D? =
             if (handle.address() == 0L) null else NavigationLink2D(GodotHandle(handle))
+
+        /** A new NavigationLink2D, GDScript's `NavigationLink2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): NavigationLink2D =
+            NavigationLink2D(GodotHandle(ObjectCalls.constructObject("NavigationLink2D")))
     }
 
     private object Binds {

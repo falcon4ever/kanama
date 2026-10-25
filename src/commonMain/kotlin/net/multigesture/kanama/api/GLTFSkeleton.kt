@@ -131,6 +131,11 @@ class GLTFSkeleton(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFSkeleton? =
             if (handle.address() == 0L) null else GLTFSkeleton(GodotHandle(handle))
+
+        /** A new GLTFSkeleton, GDScript's `GLTFSkeleton.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFSkeleton =
+            RefCounted.owned(GLTFSkeleton(GodotHandle(ObjectCalls.constructObject("GLTFSkeleton"))))
     }
 
     private object Binds {

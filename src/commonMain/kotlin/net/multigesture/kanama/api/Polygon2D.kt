@@ -478,6 +478,11 @@ class Polygon2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Polygon2D? =
             if (handle.address() == 0L) null else Polygon2D(GodotHandle(handle))
+
+        /** A new Polygon2D, GDScript's `Polygon2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Polygon2D =
+            Polygon2D(GodotHandle(ObjectCalls.constructObject("Polygon2D")))
     }
 
     private object Binds {

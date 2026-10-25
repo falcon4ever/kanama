@@ -19,5 +19,10 @@ class VFlowContainer(handle: GodotHandle) : FlowContainer(handle) {
 
         internal fun wrap(handle: RawSegment): VFlowContainer? =
             if (handle.address() == 0L) null else VFlowContainer(GodotHandle(handle))
+
+        /** A new VFlowContainer, GDScript's `VFlowContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VFlowContainer =
+            VFlowContainer(GodotHandle(ObjectCalls.constructObject("VFlowContainer")))
     }
 }

@@ -23,5 +23,10 @@ class VisualShaderNodeVectorCompose(handle: GodotHandle) : VisualShaderNodeVecto
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorCompose? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorCompose(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVectorCompose, GDScript's `VisualShaderNodeVectorCompose.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVectorCompose =
+            RefCounted.owned(VisualShaderNodeVectorCompose(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeVectorCompose"))))
     }
 }

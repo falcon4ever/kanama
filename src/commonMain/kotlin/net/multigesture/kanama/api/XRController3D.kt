@@ -107,6 +107,11 @@ class XRController3D(handle: GodotHandle) : XRNode3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRController3D? =
             if (handle.address() == 0L) null else XRController3D(GodotHandle(handle))
+
+        /** A new XRController3D, GDScript's `XRController3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): XRController3D =
+            XRController3D(GodotHandle(ObjectCalls.constructObject("XRController3D")))
     }
 
     private object Binds {

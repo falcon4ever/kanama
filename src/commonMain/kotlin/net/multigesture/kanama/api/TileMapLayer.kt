@@ -751,6 +751,11 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): TileMapLayer? =
             if (handle.address() == 0L) null else TileMapLayer(GodotHandle(handle))
+
+        /** A new TileMapLayer, GDScript's `TileMapLayer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): TileMapLayer =
+            TileMapLayer(GodotHandle(ObjectCalls.constructObject("TileMapLayer")))
     }
 
     private object Binds {

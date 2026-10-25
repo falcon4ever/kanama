@@ -139,6 +139,11 @@ open class Material(handle: GodotHandle) : Resource(handle) {
         internal fun wrapBorrowed(handle: RawSegment): Material? =
             if (handle.address() == 0L) null else Material(GodotHandle(handle))
 
+        /** A new Material, GDScript's `Material.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Material =
+            RefCounted.owned(Material(GodotHandle(ObjectCalls.constructObject("Material"))))
+
         // Downcast a Resource to Material (null if not).
         @JvmStatic
         fun fromResource(value: Resource?): Material? =

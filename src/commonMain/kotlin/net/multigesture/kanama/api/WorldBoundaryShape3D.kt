@@ -52,6 +52,11 @@ class WorldBoundaryShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WorldBoundaryShape3D? =
             if (handle.address() == 0L) null else WorldBoundaryShape3D(GodotHandle(handle))
+
+        /** A new WorldBoundaryShape3D, GDScript's `WorldBoundaryShape3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): WorldBoundaryShape3D =
+            RefCounted.owned(WorldBoundaryShape3D(GodotHandle(ObjectCalls.constructObject("WorldBoundaryShape3D"))))
     }
 
     private object Binds {

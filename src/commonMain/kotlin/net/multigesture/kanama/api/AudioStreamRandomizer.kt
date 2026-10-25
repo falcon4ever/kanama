@@ -303,6 +303,11 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamRandomizer? =
             if (handle.address() == 0L) null else AudioStreamRandomizer(GodotHandle(handle))
+
+        /** A new AudioStreamRandomizer, GDScript's `AudioStreamRandomizer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioStreamRandomizer =
+            RefCounted.owned(AudioStreamRandomizer(GodotHandle(ObjectCalls.constructObject("AudioStreamRandomizer"))))
     }
 
     private object Binds {

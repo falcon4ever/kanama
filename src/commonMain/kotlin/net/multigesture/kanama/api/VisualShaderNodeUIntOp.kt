@@ -147,6 +147,11 @@ class VisualShaderNodeUIntOp(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeUIntOp? =
             if (handle.address() == 0L) null else VisualShaderNodeUIntOp(GodotHandle(handle))
+
+        /** A new VisualShaderNodeUIntOp, GDScript's `VisualShaderNodeUIntOp.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeUIntOp =
+            RefCounted.owned(VisualShaderNodeUIntOp(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeUIntOp"))))
     }
 
     private object Binds {

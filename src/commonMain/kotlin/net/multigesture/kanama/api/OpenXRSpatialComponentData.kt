@@ -45,6 +45,11 @@ open class OpenXRSpatialComponentData(handle: GodotHandle) : RefCounted(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentData? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentData(GodotHandle(handle))
+
+        /** A new OpenXRSpatialComponentData, GDScript's `OpenXRSpatialComponentData.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialComponentData =
+            RefCounted.owned(OpenXRSpatialComponentData(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentData"))))
     }
 
     private object Binds {

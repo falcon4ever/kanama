@@ -283,6 +283,11 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DCCDIK? =
             if (handle.address() == 0L) null else SkeletonModification2DCCDIK(GodotHandle(handle))
+
+        /** A new SkeletonModification2DCCDIK, GDScript's `SkeletonModification2DCCDIK.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SkeletonModification2DCCDIK =
+            RefCounted.owned(SkeletonModification2DCCDIK(GodotHandle(ObjectCalls.constructObject("SkeletonModification2DCCDIK"))))
     }
 
     private object Binds {

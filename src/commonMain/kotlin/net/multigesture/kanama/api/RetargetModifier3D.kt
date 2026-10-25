@@ -212,6 +212,11 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): RetargetModifier3D? =
             if (handle.address() == 0L) null else RetargetModifier3D(GodotHandle(handle))
+
+        /** A new RetargetModifier3D, GDScript's `RetargetModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): RetargetModifier3D =
+            RetargetModifier3D(GodotHandle(ObjectCalls.constructObject("RetargetModifier3D")))
     }
 
     private object Binds {

@@ -111,6 +111,11 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PanoramaSkyMaterial? =
             if (handle.address() == 0L) null else PanoramaSkyMaterial(GodotHandle(handle))
+
+        /** A new PanoramaSkyMaterial, GDScript's `PanoramaSkyMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PanoramaSkyMaterial =
+            RefCounted.owned(PanoramaSkyMaterial(GodotHandle(ObjectCalls.constructObject("PanoramaSkyMaterial"))))
     }
 
     private object Binds {

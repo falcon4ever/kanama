@@ -31,6 +31,12 @@ class PackedScene(godotObject: GodotHandle) : Resource(godotObject) {
       val MAIN_INHERITED: GenEditState get() = GenEditState(3L)
     }
   }
+
+  companion object {
+    /** A new PackedScene, GDScript's `PackedScene.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): PackedScene =
+      PackedScene(checkNotNull(ClassDB.instantiate("PackedScene")) { "Godot could not instantiate PackedScene" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

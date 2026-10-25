@@ -22,5 +22,10 @@ class AnimationNodeAdd3(handle: GodotHandle) : AnimationNodeSync(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeAdd3? =
             if (handle.address() == 0L) null else AnimationNodeAdd3(GodotHandle(handle))
+
+        /** A new AnimationNodeAdd3, GDScript's `AnimationNodeAdd3.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeAdd3 =
+            RefCounted.owned(AnimationNodeAdd3(GodotHandle(ObjectCalls.constructObject("AnimationNodeAdd3"))))
     }
 }

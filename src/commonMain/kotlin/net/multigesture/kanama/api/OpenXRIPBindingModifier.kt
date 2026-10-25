@@ -22,5 +22,10 @@ open class OpenXRIPBindingModifier(handle: GodotHandle) : OpenXRBindingModifier(
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRIPBindingModifier? =
             if (handle.address() == 0L) null else OpenXRIPBindingModifier(GodotHandle(handle))
+
+        /** A new OpenXRIPBindingModifier, GDScript's `OpenXRIPBindingModifier.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRIPBindingModifier =
+            RefCounted.owned(OpenXRIPBindingModifier(GodotHandle(ObjectCalls.constructObject("OpenXRIPBindingModifier"))))
     }
 }

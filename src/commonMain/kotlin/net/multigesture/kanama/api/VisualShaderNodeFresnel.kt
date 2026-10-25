@@ -22,5 +22,10 @@ class VisualShaderNodeFresnel(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFresnel? =
             if (handle.address() == 0L) null else VisualShaderNodeFresnel(GodotHandle(handle))
+
+        /** A new VisualShaderNodeFresnel, GDScript's `VisualShaderNodeFresnel.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeFresnel =
+            RefCounted.owned(VisualShaderNodeFresnel(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeFresnel"))))
     }
 }

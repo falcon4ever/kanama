@@ -92,6 +92,11 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorNode3DGizmoPlugin? =
             if (handle.address() == 0L) null else EditorNode3DGizmoPlugin(GodotHandle(handle))
+
+        /** A new EditorNode3DGizmoPlugin, GDScript's `EditorNode3DGizmoPlugin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorNode3DGizmoPlugin =
+            RefCounted.owned(EditorNode3DGizmoPlugin(GodotHandle(ObjectCalls.constructObject("EditorNode3DGizmoPlugin"))))
     }
 
     private object Binds {

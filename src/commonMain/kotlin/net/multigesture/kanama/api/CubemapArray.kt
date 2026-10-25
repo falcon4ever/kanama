@@ -37,6 +37,11 @@ class CubemapArray(handle: GodotHandle) : ImageTextureLayered(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CubemapArray? =
             if (handle.address() == 0L) null else CubemapArray(GodotHandle(handle))
+
+        /** A new CubemapArray, GDScript's `CubemapArray.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CubemapArray =
+            RefCounted.owned(CubemapArray(GodotHandle(ObjectCalls.constructObject("CubemapArray"))))
     }
 
     private object Binds {

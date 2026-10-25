@@ -22,5 +22,10 @@ class AudioEffectBandLimitFilter(handle: GodotHandle) : AudioEffectFilter(handle
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectBandLimitFilter? =
             if (handle.address() == 0L) null else AudioEffectBandLimitFilter(GodotHandle(handle))
+
+        /** A new AudioEffectBandLimitFilter, GDScript's `AudioEffectBandLimitFilter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectBandLimitFilter =
+            RefCounted.owned(AudioEffectBandLimitFilter(GodotHandle(ObjectCalls.constructObject("AudioEffectBandLimitFilter"))))
     }
 }

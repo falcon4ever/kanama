@@ -447,6 +447,11 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): SplitContainer? =
             if (handle.address() == 0L) null else SplitContainer(GodotHandle(handle))
+
+        /** A new SplitContainer, GDScript's `SplitContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SplitContainer =
+            SplitContainer(GodotHandle(ObjectCalls.constructObject("SplitContainer")))
     }
 
     private object Binds {

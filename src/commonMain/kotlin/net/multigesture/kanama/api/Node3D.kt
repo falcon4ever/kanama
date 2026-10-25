@@ -980,6 +980,11 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): Node3D? =
             if (handle.address() == 0L) null else Node3D(GodotHandle(handle))
+
+        /** A new Node3D, GDScript's `Node3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Node3D =
+            Node3D(GodotHandle(ObjectCalls.constructObject("Node3D")))
     }
 
     private object Binds {

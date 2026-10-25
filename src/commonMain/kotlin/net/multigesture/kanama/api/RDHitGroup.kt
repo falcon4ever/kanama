@@ -115,6 +115,11 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDHitGroup? =
             if (handle.address() == 0L) null else RDHitGroup(GodotHandle(handle))
+
+        /** A new RDHitGroup, GDScript's `RDHitGroup.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDHitGroup =
+            RefCounted.owned(RDHitGroup(GodotHandle(ObjectCalls.constructObject("RDHitGroup"))))
     }
 
     private object Binds {

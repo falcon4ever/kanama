@@ -173,6 +173,11 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): BoneAttachment3D? =
             if (handle.address() == 0L) null else BoneAttachment3D(GodotHandle(handle))
+
+        /** A new BoneAttachment3D, GDScript's `BoneAttachment3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): BoneAttachment3D =
+            BoneAttachment3D(GodotHandle(ObjectCalls.constructObject("BoneAttachment3D")))
     }
 
     private object Binds {

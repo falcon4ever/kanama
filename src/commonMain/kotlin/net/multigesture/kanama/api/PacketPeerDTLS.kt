@@ -119,6 +119,11 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PacketPeerDTLS? =
             if (handle.address() == 0L) null else PacketPeerDTLS(GodotHandle(handle))
+
+        /** A new PacketPeerDTLS, GDScript's `PacketPeerDTLS.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PacketPeerDTLS =
+            RefCounted.owned(PacketPeerDTLS(GodotHandle(ObjectCalls.constructObject("PacketPeerDTLS"))))
     }
 
     private object Binds {

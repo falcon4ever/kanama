@@ -55,6 +55,11 @@ class VisualShaderNodeTexture2DArray(handle: GodotHandle) : VisualShaderNodeSamp
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTexture2DArray? =
             if (handle.address() == 0L) null else VisualShaderNodeTexture2DArray(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTexture2DArray, GDScript's `VisualShaderNodeTexture2DArray.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTexture2DArray =
+            RefCounted.owned(VisualShaderNodeTexture2DArray(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTexture2DArray"))))
     }
 
     private object Binds {

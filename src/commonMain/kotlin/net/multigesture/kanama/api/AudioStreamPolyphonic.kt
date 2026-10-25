@@ -52,6 +52,11 @@ class AudioStreamPolyphonic(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamPolyphonic? =
             if (handle.address() == 0L) null else AudioStreamPolyphonic(GodotHandle(handle))
+
+        /** A new AudioStreamPolyphonic, GDScript's `AudioStreamPolyphonic.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioStreamPolyphonic =
+            RefCounted.owned(AudioStreamPolyphonic(GodotHandle(ObjectCalls.constructObject("AudioStreamPolyphonic"))))
     }
 
     private object Binds {

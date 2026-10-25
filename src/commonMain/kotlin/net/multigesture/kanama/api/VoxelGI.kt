@@ -205,6 +205,11 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): VoxelGI? =
             if (handle.address() == 0L) null else VoxelGI(GodotHandle(handle))
+
+        /** A new VoxelGI, GDScript's `VoxelGI.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VoxelGI =
+            VoxelGI(GodotHandle(ObjectCalls.constructObject("VoxelGI")))
     }
 
     private object Binds {

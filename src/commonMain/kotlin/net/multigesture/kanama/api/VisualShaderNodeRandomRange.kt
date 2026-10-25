@@ -22,5 +22,10 @@ class VisualShaderNodeRandomRange(handle: GodotHandle) : VisualShaderNode(handle
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeRandomRange? =
             if (handle.address() == 0L) null else VisualShaderNodeRandomRange(GodotHandle(handle))
+
+        /** A new VisualShaderNodeRandomRange, GDScript's `VisualShaderNodeRandomRange.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeRandomRange =
+            RefCounted.owned(VisualShaderNodeRandomRange(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeRandomRange"))))
     }
 }

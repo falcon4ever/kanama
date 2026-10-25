@@ -22,5 +22,10 @@ class RenderSceneBuffersExtension(handle: GodotHandle) : RenderSceneBuffers(hand
 
         internal fun wrapBorrowed(handle: RawSegment): RenderSceneBuffersExtension? =
             if (handle.address() == 0L) null else RenderSceneBuffersExtension(GodotHandle(handle))
+
+        /** A new RenderSceneBuffersExtension, GDScript's `RenderSceneBuffersExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RenderSceneBuffersExtension =
+            RefCounted.owned(RenderSceneBuffersExtension(GodotHandle(ObjectCalls.constructObject("RenderSceneBuffersExtension"))))
     }
 }

@@ -22,5 +22,10 @@ open class GLTFDocumentExtension(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFDocumentExtension? =
             if (handle.address() == 0L) null else GLTFDocumentExtension(GodotHandle(handle))
+
+        /** A new GLTFDocumentExtension, GDScript's `GLTFDocumentExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFDocumentExtension =
+            RefCounted.owned(GLTFDocumentExtension(GodotHandle(ObjectCalls.constructObject("GLTFDocumentExtension"))))
     }
 }

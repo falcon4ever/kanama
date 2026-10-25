@@ -22,5 +22,10 @@ class EditorSceneFormatImporterFBX2GLTF(handle: GodotHandle) : EditorSceneFormat
 
         internal fun wrapBorrowed(handle: RawSegment): EditorSceneFormatImporterFBX2GLTF? =
             if (handle.address() == 0L) null else EditorSceneFormatImporterFBX2GLTF(GodotHandle(handle))
+
+        /** A new EditorSceneFormatImporterFBX2GLTF, GDScript's `EditorSceneFormatImporterFBX2GLTF.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorSceneFormatImporterFBX2GLTF =
+            RefCounted.owned(EditorSceneFormatImporterFBX2GLTF(GodotHandle(ObjectCalls.constructObject("EditorSceneFormatImporterFBX2GLTF"))))
     }
 }

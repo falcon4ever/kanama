@@ -90,6 +90,11 @@ class Skin(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Skin? =
             if (handle.address() == 0L) null else Skin(GodotHandle(handle))
+
+        /** A new Skin, GDScript's `Skin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Skin =
+            RefCounted.owned(Skin(GodotHandle(ObjectCalls.constructObject("Skin"))))
     }
 
     private object Binds {

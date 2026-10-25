@@ -899,6 +899,11 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): SpringBoneSimulator3D? =
             if (handle.address() == 0L) null else SpringBoneSimulator3D(GodotHandle(handle))
+
+        /** A new SpringBoneSimulator3D, GDScript's `SpringBoneSimulator3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SpringBoneSimulator3D =
+            SpringBoneSimulator3D(GodotHandle(ObjectCalls.constructObject("SpringBoneSimulator3D")))
     }
 
     private object Binds {

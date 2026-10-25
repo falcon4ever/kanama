@@ -503,6 +503,11 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): EditorProperty? =
             if (handle.address() == 0L) null else EditorProperty(GodotHandle(handle))
+
+        /** A new EditorProperty, GDScript's `EditorProperty.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): EditorProperty =
+            EditorProperty(GodotHandle(ObjectCalls.constructObject("EditorProperty")))
     }
 
     private object Binds {

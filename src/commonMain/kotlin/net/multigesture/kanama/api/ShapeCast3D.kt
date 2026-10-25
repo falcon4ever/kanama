@@ -471,6 +471,11 @@ class ShapeCast3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): ShapeCast3D? =
             if (handle.address() == 0L) null else ShapeCast3D(GodotHandle(handle))
+
+        /** A new ShapeCast3D, GDScript's `ShapeCast3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ShapeCast3D =
+            ShapeCast3D(GodotHandle(ObjectCalls.constructObject("ShapeCast3D")))
     }
 
     private object Binds {

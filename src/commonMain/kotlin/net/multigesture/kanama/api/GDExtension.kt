@@ -85,6 +85,11 @@ class GDExtension(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GDExtension? =
             if (handle.address() == 0L) null else GDExtension(GodotHandle(handle))
+
+        /** A new GDExtension, GDScript's `GDExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GDExtension =
+            RefCounted.owned(GDExtension(GodotHandle(ObjectCalls.constructObject("GDExtension"))))
     }
 
     private object Binds {

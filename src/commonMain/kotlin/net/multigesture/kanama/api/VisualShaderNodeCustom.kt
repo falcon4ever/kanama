@@ -34,6 +34,11 @@ class VisualShaderNodeCustom(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeCustom? =
             if (handle.address() == 0L) null else VisualShaderNodeCustom(GodotHandle(handle))
+
+        /** A new VisualShaderNodeCustom, GDScript's `VisualShaderNodeCustom.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeCustom =
+            RefCounted.owned(VisualShaderNodeCustom(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeCustom"))))
     }
 
     private object Binds {

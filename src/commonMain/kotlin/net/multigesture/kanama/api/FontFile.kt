@@ -1417,6 +1417,11 @@ class FontFile(handle: GodotHandle) : Font(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): FontFile? =
             if (handle.address() == 0L) null else FontFile(GodotHandle(handle))
+
+        /** A new FontFile, GDScript's `FontFile.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): FontFile =
+            RefCounted.owned(FontFile(GodotHandle(ObjectCalls.constructObject("FontFile"))))
     }
 
     private object Binds {

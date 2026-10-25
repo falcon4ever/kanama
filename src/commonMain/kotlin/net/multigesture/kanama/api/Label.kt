@@ -636,6 +636,11 @@ class Label(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): Label? =
             if (handle.address() == 0L) null else Label(GodotHandle(handle))
+
+        /** A new Label, GDScript's `Label.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Label =
+            Label(GodotHandle(ObjectCalls.constructObject("Label")))
     }
 
     private object Binds {

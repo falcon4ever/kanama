@@ -22,5 +22,10 @@ class VisualShaderNodeTextureSDF(handle: GodotHandle) : VisualShaderNode(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTextureSDF? =
             if (handle.address() == 0L) null else VisualShaderNodeTextureSDF(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTextureSDF, GDScript's `VisualShaderNodeTextureSDF.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTextureSDF =
+            RefCounted.owned(VisualShaderNodeTextureSDF(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTextureSDF"))))
     }
 }

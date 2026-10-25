@@ -37,6 +37,11 @@ class Cubemap(handle: GodotHandle) : ImageTextureLayered(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Cubemap? =
             if (handle.address() == 0L) null else Cubemap(GodotHandle(handle))
+
+        /** A new Cubemap, GDScript's `Cubemap.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Cubemap =
+            RefCounted.owned(Cubemap(GodotHandle(ObjectCalls.constructObject("Cubemap"))))
     }
 
     private object Binds {

@@ -61,6 +61,11 @@ class ArrayOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ArrayOccluder3D? =
             if (handle.address() == 0L) null else ArrayOccluder3D(GodotHandle(handle))
+
+        /** A new ArrayOccluder3D, GDScript's `ArrayOccluder3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ArrayOccluder3D =
+            RefCounted.owned(ArrayOccluder3D(GodotHandle(ObjectCalls.constructObject("ArrayOccluder3D"))))
     }
 
     private object Binds {

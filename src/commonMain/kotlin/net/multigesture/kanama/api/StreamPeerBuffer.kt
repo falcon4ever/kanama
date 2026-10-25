@@ -124,6 +124,11 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerBuffer? =
             if (handle.address() == 0L) null else StreamPeerBuffer(GodotHandle(handle))
+
+        /** A new StreamPeerBuffer, GDScript's `StreamPeerBuffer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): StreamPeerBuffer =
+            RefCounted.owned(StreamPeerBuffer(GodotHandle(ObjectCalls.constructObject("StreamPeerBuffer"))))
     }
 
     private object Binds {

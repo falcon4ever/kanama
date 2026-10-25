@@ -82,6 +82,11 @@ class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TriangleMesh? =
             if (handle.address() == 0L) null else TriangleMesh(GodotHandle(handle))
+
+        /** A new TriangleMesh, GDScript's `TriangleMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TriangleMesh =
+            RefCounted.owned(TriangleMesh(GodotHandle(ObjectCalls.constructObject("TriangleMesh"))))
     }
 
     private object Binds {

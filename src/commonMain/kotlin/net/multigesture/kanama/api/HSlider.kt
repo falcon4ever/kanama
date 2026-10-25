@@ -19,5 +19,10 @@ class HSlider(handle: GodotHandle) : Slider(handle) {
 
         internal fun wrap(handle: RawSegment): HSlider? =
             if (handle.address() == 0L) null else HSlider(GodotHandle(handle))
+
+        /** A new HSlider, GDScript's `HSlider.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): HSlider =
+            HSlider(GodotHandle(ObjectCalls.constructObject("HSlider")))
     }
 }

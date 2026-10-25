@@ -113,6 +113,11 @@ class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRHapticVibration? =
             if (handle.address() == 0L) null else OpenXRHapticVibration(GodotHandle(handle))
+
+        /** A new OpenXRHapticVibration, GDScript's `OpenXRHapticVibration.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRHapticVibration =
+            RefCounted.owned(OpenXRHapticVibration(GodotHandle(ObjectCalls.constructObject("OpenXRHapticVibration"))))
     }
 
     private object Binds {

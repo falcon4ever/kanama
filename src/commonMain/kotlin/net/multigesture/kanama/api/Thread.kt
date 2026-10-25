@@ -157,6 +157,11 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Thread? =
             if (handle.address() == 0L) null else Thread(GodotHandle(handle))
+
+        /** A new Thread, GDScript's `Thread.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Thread =
+            RefCounted.owned(Thread(GodotHandle(ObjectCalls.constructObject("Thread"))))
     }
 
     private object Binds {

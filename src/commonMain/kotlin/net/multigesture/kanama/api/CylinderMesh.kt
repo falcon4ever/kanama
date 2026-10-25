@@ -249,6 +249,11 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CylinderMesh? =
             if (handle.address() == 0L) null else CylinderMesh(GodotHandle(handle))
+
+        /** A new CylinderMesh, GDScript's `CylinderMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CylinderMesh =
+            RefCounted.owned(CylinderMesh(GodotHandle(ObjectCalls.constructObject("CylinderMesh"))))
     }
 
     private object Binds {

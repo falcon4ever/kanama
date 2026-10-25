@@ -261,6 +261,11 @@ class Timer(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): Timer? =
             if (handle.address() == 0L) null else Timer(GodotHandle(handle))
+
+        /** A new Timer, GDScript's `Timer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Timer =
+            Timer(GodotHandle(ObjectCalls.constructObject("Timer")))
     }
 
     private object Binds {

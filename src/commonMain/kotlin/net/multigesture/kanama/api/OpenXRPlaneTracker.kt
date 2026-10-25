@@ -181,6 +181,11 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRPlaneTracker? =
             if (handle.address() == 0L) null else OpenXRPlaneTracker(GodotHandle(handle))
+
+        /** A new OpenXRPlaneTracker, GDScript's `OpenXRPlaneTracker.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRPlaneTracker =
+            RefCounted.owned(OpenXRPlaneTracker(GodotHandle(ObjectCalls.constructObject("OpenXRPlaneTracker"))))
     }
 
     private object Binds {

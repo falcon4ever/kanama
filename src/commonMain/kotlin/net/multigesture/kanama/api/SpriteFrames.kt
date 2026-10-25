@@ -295,6 +295,11 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SpriteFrames? =
             if (handle.address() == 0L) null else SpriteFrames(GodotHandle(handle))
+
+        /** A new SpriteFrames, GDScript's `SpriteFrames.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SpriteFrames =
+            RefCounted.owned(SpriteFrames(GodotHandle(ObjectCalls.constructObject("SpriteFrames"))))
     }
 
     private object Binds {

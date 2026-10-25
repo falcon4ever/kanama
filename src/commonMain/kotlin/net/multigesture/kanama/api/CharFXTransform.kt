@@ -440,6 +440,11 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CharFXTransform? =
             if (handle.address() == 0L) null else CharFXTransform(GodotHandle(handle))
+
+        /** A new CharFXTransform, GDScript's `CharFXTransform.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CharFXTransform =
+            RefCounted.owned(CharFXTransform(GodotHandle(ObjectCalls.constructObject("CharFXTransform"))))
     }
 
     private object Binds {

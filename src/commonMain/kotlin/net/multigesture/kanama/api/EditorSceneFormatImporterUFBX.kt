@@ -22,5 +22,10 @@ class EditorSceneFormatImporterUFBX(handle: GodotHandle) : EditorSceneFormatImpo
 
         internal fun wrapBorrowed(handle: RawSegment): EditorSceneFormatImporterUFBX? =
             if (handle.address() == 0L) null else EditorSceneFormatImporterUFBX(GodotHandle(handle))
+
+        /** A new EditorSceneFormatImporterUFBX, GDScript's `EditorSceneFormatImporterUFBX.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorSceneFormatImporterUFBX =
+            RefCounted.owned(EditorSceneFormatImporterUFBX(GodotHandle(ObjectCalls.constructObject("EditorSceneFormatImporterUFBX"))))
     }
 }

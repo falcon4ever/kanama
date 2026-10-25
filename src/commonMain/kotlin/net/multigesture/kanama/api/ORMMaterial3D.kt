@@ -22,5 +22,10 @@ class ORMMaterial3D(handle: GodotHandle) : BaseMaterial3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ORMMaterial3D? =
             if (handle.address() == 0L) null else ORMMaterial3D(GodotHandle(handle))
+
+        /** A new ORMMaterial3D, GDScript's `ORMMaterial3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ORMMaterial3D =
+            RefCounted.owned(ORMMaterial3D(GodotHandle(ObjectCalls.constructObject("ORMMaterial3D"))))
     }
 }

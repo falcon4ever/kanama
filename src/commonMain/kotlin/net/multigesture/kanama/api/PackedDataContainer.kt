@@ -47,6 +47,11 @@ class PackedDataContainer(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PackedDataContainer? =
             if (handle.address() == 0L) null else PackedDataContainer(GodotHandle(handle))
+
+        /** A new PackedDataContainer, GDScript's `PackedDataContainer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PackedDataContainer =
+            RefCounted.owned(PackedDataContainer(GodotHandle(ObjectCalls.constructObject("PackedDataContainer"))))
     }
 
     private object Binds {

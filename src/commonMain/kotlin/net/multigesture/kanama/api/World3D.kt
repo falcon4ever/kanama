@@ -181,6 +181,11 @@ class World3D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): World3D? =
             if (handle.address() == 0L) null else World3D(GodotHandle(handle))
+
+        /** A new World3D, GDScript's `World3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): World3D =
+            RefCounted.owned(World3D(GodotHandle(ObjectCalls.constructObject("World3D"))))
     }
 
     private object Binds {

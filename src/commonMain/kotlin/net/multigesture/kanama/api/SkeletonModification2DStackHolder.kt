@@ -47,6 +47,11 @@ class SkeletonModification2DStackHolder(handle: GodotHandle) : SkeletonModificat
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DStackHolder? =
             if (handle.address() == 0L) null else SkeletonModification2DStackHolder(GodotHandle(handle))
+
+        /** A new SkeletonModification2DStackHolder, GDScript's `SkeletonModification2DStackHolder.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SkeletonModification2DStackHolder =
+            RefCounted.owned(SkeletonModification2DStackHolder(GodotHandle(ObjectCalls.constructObject("SkeletonModification2DStackHolder"))))
     }
 
     private object Binds {

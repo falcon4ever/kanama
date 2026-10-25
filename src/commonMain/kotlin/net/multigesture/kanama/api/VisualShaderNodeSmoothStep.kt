@@ -113,6 +113,11 @@ class VisualShaderNodeSmoothStep(handle: GodotHandle) : VisualShaderNode(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeSmoothStep? =
             if (handle.address() == 0L) null else VisualShaderNodeSmoothStep(GodotHandle(handle))
+
+        /** A new VisualShaderNodeSmoothStep, GDScript's `VisualShaderNodeSmoothStep.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeSmoothStep =
+            RefCounted.owned(VisualShaderNodeSmoothStep(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeSmoothStep"))))
     }
 
     private object Binds {

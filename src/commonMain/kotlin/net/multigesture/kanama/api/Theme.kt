@@ -1017,6 +1017,11 @@ class Theme(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Theme? =
             if (handle.address() == 0L) null else Theme(GodotHandle(handle))
+
+        /** A new Theme, GDScript's `Theme.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Theme =
+            RefCounted.owned(Theme(GodotHandle(ObjectCalls.constructObject("Theme"))))
     }
 
     private object Binds {

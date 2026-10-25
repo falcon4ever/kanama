@@ -144,6 +144,11 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRAnalogThresholdModifier? =
             if (handle.address() == 0L) null else OpenXRAnalogThresholdModifier(GodotHandle(handle))
+
+        /** A new OpenXRAnalogThresholdModifier, GDScript's `OpenXRAnalogThresholdModifier.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRAnalogThresholdModifier =
+            RefCounted.owned(OpenXRAnalogThresholdModifier(GodotHandle(ObjectCalls.constructObject("OpenXRAnalogThresholdModifier"))))
     }
 
     private object Binds {

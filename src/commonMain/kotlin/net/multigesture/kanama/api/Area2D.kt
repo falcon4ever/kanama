@@ -582,6 +582,11 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
 
         internal fun wrap(handle: RawSegment): Area2D? =
             if (handle.address() == 0L) null else Area2D(GodotHandle(handle))
+
+        /** A new Area2D, GDScript's `Area2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Area2D =
+            Area2D(GodotHandle(ObjectCalls.constructObject("Area2D")))
     }
 
     private object Binds {

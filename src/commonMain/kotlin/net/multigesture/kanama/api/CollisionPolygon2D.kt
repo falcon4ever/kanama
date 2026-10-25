@@ -208,6 +208,11 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): CollisionPolygon2D? =
             if (handle.address() == 0L) null else CollisionPolygon2D(GodotHandle(handle))
+
+        /** A new CollisionPolygon2D, GDScript's `CollisionPolygon2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CollisionPolygon2D =
+            CollisionPolygon2D(GodotHandle(ObjectCalls.constructObject("CollisionPolygon2D")))
     }
 
     private object Binds {

@@ -51,6 +51,11 @@ class SphereShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SphereShape3D? =
             if (handle.address() == 0L) null else SphereShape3D(GodotHandle(handle))
+
+        /** A new SphereShape3D, GDScript's `SphereShape3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SphereShape3D =
+            RefCounted.owned(SphereShape3D(GodotHandle(ObjectCalls.constructObject("SphereShape3D"))))
     }
 
     private object Binds {

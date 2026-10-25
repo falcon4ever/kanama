@@ -34,6 +34,11 @@ class WeakRef(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WeakRef? =
             if (handle.address() == 0L) null else WeakRef(GodotHandle(handle))
+
+        /** A new WeakRef, GDScript's `WeakRef.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): WeakRef =
+            RefCounted.owned(WeakRef(GodotHandle(ObjectCalls.constructObject("WeakRef"))))
     }
 
     private object Binds {

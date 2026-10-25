@@ -391,6 +391,11 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): AnimatedSprite2D? =
             if (handle.address() == 0L) null else AnimatedSprite2D(GodotHandle(handle))
+
+        /** A new AnimatedSprite2D, GDScript's `AnimatedSprite2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AnimatedSprite2D =
+            AnimatedSprite2D(GodotHandle(ObjectCalls.constructObject("AnimatedSprite2D")))
     }
 
     private object Binds {

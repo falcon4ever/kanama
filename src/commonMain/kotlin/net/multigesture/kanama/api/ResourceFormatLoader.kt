@@ -75,5 +75,10 @@ class ResourceFormatLoader(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceFormatLoader? =
             if (handle.address() == 0L) null else ResourceFormatLoader(GodotHandle(handle))
+
+        /** A new ResourceFormatLoader, GDScript's `ResourceFormatLoader.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceFormatLoader =
+            RefCounted.owned(ResourceFormatLoader(GodotHandle(ObjectCalls.constructObject("ResourceFormatLoader"))))
     }
 }

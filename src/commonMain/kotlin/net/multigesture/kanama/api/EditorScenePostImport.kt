@@ -33,6 +33,11 @@ class EditorScenePostImport(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorScenePostImport? =
             if (handle.address() == 0L) null else EditorScenePostImport(GodotHandle(handle))
+
+        /** A new EditorScenePostImport, GDScript's `EditorScenePostImport.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorScenePostImport =
+            RefCounted.owned(EditorScenePostImport(GodotHandle(ObjectCalls.constructObject("EditorScenePostImport"))))
     }
 
     private object Binds {

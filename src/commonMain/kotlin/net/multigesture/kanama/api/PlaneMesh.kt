@@ -203,6 +203,11 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         internal fun wrapBorrowed(handle: RawSegment): PlaneMesh? =
             if (handle.address() == 0L) null else PlaneMesh(GodotHandle(handle))
 
+        /** A new PlaneMesh, GDScript's `PlaneMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PlaneMesh =
+            RefCounted.owned(PlaneMesh(GodotHandle(ObjectCalls.constructObject("PlaneMesh"))))
+
         // Downcast a Resource to PlaneMesh (null if not).
         @JvmStatic
         fun fromResource(value: Resource): PlaneMesh? =

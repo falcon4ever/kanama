@@ -481,7 +481,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
         internal fun wrapBorrowed(handle: RawSegment): MeshDataTool? =
             if (handle.address() == 0L) null else MeshDataTool(GodotHandle(handle))
 
-        // Instantiate a MeshDataTool.
+        /** A new MeshDataTool, GDScript's `MeshDataTool.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): MeshDataTool =
             RefCounted.owned(MeshDataTool(GodotHandle(ObjectCalls.constructObject("MeshDataTool"))))

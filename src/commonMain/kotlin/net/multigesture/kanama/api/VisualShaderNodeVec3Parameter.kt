@@ -81,6 +81,11 @@ class VisualShaderNodeVec3Parameter(handle: GodotHandle) : VisualShaderNodeParam
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVec3Parameter? =
             if (handle.address() == 0L) null else VisualShaderNodeVec3Parameter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVec3Parameter, GDScript's `VisualShaderNodeVec3Parameter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVec3Parameter =
+            RefCounted.owned(VisualShaderNodeVec3Parameter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeVec3Parameter"))))
     }
 
     private object Binds {

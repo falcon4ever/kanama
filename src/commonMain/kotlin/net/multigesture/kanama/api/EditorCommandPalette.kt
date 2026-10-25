@@ -42,6 +42,11 @@ class EditorCommandPalette(handle: GodotHandle) : ConfirmationDialog(handle) {
 
         internal fun wrap(handle: RawSegment): EditorCommandPalette? =
             if (handle.address() == 0L) null else EditorCommandPalette(GodotHandle(handle))
+
+        /** A new EditorCommandPalette, GDScript's `EditorCommandPalette.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): EditorCommandPalette =
+            EditorCommandPalette(GodotHandle(ObjectCalls.constructObject("EditorCommandPalette")))
     }
 
     private object Binds {

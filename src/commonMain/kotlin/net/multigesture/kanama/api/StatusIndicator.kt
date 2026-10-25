@@ -142,6 +142,11 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): StatusIndicator? =
             if (handle.address() == 0L) null else StatusIndicator(GodotHandle(handle))
+
+        /** A new StatusIndicator, GDScript's `StatusIndicator.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): StatusIndicator =
+            StatusIndicator(GodotHandle(ObjectCalls.constructObject("StatusIndicator")))
     }
 
     private object Binds {

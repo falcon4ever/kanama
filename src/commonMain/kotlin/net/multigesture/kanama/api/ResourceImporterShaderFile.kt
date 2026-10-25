@@ -22,5 +22,10 @@ class ResourceImporterShaderFile(handle: GodotHandle) : ResourceImporter(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterShaderFile? =
             if (handle.address() == 0L) null else ResourceImporterShaderFile(GodotHandle(handle))
+
+        /** A new ResourceImporterShaderFile, GDScript's `ResourceImporterShaderFile.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterShaderFile =
+            RefCounted.owned(ResourceImporterShaderFile(GodotHandle(ObjectCalls.constructObject("ResourceImporterShaderFile"))))
     }
 }

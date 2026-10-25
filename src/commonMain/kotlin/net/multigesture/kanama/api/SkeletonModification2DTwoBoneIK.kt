@@ -247,6 +247,11 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DTwoBoneIK? =
             if (handle.address() == 0L) null else SkeletonModification2DTwoBoneIK(GodotHandle(handle))
+
+        /** A new SkeletonModification2DTwoBoneIK, GDScript's `SkeletonModification2DTwoBoneIK.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SkeletonModification2DTwoBoneIK =
+            RefCounted.owned(SkeletonModification2DTwoBoneIK(GodotHandle(ObjectCalls.constructObject("SkeletonModification2DTwoBoneIK"))))
     }
 
     private object Binds {

@@ -19,5 +19,10 @@ class OpenXRInteractionProfileEditor(handle: GodotHandle) : OpenXRInteractionPro
 
         internal fun wrap(handle: RawSegment): OpenXRInteractionProfileEditor? =
             if (handle.address() == 0L) null else OpenXRInteractionProfileEditor(GodotHandle(handle))
+
+        /** A new OpenXRInteractionProfileEditor, GDScript's `OpenXRInteractionProfileEditor.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OpenXRInteractionProfileEditor =
+            OpenXRInteractionProfileEditor(GodotHandle(ObjectCalls.constructObject("OpenXRInteractionProfileEditor")))
     }
 }

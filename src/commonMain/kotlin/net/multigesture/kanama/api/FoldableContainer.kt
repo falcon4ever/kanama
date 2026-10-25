@@ -294,6 +294,11 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): FoldableContainer? =
             if (handle.address() == 0L) null else FoldableContainer(GodotHandle(handle))
+
+        /** A new FoldableContainer, GDScript's `FoldableContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): FoldableContainer =
+            FoldableContainer(GodotHandle(ObjectCalls.constructObject("FoldableContainer")))
     }
 
     private object Binds {

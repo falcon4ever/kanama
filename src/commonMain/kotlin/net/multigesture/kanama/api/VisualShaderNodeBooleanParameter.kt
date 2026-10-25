@@ -80,6 +80,11 @@ class VisualShaderNodeBooleanParameter(handle: GodotHandle) : VisualShaderNodePa
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeBooleanParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeBooleanParameter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeBooleanParameter, GDScript's `VisualShaderNodeBooleanParameter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeBooleanParameter =
+            RefCounted.owned(VisualShaderNodeBooleanParameter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeBooleanParameter"))))
     }
 
     private object Binds {

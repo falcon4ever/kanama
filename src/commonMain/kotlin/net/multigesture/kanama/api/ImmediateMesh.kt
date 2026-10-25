@@ -141,6 +141,11 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ImmediateMesh? =
             if (handle.address() == 0L) null else ImmediateMesh(GodotHandle(handle))
+
+        /** A new ImmediateMesh, GDScript's `ImmediateMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ImmediateMesh =
+            RefCounted.owned(ImmediateMesh(GodotHandle(ObjectCalls.constructObject("ImmediateMesh"))))
     }
 
     private object Binds {

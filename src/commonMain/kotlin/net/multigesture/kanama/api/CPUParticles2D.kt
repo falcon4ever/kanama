@@ -1417,6 +1417,11 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): CPUParticles2D? =
             if (handle.address() == 0L) null else CPUParticles2D(GodotHandle(handle))
+
+        /** A new CPUParticles2D, GDScript's `CPUParticles2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CPUParticles2D =
+            CPUParticles2D(GodotHandle(ObjectCalls.constructObject("CPUParticles2D")))
     }
 
     private object Binds {

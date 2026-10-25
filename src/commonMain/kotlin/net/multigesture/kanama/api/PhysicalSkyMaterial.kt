@@ -370,6 +370,11 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PhysicalSkyMaterial? =
             if (handle.address() == 0L) null else PhysicalSkyMaterial(GodotHandle(handle))
+
+        /** A new PhysicalSkyMaterial, GDScript's `PhysicalSkyMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PhysicalSkyMaterial =
+            RefCounted.owned(PhysicalSkyMaterial(GodotHandle(ObjectCalls.constructObject("PhysicalSkyMaterial"))))
     }
 
     private object Binds {

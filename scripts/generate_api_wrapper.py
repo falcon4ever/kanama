@@ -1245,8 +1245,8 @@ SHARED_MEMBER_SECTIONS: dict[str, str] = {
         this.tweenMethod(GodotCallable(target, method), from, to, duration)
 """.strip("\n"),
 }
-# Every `create()` / `from*` helper this table held is a row in FACTORY_HELPERS since task 119
-# item 33. Non-factory shared companion members belong here.
+# Every `create()` / `from*` helper this table held is generated since task 119 item 33
+# (`render_factory_helpers`). Non-factory shared companion members belong here.
 SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
     "SceneTree": """
         // ── The live SceneTree, and the desktop/Android static entry points ──────────────────
@@ -1445,79 +1445,61 @@ class Downcast:
     param_name: str = "value"
 
 
-@dataclass(frozen=True)
-class FactorySpec:
-    """The factory/downcast companion helpers one wrapper class gets."""
-
-    create: bool
-    downcasts: tuple[Downcast, ...] = ()
-
-
-# Factory / downcast companion helpers, one row per class, rendered by `render_factory_helpers`
-# (task 119 item 33). Before this table every `create()` and every `from*` downcast was pasted by
-# hand into one of the three `*_COMPANION_MEMBER_SECTIONS` tables, in one of two bodies each;
-# a row here says WHICH helpers a class gets and the renderer owns the body, so a P1'(a)
-# retirement adds a row instead of copying Kotlin.
+# `create()` is not a table row: every class `extension_api.json` marks `is_instantiable` gets one
+# (GDScript's `X.new()`), rendered by `render_factory_helpers` (see `generates_create`). Only the
+# `from*` downcasts are hand-picked, one row per class (task 119 item 33): before the table every
+# one of them was pasted by hand into a companion section, in one of two bodies each; a row says
+# WHICH downcasts a class gets and the renderer owns the body.
 #
-# A key must be a class the generator renders; every target constructs through
-# `ObjectCalls.constructObject` (the iOS-only `IosGodot.constructObject` spelling left with task
-# 129 C, when the last iOS-only generated classes were generated once). `check_section_tables`
-# enforces both that (the key must be in one of the class universes) and that no section still
-# pastes the helper the row now renders.
-FACTORY_HELPERS: dict[str, FactorySpec] = {
-    # Shared tree (task 117 P1'(a)): the desktop hand files' factory helpers, generated once for
-    # every platform.
-    "ArrayMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
-    "BaseMaterial3D": FactorySpec(False, (Downcast("fromMaterial", "Material", False),)),
-    "ButtonGroup": FactorySpec(True),
-    "Camera3D": FactorySpec(True),
-    "FastNoiseLite": FactorySpec(True, (Downcast("fromResource", "Resource", False),)),
+# A key must be a class the generator renders. `check_section_tables` enforces both that (the key
+# must be in one of the class universes) and that no section pastes a `create()` or a downcast the
+# generator renders.
+DOWNCAST_HELPERS: dict[str, tuple[Downcast, ...]] = {
+    # Shared tree (task 117 P1'(a)): the desktop hand files' downcasts, generated once for every
+    # platform.
+    "ArrayMesh": (Downcast("fromResource", "Resource", False),),
+    "BaseMaterial3D": (Downcast("fromMaterial", "Material", False),),
+    "FastNoiseLite": (Downcast("fromResource", "Resource", False),),
     # Task 129 A: the hand-written desktop file's only sugar. The iOS hand class extended InputEvent
     # (not InputEventMouse) and also wrapped an InputEventScreenTouch; it is generated once now.
-    "InputEventMouseButton": FactorySpec(True, (Downcast("from", "GodotObject", False),)),
+    "InputEventMouseButton": (Downcast("from", "GodotObject", False),),
     # Task 129 A review: scripts and smokes construct a touch to feed Input.parseInputEvent
     # (Godot's emulate_mouse_from_touch path), and narrow an event to it.
-    "InputEventScreenTouch": FactorySpec(True, (Downcast("from", "GodotObject", False),)),
-    "Material": FactorySpec(False, (Downcast("fromResource", "Resource", True),)),
-    "Mesh": FactorySpec(False, (Downcast("fromObject", "GodotObject", False),)),
-    "MeshLibrary": FactorySpec(True),
-    "OfflineMultiplayerPeer": FactorySpec(True),
-    "PackedScene": FactorySpec(True),
-    # Task 117 P2': the retired iOS hand copy's only companion sugar (a Resource downcast); the
-    # rest of the class is generated on both platforms now.
-    "PlaneMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
-    "Resource": FactorySpec(True, (Downcast("fromObject", "GodotObject", False),)),
-    "SphereMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
-    "Sprite2D": FactorySpec(True),
-    # Task 117 P1'(c): the hand copies' only companion sugar (both carried create(), neither a
-    # downcast), so the whole class body is generated and the row is all that retirement needs.
-    "StandardMaterial3D": FactorySpec(True),
-    # Task 129 C: AudioStreamPlayer's only factory (a Node: the wrapper is not owned).
-    "AudioStreamPlayer": FactorySpec(True),
-    # Task 129 C: the iOS-hand band (desktop and iOS each had a hand copy, or a generated desktop
-    # copy and an iOS hand one); the desktop factories, generated once.
-    "BoxMesh": FactorySpec(True),
-    "BoxShape3D": FactorySpec(True, (Downcast("fromResource", "Resource", False),)),
-    "ParticleProcessMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
-    "ProceduralSkyMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
-    # Task 129 C: the desktop hand files' factories (these were iOS-only generated rows before; the
-    # classes are generated once now). NoiseTexture2D and ShaderMaterial keep the desktop downcasts:
-    # `fromObject` and a non-null `fromResource` (iOS took a nullable Resource).
-    "ConfigFile": FactorySpec(True),
-    "ENetMultiplayerPeer": FactorySpec(True),
-    "InputEventKey": FactorySpec(True, (Downcast("from", "GodotObject", False),)),
-    "InputEventMouseMotion": FactorySpec(False, (Downcast("from", "GodotObject", False),)),
-    "LightmapGI": FactorySpec(True),
-    "MeshDataTool": FactorySpec(True),
-    "NoiseTexture2D": FactorySpec(
-        False, (Downcast("fromObject", "GodotObject", False), Downcast("fromResource", "Resource", False))
-    ),
-    "SceneMultiplayer": FactorySpec(False, (Downcast("fromApi", "MultiplayerAPI", True, "api"),)),
-    "ShaderMaterial": FactorySpec(
-        False, (Downcast("fromObject", "GodotObject", False), Downcast("fromResource", "Resource", False))
-    ),
-    "SurfaceTool": FactorySpec(True),
+    "InputEventScreenTouch": (Downcast("from", "GodotObject", False),),
+    "Material": (Downcast("fromResource", "Resource", True),),
+    "Mesh": (Downcast("fromObject", "GodotObject", False),),
+    # Task 117 P2': the retired iOS hand copy's only companion sugar (a Resource downcast).
+    "PlaneMesh": (Downcast("fromResource", "Resource", False),),
+    "Resource": (Downcast("fromObject", "GodotObject", False),),
+    "SphereMesh": (Downcast("fromResource", "Resource", False),),
+    # Task 129 C: the iOS-hand band's and the desktop hand files' downcasts, generated once.
+    "BoxShape3D": (Downcast("fromResource", "Resource", False),),
+    "ParticleProcessMaterial": (Downcast("fromResource", "Resource", False),),
+    "ProceduralSkyMaterial": (Downcast("fromResource", "Resource", False),),
+    "InputEventKey": (Downcast("from", "GodotObject", False),),
+    "InputEventMouseMotion": (Downcast("from", "GodotObject", False),),
+    # NoiseTexture2D and ShaderMaterial keep the desktop downcasts: `fromObject` and a non-null
+    # `fromResource` (iOS took a nullable Resource).
+    "NoiseTexture2D": (Downcast("fromObject", "GodotObject", False), Downcast("fromResource", "Resource", False)),
+    "SceneMultiplayer": (Downcast("fromApi", "MultiplayerAPI", True, "api"),),
+    "ShaderMaterial": (Downcast("fromObject", "GodotObject", False), Downcast("fromResource", "Resource", False)),
 }
+
+
+def generates_create(class_name: str, api_classes: dict[str, ApiClass]) -> bool:
+    """Whether [class_name]'s companion gets `create()`, GDScript's `X.new()`.
+
+    Every class Godot can construct (`is_instantiable`) that is a `Node` or a `RefCounted` does: a
+    RefCounted `create()` is owned (the constructing +1), a Node one is not (the tree frees it). A
+    plain `Object` subclass (`UndoRedo`, `JSONRPC`, `MainLoop`, ...) gets none, because Kotlin has
+    no `free()` for an object no tree or reference count frees, so `create()` would only leak it.
+    """
+    cls = api_classes.get(class_name)
+    if cls is None or not cls.is_instantiable:
+        return False
+    family = ancestors(class_name, api_classes) | {class_name}
+    return bool(family & {"Node", "RefCounted"})
+
 
 # Sugar over a SHARED class written as top-level extensions, appended to the shared file after the
 # class (so every platform compiles it once). Extensions, not members, because callers import them by
@@ -1636,7 +1618,7 @@ def _companion_section(class_name: str) -> str | None:
     return None
 
 
-def check_section_tables(shared_classes: set[str]) -> None:
+def check_section_tables(shared_classes: set[str], api_classes: dict[str, ApiClass]) -> None:
     """Fail loudly when a custom section is keyed on a class its table cannot host."""
     problems = []
     for table_name, table, allowed in (
@@ -1650,12 +1632,12 @@ def check_section_tables(shared_classes: set[str]) -> None:
         for key in table:
             if key not in allowed:
                 problems.append(f"{table_name}[{key!r}]: not a class this table may host")
-    problems.extend(check_factory_helpers(shared_classes))
+    problems.extend(check_factory_helpers(shared_classes, api_classes))
     if problems:
         raise SystemExit("[generate_api_wrapper] custom-section table misuse:\n  " + "\n  ".join(problems))
 
 
-# A companion section that still declares a helper `FACTORY_HELPERS` renders for the same class
+# A companion section that still declares a helper `render_factory_helpers` renders for the same class
 # would emit it twice into one companion object. Matching on the declaration keyword keeps prose
 # ("Cast a generic event ...") and member names ending in `from` out of it; any annotations and a
 # visibility modifier before `fun` are allowed, because a `private fun create()` collides just the
@@ -1667,27 +1649,26 @@ _PASTED_FACTORY_RE = re.compile(
 )
 
 
-def check_factory_helpers(shared_classes: set[str]) -> list[str]:
-    """Validate `FACTORY_HELPERS`: every key renders somewhere, and nothing renders it twice."""
+def check_factory_helpers(shared_classes: set[str], api_classes: dict[str, ApiClass]) -> list[str]:
+    """Validate the factory helpers: every `DOWNCAST_HELPERS` key renders somewhere, and nothing renders a helper twice."""
     problems = []
-    for class_name in FACTORY_HELPERS:
+    for class_name in DOWNCAST_HELPERS:
         # The two per-platform sets are disjoint (asserted where they are declared) and the shared
         # set excludes PER_PLATFORM_WRAPPERS, so a key is in at most one universe; here only "in none"
         # can go wrong.
         if not any(class_name in classes for classes in (shared_classes, DESKTOP_ONLY_GENERATED, IOS_ONLY_GENERATED)):
             problems.append(
-                f"FACTORY_HELPERS[{class_name!r}]: not a class the generator renders "
+                f"DOWNCAST_HELPERS[{class_name!r}]: not a class the generator renders "
                 "(neither shared, nor a per-platform generated wrapper)",
             )
-        for table_name, table in (
-            ("SHARED_COMPANION_MEMBER_SECTIONS", SHARED_COMPANION_MEMBER_SECTIONS),
-        ):
-            pasted = _PASTED_FACTORY_RE.search(table.get(class_name, ""))
-            if pasted:
+    for class_name, section in SHARED_COMPANION_MEMBER_SECTIONS.items():
+        for pasted in _PASTED_FACTORY_RE.finditer(section):
+            helper = pasted.group(1).rstrip("(").strip()
+            rendered = generates_create(class_name, api_classes) if helper.startswith("create") else class_name in DOWNCAST_HELPERS
+            if rendered:
                 problems.append(
-                    f"FACTORY_HELPERS[{class_name!r}]: {table_name}[{class_name!r}] still pastes "
-                    f"`fun {pasted.group(1).rstrip('(').strip()}` — the table renders it, so the "
-                    "companion would declare it twice",
+                    f"SHARED_COMPANION_MEMBER_SECTIONS[{class_name!r}] still pastes `fun {helper}` — "
+                    "the generator renders it, so the companion would declare it twice",
                 )
     return problems
 
@@ -3689,21 +3670,26 @@ def _factory_class_universe(class_name: str) -> bool:
     return class_name not in IOS_ONLY_GENERATED and class_name not in DESKTOP_ONLY_GENERATED
 
 
-def render_factory_helpers(class_name: str, refcounted: bool = False) -> str | None:
-    """The `create()` / `from*` companion helpers [class_name] declares in `FACTORY_HELPERS`.
+def render_factory_helpers(class_name: str, api_classes: dict[str, ApiClass]) -> str | None:
+    """[class_name]'s `create()` (`generates_create`) and its `DOWNCAST_HELPERS` `from*` helpers.
 
     A RefCounted `create()` hands back the constructing +1, so its wrapper is owned (task 132 D1);
     the `from*` downcasts are borrowed views."""
-    spec = FACTORY_HELPERS.get(class_name)
-    if spec is None or not _factory_class_universe(class_name):
+    if not _factory_class_universe(class_name):
         return None
+    refcounted = is_resource_like(class_name, api_classes)
+    downcasts = DOWNCAST_HELPERS.get(class_name, ())
     annotation = ["        @JvmStatic"] if _factory_jvm_static() else []
     blocks: list[str] = []
-    if spec.create:
+    if generates_create(class_name, api_classes):
         blocks.append(
             "\n".join(
                 [
-                    f"        // Instantiate {_article(class_name)} {class_name}.",
+                    (
+                        f"        /** A new {class_name}, GDScript's `{class_name}.new()`. You own the reference: `close()` or `use {{ }}`. */"
+                        if refcounted
+                        else f"        /** A new {class_name}, GDScript's `{class_name}.new()`. Add it to the tree, or `queueFree()` it. */"
+                    ),
                     *annotation,
                     f"        fun create(): {class_name} =",
                     (
@@ -3714,7 +3700,7 @@ def render_factory_helpers(class_name: str, refcounted: bool = False) -> str | N
                 ],
             ),
         )
-    for downcast in spec.downcasts:
+    for downcast in downcasts:
         param = downcast.param_name
         # A RefCounted downcast takes a +1 of its own (task 132): a view kept in a field keeps the
         # object alive like any other wrapper you can reach, whatever happens to the source wrapper.
@@ -4042,7 +4028,7 @@ def render_draft(
         # After the custom section, not before it: a class with both keeps its hand-written section
         # above its factories (iOS `InputEventKey` did until task 128 A moved its Key constants to
         # the generated global `Key`).
-        factory_helpers = render_factory_helpers(cls.name, is_resource_like(cls.name, api_classes))
+        factory_helpers = render_factory_helpers(cls.name, api_classes)
         if factory_helpers:
             companion_sections.append(factory_helpers)
         if _holder() is None:
@@ -5701,7 +5687,7 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
     singleton_names = load_api_singletons(api_path)
     object_types = object_type_names(api_classes)
     shared, desktop_only, ios_only = tree_universe(api_classes)
-    check_section_tables(set(shared))
+    check_section_tables(set(shared), api_classes)
     # The iOS class universe is everything iOS hosts as a generated-shape wrapper: the shared tree,
     # the iOS-only generated classes AND the iOS hand-shaped ones (their hand files still call the
     # generated helpers and other wrappers return them), i.e. the old "emit union". Collision and

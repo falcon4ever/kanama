@@ -51,6 +51,11 @@ class FBXState(handle: GodotHandle) : GLTFState(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): FBXState? =
             if (handle.address() == 0L) null else FBXState(GodotHandle(handle))
+
+        /** A new FBXState, GDScript's `FBXState.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): FBXState =
+            RefCounted.owned(FBXState(GodotHandle(ObjectCalls.constructObject("FBXState"))))
     }
 
     private object Binds {

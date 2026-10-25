@@ -298,6 +298,11 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
 
         internal fun wrap(handle: RawSegment): Generic6DOFJoint3D? =
             if (handle.address() == 0L) null else Generic6DOFJoint3D(GodotHandle(handle))
+
+        /** A new Generic6DOFJoint3D, GDScript's `Generic6DOFJoint3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Generic6DOFJoint3D =
+            Generic6DOFJoint3D(GodotHandle(ObjectCalls.constructObject("Generic6DOFJoint3D")))
     }
 
     private object Binds {

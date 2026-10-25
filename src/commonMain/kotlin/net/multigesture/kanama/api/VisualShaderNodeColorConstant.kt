@@ -52,6 +52,11 @@ class VisualShaderNodeColorConstant(handle: GodotHandle) : VisualShaderNodeConst
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeColorConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeColorConstant(GodotHandle(handle))
+
+        /** A new VisualShaderNodeColorConstant, GDScript's `VisualShaderNodeColorConstant.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeColorConstant =
+            RefCounted.owned(VisualShaderNodeColorConstant(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeColorConstant"))))
     }
 
     private object Binds {

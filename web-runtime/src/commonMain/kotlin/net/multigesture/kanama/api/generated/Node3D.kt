@@ -218,6 +218,12 @@ open class Node3D(godotObject: GodotHandle) : Node(godotObject) {
       val BASIS: RotationEditMode get() = RotationEditMode(2L)
     }
   }
+
+  companion object {
+    /** A new Node3D, GDScript's `Node3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): Node3D =
+      Node3D(checkNotNull(ClassDB.instantiate("Node3D")) { "Godot could not instantiate Node3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

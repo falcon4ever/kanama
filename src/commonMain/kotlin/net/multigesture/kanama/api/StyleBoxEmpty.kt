@@ -22,5 +22,10 @@ class StyleBoxEmpty(handle: GodotHandle) : StyleBox(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StyleBoxEmpty? =
             if (handle.address() == 0L) null else StyleBoxEmpty(GodotHandle(handle))
+
+        /** A new StyleBoxEmpty, GDScript's `StyleBoxEmpty.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): StyleBoxEmpty =
+            RefCounted.owned(StyleBoxEmpty(GodotHandle(ObjectCalls.constructObject("StyleBoxEmpty"))))
     }
 }

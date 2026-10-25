@@ -130,6 +130,11 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventAction? =
             if (handle.address() == 0L) null else InputEventAction(GodotHandle(handle))
+
+        /** A new InputEventAction, GDScript's `InputEventAction.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): InputEventAction =
+            RefCounted.owned(InputEventAction(GodotHandle(ObjectCalls.constructObject("InputEventAction"))))
     }
 
     private object Binds {

@@ -51,6 +51,11 @@ class DTLSServer(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): DTLSServer? =
             if (handle.address() == 0L) null else DTLSServer(GodotHandle(handle))
+
+        /** A new DTLSServer, GDScript's `DTLSServer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): DTLSServer =
+            RefCounted.owned(DTLSServer(GodotHandle(ObjectCalls.constructObject("DTLSServer"))))
     }
 
     private object Binds {

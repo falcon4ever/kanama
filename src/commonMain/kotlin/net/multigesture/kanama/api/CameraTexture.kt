@@ -111,6 +111,11 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CameraTexture? =
             if (handle.address() == 0L) null else CameraTexture(GodotHandle(handle))
+
+        /** A new CameraTexture, GDScript's `CameraTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CameraTexture =
+            RefCounted.owned(CameraTexture(GodotHandle(ObjectCalls.constructObject("CameraTexture"))))
     }
 
     private object Binds {

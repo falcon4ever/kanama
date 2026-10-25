@@ -166,6 +166,11 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
 
         internal fun wrap(handle: RawSegment): PinJoint2D? =
             if (handle.address() == 0L) null else PinJoint2D(GodotHandle(handle))
+
+        /** A new PinJoint2D, GDScript's `PinJoint2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): PinJoint2D =
+            PinJoint2D(GodotHandle(ObjectCalls.constructObject("PinJoint2D")))
     }
 
     private object Binds {

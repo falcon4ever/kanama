@@ -22,5 +22,10 @@ class VideoStreamTheora(handle: GodotHandle) : VideoStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VideoStreamTheora? =
             if (handle.address() == 0L) null else VideoStreamTheora(GodotHandle(handle))
+
+        /** A new VideoStreamTheora, GDScript's `VideoStreamTheora.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VideoStreamTheora =
+            RefCounted.owned(VideoStreamTheora(GodotHandle(ObjectCalls.constructObject("VideoStreamTheora"))))
     }
 }

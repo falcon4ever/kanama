@@ -303,6 +303,11 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): CanvasLayer? =
             if (handle.address() == 0L) null else CanvasLayer(GodotHandle(handle))
+
+        /** A new CanvasLayer, GDScript's `CanvasLayer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CanvasLayer =
+            CanvasLayer(GodotHandle(ObjectCalls.constructObject("CanvasLayer")))
     }
 
     private object Binds {

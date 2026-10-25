@@ -68,6 +68,11 @@ class ConvexPolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ConvexPolygonShape2D? =
             if (handle.address() == 0L) null else ConvexPolygonShape2D(GodotHandle(handle))
+
+        /** A new ConvexPolygonShape2D, GDScript's `ConvexPolygonShape2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ConvexPolygonShape2D =
+            RefCounted.owned(ConvexPolygonShape2D(GodotHandle(ObjectCalls.constructObject("ConvexPolygonShape2D"))))
     }
 
     private object Binds {

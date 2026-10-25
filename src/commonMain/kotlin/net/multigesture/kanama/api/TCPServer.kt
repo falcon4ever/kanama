@@ -62,6 +62,11 @@ class TCPServer(handle: GodotHandle) : SocketServer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TCPServer? =
             if (handle.address() == 0L) null else TCPServer(GodotHandle(handle))
+
+        /** A new TCPServer, GDScript's `TCPServer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TCPServer =
+            RefCounted.owned(TCPServer(GodotHandle(ObjectCalls.constructObject("TCPServer"))))
     }
 
     private object Binds {

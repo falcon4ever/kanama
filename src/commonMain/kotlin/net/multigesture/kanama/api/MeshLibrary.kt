@@ -323,7 +323,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
         internal fun wrapBorrowed(handle: RawSegment): MeshLibrary? =
             if (handle.address() == 0L) null else MeshLibrary(GodotHandle(handle))
 
-        // Instantiate a MeshLibrary.
+        /** A new MeshLibrary, GDScript's `MeshLibrary.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): MeshLibrary =
             RefCounted.owned(MeshLibrary(GodotHandle(ObjectCalls.constructObject("MeshLibrary"))))

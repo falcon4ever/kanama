@@ -137,6 +137,11 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Bone2D? =
             if (handle.address() == 0L) null else Bone2D(GodotHandle(handle))
+
+        /** A new Bone2D, GDScript's `Bone2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Bone2D =
+            Bone2D(GodotHandle(ObjectCalls.constructObject("Bone2D")))
     }
 
     private object Binds {

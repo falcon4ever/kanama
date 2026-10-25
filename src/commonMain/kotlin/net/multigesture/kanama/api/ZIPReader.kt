@@ -95,6 +95,11 @@ class ZIPReader(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ZIPReader? =
             if (handle.address() == 0L) null else ZIPReader(GodotHandle(handle))
+
+        /** A new ZIPReader, GDScript's `ZIPReader.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ZIPReader =
+            RefCounted.owned(ZIPReader(GodotHandle(ObjectCalls.constructObject("ZIPReader"))))
     }
 
     private object Binds {

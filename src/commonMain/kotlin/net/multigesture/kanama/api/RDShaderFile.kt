@@ -93,6 +93,11 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDShaderFile? =
             if (handle.address() == 0L) null else RDShaderFile(GodotHandle(handle))
+
+        /** A new RDShaderFile, GDScript's `RDShaderFile.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDShaderFile =
+            RefCounted.owned(RDShaderFile(GodotHandle(ObjectCalls.constructObject("RDShaderFile"))))
     }
 
     private object Binds {

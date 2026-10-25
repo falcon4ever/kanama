@@ -85,6 +85,11 @@ class VisualShaderNodeUVFunc(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeUVFunc? =
             if (handle.address() == 0L) null else VisualShaderNodeUVFunc(GodotHandle(handle))
+
+        /** A new VisualShaderNodeUVFunc, GDScript's `VisualShaderNodeUVFunc.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeUVFunc =
+            RefCounted.owned(VisualShaderNodeUVFunc(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeUVFunc"))))
     }
 
     private object Binds {

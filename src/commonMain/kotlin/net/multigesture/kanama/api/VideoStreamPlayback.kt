@@ -35,6 +35,11 @@ class VideoStreamPlayback(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VideoStreamPlayback? =
             if (handle.address() == 0L) null else VideoStreamPlayback(GodotHandle(handle))
+
+        /** A new VideoStreamPlayback, GDScript's `VideoStreamPlayback.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VideoStreamPlayback =
+            RefCounted.owned(VideoStreamPlayback(GodotHandle(ObjectCalls.constructObject("VideoStreamPlayback"))))
     }
 
     private object Binds {

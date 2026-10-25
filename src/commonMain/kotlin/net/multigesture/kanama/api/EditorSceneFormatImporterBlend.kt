@@ -22,5 +22,10 @@ class EditorSceneFormatImporterBlend(handle: GodotHandle) : EditorSceneFormatImp
 
         internal fun wrapBorrowed(handle: RawSegment): EditorSceneFormatImporterBlend? =
             if (handle.address() == 0L) null else EditorSceneFormatImporterBlend(GodotHandle(handle))
+
+        /** A new EditorSceneFormatImporterBlend, GDScript's `EditorSceneFormatImporterBlend.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorSceneFormatImporterBlend =
+            RefCounted.owned(EditorSceneFormatImporterBlend(GodotHandle(ObjectCalls.constructObject("EditorSceneFormatImporterBlend"))))
     }
 }

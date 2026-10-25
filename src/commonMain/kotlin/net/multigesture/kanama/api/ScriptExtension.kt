@@ -20,5 +20,10 @@ class ScriptExtension(handle: GodotHandle) : Script(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ScriptExtension? =
             if (handle.address() == 0L) null else ScriptExtension(GodotHandle(handle))
+
+        /** A new ScriptExtension, GDScript's `ScriptExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ScriptExtension =
+            RefCounted.owned(ScriptExtension(GodotHandle(ObjectCalls.constructObject("ScriptExtension"))))
     }
 }

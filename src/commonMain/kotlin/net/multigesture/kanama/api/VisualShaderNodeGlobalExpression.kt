@@ -22,5 +22,10 @@ class VisualShaderNodeGlobalExpression(handle: GodotHandle) : VisualShaderNodeEx
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeGlobalExpression? =
             if (handle.address() == 0L) null else VisualShaderNodeGlobalExpression(GodotHandle(handle))
+
+        /** A new VisualShaderNodeGlobalExpression, GDScript's `VisualShaderNodeGlobalExpression.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeGlobalExpression =
+            RefCounted.owned(VisualShaderNodeGlobalExpression(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeGlobalExpression"))))
     }
 }

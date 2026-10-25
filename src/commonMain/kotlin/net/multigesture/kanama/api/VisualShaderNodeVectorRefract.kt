@@ -23,5 +23,10 @@ class VisualShaderNodeVectorRefract(handle: GodotHandle) : VisualShaderNodeVecto
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorRefract? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorRefract(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVectorRefract, GDScript's `VisualShaderNodeVectorRefract.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVectorRefract =
+            RefCounted.owned(VisualShaderNodeVectorRefract(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeVectorRefract"))))
     }
 }

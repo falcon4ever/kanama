@@ -88,6 +88,11 @@ class AudioEffectAmplify(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectAmplify? =
             if (handle.address() == 0L) null else AudioEffectAmplify(GodotHandle(handle))
+
+        /** A new AudioEffectAmplify, GDScript's `AudioEffectAmplify.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectAmplify =
+            RefCounted.owned(AudioEffectAmplify(GodotHandle(ObjectCalls.constructObject("AudioEffectAmplify"))))
     }
 
     private object Binds {

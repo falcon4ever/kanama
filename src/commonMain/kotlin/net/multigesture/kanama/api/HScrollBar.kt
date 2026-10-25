@@ -19,5 +19,10 @@ class HScrollBar(handle: GodotHandle) : ScrollBar(handle) {
 
         internal fun wrap(handle: RawSegment): HScrollBar? =
             if (handle.address() == 0L) null else HScrollBar(GodotHandle(handle))
+
+        /** A new HScrollBar, GDScript's `HScrollBar.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): HScrollBar =
+            HScrollBar(GodotHandle(ObjectCalls.constructObject("HScrollBar")))
     }
 }

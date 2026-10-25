@@ -169,6 +169,11 @@ class CSGCylinder3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
 
         internal fun wrap(handle: RawSegment): CSGCylinder3D? =
             if (handle.address() == 0L) null else CSGCylinder3D(GodotHandle(handle))
+
+        /** A new CSGCylinder3D, GDScript's `CSGCylinder3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CSGCylinder3D =
+            CSGCylinder3D(GodotHandle(ObjectCalls.constructObject("CSGCylinder3D")))
     }
 
     private object Binds {

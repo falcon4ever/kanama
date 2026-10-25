@@ -52,6 +52,11 @@ class QuadOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): QuadOccluder3D? =
             if (handle.address() == 0L) null else QuadOccluder3D(GodotHandle(handle))
+
+        /** A new QuadOccluder3D, GDScript's `QuadOccluder3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): QuadOccluder3D =
+            RefCounted.owned(QuadOccluder3D(GodotHandle(ObjectCalls.constructObject("QuadOccluder3D"))))
     }
 
     private object Binds {

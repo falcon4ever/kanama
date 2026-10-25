@@ -22,5 +22,10 @@ class VisualShaderNodeDistanceFade(handle: GodotHandle) : VisualShaderNode(handl
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeDistanceFade? =
             if (handle.address() == 0L) null else VisualShaderNodeDistanceFade(GodotHandle(handle))
+
+        /** A new VisualShaderNodeDistanceFade, GDScript's `VisualShaderNodeDistanceFade.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeDistanceFade =
+            RefCounted.owned(VisualShaderNodeDistanceFade(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeDistanceFade"))))
     }
 }

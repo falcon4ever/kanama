@@ -442,6 +442,11 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): RayCast3D? =
             if (handle.address() == 0L) null else RayCast3D(GodotHandle(handle))
+
+        /** A new RayCast3D, GDScript's `RayCast3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): RayCast3D =
+            RayCast3D(GodotHandle(ObjectCalls.constructObject("RayCast3D")))
     }
 
     private object Binds {

@@ -396,6 +396,11 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CodeHighlighter? =
             if (handle.address() == 0L) null else CodeHighlighter(GodotHandle(handle))
+
+        /** A new CodeHighlighter, GDScript's `CodeHighlighter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CodeHighlighter =
+            RefCounted.owned(CodeHighlighter(GodotHandle(ObjectCalls.constructObject("CodeHighlighter"))))
     }
 
     private object Binds {

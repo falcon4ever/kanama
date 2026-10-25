@@ -289,6 +289,11 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CompositorEffect? =
             if (handle.address() == 0L) null else CompositorEffect(GodotHandle(handle))
+
+        /** A new CompositorEffect, GDScript's `CompositorEffect.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CompositorEffect =
+            RefCounted.owned(CompositorEffect(GodotHandle(ObjectCalls.constructObject("CompositorEffect"))))
     }
 
     private object Binds {

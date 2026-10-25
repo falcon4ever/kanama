@@ -288,6 +288,11 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Parallax2D? =
             if (handle.address() == 0L) null else Parallax2D(GodotHandle(handle))
+
+        /** A new Parallax2D, GDScript's `Parallax2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Parallax2D =
+            Parallax2D(GodotHandle(ObjectCalls.constructObject("Parallax2D")))
     }
 
     private object Binds {

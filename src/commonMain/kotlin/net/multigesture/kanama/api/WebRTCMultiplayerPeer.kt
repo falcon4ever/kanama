@@ -139,6 +139,11 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WebRTCMultiplayerPeer? =
             if (handle.address() == 0L) null else WebRTCMultiplayerPeer(GodotHandle(handle))
+
+        /** A new WebRTCMultiplayerPeer, GDScript's `WebRTCMultiplayerPeer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): WebRTCMultiplayerPeer =
+            RefCounted.owned(WebRTCMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("WebRTCMultiplayerPeer"))))
     }
 
     private object Binds {

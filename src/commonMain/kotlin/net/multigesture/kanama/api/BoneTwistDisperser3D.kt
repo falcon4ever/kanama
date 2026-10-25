@@ -399,6 +399,11 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): BoneTwistDisperser3D? =
             if (handle.address() == 0L) null else BoneTwistDisperser3D(GodotHandle(handle))
+
+        /** A new BoneTwistDisperser3D, GDScript's `BoneTwistDisperser3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): BoneTwistDisperser3D =
+            BoneTwistDisperser3D(GodotHandle(ObjectCalls.constructObject("BoneTwistDisperser3D")))
     }
 
     private object Binds {

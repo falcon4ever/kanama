@@ -53,6 +53,11 @@ class EncodedObjectAsID(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EncodedObjectAsID? =
             if (handle.address() == 0L) null else EncodedObjectAsID(GodotHandle(handle))
+
+        /** A new EncodedObjectAsID, GDScript's `EncodedObjectAsID.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EncodedObjectAsID =
+            RefCounted.owned(EncodedObjectAsID(GodotHandle(ObjectCalls.constructObject("EncodedObjectAsID"))))
     }
 
     private object Binds {

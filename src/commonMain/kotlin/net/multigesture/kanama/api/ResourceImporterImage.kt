@@ -22,5 +22,10 @@ class ResourceImporterImage(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterImage? =
             if (handle.address() == 0L) null else ResourceImporterImage(GodotHandle(handle))
+
+        /** A new ResourceImporterImage, GDScript's `ResourceImporterImage.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterImage =
+            RefCounted.owned(ResourceImporterImage(GodotHandle(ObjectCalls.constructObject("ResourceImporterImage"))))
     }
 }

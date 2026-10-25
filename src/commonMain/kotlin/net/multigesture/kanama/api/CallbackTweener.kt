@@ -38,6 +38,11 @@ class CallbackTweener(handle: GodotHandle) : Tweener(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CallbackTweener? =
             if (handle.address() == 0L) null else CallbackTweener(GodotHandle(handle))
+
+        /** A new CallbackTweener, GDScript's `CallbackTweener.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CallbackTweener =
+            RefCounted.owned(CallbackTweener(GodotHandle(ObjectCalls.constructObject("CallbackTweener"))))
     }
 
     private object Binds {

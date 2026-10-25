@@ -1217,6 +1217,11 @@ class NavigationAgent3D(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationAgent3D? =
             if (handle.address() == 0L) null else NavigationAgent3D(GodotHandle(handle))
+
+        /** A new NavigationAgent3D, GDScript's `NavigationAgent3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): NavigationAgent3D =
+            NavigationAgent3D(GodotHandle(ObjectCalls.constructObject("NavigationAgent3D")))
     }
 
     private object Binds {

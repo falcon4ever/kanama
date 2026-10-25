@@ -167,6 +167,11 @@ class CSGTorus3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
 
         internal fun wrap(handle: RawSegment): CSGTorus3D? =
             if (handle.address() == 0L) null else CSGTorus3D(GodotHandle(handle))
+
+        /** A new CSGTorus3D, GDScript's `CSGTorus3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CSGTorus3D =
+            CSGTorus3D(GodotHandle(ObjectCalls.constructObject("CSGTorus3D")))
     }
 
     private object Binds {

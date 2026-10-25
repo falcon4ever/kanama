@@ -98,6 +98,11 @@ open class VisibleOnScreenNotifier2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): VisibleOnScreenNotifier2D? =
             if (handle.address() == 0L) null else VisibleOnScreenNotifier2D(GodotHandle(handle))
+
+        /** A new VisibleOnScreenNotifier2D, GDScript's `VisibleOnScreenNotifier2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VisibleOnScreenNotifier2D =
+            VisibleOnScreenNotifier2D(GodotHandle(ObjectCalls.constructObject("VisibleOnScreenNotifier2D")))
     }
 
     private object Binds {

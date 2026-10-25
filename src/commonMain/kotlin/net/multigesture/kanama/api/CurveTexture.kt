@@ -124,6 +124,11 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CurveTexture? =
             if (handle.address() == 0L) null else CurveTexture(GodotHandle(handle))
+
+        /** A new CurveTexture, GDScript's `CurveTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CurveTexture =
+            RefCounted.owned(CurveTexture(GodotHandle(ObjectCalls.constructObject("CurveTexture"))))
     }
 
     private object Binds {

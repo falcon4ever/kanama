@@ -23,5 +23,10 @@ class MultiplayerPeerExtension(handle: GodotHandle) : MultiplayerPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MultiplayerPeerExtension? =
             if (handle.address() == 0L) null else MultiplayerPeerExtension(GodotHandle(handle))
+
+        /** A new MultiplayerPeerExtension, GDScript's `MultiplayerPeerExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MultiplayerPeerExtension =
+            RefCounted.owned(MultiplayerPeerExtension(GodotHandle(ObjectCalls.constructObject("MultiplayerPeerExtension"))))
     }
 }

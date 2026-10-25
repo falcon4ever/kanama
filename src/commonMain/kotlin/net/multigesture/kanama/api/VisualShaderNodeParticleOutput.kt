@@ -22,5 +22,10 @@ class VisualShaderNodeParticleOutput(handle: GodotHandle) : VisualShaderNodeOutp
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleOutput? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleOutput(GodotHandle(handle))
+
+        /** A new VisualShaderNodeParticleOutput, GDScript's `VisualShaderNodeParticleOutput.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeParticleOutput =
+            RefCounted.owned(VisualShaderNodeParticleOutput(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeParticleOutput"))))
     }
 }

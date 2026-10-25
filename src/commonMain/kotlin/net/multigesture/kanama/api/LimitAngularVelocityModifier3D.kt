@@ -186,6 +186,11 @@ class LimitAngularVelocityModifier3D(handle: GodotHandle) : SkeletonModifier3D(h
 
         internal fun wrap(handle: RawSegment): LimitAngularVelocityModifier3D? =
             if (handle.address() == 0L) null else LimitAngularVelocityModifier3D(GodotHandle(handle))
+
+        /** A new LimitAngularVelocityModifier3D, GDScript's `LimitAngularVelocityModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): LimitAngularVelocityModifier3D =
+            LimitAngularVelocityModifier3D(GodotHandle(ObjectCalls.constructObject("LimitAngularVelocityModifier3D")))
     }
 
     private object Binds {

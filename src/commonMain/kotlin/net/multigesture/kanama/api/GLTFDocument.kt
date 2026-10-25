@@ -598,6 +598,11 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFDocument? =
             if (handle.address() == 0L) null else GLTFDocument(GodotHandle(handle))
+
+        /** A new GLTFDocument, GDScript's `GLTFDocument.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFDocument =
+            RefCounted.owned(GLTFDocument(GodotHandle(ObjectCalls.constructObject("GLTFDocument"))))
     }
 
     private object Binds {

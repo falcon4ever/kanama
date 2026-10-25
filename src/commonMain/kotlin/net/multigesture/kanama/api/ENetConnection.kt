@@ -408,6 +408,11 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ENetConnection? =
             if (handle.address() == 0L) null else ENetConnection(GodotHandle(handle))
+
+        /** A new ENetConnection, GDScript's `ENetConnection.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ENetConnection =
+            RefCounted.owned(ENetConnection(GodotHandle(ObjectCalls.constructObject("ENetConnection"))))
     }
 
     private object Binds {

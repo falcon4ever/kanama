@@ -104,6 +104,11 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXR
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAprilTag? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAprilTag(GodotHandle(handle))
+
+        /** A new OpenXRSpatialCapabilityConfigurationAprilTag, GDScript's `OpenXRSpatialCapabilityConfigurationAprilTag.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialCapabilityConfigurationAprilTag =
+            RefCounted.owned(OpenXRSpatialCapabilityConfigurationAprilTag(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationAprilTag"))))
     }
 
     private object Binds {

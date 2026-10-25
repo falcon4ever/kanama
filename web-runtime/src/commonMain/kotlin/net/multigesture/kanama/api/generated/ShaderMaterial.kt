@@ -20,6 +20,9 @@ class ShaderMaterial(godotObject: GodotHandle) : Material(godotObject) {
   }
 
   companion object {
+    /** A new ShaderMaterial, GDScript's `ShaderMaterial.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): ShaderMaterial =
+      ShaderMaterial(checkNotNull(ClassDB.instantiate("ShaderMaterial")) { "Godot could not instantiate ShaderMaterial" }.toWebId())
     fun fromResource(resource: Resource?): ShaderMaterial? = resource?.let { ShaderMaterial(it.handle) }
   }
 }

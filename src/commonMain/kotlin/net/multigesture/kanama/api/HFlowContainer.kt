@@ -19,5 +19,10 @@ class HFlowContainer(handle: GodotHandle) : FlowContainer(handle) {
 
         internal fun wrap(handle: RawSegment): HFlowContainer? =
             if (handle.address() == 0L) null else HFlowContainer(GodotHandle(handle))
+
+        /** A new HFlowContainer, GDScript's `HFlowContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): HFlowContainer =
+            HFlowContainer(GodotHandle(ObjectCalls.constructObject("HFlowContainer")))
     }
 }

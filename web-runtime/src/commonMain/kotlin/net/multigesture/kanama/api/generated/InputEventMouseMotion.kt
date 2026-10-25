@@ -28,6 +28,9 @@ class InputEventMouseMotion(godotObject: GodotHandle) : InputEventMouse(godotObj
     webGenericCall(this, "get_screen_relative", listOf()) as Vector2
 
   companion object {
+    /** A new InputEventMouseMotion, GDScript's `InputEventMouseMotion.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): InputEventMouseMotion =
+      InputEventMouseMotion(checkNotNull(ClassDB.instantiate("InputEventMouseMotion")) { "Godot could not instantiate InputEventMouseMotion" }.toWebId())
     /** Engine-side class check: null when [value] is not a InputEventMouseMotion. */
     fun from(value: GodotObject): InputEventMouseMotion? =
       value.takeIf { it.isClass("InputEventMouseMotion") }?.let { InputEventMouseMotion(it.handle) }

@@ -228,6 +228,11 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFCamera? =
             if (handle.address() == 0L) null else GLTFCamera(GodotHandle(handle))
+
+        /** A new GLTFCamera, GDScript's `GLTFCamera.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFCamera =
+            RefCounted.owned(GLTFCamera(GodotHandle(ObjectCalls.constructObject("GLTFCamera"))))
     }
 
     private object Binds {

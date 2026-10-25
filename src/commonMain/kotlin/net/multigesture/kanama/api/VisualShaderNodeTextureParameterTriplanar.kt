@@ -22,5 +22,10 @@ class VisualShaderNodeTextureParameterTriplanar(handle: GodotHandle) : VisualSha
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTextureParameterTriplanar? =
             if (handle.address() == 0L) null else VisualShaderNodeTextureParameterTriplanar(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTextureParameterTriplanar, GDScript's `VisualShaderNodeTextureParameterTriplanar.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTextureParameterTriplanar =
+            RefCounted.owned(VisualShaderNodeTextureParameterTriplanar(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTextureParameterTriplanar"))))
     }
 }

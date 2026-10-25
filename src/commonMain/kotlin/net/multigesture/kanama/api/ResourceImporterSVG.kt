@@ -23,5 +23,10 @@ class ResourceImporterSVG(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterSVG? =
             if (handle.address() == 0L) null else ResourceImporterSVG(GodotHandle(handle))
+
+        /** A new ResourceImporterSVG, GDScript's `ResourceImporterSVG.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterSVG =
+            RefCounted.owned(ResourceImporterSVG(GodotHandle(ObjectCalls.constructObject("ResourceImporterSVG"))))
     }
 }

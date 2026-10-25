@@ -81,6 +81,11 @@ class SegmentShape2D(handle: GodotHandle) : Shape2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SegmentShape2D? =
             if (handle.address() == 0L) null else SegmentShape2D(GodotHandle(handle))
+
+        /** A new SegmentShape2D, GDScript's `SegmentShape2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SegmentShape2D =
+            RefCounted.owned(SegmentShape2D(GodotHandle(ObjectCalls.constructObject("SegmentShape2D"))))
     }
 
     private object Binds {

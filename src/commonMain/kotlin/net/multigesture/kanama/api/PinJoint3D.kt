@@ -70,6 +70,11 @@ class PinJoint3D(handle: GodotHandle) : Joint3D(handle) {
 
         internal fun wrap(handle: RawSegment): PinJoint3D? =
             if (handle.address() == 0L) null else PinJoint3D(GodotHandle(handle))
+
+        /** A new PinJoint3D, GDScript's `PinJoint3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): PinJoint3D =
+            PinJoint3D(GodotHandle(ObjectCalls.constructObject("PinJoint3D")))
     }
 
     private object Binds {

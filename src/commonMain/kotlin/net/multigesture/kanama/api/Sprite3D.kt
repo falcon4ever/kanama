@@ -222,6 +222,11 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
 
         internal fun wrap(handle: RawSegment): Sprite3D? =
             if (handle.address() == 0L) null else Sprite3D(GodotHandle(handle))
+
+        /** A new Sprite3D, GDScript's `Sprite3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Sprite3D =
+            Sprite3D(GodotHandle(ObjectCalls.constructObject("Sprite3D")))
     }
 
     private object Binds {

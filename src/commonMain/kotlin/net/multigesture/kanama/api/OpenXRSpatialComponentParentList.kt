@@ -34,6 +34,11 @@ class OpenXRSpatialComponentParentList(handle: GodotHandle) : OpenXRSpatialCompo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentParentList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentParentList(GodotHandle(handle))
+
+        /** A new OpenXRSpatialComponentParentList, GDScript's `OpenXRSpatialComponentParentList.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialComponentParentList =
+            RefCounted.owned(OpenXRSpatialComponentParentList(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentParentList"))))
     }
 
     private object Binds {

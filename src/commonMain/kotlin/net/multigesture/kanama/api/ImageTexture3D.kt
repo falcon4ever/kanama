@@ -47,6 +47,17 @@ class ImageTexture3D(handle: GodotHandle) : Texture3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ImageTexture3D? =
             if (handle.address() == 0L) null else ImageTexture3D(GodotHandle(handle))
+
+        /** A new ImageTexture3D, GDScript's `ImageTexture3D.new()`. You own the reference: `close()` or `use { }`. */
+        /**
+         * Creates the `ImageTexture3D` with specified `format`, `width`, `height`, and `depth`. If
+         * `use_mipmaps` is `true`, generates mipmaps for the `ImageTexture3D`.
+         *
+         * Generated from Godot docs: ImageTexture3D.create
+         */
+        @JvmStatic
+        fun create(): ImageTexture3D =
+            RefCounted.owned(ImageTexture3D(GodotHandle(ObjectCalls.constructObject("ImageTexture3D"))))
     }
 
     private object Binds {

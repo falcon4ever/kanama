@@ -20,5 +20,10 @@ class EditorExportPlatformWindows(handle: GodotHandle) : EditorExportPlatformPC(
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformWindows? =
             if (handle.address() == 0L) null else EditorExportPlatformWindows(GodotHandle(handle))
+
+        /** A new EditorExportPlatformWindows, GDScript's `EditorExportPlatformWindows.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorExportPlatformWindows =
+            RefCounted.owned(EditorExportPlatformWindows(GodotHandle(ObjectCalls.constructObject("EditorExportPlatformWindows"))))
     }
 }

@@ -22,5 +22,10 @@ class AudioSamplePlayback(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioSamplePlayback? =
             if (handle.address() == 0L) null else AudioSamplePlayback(GodotHandle(handle))
+
+        /** A new AudioSamplePlayback, GDScript's `AudioSamplePlayback.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioSamplePlayback =
+            RefCounted.owned(AudioSamplePlayback(GodotHandle(ObjectCalls.constructObject("AudioSamplePlayback"))))
     }
 }

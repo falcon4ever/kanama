@@ -251,6 +251,11 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFBufferView? =
             if (handle.address() == 0L) null else GLTFBufferView(GodotHandle(handle))
+
+        /** A new GLTFBufferView, GDScript's `GLTFBufferView.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFBufferView =
+            RefCounted.owned(GLTFBufferView(GodotHandle(ObjectCalls.constructObject("GLTFBufferView"))))
     }
 
     private object Binds {

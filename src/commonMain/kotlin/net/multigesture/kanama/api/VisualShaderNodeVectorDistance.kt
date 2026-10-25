@@ -22,5 +22,10 @@ class VisualShaderNodeVectorDistance(handle: GodotHandle) : VisualShaderNodeVect
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorDistance? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorDistance(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVectorDistance, GDScript's `VisualShaderNodeVectorDistance.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVectorDistance =
+            RefCounted.owned(VisualShaderNodeVectorDistance(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeVectorDistance"))))
     }
 }

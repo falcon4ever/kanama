@@ -19,5 +19,10 @@ class CheckButton(handle: GodotHandle) : Button(handle) {
 
         internal fun wrap(handle: RawSegment): CheckButton? =
             if (handle.address() == 0L) null else CheckButton(GodotHandle(handle))
+
+        /** A new CheckButton, GDScript's `CheckButton.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CheckButton =
+            CheckButton(GodotHandle(ObjectCalls.constructObject("CheckButton")))
     }
 }

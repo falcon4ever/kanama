@@ -573,6 +573,11 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StyleBoxFlat? =
             if (handle.address() == 0L) null else StyleBoxFlat(GodotHandle(handle))
+
+        /** A new StyleBoxFlat, GDScript's `StyleBoxFlat.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): StyleBoxFlat =
+            RefCounted.owned(StyleBoxFlat(GodotHandle(ObjectCalls.constructObject("StyleBoxFlat"))))
     }
 
     private object Binds {

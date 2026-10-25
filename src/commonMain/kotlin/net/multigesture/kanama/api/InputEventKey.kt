@@ -317,7 +317,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
         internal fun wrapBorrowed(handle: RawSegment): InputEventKey? =
             if (handle.address() == 0L) null else InputEventKey(GodotHandle(handle))
 
-        // Instantiate an InputEventKey.
+        /** A new InputEventKey, GDScript's `InputEventKey.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): InputEventKey =
             RefCounted.owned(InputEventKey(GodotHandle(ObjectCalls.constructObject("InputEventKey"))))

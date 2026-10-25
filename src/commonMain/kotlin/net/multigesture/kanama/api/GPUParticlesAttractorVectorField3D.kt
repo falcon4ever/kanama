@@ -77,6 +77,11 @@ class GPUParticlesAttractorVectorField3D(handle: GodotHandle) : GPUParticlesAttr
 
         internal fun wrap(handle: RawSegment): GPUParticlesAttractorVectorField3D? =
             if (handle.address() == 0L) null else GPUParticlesAttractorVectorField3D(GodotHandle(handle))
+
+        /** A new GPUParticlesAttractorVectorField3D, GDScript's `GPUParticlesAttractorVectorField3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GPUParticlesAttractorVectorField3D =
+            GPUParticlesAttractorVectorField3D(GodotHandle(ObjectCalls.constructObject("GPUParticlesAttractorVectorField3D")))
     }
 
     private object Binds {

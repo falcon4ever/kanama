@@ -43,6 +43,11 @@ class CenterContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): CenterContainer? =
             if (handle.address() == 0L) null else CenterContainer(GodotHandle(handle))
+
+        /** A new CenterContainer, GDScript's `CenterContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CenterContainer =
+            CenterContainer(GodotHandle(ObjectCalls.constructObject("CenterContainer")))
     }
 
     private object Binds {

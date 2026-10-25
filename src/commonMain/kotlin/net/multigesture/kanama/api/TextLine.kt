@@ -549,6 +549,11 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextLine? =
             if (handle.address() == 0L) null else TextLine(GodotHandle(handle))
+
+        /** A new TextLine, GDScript's `TextLine.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TextLine =
+            RefCounted.owned(TextLine(GodotHandle(ObjectCalls.constructObject("TextLine"))))
     }
 
     private object Binds {

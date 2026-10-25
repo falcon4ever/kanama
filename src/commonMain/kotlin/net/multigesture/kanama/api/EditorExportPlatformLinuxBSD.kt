@@ -20,5 +20,10 @@ class EditorExportPlatformLinuxBSD(handle: GodotHandle) : EditorExportPlatformPC
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformLinuxBSD? =
             if (handle.address() == 0L) null else EditorExportPlatformLinuxBSD(GodotHandle(handle))
+
+        /** A new EditorExportPlatformLinuxBSD, GDScript's `EditorExportPlatformLinuxBSD.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorExportPlatformLinuxBSD =
+            RefCounted.owned(EditorExportPlatformLinuxBSD(GodotHandle(ObjectCalls.constructObject("EditorExportPlatformLinuxBSD"))))
     }
 }

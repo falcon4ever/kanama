@@ -19,5 +19,10 @@ open class MarginContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): MarginContainer? =
             if (handle.address() == 0L) null else MarginContainer(GodotHandle(handle))
+
+        /** A new MarginContainer, GDScript's `MarginContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): MarginContainer =
+            MarginContainer(GodotHandle(ObjectCalls.constructObject("MarginContainer")))
     }
 }

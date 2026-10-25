@@ -44,6 +44,11 @@ class ColorRect(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): ColorRect? =
             if (handle.address() == 0L) null else ColorRect(GodotHandle(handle))
+
+        /** A new ColorRect, GDScript's `ColorRect.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ColorRect =
+            ColorRect(GodotHandle(ObjectCalls.constructObject("ColorRect")))
     }
 
     private object Binds {

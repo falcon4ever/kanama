@@ -38,6 +38,11 @@ class AwaitTweener(handle: GodotHandle) : Tweener(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AwaitTweener? =
             if (handle.address() == 0L) null else AwaitTweener(GodotHandle(handle))
+
+        /** A new AwaitTweener, GDScript's `AwaitTweener.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AwaitTweener =
+            RefCounted.owned(AwaitTweener(GodotHandle(ObjectCalls.constructObject("AwaitTweener"))))
     }
 
     private object Binds {

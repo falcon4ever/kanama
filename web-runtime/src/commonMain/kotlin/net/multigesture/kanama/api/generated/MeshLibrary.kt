@@ -34,7 +34,7 @@ class MeshLibrary(godotObject: GodotHandle) : Resource(godotObject) {
   }
 
   companion object {
-    /** Constructs a new MeshLibrary engine-side; the wrapper owns the handle (close what you create). */
+    /** A new MeshLibrary, GDScript's `MeshLibrary.new()`. You own the reference: `close()` or `use { }`. */
     fun create(): MeshLibrary =
       MeshLibrary(checkNotNull(ClassDB.instantiate("MeshLibrary")) { "Godot could not instantiate MeshLibrary" }.toWebId())
   }

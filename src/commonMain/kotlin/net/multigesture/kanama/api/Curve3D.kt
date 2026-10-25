@@ -475,6 +475,11 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Curve3D? =
             if (handle.address() == 0L) null else Curve3D(GodotHandle(handle))
+
+        /** A new Curve3D, GDScript's `Curve3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Curve3D =
+            RefCounted.owned(Curve3D(GodotHandle(ObjectCalls.constructObject("Curve3D"))))
     }
 
     private object Binds {

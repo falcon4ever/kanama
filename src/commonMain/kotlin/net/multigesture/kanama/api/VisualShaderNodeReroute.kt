@@ -38,6 +38,11 @@ class VisualShaderNodeReroute(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeReroute? =
             if (handle.address() == 0L) null else VisualShaderNodeReroute(GodotHandle(handle))
+
+        /** A new VisualShaderNodeReroute, GDScript's `VisualShaderNodeReroute.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeReroute =
+            RefCounted.owned(VisualShaderNodeReroute(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeReroute"))))
     }
 
     private object Binds {

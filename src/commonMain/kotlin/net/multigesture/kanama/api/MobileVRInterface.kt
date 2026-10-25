@@ -331,6 +331,11 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MobileVRInterface? =
             if (handle.address() == 0L) null else MobileVRInterface(GodotHandle(handle))
+
+        /** A new MobileVRInterface, GDScript's `MobileVRInterface.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MobileVRInterface =
+            RefCounted.owned(MobileVRInterface(GodotHandle(ObjectCalls.constructObject("MobileVRInterface"))))
     }
 
     private object Binds {

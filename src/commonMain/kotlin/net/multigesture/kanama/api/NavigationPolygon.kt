@@ -667,6 +667,11 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationPolygon? =
             if (handle.address() == 0L) null else NavigationPolygon(GodotHandle(handle))
+
+        /** A new NavigationPolygon, GDScript's `NavigationPolygon.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): NavigationPolygon =
+            RefCounted.owned(NavigationPolygon(GodotHandle(ObjectCalls.constructObject("NavigationPolygon"))))
     }
 
     private object Binds {

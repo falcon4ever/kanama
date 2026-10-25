@@ -48,6 +48,11 @@ class AnimatableBody3D(handle: GodotHandle) : StaticBody3D(handle) {
 
         internal fun wrap(handle: RawSegment): AnimatableBody3D? =
             if (handle.address() == 0L) null else AnimatableBody3D(GodotHandle(handle))
+
+        /** A new AnimatableBody3D, GDScript's `AnimatableBody3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AnimatableBody3D =
+            AnimatableBody3D(GodotHandle(ObjectCalls.constructObject("AnimatableBody3D")))
     }
 
     private object Binds {

@@ -38,6 +38,11 @@ class OptimizedTranslation(handle: GodotHandle) : Translation(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OptimizedTranslation? =
             if (handle.address() == 0L) null else OptimizedTranslation(GodotHandle(handle))
+
+        /** A new OptimizedTranslation, GDScript's `OptimizedTranslation.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OptimizedTranslation =
+            RefCounted.owned(OptimizedTranslation(GodotHandle(ObjectCalls.constructObject("OptimizedTranslation"))))
     }
 
     private object Binds {

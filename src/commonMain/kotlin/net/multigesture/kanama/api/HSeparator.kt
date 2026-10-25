@@ -19,5 +19,10 @@ class HSeparator(handle: GodotHandle) : Separator(handle) {
 
         internal fun wrap(handle: RawSegment): HSeparator? =
             if (handle.address() == 0L) null else HSeparator(GodotHandle(handle))
+
+        /** A new HSeparator, GDScript's `HSeparator.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): HSeparator =
+            HSeparator(GodotHandle(ObjectCalls.constructObject("HSeparator")))
     }
 }

@@ -34,6 +34,11 @@ class OpenXRSpatialCapabilityConfigurationMicroQrCode(handle: GodotHandle) : Ope
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationMicroQrCode? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationMicroQrCode(GodotHandle(handle))
+
+        /** A new OpenXRSpatialCapabilityConfigurationMicroQrCode, GDScript's `OpenXRSpatialCapabilityConfigurationMicroQrCode.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialCapabilityConfigurationMicroQrCode =
+            RefCounted.owned(OpenXRSpatialCapabilityConfigurationMicroQrCode(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationMicroQrCode"))))
     }
 
     private object Binds {

@@ -56,6 +56,11 @@ class Semaphore(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Semaphore? =
             if (handle.address() == 0L) null else Semaphore(GodotHandle(handle))
+
+        /** A new Semaphore, GDScript's `Semaphore.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Semaphore =
+            RefCounted.owned(Semaphore(GodotHandle(ObjectCalls.constructObject("Semaphore"))))
     }
 
     private object Binds {

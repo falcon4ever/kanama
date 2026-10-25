@@ -59,6 +59,11 @@ class EditorScript(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorScript? =
             if (handle.address() == 0L) null else EditorScript(GodotHandle(handle))
+
+        /** A new EditorScript, GDScript's `EditorScript.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorScript =
+            RefCounted.owned(EditorScript(GodotHandle(ObjectCalls.constructObject("EditorScript"))))
     }
 
     private object Binds {

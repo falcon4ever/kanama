@@ -22,5 +22,10 @@ class AudioEffectHighShelfFilter(handle: GodotHandle) : AudioEffectFilter(handle
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectHighShelfFilter? =
             if (handle.address() == 0L) null else AudioEffectHighShelfFilter(GodotHandle(handle))
+
+        /** A new AudioEffectHighShelfFilter, GDScript's `AudioEffectHighShelfFilter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectHighShelfFilter =
+            RefCounted.owned(AudioEffectHighShelfFilter(GodotHandle(ObjectCalls.constructObject("AudioEffectHighShelfFilter"))))
     }
 }

@@ -22,5 +22,10 @@ class AudioEffectHighPassFilter(handle: GodotHandle) : AudioEffectFilter(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectHighPassFilter? =
             if (handle.address() == 0L) null else AudioEffectHighPassFilter(GodotHandle(handle))
+
+        /** A new AudioEffectHighPassFilter, GDScript's `AudioEffectHighPassFilter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectHighPassFilter =
+            RefCounted.owned(AudioEffectHighPassFilter(GodotHandle(ObjectCalls.constructObject("AudioEffectHighPassFilter"))))
     }
 }

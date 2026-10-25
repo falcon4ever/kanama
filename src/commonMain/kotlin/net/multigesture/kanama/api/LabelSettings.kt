@@ -560,6 +560,11 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): LabelSettings? =
             if (handle.address() == 0L) null else LabelSettings(GodotHandle(handle))
+
+        /** A new LabelSettings, GDScript's `LabelSettings.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): LabelSettings =
+            RefCounted.owned(LabelSettings(GodotHandle(ObjectCalls.constructObject("LabelSettings"))))
     }
 
     private object Binds {

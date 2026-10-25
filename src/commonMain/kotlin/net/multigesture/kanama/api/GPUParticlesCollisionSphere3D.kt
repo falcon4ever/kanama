@@ -43,6 +43,11 @@ class GPUParticlesCollisionSphere3D(handle: GodotHandle) : GPUParticlesCollision
 
         internal fun wrap(handle: RawSegment): GPUParticlesCollisionSphere3D? =
             if (handle.address() == 0L) null else GPUParticlesCollisionSphere3D(GodotHandle(handle))
+
+        /** A new GPUParticlesCollisionSphere3D, GDScript's `GPUParticlesCollisionSphere3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GPUParticlesCollisionSphere3D =
+            GPUParticlesCollisionSphere3D(GodotHandle(ObjectCalls.constructObject("GPUParticlesCollisionSphere3D")))
     }
 
     private object Binds {

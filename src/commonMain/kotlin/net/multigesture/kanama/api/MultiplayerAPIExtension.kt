@@ -22,5 +22,10 @@ class MultiplayerAPIExtension(handle: GodotHandle) : MultiplayerAPI(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MultiplayerAPIExtension? =
             if (handle.address() == 0L) null else MultiplayerAPIExtension(GodotHandle(handle))
+
+        /** A new MultiplayerAPIExtension, GDScript's `MultiplayerAPIExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MultiplayerAPIExtension =
+            RefCounted.owned(MultiplayerAPIExtension(GodotHandle(ObjectCalls.constructObject("MultiplayerAPIExtension"))))
     }
 }

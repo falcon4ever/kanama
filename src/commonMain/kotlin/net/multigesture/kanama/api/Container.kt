@@ -87,6 +87,11 @@ open class Container(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): Container? =
             if (handle.address() == 0L) null else Container(GodotHandle(handle))
+
+        /** A new Container, GDScript's `Container.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Container =
+            Container(GodotHandle(ObjectCalls.constructObject("Container")))
     }
 
     private object Binds {

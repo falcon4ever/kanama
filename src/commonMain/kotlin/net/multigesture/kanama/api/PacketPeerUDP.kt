@@ -201,6 +201,11 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PacketPeerUDP? =
             if (handle.address() == 0L) null else PacketPeerUDP(GodotHandle(handle))
+
+        /** A new PacketPeerUDP, GDScript's `PacketPeerUDP.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PacketPeerUDP =
+            RefCounted.owned(PacketPeerUDP(GodotHandle(ObjectCalls.constructObject("PacketPeerUDP"))))
     }
 
     private object Binds {

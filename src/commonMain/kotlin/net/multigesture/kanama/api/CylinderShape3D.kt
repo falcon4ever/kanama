@@ -80,6 +80,11 @@ class CylinderShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CylinderShape3D? =
             if (handle.address() == 0L) null else CylinderShape3D(GodotHandle(handle))
+
+        /** A new CylinderShape3D, GDScript's `CylinderShape3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CylinderShape3D =
+            RefCounted.owned(CylinderShape3D(GodotHandle(ObjectCalls.constructObject("CylinderShape3D"))))
     }
 
     private object Binds {

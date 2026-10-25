@@ -85,6 +85,11 @@ class ConcavePolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ConcavePolygonShape3D? =
             if (handle.address() == 0L) null else ConcavePolygonShape3D(GodotHandle(handle))
+
+        /** A new ConcavePolygonShape3D, GDScript's `ConcavePolygonShape3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ConcavePolygonShape3D =
+            RefCounted.owned(ConcavePolygonShape3D(GodotHandle(ObjectCalls.constructObject("ConcavePolygonShape3D"))))
     }
 
     private object Binds {

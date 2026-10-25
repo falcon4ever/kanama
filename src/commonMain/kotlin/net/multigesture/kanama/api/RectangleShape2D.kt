@@ -52,6 +52,11 @@ class RectangleShape2D(handle: GodotHandle) : Shape2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RectangleShape2D? =
             if (handle.address() == 0L) null else RectangleShape2D(GodotHandle(handle))
+
+        /** A new RectangleShape2D, GDScript's `RectangleShape2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RectangleShape2D =
+            RefCounted.owned(RectangleShape2D(GodotHandle(ObjectCalls.constructObject("RectangleShape2D"))))
     }
 
     private object Binds {

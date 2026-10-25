@@ -1425,6 +1425,11 @@ class CodeEdit(handle: GodotHandle) : TextEdit(handle) {
 
         internal fun wrap(handle: RawSegment): CodeEdit? =
             if (handle.address() == 0L) null else CodeEdit(GodotHandle(handle))
+
+        /** A new CodeEdit, GDScript's `CodeEdit.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CodeEdit =
+            CodeEdit(GodotHandle(ObjectCalls.constructObject("CodeEdit")))
     }
 
     private object Binds {

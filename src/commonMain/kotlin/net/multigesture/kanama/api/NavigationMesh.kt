@@ -1016,6 +1016,11 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationMesh? =
             if (handle.address() == 0L) null else NavigationMesh(GodotHandle(handle))
+
+        /** A new NavigationMesh, GDScript's `NavigationMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): NavigationMesh =
+            RefCounted.owned(NavigationMesh(GodotHandle(ObjectCalls.constructObject("NavigationMesh"))))
     }
 
     private object Binds {

@@ -331,6 +331,11 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): CameraAttributesPractical? =
             if (handle.address() == 0L) null else CameraAttributesPractical(GodotHandle(handle))
+
+        /** A new CameraAttributesPractical, GDScript's `CameraAttributesPractical.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CameraAttributesPractical =
+            RefCounted.owned(CameraAttributesPractical(GodotHandle(ObjectCalls.constructObject("CameraAttributesPractical"))))
     }
 
     private object Binds {

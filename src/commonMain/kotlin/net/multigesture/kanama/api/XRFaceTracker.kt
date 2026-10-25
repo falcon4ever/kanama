@@ -951,6 +951,11 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRFaceTracker? =
             if (handle.address() == 0L) null else XRFaceTracker(GodotHandle(handle))
+
+        /** A new XRFaceTracker, GDScript's `XRFaceTracker.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): XRFaceTracker =
+            RefCounted.owned(XRFaceTracker(GodotHandle(ObjectCalls.constructObject("XRFaceTracker"))))
     }
 
     private object Binds {

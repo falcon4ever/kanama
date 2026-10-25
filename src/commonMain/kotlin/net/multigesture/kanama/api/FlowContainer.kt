@@ -211,6 +211,11 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): FlowContainer? =
             if (handle.address() == 0L) null else FlowContainer(GodotHandle(handle))
+
+        /** A new FlowContainer, GDScript's `FlowContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): FlowContainer =
+            FlowContainer(GodotHandle(ObjectCalls.constructObject("FlowContainer")))
     }
 
     private object Binds {

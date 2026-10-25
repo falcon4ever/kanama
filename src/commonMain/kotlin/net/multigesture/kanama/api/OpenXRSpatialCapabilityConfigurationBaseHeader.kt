@@ -47,6 +47,11 @@ open class OpenXRSpatialCapabilityConfigurationBaseHeader(handle: GodotHandle) :
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationBaseHeader? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationBaseHeader(GodotHandle(handle))
+
+        /** A new OpenXRSpatialCapabilityConfigurationBaseHeader, GDScript's `OpenXRSpatialCapabilityConfigurationBaseHeader.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialCapabilityConfigurationBaseHeader =
+            RefCounted.owned(OpenXRSpatialCapabilityConfigurationBaseHeader(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationBaseHeader"))))
     }
 
     private object Binds {

@@ -138,6 +138,11 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TorusMesh? =
             if (handle.address() == 0L) null else TorusMesh(GodotHandle(handle))
+
+        /** A new TorusMesh, GDScript's `TorusMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TorusMesh =
+            RefCounted.owned(TorusMesh(GodotHandle(ObjectCalls.constructObject("TorusMesh"))))
     }
 
     private object Binds {

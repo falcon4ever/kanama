@@ -332,6 +332,11 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFPhysicsBody? =
             if (handle.address() == 0L) null else GLTFPhysicsBody(GodotHandle(handle))
+
+        /** A new GLTFPhysicsBody, GDScript's `GLTFPhysicsBody.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFPhysicsBody =
+            RefCounted.owned(GLTFPhysicsBody(GodotHandle(ObjectCalls.constructObject("GLTFPhysicsBody"))))
     }
 
     private object Binds {

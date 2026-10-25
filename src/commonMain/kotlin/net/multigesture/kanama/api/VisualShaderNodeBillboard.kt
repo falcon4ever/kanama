@@ -126,6 +126,11 @@ class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeBillboard? =
             if (handle.address() == 0L) null else VisualShaderNodeBillboard(GodotHandle(handle))
+
+        /** A new VisualShaderNodeBillboard, GDScript's `VisualShaderNodeBillboard.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeBillboard =
+            RefCounted.owned(VisualShaderNodeBillboard(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeBillboard"))))
     }
 
     private object Binds {

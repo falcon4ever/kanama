@@ -17,6 +17,12 @@ class PathFollow2D(godotObject: GodotHandle) : Node2D(godotObject) {
   var progressRatio: Double
     get() = unsupportedWebGameplayFamily("PathFollow2D.get_progress_ratio")
     set(newValue) = setProgressRatio(newValue)
+
+  companion object {
+    /** A new PathFollow2D, GDScript's `PathFollow2D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): PathFollow2D =
+      PathFollow2D(checkNotNull(ClassDB.instantiate("PathFollow2D")) { "Godot could not instantiate PathFollow2D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

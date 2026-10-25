@@ -22,5 +22,10 @@ class VisualShaderNodeTexture2DArrayParameter(handle: GodotHandle) : VisualShade
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTexture2DArrayParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeTexture2DArrayParameter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTexture2DArrayParameter, GDScript's `VisualShaderNodeTexture2DArrayParameter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTexture2DArrayParameter =
+            RefCounted.owned(VisualShaderNodeTexture2DArrayParameter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTexture2DArrayParameter"))))
     }
 }

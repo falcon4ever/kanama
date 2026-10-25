@@ -214,6 +214,11 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SceneReplicationConfig? =
             if (handle.address() == 0L) null else SceneReplicationConfig(GodotHandle(handle))
+
+        /** A new SceneReplicationConfig, GDScript's `SceneReplicationConfig.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SceneReplicationConfig =
+            RefCounted.owned(SceneReplicationConfig(GodotHandle(ObjectCalls.constructObject("SceneReplicationConfig"))))
     }
 
     private object Binds {

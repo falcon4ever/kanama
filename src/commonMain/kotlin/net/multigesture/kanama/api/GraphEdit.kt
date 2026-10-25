@@ -1048,6 +1048,11 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): GraphEdit? =
             if (handle.address() == 0L) null else GraphEdit(GodotHandle(handle))
+
+        /** A new GraphEdit, GDScript's `GraphEdit.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GraphEdit =
+            GraphEdit(GodotHandle(ObjectCalls.constructObject("GraphEdit")))
     }
 
     private object Binds {

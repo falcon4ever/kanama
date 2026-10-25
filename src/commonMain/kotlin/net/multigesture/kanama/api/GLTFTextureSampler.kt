@@ -142,6 +142,11 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFTextureSampler? =
             if (handle.address() == 0L) null else GLTFTextureSampler(GodotHandle(handle))
+
+        /** A new GLTFTextureSampler, GDScript's `GLTFTextureSampler.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFTextureSampler =
+            RefCounted.owned(GLTFTextureSampler(GodotHandle(ObjectCalls.constructObject("GLTFTextureSampler"))))
     }
 
     private object Binds {

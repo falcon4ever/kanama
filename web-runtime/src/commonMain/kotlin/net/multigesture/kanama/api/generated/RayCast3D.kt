@@ -76,6 +76,12 @@ class RayCast3D(godotObject: GodotHandle) : Node3D(godotObject) {
   /** The RID of the object the cast hits (an empty RID when none). One immediate call. */
   fun getColliderRid(): RID =
     webGenericCall(this, "get_collider_rid", listOf()) as RID
+
+  companion object {
+    /** A new RayCast3D, GDScript's `RayCast3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): RayCast3D =
+      RayCast3D(checkNotNull(ClassDB.instantiate("RayCast3D")) { "Godot could not instantiate RayCast3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

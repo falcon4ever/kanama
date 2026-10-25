@@ -510,6 +510,11 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SystemFont? =
             if (handle.address() == 0L) null else SystemFont(GodotHandle(handle))
+
+        /** A new SystemFont, GDScript's `SystemFont.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SystemFont =
+            RefCounted.owned(SystemFont(GodotHandle(ObjectCalls.constructObject("SystemFont"))))
     }
 
     private object Binds {

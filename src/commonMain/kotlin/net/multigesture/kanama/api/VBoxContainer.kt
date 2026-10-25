@@ -19,5 +19,10 @@ open class VBoxContainer(handle: GodotHandle) : BoxContainer(handle) {
 
         internal fun wrap(handle: RawSegment): VBoxContainer? =
             if (handle.address() == 0L) null else VBoxContainer(GodotHandle(handle))
+
+        /** A new VBoxContainer, GDScript's `VBoxContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VBoxContainer =
+            VBoxContainer(GodotHandle(ObjectCalls.constructObject("VBoxContainer")))
     }
 }

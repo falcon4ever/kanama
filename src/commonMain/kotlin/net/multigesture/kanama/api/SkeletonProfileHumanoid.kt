@@ -22,5 +22,10 @@ class SkeletonProfileHumanoid(handle: GodotHandle) : SkeletonProfile(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonProfileHumanoid? =
             if (handle.address() == 0L) null else SkeletonProfileHumanoid(GodotHandle(handle))
+
+        /** A new SkeletonProfileHumanoid, GDScript's `SkeletonProfileHumanoid.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SkeletonProfileHumanoid =
+            RefCounted.owned(SkeletonProfileHumanoid(GodotHandle(ObjectCalls.constructObject("SkeletonProfileHumanoid"))))
     }
 }

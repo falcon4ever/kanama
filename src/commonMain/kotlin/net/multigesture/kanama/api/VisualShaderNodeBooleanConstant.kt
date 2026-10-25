@@ -51,6 +51,11 @@ class VisualShaderNodeBooleanConstant(handle: GodotHandle) : VisualShaderNodeCon
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeBooleanConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeBooleanConstant(GodotHandle(handle))
+
+        /** A new VisualShaderNodeBooleanConstant, GDScript's `VisualShaderNodeBooleanConstant.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeBooleanConstant =
+            RefCounted.owned(VisualShaderNodeBooleanConstant(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeBooleanConstant"))))
     }
 
     private object Binds {

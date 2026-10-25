@@ -20,5 +20,10 @@ class WebRTCPeerConnectionExtension(handle: GodotHandle) : WebRTCPeerConnection(
 
         internal fun wrapBorrowed(handle: RawSegment): WebRTCPeerConnectionExtension? =
             if (handle.address() == 0L) null else WebRTCPeerConnectionExtension(GodotHandle(handle))
+
+        /** A new WebRTCPeerConnectionExtension, GDScript's `WebRTCPeerConnectionExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): WebRTCPeerConnectionExtension =
+            RefCounted.owned(WebRTCPeerConnectionExtension(GodotHandle(ObjectCalls.constructObject("WebRTCPeerConnectionExtension"))))
     }
 }

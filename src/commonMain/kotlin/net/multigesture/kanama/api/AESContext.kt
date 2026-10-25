@@ -117,6 +117,11 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AESContext? =
             if (handle.address() == 0L) null else AESContext(GodotHandle(handle))
+
+        /** A new AESContext, GDScript's `AESContext.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AESContext =
+            RefCounted.owned(AESContext(GodotHandle(ObjectCalls.constructObject("AESContext"))))
     }
 
     private object Binds {

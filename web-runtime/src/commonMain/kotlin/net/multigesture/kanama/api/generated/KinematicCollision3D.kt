@@ -31,6 +31,12 @@ class KinematicCollision3D(godotObject: GodotHandle) : RefCounted(godotObject) {
   /** The RID of the collision's [collisionIndex]th collider. One immediate call. */
   fun getColliderRid(collisionIndex: Int = 0): RID =
     webGenericCall(this, "get_collider_rid", listOf(collisionIndex)) as RID
+
+  companion object {
+    /** A new KinematicCollision3D, GDScript's `KinematicCollision3D.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): KinematicCollision3D =
+      KinematicCollision3D(checkNotNull(ClassDB.instantiate("KinematicCollision3D")) { "Godot could not instantiate KinematicCollision3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

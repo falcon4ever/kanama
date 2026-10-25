@@ -32,6 +32,9 @@ open class Material(godotObject: GodotHandle) : Resource(godotObject) {
   override fun duplicate(deep: Boolean): Material? = super.duplicate(deep)?.let { webRetyped(it, Material(it.handle)) }
 
   companion object {
+    /** A new Material, GDScript's `Material.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): Material =
+      Material(checkNotNull(ClassDB.instantiate("Material")) { "Godot could not instantiate Material" }.toWebId())
     fun fromResource(resource: Resource?): Material? = resource?.let { Material(it.handle) }
   }
 }

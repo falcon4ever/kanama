@@ -434,6 +434,11 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): HTTPRequest? =
             if (handle.address() == 0L) null else HTTPRequest(GodotHandle(handle))
+
+        /** A new HTTPRequest, GDScript's `HTTPRequest.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): HTTPRequest =
+            HTTPRequest(GodotHandle(ObjectCalls.constructObject("HTTPRequest")))
     }
 
     private object Binds {

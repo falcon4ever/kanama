@@ -334,6 +334,11 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): SkeletonIK3D? =
             if (handle.address() == 0L) null else SkeletonIK3D(GodotHandle(handle))
+
+        /** A new SkeletonIK3D, GDScript's `SkeletonIK3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SkeletonIK3D =
+            SkeletonIK3D(GodotHandle(ObjectCalls.constructObject("SkeletonIK3D")))
     }
 
     private object Binds {

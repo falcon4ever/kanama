@@ -70,6 +70,11 @@ class CSGBox3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
 
         internal fun wrap(handle: RawSegment): CSGBox3D? =
             if (handle.address() == 0L) null else CSGBox3D(GodotHandle(handle))
+
+        /** A new CSGBox3D, GDScript's `CSGBox3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CSGBox3D =
+            CSGBox3D(GodotHandle(ObjectCalls.constructObject("CSGBox3D")))
     }
 
     private object Binds {

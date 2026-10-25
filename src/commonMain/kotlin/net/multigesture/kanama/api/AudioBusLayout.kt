@@ -22,5 +22,10 @@ class AudioBusLayout(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioBusLayout? =
             if (handle.address() == 0L) null else AudioBusLayout(GodotHandle(handle))
+
+        /** A new AudioBusLayout, GDScript's `AudioBusLayout.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioBusLayout =
+            RefCounted.owned(AudioBusLayout(GodotHandle(ObjectCalls.constructObject("AudioBusLayout"))))
     }
 }

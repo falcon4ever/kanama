@@ -53,6 +53,11 @@ class AnimationNodeTimeSeek(handle: GodotHandle) : AnimationNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeTimeSeek? =
             if (handle.address() == 0L) null else AnimationNodeTimeSeek(GodotHandle(handle))
+
+        /** A new AnimationNodeTimeSeek, GDScript's `AnimationNodeTimeSeek.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeTimeSeek =
+            RefCounted.owned(AnimationNodeTimeSeek(GodotHandle(ObjectCalls.constructObject("AnimationNodeTimeSeek"))))
     }
 
     private object Binds {

@@ -126,6 +126,11 @@ class OpenXRRenderModelManager(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): OpenXRRenderModelManager? =
             if (handle.address() == 0L) null else OpenXRRenderModelManager(GodotHandle(handle))
+
+        /** A new OpenXRRenderModelManager, GDScript's `OpenXRRenderModelManager.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OpenXRRenderModelManager =
+            OpenXRRenderModelManager(GodotHandle(ObjectCalls.constructObject("OpenXRRenderModelManager")))
     }
 
     private object Binds {

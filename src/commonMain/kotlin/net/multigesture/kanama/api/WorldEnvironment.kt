@@ -96,6 +96,11 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): WorldEnvironment? =
             if (handle.address() == 0L) null else WorldEnvironment(GodotHandle(handle))
+
+        /** A new WorldEnvironment, GDScript's `WorldEnvironment.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): WorldEnvironment =
+            WorldEnvironment(GodotHandle(ObjectCalls.constructObject("WorldEnvironment")))
     }
 
     private object Binds {

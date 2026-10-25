@@ -314,6 +314,11 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorSettings? =
             if (handle.address() == 0L) null else EditorSettings(GodotHandle(handle))
+
+        /** A new EditorSettings, GDScript's `EditorSettings.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorSettings =
+            RefCounted.owned(EditorSettings(GodotHandle(ObjectCalls.constructObject("EditorSettings"))))
     }
 
     private object Binds {

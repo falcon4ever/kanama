@@ -52,6 +52,11 @@ class BoxOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): BoxOccluder3D? =
             if (handle.address() == 0L) null else BoxOccluder3D(GodotHandle(handle))
+
+        /** A new BoxOccluder3D, GDScript's `BoxOccluder3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): BoxOccluder3D =
+            RefCounted.owned(BoxOccluder3D(GodotHandle(ObjectCalls.constructObject("BoxOccluder3D"))))
     }
 
     private object Binds {

@@ -22,5 +22,10 @@ class GDScriptSyntaxHighlighter(handle: GodotHandle) : EditorSyntaxHighlighter(h
 
         internal fun wrapBorrowed(handle: RawSegment): GDScriptSyntaxHighlighter? =
             if (handle.address() == 0L) null else GDScriptSyntaxHighlighter(GodotHandle(handle))
+
+        /** A new GDScriptSyntaxHighlighter, GDScript's `GDScriptSyntaxHighlighter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GDScriptSyntaxHighlighter =
+            RefCounted.owned(GDScriptSyntaxHighlighter(GodotHandle(ObjectCalls.constructObject("GDScriptSyntaxHighlighter"))))
     }
 }

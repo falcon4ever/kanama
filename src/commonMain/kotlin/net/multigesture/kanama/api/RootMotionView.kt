@@ -145,6 +145,11 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): RootMotionView? =
             if (handle.address() == 0L) null else RootMotionView(GodotHandle(handle))
+
+        /** A new RootMotionView, GDScript's `RootMotionView.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): RootMotionView =
+            RootMotionView(GodotHandle(ObjectCalls.constructObject("RootMotionView")))
     }
 
     private object Binds {

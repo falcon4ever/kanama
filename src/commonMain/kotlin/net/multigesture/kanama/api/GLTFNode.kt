@@ -512,6 +512,11 @@ class GLTFNode(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFNode? =
             if (handle.address() == 0L) null else GLTFNode(GodotHandle(handle))
+
+        /** A new GLTFNode, GDScript's `GLTFNode.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFNode =
+            RefCounted.owned(GLTFNode(GodotHandle(ObjectCalls.constructObject("GLTFNode"))))
     }
 
     private object Binds {

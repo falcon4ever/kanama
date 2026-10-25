@@ -97,6 +97,11 @@ class LightOccluder2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): LightOccluder2D? =
             if (handle.address() == 0L) null else LightOccluder2D(GodotHandle(handle))
+
+        /** A new LightOccluder2D, GDScript's `LightOccluder2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): LightOccluder2D =
+            LightOccluder2D(GodotHandle(ObjectCalls.constructObject("LightOccluder2D")))
     }
 
     private object Binds {

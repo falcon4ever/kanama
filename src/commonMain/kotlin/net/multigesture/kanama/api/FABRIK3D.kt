@@ -19,5 +19,10 @@ class FABRIK3D(handle: GodotHandle) : IterateIK3D(handle) {
 
         internal fun wrap(handle: RawSegment): FABRIK3D? =
             if (handle.address() == 0L) null else FABRIK3D(GodotHandle(handle))
+
+        /** A new FABRIK3D, GDScript's `FABRIK3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): FABRIK3D =
+            FABRIK3D(GodotHandle(ObjectCalls.constructObject("FABRIK3D")))
     }
 }

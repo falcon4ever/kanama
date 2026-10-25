@@ -76,6 +76,11 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Expression? =
             if (handle.address() == 0L) null else Expression(GodotHandle(handle))
+
+        /** A new Expression, GDScript's `Expression.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Expression =
+            RefCounted.owned(Expression(GodotHandle(ObjectCalls.constructObject("Expression"))))
     }
 
     private object Binds {

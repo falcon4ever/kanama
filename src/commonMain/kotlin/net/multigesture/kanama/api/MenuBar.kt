@@ -285,6 +285,11 @@ class MenuBar(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): MenuBar? =
             if (handle.address() == 0L) null else MenuBar(GodotHandle(handle))
+
+        /** A new MenuBar, GDScript's `MenuBar.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): MenuBar =
+            MenuBar(GodotHandle(ObjectCalls.constructObject("MenuBar")))
     }
 
     private object Binds {

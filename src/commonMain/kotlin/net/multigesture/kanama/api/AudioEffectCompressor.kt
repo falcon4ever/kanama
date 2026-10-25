@@ -238,6 +238,11 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectCompressor? =
             if (handle.address() == 0L) null else AudioEffectCompressor(GodotHandle(handle))
+
+        /** A new AudioEffectCompressor, GDScript's `AudioEffectCompressor.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectCompressor =
+            RefCounted.owned(AudioEffectCompressor(GodotHandle(ObjectCalls.constructObject("AudioEffectCompressor"))))
     }
 
     private object Binds {

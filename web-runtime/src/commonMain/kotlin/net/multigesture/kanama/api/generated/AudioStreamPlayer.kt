@@ -107,7 +107,7 @@ class AudioStreamPlayer(godotObject: GodotHandle) : Node(godotObject) {
   }
 
   companion object {
-    /** Constructs a new AudioStreamPlayer engine-side; the wrapper owns the handle (close what you create). */
+    /** A new AudioStreamPlayer, GDScript's `AudioStreamPlayer.new()`. Add it to the tree, or `queueFree()` it. */
     fun create(): AudioStreamPlayer =
       AudioStreamPlayer(checkNotNull(ClassDB.instantiate("AudioStreamPlayer")) { "Godot could not instantiate AudioStreamPlayer" }.toWebId())
   }

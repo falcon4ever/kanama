@@ -52,6 +52,11 @@ class VisualShaderNodeTransformConstant(handle: GodotHandle) : VisualShaderNodeC
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformConstant(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTransformConstant, GDScript's `VisualShaderNodeTransformConstant.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTransformConstant =
+            RefCounted.owned(VisualShaderNodeTransformConstant(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTransformConstant"))))
     }
 
     private object Binds {

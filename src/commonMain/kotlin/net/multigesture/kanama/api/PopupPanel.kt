@@ -19,5 +19,10 @@ class PopupPanel(handle: GodotHandle) : Popup(handle) {
 
         internal fun wrap(handle: RawSegment): PopupPanel? =
             if (handle.address() == 0L) null else PopupPanel(GodotHandle(handle))
+
+        /** A new PopupPanel, GDScript's `PopupPanel.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): PopupPanel =
+            PopupPanel(GodotHandle(ObjectCalls.constructObject("PopupPanel")))
     }
 }

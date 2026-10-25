@@ -204,6 +204,11 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDVertexAttribute? =
             if (handle.address() == 0L) null else RDVertexAttribute(GodotHandle(handle))
+
+        /** A new RDVertexAttribute, GDScript's `RDVertexAttribute.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDVertexAttribute =
+            RefCounted.owned(RDVertexAttribute(GodotHandle(ObjectCalls.constructObject("RDVertexAttribute"))))
     }
 
     private object Binds {

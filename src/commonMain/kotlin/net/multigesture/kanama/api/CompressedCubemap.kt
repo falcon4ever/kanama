@@ -22,5 +22,10 @@ class CompressedCubemap(handle: GodotHandle) : CompressedTextureLayered(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): CompressedCubemap? =
             if (handle.address() == 0L) null else CompressedCubemap(GodotHandle(handle))
+
+        /** A new CompressedCubemap, GDScript's `CompressedCubemap.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CompressedCubemap =
+            RefCounted.owned(CompressedCubemap(GodotHandle(ObjectCalls.constructObject("CompressedCubemap"))))
     }
 }

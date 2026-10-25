@@ -407,6 +407,11 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFObjectModelProperty? =
             if (handle.address() == 0L) null else GLTFObjectModelProperty(GodotHandle(handle))
+
+        /** A new GLTFObjectModelProperty, GDScript's `GLTFObjectModelProperty.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFObjectModelProperty =
+            RefCounted.owned(GLTFObjectModelProperty(GodotHandle(ObjectCalls.constructObject("GLTFObjectModelProperty"))))
     }
 
     private object Binds {

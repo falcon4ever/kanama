@@ -102,6 +102,12 @@ class CPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject)
       val MAX: EmissionShape get() = EmissionShape(7L)
     }
   }
+
+  companion object {
+    /** A new CPUParticles3D, GDScript's `CPUParticles3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): CPUParticles3D =
+      CPUParticles3D(checkNotNull(ClassDB.instantiate("CPUParticles3D")) { "Godot could not instantiate CPUParticles3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

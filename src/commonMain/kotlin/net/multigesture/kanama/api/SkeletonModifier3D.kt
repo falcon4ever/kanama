@@ -294,6 +294,11 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): SkeletonModifier3D? =
             if (handle.address() == 0L) null else SkeletonModifier3D(GodotHandle(handle))
+
+        /** A new SkeletonModifier3D, GDScript's `SkeletonModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SkeletonModifier3D =
+            SkeletonModifier3D(GodotHandle(ObjectCalls.constructObject("SkeletonModifier3D")))
     }
 
     private object Binds {

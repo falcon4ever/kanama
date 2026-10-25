@@ -22,5 +22,10 @@ class ResourceImporterCSVTranslation(handle: GodotHandle) : ResourceImporter(han
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterCSVTranslation? =
             if (handle.address() == 0L) null else ResourceImporterCSVTranslation(GodotHandle(handle))
+
+        /** A new ResourceImporterCSVTranslation, GDScript's `ResourceImporterCSVTranslation.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterCSVTranslation =
+            RefCounted.owned(ResourceImporterCSVTranslation(GodotHandle(ObjectCalls.constructObject("ResourceImporterCSVTranslation"))))
     }
 }

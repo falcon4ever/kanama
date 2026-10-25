@@ -51,6 +51,11 @@ class VisualShaderNodeUIntConstant(handle: GodotHandle) : VisualShaderNodeConsta
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeUIntConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeUIntConstant(GodotHandle(handle))
+
+        /** A new VisualShaderNodeUIntConstant, GDScript's `VisualShaderNodeUIntConstant.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeUIntConstant =
+            RefCounted.owned(VisualShaderNodeUIntConstant(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeUIntConstant"))))
     }
 
     private object Binds {

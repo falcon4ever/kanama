@@ -71,6 +71,11 @@ class XRInterfaceExtension(handle: GodotHandle) : XRInterface(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRInterfaceExtension? =
             if (handle.address() == 0L) null else XRInterfaceExtension(GodotHandle(handle))
+
+        /** A new XRInterfaceExtension, GDScript's `XRInterfaceExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): XRInterfaceExtension =
+            RefCounted.owned(XRInterfaceExtension(GodotHandle(ObjectCalls.constructObject("XRInterfaceExtension"))))
     }
 
     private object Binds {

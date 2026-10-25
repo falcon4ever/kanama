@@ -638,6 +638,11 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AStarGrid2D? =
             if (handle.address() == 0L) null else AStarGrid2D(GodotHandle(handle))
+
+        /** A new AStarGrid2D, GDScript's `AStarGrid2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AStarGrid2D =
+            RefCounted.owned(AStarGrid2D(GodotHandle(ObjectCalls.constructObject("AStarGrid2D"))))
     }
 
     private object Binds {

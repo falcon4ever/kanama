@@ -42,6 +42,11 @@ class EditorScriptPicker(handle: GodotHandle) : EditorResourcePicker(handle) {
 
         internal fun wrap(handle: RawSegment): EditorScriptPicker? =
             if (handle.address() == 0L) null else EditorScriptPicker(GodotHandle(handle))
+
+        /** A new EditorScriptPicker, GDScript's `EditorScriptPicker.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): EditorScriptPicker =
+            EditorScriptPicker(GodotHandle(ObjectCalls.constructObject("EditorScriptPicker")))
     }
 
     private object Binds {

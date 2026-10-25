@@ -33,6 +33,11 @@ class PlaceholderMesh(handle: GodotHandle) : Mesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderMesh? =
             if (handle.address() == 0L) null else PlaceholderMesh(GodotHandle(handle))
+
+        /** A new PlaceholderMesh, GDScript's `PlaceholderMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PlaceholderMesh =
+            RefCounted.owned(PlaceholderMesh(GodotHandle(ObjectCalls.constructObject("PlaceholderMesh"))))
     }
 
     private object Binds {

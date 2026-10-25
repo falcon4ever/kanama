@@ -34,6 +34,11 @@ class OpenXRSpatialCapabilityConfigurationAnchor(handle: GodotHandle) : OpenXRSp
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAnchor? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAnchor(GodotHandle(handle))
+
+        /** A new OpenXRSpatialCapabilityConfigurationAnchor, GDScript's `OpenXRSpatialCapabilityConfigurationAnchor.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialCapabilityConfigurationAnchor =
+            RefCounted.owned(OpenXRSpatialCapabilityConfigurationAnchor(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationAnchor"))))
     }
 
     private object Binds {

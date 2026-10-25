@@ -649,6 +649,11 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineDepthStencilState? =
             if (handle.address() == 0L) null else RDPipelineDepthStencilState(GodotHandle(handle))
+
+        /** A new RDPipelineDepthStencilState, GDScript's `RDPipelineDepthStencilState.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDPipelineDepthStencilState =
+            RefCounted.owned(RDPipelineDepthStencilState(GodotHandle(ObjectCalls.constructObject("RDPipelineDepthStencilState"))))
     }
 
     private object Binds {

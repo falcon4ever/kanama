@@ -192,6 +192,11 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFrame? =
             if (handle.address() == 0L) null else VisualShaderNodeFrame(GodotHandle(handle))
+
+        /** A new VisualShaderNodeFrame, GDScript's `VisualShaderNodeFrame.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeFrame =
+            RefCounted.owned(VisualShaderNodeFrame(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeFrame"))))
     }
 
     private object Binds {

@@ -71,6 +71,11 @@ class GrooveJoint2D(handle: GodotHandle) : Joint2D(handle) {
 
         internal fun wrap(handle: RawSegment): GrooveJoint2D? =
             if (handle.address() == 0L) null else GrooveJoint2D(GodotHandle(handle))
+
+        /** A new GrooveJoint2D, GDScript's `GrooveJoint2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GrooveJoint2D =
+            GrooveJoint2D(GodotHandle(ObjectCalls.constructObject("GrooveJoint2D")))
     }
 
     private object Binds {

@@ -20,5 +20,10 @@ class EditorExportPlatformMacOS(handle: GodotHandle) : EditorExportPlatform(hand
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformMacOS? =
             if (handle.address() == 0L) null else EditorExportPlatformMacOS(GodotHandle(handle))
+
+        /** A new EditorExportPlatformMacOS, GDScript's `EditorExportPlatformMacOS.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorExportPlatformMacOS =
+            RefCounted.owned(EditorExportPlatformMacOS(GodotHandle(ObjectCalls.constructObject("EditorExportPlatformMacOS"))))
     }
 }

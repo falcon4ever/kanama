@@ -160,6 +160,11 @@ class JSON(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): JSON? =
             if (handle.address() == 0L) null else JSON(GodotHandle(handle))
+
+        /** A new JSON, GDScript's `JSON.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): JSON =
+            RefCounted.owned(JSON(GodotHandle(ObjectCalls.constructObject("JSON"))))
     }
 
     private object Binds {

@@ -22,5 +22,10 @@ class VisualShaderNodeLinearSceneDepth(handle: GodotHandle) : VisualShaderNode(h
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeLinearSceneDepth? =
             if (handle.address() == 0L) null else VisualShaderNodeLinearSceneDepth(GodotHandle(handle))
+
+        /** A new VisualShaderNodeLinearSceneDepth, GDScript's `VisualShaderNodeLinearSceneDepth.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeLinearSceneDepth =
+            RefCounted.owned(VisualShaderNodeLinearSceneDepth(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeLinearSceneDepth"))))
     }
 }

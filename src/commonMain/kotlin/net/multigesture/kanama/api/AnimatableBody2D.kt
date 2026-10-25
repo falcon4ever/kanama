@@ -48,6 +48,11 @@ class AnimatableBody2D(handle: GodotHandle) : StaticBody2D(handle) {
 
         internal fun wrap(handle: RawSegment): AnimatableBody2D? =
             if (handle.address() == 0L) null else AnimatableBody2D(GodotHandle(handle))
+
+        /** A new AnimatableBody2D, GDScript's `AnimatableBody2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AnimatableBody2D =
+            AnimatableBody2D(GodotHandle(ObjectCalls.constructObject("AnimatableBody2D")))
     }
 
     private object Binds {

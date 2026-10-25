@@ -221,6 +221,11 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectDistortion? =
             if (handle.address() == 0L) null else AudioEffectDistortion(GodotHandle(handle))
+
+        /** A new AudioEffectDistortion, GDScript's `AudioEffectDistortion.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectDistortion =
+            RefCounted.owned(AudioEffectDistortion(GodotHandle(ObjectCalls.constructObject("AudioEffectDistortion"))))
     }
 
     private object Binds {

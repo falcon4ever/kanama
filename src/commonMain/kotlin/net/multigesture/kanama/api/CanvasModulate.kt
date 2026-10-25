@@ -44,6 +44,11 @@ class CanvasModulate(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): CanvasModulate? =
             if (handle.address() == 0L) null else CanvasModulate(GodotHandle(handle))
+
+        /** A new CanvasModulate, GDScript's `CanvasModulate.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CanvasModulate =
+            CanvasModulate(GodotHandle(ObjectCalls.constructObject("CanvasModulate")))
     }
 
     private object Binds {

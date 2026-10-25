@@ -467,6 +467,11 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): UPNP? =
             if (handle.address() == 0L) null else UPNP(GodotHandle(handle))
+
+        /** A new UPNP, GDScript's `UPNP.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): UPNP =
+            RefCounted.owned(UPNP(GodotHandle(ObjectCalls.constructObject("UPNP"))))
     }
 
     private object Binds {

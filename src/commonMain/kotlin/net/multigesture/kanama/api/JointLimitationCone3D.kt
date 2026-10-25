@@ -53,6 +53,11 @@ class JointLimitationCone3D(handle: GodotHandle) : JointLimitation3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): JointLimitationCone3D? =
             if (handle.address() == 0L) null else JointLimitationCone3D(GodotHandle(handle))
+
+        /** A new JointLimitationCone3D, GDScript's `JointLimitationCone3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): JointLimitationCone3D =
+            RefCounted.owned(JointLimitationCone3D(GodotHandle(ObjectCalls.constructObject("JointLimitationCone3D"))))
     }
 
     private object Binds {

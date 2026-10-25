@@ -116,6 +116,11 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDUniform? =
             if (handle.address() == 0L) null else RDUniform(GodotHandle(handle))
+
+        /** A new RDUniform, GDScript's `RDUniform.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDUniform =
+            RefCounted.owned(RDUniform(GodotHandle(ObjectCalls.constructObject("RDUniform"))))
     }
 
     private object Binds {

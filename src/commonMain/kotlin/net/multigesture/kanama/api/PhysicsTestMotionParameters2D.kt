@@ -246,6 +246,11 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PhysicsTestMotionParameters2D? =
             if (handle.address() == 0L) null else PhysicsTestMotionParameters2D(GodotHandle(handle))
+
+        /** A new PhysicsTestMotionParameters2D, GDScript's `PhysicsTestMotionParameters2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PhysicsTestMotionParameters2D =
+            RefCounted.owned(PhysicsTestMotionParameters2D(GodotHandle(ObjectCalls.constructObject("PhysicsTestMotionParameters2D"))))
     }
 
     private object Binds {

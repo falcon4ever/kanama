@@ -267,6 +267,11 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeCompare? =
             if (handle.address() == 0L) null else VisualShaderNodeCompare(GodotHandle(handle))
+
+        /** A new VisualShaderNodeCompare, GDScript's `VisualShaderNodeCompare.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeCompare =
+            RefCounted.owned(VisualShaderNodeCompare(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeCompare"))))
     }
 
     private object Binds {

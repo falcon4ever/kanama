@@ -33,6 +33,11 @@ open class AudioStreamPlaybackResampled(handle: GodotHandle) : AudioStreamPlayba
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaybackResampled? =
             if (handle.address() == 0L) null else AudioStreamPlaybackResampled(GodotHandle(handle))
+
+        /** A new AudioStreamPlaybackResampled, GDScript's `AudioStreamPlaybackResampled.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioStreamPlaybackResampled =
+            RefCounted.owned(AudioStreamPlaybackResampled(GodotHandle(ObjectCalls.constructObject("AudioStreamPlaybackResampled"))))
     }
 
     private object Binds {

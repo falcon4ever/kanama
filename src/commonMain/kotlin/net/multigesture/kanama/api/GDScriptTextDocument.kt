@@ -148,6 +148,11 @@ class GDScriptTextDocument(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GDScriptTextDocument? =
             if (handle.address() == 0L) null else GDScriptTextDocument(GodotHandle(handle))
+
+        /** A new GDScriptTextDocument, GDScript's `GDScriptTextDocument.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GDScriptTextDocument =
+            RefCounted.owned(GDScriptTextDocument(GodotHandle(ObjectCalls.constructObject("GDScriptTextDocument"))))
     }
 
     private object Binds {

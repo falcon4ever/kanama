@@ -71,6 +71,11 @@ class OpenXRSpatialComponentPlaneAlignmentList(handle: GodotHandle) : OpenXRSpat
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentPlaneAlignmentList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPlaneAlignmentList(GodotHandle(handle))
+
+        /** A new OpenXRSpatialComponentPlaneAlignmentList, GDScript's `OpenXRSpatialComponentPlaneAlignmentList.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialComponentPlaneAlignmentList =
+            RefCounted.owned(OpenXRSpatialComponentPlaneAlignmentList(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentPlaneAlignmentList"))))
     }
 
     private object Binds {

@@ -2142,6 +2142,11 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): Node? =
             if (handle.address() == 0L) null else Node(GodotHandle(handle))
+
+        /** A new Node, GDScript's `Node.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Node =
+            Node(GodotHandle(ObjectCalls.constructObject("Node")))
     }
 
     private object Binds {

@@ -90,6 +90,11 @@ class GDScriptWorkspace(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GDScriptWorkspace? =
             if (handle.address() == 0L) null else GDScriptWorkspace(GodotHandle(handle))
+
+        /** A new GDScriptWorkspace, GDScript's `GDScriptWorkspace.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GDScriptWorkspace =
+            RefCounted.owned(GDScriptWorkspace(GodotHandle(ObjectCalls.constructObject("GDScriptWorkspace"))))
     }
 
     private object Binds {

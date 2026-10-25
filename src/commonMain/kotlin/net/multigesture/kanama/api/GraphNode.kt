@@ -473,6 +473,11 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
 
         internal fun wrap(handle: RawSegment): GraphNode? =
             if (handle.address() == 0L) null else GraphNode(GodotHandle(handle))
+
+        /** A new GraphNode, GDScript's `GraphNode.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GraphNode =
+            GraphNode(GodotHandle(ObjectCalls.constructObject("GraphNode")))
     }
 
     private object Binds {

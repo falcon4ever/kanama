@@ -73,6 +73,11 @@ open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SyntaxHighlighter? =
             if (handle.address() == 0L) null else SyntaxHighlighter(GodotHandle(handle))
+
+        /** A new SyntaxHighlighter, GDScript's `SyntaxHighlighter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SyntaxHighlighter =
+            RefCounted.owned(SyntaxHighlighter(GodotHandle(ObjectCalls.constructObject("SyntaxHighlighter"))))
     }
 
     private object Binds {

@@ -263,6 +263,11 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationObstacle2D? =
             if (handle.address() == 0L) null else NavigationObstacle2D(GodotHandle(handle))
+
+        /** A new NavigationObstacle2D, GDScript's `NavigationObstacle2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): NavigationObstacle2D =
+            NavigationObstacle2D(GodotHandle(ObjectCalls.constructObject("NavigationObstacle2D")))
     }
 
     private object Binds {

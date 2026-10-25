@@ -394,6 +394,11 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
         internal fun wrapBorrowed(handle: RawSegment): SceneMultiplayer? =
             if (handle.address() == 0L) null else SceneMultiplayer(GodotHandle(handle))
 
+        /** A new SceneMultiplayer, GDScript's `SceneMultiplayer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SceneMultiplayer =
+            RefCounted.owned(SceneMultiplayer(GodotHandle(ObjectCalls.constructObject("SceneMultiplayer"))))
+
         // Downcast a MultiplayerAPI to SceneMultiplayer (null if not).
         @JvmStatic
         fun fromApi(api: MultiplayerAPI?): SceneMultiplayer? =

@@ -388,6 +388,11 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
 
         internal fun wrap(handle: RawSegment): CopyTransformModifier3D? =
             if (handle.address() == 0L) null else CopyTransformModifier3D(GodotHandle(handle))
+
+        /** A new CopyTransformModifier3D, GDScript's `CopyTransformModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CopyTransformModifier3D =
+            CopyTransformModifier3D(GodotHandle(ObjectCalls.constructObject("CopyTransformModifier3D")))
     }
 
     private object Binds {

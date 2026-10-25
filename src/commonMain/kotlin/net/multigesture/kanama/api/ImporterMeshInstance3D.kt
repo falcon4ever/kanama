@@ -161,6 +161,11 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): ImporterMeshInstance3D? =
             if (handle.address() == 0L) null else ImporterMeshInstance3D(GodotHandle(handle))
+
+        /** A new ImporterMeshInstance3D, GDScript's `ImporterMeshInstance3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ImporterMeshInstance3D =
+            ImporterMeshInstance3D(GodotHandle(ObjectCalls.constructObject("ImporterMeshInstance3D")))
     }
 
     private object Binds {

@@ -749,6 +749,11 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): AudioStreamPlayer3D? =
             if (handle.address() == 0L) null else AudioStreamPlayer3D(GodotHandle(handle))
+
+        /** A new AudioStreamPlayer3D, GDScript's `AudioStreamPlayer3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AudioStreamPlayer3D =
+            AudioStreamPlayer3D(GodotHandle(ObjectCalls.constructObject("AudioStreamPlayer3D")))
     }
 
     private object Binds {

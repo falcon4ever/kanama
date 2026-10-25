@@ -76,6 +76,11 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ImageTexture? =
             if (handle.address() == 0L) null else ImageTexture(GodotHandle(handle))
+
+        /** A new ImageTexture, GDScript's `ImageTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ImageTexture =
+            RefCounted.owned(ImageTexture(GodotHandle(ObjectCalls.constructObject("ImageTexture"))))
     }
 
     private object Binds {

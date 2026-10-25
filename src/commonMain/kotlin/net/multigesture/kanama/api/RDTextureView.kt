@@ -171,6 +171,11 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDTextureView? =
             if (handle.address() == 0L) null else RDTextureView(GodotHandle(handle))
+
+        /** A new RDTextureView, GDScript's `RDTextureView.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDTextureView =
+            RefCounted.owned(RDTextureView(GodotHandle(ObjectCalls.constructObject("RDTextureView"))))
     }
 
     private object Binds {

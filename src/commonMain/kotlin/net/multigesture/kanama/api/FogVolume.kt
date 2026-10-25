@@ -122,6 +122,11 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): FogVolume? =
             if (handle.address() == 0L) null else FogVolume(GodotHandle(handle))
+
+        /** A new FogVolume, GDScript's `FogVolume.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): FogVolume =
+            FogVolume(GodotHandle(ObjectCalls.constructObject("FogVolume")))
     }
 
     private object Binds {

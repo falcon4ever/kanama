@@ -119,6 +119,11 @@ class MissingNode(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): MissingNode? =
             if (handle.address() == 0L) null else MissingNode(GodotHandle(handle))
+
+        /** A new MissingNode, GDScript's `MissingNode.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): MissingNode =
+            MissingNode(GodotHandle(ObjectCalls.constructObject("MissingNode")))
     }
 
     private object Binds {

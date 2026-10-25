@@ -87,6 +87,11 @@ class PolygonPathFinder(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PolygonPathFinder? =
             if (handle.address() == 0L) null else PolygonPathFinder(GodotHandle(handle))
+
+        /** A new PolygonPathFinder, GDScript's `PolygonPathFinder.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PolygonPathFinder =
+            RefCounted.owned(PolygonPathFinder(GodotHandle(ObjectCalls.constructObject("PolygonPathFinder"))))
     }
 
     private object Binds {

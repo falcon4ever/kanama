@@ -434,7 +434,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
         internal fun wrapBorrowed(handle: RawSegment): Resource? =
             if (handle.address() == 0L) null else Resource(GodotHandle(handle))
 
-        // Instantiate a Resource.
+        /** A new Resource, GDScript's `Resource.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): Resource =
             RefCounted.owned(Resource(GodotHandle(ObjectCalls.constructObject("Resource"))))

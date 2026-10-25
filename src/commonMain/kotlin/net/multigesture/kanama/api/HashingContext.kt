@@ -89,6 +89,11 @@ class HashingContext(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): HashingContext? =
             if (handle.address() == 0L) null else HashingContext(GodotHandle(handle))
+
+        /** A new HashingContext, GDScript's `HashingContext.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): HashingContext =
+            RefCounted.owned(HashingContext(GodotHandle(ObjectCalls.constructObject("HashingContext"))))
     }
 
     private object Binds {

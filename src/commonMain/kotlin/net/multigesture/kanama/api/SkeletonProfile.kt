@@ -450,6 +450,11 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonProfile? =
             if (handle.address() == 0L) null else SkeletonProfile(GodotHandle(handle))
+
+        /** A new SkeletonProfile, GDScript's `SkeletonProfile.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SkeletonProfile =
+            RefCounted.owned(SkeletonProfile(GodotHandle(ObjectCalls.constructObject("SkeletonProfile"))))
     }
 
     private object Binds {

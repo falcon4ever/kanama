@@ -286,6 +286,11 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
 
         internal fun wrap(handle: RawSegment): AnimatedSprite3D? =
             if (handle.address() == 0L) null else AnimatedSprite3D(GodotHandle(handle))
+
+        /** A new AnimatedSprite3D, GDScript's `AnimatedSprite3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AnimatedSprite3D =
+            AnimatedSprite3D(GodotHandle(ObjectCalls.constructObject("AnimatedSprite3D")))
     }
 
     private object Binds {

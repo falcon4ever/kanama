@@ -296,6 +296,11 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): TouchScreenButton? =
             if (handle.address() == 0L) null else TouchScreenButton(GodotHandle(handle))
+
+        /** A new TouchScreenButton, GDScript's `TouchScreenButton.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): TouchScreenButton =
+            TouchScreenButton(GodotHandle(ObjectCalls.constructObject("TouchScreenButton")))
     }
 
     private object Binds {

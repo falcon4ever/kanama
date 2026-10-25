@@ -20,6 +20,12 @@ class Label(godotObject: GodotHandle) : Control(godotObject) {
   var text: String
     get() = getText()
     set(newValue) = setText(newValue)
+
+  companion object {
+    /** A new Label, GDScript's `Label.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): Label =
+      Label(checkNotNull(ClassDB.instantiate("Label")) { "Godot could not instantiate Label" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

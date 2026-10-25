@@ -881,6 +881,11 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
 
         internal fun wrap(handle: RawSegment): FileDialog? =
             if (handle.address() == 0L) null else FileDialog(GodotHandle(handle))
+
+        /** A new FileDialog, GDScript's `FileDialog.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): FileDialog =
+            FileDialog(GodotHandle(ObjectCalls.constructObject("FileDialog")))
     }
 
     private object Binds {

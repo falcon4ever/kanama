@@ -114,6 +114,11 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DPhysicalBones? =
             if (handle.address() == 0L) null else SkeletonModification2DPhysicalBones(GodotHandle(handle))
+
+        /** A new SkeletonModification2DPhysicalBones, GDScript's `SkeletonModification2DPhysicalBones.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SkeletonModification2DPhysicalBones =
+            RefCounted.owned(SkeletonModification2DPhysicalBones(GodotHandle(ObjectCalls.constructObject("SkeletonModification2DPhysicalBones"))))
     }
 
     private object Binds {

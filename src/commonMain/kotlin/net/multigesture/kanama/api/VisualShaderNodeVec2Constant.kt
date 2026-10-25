@@ -52,6 +52,11 @@ class VisualShaderNodeVec2Constant(handle: GodotHandle) : VisualShaderNodeConsta
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVec2Constant? =
             if (handle.address() == 0L) null else VisualShaderNodeVec2Constant(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVec2Constant, GDScript's `VisualShaderNodeVec2Constant.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVec2Constant =
+            RefCounted.owned(VisualShaderNodeVec2Constant(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeVec2Constant"))))
     }
 
     private object Binds {

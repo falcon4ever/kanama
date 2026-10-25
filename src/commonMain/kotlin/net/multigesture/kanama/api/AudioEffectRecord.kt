@@ -87,6 +87,11 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectRecord? =
             if (handle.address() == 0L) null else AudioEffectRecord(GodotHandle(handle))
+
+        /** A new AudioEffectRecord, GDScript's `AudioEffectRecord.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectRecord =
+            RefCounted.owned(AudioEffectRecord(GodotHandle(ObjectCalls.constructObject("AudioEffectRecord"))))
     }
 
     private object Binds {

@@ -58,6 +58,11 @@ class ExternalTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ExternalTexture? =
             if (handle.address() == 0L) null else ExternalTexture(GodotHandle(handle))
+
+        /** A new ExternalTexture, GDScript's `ExternalTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ExternalTexture =
+            RefCounted.owned(ExternalTexture(GodotHandle(ObjectCalls.constructObject("ExternalTexture"))))
     }
 
     private object Binds {

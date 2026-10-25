@@ -140,6 +140,11 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
 
         internal fun wrap(handle: RawSegment): AnimationTree? =
             if (handle.address() == 0L) null else AnimationTree(GodotHandle(handle))
+
+        /** A new AnimationTree, GDScript's `AnimationTree.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AnimationTree =
+            AnimationTree(GodotHandle(ObjectCalls.constructObject("AnimationTree")))
     }
 
     private object Binds {

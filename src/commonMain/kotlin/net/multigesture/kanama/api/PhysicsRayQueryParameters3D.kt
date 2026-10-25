@@ -283,6 +283,17 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PhysicsRayQueryParameters3D? =
             if (handle.address() == 0L) null else PhysicsRayQueryParameters3D(GodotHandle(handle))
+
+        /** A new PhysicsRayQueryParameters3D, GDScript's `PhysicsRayQueryParameters3D.new()`. You own the reference: `close()` or `use { }`. */
+        /**
+         * Returns a new, pre-configured `PhysicsRayQueryParameters3D` object. Use it to quickly create
+         * query parameters using the most common options.
+         *
+         * Generated from Godot docs: PhysicsRayQueryParameters3D.create
+         */
+        @JvmStatic
+        fun create(): PhysicsRayQueryParameters3D =
+            RefCounted.owned(PhysicsRayQueryParameters3D(GodotHandle(ObjectCalls.constructObject("PhysicsRayQueryParameters3D"))))
     }
 
     private object Binds {

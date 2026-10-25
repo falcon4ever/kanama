@@ -3177,6 +3177,11 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): TextEdit? =
             if (handle.address() == 0L) null else TextEdit(GodotHandle(handle))
+
+        /** A new TextEdit, GDScript's `TextEdit.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): TextEdit =
+            TextEdit(GodotHandle(ObjectCalls.constructObject("TextEdit")))
     }
 
     private object Binds {

@@ -22,5 +22,10 @@ class AnimationNodeSub2(handle: GodotHandle) : AnimationNodeSync(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeSub2? =
             if (handle.address() == 0L) null else AnimationNodeSub2(GodotHandle(handle))
+
+        /** A new AnimationNodeSub2, GDScript's `AnimationNodeSub2.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeSub2 =
+            RefCounted.owned(AnimationNodeSub2(GodotHandle(ObjectCalls.constructObject("AnimationNodeSub2"))))
     }
 }

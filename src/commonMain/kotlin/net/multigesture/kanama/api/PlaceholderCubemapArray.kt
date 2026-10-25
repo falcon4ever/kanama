@@ -22,5 +22,10 @@ class PlaceholderCubemapArray(handle: GodotHandle) : PlaceholderTextureLayered(h
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderCubemapArray? =
             if (handle.address() == 0L) null else PlaceholderCubemapArray(GodotHandle(handle))
+
+        /** A new PlaceholderCubemapArray, GDScript's `PlaceholderCubemapArray.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PlaceholderCubemapArray =
+            RefCounted.owned(PlaceholderCubemapArray(GodotHandle(ObjectCalls.constructObject("PlaceholderCubemapArray"))))
     }
 }

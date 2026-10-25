@@ -253,6 +253,11 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationMeshSourceGeometryData3D? =
             if (handle.address() == 0L) null else NavigationMeshSourceGeometryData3D(GodotHandle(handle))
+
+        /** A new NavigationMeshSourceGeometryData3D, GDScript's `NavigationMeshSourceGeometryData3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): NavigationMeshSourceGeometryData3D =
+            RefCounted.owned(NavigationMeshSourceGeometryData3D(GodotHandle(ObjectCalls.constructObject("NavigationMeshSourceGeometryData3D"))))
     }
 
     private object Binds {

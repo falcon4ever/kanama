@@ -904,7 +904,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         internal fun wrapBorrowed(handle: RawSegment): FastNoiseLite? =
             if (handle.address() == 0L) null else FastNoiseLite(GodotHandle(handle))
 
-        // Instantiate a FastNoiseLite.
+        /** A new FastNoiseLite, GDScript's `FastNoiseLite.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): FastNoiseLite =
             RefCounted.owned(FastNoiseLite(GodotHandle(ObjectCalls.constructObject("FastNoiseLite"))))

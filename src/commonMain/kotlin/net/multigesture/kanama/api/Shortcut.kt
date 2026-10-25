@@ -92,6 +92,11 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Shortcut? =
             if (handle.address() == 0L) null else Shortcut(GodotHandle(handle))
+
+        /** A new Shortcut, GDScript's `Shortcut.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Shortcut =
+            RefCounted.owned(Shortcut(GodotHandle(ObjectCalls.constructObject("Shortcut"))))
     }
 
     private object Binds {

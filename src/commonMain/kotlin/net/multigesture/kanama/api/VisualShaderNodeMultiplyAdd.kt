@@ -95,6 +95,11 @@ class VisualShaderNodeMultiplyAdd(handle: GodotHandle) : VisualShaderNode(handle
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeMultiplyAdd? =
             if (handle.address() == 0L) null else VisualShaderNodeMultiplyAdd(GodotHandle(handle))
+
+        /** A new VisualShaderNodeMultiplyAdd, GDScript's `VisualShaderNodeMultiplyAdd.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeMultiplyAdd =
+            RefCounted.owned(VisualShaderNodeMultiplyAdd(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeMultiplyAdd"))))
     }
 
     private object Binds {

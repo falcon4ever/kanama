@@ -110,6 +110,11 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStream? =
             if (handle.address() == 0L) null else AudioStream(GodotHandle(handle))
+
+        /** A new AudioStream, GDScript's `AudioStream.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioStream =
+            RefCounted.owned(AudioStream(GodotHandle(ObjectCalls.constructObject("AudioStream"))))
     }
 
     private object Binds {

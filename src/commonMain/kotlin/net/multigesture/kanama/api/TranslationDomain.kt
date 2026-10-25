@@ -545,6 +545,11 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TranslationDomain? =
             if (handle.address() == 0L) null else TranslationDomain(GodotHandle(handle))
+
+        /** A new TranslationDomain, GDScript's `TranslationDomain.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TranslationDomain =
+            RefCounted.owned(TranslationDomain(GodotHandle(ObjectCalls.constructObject("TranslationDomain"))))
     }
 
     private object Binds {

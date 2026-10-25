@@ -190,6 +190,11 @@ class RDShaderSPIRV(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDShaderSPIRV? =
             if (handle.address() == 0L) null else RDShaderSPIRV(GodotHandle(handle))
+
+        /** A new RDShaderSPIRV, GDScript's `RDShaderSPIRV.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDShaderSPIRV =
+            RefCounted.owned(RDShaderSPIRV(GodotHandle(ObjectCalls.constructObject("RDShaderSPIRV"))))
     }
 
     private object Binds {

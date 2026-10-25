@@ -83,6 +83,11 @@ class VisualShaderNodeTransformFunc(handle: GodotHandle) : VisualShaderNode(hand
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformFunc? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformFunc(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTransformFunc, GDScript's `VisualShaderNodeTransformFunc.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTransformFunc =
+            RefCounted.owned(VisualShaderNodeTransformFunc(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTransformFunc"))))
     }
 
     private object Binds {

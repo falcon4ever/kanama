@@ -175,6 +175,11 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): CollisionPolygon3D? =
             if (handle.address() == 0L) null else CollisionPolygon3D(GodotHandle(handle))
+
+        /** A new CollisionPolygon3D, GDScript's `CollisionPolygon3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CollisionPolygon3D =
+            CollisionPolygon3D(GodotHandle(ObjectCalls.constructObject("CollisionPolygon3D")))
     }
 
     private object Binds {

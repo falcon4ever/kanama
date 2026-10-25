@@ -770,6 +770,11 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
 
         internal fun wrap(handle: RawSegment): Area3D? =
             if (handle.address() == 0L) null else Area3D(GodotHandle(handle))
+
+        /** A new Area3D, GDScript's `Area3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Area3D =
+            Area3D(GodotHandle(ObjectCalls.constructObject("Area3D")))
     }
 
     private object Binds {

@@ -113,7 +113,7 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
         internal fun wrapBorrowed(handle: RawSegment): PackedScene? =
             if (handle.address() == 0L) null else PackedScene(GodotHandle(handle))
 
-        // Instantiate a PackedScene.
+        /** A new PackedScene, GDScript's `PackedScene.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PackedScene =
             RefCounted.owned(PackedScene(GodotHandle(ObjectCalls.constructObject("PackedScene"))))

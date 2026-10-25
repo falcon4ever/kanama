@@ -273,6 +273,11 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WebSocketMultiplayerPeer? =
             if (handle.address() == 0L) null else WebSocketMultiplayerPeer(GodotHandle(handle))
+
+        /** A new WebSocketMultiplayerPeer, GDScript's `WebSocketMultiplayerPeer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): WebSocketMultiplayerPeer =
+            RefCounted.owned(WebSocketMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("WebSocketMultiplayerPeer"))))
     }
 
     private object Binds {

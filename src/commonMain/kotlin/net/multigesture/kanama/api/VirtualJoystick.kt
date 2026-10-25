@@ -397,6 +397,11 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): VirtualJoystick? =
             if (handle.address() == 0L) null else VirtualJoystick(GodotHandle(handle))
+
+        /** A new VirtualJoystick, GDScript's `VirtualJoystick.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VirtualJoystick =
+            VirtualJoystick(GodotHandle(ObjectCalls.constructObject("VirtualJoystick")))
     }
 
     private object Binds {

@@ -115,6 +115,11 @@ class OpenXRCompositionLayerCylinder(handle: GodotHandle) : OpenXRCompositionLay
 
         internal fun wrap(handle: RawSegment): OpenXRCompositionLayerCylinder? =
             if (handle.address() == 0L) null else OpenXRCompositionLayerCylinder(GodotHandle(handle))
+
+        /** A new OpenXRCompositionLayerCylinder, GDScript's `OpenXRCompositionLayerCylinder.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OpenXRCompositionLayerCylinder =
+            OpenXRCompositionLayerCylinder(GodotHandle(ObjectCalls.constructObject("OpenXRCompositionLayerCylinder")))
     }
 
     private object Binds {

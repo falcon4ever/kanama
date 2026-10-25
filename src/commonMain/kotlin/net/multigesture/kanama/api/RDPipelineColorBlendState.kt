@@ -139,6 +139,11 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineColorBlendState? =
             if (handle.address() == 0L) null else RDPipelineColorBlendState(GodotHandle(handle))
+
+        /** A new RDPipelineColorBlendState, GDScript's `RDPipelineColorBlendState.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDPipelineColorBlendState =
+            RefCounted.owned(RDPipelineColorBlendState(GodotHandle(ObjectCalls.constructObject("RDPipelineColorBlendState"))))
     }
 
     private object Binds {

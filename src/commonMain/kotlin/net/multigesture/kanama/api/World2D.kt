@@ -90,6 +90,11 @@ class World2D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): World2D? =
             if (handle.address() == 0L) null else World2D(GodotHandle(handle))
+
+        /** A new World2D, GDScript's `World2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): World2D =
+            RefCounted.owned(World2D(GodotHandle(ObjectCalls.constructObject("World2D"))))
     }
 
     private object Binds {

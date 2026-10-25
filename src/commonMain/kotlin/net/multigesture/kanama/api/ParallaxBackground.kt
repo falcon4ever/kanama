@@ -170,6 +170,11 @@ class ParallaxBackground(handle: GodotHandle) : CanvasLayer(handle) {
 
         internal fun wrap(handle: RawSegment): ParallaxBackground? =
             if (handle.address() == 0L) null else ParallaxBackground(GodotHandle(handle))
+
+        /** A new ParallaxBackground, GDScript's `ParallaxBackground.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ParallaxBackground =
+            ParallaxBackground(GodotHandle(ObjectCalls.constructObject("ParallaxBackground")))
     }
 
     private object Binds {

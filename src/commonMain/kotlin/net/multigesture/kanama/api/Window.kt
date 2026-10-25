@@ -2160,6 +2160,11 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
 
         internal fun wrap(handle: RawSegment): Window? =
             if (handle.address() == 0L) null else Window(GodotHandle(handle))
+
+        /** A new Window, GDScript's `Window.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Window =
+            Window(GodotHandle(ObjectCalls.constructObject("Window")))
     }
 
     private object Binds {

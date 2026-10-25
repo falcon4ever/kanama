@@ -23,5 +23,10 @@ class AudioEffectEQ21(handle: GodotHandle) : AudioEffectEQ(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectEQ21? =
             if (handle.address() == 0L) null else AudioEffectEQ21(GodotHandle(handle))
+
+        /** A new AudioEffectEQ21, GDScript's `AudioEffectEQ21.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectEQ21 =
+            RefCounted.owned(AudioEffectEQ21(GodotHandle(ObjectCalls.constructObject("AudioEffectEQ21"))))
     }
 }

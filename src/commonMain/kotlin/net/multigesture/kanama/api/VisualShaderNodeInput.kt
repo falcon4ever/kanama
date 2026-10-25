@@ -75,6 +75,11 @@ class VisualShaderNodeInput(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeInput? =
             if (handle.address() == 0L) null else VisualShaderNodeInput(GodotHandle(handle))
+
+        /** A new VisualShaderNodeInput, GDScript's `VisualShaderNodeInput.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeInput =
+            RefCounted.owned(VisualShaderNodeInput(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeInput"))))
     }
 
     private object Binds {

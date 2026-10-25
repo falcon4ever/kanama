@@ -219,6 +219,11 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): GraphElement? =
             if (handle.address() == 0L) null else GraphElement(GodotHandle(handle))
+
+        /** A new GraphElement, GDScript's `GraphElement.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GraphElement =
+            GraphElement(GodotHandle(ObjectCalls.constructObject("GraphElement")))
     }
 
     private object Binds {

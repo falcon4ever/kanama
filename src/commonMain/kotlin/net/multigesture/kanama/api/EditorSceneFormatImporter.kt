@@ -132,6 +132,11 @@ open class EditorSceneFormatImporter(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorSceneFormatImporter? =
             if (handle.address() == 0L) null else EditorSceneFormatImporter(GodotHandle(handle))
+
+        /** A new EditorSceneFormatImporter, GDScript's `EditorSceneFormatImporter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorSceneFormatImporter =
+            RefCounted.owned(EditorSceneFormatImporter(GodotHandle(ObjectCalls.constructObject("EditorSceneFormatImporter"))))
     }
 
     private object Binds {

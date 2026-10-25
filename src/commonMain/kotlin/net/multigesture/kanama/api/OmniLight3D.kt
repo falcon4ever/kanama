@@ -71,6 +71,11 @@ class OmniLight3D(handle: GodotHandle) : Light3D(handle) {
 
         internal fun wrap(handle: RawSegment): OmniLight3D? =
             if (handle.address() == 0L) null else OmniLight3D(GodotHandle(handle))
+
+        /** A new OmniLight3D, GDScript's `OmniLight3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OmniLight3D =
+            OmniLight3D(GodotHandle(ObjectCalls.constructObject("OmniLight3D")))
     }
 
     private object Binds {

@@ -124,6 +124,11 @@ class AreaLight3D(handle: GodotHandle) : Light3D(handle) {
 
         internal fun wrap(handle: RawSegment): AreaLight3D? =
             if (handle.address() == 0L) null else AreaLight3D(GodotHandle(handle))
+
+        /** A new AreaLight3D, GDScript's `AreaLight3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AreaLight3D =
+            AreaLight3D(GodotHandle(ObjectCalls.constructObject("AreaLight3D")))
     }
 
     private object Binds {

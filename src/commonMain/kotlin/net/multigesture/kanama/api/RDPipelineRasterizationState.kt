@@ -357,6 +357,11 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineRasterizationState? =
             if (handle.address() == 0L) null else RDPipelineRasterizationState(GodotHandle(handle))
+
+        /** A new RDPipelineRasterizationState, GDScript's `RDPipelineRasterizationState.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDPipelineRasterizationState =
+            RefCounted.owned(RDPipelineRasterizationState(GodotHandle(ObjectCalls.constructObject("RDPipelineRasterizationState"))))
     }
 
     private object Binds {

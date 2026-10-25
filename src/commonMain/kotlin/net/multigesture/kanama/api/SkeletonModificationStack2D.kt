@@ -224,6 +224,11 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModificationStack2D? =
             if (handle.address() == 0L) null else SkeletonModificationStack2D(GodotHandle(handle))
+
+        /** A new SkeletonModificationStack2D, GDScript's `SkeletonModificationStack2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SkeletonModificationStack2D =
+            RefCounted.owned(SkeletonModificationStack2D(GodotHandle(ObjectCalls.constructObject("SkeletonModificationStack2D"))))
     }
 
     private object Binds {

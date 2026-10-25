@@ -236,6 +236,11 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): LightmapGIData? =
             if (handle.address() == 0L) null else LightmapGIData(GodotHandle(handle))
+
+        /** A new LightmapGIData, GDScript's `LightmapGIData.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): LightmapGIData =
+            RefCounted.owned(LightmapGIData(GodotHandle(ObjectCalls.constructObject("LightmapGIData"))))
     }
 
     private object Binds {

@@ -45,6 +45,11 @@ class OpenXRSpatialComponentPersistenceList(handle: GodotHandle) : OpenXRSpatial
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentPersistenceList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPersistenceList(GodotHandle(handle))
+
+        /** A new OpenXRSpatialComponentPersistenceList, GDScript's `OpenXRSpatialComponentPersistenceList.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialComponentPersistenceList =
+            RefCounted.owned(OpenXRSpatialComponentPersistenceList(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentPersistenceList"))))
     }
 
     private object Binds {

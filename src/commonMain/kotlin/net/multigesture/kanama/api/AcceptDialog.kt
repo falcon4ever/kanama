@@ -245,6 +245,11 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
 
         internal fun wrap(handle: RawSegment): AcceptDialog? =
             if (handle.address() == 0L) null else AcceptDialog(GodotHandle(handle))
+
+        /** A new AcceptDialog, GDScript's `AcceptDialog.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AcceptDialog =
+            AcceptDialog(GodotHandle(ObjectCalls.constructObject("AcceptDialog")))
     }
 
     private object Binds {

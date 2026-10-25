@@ -206,6 +206,11 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeTransition? =
             if (handle.address() == 0L) null else AnimationNodeTransition(GodotHandle(handle))
+
+        /** A new AnimationNodeTransition, GDScript's `AnimationNodeTransition.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeTransition =
+            RefCounted.owned(AnimationNodeTransition(GodotHandle(ObjectCalls.constructObject("AnimationNodeTransition"))))
     }
 
     private object Binds {

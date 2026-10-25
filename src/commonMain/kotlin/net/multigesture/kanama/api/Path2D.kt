@@ -45,6 +45,11 @@ class Path2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Path2D? =
             if (handle.address() == 0L) null else Path2D(GodotHandle(handle))
+
+        /** A new Path2D, GDScript's `Path2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Path2D =
+            Path2D(GodotHandle(ObjectCalls.constructObject("Path2D")))
     }
 
     private object Binds {

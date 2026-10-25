@@ -212,6 +212,11 @@ class OpenXRActionMap(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRActionMap? =
             if (handle.address() == 0L) null else OpenXRActionMap(GodotHandle(handle))
+
+        /** A new OpenXRActionMap, GDScript's `OpenXRActionMap.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRActionMap =
+            RefCounted.owned(OpenXRActionMap(GodotHandle(ObjectCalls.constructObject("OpenXRActionMap"))))
     }
 
     private object Binds {

@@ -444,6 +444,11 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): Decal? =
             if (handle.address() == 0L) null else Decal(GodotHandle(handle))
+
+        /** A new Decal, GDScript's `Decal.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Decal =
+            Decal(GodotHandle(ObjectCalls.constructObject("Decal")))
     }
 
     private object Binds {

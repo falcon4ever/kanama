@@ -276,6 +276,11 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): MeshInstance3D? =
             if (handle.address() == 0L) null else MeshInstance3D(GodotHandle(handle))
+
+        /** A new MeshInstance3D, GDScript's `MeshInstance3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): MeshInstance3D =
+            MeshInstance3D(GodotHandle(ObjectCalls.constructObject("MeshInstance3D")))
     }
 
     private object Binds {

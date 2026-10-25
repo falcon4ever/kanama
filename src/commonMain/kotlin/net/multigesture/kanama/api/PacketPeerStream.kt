@@ -91,6 +91,11 @@ class PacketPeerStream(handle: GodotHandle) : PacketPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PacketPeerStream? =
             if (handle.address() == 0L) null else PacketPeerStream(GodotHandle(handle))
+
+        /** A new PacketPeerStream, GDScript's `PacketPeerStream.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PacketPeerStream =
+            RefCounted.owned(PacketPeerStream(GodotHandle(ObjectCalls.constructObject("PacketPeerStream"))))
     }
 
     private object Binds {

@@ -705,6 +705,11 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Tween? =
             if (handle.address() == 0L) null else Tween(GodotHandle(handle))
+
+        /** A new Tween, GDScript's `Tween.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Tween =
+            RefCounted.owned(Tween(GodotHandle(ObjectCalls.constructObject("Tween"))))
     }
 
     private object Binds {

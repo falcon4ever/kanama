@@ -215,6 +215,11 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): PathFollow2D? =
             if (handle.address() == 0L) null else PathFollow2D(GodotHandle(handle))
+
+        /** A new PathFollow2D, GDScript's `PathFollow2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): PathFollow2D =
+            PathFollow2D(GodotHandle(ObjectCalls.constructObject("PathFollow2D")))
     }
 
     private object Binds {

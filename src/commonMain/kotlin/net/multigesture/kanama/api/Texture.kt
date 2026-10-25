@@ -22,5 +22,10 @@ open class Texture(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Texture? =
             if (handle.address() == 0L) null else Texture(GodotHandle(handle))
+
+        /** A new Texture, GDScript's `Texture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Texture =
+            RefCounted.owned(Texture(GodotHandle(ObjectCalls.constructObject("Texture"))))
     }
 }

@@ -67,6 +67,11 @@ class ModifierBoneTarget3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): ModifierBoneTarget3D? =
             if (handle.address() == 0L) null else ModifierBoneTarget3D(GodotHandle(handle))
+
+        /** A new ModifierBoneTarget3D, GDScript's `ModifierBoneTarget3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ModifierBoneTarget3D =
+            ModifierBoneTarget3D(GodotHandle(ObjectCalls.constructObject("ModifierBoneTarget3D")))
     }
 
     private object Binds {

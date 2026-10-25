@@ -292,6 +292,11 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
 
         internal fun wrap(handle: RawSegment): EditorSpinSlider? =
             if (handle.address() == 0L) null else EditorSpinSlider(GodotHandle(handle))
+
+        /** A new EditorSpinSlider, GDScript's `EditorSpinSlider.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): EditorSpinSlider =
+            EditorSpinSlider(GodotHandle(ObjectCalls.constructObject("EditorSpinSlider")))
     }
 
     private object Binds {

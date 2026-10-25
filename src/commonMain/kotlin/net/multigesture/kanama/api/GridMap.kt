@@ -721,6 +721,11 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): GridMap? =
             if (handle.address() == 0L) null else GridMap(GodotHandle(handle))
+
+        /** A new GridMap, GDScript's `GridMap.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GridMap =
+            GridMap(GodotHandle(ObjectCalls.constructObject("GridMap")))
     }
 
     private object Binds {

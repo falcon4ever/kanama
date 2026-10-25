@@ -45,6 +45,11 @@ class GridContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): GridContainer? =
             if (handle.address() == 0L) null else GridContainer(GodotHandle(handle))
+
+        /** A new GridContainer, GDScript's `GridContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GridContainer =
+            GridContainer(GodotHandle(ObjectCalls.constructObject("GridContainer")))
     }
 
     private object Binds {

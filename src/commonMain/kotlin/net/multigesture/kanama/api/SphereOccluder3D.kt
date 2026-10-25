@@ -51,6 +51,11 @@ class SphereOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SphereOccluder3D? =
             if (handle.address() == 0L) null else SphereOccluder3D(GodotHandle(handle))
+
+        /** A new SphereOccluder3D, GDScript's `SphereOccluder3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SphereOccluder3D =
+            RefCounted.owned(SphereOccluder3D(GodotHandle(ObjectCalls.constructObject("SphereOccluder3D"))))
     }
 
     private object Binds {

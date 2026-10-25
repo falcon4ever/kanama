@@ -279,6 +279,11 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeIntParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeIntParameter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeIntParameter, GDScript's `VisualShaderNodeIntParameter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeIntParameter =
+            RefCounted.owned(VisualShaderNodeIntParameter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeIntParameter"))))
     }
 
     private object Binds {

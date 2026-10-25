@@ -163,6 +163,11 @@ class MultiplayerSpawner(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): MultiplayerSpawner? =
             if (handle.address() == 0L) null else MultiplayerSpawner(GodotHandle(handle))
+
+        /** A new MultiplayerSpawner, GDScript's `MultiplayerSpawner.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): MultiplayerSpawner =
+            MultiplayerSpawner(GodotHandle(ObjectCalls.constructObject("MultiplayerSpawner")))
     }
 
     private object Binds {

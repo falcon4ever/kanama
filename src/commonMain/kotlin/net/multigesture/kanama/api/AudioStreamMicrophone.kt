@@ -22,5 +22,10 @@ class AudioStreamMicrophone(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamMicrophone? =
             if (handle.address() == 0L) null else AudioStreamMicrophone(GodotHandle(handle))
+
+        /** A new AudioStreamMicrophone, GDScript's `AudioStreamMicrophone.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioStreamMicrophone =
+            RefCounted.owned(AudioStreamMicrophone(GodotHandle(ObjectCalls.constructObject("AudioStreamMicrophone"))))
     }
 }

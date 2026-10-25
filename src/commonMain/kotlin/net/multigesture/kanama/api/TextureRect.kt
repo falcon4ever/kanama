@@ -250,6 +250,11 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): TextureRect? =
             if (handle.address() == 0L) null else TextureRect(GodotHandle(handle))
+
+        /** A new TextureRect, GDScript's `TextureRect.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): TextureRect =
+            TextureRect(GodotHandle(ObjectCalls.constructObject("TextureRect")))
     }
 
     private object Binds {

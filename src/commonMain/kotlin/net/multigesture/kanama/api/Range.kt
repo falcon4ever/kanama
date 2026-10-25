@@ -317,6 +317,11 @@ open class Range(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): Range? =
             if (handle.address() == 0L) null else Range(GodotHandle(handle))
+
+        /** A new Range, GDScript's `Range.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Range =
+            Range(GodotHandle(ObjectCalls.constructObject("Range")))
     }
 
     private object Binds {

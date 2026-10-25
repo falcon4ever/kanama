@@ -814,6 +814,11 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): EditorPlugin? =
             if (handle.address() == 0L) null else EditorPlugin(GodotHandle(handle))
+
+        /** A new EditorPlugin, GDScript's `EditorPlugin.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): EditorPlugin =
+            EditorPlugin(GodotHandle(ObjectCalls.constructObject("EditorPlugin")))
     }
 
     private object Binds {

@@ -261,6 +261,11 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorFeatureProfile? =
             if (handle.address() == 0L) null else EditorFeatureProfile(GodotHandle(handle))
+
+        /** A new EditorFeatureProfile, GDScript's `EditorFeatureProfile.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorFeatureProfile =
+            RefCounted.owned(EditorFeatureProfile(GodotHandle(ObjectCalls.constructObject("EditorFeatureProfile"))))
     }
 
     private object Binds {

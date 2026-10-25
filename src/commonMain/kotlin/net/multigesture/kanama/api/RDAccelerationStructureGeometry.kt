@@ -284,6 +284,11 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): RDAccelerationStructureGeometry? =
             if (handle.address() == 0L) null else RDAccelerationStructureGeometry(GodotHandle(handle))
+
+        /** A new RDAccelerationStructureGeometry, GDScript's `RDAccelerationStructureGeometry.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDAccelerationStructureGeometry =
+            RefCounted.owned(RDAccelerationStructureGeometry(GodotHandle(ObjectCalls.constructObject("RDAccelerationStructureGeometry"))))
     }
 
     private object Binds {

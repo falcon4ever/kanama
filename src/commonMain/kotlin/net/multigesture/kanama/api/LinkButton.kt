@@ -275,6 +275,11 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
 
         internal fun wrap(handle: RawSegment): LinkButton? =
             if (handle.address() == 0L) null else LinkButton(GodotHandle(handle))
+
+        /** A new LinkButton, GDScript's `LinkButton.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): LinkButton =
+            LinkButton(GodotHandle(ObjectCalls.constructObject("LinkButton")))
     }
 
     private object Binds {

@@ -136,6 +136,11 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRMarkerTracker? =
             if (handle.address() == 0L) null else OpenXRMarkerTracker(GodotHandle(handle))
+
+        /** A new OpenXRMarkerTracker, GDScript's `OpenXRMarkerTracker.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRMarkerTracker =
+            RefCounted.owned(OpenXRMarkerTracker(GodotHandle(ObjectCalls.constructObject("OpenXRMarkerTracker"))))
     }
 
     private object Binds {

@@ -312,6 +312,11 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventScreenDrag? =
             if (handle.address() == 0L) null else InputEventScreenDrag(GodotHandle(handle))
+
+        /** A new InputEventScreenDrag, GDScript's `InputEventScreenDrag.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): InputEventScreenDrag =
+            RefCounted.owned(InputEventScreenDrag(GodotHandle(ObjectCalls.constructObject("InputEventScreenDrag"))))
     }
 
     private object Binds {

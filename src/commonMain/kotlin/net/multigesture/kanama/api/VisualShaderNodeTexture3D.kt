@@ -55,6 +55,11 @@ class VisualShaderNodeTexture3D(handle: GodotHandle) : VisualShaderNodeSample3D(
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTexture3D? =
             if (handle.address() == 0L) null else VisualShaderNodeTexture3D(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTexture3D, GDScript's `VisualShaderNodeTexture3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTexture3D =
+            RefCounted.owned(VisualShaderNodeTexture3D(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTexture3D"))))
     }
 
     private object Binds {

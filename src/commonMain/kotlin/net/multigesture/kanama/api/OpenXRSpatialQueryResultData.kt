@@ -57,6 +57,11 @@ class OpenXRSpatialQueryResultData(handle: GodotHandle) : OpenXRSpatialComponent
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialQueryResultData? =
             if (handle.address() == 0L) null else OpenXRSpatialQueryResultData(GodotHandle(handle))
+
+        /** A new OpenXRSpatialQueryResultData, GDScript's `OpenXRSpatialQueryResultData.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialQueryResultData =
+            RefCounted.owned(OpenXRSpatialQueryResultData(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialQueryResultData"))))
     }
 
     private object Binds {

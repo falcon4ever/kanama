@@ -1070,6 +1070,11 @@ class ItemList(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): ItemList? =
             if (handle.address() == 0L) null else ItemList(GodotHandle(handle))
+
+        /** A new ItemList, GDScript's `ItemList.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ItemList =
+            ItemList(GodotHandle(ObjectCalls.constructObject("ItemList")))
     }
 
     private object Binds {

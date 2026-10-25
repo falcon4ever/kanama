@@ -224,6 +224,11 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineMultisampleState? =
             if (handle.address() == 0L) null else RDPipelineMultisampleState(GodotHandle(handle))
+
+        /** A new RDPipelineMultisampleState, GDScript's `RDPipelineMultisampleState.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDPipelineMultisampleState =
+            RefCounted.owned(RDPipelineMultisampleState(GodotHandle(ObjectCalls.constructObject("RDPipelineMultisampleState"))))
     }
 
     private object Binds {

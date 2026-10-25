@@ -33,6 +33,11 @@ class GDScript(handle: GodotHandle) : Script(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GDScript? =
             if (handle.address() == 0L) null else GDScript(GodotHandle(handle))
+
+        /** A new GDScript, GDScript's `GDScript.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GDScript =
+            RefCounted.owned(GDScript(GodotHandle(ObjectCalls.constructObject("GDScript"))))
     }
 
     private object Binds {

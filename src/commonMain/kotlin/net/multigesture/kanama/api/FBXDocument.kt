@@ -22,5 +22,10 @@ class FBXDocument(handle: GodotHandle) : GLTFDocument(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): FBXDocument? =
             if (handle.address() == 0L) null else FBXDocument(GodotHandle(handle))
+
+        /** A new FBXDocument, GDScript's `FBXDocument.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): FBXDocument =
+            RefCounted.owned(FBXDocument(GodotHandle(ObjectCalls.constructObject("FBXDocument"))))
     }
 }

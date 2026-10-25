@@ -371,6 +371,11 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineColorBlendStateAttachment? =
             if (handle.address() == 0L) null else RDPipelineColorBlendStateAttachment(GodotHandle(handle))
+
+        /** A new RDPipelineColorBlendStateAttachment, GDScript's `RDPipelineColorBlendStateAttachment.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDPipelineColorBlendStateAttachment =
+            RefCounted.owned(RDPipelineColorBlendStateAttachment(GodotHandle(ObjectCalls.constructObject("RDPipelineColorBlendStateAttachment"))))
     }
 
     private object Binds {

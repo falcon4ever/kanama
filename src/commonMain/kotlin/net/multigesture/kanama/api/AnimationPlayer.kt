@@ -702,6 +702,11 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
 
         internal fun wrap(handle: RawSegment): AnimationPlayer? =
             if (handle.address() == 0L) null else AnimationPlayer(GodotHandle(handle))
+
+        /** A new AnimationPlayer, GDScript's `AnimationPlayer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AnimationPlayer =
+            AnimationPlayer(GodotHandle(ObjectCalls.constructObject("AnimationPlayer")))
     }
 
     private object Binds {

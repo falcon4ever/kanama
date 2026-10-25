@@ -540,6 +540,11 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Line2D? =
             if (handle.address() == 0L) null else Line2D(GodotHandle(handle))
+
+        /** A new Line2D, GDScript's `Line2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Line2D =
+            Line2D(GodotHandle(ObjectCalls.constructObject("Line2D")))
     }
 
     private object Binds {

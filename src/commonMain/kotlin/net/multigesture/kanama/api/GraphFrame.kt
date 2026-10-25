@@ -189,6 +189,11 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
 
         internal fun wrap(handle: RawSegment): GraphFrame? =
             if (handle.address() == 0L) null else GraphFrame(GodotHandle(handle))
+
+        /** A new GraphFrame, GDScript's `GraphFrame.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GraphFrame =
+            GraphFrame(GodotHandle(ObjectCalls.constructObject("GraphFrame")))
     }
 
     private object Binds {

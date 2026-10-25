@@ -237,6 +237,11 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimatedTexture? =
             if (handle.address() == 0L) null else AnimatedTexture(GodotHandle(handle))
+
+        /** A new AnimatedTexture, GDScript's `AnimatedTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimatedTexture =
+            RefCounted.owned(AnimatedTexture(GodotHandle(ObjectCalls.constructObject("AnimatedTexture"))))
     }
 
     private object Binds {

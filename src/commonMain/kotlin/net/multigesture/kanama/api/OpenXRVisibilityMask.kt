@@ -19,5 +19,10 @@ class OpenXRVisibilityMask(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): OpenXRVisibilityMask? =
             if (handle.address() == 0L) null else OpenXRVisibilityMask(GodotHandle(handle))
+
+        /** A new OpenXRVisibilityMask, GDScript's `OpenXRVisibilityMask.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OpenXRVisibilityMask =
+            OpenXRVisibilityMask(GodotHandle(ObjectCalls.constructObject("OpenXRVisibilityMask")))
     }
 }

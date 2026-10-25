@@ -129,6 +129,11 @@ class RegExMatch(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RegExMatch? =
             if (handle.address() == 0L) null else RegExMatch(GodotHandle(handle))
+
+        /** A new RegExMatch, GDScript's `RegExMatch.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RegExMatch =
+            RefCounted.owned(RegExMatch(GodotHandle(ObjectCalls.constructObject("RegExMatch"))))
     }
 
     private object Binds {

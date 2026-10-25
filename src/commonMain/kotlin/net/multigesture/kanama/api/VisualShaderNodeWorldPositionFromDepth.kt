@@ -23,5 +23,10 @@ class VisualShaderNodeWorldPositionFromDepth(handle: GodotHandle) : VisualShader
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeWorldPositionFromDepth? =
             if (handle.address() == 0L) null else VisualShaderNodeWorldPositionFromDepth(GodotHandle(handle))
+
+        /** A new VisualShaderNodeWorldPositionFromDepth, GDScript's `VisualShaderNodeWorldPositionFromDepth.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeWorldPositionFromDepth =
+            RefCounted.owned(VisualShaderNodeWorldPositionFromDepth(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeWorldPositionFromDepth"))))
     }
 }

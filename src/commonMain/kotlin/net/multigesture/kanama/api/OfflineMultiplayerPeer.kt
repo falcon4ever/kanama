@@ -23,7 +23,7 @@ class OfflineMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
         internal fun wrapBorrowed(handle: RawSegment): OfflineMultiplayerPeer? =
             if (handle.address() == 0L) null else OfflineMultiplayerPeer(GodotHandle(handle))
 
-        // Instantiate an OfflineMultiplayerPeer.
+        /** A new OfflineMultiplayerPeer, GDScript's `OfflineMultiplayerPeer.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OfflineMultiplayerPeer =
             RefCounted.owned(OfflineMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("OfflineMultiplayerPeer"))))

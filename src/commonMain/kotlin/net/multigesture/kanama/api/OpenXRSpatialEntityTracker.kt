@@ -189,6 +189,11 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialEntityTracker? =
             if (handle.address() == 0L) null else OpenXRSpatialEntityTracker(GodotHandle(handle))
+
+        /** A new OpenXRSpatialEntityTracker, GDScript's `OpenXRSpatialEntityTracker.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialEntityTracker =
+            RefCounted.owned(OpenXRSpatialEntityTracker(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialEntityTracker"))))
     }
 
     private object Binds {

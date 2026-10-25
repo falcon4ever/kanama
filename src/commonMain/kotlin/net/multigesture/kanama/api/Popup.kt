@@ -29,5 +29,10 @@ open class Popup(handle: GodotHandle) : Window(handle) {
 
         internal fun wrap(handle: RawSegment): Popup? =
             if (handle.address() == 0L) null else Popup(GodotHandle(handle))
+
+        /** A new Popup, GDScript's `Popup.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Popup =
+            Popup(GodotHandle(ObjectCalls.constructObject("Popup")))
     }
 }

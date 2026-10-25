@@ -292,6 +292,11 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventMIDI? =
             if (handle.address() == 0L) null else InputEventMIDI(GodotHandle(handle))
+
+        /** A new InputEventMIDI, GDScript's `InputEventMIDI.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): InputEventMIDI =
+            RefCounted.owned(InputEventMIDI(GodotHandle(ObjectCalls.constructObject("InputEventMIDI"))))
     }
 
     private object Binds {

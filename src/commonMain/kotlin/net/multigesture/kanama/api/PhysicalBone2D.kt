@@ -172,6 +172,11 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
 
         internal fun wrap(handle: RawSegment): PhysicalBone2D? =
             if (handle.address() == 0L) null else PhysicalBone2D(GodotHandle(handle))
+
+        /** A new PhysicalBone2D, GDScript's `PhysicalBone2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): PhysicalBone2D =
+            PhysicalBone2D(GodotHandle(ObjectCalls.constructObject("PhysicalBone2D")))
     }
 
     private object Binds {

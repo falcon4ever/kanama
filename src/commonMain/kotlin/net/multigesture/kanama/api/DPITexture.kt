@@ -245,6 +245,11 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): DPITexture? =
             if (handle.address() == 0L) null else DPITexture(GodotHandle(handle))
+
+        /** A new DPITexture, GDScript's `DPITexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): DPITexture =
+            RefCounted.owned(DPITexture(GodotHandle(ObjectCalls.constructObject("DPITexture"))))
     }
 
     private object Binds {

@@ -283,6 +283,11 @@ class NavigationRegion3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationRegion3D? =
             if (handle.address() == 0L) null else NavigationRegion3D(GodotHandle(handle))
+
+        /** A new NavigationRegion3D, GDScript's `NavigationRegion3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): NavigationRegion3D =
+            NavigationRegion3D(GodotHandle(ObjectCalls.constructObject("NavigationRegion3D")))
     }
 
     private object Binds {

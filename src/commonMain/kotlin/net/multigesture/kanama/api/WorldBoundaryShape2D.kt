@@ -89,6 +89,11 @@ class WorldBoundaryShape2D(handle: GodotHandle) : Shape2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WorldBoundaryShape2D? =
             if (handle.address() == 0L) null else WorldBoundaryShape2D(GodotHandle(handle))
+
+        /** A new WorldBoundaryShape2D, GDScript's `WorldBoundaryShape2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): WorldBoundaryShape2D =
+            RefCounted.owned(WorldBoundaryShape2D(GodotHandle(ObjectCalls.constructObject("WorldBoundaryShape2D"))))
     }
 
     private object Binds {

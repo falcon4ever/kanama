@@ -164,6 +164,11 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRBodyModifier3D? =
             if (handle.address() == 0L) null else XRBodyModifier3D(GodotHandle(handle))
+
+        /** A new XRBodyModifier3D, GDScript's `XRBodyModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): XRBodyModifier3D =
+            XRBodyModifier3D(GodotHandle(ObjectCalls.constructObject("XRBodyModifier3D")))
     }
 
     private object Binds {

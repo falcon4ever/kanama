@@ -113,6 +113,11 @@ class CanvasGroup(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): CanvasGroup? =
             if (handle.address() == 0L) null else CanvasGroup(GodotHandle(handle))
+
+        /** A new CanvasGroup, GDScript's `CanvasGroup.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CanvasGroup =
+            CanvasGroup(GodotHandle(ObjectCalls.constructObject("CanvasGroup")))
     }
 
     private object Binds {

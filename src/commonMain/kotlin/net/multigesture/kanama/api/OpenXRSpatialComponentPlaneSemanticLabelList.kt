@@ -77,6 +77,11 @@ class OpenXRSpatialComponentPlaneSemanticLabelList(handle: GodotHandle) : OpenXR
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentPlaneSemanticLabelList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPlaneSemanticLabelList(GodotHandle(handle))
+
+        /** A new OpenXRSpatialComponentPlaneSemanticLabelList, GDScript's `OpenXRSpatialComponentPlaneSemanticLabelList.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialComponentPlaneSemanticLabelList =
+            RefCounted.owned(OpenXRSpatialComponentPlaneSemanticLabelList(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentPlaneSemanticLabelList"))))
     }
 
     private object Binds {

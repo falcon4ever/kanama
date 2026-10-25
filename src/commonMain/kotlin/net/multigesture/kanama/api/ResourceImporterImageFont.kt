@@ -22,5 +22,10 @@ class ResourceImporterImageFont(handle: GodotHandle) : ResourceImporter(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterImageFont? =
             if (handle.address() == 0L) null else ResourceImporterImageFont(GodotHandle(handle))
+
+        /** A new ResourceImporterImageFont, GDScript's `ResourceImporterImageFont.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterImageFont =
+            RefCounted.owned(ResourceImporterImageFont(GodotHandle(ObjectCalls.constructObject("ResourceImporterImageFont"))))
     }
 }

@@ -209,6 +209,11 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PrimitiveMesh? =
             if (handle.address() == 0L) null else PrimitiveMesh(GodotHandle(handle))
+
+        /** A new PrimitiveMesh, GDScript's `PrimitiveMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PrimitiveMesh =
+            RefCounted.owned(PrimitiveMesh(GodotHandle(ObjectCalls.constructObject("PrimitiveMesh"))))
     }
 
     private object Binds {

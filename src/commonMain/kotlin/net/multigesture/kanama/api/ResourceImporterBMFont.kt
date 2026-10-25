@@ -22,5 +22,10 @@ class ResourceImporterBMFont(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterBMFont? =
             if (handle.address() == 0L) null else ResourceImporterBMFont(GodotHandle(handle))
+
+        /** A new ResourceImporterBMFont, GDScript's `ResourceImporterBMFont.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterBMFont =
+            RefCounted.owned(ResourceImporterBMFont(GodotHandle(ObjectCalls.constructObject("ResourceImporterBMFont"))))
     }
 }

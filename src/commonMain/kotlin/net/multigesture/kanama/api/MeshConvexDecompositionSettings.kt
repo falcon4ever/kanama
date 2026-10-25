@@ -429,6 +429,11 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): MeshConvexDecompositionSettings? =
             if (handle.address() == 0L) null else MeshConvexDecompositionSettings(GodotHandle(handle))
+
+        /** A new MeshConvexDecompositionSettings, GDScript's `MeshConvexDecompositionSettings.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MeshConvexDecompositionSettings =
+            RefCounted.owned(MeshConvexDecompositionSettings(GodotHandle(ObjectCalls.constructObject("MeshConvexDecompositionSettings"))))
     }
 
     private object Binds {

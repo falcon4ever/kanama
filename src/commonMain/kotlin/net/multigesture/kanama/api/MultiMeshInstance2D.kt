@@ -81,6 +81,11 @@ class MultiMeshInstance2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): MultiMeshInstance2D? =
             if (handle.address() == 0L) null else MultiMeshInstance2D(GodotHandle(handle))
+
+        /** A new MultiMeshInstance2D, GDScript's `MultiMeshInstance2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): MultiMeshInstance2D =
+            MultiMeshInstance2D(GodotHandle(ObjectCalls.constructObject("MultiMeshInstance2D")))
     }
 
     private object Binds {

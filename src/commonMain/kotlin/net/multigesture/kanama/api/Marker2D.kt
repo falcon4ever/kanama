@@ -43,6 +43,11 @@ class Marker2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Marker2D? =
             if (handle.address() == 0L) null else Marker2D(GodotHandle(handle))
+
+        /** A new Marker2D, GDScript's `Marker2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Marker2D =
+            Marker2D(GodotHandle(ObjectCalls.constructObject("Marker2D")))
     }
 
     private object Binds {

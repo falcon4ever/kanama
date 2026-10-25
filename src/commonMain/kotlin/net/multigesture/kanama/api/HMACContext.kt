@@ -59,6 +59,11 @@ class HMACContext(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): HMACContext? =
             if (handle.address() == 0L) null else HMACContext(GodotHandle(handle))
+
+        /** A new HMACContext, GDScript's `HMACContext.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): HMACContext =
+            RefCounted.owned(HMACContext(GodotHandle(ObjectCalls.constructObject("HMACContext"))))
     }
 
     private object Binds {

@@ -157,6 +157,11 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRInteractionProfile? =
             if (handle.address() == 0L) null else OpenXRInteractionProfile(GodotHandle(handle))
+
+        /** A new OpenXRInteractionProfile, GDScript's `OpenXRInteractionProfile.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRInteractionProfile =
+            RefCounted.owned(OpenXRInteractionProfile(GodotHandle(ObjectCalls.constructObject("OpenXRInteractionProfile"))))
     }
 
     private object Binds {

@@ -673,6 +673,11 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): Skeleton3D? =
             if (handle.address() == 0L) null else Skeleton3D(GodotHandle(handle))
+
+        /** A new Skeleton3D, GDScript's `Skeleton3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Skeleton3D =
+            Skeleton3D(GodotHandle(ObjectCalls.constructObject("Skeleton3D")))
     }
 
     private object Binds {

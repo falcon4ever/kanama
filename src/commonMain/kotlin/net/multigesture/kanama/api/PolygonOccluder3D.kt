@@ -56,6 +56,11 @@ class PolygonOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PolygonOccluder3D? =
             if (handle.address() == 0L) null else PolygonOccluder3D(GodotHandle(handle))
+
+        /** A new PolygonOccluder3D, GDScript's `PolygonOccluder3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PolygonOccluder3D =
+            RefCounted.owned(PolygonOccluder3D(GodotHandle(ObjectCalls.constructObject("PolygonOccluder3D"))))
     }
 
     private object Binds {

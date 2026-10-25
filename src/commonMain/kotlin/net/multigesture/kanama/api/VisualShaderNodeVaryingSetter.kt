@@ -22,5 +22,10 @@ class VisualShaderNodeVaryingSetter(handle: GodotHandle) : VisualShaderNodeVaryi
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVaryingSetter? =
             if (handle.address() == 0L) null else VisualShaderNodeVaryingSetter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVaryingSetter, GDScript's `VisualShaderNodeVaryingSetter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVaryingSetter =
+            RefCounted.owned(VisualShaderNodeVaryingSetter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeVaryingSetter"))))
     }
 }

@@ -333,6 +333,11 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): FontVariation? =
             if (handle.address() == 0L) null else FontVariation(GodotHandle(handle))
+
+        /** A new FontVariation, GDScript's `FontVariation.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): FontVariation =
+            RefCounted.owned(FontVariation(GodotHandle(ObjectCalls.constructObject("FontVariation"))))
     }
 
     private object Binds {

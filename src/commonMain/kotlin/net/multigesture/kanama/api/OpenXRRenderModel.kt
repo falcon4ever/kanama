@@ -66,6 +66,11 @@ class OpenXRRenderModel(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): OpenXRRenderModel? =
             if (handle.address() == 0L) null else OpenXRRenderModel(GodotHandle(handle))
+
+        /** A new OpenXRRenderModel, GDScript's `OpenXRRenderModel.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OpenXRRenderModel =
+            OpenXRRenderModel(GodotHandle(ObjectCalls.constructObject("OpenXRRenderModel")))
     }
 
     private object Binds {

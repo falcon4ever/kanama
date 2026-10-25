@@ -382,7 +382,7 @@ class Sprite2D(handle: GodotHandle) : Node2D(handle) {
         internal fun wrap(handle: RawSegment): Sprite2D? =
             if (handle.address() == 0L) null else Sprite2D(GodotHandle(handle))
 
-        // Instantiate a Sprite2D.
+        /** A new Sprite2D, GDScript's `Sprite2D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Sprite2D =
             Sprite2D(GodotHandle(ObjectCalls.constructObject("Sprite2D")))

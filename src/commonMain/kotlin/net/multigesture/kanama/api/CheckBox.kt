@@ -19,5 +19,10 @@ class CheckBox(handle: GodotHandle) : Button(handle) {
 
         internal fun wrap(handle: RawSegment): CheckBox? =
             if (handle.address() == 0L) null else CheckBox(GodotHandle(handle))
+
+        /** A new CheckBox, GDScript's `CheckBox.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CheckBox =
+            CheckBox(GodotHandle(ObjectCalls.constructObject("CheckBox")))
     }
 }

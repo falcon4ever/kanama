@@ -85,6 +85,11 @@ class CryptoKey(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CryptoKey? =
             if (handle.address() == 0L) null else CryptoKey(GodotHandle(handle))
+
+        /** A new CryptoKey, GDScript's `CryptoKey.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CryptoKey =
+            RefCounted.owned(CryptoKey(GodotHandle(ObjectCalls.constructObject("CryptoKey"))))
     }
 
     private object Binds {

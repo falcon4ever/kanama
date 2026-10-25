@@ -1486,6 +1486,11 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): LineEdit? =
             if (handle.address() == 0L) null else LineEdit(GodotHandle(handle))
+
+        /** A new LineEdit, GDScript's `LineEdit.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): LineEdit =
+            LineEdit(GodotHandle(ObjectCalls.constructObject("LineEdit")))
     }
 
     private object Binds {

@@ -955,6 +955,11 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): HTTPClient? =
             if (handle.address() == 0L) null else HTTPClient(GodotHandle(handle))
+
+        /** A new HTTPClient, GDScript's `HTTPClient.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): HTTPClient =
+            RefCounted.owned(HTTPClient(GodotHandle(ObjectCalls.constructObject("HTTPClient"))))
     }
 
     private object Binds {

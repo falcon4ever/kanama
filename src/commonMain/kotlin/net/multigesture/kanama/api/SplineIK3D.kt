@@ -101,6 +101,11 @@ class SplineIK3D(handle: GodotHandle) : ChainIK3D(handle) {
 
         internal fun wrap(handle: RawSegment): SplineIK3D? =
             if (handle.address() == 0L) null else SplineIK3D(GodotHandle(handle))
+
+        /** A new SplineIK3D, GDScript's `SplineIK3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SplineIK3D =
+            SplineIK3D(GodotHandle(ObjectCalls.constructObject("SplineIK3D")))
     }
 
     private object Binds {

@@ -787,6 +787,11 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Camera2D? =
             if (handle.address() == 0L) null else Camera2D(GodotHandle(handle))
+
+        /** A new Camera2D, GDScript's `Camera2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Camera2D =
+            Camera2D(GodotHandle(ObjectCalls.constructObject("Camera2D")))
     }
 
     private object Binds {

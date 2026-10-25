@@ -54,6 +54,11 @@ class EditorFileDialog(handle: GodotHandle) : FileDialog(handle) {
 
         internal fun wrap(handle: RawSegment): EditorFileDialog? =
             if (handle.address() == 0L) null else EditorFileDialog(GodotHandle(handle))
+
+        /** A new EditorFileDialog, GDScript's `EditorFileDialog.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): EditorFileDialog =
+            EditorFileDialog(GodotHandle(ObjectCalls.constructObject("EditorFileDialog")))
     }
 
     private object Binds {

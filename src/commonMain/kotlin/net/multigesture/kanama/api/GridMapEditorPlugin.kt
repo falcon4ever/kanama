@@ -98,6 +98,11 @@ class GridMapEditorPlugin(handle: GodotHandle) : EditorPlugin(handle) {
 
         internal fun wrap(handle: RawSegment): GridMapEditorPlugin? =
             if (handle.address() == 0L) null else GridMapEditorPlugin(GodotHandle(handle))
+
+        /** A new GridMapEditorPlugin, GDScript's `GridMapEditorPlugin.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GridMapEditorPlugin =
+            GridMapEditorPlugin(GodotHandle(ObjectCalls.constructObject("GridMapEditorPlugin")))
     }
 
     private object Binds {

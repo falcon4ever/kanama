@@ -511,6 +511,11 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MultiMesh? =
             if (handle.address() == 0L) null else MultiMesh(GodotHandle(handle))
+
+        /** A new MultiMesh, GDScript's `MultiMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MultiMesh =
+            RefCounted.owned(MultiMesh(GodotHandle(ObjectCalls.constructObject("MultiMesh"))))
     }
 
     private object Binds {

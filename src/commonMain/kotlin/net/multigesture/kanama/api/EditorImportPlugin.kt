@@ -41,6 +41,11 @@ class EditorImportPlugin(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorImportPlugin? =
             if (handle.address() == 0L) null else EditorImportPlugin(GodotHandle(handle))
+
+        /** A new EditorImportPlugin, GDScript's `EditorImportPlugin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorImportPlugin =
+            RefCounted.owned(EditorImportPlugin(GodotHandle(ObjectCalls.constructObject("EditorImportPlugin"))))
     }
 
     private object Binds {

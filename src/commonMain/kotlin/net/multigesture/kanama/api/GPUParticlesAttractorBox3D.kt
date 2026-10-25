@@ -44,6 +44,11 @@ class GPUParticlesAttractorBox3D(handle: GodotHandle) : GPUParticlesAttractor3D(
 
         internal fun wrap(handle: RawSegment): GPUParticlesAttractorBox3D? =
             if (handle.address() == 0L) null else GPUParticlesAttractorBox3D(GodotHandle(handle))
+
+        /** A new GPUParticlesAttractorBox3D, GDScript's `GPUParticlesAttractorBox3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GPUParticlesAttractorBox3D =
+            GPUParticlesAttractorBox3D(GodotHandle(ObjectCalls.constructObject("GPUParticlesAttractorBox3D")))
     }
 
     private object Binds {

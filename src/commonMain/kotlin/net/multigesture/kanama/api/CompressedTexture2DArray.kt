@@ -22,5 +22,10 @@ class CompressedTexture2DArray(handle: GodotHandle) : CompressedTextureLayered(h
 
         internal fun wrapBorrowed(handle: RawSegment): CompressedTexture2DArray? =
             if (handle.address() == 0L) null else CompressedTexture2DArray(GodotHandle(handle))
+
+        /** A new CompressedTexture2DArray, GDScript's `CompressedTexture2DArray.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CompressedTexture2DArray =
+            RefCounted.owned(CompressedTexture2DArray(GodotHandle(ObjectCalls.constructObject("CompressedTexture2DArray"))))
     }
 }

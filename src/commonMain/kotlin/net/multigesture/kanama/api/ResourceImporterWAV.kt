@@ -22,5 +22,10 @@ class ResourceImporterWAV(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterWAV? =
             if (handle.address() == 0L) null else ResourceImporterWAV(GodotHandle(handle))
+
+        /** A new ResourceImporterWAV, GDScript's `ResourceImporterWAV.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterWAV =
+            RefCounted.owned(ResourceImporterWAV(GodotHandle(ObjectCalls.constructObject("ResourceImporterWAV"))))
     }
 }

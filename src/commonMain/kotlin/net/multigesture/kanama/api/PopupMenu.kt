@@ -1210,6 +1210,11 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
 
         internal fun wrap(handle: RawSegment): PopupMenu? =
             if (handle.address() == 0L) null else PopupMenu(GodotHandle(handle))
+
+        /** A new PopupMenu, GDScript's `PopupMenu.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): PopupMenu =
+            PopupMenu(GodotHandle(ObjectCalls.constructObject("PopupMenu")))
     }
 
     private object Binds {

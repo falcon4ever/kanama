@@ -37,6 +37,11 @@ class ScriptCreateDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
 
         internal fun wrap(handle: RawSegment): ScriptCreateDialog? =
             if (handle.address() == 0L) null else ScriptCreateDialog(GodotHandle(handle))
+
+        /** A new ScriptCreateDialog, GDScript's `ScriptCreateDialog.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ScriptCreateDialog =
+            ScriptCreateDialog(GodotHandle(ObjectCalls.constructObject("ScriptCreateDialog")))
     }
 
     private object Binds {

@@ -125,6 +125,11 @@ class VisualShaderNodeColorOp(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeColorOp? =
             if (handle.address() == 0L) null else VisualShaderNodeColorOp(GodotHandle(handle))
+
+        /** A new VisualShaderNodeColorOp, GDScript's `VisualShaderNodeColorOp.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeColorOp =
+            RefCounted.owned(VisualShaderNodeColorOp(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeColorOp"))))
     }
 
     private object Binds {

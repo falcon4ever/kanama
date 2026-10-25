@@ -46,6 +46,11 @@ class EditorDebuggerPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorDebuggerPlugin? =
             if (handle.address() == 0L) null else EditorDebuggerPlugin(GodotHandle(handle))
+
+        /** A new EditorDebuggerPlugin, GDScript's `EditorDebuggerPlugin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorDebuggerPlugin =
+            RefCounted.owned(EditorDebuggerPlugin(GodotHandle(ObjectCalls.constructObject("EditorDebuggerPlugin"))))
     }
 
     private object Binds {

@@ -34,6 +34,11 @@ class OpenXRSpatialComponentAnchorList(handle: GodotHandle) : OpenXRSpatialCompo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentAnchorList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentAnchorList(GodotHandle(handle))
+
+        /** A new OpenXRSpatialComponentAnchorList, GDScript's `OpenXRSpatialComponentAnchorList.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialComponentAnchorList =
+            RefCounted.owned(OpenXRSpatialComponentAnchorList(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentAnchorList"))))
     }
 
     private object Binds {

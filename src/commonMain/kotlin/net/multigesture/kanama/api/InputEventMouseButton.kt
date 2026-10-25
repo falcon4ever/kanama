@@ -137,7 +137,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
         internal fun wrapBorrowed(handle: RawSegment): InputEventMouseButton? =
             if (handle.address() == 0L) null else InputEventMouseButton(GodotHandle(handle))
 
-        // Instantiate an InputEventMouseButton.
+        /** A new InputEventMouseButton, GDScript's `InputEventMouseButton.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): InputEventMouseButton =
             RefCounted.owned(InputEventMouseButton(GodotHandle(ObjectCalls.constructObject("InputEventMouseButton"))))

@@ -554,7 +554,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
         internal fun wrapBorrowed(handle: RawSegment): SurfaceTool? =
             if (handle.address() == 0L) null else SurfaceTool(GodotHandle(handle))
 
-        // Instantiate a SurfaceTool.
+        /** A new SurfaceTool, GDScript's `SurfaceTool.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): SurfaceTool =
             RefCounted.owned(SurfaceTool(GodotHandle(ObjectCalls.constructObject("SurfaceTool"))))

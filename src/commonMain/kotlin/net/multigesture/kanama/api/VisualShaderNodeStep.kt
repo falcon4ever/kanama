@@ -112,6 +112,11 @@ class VisualShaderNodeStep(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeStep? =
             if (handle.address() == 0L) null else VisualShaderNodeStep(GodotHandle(handle))
+
+        /** A new VisualShaderNodeStep, GDScript's `VisualShaderNodeStep.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeStep =
+            RefCounted.owned(VisualShaderNodeStep(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeStep"))))
     }
 
     private object Binds {

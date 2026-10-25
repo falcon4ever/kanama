@@ -467,6 +467,11 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): ScrollContainer? =
             if (handle.address() == 0L) null else ScrollContainer(GodotHandle(handle))
+
+        /** A new ScrollContainer, GDScript's `ScrollContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ScrollContainer =
+            ScrollContainer(GodotHandle(ObjectCalls.constructObject("ScrollContainer")))
     }
 
     private object Binds {

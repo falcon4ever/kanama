@@ -426,7 +426,7 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
         internal fun wrap(handle: RawSegment): AudioStreamPlayer? =
             if (handle.address() == 0L) null else AudioStreamPlayer(GodotHandle(handle))
 
-        // Instantiate an AudioStreamPlayer.
+        /** A new AudioStreamPlayer, GDScript's `AudioStreamPlayer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): AudioStreamPlayer =
             AudioStreamPlayer(GodotHandle(ObjectCalls.constructObject("AudioStreamPlayer")))

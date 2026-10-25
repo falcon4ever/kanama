@@ -150,6 +150,11 @@ class RemoteTransform3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): RemoteTransform3D? =
             if (handle.address() == 0L) null else RemoteTransform3D(GodotHandle(handle))
+
+        /** A new RemoteTransform3D, GDScript's `RemoteTransform3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): RemoteTransform3D =
+            RemoteTransform3D(GodotHandle(ObjectCalls.constructObject("RemoteTransform3D")))
     }
 
     private object Binds {

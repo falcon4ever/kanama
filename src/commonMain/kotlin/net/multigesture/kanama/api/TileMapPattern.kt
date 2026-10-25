@@ -139,6 +139,11 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TileMapPattern? =
             if (handle.address() == 0L) null else TileMapPattern(GodotHandle(handle))
+
+        /** A new TileMapPattern, GDScript's `TileMapPattern.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TileMapPattern =
+            RefCounted.owned(TileMapPattern(GodotHandle(ObjectCalls.constructObject("TileMapPattern"))))
     }
 
     private object Binds {

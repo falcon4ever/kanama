@@ -238,6 +238,11 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): NinePatchRect? =
             if (handle.address() == 0L) null else NinePatchRect(GodotHandle(handle))
+
+        /** A new NinePatchRect, GDScript's `NinePatchRect.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): NinePatchRect =
+            NinePatchRect(GodotHandle(ObjectCalls.constructObject("NinePatchRect")))
     }
 
     private object Binds {

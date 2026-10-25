@@ -710,6 +710,11 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
 
         internal fun wrap(handle: RawSegment): CharacterBody2D? =
             if (handle.address() == 0L) null else CharacterBody2D(GodotHandle(handle))
+
+        /** A new CharacterBody2D, GDScript's `CharacterBody2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CharacterBody2D =
+            CharacterBody2D(GodotHandle(ObjectCalls.constructObject("CharacterBody2D")))
     }
 
     private object Binds {

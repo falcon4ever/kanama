@@ -399,6 +399,11 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeStateMachine? =
             if (handle.address() == 0L) null else AnimationNodeStateMachine(GodotHandle(handle))
+
+        /** A new AnimationNodeStateMachine, GDScript's `AnimationNodeStateMachine.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeStateMachine =
+            RefCounted.owned(AnimationNodeStateMachine(GodotHandle(ObjectCalls.constructObject("AnimationNodeStateMachine"))))
     }
 
     private object Binds {

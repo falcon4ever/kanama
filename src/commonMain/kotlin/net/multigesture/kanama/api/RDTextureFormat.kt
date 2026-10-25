@@ -372,6 +372,11 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDTextureFormat? =
             if (handle.address() == 0L) null else RDTextureFormat(GodotHandle(handle))
+
+        /** A new RDTextureFormat, GDScript's `RDTextureFormat.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDTextureFormat =
+            RefCounted.owned(RDTextureFormat(GodotHandle(ObjectCalls.constructObject("RDTextureFormat"))))
     }
 
     private object Binds {

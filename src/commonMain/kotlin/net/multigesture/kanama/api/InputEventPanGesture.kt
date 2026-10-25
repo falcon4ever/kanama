@@ -52,6 +52,11 @@ class InputEventPanGesture(handle: GodotHandle) : InputEventGesture(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventPanGesture? =
             if (handle.address() == 0L) null else InputEventPanGesture(GodotHandle(handle))
+
+        /** A new InputEventPanGesture, GDScript's `InputEventPanGesture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): InputEventPanGesture =
+            RefCounted.owned(InputEventPanGesture(GodotHandle(ObjectCalls.constructObject("InputEventPanGesture"))))
     }
 
     private object Binds {

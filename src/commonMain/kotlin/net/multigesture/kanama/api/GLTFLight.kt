@@ -287,6 +287,11 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFLight? =
             if (handle.address() == 0L) null else GLTFLight(GodotHandle(handle))
+
+        /** A new GLTFLight, GDScript's `GLTFLight.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFLight =
+            RefCounted.owned(GLTFLight(GodotHandle(ObjectCalls.constructObject("GLTFLight"))))
     }
 
     private object Binds {

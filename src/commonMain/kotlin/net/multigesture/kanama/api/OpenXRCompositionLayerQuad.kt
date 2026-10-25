@@ -44,6 +44,11 @@ class OpenXRCompositionLayerQuad(handle: GodotHandle) : OpenXRCompositionLayer(h
 
         internal fun wrap(handle: RawSegment): OpenXRCompositionLayerQuad? =
             if (handle.address() == 0L) null else OpenXRCompositionLayerQuad(GodotHandle(handle))
+
+        /** A new OpenXRCompositionLayerQuad, GDScript's `OpenXRCompositionLayerQuad.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OpenXRCompositionLayerQuad =
+            OpenXRCompositionLayerQuad(GodotHandle(ObjectCalls.constructObject("OpenXRCompositionLayerQuad")))
     }
 
     private object Binds {

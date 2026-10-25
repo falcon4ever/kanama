@@ -109,6 +109,11 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDAttachmentFormat? =
             if (handle.address() == 0L) null else RDAttachmentFormat(GodotHandle(handle))
+
+        /** A new RDAttachmentFormat, GDScript's `RDAttachmentFormat.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDAttachmentFormat =
+            RefCounted.owned(RDAttachmentFormat(GodotHandle(ObjectCalls.constructObject("RDAttachmentFormat"))))
     }
 
     private object Binds {

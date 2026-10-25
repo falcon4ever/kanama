@@ -53,6 +53,11 @@ class ShaderInclude(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ShaderInclude? =
             if (handle.address() == 0L) null else ShaderInclude(GodotHandle(handle))
+
+        /** A new ShaderInclude, GDScript's `ShaderInclude.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ShaderInclude =
+            RefCounted.owned(ShaderInclude(GodotHandle(ObjectCalls.constructObject("ShaderInclude"))))
     }
 
     private object Binds {

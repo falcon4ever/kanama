@@ -84,6 +84,11 @@ class ShaderMaterial(handle: GodotHandle) : Material(handle) {
         internal fun wrapBorrowed(handle: RawSegment): ShaderMaterial? =
             if (handle.address() == 0L) null else ShaderMaterial(GodotHandle(handle))
 
+        /** A new ShaderMaterial, GDScript's `ShaderMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ShaderMaterial =
+            RefCounted.owned(ShaderMaterial(GodotHandle(ObjectCalls.constructObject("ShaderMaterial"))))
+
         // Downcast a GodotObject to ShaderMaterial (null if not).
         @JvmStatic
         fun fromObject(value: GodotObject): ShaderMaterial? =

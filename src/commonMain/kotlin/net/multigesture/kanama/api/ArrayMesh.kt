@@ -404,6 +404,11 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
         internal fun wrapBorrowed(handle: RawSegment): ArrayMesh? =
             if (handle.address() == 0L) null else ArrayMesh(GodotHandle(handle))
 
+        /** A new ArrayMesh, GDScript's `ArrayMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ArrayMesh =
+            RefCounted.owned(ArrayMesh(GodotHandle(ObjectCalls.constructObject("ArrayMesh"))))
+
         // Downcast a Resource to ArrayMesh (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ArrayMesh? =

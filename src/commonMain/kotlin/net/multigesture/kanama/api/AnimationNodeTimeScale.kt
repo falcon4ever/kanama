@@ -22,5 +22,10 @@ class AnimationNodeTimeScale(handle: GodotHandle) : AnimationNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeTimeScale? =
             if (handle.address() == 0L) null else AnimationNodeTimeScale(GodotHandle(handle))
+
+        /** A new AnimationNodeTimeScale, GDScript's `AnimationNodeTimeScale.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeTimeScale =
+            RefCounted.owned(AnimationNodeTimeScale(GodotHandle(ObjectCalls.constructObject("AnimationNodeTimeScale"))))
     }
 }

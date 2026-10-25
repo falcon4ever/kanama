@@ -82,6 +82,11 @@ class MissingResource(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MissingResource? =
             if (handle.address() == 0L) null else MissingResource(GodotHandle(handle))
+
+        /** A new MissingResource, GDScript's `MissingResource.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MissingResource =
+            RefCounted.owned(MissingResource(GodotHandle(ObjectCalls.constructObject("MissingResource"))))
     }
 
     private object Binds {

@@ -23,5 +23,10 @@ class VisualShaderNodeIf(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeIf? =
             if (handle.address() == 0L) null else VisualShaderNodeIf(GodotHandle(handle))
+
+        /** A new VisualShaderNodeIf, GDScript's `VisualShaderNodeIf.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeIf =
+            RefCounted.owned(VisualShaderNodeIf(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeIf"))))
     }
 }

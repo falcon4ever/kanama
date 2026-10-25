@@ -381,6 +381,11 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): VideoStreamPlayer? =
             if (handle.address() == 0L) null else VideoStreamPlayer(GodotHandle(handle))
+
+        /** A new VideoStreamPlayer, GDScript's `VideoStreamPlayer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VideoStreamPlayer =
+            VideoStreamPlayer(GodotHandle(ObjectCalls.constructObject("VideoStreamPlayer")))
     }
 
     private object Binds {

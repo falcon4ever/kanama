@@ -76,6 +76,11 @@ class ResourcePreloader(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): ResourcePreloader? =
             if (handle.address() == 0L) null else ResourcePreloader(GodotHandle(handle))
+
+        /** A new ResourcePreloader, GDScript's `ResourcePreloader.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ResourcePreloader =
+            ResourcePreloader(GodotHandle(ObjectCalls.constructObject("ResourcePreloader")))
     }
 
     private object Binds {

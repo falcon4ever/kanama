@@ -1342,6 +1342,11 @@ class Animation(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Animation? =
             if (handle.address() == 0L) null else Animation(GodotHandle(handle))
+
+        /** A new Animation, GDScript's `Animation.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Animation =
+            RefCounted.owned(Animation(GodotHandle(ObjectCalls.constructObject("Animation"))))
     }
 
     private object Binds {

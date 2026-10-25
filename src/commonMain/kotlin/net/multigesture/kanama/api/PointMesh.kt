@@ -22,5 +22,10 @@ class PointMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PointMesh? =
             if (handle.address() == 0L) null else PointMesh(GodotHandle(handle))
+
+        /** A new PointMesh, GDScript's `PointMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PointMesh =
+            RefCounted.owned(PointMesh(GodotHandle(ObjectCalls.constructObject("PointMesh"))))
     }
 }

@@ -53,6 +53,11 @@ class Compositor(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Compositor? =
             if (handle.address() == 0L) null else Compositor(GodotHandle(handle))
+
+        /** A new Compositor, GDScript's `Compositor.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Compositor =
+            RefCounted.owned(Compositor(GodotHandle(ObjectCalls.constructObject("Compositor"))))
     }
 
     private object Binds {

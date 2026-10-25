@@ -19,5 +19,10 @@ class VScrollBar(handle: GodotHandle) : ScrollBar(handle) {
 
         internal fun wrap(handle: RawSegment): VScrollBar? =
             if (handle.address() == 0L) null else VScrollBar(GodotHandle(handle))
+
+        /** A new VScrollBar, GDScript's `VScrollBar.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VScrollBar =
+            VScrollBar(GodotHandle(ObjectCalls.constructObject("VScrollBar")))
     }
 }

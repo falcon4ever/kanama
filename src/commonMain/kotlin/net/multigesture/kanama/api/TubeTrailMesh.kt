@@ -270,6 +270,11 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TubeTrailMesh? =
             if (handle.address() == 0L) null else TubeTrailMesh(GodotHandle(handle))
+
+        /** A new TubeTrailMesh, GDScript's `TubeTrailMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TubeTrailMesh =
+            RefCounted.owned(TubeTrailMesh(GodotHandle(ObjectCalls.constructObject("TubeTrailMesh"))))
     }
 
     private object Binds {

@@ -52,6 +52,11 @@ class PlaceholderTexture3D(handle: GodotHandle) : Texture3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderTexture3D? =
             if (handle.address() == 0L) null else PlaceholderTexture3D(GodotHandle(handle))
+
+        /** A new PlaceholderTexture3D, GDScript's `PlaceholderTexture3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PlaceholderTexture3D =
+            RefCounted.owned(PlaceholderTexture3D(GodotHandle(ObjectCalls.constructObject("PlaceholderTexture3D"))))
     }
 
     private object Binds {

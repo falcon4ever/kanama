@@ -20,5 +20,10 @@ class PacketPeerExtension(handle: GodotHandle) : PacketPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PacketPeerExtension? =
             if (handle.address() == 0L) null else PacketPeerExtension(GodotHandle(handle))
+
+        /** A new PacketPeerExtension, GDScript's `PacketPeerExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PacketPeerExtension =
+            RefCounted.owned(PacketPeerExtension(GodotHandle(ObjectCalls.constructObject("PacketPeerExtension"))))
     }
 }

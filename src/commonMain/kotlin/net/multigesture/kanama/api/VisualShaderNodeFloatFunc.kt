@@ -283,6 +283,11 @@ class VisualShaderNodeFloatFunc(handle: GodotHandle) : VisualShaderNode(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFloatFunc? =
             if (handle.address() == 0L) null else VisualShaderNodeFloatFunc(GodotHandle(handle))
+
+        /** A new VisualShaderNodeFloatFunc, GDScript's `VisualShaderNodeFloatFunc.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeFloatFunc =
+            RefCounted.owned(VisualShaderNodeFloatFunc(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeFloatFunc"))))
     }
 
     private object Binds {

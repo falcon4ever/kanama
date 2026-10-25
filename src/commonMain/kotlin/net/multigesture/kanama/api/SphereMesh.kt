@@ -170,6 +170,11 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         internal fun wrapBorrowed(handle: RawSegment): SphereMesh? =
             if (handle.address() == 0L) null else SphereMesh(GodotHandle(handle))
 
+        /** A new SphereMesh, GDScript's `SphereMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SphereMesh =
+            RefCounted.owned(SphereMesh(GodotHandle(ObjectCalls.constructObject("SphereMesh"))))
+
         // Downcast a Resource to SphereMesh (null if not).
         @JvmStatic
         fun fromResource(value: Resource): SphereMesh? =

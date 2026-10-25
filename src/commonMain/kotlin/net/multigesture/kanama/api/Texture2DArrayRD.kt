@@ -22,5 +22,10 @@ class Texture2DArrayRD(handle: GodotHandle) : TextureLayeredRD(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Texture2DArrayRD? =
             if (handle.address() == 0L) null else Texture2DArrayRD(GodotHandle(handle))
+
+        /** A new Texture2DArrayRD, GDScript's `Texture2DArrayRD.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Texture2DArrayRD =
+            RefCounted.owned(Texture2DArrayRD(GodotHandle(ObjectCalls.constructObject("Texture2DArrayRD"))))
     }
 }

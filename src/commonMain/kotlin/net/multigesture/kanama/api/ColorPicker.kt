@@ -491,6 +491,11 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
 
         internal fun wrap(handle: RawSegment): ColorPicker? =
             if (handle.address() == 0L) null else ColorPicker(GodotHandle(handle))
+
+        /** A new ColorPicker, GDScript's `ColorPicker.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ColorPicker =
+            ColorPicker(GodotHandle(ObjectCalls.constructObject("ColorPicker")))
     }
 
     private object Binds {

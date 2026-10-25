@@ -22,5 +22,10 @@ class AnimationNodeOutput(handle: GodotHandle) : AnimationNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeOutput? =
             if (handle.address() == 0L) null else AnimationNodeOutput(GodotHandle(handle))
+
+        /** A new AnimationNodeOutput, GDScript's `AnimationNodeOutput.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeOutput =
+            RefCounted.owned(AnimationNodeOutput(GodotHandle(ObjectCalls.constructObject("AnimationNodeOutput"))))
     }
 }

@@ -20,5 +20,10 @@ class HSplitContainer(handle: GodotHandle) : SplitContainer(handle) {
 
         internal fun wrap(handle: RawSegment): HSplitContainer? =
             if (handle.address() == 0L) null else HSplitContainer(GodotHandle(handle))
+
+        /** A new HSplitContainer, GDScript's `HSplitContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): HSplitContainer =
+            HSplitContainer(GodotHandle(ObjectCalls.constructObject("HSplitContainer")))
     }
 }

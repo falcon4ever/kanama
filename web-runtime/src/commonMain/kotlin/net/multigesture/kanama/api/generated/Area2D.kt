@@ -61,4 +61,10 @@ class Area2D(godotObject: GodotHandle) : CollisionObject2D(godotObject) {
       val REPLACE_COMBINE: SpaceOverride get() = SpaceOverride(4L)
     }
   }
+
+  companion object {
+    /** A new Area2D, GDScript's `Area2D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): Area2D =
+      Area2D(checkNotNull(ClassDB.instantiate("Area2D")) { "Godot could not instantiate Area2D" }.toWebId())
+  }
 }

@@ -317,6 +317,11 @@ class NavigationObstacle3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationObstacle3D? =
             if (handle.address() == 0L) null else NavigationObstacle3D(GodotHandle(handle))
+
+        /** A new NavigationObstacle3D, GDScript's `NavigationObstacle3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): NavigationObstacle3D =
+            NavigationObstacle3D(GodotHandle(ObjectCalls.constructObject("NavigationObstacle3D")))
     }
 
     private object Binds {

@@ -67,6 +67,11 @@ class SpringBoneCollisionSphere3D(handle: GodotHandle) : SpringBoneCollision3D(h
 
         internal fun wrap(handle: RawSegment): SpringBoneCollisionSphere3D? =
             if (handle.address() == 0L) null else SpringBoneCollisionSphere3D(GodotHandle(handle))
+
+        /** A new SpringBoneCollisionSphere3D, GDScript's `SpringBoneCollisionSphere3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SpringBoneCollisionSphere3D =
+            SpringBoneCollisionSphere3D(GodotHandle(ObjectCalls.constructObject("SpringBoneCollisionSphere3D")))
     }
 
     private object Binds {

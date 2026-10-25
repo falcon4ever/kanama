@@ -213,6 +213,11 @@ class NavigationPathQueryResult2D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationPathQueryResult2D? =
             if (handle.address() == 0L) null else NavigationPathQueryResult2D(GodotHandle(handle))
+
+        /** A new NavigationPathQueryResult2D, GDScript's `NavigationPathQueryResult2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): NavigationPathQueryResult2D =
+            RefCounted.owned(NavigationPathQueryResult2D(GodotHandle(ObjectCalls.constructObject("NavigationPathQueryResult2D"))))
     }
 
     private object Binds {

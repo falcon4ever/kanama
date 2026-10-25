@@ -506,6 +506,11 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): ReflectionProbe? =
             if (handle.address() == 0L) null else ReflectionProbe(GodotHandle(handle))
+
+        /** A new ReflectionProbe, GDScript's `ReflectionProbe.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ReflectionProbe =
+            ReflectionProbe(GodotHandle(ObjectCalls.constructObject("ReflectionProbe")))
     }
 
     private object Binds {

@@ -9,4 +9,9 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class ColorRect(godotObject: GodotHandle) : Control(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  companion object {
+    /** A new ColorRect, GDScript's `ColorRect.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): ColorRect =
+      ColorRect(checkNotNull(ClassDB.instantiate("ColorRect")) { "Godot could not instantiate ColorRect" }.toWebId())
+  }
 }

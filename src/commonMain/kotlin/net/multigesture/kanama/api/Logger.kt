@@ -59,5 +59,10 @@ class Logger(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Logger? =
             if (handle.address() == 0L) null else Logger(GodotHandle(handle))
+
+        /** A new Logger, GDScript's `Logger.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Logger =
+            RefCounted.owned(Logger(GodotHandle(ObjectCalls.constructObject("Logger"))))
     }
 }

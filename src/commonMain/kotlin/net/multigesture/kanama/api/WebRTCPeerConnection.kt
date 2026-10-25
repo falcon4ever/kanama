@@ -345,6 +345,11 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WebRTCPeerConnection? =
             if (handle.address() == 0L) null else WebRTCPeerConnection(GodotHandle(handle))
+
+        /** A new WebRTCPeerConnection, GDScript's `WebRTCPeerConnection.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): WebRTCPeerConnection =
+            RefCounted.owned(WebRTCPeerConnection(GodotHandle(ObjectCalls.constructObject("WebRTCPeerConnection"))))
     }
 
     private object Binds {

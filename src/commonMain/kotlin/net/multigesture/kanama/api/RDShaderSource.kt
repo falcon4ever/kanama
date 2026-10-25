@@ -134,6 +134,11 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDShaderSource? =
             if (handle.address() == 0L) null else RDShaderSource(GodotHandle(handle))
+
+        /** A new RDShaderSource, GDScript's `RDShaderSource.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDShaderSource =
+            RefCounted.owned(RDShaderSource(GodotHandle(ObjectCalls.constructObject("RDShaderSource"))))
     }
 
     private object Binds {

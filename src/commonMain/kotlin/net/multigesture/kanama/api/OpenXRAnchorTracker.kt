@@ -72,6 +72,11 @@ class OpenXRAnchorTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRAnchorTracker? =
             if (handle.address() == 0L) null else OpenXRAnchorTracker(GodotHandle(handle))
+
+        /** A new OpenXRAnchorTracker, GDScript's `OpenXRAnchorTracker.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRAnchorTracker =
+            RefCounted.owned(OpenXRAnchorTracker(GodotHandle(ObjectCalls.constructObject("OpenXRAnchorTracker"))))
     }
 
     private object Binds {

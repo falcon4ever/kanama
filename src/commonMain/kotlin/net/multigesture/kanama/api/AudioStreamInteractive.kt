@@ -469,6 +469,11 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamInteractive? =
             if (handle.address() == 0L) null else AudioStreamInteractive(GodotHandle(handle))
+
+        /** A new AudioStreamInteractive, GDScript's `AudioStreamInteractive.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioStreamInteractive =
+            RefCounted.owned(AudioStreamInteractive(GodotHandle(ObjectCalls.constructObject("AudioStreamInteractive"))))
     }
 
     private object Binds {

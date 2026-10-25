@@ -100,6 +100,11 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): BackBufferCopy? =
             if (handle.address() == 0L) null else BackBufferCopy(GodotHandle(handle))
+
+        /** A new BackBufferCopy, GDScript's `BackBufferCopy.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): BackBufferCopy =
+            BackBufferCopy(GodotHandle(ObjectCalls.constructObject("BackBufferCopy")))
     }
 
     private object Binds {

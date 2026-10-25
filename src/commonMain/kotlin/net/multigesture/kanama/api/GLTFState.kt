@@ -1084,6 +1084,11 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFState? =
             if (handle.address() == 0L) null else GLTFState(GodotHandle(handle))
+
+        /** A new GLTFState, GDScript's `GLTFState.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFState =
+            RefCounted.owned(GLTFState(GodotHandle(ObjectCalls.constructObject("GLTFState"))))
     }
 
     private object Binds {

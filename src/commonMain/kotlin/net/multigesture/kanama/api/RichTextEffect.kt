@@ -22,5 +22,10 @@ class RichTextEffect(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RichTextEffect? =
             if (handle.address() == 0L) null else RichTextEffect(GodotHandle(handle))
+
+        /** A new RichTextEffect, GDScript's `RichTextEffect.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RichTextEffect =
+            RefCounted.owned(RichTextEffect(GodotHandle(ObjectCalls.constructObject("RichTextEffect"))))
     }
 }

@@ -58,6 +58,12 @@ class GPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject)
       val LOCAL_BILLBOARD: TransformAlign get() = TransformAlign(4L)
     }
   }
+
+  companion object {
+    /** A new GPUParticles3D, GDScript's `GPUParticles3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): GPUParticles3D =
+      GPUParticles3D(checkNotNull(ClassDB.instantiate("GPUParticles3D")) { "Godot could not instantiate GPUParticles3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

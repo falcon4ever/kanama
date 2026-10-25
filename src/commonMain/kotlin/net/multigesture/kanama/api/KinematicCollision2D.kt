@@ -181,6 +181,11 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): KinematicCollision2D? =
             if (handle.address() == 0L) null else KinematicCollision2D(GodotHandle(handle))
+
+        /** A new KinematicCollision2D, GDScript's `KinematicCollision2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): KinematicCollision2D =
+            RefCounted.owned(KinematicCollision2D(GodotHandle(ObjectCalls.constructObject("KinematicCollision2D"))))
     }
 
     private object Binds {

@@ -84,6 +84,11 @@ class VisualShaderNodeUIntFunc(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeUIntFunc? =
             if (handle.address() == 0L) null else VisualShaderNodeUIntFunc(GodotHandle(handle))
+
+        /** A new VisualShaderNodeUIntFunc, GDScript's `VisualShaderNodeUIntFunc.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeUIntFunc =
+            RefCounted.owned(VisualShaderNodeUIntFunc(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeUIntFunc"))))
     }
 
     private object Binds {

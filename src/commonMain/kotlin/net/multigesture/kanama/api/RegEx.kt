@@ -160,6 +160,11 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RegEx? =
             if (handle.address() == 0L) null else RegEx(GodotHandle(handle))
+
+        /** A new RegEx, GDScript's `RegEx.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RegEx =
+            RefCounted.owned(RegEx(GodotHandle(ObjectCalls.constructObject("RegEx"))))
     }
 
     private object Binds {

@@ -19,5 +19,10 @@ class VSlider(handle: GodotHandle) : Slider(handle) {
 
         internal fun wrap(handle: RawSegment): VSlider? =
             if (handle.address() == 0L) null else VSlider(GodotHandle(handle))
+
+        /** A new VSlider, GDScript's `VSlider.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VSlider =
+            VSlider(GodotHandle(ObjectCalls.constructObject("VSlider")))
     }
 }

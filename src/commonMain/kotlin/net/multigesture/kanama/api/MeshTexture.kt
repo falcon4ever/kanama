@@ -117,6 +117,11 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MeshTexture? =
             if (handle.address() == 0L) null else MeshTexture(GodotHandle(handle))
+
+        /** A new MeshTexture, GDScript's `MeshTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MeshTexture =
+            RefCounted.owned(MeshTexture(GodotHandle(ObjectCalls.constructObject("MeshTexture"))))
     }
 
     private object Binds {

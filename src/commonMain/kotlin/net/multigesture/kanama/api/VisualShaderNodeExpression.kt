@@ -55,6 +55,11 @@ open class VisualShaderNodeExpression(handle: GodotHandle) : VisualShaderNodeGro
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeExpression? =
             if (handle.address() == 0L) null else VisualShaderNodeExpression(GodotHandle(handle))
+
+        /** A new VisualShaderNodeExpression, GDScript's `VisualShaderNodeExpression.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeExpression =
+            RefCounted.owned(VisualShaderNodeExpression(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeExpression"))))
     }
 
     private object Binds {

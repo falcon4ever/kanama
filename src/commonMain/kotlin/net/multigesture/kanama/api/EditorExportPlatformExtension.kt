@@ -75,6 +75,11 @@ class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformExtension? =
             if (handle.address() == 0L) null else EditorExportPlatformExtension(GodotHandle(handle))
+
+        /** A new EditorExportPlatformExtension, GDScript's `EditorExportPlatformExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorExportPlatformExtension =
+            RefCounted.owned(EditorExportPlatformExtension(GodotHandle(ObjectCalls.constructObject("EditorExportPlatformExtension"))))
     }
 
     private object Binds {

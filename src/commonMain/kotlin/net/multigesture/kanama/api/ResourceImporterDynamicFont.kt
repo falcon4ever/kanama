@@ -23,5 +23,10 @@ class ResourceImporterDynamicFont(handle: GodotHandle) : ResourceImporter(handle
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterDynamicFont? =
             if (handle.address() == 0L) null else ResourceImporterDynamicFont(GodotHandle(handle))
+
+        /** A new ResourceImporterDynamicFont, GDScript's `ResourceImporterDynamicFont.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterDynamicFont =
+            RefCounted.owned(ResourceImporterDynamicFont(GodotHandle(ObjectCalls.constructObject("ResourceImporterDynamicFont"))))
     }
 }

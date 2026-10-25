@@ -22,5 +22,10 @@ class AudioEffectBandPassFilter(handle: GodotHandle) : AudioEffectFilter(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectBandPassFilter? =
             if (handle.address() == 0L) null else AudioEffectBandPassFilter(GodotHandle(handle))
+
+        /** A new AudioEffectBandPassFilter, GDScript's `AudioEffectBandPassFilter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectBandPassFilter =
+            RefCounted.owned(AudioEffectBandPassFilter(GodotHandle(ObjectCalls.constructObject("AudioEffectBandPassFilter"))))
     }
 }

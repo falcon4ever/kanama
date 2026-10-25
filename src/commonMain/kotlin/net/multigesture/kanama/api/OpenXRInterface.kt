@@ -1120,6 +1120,11 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRInterface? =
             if (handle.address() == 0L) null else OpenXRInterface(GodotHandle(handle))
+
+        /** A new OpenXRInterface, GDScript's `OpenXRInterface.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRInterface =
+            RefCounted.owned(OpenXRInterface(GodotHandle(ObjectCalls.constructObject("OpenXRInterface"))))
     }
 
     private object Binds {

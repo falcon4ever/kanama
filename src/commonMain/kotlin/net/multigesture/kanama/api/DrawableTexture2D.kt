@@ -152,6 +152,11 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): DrawableTexture2D? =
             if (handle.address() == 0L) null else DrawableTexture2D(GodotHandle(handle))
+
+        /** A new DrawableTexture2D, GDScript's `DrawableTexture2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): DrawableTexture2D =
+            RefCounted.owned(DrawableTexture2D(GodotHandle(ObjectCalls.constructObject("DrawableTexture2D"))))
     }
 
     private object Binds {

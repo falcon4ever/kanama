@@ -34,6 +34,11 @@ class OpenXRSpatialCapabilityConfigurationQrCode(handle: GodotHandle) : OpenXRSp
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationQrCode? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationQrCode(GodotHandle(handle))
+
+        /** A new OpenXRSpatialCapabilityConfigurationQrCode, GDScript's `OpenXRSpatialCapabilityConfigurationQrCode.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialCapabilityConfigurationQrCode =
+            RefCounted.owned(OpenXRSpatialCapabilityConfigurationQrCode(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationQrCode"))))
     }
 
     private object Binds {

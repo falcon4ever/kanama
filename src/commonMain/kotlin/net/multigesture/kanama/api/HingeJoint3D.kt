@@ -148,6 +148,11 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
 
         internal fun wrap(handle: RawSegment): HingeJoint3D? =
             if (handle.address() == 0L) null else HingeJoint3D(GodotHandle(handle))
+
+        /** A new HingeJoint3D, GDScript's `HingeJoint3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): HingeJoint3D =
+            HingeJoint3D(GodotHandle(ObjectCalls.constructObject("HingeJoint3D")))
     }
 
     private object Binds {

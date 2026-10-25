@@ -81,6 +81,11 @@ class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventJoypadButton? =
             if (handle.address() == 0L) null else InputEventJoypadButton(GodotHandle(handle))
+
+        /** A new InputEventJoypadButton, GDScript's `InputEventJoypadButton.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): InputEventJoypadButton =
+            RefCounted.owned(InputEventJoypadButton(GodotHandle(ObjectCalls.constructObject("InputEventJoypadButton"))))
     }
 
     private object Binds {

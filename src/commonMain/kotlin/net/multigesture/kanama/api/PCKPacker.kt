@@ -92,6 +92,11 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PCKPacker? =
             if (handle.address() == 0L) null else PCKPacker(GodotHandle(handle))
+
+        /** A new PCKPacker, GDScript's `PCKPacker.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PCKPacker =
+            RefCounted.owned(PCKPacker(GodotHandle(ObjectCalls.constructObject("PCKPacker"))))
     }
 
     private object Binds {

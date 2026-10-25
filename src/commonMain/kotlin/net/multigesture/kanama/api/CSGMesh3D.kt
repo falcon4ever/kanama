@@ -88,6 +88,11 @@ class CSGMesh3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
 
         internal fun wrap(handle: RawSegment): CSGMesh3D? =
             if (handle.address() == 0L) null else CSGMesh3D(GodotHandle(handle))
+
+        /** A new CSGMesh3D, GDScript's `CSGMesh3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CSGMesh3D =
+            CSGMesh3D(GodotHandle(ObjectCalls.constructObject("CSGMesh3D")))
     }
 
     private object Binds {

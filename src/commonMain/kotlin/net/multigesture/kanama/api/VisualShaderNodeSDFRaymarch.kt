@@ -22,5 +22,10 @@ class VisualShaderNodeSDFRaymarch(handle: GodotHandle) : VisualShaderNode(handle
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeSDFRaymarch? =
             if (handle.address() == 0L) null else VisualShaderNodeSDFRaymarch(GodotHandle(handle))
+
+        /** A new VisualShaderNodeSDFRaymarch, GDScript's `VisualShaderNodeSDFRaymarch.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeSDFRaymarch =
+            RefCounted.owned(VisualShaderNodeSDFRaymarch(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeSDFRaymarch"))))
     }
 }

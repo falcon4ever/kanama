@@ -147,6 +147,11 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): UDPServer? =
             if (handle.address() == 0L) null else UDPServer(GodotHandle(handle))
+
+        /** A new UDPServer, GDScript's `UDPServer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): UDPServer =
+            RefCounted.owned(UDPServer(GodotHandle(ObjectCalls.constructObject("UDPServer"))))
     }
 
     private object Binds {

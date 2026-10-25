@@ -22,5 +22,10 @@ class TextureCubemapArrayRD(handle: GodotHandle) : TextureLayeredRD(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextureCubemapArrayRD? =
             if (handle.address() == 0L) null else TextureCubemapArrayRD(GodotHandle(handle))
+
+        /** A new TextureCubemapArrayRD, GDScript's `TextureCubemapArrayRD.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TextureCubemapArrayRD =
+            RefCounted.owned(TextureCubemapArrayRD(GodotHandle(ObjectCalls.constructObject("TextureCubemapArrayRD"))))
     }
 }

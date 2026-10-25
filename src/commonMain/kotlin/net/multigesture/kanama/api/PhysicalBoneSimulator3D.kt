@@ -68,6 +68,11 @@ class PhysicalBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) 
 
         internal fun wrap(handle: RawSegment): PhysicalBoneSimulator3D? =
             if (handle.address() == 0L) null else PhysicalBoneSimulator3D(GodotHandle(handle))
+
+        /** A new PhysicalBoneSimulator3D, GDScript's `PhysicalBoneSimulator3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): PhysicalBoneSimulator3D =
+            PhysicalBoneSimulator3D(GodotHandle(ObjectCalls.constructObject("PhysicalBoneSimulator3D")))
     }
 
     private object Binds {

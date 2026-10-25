@@ -43,7 +43,7 @@ class InputEventKey(godotObject: GodotHandle) : InputEventWithModifiers(godotObj
     set(newValue) = setPhysicalKeycode(newValue)
 
   companion object {
-    /** Constructs a new InputEventKey engine-side; the wrapper owns the handle (close what you create). */
+    /** A new InputEventKey, GDScript's `InputEventKey.new()`. You own the reference: `close()` or `use { }`. */
     fun create(): InputEventKey =
       InputEventKey(checkNotNull(ClassDB.instantiate("InputEventKey")) { "Godot could not instantiate InputEventKey" }.toWebId())
     /** Engine-side class check: null when [value] is not a InputEventKey. */

@@ -111,6 +111,11 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Texture3D? =
             if (handle.address() == 0L) null else Texture3D(GodotHandle(handle))
+
+        /** A new Texture3D, GDScript's `Texture3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Texture3D =
+            RefCounted.owned(Texture3D(GodotHandle(ObjectCalls.constructObject("Texture3D"))))
     }
 
     private object Binds {

@@ -108,6 +108,11 @@ class VisibleOnScreenEnabler3D(handle: GodotHandle) : VisibleOnScreenNotifier3D(
 
         internal fun wrap(handle: RawSegment): VisibleOnScreenEnabler3D? =
             if (handle.address() == 0L) null else VisibleOnScreenEnabler3D(GodotHandle(handle))
+
+        /** A new VisibleOnScreenEnabler3D, GDScript's `VisibleOnScreenEnabler3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VisibleOnScreenEnabler3D =
+            VisibleOnScreenEnabler3D(GodotHandle(ObjectCalls.constructObject("VisibleOnScreenEnabler3D")))
     }
 
     private object Binds {

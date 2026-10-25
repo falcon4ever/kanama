@@ -19,5 +19,10 @@ open class HBoxContainer(handle: GodotHandle) : BoxContainer(handle) {
 
         internal fun wrap(handle: RawSegment): HBoxContainer? =
             if (handle.address() == 0L) null else HBoxContainer(GodotHandle(handle))
+
+        /** A new HBoxContainer, GDScript's `HBoxContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): HBoxContainer =
+            HBoxContainer(GodotHandle(ObjectCalls.constructObject("HBoxContainer")))
     }
 }

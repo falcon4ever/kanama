@@ -22,5 +22,10 @@ class ResourceFormatSaver(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceFormatSaver? =
             if (handle.address() == 0L) null else ResourceFormatSaver(GodotHandle(handle))
+
+        /** A new ResourceFormatSaver, GDScript's `ResourceFormatSaver.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceFormatSaver =
+            RefCounted.owned(ResourceFormatSaver(GodotHandle(ObjectCalls.constructObject("ResourceFormatSaver"))))
     }
 }

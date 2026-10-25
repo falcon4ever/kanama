@@ -53,6 +53,11 @@ class AudioEffectPanner(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectPanner? =
             if (handle.address() == 0L) null else AudioEffectPanner(GodotHandle(handle))
+
+        /** A new AudioEffectPanner, GDScript's `AudioEffectPanner.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectPanner =
+            RefCounted.owned(AudioEffectPanner(GodotHandle(ObjectCalls.constructObject("AudioEffectPanner"))))
     }
 
     private object Binds {

@@ -94,6 +94,11 @@ class PointLight2D(handle: GodotHandle) : Light2D(handle) {
 
         internal fun wrap(handle: RawSegment): PointLight2D? =
             if (handle.address() == 0L) null else PointLight2D(GodotHandle(handle))
+
+        /** A new PointLight2D, GDScript's `PointLight2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): PointLight2D =
+            PointLight2D(GodotHandle(ObjectCalls.constructObject("PointLight2D")))
     }
 
     private object Binds {

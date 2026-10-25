@@ -430,6 +430,11 @@ class ShapeCast2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): ShapeCast2D? =
             if (handle.address() == 0L) null else ShapeCast2D(GodotHandle(handle))
+
+        /** A new ShapeCast2D, GDScript's `ShapeCast2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ShapeCast2D =
+            ShapeCast2D(GodotHandle(ObjectCalls.constructObject("ShapeCast2D")))
     }
 
     private object Binds {

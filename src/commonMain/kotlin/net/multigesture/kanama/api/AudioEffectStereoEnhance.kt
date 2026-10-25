@@ -116,6 +116,11 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectStereoEnhance? =
             if (handle.address() == 0L) null else AudioEffectStereoEnhance(GodotHandle(handle))
+
+        /** A new AudioEffectStereoEnhance, GDScript's `AudioEffectStereoEnhance.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectStereoEnhance =
+            RefCounted.owned(AudioEffectStereoEnhance(GodotHandle(ObjectCalls.constructObject("AudioEffectStereoEnhance"))))
     }
 
     private object Binds {

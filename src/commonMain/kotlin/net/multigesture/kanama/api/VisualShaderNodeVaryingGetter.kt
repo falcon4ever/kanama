@@ -22,5 +22,10 @@ class VisualShaderNodeVaryingGetter(handle: GodotHandle) : VisualShaderNodeVaryi
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVaryingGetter? =
             if (handle.address() == 0L) null else VisualShaderNodeVaryingGetter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVaryingGetter, GDScript's `VisualShaderNodeVaryingGetter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVaryingGetter =
+            RefCounted.owned(VisualShaderNodeVaryingGetter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeVaryingGetter"))))
     }
 }

@@ -207,6 +207,11 @@ class SliderJoint3D(handle: GodotHandle) : Joint3D(handle) {
 
         internal fun wrap(handle: RawSegment): SliderJoint3D? =
             if (handle.address() == 0L) null else SliderJoint3D(GodotHandle(handle))
+
+        /** A new SliderJoint3D, GDScript's `SliderJoint3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SliderJoint3D =
+            SliderJoint3D(GodotHandle(ObjectCalls.constructObject("SliderJoint3D")))
     }
 
     private object Binds {

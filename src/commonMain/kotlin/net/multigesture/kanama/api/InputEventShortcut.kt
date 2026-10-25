@@ -55,6 +55,11 @@ class InputEventShortcut(handle: GodotHandle) : InputEvent(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventShortcut? =
             if (handle.address() == 0L) null else InputEventShortcut(GodotHandle(handle))
+
+        /** A new InputEventShortcut, GDScript's `InputEventShortcut.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): InputEventShortcut =
+            RefCounted.owned(InputEventShortcut(GodotHandle(ObjectCalls.constructObject("InputEventShortcut"))))
     }
 
     private object Binds {

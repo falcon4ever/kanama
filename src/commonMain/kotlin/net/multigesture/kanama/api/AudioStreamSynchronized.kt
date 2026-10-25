@@ -105,6 +105,11 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamSynchronized? =
             if (handle.address() == 0L) null else AudioStreamSynchronized(GodotHandle(handle))
+
+        /** A new AudioStreamSynchronized, GDScript's `AudioStreamSynchronized.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioStreamSynchronized =
+            RefCounted.owned(AudioStreamSynchronized(GodotHandle(ObjectCalls.constructObject("AudioStreamSynchronized"))))
     }
 
     private object Binds {

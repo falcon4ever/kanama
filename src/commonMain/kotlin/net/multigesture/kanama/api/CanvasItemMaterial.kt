@@ -287,6 +287,11 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CanvasItemMaterial? =
             if (handle.address() == 0L) null else CanvasItemMaterial(GodotHandle(handle))
+
+        /** A new CanvasItemMaterial, GDScript's `CanvasItemMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CanvasItemMaterial =
+            RefCounted.owned(CanvasItemMaterial(GodotHandle(ObjectCalls.constructObject("CanvasItemMaterial"))))
     }
 
     private object Binds {

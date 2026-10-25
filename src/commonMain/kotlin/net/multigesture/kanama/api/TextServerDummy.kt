@@ -22,5 +22,10 @@ class TextServerDummy(handle: GodotHandle) : TextServerExtension(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextServerDummy? =
             if (handle.address() == 0L) null else TextServerDummy(GodotHandle(handle))
+
+        /** A new TextServerDummy, GDScript's `TextServerDummy.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TextServerDummy =
+            RefCounted.owned(TextServerDummy(GodotHandle(ObjectCalls.constructObject("TextServerDummy"))))
     }
 }

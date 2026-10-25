@@ -19,5 +19,10 @@ class XRCamera3D(handle: GodotHandle) : Camera3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRCamera3D? =
             if (handle.address() == 0L) null else XRCamera3D(GodotHandle(handle))
+
+        /** A new XRCamera3D, GDScript's `XRCamera3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): XRCamera3D =
+            XRCamera3D(GodotHandle(ObjectCalls.constructObject("XRCamera3D")))
     }
 }

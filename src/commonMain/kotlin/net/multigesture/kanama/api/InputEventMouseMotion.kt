@@ -277,6 +277,11 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
         internal fun wrapBorrowed(handle: RawSegment): InputEventMouseMotion? =
             if (handle.address() == 0L) null else InputEventMouseMotion(GodotHandle(handle))
 
+        /** A new InputEventMouseMotion, GDScript's `InputEventMouseMotion.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): InputEventMouseMotion =
+            RefCounted.owned(InputEventMouseMotion(GodotHandle(ObjectCalls.constructObject("InputEventMouseMotion"))))
+
         // Downcast a GodotObject to InputEventMouseMotion (null if not).
         @JvmStatic
         fun from(value: GodotObject): InputEventMouseMotion? =

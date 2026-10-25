@@ -680,6 +680,11 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         internal fun wrapBorrowed(handle: RawSegment): Mesh? =
             if (handle.address() == 0L) null else Mesh(GodotHandle(handle))
 
+        /** A new Mesh, GDScript's `Mesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Mesh =
+            RefCounted.owned(Mesh(GodotHandle(ObjectCalls.constructObject("Mesh"))))
+
         // Downcast a GodotObject to Mesh (null if not).
         @JvmStatic
         fun fromObject(value: GodotObject): Mesh? =

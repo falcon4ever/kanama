@@ -22,5 +22,10 @@ class VisualShaderNodeOuterProduct(handle: GodotHandle) : VisualShaderNode(handl
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeOuterProduct? =
             if (handle.address() == 0L) null else VisualShaderNodeOuterProduct(GodotHandle(handle))
+
+        /** A new VisualShaderNodeOuterProduct, GDScript's `VisualShaderNodeOuterProduct.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeOuterProduct =
+            RefCounted.owned(VisualShaderNodeOuterProduct(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeOuterProduct"))))
     }
 }

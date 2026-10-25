@@ -678,6 +678,11 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRAPIExtension? =
             if (handle.address() == 0L) null else OpenXRAPIExtension(GodotHandle(handle))
+
+        /** A new OpenXRAPIExtension, GDScript's `OpenXRAPIExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRAPIExtension =
+            RefCounted.owned(OpenXRAPIExtension(GodotHandle(ObjectCalls.constructObject("OpenXRAPIExtension"))))
     }
 
     private object Binds {

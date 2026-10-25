@@ -333,6 +333,11 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CameraFeed? =
             if (handle.address() == 0L) null else CameraFeed(GodotHandle(handle))
+
+        /** A new CameraFeed, GDScript's `CameraFeed.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CameraFeed =
+            RefCounted.owned(CameraFeed(GodotHandle(ObjectCalls.constructObject("CameraFeed"))))
     }
 
     private object Binds {

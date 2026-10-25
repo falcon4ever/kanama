@@ -94,6 +94,11 @@ class BlitMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): BlitMaterial? =
             if (handle.address() == 0L) null else BlitMaterial(GodotHandle(handle))
+
+        /** A new BlitMaterial, GDScript's `BlitMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): BlitMaterial =
+            RefCounted.owned(BlitMaterial(GodotHandle(ObjectCalls.constructObject("BlitMaterial"))))
     }
 
     private object Binds {

@@ -22,5 +22,10 @@ class QuadMesh(handle: GodotHandle) : PlaneMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): QuadMesh? =
             if (handle.address() == 0L) null else QuadMesh(GodotHandle(handle))
+
+        /** A new QuadMesh, GDScript's `QuadMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): QuadMesh =
+            RefCounted.owned(QuadMesh(GodotHandle(ObjectCalls.constructObject("QuadMesh"))))
     }
 }

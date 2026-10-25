@@ -520,6 +520,11 @@ class OptionButton(handle: GodotHandle) : Button(handle) {
 
         internal fun wrap(handle: RawSegment): OptionButton? =
             if (handle.address() == 0L) null else OptionButton(GodotHandle(handle))
+
+        /** A new OptionButton, GDScript's `OptionButton.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OptionButton =
+            OptionButton(GodotHandle(ObjectCalls.constructObject("OptionButton")))
     }
 
     private object Binds {

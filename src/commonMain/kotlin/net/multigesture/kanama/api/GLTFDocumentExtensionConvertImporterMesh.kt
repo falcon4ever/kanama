@@ -20,5 +20,10 @@ class GLTFDocumentExtensionConvertImporterMesh(handle: GodotHandle) : GLTFDocume
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFDocumentExtensionConvertImporterMesh? =
             if (handle.address() == 0L) null else GLTFDocumentExtensionConvertImporterMesh(GodotHandle(handle))
+
+        /** A new GLTFDocumentExtensionConvertImporterMesh, GDScript's `GLTFDocumentExtensionConvertImporterMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFDocumentExtensionConvertImporterMesh =
+            RefCounted.owned(GLTFDocumentExtensionConvertImporterMesh(GodotHandle(ObjectCalls.constructObject("GLTFDocumentExtensionConvertImporterMesh"))))
     }
 }

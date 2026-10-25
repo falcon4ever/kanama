@@ -319,6 +319,11 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Gradient? =
             if (handle.address() == 0L) null else Gradient(GodotHandle(handle))
+
+        /** A new Gradient, GDScript's `Gradient.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Gradient =
+            RefCounted.owned(Gradient(GodotHandle(ObjectCalls.constructObject("Gradient"))))
     }
 
     private object Binds {

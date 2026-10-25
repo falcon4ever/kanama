@@ -665,6 +665,11 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): TabContainer? =
             if (handle.address() == 0L) null else TabContainer(GodotHandle(handle))
+
+        /** A new TabContainer, GDScript's `TabContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): TabContainer =
+            TabContainer(GodotHandle(ObjectCalls.constructObject("TabContainer")))
     }
 
     private object Binds {

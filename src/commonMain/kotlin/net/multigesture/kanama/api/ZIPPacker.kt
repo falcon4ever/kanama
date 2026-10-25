@@ -203,6 +203,11 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ZIPPacker? =
             if (handle.address() == 0L) null else ZIPPacker(GodotHandle(handle))
+
+        /** A new ZIPPacker, GDScript's `ZIPPacker.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ZIPPacker =
+            RefCounted.owned(ZIPPacker(GodotHandle(ObjectCalls.constructObject("ZIPPacker"))))
     }
 
     private object Binds {

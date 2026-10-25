@@ -667,6 +667,11 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFAccessor? =
             if (handle.address() == 0L) null else GLTFAccessor(GodotHandle(handle))
+
+        /** A new GLTFAccessor, GDScript's `GLTFAccessor.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFAccessor =
+            RefCounted.owned(GLTFAccessor(GodotHandle(ObjectCalls.constructObject("GLTFAccessor"))))
     }
 
     private object Binds {

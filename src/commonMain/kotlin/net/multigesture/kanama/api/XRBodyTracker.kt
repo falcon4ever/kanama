@@ -755,6 +755,11 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRBodyTracker? =
             if (handle.address() == 0L) null else XRBodyTracker(GodotHandle(handle))
+
+        /** A new XRBodyTracker, GDScript's `XRBodyTracker.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): XRBodyTracker =
+            RefCounted.owned(XRBodyTracker(GodotHandle(ObjectCalls.constructObject("XRBodyTracker"))))
     }
 
     private object Binds {

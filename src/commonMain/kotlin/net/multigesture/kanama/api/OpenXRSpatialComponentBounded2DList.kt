@@ -47,6 +47,11 @@ class OpenXRSpatialComponentBounded2DList(handle: GodotHandle) : OpenXRSpatialCo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentBounded2DList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentBounded2DList(GodotHandle(handle))
+
+        /** A new OpenXRSpatialComponentBounded2DList, GDScript's `OpenXRSpatialComponentBounded2DList.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialComponentBounded2DList =
+            RefCounted.owned(OpenXRSpatialComponentBounded2DList(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentBounded2DList"))))
     }
 
     private object Binds {

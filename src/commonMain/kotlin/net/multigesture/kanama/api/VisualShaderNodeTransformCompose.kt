@@ -22,5 +22,10 @@ class VisualShaderNodeTransformCompose(handle: GodotHandle) : VisualShaderNode(h
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformCompose? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformCompose(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTransformCompose, GDScript's `VisualShaderNodeTransformCompose.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTransformCompose =
+            RefCounted.owned(VisualShaderNodeTransformCompose(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTransformCompose"))))
     }
 }

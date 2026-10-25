@@ -118,6 +118,11 @@ class VisualShaderNodeSwitch(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeSwitch? =
             if (handle.address() == 0L) null else VisualShaderNodeSwitch(GodotHandle(handle))
+
+        /** A new VisualShaderNodeSwitch, GDScript's `VisualShaderNodeSwitch.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeSwitch =
+            RefCounted.owned(VisualShaderNodeSwitch(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeSwitch"))))
     }
 
     private object Binds {

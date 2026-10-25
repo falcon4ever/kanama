@@ -195,6 +195,11 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectFilter? =
             if (handle.address() == 0L) null else AudioEffectFilter(GodotHandle(handle))
+
+        /** A new AudioEffectFilter, GDScript's `AudioEffectFilter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectFilter =
+            RefCounted.owned(AudioEffectFilter(GodotHandle(ObjectCalls.constructObject("AudioEffectFilter"))))
     }
 
     private object Binds {

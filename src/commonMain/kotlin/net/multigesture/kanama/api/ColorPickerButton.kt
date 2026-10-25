@@ -136,6 +136,11 @@ class ColorPickerButton(handle: GodotHandle) : Button(handle) {
 
         internal fun wrap(handle: RawSegment): ColorPickerButton? =
             if (handle.address() == 0L) null else ColorPickerButton(GodotHandle(handle))
+
+        /** A new ColorPickerButton, GDScript's `ColorPickerButton.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ColorPickerButton =
+            ColorPickerButton(GodotHandle(ObjectCalls.constructObject("ColorPickerButton")))
     }
 
     private object Binds {

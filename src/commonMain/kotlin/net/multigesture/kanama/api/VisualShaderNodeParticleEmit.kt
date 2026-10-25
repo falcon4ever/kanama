@@ -95,6 +95,11 @@ class VisualShaderNodeParticleEmit(handle: GodotHandle) : VisualShaderNode(handl
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleEmit? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleEmit(GodotHandle(handle))
+
+        /** A new VisualShaderNodeParticleEmit, GDScript's `VisualShaderNodeParticleEmit.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeParticleEmit =
+            RefCounted.owned(VisualShaderNodeParticleEmit(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeParticleEmit"))))
     }
 
     private object Binds {

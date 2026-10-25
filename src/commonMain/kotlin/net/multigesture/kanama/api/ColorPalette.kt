@@ -53,6 +53,11 @@ class ColorPalette(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ColorPalette? =
             if (handle.address() == 0L) null else ColorPalette(GodotHandle(handle))
+
+        /** A new ColorPalette, GDScript's `ColorPalette.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ColorPalette =
+            RefCounted.owned(ColorPalette(GodotHandle(ObjectCalls.constructObject("ColorPalette"))))
     }
 
     private object Binds {

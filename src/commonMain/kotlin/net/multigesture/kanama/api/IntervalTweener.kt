@@ -22,5 +22,10 @@ class IntervalTweener(handle: GodotHandle) : Tweener(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): IntervalTweener? =
             if (handle.address() == 0L) null else IntervalTweener(GodotHandle(handle))
+
+        /** A new IntervalTweener, GDScript's `IntervalTweener.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): IntervalTweener =
+            RefCounted.owned(IntervalTweener(GodotHandle(ObjectCalls.constructObject("IntervalTweener"))))
     }
 }

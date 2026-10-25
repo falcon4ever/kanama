@@ -87,6 +87,11 @@ class FoldableGroup(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): FoldableGroup? =
             if (handle.address() == 0L) null else FoldableGroup(GodotHandle(handle))
+
+        /** A new FoldableGroup, GDScript's `FoldableGroup.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): FoldableGroup =
+            RefCounted.owned(FoldableGroup(GodotHandle(ObjectCalls.constructObject("FoldableGroup"))))
     }
 
     private object Binds {

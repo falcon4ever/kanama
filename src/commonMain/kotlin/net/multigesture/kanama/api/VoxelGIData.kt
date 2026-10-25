@@ -359,6 +359,11 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VoxelGIData? =
             if (handle.address() == 0L) null else VoxelGIData(GodotHandle(handle))
+
+        /** A new VoxelGIData, GDScript's `VoxelGIData.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VoxelGIData =
+            RefCounted.owned(VoxelGIData(GodotHandle(ObjectCalls.constructObject("VoxelGIData"))))
     }
 
     private object Binds {

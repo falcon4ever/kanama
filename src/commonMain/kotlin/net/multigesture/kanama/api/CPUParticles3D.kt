@@ -1627,6 +1627,11 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): CPUParticles3D? =
             if (handle.address() == 0L) null else CPUParticles3D(GodotHandle(handle))
+
+        /** A new CPUParticles3D, GDScript's `CPUParticles3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CPUParticles3D =
+            CPUParticles3D(GodotHandle(ObjectCalls.constructObject("CPUParticles3D")))
     }
 
     private object Binds {

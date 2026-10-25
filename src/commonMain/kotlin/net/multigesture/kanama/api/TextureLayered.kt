@@ -138,6 +138,11 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextureLayered? =
             if (handle.address() == 0L) null else TextureLayered(GodotHandle(handle))
+
+        /** A new TextureLayered, GDScript's `TextureLayered.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TextureLayered =
+            RefCounted.owned(TextureLayered(GodotHandle(ObjectCalls.constructObject("TextureLayered"))))
     }
 
     private object Binds {

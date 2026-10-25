@@ -110,6 +110,11 @@ class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialCompo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentMarkerList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentMarkerList(GodotHandle(handle))
+
+        /** A new OpenXRSpatialComponentMarkerList, GDScript's `OpenXRSpatialComponentMarkerList.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialComponentMarkerList =
+            RefCounted.owned(OpenXRSpatialComponentMarkerList(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentMarkerList"))))
     }
 
     private object Binds {

@@ -52,6 +52,11 @@ class Texture3DRD(handle: GodotHandle) : Texture3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Texture3DRD? =
             if (handle.address() == 0L) null else Texture3DRD(GodotHandle(handle))
+
+        /** A new Texture3DRD, GDScript's `Texture3DRD.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Texture3DRD =
+            RefCounted.owned(Texture3DRD(GodotHandle(ObjectCalls.constructObject("Texture3DRD"))))
     }
 
     private object Binds {

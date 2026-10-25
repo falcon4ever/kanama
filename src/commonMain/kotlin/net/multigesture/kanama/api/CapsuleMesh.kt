@@ -146,6 +146,11 @@ class CapsuleMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CapsuleMesh? =
             if (handle.address() == 0L) null else CapsuleMesh(GodotHandle(handle))
+
+        /** A new CapsuleMesh, GDScript's `CapsuleMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CapsuleMesh =
+            RefCounted.owned(CapsuleMesh(GodotHandle(ObjectCalls.constructObject("CapsuleMesh"))))
     }
 
     private object Binds {

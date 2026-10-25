@@ -261,6 +261,11 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamOggVorbis? =
             if (handle.address() == 0L) null else AudioStreamOggVorbis(GodotHandle(handle))
+
+        /** A new AudioStreamOggVorbis, GDScript's `AudioStreamOggVorbis.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioStreamOggVorbis =
+            RefCounted.owned(AudioStreamOggVorbis(GodotHandle(ObjectCalls.constructObject("AudioStreamOggVorbis"))))
     }
 
     private object Binds {

@@ -20,5 +20,10 @@ class EditorExportPlatformVisionOS(handle: GodotHandle) : EditorExportPlatformAp
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformVisionOS? =
             if (handle.address() == 0L) null else EditorExportPlatformVisionOS(GodotHandle(handle))
+
+        /** A new EditorExportPlatformVisionOS, GDScript's `EditorExportPlatformVisionOS.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorExportPlatformVisionOS =
+            RefCounted.owned(EditorExportPlatformVisionOS(GodotHandle(ObjectCalls.constructObject("EditorExportPlatformVisionOS"))))
     }
 }

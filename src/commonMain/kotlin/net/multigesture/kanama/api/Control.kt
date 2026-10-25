@@ -3170,6 +3170,11 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
         internal fun wrap(handle: RawSegment): Control? =
             if (handle.address() == 0L) null else Control(GodotHandle(handle))
+
+        /** A new Control, GDScript's `Control.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Control =
+            Control(GodotHandle(ObjectCalls.constructObject("Control")))
     }
 
     private object Binds {

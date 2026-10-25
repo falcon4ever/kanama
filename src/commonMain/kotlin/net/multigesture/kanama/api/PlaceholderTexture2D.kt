@@ -33,6 +33,11 @@ class PlaceholderTexture2D(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderTexture2D? =
             if (handle.address() == 0L) null else PlaceholderTexture2D(GodotHandle(handle))
+
+        /** A new PlaceholderTexture2D, GDScript's `PlaceholderTexture2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PlaceholderTexture2D =
+            RefCounted.owned(PlaceholderTexture2D(GodotHandle(ObjectCalls.constructObject("PlaceholderTexture2D"))))
     }
 
     private object Binds {

@@ -171,6 +171,11 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFSpecGloss? =
             if (handle.address() == 0L) null else GLTFSpecGloss(GodotHandle(handle))
+
+        /** A new GLTFSpecGloss, GDScript's `GLTFSpecGloss.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFSpecGloss =
+            RefCounted.owned(GLTFSpecGloss(GodotHandle(ObjectCalls.constructObject("GLTFSpecGloss"))))
     }
 
     private object Binds {

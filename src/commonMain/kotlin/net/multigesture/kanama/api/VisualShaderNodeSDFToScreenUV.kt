@@ -23,5 +23,10 @@ class VisualShaderNodeSDFToScreenUV(handle: GodotHandle) : VisualShaderNode(hand
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeSDFToScreenUV? =
             if (handle.address() == 0L) null else VisualShaderNodeSDFToScreenUV(GodotHandle(handle))
+
+        /** A new VisualShaderNodeSDFToScreenUV, GDScript's `VisualShaderNodeSDFToScreenUV.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeSDFToScreenUV =
+            RefCounted.owned(VisualShaderNodeSDFToScreenUV(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeSDFToScreenUV"))))
     }
 }

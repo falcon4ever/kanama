@@ -22,5 +22,10 @@ class VisualShaderNodeCubemapParameter(handle: GodotHandle) : VisualShaderNodeTe
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeCubemapParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeCubemapParameter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeCubemapParameter, GDScript's `VisualShaderNodeCubemapParameter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeCubemapParameter =
+            RefCounted.owned(VisualShaderNodeCubemapParameter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeCubemapParameter"))))
     }
 }

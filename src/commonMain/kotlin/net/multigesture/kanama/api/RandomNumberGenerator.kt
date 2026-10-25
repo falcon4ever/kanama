@@ -185,6 +185,11 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RandomNumberGenerator? =
             if (handle.address() == 0L) null else RandomNumberGenerator(GodotHandle(handle))
+
+        /** A new RandomNumberGenerator, GDScript's `RandomNumberGenerator.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RandomNumberGenerator =
+            RefCounted.owned(RandomNumberGenerator(GodotHandle(ObjectCalls.constructObject("RandomNumberGenerator"))))
     }
 
     private object Binds {

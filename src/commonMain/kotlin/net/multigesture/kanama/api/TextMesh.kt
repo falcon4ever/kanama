@@ -589,6 +589,11 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextMesh? =
             if (handle.address() == 0L) null else TextMesh(GodotHandle(handle))
+
+        /** A new TextMesh, GDScript's `TextMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TextMesh =
+            RefCounted.owned(TextMesh(GodotHandle(ObjectCalls.constructObject("TextMesh"))))
     }
 
     private object Binds {

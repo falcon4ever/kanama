@@ -47,6 +47,11 @@ class MultiMeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): MultiMeshInstance3D? =
             if (handle.address() == 0L) null else MultiMeshInstance3D(GodotHandle(handle))
+
+        /** A new MultiMeshInstance3D, GDScript's `MultiMeshInstance3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): MultiMeshInstance3D =
+            MultiMeshInstance3D(GodotHandle(ObjectCalls.constructObject("MultiMeshInstance3D")))
     }
 
     private object Binds {

@@ -240,6 +240,11 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRPositionalTracker? =
             if (handle.address() == 0L) null else XRPositionalTracker(GodotHandle(handle))
+
+        /** A new XRPositionalTracker, GDScript's `XRPositionalTracker.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): XRPositionalTracker =
+            RefCounted.owned(XRPositionalTracker(GodotHandle(ObjectCalls.constructObject("XRPositionalTracker"))))
     }
 
     private object Binds {

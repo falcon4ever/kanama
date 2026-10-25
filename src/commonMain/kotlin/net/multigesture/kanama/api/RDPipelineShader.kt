@@ -81,6 +81,11 @@ class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineShader? =
             if (handle.address() == 0L) null else RDPipelineShader(GodotHandle(handle))
+
+        /** A new RDPipelineShader, GDScript's `RDPipelineShader.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDPipelineShader =
+            RefCounted.owned(RDPipelineShader(GodotHandle(ObjectCalls.constructObject("RDPipelineShader"))))
     }
 
     private object Binds {

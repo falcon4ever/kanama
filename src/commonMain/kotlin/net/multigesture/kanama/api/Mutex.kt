@@ -61,6 +61,11 @@ class Mutex(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Mutex? =
             if (handle.address() == 0L) null else Mutex(GodotHandle(handle))
+
+        /** A new Mutex, GDScript's `Mutex.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Mutex =
+            RefCounted.owned(Mutex(GodotHandle(ObjectCalls.constructObject("Mutex"))))
     }
 
     private object Binds {

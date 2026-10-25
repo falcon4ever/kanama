@@ -100,6 +100,11 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerTCP? =
             if (handle.address() == 0L) null else StreamPeerTCP(GodotHandle(handle))
+
+        /** A new StreamPeerTCP, GDScript's `StreamPeerTCP.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): StreamPeerTCP =
+            RefCounted.owned(StreamPeerTCP(GodotHandle(ObjectCalls.constructObject("StreamPeerTCP"))))
     }
 
     private object Binds {

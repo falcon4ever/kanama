@@ -101,6 +101,11 @@ open class StaticBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
 
         internal fun wrap(handle: RawSegment): StaticBody3D? =
             if (handle.address() == 0L) null else StaticBody3D(GodotHandle(handle))
+
+        /** A new StaticBody3D, GDScript's `StaticBody3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): StaticBody3D =
+            StaticBody3D(GodotHandle(ObjectCalls.constructObject("StaticBody3D")))
     }
 
     private object Binds {

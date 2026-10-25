@@ -127,6 +127,11 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): AudioListener3D? =
             if (handle.address() == 0L) null else AudioListener3D(GodotHandle(handle))
+
+        /** A new AudioListener3D, GDScript's `AudioListener3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AudioListener3D =
+            AudioListener3D(GodotHandle(ObjectCalls.constructObject("AudioListener3D")))
     }
 
     private object Binds {

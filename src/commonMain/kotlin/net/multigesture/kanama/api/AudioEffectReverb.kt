@@ -269,6 +269,11 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectReverb? =
             if (handle.address() == 0L) null else AudioEffectReverb(GodotHandle(handle))
+
+        /** A new AudioEffectReverb, GDScript's `AudioEffectReverb.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectReverb =
+            RefCounted.owned(AudioEffectReverb(GodotHandle(ObjectCalls.constructObject("AudioEffectReverb"))))
     }
 
     private object Binds {

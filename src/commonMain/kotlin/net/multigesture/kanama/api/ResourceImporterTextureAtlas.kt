@@ -23,5 +23,10 @@ class ResourceImporterTextureAtlas(handle: GodotHandle) : ResourceImporter(handl
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterTextureAtlas? =
             if (handle.address() == 0L) null else ResourceImporterTextureAtlas(GodotHandle(handle))
+
+        /** A new ResourceImporterTextureAtlas, GDScript's `ResourceImporterTextureAtlas.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterTextureAtlas =
+            RefCounted.owned(ResourceImporterTextureAtlas(GodotHandle(ObjectCalls.constructObject("ResourceImporterTextureAtlas"))))
     }
 }

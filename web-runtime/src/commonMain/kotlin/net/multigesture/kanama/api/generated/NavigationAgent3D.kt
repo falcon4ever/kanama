@@ -59,6 +59,12 @@ class NavigationAgent3D(godotObject: GodotHandle) : Node(godotObject) {
     const val navigationFinished: String = "navigation_finished"
     const val velocityComputed: String = "velocity_computed"
   }
+
+  companion object {
+    /** A new NavigationAgent3D, GDScript's `NavigationAgent3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): NavigationAgent3D =
+      NavigationAgent3D(checkNotNull(ClassDB.instantiate("NavigationAgent3D")) { "Godot could not instantiate NavigationAgent3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

@@ -81,6 +81,11 @@ class MeshInstance2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): MeshInstance2D? =
             if (handle.address() == 0L) null else MeshInstance2D(GodotHandle(handle))
+
+        /** A new MeshInstance2D, GDScript's `MeshInstance2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): MeshInstance2D =
+            MeshInstance2D(GodotHandle(ObjectCalls.constructObject("MeshInstance2D")))
     }
 
     private object Binds {

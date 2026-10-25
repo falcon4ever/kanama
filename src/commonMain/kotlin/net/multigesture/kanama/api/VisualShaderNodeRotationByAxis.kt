@@ -22,5 +22,10 @@ class VisualShaderNodeRotationByAxis(handle: GodotHandle) : VisualShaderNode(han
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeRotationByAxis? =
             if (handle.address() == 0L) null else VisualShaderNodeRotationByAxis(GodotHandle(handle))
+
+        /** A new VisualShaderNodeRotationByAxis, GDScript's `VisualShaderNodeRotationByAxis.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeRotationByAxis =
+            RefCounted.owned(VisualShaderNodeRotationByAxis(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeRotationByAxis"))))
     }
 }

@@ -53,7 +53,7 @@ class BoxShape3D(handle: GodotHandle) : Shape3D(handle) {
         internal fun wrapBorrowed(handle: RawSegment): BoxShape3D? =
             if (handle.address() == 0L) null else BoxShape3D(GodotHandle(handle))
 
-        // Instantiate a BoxShape3D.
+        /** A new BoxShape3D, GDScript's `BoxShape3D.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): BoxShape3D =
             RefCounted.owned(BoxShape3D(GodotHandle(ObjectCalls.constructObject("BoxShape3D"))))

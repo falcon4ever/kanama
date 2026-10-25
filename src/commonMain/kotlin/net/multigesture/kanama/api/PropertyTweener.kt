@@ -144,6 +144,11 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PropertyTweener? =
             if (handle.address() == 0L) null else PropertyTweener(GodotHandle(handle))
+
+        /** A new PropertyTweener, GDScript's `PropertyTweener.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PropertyTweener =
+            RefCounted.owned(PropertyTweener(GodotHandle(ObjectCalls.constructObject("PropertyTweener"))))
     }
 
     private object Binds {

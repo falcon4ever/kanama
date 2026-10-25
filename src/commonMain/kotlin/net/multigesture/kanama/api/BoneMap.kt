@@ -108,6 +108,11 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): BoneMap? =
             if (handle.address() == 0L) null else BoneMap(GodotHandle(handle))
+
+        /** A new BoneMap, GDScript's `BoneMap.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): BoneMap =
+            RefCounted.owned(BoneMap(GodotHandle(ObjectCalls.constructObject("BoneMap"))))
     }
 
     private object Binds {

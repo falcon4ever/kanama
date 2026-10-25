@@ -22,5 +22,10 @@ class EditorFileSystemImportFormatSupportQuery(handle: GodotHandle) : RefCounted
 
         internal fun wrapBorrowed(handle: RawSegment): EditorFileSystemImportFormatSupportQuery? =
             if (handle.address() == 0L) null else EditorFileSystemImportFormatSupportQuery(GodotHandle(handle))
+
+        /** A new EditorFileSystemImportFormatSupportQuery, GDScript's `EditorFileSystemImportFormatSupportQuery.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorFileSystemImportFormatSupportQuery =
+            RefCounted.owned(EditorFileSystemImportFormatSupportQuery(GodotHandle(ObjectCalls.constructObject("EditorFileSystemImportFormatSupportQuery"))))
     }
 }

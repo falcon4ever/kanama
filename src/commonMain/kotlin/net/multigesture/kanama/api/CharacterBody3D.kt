@@ -720,6 +720,11 @@ class CharacterBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
 
         internal fun wrap(handle: RawSegment): CharacterBody3D? =
             if (handle.address() == 0L) null else CharacterBody3D(GodotHandle(handle))
+
+        /** A new CharacterBody3D, GDScript's `CharacterBody3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CharacterBody3D =
+            CharacterBody3D(GodotHandle(ObjectCalls.constructObject("CharacterBody3D")))
     }
 
     private object Binds {

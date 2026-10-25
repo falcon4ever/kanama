@@ -85,6 +85,12 @@ class AnimatedSprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
     const val animationLooped: String = "animation_looped"
     const val animationFinished: String = "animation_finished"
   }
+
+  companion object {
+    /** A new AnimatedSprite2D, GDScript's `AnimatedSprite2D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): AnimatedSprite2D =
+      AnimatedSprite2D(checkNotNull(ClassDB.instantiate("AnimatedSprite2D")) { "Godot could not instantiate AnimatedSprite2D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

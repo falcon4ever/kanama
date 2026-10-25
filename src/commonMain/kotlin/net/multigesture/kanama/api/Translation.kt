@@ -188,6 +188,11 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Translation? =
             if (handle.address() == 0L) null else Translation(GodotHandle(handle))
+
+        /** A new Translation, GDScript's `Translation.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Translation =
+            RefCounted.owned(Translation(GodotHandle(ObjectCalls.constructObject("Translation"))))
     }
 
     private object Binds {

@@ -320,6 +320,11 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): UPNPDevice? =
             if (handle.address() == 0L) null else UPNPDevice(GodotHandle(handle))
+
+        /** A new UPNPDevice, GDScript's `UPNPDevice.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): UPNPDevice =
+            RefCounted.owned(UPNPDevice(GodotHandle(ObjectCalls.constructObject("UPNPDevice"))))
     }
 
     private object Binds {

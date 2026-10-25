@@ -121,6 +121,11 @@ class CapsuleShape2D(handle: GodotHandle) : Shape2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CapsuleShape2D? =
             if (handle.address() == 0L) null else CapsuleShape2D(GodotHandle(handle))
+
+        /** A new CapsuleShape2D, GDScript's `CapsuleShape2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CapsuleShape2D =
+            RefCounted.owned(CapsuleShape2D(GodotHandle(ObjectCalls.constructObject("CapsuleShape2D"))))
     }
 
     private object Binds {

@@ -1836,6 +1836,11 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): RichTextLabel? =
             if (handle.address() == 0L) null else RichTextLabel(GodotHandle(handle))
+
+        /** A new RichTextLabel, GDScript's `RichTextLabel.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): RichTextLabel =
+            RichTextLabel(GodotHandle(ObjectCalls.constructObject("RichTextLabel")))
     }
 
     private object Binds {

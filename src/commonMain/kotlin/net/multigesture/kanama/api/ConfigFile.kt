@@ -246,7 +246,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
         internal fun wrapBorrowed(handle: RawSegment): ConfigFile? =
             if (handle.address() == 0L) null else ConfigFile(GodotHandle(handle))
 
-        // Instantiate a ConfigFile.
+        /** A new ConfigFile, GDScript's `ConfigFile.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ConfigFile =
             RefCounted.owned(ConfigFile(GodotHandle(ObjectCalls.constructObject("ConfigFile"))))

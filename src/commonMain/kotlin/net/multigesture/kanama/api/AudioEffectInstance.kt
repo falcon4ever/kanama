@@ -22,5 +22,10 @@ open class AudioEffectInstance(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectInstance? =
             if (handle.address() == 0L) null else AudioEffectInstance(GodotHandle(handle))
+
+        /** A new AudioEffectInstance, GDScript's `AudioEffectInstance.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectInstance =
+            RefCounted.owned(AudioEffectInstance(GodotHandle(ObjectCalls.constructObject("AudioEffectInstance"))))
     }
 }

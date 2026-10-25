@@ -486,6 +486,11 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DJiggle? =
             if (handle.address() == 0L) null else SkeletonModification2DJiggle(GodotHandle(handle))
+
+        /** A new SkeletonModification2DJiggle, GDScript's `SkeletonModification2DJiggle.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SkeletonModification2DJiggle =
+            RefCounted.owned(SkeletonModification2DJiggle(GodotHandle(ObjectCalls.constructObject("SkeletonModification2DJiggle"))))
     }
 
     private object Binds {

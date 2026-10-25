@@ -84,6 +84,11 @@ class SeparationRayShape2D(handle: GodotHandle) : Shape2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SeparationRayShape2D? =
             if (handle.address() == 0L) null else SeparationRayShape2D(GodotHandle(handle))
+
+        /** A new SeparationRayShape2D, GDScript's `SeparationRayShape2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SeparationRayShape2D =
+            RefCounted.owned(SeparationRayShape2D(GodotHandle(ObjectCalls.constructObject("SeparationRayShape2D"))))
     }
 
     private object Binds {

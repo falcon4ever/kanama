@@ -53,6 +53,11 @@ open class AnimationNodeSync(handle: GodotHandle) : AnimationNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeSync? =
             if (handle.address() == 0L) null else AnimationNodeSync(GodotHandle(handle))
+
+        /** A new AnimationNodeSync, GDScript's `AnimationNodeSync.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeSync =
+            RefCounted.owned(AnimationNodeSync(GodotHandle(ObjectCalls.constructObject("AnimationNodeSync"))))
     }
 
     private object Binds {

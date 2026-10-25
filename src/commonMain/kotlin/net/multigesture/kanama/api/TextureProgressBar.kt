@@ -466,6 +466,11 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
 
         internal fun wrap(handle: RawSegment): TextureProgressBar? =
             if (handle.address() == 0L) null else TextureProgressBar(GodotHandle(handle))
+
+        /** A new TextureProgressBar, GDScript's `TextureProgressBar.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): TextureProgressBar =
+            TextureProgressBar(GodotHandle(ObjectCalls.constructObject("TextureProgressBar")))
     }
 
     private object Binds {

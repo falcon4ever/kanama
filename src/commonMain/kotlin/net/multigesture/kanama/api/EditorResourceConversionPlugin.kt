@@ -23,5 +23,10 @@ class EditorResourceConversionPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorResourceConversionPlugin? =
             if (handle.address() == 0L) null else EditorResourceConversionPlugin(GodotHandle(handle))
+
+        /** A new EditorResourceConversionPlugin, GDScript's `EditorResourceConversionPlugin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorResourceConversionPlugin =
+            RefCounted.owned(EditorResourceConversionPlugin(GodotHandle(ObjectCalls.constructObject("EditorResourceConversionPlugin"))))
     }
 }

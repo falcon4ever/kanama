@@ -45,6 +45,11 @@ class JavaObject(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): JavaObject? =
             if (handle.address() == 0L) null else JavaObject(GodotHandle(handle))
+
+        /** A new JavaObject, GDScript's `JavaObject.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): JavaObject =
+            RefCounted.owned(JavaObject(GodotHandle(ObjectCalls.constructObject("JavaObject"))))
     }
 
     private object Binds {

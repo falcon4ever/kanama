@@ -172,6 +172,11 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StyleBoxLine? =
             if (handle.address() == 0L) null else StyleBoxLine(GodotHandle(handle))
+
+        /** A new StyleBoxLine, GDScript's `StyleBoxLine.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): StyleBoxLine =
+            RefCounted.owned(StyleBoxLine(GodotHandle(ObjectCalls.constructObject("StyleBoxLine"))))
     }
 
     private object Binds {

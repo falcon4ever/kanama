@@ -607,6 +607,11 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TileSetAtlasSource? =
             if (handle.address() == 0L) null else TileSetAtlasSource(GodotHandle(handle))
+
+        /** A new TileSetAtlasSource, GDScript's `TileSetAtlasSource.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TileSetAtlasSource =
+            RefCounted.owned(TileSetAtlasSource(GodotHandle(ObjectCalls.constructObject("TileSetAtlasSource"))))
     }
 
     private object Binds {

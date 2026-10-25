@@ -190,6 +190,11 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeBlendTree? =
             if (handle.address() == 0L) null else AnimationNodeBlendTree(GodotHandle(handle))
+
+        /** A new AnimationNodeBlendTree, GDScript's `AnimationNodeBlendTree.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeBlendTree =
+            RefCounted.owned(AnimationNodeBlendTree(GodotHandle(ObjectCalls.constructObject("AnimationNodeBlendTree"))))
     }
 
     private object Binds {

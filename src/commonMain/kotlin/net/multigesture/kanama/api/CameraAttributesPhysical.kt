@@ -319,6 +319,11 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CameraAttributesPhysical? =
             if (handle.address() == 0L) null else CameraAttributesPhysical(GodotHandle(handle))
+
+        /** A new CameraAttributesPhysical, GDScript's `CameraAttributesPhysical.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CameraAttributesPhysical =
+            RefCounted.owned(CameraAttributesPhysical(GodotHandle(ObjectCalls.constructObject("CameraAttributesPhysical"))))
     }
 
     private object Binds {

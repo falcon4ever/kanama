@@ -518,6 +518,11 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): SoftBody3D? =
             if (handle.address() == 0L) null else SoftBody3D(GodotHandle(handle))
+
+        /** A new SoftBody3D, GDScript's `SoftBody3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SoftBody3D =
+            SoftBody3D(GodotHandle(ObjectCalls.constructObject("SoftBody3D")))
     }
 
     private object Binds {

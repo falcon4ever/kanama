@@ -51,6 +51,11 @@ class VisualShaderNodeFloatConstant(handle: GodotHandle) : VisualShaderNodeConst
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFloatConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeFloatConstant(GodotHandle(handle))
+
+        /** A new VisualShaderNodeFloatConstant, GDScript's `VisualShaderNodeFloatConstant.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeFloatConstant =
+            RefCounted.owned(VisualShaderNodeFloatConstant(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeFloatConstant"))))
     }
 
     private object Binds {

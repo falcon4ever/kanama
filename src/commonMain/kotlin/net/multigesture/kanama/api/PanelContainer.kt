@@ -19,5 +19,10 @@ open class PanelContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): PanelContainer? =
             if (handle.address() == 0L) null else PanelContainer(GodotHandle(handle))
+
+        /** A new PanelContainer, GDScript's `PanelContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): PanelContainer =
+            PanelContainer(GodotHandle(ObjectCalls.constructObject("PanelContainer")))
     }
 }

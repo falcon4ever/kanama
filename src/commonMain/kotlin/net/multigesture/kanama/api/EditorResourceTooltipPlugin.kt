@@ -34,6 +34,11 @@ class EditorResourceTooltipPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorResourceTooltipPlugin? =
             if (handle.address() == 0L) null else EditorResourceTooltipPlugin(GodotHandle(handle))
+
+        /** A new EditorResourceTooltipPlugin, GDScript's `EditorResourceTooltipPlugin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorResourceTooltipPlugin =
+            RefCounted.owned(EditorResourceTooltipPlugin(GodotHandle(ObjectCalls.constructObject("EditorResourceTooltipPlugin"))))
     }
 
     private object Binds {

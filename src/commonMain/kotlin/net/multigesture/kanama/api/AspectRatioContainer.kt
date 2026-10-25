@@ -190,6 +190,11 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): AspectRatioContainer? =
             if (handle.address() == 0L) null else AspectRatioContainer(GodotHandle(handle))
+
+        /** A new AspectRatioContainer, GDScript's `AspectRatioContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AspectRatioContainer =
+            AspectRatioContainer(GodotHandle(ObjectCalls.constructObject("AspectRatioContainer")))
     }
 
     private object Binds {

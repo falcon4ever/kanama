@@ -256,6 +256,11 @@ class NoiseTexture3D(handle: GodotHandle) : Texture3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): NoiseTexture3D? =
             if (handle.address() == 0L) null else NoiseTexture3D(GodotHandle(handle))
+
+        /** A new NoiseTexture3D, GDScript's `NoiseTexture3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): NoiseTexture3D =
+            RefCounted.owned(NoiseTexture3D(GodotHandle(ObjectCalls.constructObject("NoiseTexture3D"))))
     }
 
     private object Binds {

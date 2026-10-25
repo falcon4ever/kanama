@@ -53,6 +53,11 @@ class VisualShaderNodeComment(handle: GodotHandle) : VisualShaderNodeFrame(handl
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeComment? =
             if (handle.address() == 0L) null else VisualShaderNodeComment(GodotHandle(handle))
+
+        /** A new VisualShaderNodeComment, GDScript's `VisualShaderNodeComment.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeComment =
+            RefCounted.owned(VisualShaderNodeComment(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeComment"))))
     }
 
     private object Binds {

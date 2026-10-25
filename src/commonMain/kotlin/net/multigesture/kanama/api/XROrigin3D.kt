@@ -73,6 +73,11 @@ class XROrigin3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): XROrigin3D? =
             if (handle.address() == 0L) null else XROrigin3D(GodotHandle(handle))
+
+        /** A new XROrigin3D, GDScript's `XROrigin3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): XROrigin3D =
+            XROrigin3D(GodotHandle(ObjectCalls.constructObject("XROrigin3D")))
     }
 
     private object Binds {

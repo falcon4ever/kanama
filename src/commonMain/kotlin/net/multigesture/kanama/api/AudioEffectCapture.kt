@@ -144,6 +144,11 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectCapture? =
             if (handle.address() == 0L) null else AudioEffectCapture(GodotHandle(handle))
+
+        /** A new AudioEffectCapture, GDScript's `AudioEffectCapture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectCapture =
+            RefCounted.owned(AudioEffectCapture(GodotHandle(ObjectCalls.constructObject("AudioEffectCapture"))))
     }
 
     private object Binds {

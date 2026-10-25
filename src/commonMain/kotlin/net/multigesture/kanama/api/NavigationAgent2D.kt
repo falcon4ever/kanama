@@ -1117,6 +1117,11 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationAgent2D? =
             if (handle.address() == 0L) null else NavigationAgent2D(GodotHandle(handle))
+
+        /** A new NavigationAgent2D, GDScript's `NavigationAgent2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): NavigationAgent2D =
+            NavigationAgent2D(GodotHandle(ObjectCalls.constructObject("NavigationAgent2D")))
     }
 
     private object Binds {

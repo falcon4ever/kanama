@@ -81,6 +81,11 @@ class VisualShaderNodeColorParameter(handle: GodotHandle) : VisualShaderNodePara
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeColorParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeColorParameter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeColorParameter, GDScript's `VisualShaderNodeColorParameter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeColorParameter =
+            RefCounted.owned(VisualShaderNodeColorParameter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeColorParameter"))))
     }
 
     private object Binds {

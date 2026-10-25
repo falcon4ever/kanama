@@ -20,5 +20,10 @@ class VSplitContainer(handle: GodotHandle) : SplitContainer(handle) {
 
         internal fun wrap(handle: RawSegment): VSplitContainer? =
             if (handle.address() == 0L) null else VSplitContainer(GodotHandle(handle))
+
+        /** A new VSplitContainer, GDScript's `VSplitContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VSplitContainer =
+            VSplitContainer(GodotHandle(ObjectCalls.constructObject("VSplitContainer")))
     }
 }

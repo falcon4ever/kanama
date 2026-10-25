@@ -73,6 +73,11 @@ open class OpenXRStructureBase(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRStructureBase? =
             if (handle.address() == 0L) null else OpenXRStructureBase(GodotHandle(handle))
+
+        /** A new OpenXRStructureBase, GDScript's `OpenXRStructureBase.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRStructureBase =
+            RefCounted.owned(OpenXRStructureBase(GodotHandle(ObjectCalls.constructObject("OpenXRStructureBase"))))
     }
 
     private object Binds {

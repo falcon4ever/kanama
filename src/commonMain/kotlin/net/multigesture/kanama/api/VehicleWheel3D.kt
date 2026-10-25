@@ -482,6 +482,11 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): VehicleWheel3D? =
             if (handle.address() == 0L) null else VehicleWheel3D(GodotHandle(handle))
+
+        /** A new VehicleWheel3D, GDScript's `VehicleWheel3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VehicleWheel3D =
+            VehicleWheel3D(GodotHandle(ObjectCalls.constructObject("VehicleWheel3D")))
     }
 
     private object Binds {

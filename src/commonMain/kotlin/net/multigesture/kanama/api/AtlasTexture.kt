@@ -157,6 +157,11 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AtlasTexture? =
             if (handle.address() == 0L) null else AtlasTexture(GodotHandle(handle))
+
+        /** A new AtlasTexture, GDScript's `AtlasTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AtlasTexture =
+            RefCounted.owned(AtlasTexture(GodotHandle(ObjectCalls.constructObject("AtlasTexture"))))
     }
 
     private object Binds {

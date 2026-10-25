@@ -2635,6 +2635,11 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         internal fun wrapBorrowed(handle: RawSegment): ParticleProcessMaterial? =
             if (handle.address() == 0L) null else ParticleProcessMaterial(GodotHandle(handle))
 
+        /** A new ParticleProcessMaterial, GDScript's `ParticleProcessMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ParticleProcessMaterial =
+            RefCounted.owned(ParticleProcessMaterial(GodotHandle(ObjectCalls.constructObject("ParticleProcessMaterial"))))
+
         // Downcast a Resource to ParticleProcessMaterial (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ParticleProcessMaterial? =

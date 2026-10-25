@@ -70,6 +70,11 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): X509Certificate? =
             if (handle.address() == 0L) null else X509Certificate(GodotHandle(handle))
+
+        /** A new X509Certificate, GDScript's `X509Certificate.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): X509Certificate =
+            RefCounted.owned(X509Certificate(GodotHandle(ObjectCalls.constructObject("X509Certificate"))))
     }
 
     private object Binds {

@@ -120,6 +120,11 @@ class ParallaxLayer(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): ParallaxLayer? =
             if (handle.address() == 0L) null else ParallaxLayer(GodotHandle(handle))
+
+        /** A new ParallaxLayer, GDScript's `ParallaxLayer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ParallaxLayer =
+            ParallaxLayer(GodotHandle(ObjectCalls.constructObject("ParallaxLayer")))
     }
 
     private object Binds {

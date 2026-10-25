@@ -74,6 +74,11 @@ class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: GodotHandle) : O
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationPlaneTracking? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationPlaneTracking(GodotHandle(handle))
+
+        /** A new OpenXRSpatialCapabilityConfigurationPlaneTracking, GDScript's `OpenXRSpatialCapabilityConfigurationPlaneTracking.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialCapabilityConfigurationPlaneTracking =
+            RefCounted.owned(OpenXRSpatialCapabilityConfigurationPlaneTracking(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationPlaneTracking"))))
     }
 
     private object Binds {

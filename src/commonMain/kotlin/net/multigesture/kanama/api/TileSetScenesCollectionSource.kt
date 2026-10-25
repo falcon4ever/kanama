@@ -156,6 +156,11 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): TileSetScenesCollectionSource? =
             if (handle.address() == 0L) null else TileSetScenesCollectionSource(GodotHandle(handle))
+
+        /** A new TileSetScenesCollectionSource, GDScript's `TileSetScenesCollectionSource.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TileSetScenesCollectionSource =
+            RefCounted.owned(TileSetScenesCollectionSource(GodotHandle(ObjectCalls.constructObject("TileSetScenesCollectionSource"))))
     }
 
     private object Binds {

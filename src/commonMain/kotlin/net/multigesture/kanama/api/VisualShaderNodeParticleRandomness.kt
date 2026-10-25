@@ -95,6 +95,11 @@ class VisualShaderNodeParticleRandomness(handle: GodotHandle) : VisualShaderNode
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleRandomness? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleRandomness(GodotHandle(handle))
+
+        /** A new VisualShaderNodeParticleRandomness, GDScript's `VisualShaderNodeParticleRandomness.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeParticleRandomness =
+            RefCounted.owned(VisualShaderNodeParticleRandomness(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeParticleRandomness"))))
     }
 
     private object Binds {

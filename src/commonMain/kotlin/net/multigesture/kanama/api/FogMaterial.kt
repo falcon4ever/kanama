@@ -229,6 +229,11 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): FogMaterial? =
             if (handle.address() == 0L) null else FogMaterial(GodotHandle(handle))
+
+        /** A new FogMaterial, GDScript's `FogMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): FogMaterial =
+            RefCounted.owned(FogMaterial(GodotHandle(ObjectCalls.constructObject("FogMaterial"))))
     }
 
     private object Binds {

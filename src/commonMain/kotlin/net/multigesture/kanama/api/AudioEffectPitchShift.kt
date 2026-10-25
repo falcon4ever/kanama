@@ -175,6 +175,11 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectPitchShift? =
             if (handle.address() == 0L) null else AudioEffectPitchShift(GodotHandle(handle))
+
+        /** A new AudioEffectPitchShift, GDScript's `AudioEffectPitchShift.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectPitchShift =
+            RefCounted.owned(AudioEffectPitchShift(GodotHandle(ObjectCalls.constructObject("AudioEffectPitchShift"))))
     }
 
     private object Binds {

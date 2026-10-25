@@ -259,6 +259,11 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRPose? =
             if (handle.address() == 0L) null else XRPose(GodotHandle(handle))
+
+        /** A new XRPose, GDScript's `XRPose.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): XRPose =
+            RefCounted.owned(XRPose(GodotHandle(ObjectCalls.constructObject("XRPose"))))
     }
 
     private object Binds {

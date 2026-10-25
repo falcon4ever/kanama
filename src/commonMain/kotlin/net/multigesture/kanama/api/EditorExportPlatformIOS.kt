@@ -20,5 +20,10 @@ class EditorExportPlatformIOS(handle: GodotHandle) : EditorExportPlatformAppleEm
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformIOS? =
             if (handle.address() == 0L) null else EditorExportPlatformIOS(GodotHandle(handle))
+
+        /** A new EditorExportPlatformIOS, GDScript's `EditorExportPlatformIOS.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorExportPlatformIOS =
+            RefCounted.owned(EditorExportPlatformIOS(GodotHandle(ObjectCalls.constructObject("EditorExportPlatformIOS"))))
     }
 }

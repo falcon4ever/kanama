@@ -698,6 +698,11 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): GeometryInstance3D? =
             if (handle.address() == 0L) null else GeometryInstance3D(GodotHandle(handle))
+
+        /** A new GeometryInstance3D, GDScript's `GeometryInstance3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GeometryInstance3D =
+            GeometryInstance3D(GodotHandle(ObjectCalls.constructObject("GeometryInstance3D")))
     }
 
     private object Binds {

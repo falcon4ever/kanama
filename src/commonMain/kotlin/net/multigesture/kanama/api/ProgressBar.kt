@@ -158,6 +158,11 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
 
         internal fun wrap(handle: RawSegment): ProgressBar? =
             if (handle.address() == 0L) null else ProgressBar(GodotHandle(handle))
+
+        /** A new ProgressBar, GDScript's `ProgressBar.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ProgressBar =
+            ProgressBar(GodotHandle(ObjectCalls.constructObject("ProgressBar")))
     }
 
     private object Binds {

@@ -84,6 +84,12 @@ class AudioStreamPlayer3D(godotObject: GodotHandle) : Node3D(godotObject) {
       val PHYSICS_STEP: DopplerTracking get() = DopplerTracking(2L)
     }
   }
+
+  companion object {
+    /** A new AudioStreamPlayer3D, GDScript's `AudioStreamPlayer3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): AudioStreamPlayer3D =
+      AudioStreamPlayer3D(checkNotNull(ClassDB.instantiate("AudioStreamPlayer3D")) { "Godot could not instantiate AudioStreamPlayer3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

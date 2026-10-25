@@ -551,6 +551,11 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
 
         internal fun wrap(handle: RawSegment): CSGPolygon3D? =
             if (handle.address() == 0L) null else CSGPolygon3D(GodotHandle(handle))
+
+        /** A new CSGPolygon3D, GDScript's `CSGPolygon3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CSGPolygon3D =
+            CSGPolygon3D(GodotHandle(ObjectCalls.constructObject("CSGPolygon3D")))
     }
 
     private object Binds {

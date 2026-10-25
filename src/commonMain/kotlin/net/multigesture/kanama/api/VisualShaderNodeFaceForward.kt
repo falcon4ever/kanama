@@ -23,5 +23,10 @@ class VisualShaderNodeFaceForward(handle: GodotHandle) : VisualShaderNodeVectorB
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFaceForward? =
             if (handle.address() == 0L) null else VisualShaderNodeFaceForward(GodotHandle(handle))
+
+        /** A new VisualShaderNodeFaceForward, GDScript's `VisualShaderNodeFaceForward.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeFaceForward =
+            RefCounted.owned(VisualShaderNodeFaceForward(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeFaceForward"))))
     }
 }

@@ -22,5 +22,10 @@ class LightmapperRD(handle: GodotHandle) : Lightmapper(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): LightmapperRD? =
             if (handle.address() == 0L) null else LightmapperRD(GodotHandle(handle))
+
+        /** A new LightmapperRD, GDScript's `LightmapperRD.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): LightmapperRD =
+            RefCounted.owned(LightmapperRD(GodotHandle(ObjectCalls.constructObject("LightmapperRD"))))
     }
 }

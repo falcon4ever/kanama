@@ -446,6 +446,11 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
         internal fun wrapBorrowed(handle: RawSegment): ProceduralSkyMaterial? =
             if (handle.address() == 0L) null else ProceduralSkyMaterial(GodotHandle(handle))
 
+        /** A new ProceduralSkyMaterial, GDScript's `ProceduralSkyMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ProceduralSkyMaterial =
+            RefCounted.owned(ProceduralSkyMaterial(GodotHandle(ObjectCalls.constructObject("ProceduralSkyMaterial"))))
+
         // Downcast a Resource to ProceduralSkyMaterial (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ProceduralSkyMaterial? =

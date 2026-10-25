@@ -212,6 +212,12 @@ class Window(godotObject: GodotHandle) : Viewport(godotObject) {
       val CENTER_SCREEN_WITH_KEYBOARD_FOCUS: WindowInitialPosition get() = WindowInitialPosition(5L)
     }
   }
+
+  companion object {
+    /** A new Window, GDScript's `Window.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): Window =
+      Window(checkNotNull(ClassDB.instantiate("Window")) { "Godot could not instantiate Window" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

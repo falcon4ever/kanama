@@ -22,5 +22,10 @@ class VisualShaderNodeVectorLen(handle: GodotHandle) : VisualShaderNodeVectorBas
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorLen? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorLen(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVectorLen, GDScript's `VisualShaderNodeVectorLen.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVectorLen =
+            RefCounted.owned(VisualShaderNodeVectorLen(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeVectorLen"))))
     }
 }

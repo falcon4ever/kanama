@@ -152,6 +152,11 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PhysicsMaterial? =
             if (handle.address() == 0L) null else PhysicsMaterial(GodotHandle(handle))
+
+        /** A new PhysicsMaterial, GDScript's `PhysicsMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PhysicsMaterial =
+            RefCounted.owned(PhysicsMaterial(GodotHandle(ObjectCalls.constructObject("PhysicsMaterial"))))
     }
 
     private object Binds {

@@ -902,6 +902,11 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): Label3D? =
             if (handle.address() == 0L) null else Label3D(GodotHandle(handle))
+
+        /** A new Label3D, GDScript's `Label3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Label3D =
+            Label3D(GodotHandle(ObjectCalls.constructObject("Label3D")))
     }
 
     private object Binds {

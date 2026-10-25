@@ -141,6 +141,11 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectSpectrumAnalyzer? =
             if (handle.address() == 0L) null else AudioEffectSpectrumAnalyzer(GodotHandle(handle))
+
+        /** A new AudioEffectSpectrumAnalyzer, GDScript's `AudioEffectSpectrumAnalyzer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectSpectrumAnalyzer =
+            RefCounted.owned(AudioEffectSpectrumAnalyzer(GodotHandle(ObjectCalls.constructObject("AudioEffectSpectrumAnalyzer"))))
     }
 
     private object Binds {

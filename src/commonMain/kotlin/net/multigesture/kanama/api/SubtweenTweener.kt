@@ -39,6 +39,11 @@ class SubtweenTweener(handle: GodotHandle) : Tweener(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SubtweenTweener? =
             if (handle.address() == 0L) null else SubtweenTweener(GodotHandle(handle))
+
+        /** A new SubtweenTweener, GDScript's `SubtweenTweener.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SubtweenTweener =
+            RefCounted.owned(SubtweenTweener(GodotHandle(ObjectCalls.constructObject("SubtweenTweener"))))
     }
 
     private object Binds {

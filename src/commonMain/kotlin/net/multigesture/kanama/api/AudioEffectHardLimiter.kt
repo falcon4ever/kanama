@@ -116,6 +116,11 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectHardLimiter? =
             if (handle.address() == 0L) null else AudioEffectHardLimiter(GodotHandle(handle))
+
+        /** A new AudioEffectHardLimiter, GDScript's `AudioEffectHardLimiter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectHardLimiter =
+            RefCounted.owned(AudioEffectHardLimiter(GodotHandle(ObjectCalls.constructObject("AudioEffectHardLimiter"))))
     }
 
     private object Binds {

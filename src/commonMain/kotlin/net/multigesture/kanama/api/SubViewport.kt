@@ -247,6 +247,11 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
 
         internal fun wrap(handle: RawSegment): SubViewport? =
             if (handle.address() == 0L) null else SubViewport(GodotHandle(handle))
+
+        /** A new SubViewport, GDScript's `SubViewport.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SubViewport =
+            SubViewport(GodotHandle(ObjectCalls.constructObject("SubViewport")))
     }
 
     private object Binds {

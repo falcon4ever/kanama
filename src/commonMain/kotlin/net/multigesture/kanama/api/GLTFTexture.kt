@@ -84,6 +84,11 @@ class GLTFTexture(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFTexture? =
             if (handle.address() == 0L) null else GLTFTexture(GodotHandle(handle))
+
+        /** A new GLTFTexture, GDScript's `GLTFTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFTexture =
+            RefCounted.owned(GLTFTexture(GodotHandle(ObjectCalls.constructObject("GLTFTexture"))))
     }
 
     private object Binds {

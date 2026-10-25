@@ -100,6 +100,11 @@ class XRHandModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRHandModifier3D? =
             if (handle.address() == 0L) null else XRHandModifier3D(GodotHandle(handle))
+
+        /** A new XRHandModifier3D, GDScript's `XRHandModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): XRHandModifier3D =
+            XRHandModifier3D(GodotHandle(ObjectCalls.constructObject("XRHandModifier3D")))
     }
 
     private object Binds {

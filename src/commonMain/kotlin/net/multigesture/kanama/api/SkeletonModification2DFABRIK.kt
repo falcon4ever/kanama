@@ -180,6 +180,11 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DFABRIK? =
             if (handle.address() == 0L) null else SkeletonModification2DFABRIK(GodotHandle(handle))
+
+        /** A new SkeletonModification2DFABRIK, GDScript's `SkeletonModification2DFABRIK.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SkeletonModification2DFABRIK =
+            RefCounted.owned(SkeletonModification2DFABRIK(GodotHandle(ObjectCalls.constructObject("SkeletonModification2DFABRIK"))))
     }
 
     private object Binds {

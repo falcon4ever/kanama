@@ -237,6 +237,11 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationMeshSourceGeometryData2D? =
             if (handle.address() == 0L) null else NavigationMeshSourceGeometryData2D(GodotHandle(handle))
+
+        /** A new NavigationMeshSourceGeometryData2D, GDScript's `NavigationMeshSourceGeometryData2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): NavigationMeshSourceGeometryData2D =
+            RefCounted.owned(NavigationMeshSourceGeometryData2D(GodotHandle(ObjectCalls.constructObject("NavigationMeshSourceGeometryData2D"))))
     }
 
     private object Binds {

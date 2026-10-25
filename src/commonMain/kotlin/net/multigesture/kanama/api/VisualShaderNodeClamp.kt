@@ -106,6 +106,11 @@ class VisualShaderNodeClamp(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeClamp? =
             if (handle.address() == 0L) null else VisualShaderNodeClamp(GodotHandle(handle))
+
+        /** A new VisualShaderNodeClamp, GDScript's `VisualShaderNodeClamp.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeClamp =
+            RefCounted.owned(VisualShaderNodeClamp(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeClamp"))))
     }
 
     private object Binds {

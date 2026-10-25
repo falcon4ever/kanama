@@ -278,6 +278,11 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationRegion2D? =
             if (handle.address() == 0L) null else NavigationRegion2D(GodotHandle(handle))
+
+        /** A new NavigationRegion2D, GDScript's `NavigationRegion2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): NavigationRegion2D =
+            NavigationRegion2D(GodotHandle(ObjectCalls.constructObject("NavigationRegion2D")))
     }
 
     private object Binds {

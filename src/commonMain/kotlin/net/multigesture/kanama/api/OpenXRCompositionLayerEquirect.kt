@@ -143,6 +143,11 @@ class OpenXRCompositionLayerEquirect(handle: GodotHandle) : OpenXRCompositionLay
 
         internal fun wrap(handle: RawSegment): OpenXRCompositionLayerEquirect? =
             if (handle.address() == 0L) null else OpenXRCompositionLayerEquirect(GodotHandle(handle))
+
+        /** A new OpenXRCompositionLayerEquirect, GDScript's `OpenXRCompositionLayerEquirect.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OpenXRCompositionLayerEquirect =
+            OpenXRCompositionLayerEquirect(GodotHandle(ObjectCalls.constructObject("OpenXRCompositionLayerEquirect")))
     }
 
     private object Binds {

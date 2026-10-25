@@ -518,6 +518,11 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
 
         internal fun wrap(handle: RawSegment): EditorDock? =
             if (handle.address() == 0L) null else EditorDock(GodotHandle(handle))
+
+        /** A new EditorDock, GDScript's `EditorDock.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): EditorDock =
+            EditorDock(GodotHandle(ObjectCalls.constructObject("EditorDock")))
     }
 
     private object Binds {

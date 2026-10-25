@@ -264,6 +264,11 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CanvasTexture? =
             if (handle.address() == 0L) null else CanvasTexture(GodotHandle(handle))
+
+        /** A new CanvasTexture, GDScript's `CanvasTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CanvasTexture =
+            RefCounted.owned(CanvasTexture(GodotHandle(ObjectCalls.constructObject("CanvasTexture"))))
     }
 
     private object Binds {

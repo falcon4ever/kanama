@@ -22,5 +22,10 @@ class VisualShaderNodeParticleBoxEmitter(handle: GodotHandle) : VisualShaderNode
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleBoxEmitter? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleBoxEmitter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeParticleBoxEmitter, GDScript's `VisualShaderNodeParticleBoxEmitter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeParticleBoxEmitter =
+            RefCounted.owned(VisualShaderNodeParticleBoxEmitter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeParticleBoxEmitter"))))
     }
 }

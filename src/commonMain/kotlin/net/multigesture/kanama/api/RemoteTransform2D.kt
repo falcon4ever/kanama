@@ -150,6 +150,11 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): RemoteTransform2D? =
             if (handle.address() == 0L) null else RemoteTransform2D(GodotHandle(handle))
+
+        /** A new RemoteTransform2D, GDScript's `RemoteTransform2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): RemoteTransform2D =
+            RemoteTransform2D(GodotHandle(ObjectCalls.constructObject("RemoteTransform2D")))
     }
 
     private object Binds {

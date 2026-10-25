@@ -349,6 +349,11 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AStar3D? =
             if (handle.address() == 0L) null else AStar3D(GodotHandle(handle))
+
+        /** A new AStar3D, GDScript's `AStar3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AStar3D =
+            RefCounted.owned(AStar3D(GodotHandle(ObjectCalls.constructObject("AStar3D"))))
     }
 
     private object Binds {

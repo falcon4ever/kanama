@@ -96,6 +96,11 @@ class ReferenceRect(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): ReferenceRect? =
             if (handle.address() == 0L) null else ReferenceRect(GodotHandle(handle))
+
+        /** A new ReferenceRect, GDScript's `ReferenceRect.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ReferenceRect =
+            ReferenceRect(GodotHandle(ObjectCalls.constructObject("ReferenceRect")))
     }
 
     private object Binds {

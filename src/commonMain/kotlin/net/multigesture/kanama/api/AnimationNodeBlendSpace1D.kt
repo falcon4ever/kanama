@@ -481,6 +481,11 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeBlendSpace1D? =
             if (handle.address() == 0L) null else AnimationNodeBlendSpace1D(GodotHandle(handle))
+
+        /** A new AnimationNodeBlendSpace1D, GDScript's `AnimationNodeBlendSpace1D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeBlendSpace1D =
+            RefCounted.owned(AnimationNodeBlendSpace1D(GodotHandle(ObjectCalls.constructObject("AnimationNodeBlendSpace1D"))))
     }
 
     private object Binds {

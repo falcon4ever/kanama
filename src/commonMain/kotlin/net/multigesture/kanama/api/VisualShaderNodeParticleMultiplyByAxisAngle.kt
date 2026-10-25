@@ -51,6 +51,11 @@ class VisualShaderNodeParticleMultiplyByAxisAngle(handle: GodotHandle) : VisualS
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleMultiplyByAxisAngle? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleMultiplyByAxisAngle(GodotHandle(handle))
+
+        /** A new VisualShaderNodeParticleMultiplyByAxisAngle, GDScript's `VisualShaderNodeParticleMultiplyByAxisAngle.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeParticleMultiplyByAxisAngle =
+            RefCounted.owned(VisualShaderNodeParticleMultiplyByAxisAngle(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeParticleMultiplyByAxisAngle"))))
     }
 
     private object Binds {

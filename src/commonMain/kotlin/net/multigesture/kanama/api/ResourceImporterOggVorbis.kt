@@ -44,6 +44,11 @@ class ResourceImporterOggVorbis(handle: GodotHandle) : ResourceImporter(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterOggVorbis? =
             if (handle.address() == 0L) null else ResourceImporterOggVorbis(GodotHandle(handle))
+
+        /** A new ResourceImporterOggVorbis, GDScript's `ResourceImporterOggVorbis.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterOggVorbis =
+            RefCounted.owned(ResourceImporterOggVorbis(GodotHandle(ObjectCalls.constructObject("ResourceImporterOggVorbis"))))
     }
 
     private object Binds {

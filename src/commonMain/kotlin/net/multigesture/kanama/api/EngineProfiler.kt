@@ -22,5 +22,10 @@ class EngineProfiler(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EngineProfiler? =
             if (handle.address() == 0L) null else EngineProfiler(GodotHandle(handle))
+
+        /** A new EngineProfiler, GDScript's `EngineProfiler.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EngineProfiler =
+            RefCounted.owned(EngineProfiler(GodotHandle(ObjectCalls.constructObject("EngineProfiler"))))
     }
 }

@@ -239,6 +239,11 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFloatParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeFloatParameter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeFloatParameter, GDScript's `VisualShaderNodeFloatParameter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeFloatParameter =
+            RefCounted.owned(VisualShaderNodeFloatParameter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeFloatParameter"))))
     }
 
     private object Binds {

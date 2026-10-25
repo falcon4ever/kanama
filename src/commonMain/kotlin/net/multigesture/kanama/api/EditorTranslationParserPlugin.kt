@@ -23,5 +23,10 @@ class EditorTranslationParserPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorTranslationParserPlugin? =
             if (handle.address() == 0L) null else EditorTranslationParserPlugin(GodotHandle(handle))
+
+        /** A new EditorTranslationParserPlugin, GDScript's `EditorTranslationParserPlugin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorTranslationParserPlugin =
+            RefCounted.owned(EditorTranslationParserPlugin(GodotHandle(ObjectCalls.constructObject("EditorTranslationParserPlugin"))))
     }
 }

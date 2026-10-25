@@ -47,6 +47,11 @@ class UDSServer(handle: GodotHandle) : SocketServer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): UDSServer? =
             if (handle.address() == 0L) null else UDSServer(GodotHandle(handle))
+
+        /** A new UDSServer, GDScript's `UDSServer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): UDSServer =
+            RefCounted.owned(UDSServer(GodotHandle(ObjectCalls.constructObject("UDSServer"))))
     }
 
     private object Binds {

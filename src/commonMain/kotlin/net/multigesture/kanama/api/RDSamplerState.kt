@@ -495,6 +495,11 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDSamplerState? =
             if (handle.address() == 0L) null else RDSamplerState(GodotHandle(handle))
+
+        /** A new RDSamplerState, GDScript's `RDSamplerState.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDSamplerState =
+            RefCounted.owned(RDSamplerState(GodotHandle(ObjectCalls.constructObject("RDSamplerState"))))
     }
 
     private object Binds {

@@ -22,5 +22,10 @@ class VisualShaderNodeDeterminant(handle: GodotHandle) : VisualShaderNode(handle
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeDeterminant? =
             if (handle.address() == 0L) null else VisualShaderNodeDeterminant(GodotHandle(handle))
+
+        /** A new VisualShaderNodeDeterminant, GDScript's `VisualShaderNodeDeterminant.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeDeterminant =
+            RefCounted.owned(VisualShaderNodeDeterminant(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeDeterminant"))))
     }
 }

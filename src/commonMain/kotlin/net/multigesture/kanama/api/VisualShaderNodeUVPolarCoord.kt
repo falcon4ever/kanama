@@ -22,5 +22,10 @@ class VisualShaderNodeUVPolarCoord(handle: GodotHandle) : VisualShaderNode(handl
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeUVPolarCoord? =
             if (handle.address() == 0L) null else VisualShaderNodeUVPolarCoord(GodotHandle(handle))
+
+        /** A new VisualShaderNodeUVPolarCoord, GDScript's `VisualShaderNodeUVPolarCoord.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeUVPolarCoord =
+            RefCounted.owned(VisualShaderNodeUVPolarCoord(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeUVPolarCoord"))))
     }
 }

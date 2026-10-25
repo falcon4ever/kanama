@@ -19,5 +19,10 @@ class VSeparator(handle: GodotHandle) : Separator(handle) {
 
         internal fun wrap(handle: RawSegment): VSeparator? =
             if (handle.address() == 0L) null else VSeparator(GodotHandle(handle))
+
+        /** A new VSeparator, GDScript's `VSeparator.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VSeparator =
+            VSeparator(GodotHandle(ObjectCalls.constructObject("VSeparator")))
     }
 }

@@ -81,6 +81,11 @@ class VisualShaderNodeTransformParameter(handle: GodotHandle) : VisualShaderNode
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformParameter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTransformParameter, GDScript's `VisualShaderNodeTransformParameter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTransformParameter =
+            RefCounted.owned(VisualShaderNodeTransformParameter(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTransformParameter"))))
     }
 
     private object Binds {

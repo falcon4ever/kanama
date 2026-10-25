@@ -50,6 +50,11 @@ class CompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CompressedTexture2D? =
             if (handle.address() == 0L) null else CompressedTexture2D(GodotHandle(handle))
+
+        /** A new CompressedTexture2D, GDScript's `CompressedTexture2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CompressedTexture2D =
+            RefCounted.owned(CompressedTexture2D(GodotHandle(ObjectCalls.constructObject("CompressedTexture2D"))))
     }
 
     private object Binds {

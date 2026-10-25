@@ -1401,6 +1401,11 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TileSet? =
             if (handle.address() == 0L) null else TileSet(GodotHandle(handle))
+
+        /** A new TileSet, GDScript's `TileSet.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TileSet =
+            RefCounted.owned(TileSet(GodotHandle(ObjectCalls.constructObject("TileSet"))))
     }
 
     private object Binds {

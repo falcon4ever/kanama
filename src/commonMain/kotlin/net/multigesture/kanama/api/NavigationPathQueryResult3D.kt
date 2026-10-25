@@ -213,6 +213,11 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationPathQueryResult3D? =
             if (handle.address() == 0L) null else NavigationPathQueryResult3D(GodotHandle(handle))
+
+        /** A new NavigationPathQueryResult3D, GDScript's `NavigationPathQueryResult3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): NavigationPathQueryResult3D =
+            RefCounted.owned(NavigationPathQueryResult3D(GodotHandle(ObjectCalls.constructObject("NavigationPathQueryResult3D"))))
     }
 
     private object Binds {

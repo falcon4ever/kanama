@@ -64,6 +64,11 @@ class EditorInspectorPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorInspectorPlugin? =
             if (handle.address() == 0L) null else EditorInspectorPlugin(GodotHandle(handle))
+
+        /** A new EditorInspectorPlugin, GDScript's `EditorInspectorPlugin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorInspectorPlugin =
+            RefCounted.owned(EditorInspectorPlugin(GodotHandle(ObjectCalls.constructObject("EditorInspectorPlugin"))))
     }
 
     private object Binds {

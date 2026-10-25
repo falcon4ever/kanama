@@ -250,6 +250,11 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
 
         internal fun wrap(handle: RawSegment): SpinBox? =
             if (handle.address() == 0L) null else SpinBox(GodotHandle(handle))
+
+        /** A new SpinBox, GDScript's `SpinBox.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SpinBox =
+            SpinBox(GodotHandle(ObjectCalls.constructObject("SpinBox")))
     }
 
     private object Binds {

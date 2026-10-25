@@ -133,6 +133,11 @@ class VisualShaderNodeFloatOp(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFloatOp? =
             if (handle.address() == 0L) null else VisualShaderNodeFloatOp(GodotHandle(handle))
+
+        /** A new VisualShaderNodeFloatOp, GDScript's `VisualShaderNodeFloatOp.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeFloatOp =
+            RefCounted.owned(VisualShaderNodeFloatOp(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeFloatOp"))))
     }
 
     private object Binds {

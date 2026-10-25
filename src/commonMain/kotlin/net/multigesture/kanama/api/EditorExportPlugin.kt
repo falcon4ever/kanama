@@ -273,6 +273,11 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlugin? =
             if (handle.address() == 0L) null else EditorExportPlugin(GodotHandle(handle))
+
+        /** A new EditorExportPlugin, GDScript's `EditorExportPlugin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorExportPlugin =
+            RefCounted.owned(EditorExportPlugin(GodotHandle(ObjectCalls.constructObject("EditorExportPlugin"))))
     }
 
     private object Binds {

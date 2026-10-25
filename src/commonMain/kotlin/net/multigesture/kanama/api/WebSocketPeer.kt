@@ -492,6 +492,11 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WebSocketPeer? =
             if (handle.address() == 0L) null else WebSocketPeer(GodotHandle(handle))
+
+        /** A new WebSocketPeer, GDScript's `WebSocketPeer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): WebSocketPeer =
+            RefCounted.owned(WebSocketPeer(GodotHandle(ObjectCalls.constructObject("WebSocketPeer"))))
     }
 
     private object Binds {

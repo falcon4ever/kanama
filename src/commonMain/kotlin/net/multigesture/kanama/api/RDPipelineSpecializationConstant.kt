@@ -84,6 +84,11 @@ class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineSpecializationConstant? =
             if (handle.address() == 0L) null else RDPipelineSpecializationConstant(GodotHandle(handle))
+
+        /** A new RDPipelineSpecializationConstant, GDScript's `RDPipelineSpecializationConstant.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDPipelineSpecializationConstant =
+            RefCounted.owned(RDPipelineSpecializationConstant(GodotHandle(ObjectCalls.constructObject("RDPipelineSpecializationConstant"))))
     }
 
     private object Binds {

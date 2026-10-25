@@ -417,6 +417,11 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
 
         internal fun wrap(handle: RawSegment): Node2D? =
             if (handle.address() == 0L) null else Node2D(GodotHandle(handle))
+
+        /** A new Node2D, GDScript's `Node2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Node2D =
+            Node2D(GodotHandle(ObjectCalls.constructObject("Node2D")))
     }
 
     private object Binds {

@@ -176,6 +176,11 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpa
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAruco? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAruco(GodotHandle(handle))
+
+        /** A new OpenXRSpatialCapabilityConfigurationAruco, GDScript's `OpenXRSpatialCapabilityConfigurationAruco.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialCapabilityConfigurationAruco =
+            RefCounted.owned(OpenXRSpatialCapabilityConfigurationAruco(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialCapabilityConfigurationAruco"))))
     }
 
     private object Binds {

@@ -934,6 +934,11 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
 
         internal fun wrap(handle: RawSegment): RigidBody2D? =
             if (handle.address() == 0L) null else RigidBody2D(GodotHandle(handle))
+
+        /** A new RigidBody2D, GDScript's `RigidBody2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): RigidBody2D =
+            RigidBody2D(GodotHandle(ObjectCalls.constructObject("RigidBody2D")))
     }
 
     private object Binds {

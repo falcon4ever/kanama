@@ -60,6 +60,11 @@ class OpenXRSpatialComponentMesh2DList(handle: GodotHandle) : OpenXRSpatialCompo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentMesh2DList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentMesh2DList(GodotHandle(handle))
+
+        /** A new OpenXRSpatialComponentMesh2DList, GDScript's `OpenXRSpatialComponentMesh2DList.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialComponentMesh2DList =
+            RefCounted.owned(OpenXRSpatialComponentMesh2DList(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialComponentMesh2DList"))))
     }
 
     private object Binds {

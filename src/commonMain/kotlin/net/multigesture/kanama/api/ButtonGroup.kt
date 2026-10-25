@@ -86,7 +86,7 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
         internal fun wrapBorrowed(handle: RawSegment): ButtonGroup? =
             if (handle.address() == 0L) null else ButtonGroup(GodotHandle(handle))
 
-        // Instantiate a ButtonGroup.
+        /** A new ButtonGroup, GDScript's `ButtonGroup.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ButtonGroup =
             RefCounted.owned(ButtonGroup(GodotHandle(ObjectCalls.constructObject("ButtonGroup"))))

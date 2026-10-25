@@ -58,6 +58,11 @@ class OpenXRSpatialContextPersistenceConfig(handle: GodotHandle) : OpenXRStructu
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialContextPersistenceConfig? =
             if (handle.address() == 0L) null else OpenXRSpatialContextPersistenceConfig(GodotHandle(handle))
+
+        /** A new OpenXRSpatialContextPersistenceConfig, GDScript's `OpenXRSpatialContextPersistenceConfig.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialContextPersistenceConfig =
+            RefCounted.owned(OpenXRSpatialContextPersistenceConfig(GodotHandle(ObjectCalls.constructObject("OpenXRSpatialContextPersistenceConfig"))))
     }
 
     private object Binds {

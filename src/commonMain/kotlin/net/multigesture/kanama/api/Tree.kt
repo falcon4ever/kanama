@@ -1038,6 +1038,11 @@ class Tree(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): Tree? =
             if (handle.address() == 0L) null else Tree(GodotHandle(handle))
+
+        /** A new Tree, GDScript's `Tree.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Tree =
+            Tree(GodotHandle(ObjectCalls.constructObject("Tree")))
     }
 
     private object Binds {

@@ -131,6 +131,11 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OccluderPolygon2D? =
             if (handle.address() == 0L) null else OccluderPolygon2D(GodotHandle(handle))
+
+        /** A new OccluderPolygon2D, GDScript's `OccluderPolygon2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OccluderPolygon2D =
+            RefCounted.owned(OccluderPolygon2D(GodotHandle(ObjectCalls.constructObject("OccluderPolygon2D"))))
     }
 
     private object Binds {

@@ -143,7 +143,7 @@ class ENetMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
         internal fun wrapBorrowed(handle: RawSegment): ENetMultiplayerPeer? =
             if (handle.address() == 0L) null else ENetMultiplayerPeer(GodotHandle(handle))
 
-        // Instantiate an ENetMultiplayerPeer.
+        /** A new ENetMultiplayerPeer, GDScript's `ENetMultiplayerPeer.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ENetMultiplayerPeer =
             RefCounted.owned(ENetMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("ENetMultiplayerPeer"))))

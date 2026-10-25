@@ -98,6 +98,11 @@ class GLTFAnimation(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFAnimation? =
             if (handle.address() == 0L) null else GLTFAnimation(GodotHandle(handle))
+
+        /** A new GLTFAnimation, GDScript's `GLTFAnimation.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFAnimation =
+            RefCounted.owned(GLTFAnimation(GodotHandle(ObjectCalls.constructObject("GLTFAnimation"))))
     }
 
     private object Binds {

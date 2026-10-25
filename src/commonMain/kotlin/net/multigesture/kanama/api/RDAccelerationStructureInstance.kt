@@ -202,6 +202,11 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): RDAccelerationStructureInstance? =
             if (handle.address() == 0L) null else RDAccelerationStructureInstance(GodotHandle(handle))
+
+        /** A new RDAccelerationStructureInstance, GDScript's `RDAccelerationStructureInstance.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDAccelerationStructureInstance =
+            RefCounted.owned(RDAccelerationStructureInstance(GodotHandle(ObjectCalls.constructObject("RDAccelerationStructureInstance"))))
     }
 
     private object Binds {

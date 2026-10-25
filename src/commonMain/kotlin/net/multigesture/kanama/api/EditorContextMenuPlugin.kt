@@ -158,6 +158,11 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorContextMenuPlugin? =
             if (handle.address() == 0L) null else EditorContextMenuPlugin(GodotHandle(handle))
+
+        /** A new EditorContextMenuPlugin, GDScript's `EditorContextMenuPlugin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorContextMenuPlugin =
+            RefCounted.owned(EditorContextMenuPlugin(GodotHandle(ObjectCalls.constructObject("EditorContextMenuPlugin"))))
     }
 
     private object Binds {

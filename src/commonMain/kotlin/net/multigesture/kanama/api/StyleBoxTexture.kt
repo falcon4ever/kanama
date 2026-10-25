@@ -360,6 +360,11 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StyleBoxTexture? =
             if (handle.address() == 0L) null else StyleBoxTexture(GodotHandle(handle))
+
+        /** A new StyleBoxTexture, GDScript's `StyleBoxTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): StyleBoxTexture =
+            RefCounted.owned(StyleBoxTexture(GodotHandle(ObjectCalls.constructObject("StyleBoxTexture"))))
     }
 
     private object Binds {

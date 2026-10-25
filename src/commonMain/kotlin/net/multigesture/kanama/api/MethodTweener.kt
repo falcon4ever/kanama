@@ -73,6 +73,11 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MethodTweener? =
             if (handle.address() == 0L) null else MethodTweener(GodotHandle(handle))
+
+        /** A new MethodTweener, GDScript's `MethodTweener.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MethodTweener =
+            RefCounted.owned(MethodTweener(GodotHandle(ObjectCalls.constructObject("MethodTweener"))))
     }
 
     private object Binds {

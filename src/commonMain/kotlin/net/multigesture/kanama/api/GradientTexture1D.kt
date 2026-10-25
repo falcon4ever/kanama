@@ -99,6 +99,11 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GradientTexture1D? =
             if (handle.address() == 0L) null else GradientTexture1D(GodotHandle(handle))
+
+        /** A new GradientTexture1D, GDScript's `GradientTexture1D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GradientTexture1D =
+            RefCounted.owned(GradientTexture1D(GodotHandle(ObjectCalls.constructObject("GradientTexture1D"))))
     }
 
     private object Binds {

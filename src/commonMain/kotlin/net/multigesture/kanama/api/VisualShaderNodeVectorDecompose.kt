@@ -23,5 +23,10 @@ class VisualShaderNodeVectorDecompose(handle: GodotHandle) : VisualShaderNodeVec
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorDecompose? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorDecompose(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVectorDecompose, GDScript's `VisualShaderNodeVectorDecompose.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVectorDecompose =
+            RefCounted.owned(VisualShaderNodeVectorDecompose(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeVectorDecompose"))))
     }
 }

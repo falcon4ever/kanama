@@ -173,6 +173,11 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDFramebufferPass? =
             if (handle.address() == 0L) null else RDFramebufferPass(GodotHandle(handle))
+
+        /** A new RDFramebufferPass, GDScript's `RDFramebufferPass.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDFramebufferPass =
+            RefCounted.owned(RDFramebufferPass(GodotHandle(ObjectCalls.constructObject("RDFramebufferPass"))))
     }
 
     private object Binds {

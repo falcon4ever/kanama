@@ -22,5 +22,10 @@ open class TextServerExtension(handle: GodotHandle) : TextServer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextServerExtension? =
             if (handle.address() == 0L) null else TextServerExtension(GodotHandle(handle))
+
+        /** A new TextServerExtension, GDScript's `TextServerExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TextServerExtension =
+            RefCounted.owned(TextServerExtension(GodotHandle(ObjectCalls.constructObject("TextServerExtension"))))
     }
 }

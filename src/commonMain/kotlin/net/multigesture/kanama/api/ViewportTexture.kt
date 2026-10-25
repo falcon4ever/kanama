@@ -58,6 +58,11 @@ class ViewportTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ViewportTexture? =
             if (handle.address() == 0L) null else ViewportTexture(GodotHandle(handle))
+
+        /** A new ViewportTexture, GDScript's `ViewportTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ViewportTexture =
+            RefCounted.owned(ViewportTexture(GodotHandle(ObjectCalls.constructObject("ViewportTexture"))))
     }
 
     private object Binds {

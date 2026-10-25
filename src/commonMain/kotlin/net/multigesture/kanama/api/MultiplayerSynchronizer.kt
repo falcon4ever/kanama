@@ -285,6 +285,11 @@ class MultiplayerSynchronizer(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): MultiplayerSynchronizer? =
             if (handle.address() == 0L) null else MultiplayerSynchronizer(GodotHandle(handle))
+
+        /** A new MultiplayerSynchronizer, GDScript's `MultiplayerSynchronizer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): MultiplayerSynchronizer =
+            MultiplayerSynchronizer(GodotHandle(ObjectCalls.constructObject("MultiplayerSynchronizer")))
     }
 
     private object Binds {

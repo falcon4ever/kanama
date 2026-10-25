@@ -360,6 +360,11 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ImporterMesh? =
             if (handle.address() == 0L) null else ImporterMesh(GodotHandle(handle))
+
+        /** A new ImporterMesh, GDScript's `ImporterMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ImporterMesh =
+            RefCounted.owned(ImporterMesh(GodotHandle(ObjectCalls.constructObject("ImporterMesh"))))
     }
 
     private object Binds {

@@ -123,6 +123,11 @@ class ConeTwistJoint3D(handle: GodotHandle) : Joint3D(handle) {
 
         internal fun wrap(handle: RawSegment): ConeTwistJoint3D? =
             if (handle.address() == 0L) null else ConeTwistJoint3D(GodotHandle(handle))
+
+        /** A new ConeTwistJoint3D, GDScript's `ConeTwistJoint3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ConeTwistJoint3D =
+            ConeTwistJoint3D(GodotHandle(ObjectCalls.constructObject("ConeTwistJoint3D")))
     }
 
     private object Binds {

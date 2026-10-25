@@ -142,6 +142,11 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectLimiter? =
             if (handle.address() == 0L) null else AudioEffectLimiter(GodotHandle(handle))
+
+        /** A new AudioEffectLimiter, GDScript's `AudioEffectLimiter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectLimiter =
+            RefCounted.owned(AudioEffectLimiter(GodotHandle(ObjectCalls.constructObject("AudioEffectLimiter"))))
     }
 
     private object Binds {

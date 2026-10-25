@@ -878,6 +878,11 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): LookAtModifier3D? =
             if (handle.address() == 0L) null else LookAtModifier3D(GodotHandle(handle))
+
+        /** A new LookAtModifier3D, GDScript's `LookAtModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): LookAtModifier3D =
+            LookAtModifier3D(GodotHandle(ObjectCalls.constructObject("LookAtModifier3D")))
     }
 
     private object Binds {

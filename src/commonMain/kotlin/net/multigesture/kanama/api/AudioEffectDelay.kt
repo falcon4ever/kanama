@@ -410,6 +410,11 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectDelay? =
             if (handle.address() == 0L) null else AudioEffectDelay(GodotHandle(handle))
+
+        /** A new AudioEffectDelay, GDScript's `AudioEffectDelay.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectDelay =
+            RefCounted.owned(AudioEffectDelay(GodotHandle(ObjectCalls.constructObject("AudioEffectDelay"))))
     }
 
     private object Binds {

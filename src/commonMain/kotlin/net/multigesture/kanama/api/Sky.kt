@@ -234,6 +234,11 @@ class Sky(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Sky? =
             if (handle.address() == 0L) null else Sky(GodotHandle(handle))
+
+        /** A new Sky, GDScript's `Sky.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Sky =
+            RefCounted.owned(Sky(GodotHandle(ObjectCalls.constructObject("Sky"))))
     }
 
     private object Binds {

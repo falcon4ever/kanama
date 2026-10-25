@@ -155,6 +155,11 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): OccluderInstance3D? =
             if (handle.address() == 0L) null else OccluderInstance3D(GodotHandle(handle))
+
+        /** A new OccluderInstance3D, GDScript's `OccluderInstance3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OccluderInstance3D =
+            OccluderInstance3D(GodotHandle(ObjectCalls.constructObject("OccluderInstance3D")))
     }
 
     private object Binds {

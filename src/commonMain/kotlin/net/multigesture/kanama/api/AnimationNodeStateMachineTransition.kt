@@ -387,6 +387,11 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeStateMachineTransition? =
             if (handle.address() == 0L) null else AnimationNodeStateMachineTransition(GodotHandle(handle))
+
+        /** A new AnimationNodeStateMachineTransition, GDScript's `AnimationNodeStateMachineTransition.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeStateMachineTransition =
+            RefCounted.owned(AnimationNodeStateMachineTransition(GodotHandle(ObjectCalls.constructObject("AnimationNodeStateMachineTransition"))))
     }
 
     private object Binds {

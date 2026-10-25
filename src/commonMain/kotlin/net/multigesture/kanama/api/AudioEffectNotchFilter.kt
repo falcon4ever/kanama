@@ -22,5 +22,10 @@ class AudioEffectNotchFilter(handle: GodotHandle) : AudioEffectFilter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectNotchFilter? =
             if (handle.address() == 0L) null else AudioEffectNotchFilter(GodotHandle(handle))
+
+        /** A new AudioEffectNotchFilter, GDScript's `AudioEffectNotchFilter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectNotchFilter =
+            RefCounted.owned(AudioEffectNotchFilter(GodotHandle(ObjectCalls.constructObject("AudioEffectNotchFilter"))))
     }
 }

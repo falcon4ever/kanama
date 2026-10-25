@@ -75,6 +75,11 @@ class VisualShaderNodeTransformVecMult(handle: GodotHandle) : VisualShaderNode(h
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformVecMult? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformVecMult(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTransformVecMult, GDScript's `VisualShaderNodeTransformVecMult.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTransformVecMult =
+            RefCounted.owned(VisualShaderNodeTransformVecMult(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeTransformVecMult"))))
     }
 
     private object Binds {

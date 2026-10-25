@@ -23,5 +23,10 @@ class ResourceImporterLayeredTexture(handle: GodotHandle) : ResourceImporter(han
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterLayeredTexture? =
             if (handle.address() == 0L) null else ResourceImporterLayeredTexture(GodotHandle(handle))
+
+        /** A new ResourceImporterLayeredTexture, GDScript's `ResourceImporterLayeredTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterLayeredTexture =
+            RefCounted.owned(ResourceImporterLayeredTexture(GodotHandle(ObjectCalls.constructObject("ResourceImporterLayeredTexture"))))
     }
 }

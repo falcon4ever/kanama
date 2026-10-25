@@ -22,5 +22,10 @@ class PlaceholderTexture2DArray(handle: GodotHandle) : PlaceholderTextureLayered
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderTexture2DArray? =
             if (handle.address() == 0L) null else PlaceholderTexture2DArray(GodotHandle(handle))
+
+        /** A new PlaceholderTexture2DArray, GDScript's `PlaceholderTexture2DArray.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PlaceholderTexture2DArray =
+            RefCounted.owned(PlaceholderTexture2DArray(GodotHandle(ObjectCalls.constructObject("PlaceholderTexture2DArray"))))
     }
 }

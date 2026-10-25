@@ -71,6 +71,11 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerGZIP? =
             if (handle.address() == 0L) null else StreamPeerGZIP(GodotHandle(handle))
+
+        /** A new StreamPeerGZIP, GDScript's `StreamPeerGZIP.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): StreamPeerGZIP =
+            RefCounted.owned(StreamPeerGZIP(GodotHandle(ObjectCalls.constructObject("StreamPeerGZIP"))))
     }
 
     private object Binds {

@@ -349,6 +349,11 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
 
         internal fun wrap(handle: RawSegment): TextureButton? =
             if (handle.address() == 0L) null else TextureButton(GodotHandle(handle))
+
+        /** A new TextureButton, GDScript's `TextureButton.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): TextureButton =
+            TextureButton(GodotHandle(ObjectCalls.constructObject("TextureButton")))
     }
 
     private object Binds {

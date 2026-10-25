@@ -105,6 +105,11 @@ class VisualShaderNodeRemap(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeRemap? =
             if (handle.address() == 0L) null else VisualShaderNodeRemap(GodotHandle(handle))
+
+        /** A new VisualShaderNodeRemap, GDScript's `VisualShaderNodeRemap.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeRemap =
+            RefCounted.owned(VisualShaderNodeRemap(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeRemap"))))
     }
 
     private object Binds {

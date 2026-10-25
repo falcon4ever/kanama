@@ -19,5 +19,10 @@ class JacobianIK3D(handle: GodotHandle) : IterateIK3D(handle) {
 
         internal fun wrap(handle: RawSegment): JacobianIK3D? =
             if (handle.address() == 0L) null else JacobianIK3D(GodotHandle(handle))
+
+        /** A new JacobianIK3D, GDScript's `JacobianIK3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): JacobianIK3D =
+            JacobianIK3D(GodotHandle(ObjectCalls.constructObject("JacobianIK3D")))
     }
 }

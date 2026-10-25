@@ -153,6 +153,11 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
 
         internal fun wrap(handle: RawSegment): EditorResourcePicker? =
             if (handle.address() == 0L) null else EditorResourcePicker(GodotHandle(handle))
+
+        /** A new EditorResourcePicker, GDScript's `EditorResourcePicker.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): EditorResourcePicker =
+            EditorResourcePicker(GodotHandle(ObjectCalls.constructObject("EditorResourcePicker")))
     }
 
     private object Binds {

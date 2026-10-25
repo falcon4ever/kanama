@@ -399,6 +399,11 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeOneShot? =
             if (handle.address() == 0L) null else AnimationNodeOneShot(GodotHandle(handle))
+
+        /** A new AnimationNodeOneShot, GDScript's `AnimationNodeOneShot.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeOneShot =
+            RefCounted.owned(AnimationNodeOneShot(GodotHandle(ObjectCalls.constructObject("AnimationNodeOneShot"))))
     }
 
     private object Binds {

@@ -22,5 +22,10 @@ class ResourceImporterBitMap(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterBitMap? =
             if (handle.address() == 0L) null else ResourceImporterBitMap(GodotHandle(handle))
+
+        /** A new ResourceImporterBitMap, GDScript's `ResourceImporterBitMap.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterBitMap =
+            RefCounted.owned(ResourceImporterBitMap(GodotHandle(ObjectCalls.constructObject("ResourceImporterBitMap"))))
     }
 }

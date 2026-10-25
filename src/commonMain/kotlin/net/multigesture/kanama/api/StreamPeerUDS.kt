@@ -59,6 +59,11 @@ class StreamPeerUDS(handle: GodotHandle) : StreamPeerSocket(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerUDS? =
             if (handle.address() == 0L) null else StreamPeerUDS(GodotHandle(handle))
+
+        /** A new StreamPeerUDS, GDScript's `StreamPeerUDS.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): StreamPeerUDS =
+            RefCounted.owned(StreamPeerUDS(GodotHandle(ObjectCalls.constructObject("StreamPeerUDS"))))
     }
 
     private object Binds {

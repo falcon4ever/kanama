@@ -168,6 +168,11 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PortableCompressedTexture2D? =
             if (handle.address() == 0L) null else PortableCompressedTexture2D(GodotHandle(handle))
+
+        /** A new PortableCompressedTexture2D, GDScript's `PortableCompressedTexture2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PortableCompressedTexture2D =
+            RefCounted.owned(PortableCompressedTexture2D(GodotHandle(ObjectCalls.constructObject("PortableCompressedTexture2D"))))
     }
 
     private object Binds {

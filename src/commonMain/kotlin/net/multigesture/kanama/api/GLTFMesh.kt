@@ -170,6 +170,11 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFMesh? =
             if (handle.address() == 0L) null else GLTFMesh(GodotHandle(handle))
+
+        /** A new GLTFMesh, GDScript's `GLTFMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFMesh =
+            RefCounted.owned(GLTFMesh(GodotHandle(ObjectCalls.constructObject("GLTFMesh"))))
     }
 
     private object Binds {

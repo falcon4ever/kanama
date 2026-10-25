@@ -19,5 +19,10 @@ class ShaderGlobalsOverride(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): ShaderGlobalsOverride? =
             if (handle.address() == 0L) null else ShaderGlobalsOverride(GodotHandle(handle))
+
+        /** A new ShaderGlobalsOverride, GDScript's `ShaderGlobalsOverride.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ShaderGlobalsOverride =
+            ShaderGlobalsOverride(GodotHandle(ObjectCalls.constructObject("ShaderGlobalsOverride")))
     }
 }

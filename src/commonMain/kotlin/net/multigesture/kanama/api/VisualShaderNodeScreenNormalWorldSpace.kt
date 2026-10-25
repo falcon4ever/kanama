@@ -22,5 +22,10 @@ class VisualShaderNodeScreenNormalWorldSpace(handle: GodotHandle) : VisualShader
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeScreenNormalWorldSpace? =
             if (handle.address() == 0L) null else VisualShaderNodeScreenNormalWorldSpace(GodotHandle(handle))
+
+        /** A new VisualShaderNodeScreenNormalWorldSpace, GDScript's `VisualShaderNodeScreenNormalWorldSpace.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeScreenNormalWorldSpace =
+            RefCounted.owned(VisualShaderNodeScreenNormalWorldSpace(GodotHandle(ObjectCalls.constructObject("VisualShaderNodeScreenNormalWorldSpace"))))
     }
 }

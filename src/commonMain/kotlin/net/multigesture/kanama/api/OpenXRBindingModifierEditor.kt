@@ -49,6 +49,11 @@ class OpenXRBindingModifierEditor(handle: GodotHandle) : PanelContainer(handle) 
 
         internal fun wrap(handle: RawSegment): OpenXRBindingModifierEditor? =
             if (handle.address() == 0L) null else OpenXRBindingModifierEditor(GodotHandle(handle))
+
+        /** A new OpenXRBindingModifierEditor, GDScript's `OpenXRBindingModifierEditor.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OpenXRBindingModifierEditor =
+            OpenXRBindingModifierEditor(GodotHandle(ObjectCalls.constructObject("OpenXRBindingModifierEditor")))
     }
 
     private object Binds {

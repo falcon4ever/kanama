@@ -913,6 +913,11 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): GPUParticles2D? =
             if (handle.address() == 0L) null else GPUParticles2D(GodotHandle(handle))
+
+        /** A new GPUParticles2D, GDScript's `GPUParticles2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GPUParticles2D =
+            GPUParticles2D(GodotHandle(ObjectCalls.constructObject("GPUParticles2D")))
     }
 
     private object Binds {

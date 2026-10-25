@@ -22,5 +22,10 @@ class CompressedCubemapArray(handle: GodotHandle) : CompressedTextureLayered(han
 
         internal fun wrapBorrowed(handle: RawSegment): CompressedCubemapArray? =
             if (handle.address() == 0L) null else CompressedCubemapArray(GodotHandle(handle))
+
+        /** A new CompressedCubemapArray, GDScript's `CompressedCubemapArray.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CompressedCubemapArray =
+            RefCounted.owned(CompressedCubemapArray(GodotHandle(ObjectCalls.constructObject("CompressedCubemapArray"))))
     }
 }

@@ -172,6 +172,11 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Shader? =
             if (handle.address() == 0L) null else Shader(GodotHandle(handle))
+
+        /** A new Shader, GDScript's `Shader.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Shader =
+            RefCounted.owned(Shader(GodotHandle(ObjectCalls.constructObject("Shader"))))
     }
 
     private object Binds {

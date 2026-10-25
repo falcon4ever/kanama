@@ -123,6 +123,11 @@ class OggPacketSequence(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OggPacketSequence? =
             if (handle.address() == 0L) null else OggPacketSequence(GodotHandle(handle))
+
+        /** A new OggPacketSequence, GDScript's `OggPacketSequence.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OggPacketSequence =
+            RefCounted.owned(OggPacketSequence(GodotHandle(ObjectCalls.constructObject("OggPacketSequence"))))
     }
 
     private object Binds {

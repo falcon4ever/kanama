@@ -569,6 +569,11 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
 
         internal fun wrap(handle: RawSegment): PhysicalBone3D? =
             if (handle.address() == 0L) null else PhysicalBone3D(GodotHandle(handle))
+
+        /** A new PhysicalBone3D, GDScript's `PhysicalBone3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): PhysicalBone3D =
+            PhysicalBone3D(GodotHandle(ObjectCalls.constructObject("PhysicalBone3D")))
     }
 
     private object Binds {

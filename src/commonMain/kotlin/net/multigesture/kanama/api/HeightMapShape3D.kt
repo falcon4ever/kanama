@@ -154,6 +154,11 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): HeightMapShape3D? =
             if (handle.address() == 0L) null else HeightMapShape3D(GodotHandle(handle))
+
+        /** A new HeightMapShape3D, GDScript's `HeightMapShape3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): HeightMapShape3D =
+            RefCounted.owned(HeightMapShape3D(GodotHandle(ObjectCalls.constructObject("HeightMapShape3D"))))
     }
 
     private object Binds {

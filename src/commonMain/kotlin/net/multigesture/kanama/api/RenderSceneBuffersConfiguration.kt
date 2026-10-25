@@ -320,6 +320,11 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): RenderSceneBuffersConfiguration? =
             if (handle.address() == 0L) null else RenderSceneBuffersConfiguration(GodotHandle(handle))
+
+        /** A new RenderSceneBuffersConfiguration, GDScript's `RenderSceneBuffersConfiguration.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RenderSceneBuffersConfiguration =
+            RefCounted.owned(RenderSceneBuffersConfiguration(GodotHandle(ObjectCalls.constructObject("RenderSceneBuffersConfiguration"))))
     }
 
     private object Binds {

@@ -903,7 +903,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         internal fun wrap(handle: RawSegment): LightmapGI? =
             if (handle.address() == 0L) null else LightmapGI(GodotHandle(handle))
 
-        // Instantiate a LightmapGI.
+        /** A new LightmapGI, GDScript's `LightmapGI.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): LightmapGI =
             LightmapGI(GodotHandle(ObjectCalls.constructObject("LightmapGI")))

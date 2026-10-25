@@ -159,6 +159,11 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
 
         internal fun wrap(handle: RawSegment): EditorInspector? =
             if (handle.address() == 0L) null else EditorInspector(GodotHandle(handle))
+
+        /** A new EditorInspector, GDScript's `EditorInspector.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): EditorInspector =
+            EditorInspector(GodotHandle(ObjectCalls.constructObject("EditorInspector")))
     }
 
     private object Binds {

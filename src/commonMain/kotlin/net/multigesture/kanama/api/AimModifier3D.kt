@@ -115,6 +115,11 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
 
         internal fun wrap(handle: RawSegment): AimModifier3D? =
             if (handle.address() == 0L) null else AimModifier3D(GodotHandle(handle))
+
+        /** A new AimModifier3D, GDScript's `AimModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AimModifier3D =
+            AimModifier3D(GodotHandle(ObjectCalls.constructObject("AimModifier3D")))
     }
 
     private object Binds {
