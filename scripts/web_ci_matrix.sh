@@ -261,6 +261,19 @@ export_with_retry() {
 FAILED=0
 RUN_INDEX=0
 
+# The starter cell (task 142) exports a project that is not a demo, the way a game developer
+# exports their own: a fresh createStarterProject, staged by the generic stageWebProject under the
+# user-project key. It is created here, once, into the result directory.
+if [[ "$SKIP_EXPORT" -eq 0 && " ${DEMOS[*]} " == *" starter "* ]]; then
+  KANAMA_WEB_STARTER_DIR="$RESULT_DIR/starter-project"
+  rm -rf "$KANAMA_WEB_STARTER_DIR"
+  echo "[web_ci_matrix] creating the starter project at $KANAMA_WEB_STARTER_DIR"
+  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon -q createStarterProject \
+    "-PkanamaStarterProjectDir=$KANAMA_WEB_STARTER_DIR" ||
+    die "createStarterProject failed for the starter cell"
+  export KANAMA_WEB_STARTER_DIR
+fi
+
 for demo in "${DEMOS[@]}"; do
   echo "[web_ci_matrix] === $demo ==="
   # The build key can differ from the driver key: the soak gate drives the dodge

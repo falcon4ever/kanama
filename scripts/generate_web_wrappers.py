@@ -939,6 +939,26 @@ internal object WebWindowSettings {
   fun <T : GodotObject> requireAs(path: NodePath, ctor: (GodotHandle) -> T): T =
     requireAs(path.path, ctor)
 
+  /**
+   * The node at [path] as [wrapper] when Godot reports that it is an [expectedClass], else `null`
+   * (the path is missing or the class check fails). Desktop's spelling, so a shared script compiles.
+   */
+  fun <T : Node> getNodeAsOrNull(path: String, expectedClass: String, wrapper: (GodotHandle) -> T): T? {
+    val node = getNodeOrNull(path) ?: return null
+    return if (node.isClass(expectedClass)) wrapper(node.handle) else null
+  }
+
+  fun <T : Node> getNodeAsOrNull(path: NodePath, expectedClass: String, wrapper: (GodotHandle) -> T): T? =
+    getNodeAsOrNull(path.path, expectedClass, wrapper)
+
+  /** [getNodeAsOrNull] that throws when the node is missing or not an [expectedClass]. */
+  fun <T : Node> requireNodeAs(path: String, expectedClass: String, wrapper: (GodotHandle) -> T): T =
+    getNodeAsOrNull(path, expectedClass, wrapper)
+      ?: error("Required node '$path' was not found or is not a $expectedClass")
+
+  fun <T : Node> requireNodeAs(path: NodePath, expectedClass: String, wrapper: (GodotHandle) -> T): T =
+    requireNodeAs(path.path, expectedClass, wrapper)
+
   fun hasNode(path: String): Boolean = getNodeOrNull(path) != null
 
   fun getNode(path: String): Node? = getNodeOrNull(path)
@@ -2186,7 +2206,51 @@ def render_all(api: Api, api_dir: Path = API_DIR) -> dict[str, str]:
             continue
         file_name = kotlin_class_name(godot_name) + ".kt"
         files[file_name] = render_class(tree, godot_name, sorted(calls, key=lambda c: c.opcode))
+    files[CLASS_TABLE_FILE] = render_class_table(files, by_class, api_dir)
     return files
+
+
+CLASS_TABLE_FILE = "WebGodotClasses.kt"
+
+
+def render_class_table(files: dict[str, str], by_class: dict, api_dir: Path = API_DIR) -> str:
+    """Task 142: the wrapper-class table behind the checked casts (WebCheckedCasts.kt).
+
+    Kotlin/Wasm has no reflection, so `castOrNull<T>()` and `requireAs<T>()` find a class's Godot
+    name and constructor here. Every generated class a handle constructs is listed (an `object`
+    singleton is not a cast target), and so is every hand-written facade of a Godot class
+    (WEB_HANDSHAPED, WEB_INERT_FACADES) that a handle constructs, such as MultiplayerSynchronizer.
+    """
+    rows: list[tuple[str, str]] = []
+    for godot_name in by_class:
+        if godot_name == "@GlobalScope":
+            continue
+        name = kotlin_class_name(godot_name)
+        if re.search(rf"(?m)^(?:open )?class {name}\(godotObject: GodotHandle\)", files[name + ".kt"]):
+            rows.append((name, godot_name))
+    hand_facades = set(WEB_HANDSHAPED) | set(WEB_INERT_FACADES)
+    for path in sorted(api_dir.glob("*.kt")):
+        for match in re.finditer(r"(?m)^(?:open )?class ([A-Z][A-Za-z0-9]*)\(godotObject: GodotHandle\)", path.read_text()):
+            if match.group(1) in hand_facades:
+                rows.append((match.group(1), match.group(1)))
+    lines = [
+        "/** A Web wrapper class: its Godot class name and how to wrap a handle as it. */",
+        "@PublishedApi",
+        "internal class WebGodotClassToken(val godotName: String, val wrap: (GodotHandle) -> GodotObject)",
+        "",
+        "/**",
+        " * The token of the Web wrapper class [type], or `null` when [type] is none (Kotlin/Wasm has no",
+        " * reflection; the checked casts in WebCheckedCasts.kt read this table).",
+        " */",
+        "@PublishedApi",
+        "internal fun webGodotClassToken(type: KClass<*>): WebGodotClassToken? =",
+        "  when (type) {",
+    ]
+    for name, godot_name in sorted(rows):
+        lines.append(f'    {name}::class -> WebGodotClassToken("{godot_name}") {{ {name}(it) }}')
+    lines += ["    else -> null", "  }"]
+    head = [HEADER.rstrip("\n"), "package net.multigesture.kanama.api", "", "import kotlin.reflect.KClass", ""]
+    return "\n".join(head + lines) + "\n"
 
 
 # --------------------------------------------------------------------------------------------------

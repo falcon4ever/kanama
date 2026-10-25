@@ -190,6 +190,14 @@
       "lines": 54,
       "reason": "Web lookups behind the generated Autoloads object"
     },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebCheckedCasts.kt": {
+      "category": "sugar",
+      "lines": 88,
+      "raises": [
+        "71 -> 88: desktop's error text (webDescribeObject: the tree path, under <owner>), task 142 review"
+      ],
+      "reason": "the Web twin of ScriptAccess.kt's checked casts and typed node lookups (castOrNull, cast, getNodeAs<T>, requireAs<T>) over the generated class table, task 142"
+    },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebCoroutines.kt": {
       "category": "runtime-core",
       "lines": 85,
@@ -211,7 +219,7 @@
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebGodotApi.kt": {
       "category": "transitional",
-      "lines": 153,
+      "lines": 68,
       "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
       "reason": "per-platform hand file the generator should emit"
     },
@@ -219,6 +227,11 @@
       "category": "sugar",
       "lines": 20,
       "reason": "Web-only import-compat names the replaced Web GD/Mathf copies had (task 129 E): Basis alias, five GD extensions"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebKanamaScript.kt": {
+      "category": "runtime-core",
+      "lines": 122,
+      "reason": "the Web script base KanamaScript (moved out of the transitional WebGodotApi.kt by task 142): self, the coroutine scope, the typed-signal connects and the node/script/preload delegate members desktop's KanamaScript has"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebMultiplayer.kt": {
       "category": "transitional",
@@ -245,6 +258,11 @@
       "lines": 26,
       "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
       "reason": "per-platform hand file the generator should emit"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebScriptDelegates.kt": {
+      "category": "sugar",
+      "lines": 171,
+      "reason": "the Web twin of KanamaScript's node/script/preload delegates and ScriptAccess.kt's instantiateAs/instantiateScript, over the checked casts, task 142"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebScriptResources.kt": {
       "category": "runtime-core",
@@ -378,9 +396,10 @@
       ]
     },
     "generate_web_wrappers.CLASS_POLICY[Node].custom": {
-      "lines": 53,
+      "lines": 73,
       "raises": [
-        "47 -> 53: desktop's multiplayer members on the Web session stand-in: Node.getMultiplayer becomes a member (with its import-compat alias) so shared sources compile without the Web import"
+        "47 -> 53: desktop's multiplayer members on the Web session stand-in: Node.getMultiplayer becomes a member (with its import-compat alias) so shared sources compile without the Web import",
+        "53 -> 73: desktop's Node ergonomics getNodeAsOrNull/requireNodeAs on Web (the starter script and the getting-started page use getNodeAsOrNull), task 142"
       ]
     },
     "generate_web_wrappers.CLASS_POLICY[Node].top_level": {

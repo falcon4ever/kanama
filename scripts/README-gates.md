@@ -155,7 +155,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_pt_tag_tables.py:375` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
 | `scripts/check_public_signature_changes.py:1032` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_public_signature_changes.py:1041` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_public_signature_changes.py:1510` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_public_signature_changes.py:1506` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_script_portability.py:1151` | `except SyntaxError as error:` | justified: reported as a `parse` finding (the return value), the gate stays red |
 | `scripts/check_script_portability.py:1474` | `except UnicodeDecodeError:` | justified: a binary file is not a script; only text files are scanned |
 | `scripts/check_shell_lint.sh:27` | `if ! command -v shellcheck >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
@@ -171,7 +171,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:199` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:241` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:243` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1271` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1312` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:682` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:725` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -192,7 +192,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/generate_gates_index.py:422` | `check=False,` | justified: a failed probe reads as "not shallow", and the full-history path then derives the dates itself |
 | `scripts/generate_gates_index.py:446` | `check=False,` | justified: a failed `git log` leaves the date as a dash, which --check reports as a stale page |
 | `scripts/generate_web_exercise.py:1317` | `except GenerationError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/generate_web_wrappers.py:1861` | `except GenerationError as error:` | justified: a signal whose argument Web cannot pack gets no typed handle (its name stays |
+| `scripts/generate_web_wrappers.py:1881` | `except GenerationError as error:` | justified: a signal whose argument Web cannot pack gets no typed handle (its name stays |
 | `scripts/hot_reload_in_process_smoke.sh:30` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/hot_reload_in_process_smoke.sh:51` | `if [[ -n "$GODOT_PID" ]] && kill -0 "$GODOT_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
 | `scripts/hot_reload_in_process_smoke.sh:53` | `kill "$GODOT_PID" 2>/dev/null \|\| true` | justified: cleanup of our own child after the verdict; it may already be gone. |
@@ -236,14 +236,14 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/ios_visual_smoke.sh:3007` | `grep -ahE 'project script method call.*method=add_bunny' "$stderr_log" "$stdout_log" \|\| true` | justified: no match exits 1 and the count is 0; the `-lt 25` check right after is the verdict. |
 | `scripts/ios_visual_smoke.sh:3145` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl terminate "$device_udid" "$bundle_id" >/dev/null 2>&1 \|\| tru` | justified: closing the app after the verdict; it may already have exited. |
 | `scripts/ios_visual_smoke.sh:3147` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/local_ci.sh:53` | `write_timings_json FAIL \|\| true` | justified: this runs inside the failure banner; the run is already red and the exit code is the original one. |
-| `scripts/local_ci.sh:212` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:723` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
-| `scripts/local_ci.sh:726` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:728` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/local_ci.sh:769` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:785` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:798` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:57` | `write_timings_json FAIL \|\| true` | justified: this runs inside the failure banner; the run is already red and the exit code is the original one. |
+| `scripts/local_ci.sh:216` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:727` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
+| `scripts/local_ci.sh:730` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:732` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/local_ci.sh:773` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:789` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:802` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/measure_edit_loop.py:97` | `except OSError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/measure_edit_loop.py:110` | `except ProcessLookupError:` | justified: cleanup after the verdict; the process already exited |
 | `scripts/measure_edit_loop.py:114` | `except subprocess.TimeoutExpired:` | justified: escalated to SIGKILL on the next line |
@@ -285,7 +285,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/web/check_budgets.py:473` | `except (OSError, json.JSONDecodeError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/check_budgets.py:500` | `except BudgetError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/coverage_report.py:48` | `except json.JSONDecodeError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/web/demos.sh:142` | `[[ "$1" == "spike" ]] \|\| kanama_web_demo_project_dir "$1" >/dev/null 2>&1` | justified: a probe; the registry lookup's exit status is the answer (unknown demo), its stdout/stderr are noise. |
+| `scripts/web/demos.sh:154` | `[[ "$1" == "spike" ]] \|\| { [[ "$1" != "project" ]] && kanama_web_demo_project_dir "$1" >/dev/null 2>&1; }` | justified: a probe; the registry lookup's exit status is the answer (unknown demo), its stdout/stderr are noise. |
 | `scripts/web/result_schema.py:235` | `except (OSError, json.JSONDecodeError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/result_schema.py:446` | `except (OSError, json.JSONDecodeError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/result_schema.py:452` | `except SchemaError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -297,14 +297,15 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/web/scaffold_selftest.sh:123` | `&& python3 "$ROOT_DIR/scripts/web/result_schema.py" "$WORK/success/result.json" >/dev/null; then` | justified: output dropped, the command's exit status is the condition of the `if` |
 | `scripts/web/scaffold_selftest.sh:132` | `>/dev/null 2>&1 \|\| usage_status=$?` | justified: the status is captured and asserted on the next lines |
 | `scripts/web/serve_export.py:83` | `except OSError:` | justified: no route means no LAN address to print; the server itself still binds and serves |
-| `scripts/web/serve_export.py:113` | `except FileNotFoundError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/web/serve_export.py:120` | `except subprocess.CalledProcessError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/web/serve_export.py:206` | `except KeyboardInterrupt:` | justified: Ctrl-C is how an operator stops the dev server; exit 0 is right |
+| `scripts/web/serve_export.py:98` | `except FileNotFoundError:` | justified: no openssl means no cached certificate is trusted; the generation step below reports the missing openssl |
+| `scripts/web/serve_export.py:129` | `except FileNotFoundError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/web/serve_export.py:136` | `except subprocess.CalledProcessError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/web/serve_export.py:222` | `except KeyboardInterrupt:` | justified: Ctrl-C is how an operator stops the dev server; exit 0 is right |
 | `scripts/web/visibility_probe.py:166` | `except subprocess.TimeoutExpired:` | justified: the browser ignored terminate(); escalating to kill() IS the handling |
 | `scripts/web/visibility_probe.py:183` | `except (OSError, ValueError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/visibility_probe.py:201` | `except OSError:` | justified: the browser-output tail is diagnostics only; this branch returns 2 (INCONCLUSIVE) regardless |
-| `scripts/web_ci_matrix.sh:303` | `continue` | justified: the demo was just recorded as a failed cell (`record_unrun_demo`) and FAILED=1 is set. |
-| `scripts/web_ci_matrix.sh:312` | `continue` | justified: the demo was just recorded as a failed cell (`record_unrun_demo`) and FAILED=1 is set. |
+| `scripts/web_ci_matrix.sh:316` | `continue` | justified: the demo was just recorded as a failed cell (`record_unrun_demo`) and FAILED=1 is set. |
+| `scripts/web_ci_matrix.sh:325` | `continue` | justified: the demo was just recorded as a failed cell (`record_unrun_demo`) and FAILED=1 is set. |
 | `scripts/web_export_smoke.sh:134` | `if [[ -n "$DRIVER_PID" ]] && kill -0 "$DRIVER_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
 | `scripts/web_export_smoke.sh:135` | `kill -TERM -- "-$DRIVER_PID" 2>/dev/null \|\| kill -TERM "$DRIVER_PID" 2>/dev/null \|\| true` | justified: cleanup after the verdict; the process may already be gone |
 | `scripts/web_export_smoke.sh:137` | `kill -0 "$DRIVER_PID" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
@@ -316,15 +317,15 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/web_export_smoke.sh:208` | `if ! kill -0 "$DRIVER_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
 | `scripts/web_export_smoke.sh:214` | `kill -TERM -- "-$DRIVER_PID" 2>/dev/null \|\| kill -TERM "$DRIVER_PID" 2>/dev/null \|\| true` | justified: killing a driver that timed out; the `fail` just below is the verdict |
 | `scripts/web_export_smoke.sh:216` | `kill -KILL -- "-$DRIVER_PID" 2>/dev/null \|\| kill -KILL "$DRIVER_PID" 2>/dev/null \|\| true` | justified: killing a driver that timed out; the `fail` just below is the verdict |
-| `scripts/web_fresh_checkout_smoke.sh:97` | `demo_project_dir "$demo" >/dev/null \|\| die "unknown --demo: $demo (expected one of: ${ALL_DEMOS[*]} \| all)"` | justified: not a swallow; `\|\| die` fails the script with a message |
-| `scripts/web_fresh_checkout_smoke.sh:216` | `git -C "$DEMOS_DIR" status --short >&2 \|\| true` | justified: diagnostics; FAILED=1 above already decided |
+| `scripts/web_fresh_checkout_smoke.sh:106` | `demo_project_dir "$demo" >/dev/null \|\| die "unknown --demo: $demo (expected one of: ${ALL_DEMOS[*]} \| all)"` | justified: not a swallow; `\|\| die` fails the script with a message |
+| `scripts/web_fresh_checkout_smoke.sh:225` | `git -C "$DEMOS_DIR" status --short >&2 \|\| true` | justified: diagnostics; FAILED=1 above already decided |
 | `scripts/web_hand_metric.py:99` | `except OSError:` | justified: a size metric for a report, not a gate; an unreadable file counts as 0 lines |
 | `.github/workflows/package.yml:313` | `chmod +x "$templates/${{ matrix.export_template }}" \|\| true` | justified: a template that is not executable is not an error (Windows); the smoke below fails if it cannot run. |
 | `.github/workflows/package.yml:330` | `chmod +x "$godot_bin" \|\| true` | justified: if the editor binary is not executable the smoke's own executable check on it fails the step. |
 | `.github/workflows/package.yml:420` | `gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \|\| \` | justified: `gh release view` is the existence probe; failing it means "create the release" on the next line. |
-| `.github/workflows/web.yml:236` | `continue-on-error: true` | justified: an experiment, not a gate (see the comment above the job); its failure must never block a merge. |
-| `.github/workflows/web.yml:289` | `"$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe --import \|\| true` | justified: the import only warms .godot/; the export on the next line fails loudly if it did not take. |
-| `.github/workflows/web.yml:317` | `set +e` | justified: `set +e` only reads the probe's exit status into $status, which the case below prints; the job is an experiment. |
+| `.github/workflows/web.yml:237` | `continue-on-error: true` | justified: an experiment, not a gate (see the comment above the job); its failure must never block a merge. |
+| `.github/workflows/web.yml:290` | `"$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe --import \|\| true` | justified: the import only warms .godot/; the export on the next line fails loudly if it did not take. |
+| `.github/workflows/web.yml:318` | `set +e` | justified: `set +e` only reads the probe's exit status into $status, which the case below prints; the job is an experiment. |
 
 <!-- audit-table:end -->
 

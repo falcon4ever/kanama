@@ -318,6 +318,23 @@
           "reason": "Ranked gap #7: the driver moves the player but never lands a shot; RedRobot.hit / Part.explode stay dark until the combat choreography is written."
         }
       ]
+    },
+    "starter": {
+      "required": [
+        {
+          "member": "HelloScript._ready",
+          "reason": "The starter's @OnReady: it finds the Status label (getNodeAsOrNull) and prints the greeting. The user-project cell's proof that a project that is not a demo boots its script (task 142)."
+        },
+        {
+          "member": "HelloScript._process",
+          "reason": "The starter's @OnProcess spins the Node2D and writes the Status label every frame; the driver waits for 60 dispatches after _ready."
+        },
+        {
+          "member": "HelloScript.greet",
+          "reason": "A registered String -> String function, called by the driver through the bridge; it must return \"Hello from Kanama, web\"."
+        }
+      ],
+      "todo": []
     }
   }
 }

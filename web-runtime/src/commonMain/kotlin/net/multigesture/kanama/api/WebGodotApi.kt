@@ -1,18 +1,10 @@
 package net.multigesture.kanama.api
 
-import kotlin.coroutines.resume
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import net.multigesture.kanama.web.KanamaWebScript
-
 /**
  * Hand-written base of the Web API. The Godot classes themselves are generated from the Web call
  * contract into `generated/` (`scripts/generate_web_wrappers.py`); this file keeps only what is not
- * a Godot class: the script base, the coverage markers, and the platform seams the generated
- * lifetimes call.
+ * a Godot class: the coverage markers and the platform seams the generated lifetimes call (the
+ * script base is in WebKanamaScript.kt).
  */
 
 /**
@@ -30,84 +22,7 @@ import net.multigesture.kanama.web.KanamaWebScript
 @Retention(AnnotationRetention.BINARY)
 annotation class ManualGodotLifetimeApi
 
-abstract class KanamaScript<T : GodotObject>(
-  val godotObject: GodotHandle,
-  wrapper: (GodotHandle) -> T,
-) : KanamaWebScript(godotObject) {
-  // Public as on desktop, Android and iOS (task 133 C: `Autoloads.Events.self` is the autoload node).
-  val self: T = wrapper(godotObject)
-
-  inline fun <R> selfAs(ctor: (GodotHandle) -> R): R = ctor(godotObject)
-
-  // The script coroutine scope (task 133), as on desktop, Android and iOS. Scripts are constructed
-  // inside their own owner scope (WebInstanceRegistry.construct), so the owner is captured here and the
-  // scope, created on first use, binds to this script and not to whichever callback launches.
-  private val scopeOwner: Int = WebFrameScheduler.currentOwnerOrZero()
-  private var scopeOrNull: KanamaScope? = null
-  private var scopeDisposed = false
-
-  /**
-   * This script's coroutine scope: it runs on the frame scheduler, is created on first use, and is
-   * cancelled when the script object is freed. [launch] is the short form of `scriptScope.launch`.
-   */
-  val scriptScope: CoroutineScope
-    get() {
-      scopeOrNull?.let {
-        return it
-      }
-      val scope = KanamaScope(scopeOwner)
-      if (scopeDisposed) scope.cancel()
-      scopeOrNull = scope
-      return scope
-    }
-
-  /** Starts [block] as a coroutine of this script; it stops when the script object is freed. */
-  fun launch(block: suspend CoroutineScope.() -> Unit): Job = scriptScope.launch(block = block)
-
-  /**
-   * Suspends for [seconds] of frame time (on Web, the frame scheduler's `SceneTree.delaySeconds`).
-   * The parameters mirror native `wait`; like Web `SceneTree.createTimer`, only the GDScript
-   * defaults (`processAlways = true`, `ignoreTimeScale = false`) are supported.
-   */
-  suspend fun wait(seconds: Double, processAlways: Boolean = true, ignoreTimeScale: Boolean = false) {
-    require(processAlways) { "Web wait supports only processAlways = true" }
-    require(!ignoreTimeScale) { "Web wait supports only ignoreTimeScale = false" }
-    SceneTree.delaySeconds(seconds)
-  }
-
-  /** Suspends until the next frame. */
-  suspend fun nextFrame() {
-    suspendCancellableCoroutine { continuation ->
-      MainThread.post { if (continuation.isActive) continuation.resume(Unit) }
-    }
-  }
-
-  // Typed signals bound to this script's object (task 134 D4), as on desktop, Android and iOS.
-
-  /** Connects [callback] bound to this script's object: `timer.timeout.connect { … }`. */
-  fun Signal0.connect(callback: () -> Unit): SignalConnection = connect(GodotObject(godotObject), callback)
-
-  /** [Signal0.connect] bound to this script's object, with [flags]. */
-  fun Signal0.connect(flags: GodotObject.ConnectFlags, callback: () -> Unit): SignalConnection =
-    connect(GodotObject(godotObject), flags, callback)
-
-  /** Connects [callback] bound to this script's object: `area.bodyEntered.connect { body -> … }`. */
-  fun <A> Signal1<A>.connect(callback: (A) -> Unit): SignalConnection = connect(GodotObject(godotObject), callback)
-
-  /** [Signal1.connect] bound to this script's object, with [flags]. */
-  fun <A> Signal1<A>.connect(flags: GodotObject.ConnectFlags, callback: (A) -> Unit): SignalConnection =
-    connect(GodotObject(godotObject), flags, callback)
-
-  /** Cancels every coroutine this script has running; a later [launch] starts fresh. */
-  fun cancelCoroutines() {
-    scopeOrNull?.coroutineContext?.cancelChildren()
-  }
-
-  internal override fun onFree() {
-    scopeDisposed = true
-    scopeOrNull?.cancel()
-  }
-}
+// The script base, KanamaScript, is in WebKanamaScript.kt (task 142).
 
 /**
  * Coverage markers. Each gameplay operation that has not entered the typed Web call manifest fails

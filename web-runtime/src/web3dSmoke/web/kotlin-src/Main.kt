@@ -36,9 +36,19 @@ import net.multigesture.kanama.api.RenderingServer
 import net.multigesture.kanama.api.Resource
 import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.SceneTree
+import net.multigesture.kanama.api.Texture2D
 import net.multigesture.kanama.api.StaticBody3D
 import net.multigesture.kanama.api.Timer
 import net.multigesture.kanama.api.Window
+import net.multigesture.kanama.api.instantiateScript
+import net.multigesture.kanama.api.instantiateAs
+import net.multigesture.kanama.api.asScript
+import net.multigesture.kanama.api.AudioStream
+import net.multigesture.kanama.api.Area3D
+import net.multigesture.kanama.api.cast
+import net.multigesture.kanama.api.castOrNull
+import net.multigesture.kanama.api.getNodeAs
+import net.multigesture.kanama.api.requireAs
 import net.multigesture.kanama.binding.runtime.BuiltinMethod
 import net.multigesture.kanama.binding.runtime.builtinFrame
 import net.multigesture.kanama.api.WorldEnvironment
@@ -152,6 +162,16 @@ class Main(godotObject: GodotHandle) :
   @Export var probeProjection: Projection = Projection.ZERO
 
   private lateinit var spinner: Node3D
+
+  // Task 142: the node/script/preload delegates on Web (see [delegateProbe]).
+  private val delegateSpinner by node<Node3D>("Spinner")
+  private val delegateBox by node<MeshInstance3D>("Spinner/Box")
+  private val delegateWrongClass by node<Camera3D>("Spinner")
+  private val delegateMissing by node<Node3D>("NoSuchNode")
+  private val delegatePlayer by script<Player>("Player")
+  private val delegateBeep by preload<AudioStream>("res://assets/beep.wav")
+  private val delegateBeepAgain by preload<AudioStream>("res://assets/beep.wav")
+  private var releasedPreloadToken = 0
   private var angle = 0.0
   private var enterTreeRan = false
   private var enterTreeSawExportedValue = false
@@ -582,6 +602,117 @@ class Main(godotObject: GodotHandle) :
     val curve = probeCurve
     if (curve != null) mask = mask or 1L
     if (curve != null && abs(curve.sample(0.5) - 0.5) < 1e-3) mask = mask or 2L
+    return mask
+  }
+
+  /**
+   * Task 142 (driver method `preload_handle_probe`, then the driver releases that handle the way the
+   * bridge does when the last proxy that could route it is freed, then `preload_reload_probe`): the
+   * handle token the preload cache holds.
+   */
+  fun preloadHandleProbe(value: Long): Long {
+    releasedPreloadToken = delegateBeep.handle.value
+    return releasedPreloadToken.toLong()
+  }
+
+  /**
+   * Task 142: after the release, bit 1 = `delegateBeep` answers a live resource again (reloaded),
+   * bit 2 = under a new handle, bit 4 = a second preload of the path is the same object, bit 8 =
+   * the reloaded resource answers the engine (its class). A healthy run returns 15.
+   */
+  fun preloadReloadProbe(value: Long): Long {
+    var mask = 0L
+    val beep = delegateBeep
+    if (beep.isInstanceLive()) mask = mask or 1L
+    if (releasedPreloadToken != 0 && beep.handle.value != releasedPreloadToken) mask = mask or 2L
+    if (delegateBeepAgain.isSameInstance(beep)) mask = mask or 4L
+    if (beep.isClass("AudioStream")) mask = mask or 8L
+    return mask
+  }
+
+  /**
+   * Task 142 (driver method `re_ready_probe`): `request_ready()` on InitProbe, then out of the tree
+   * and back in. Godot runs its `_ready` again on the way in; the driver checks that @OnReady
+   * dispatched a second time without a second live script, as on desktop.
+   */
+  fun reReadyProbe(value: Long): Long {
+    val probe = self.getNodeOrNull("InitProbe") ?: return 0L
+    probe.call("request_ready")
+    self.removeChild(probe)
+    self.addChild(probe)
+    return 1L
+  }
+
+  /**
+   * Task 142 (driver method `delegate_probe`): bit 1 = `by node<Node3D>("Spinner")` is the Spinner,
+   * bit 2 = a node delegate is cached, bit 4 = one of another class throws naming both classes, bit
+   * 8 = one with no node throws naming the path and `under /root/...`, bit 16 = `by script<Player>`
+   * is the Player node's script, bit 32 = `by preload<AudioStream>` loads once, bit 64 =
+   * `instantiateAs` returns a typed root and fails naming a wrong one, bit 128 = `instantiateScript`
+   * returns the root's Kotlin script. A healthy run returns 255.
+   */
+  fun delegateProbe(value: Long): Long {
+    var mask = 0L
+    val spinnerNode = self.getNodeOrNull("Spinner")
+    if (spinnerNode != null && delegateSpinner.isSameInstance(spinnerNode)) mask = mask or 1L
+    if (delegateBox === delegateBox) mask = mask or 2L
+    val wrong = runCatching { delegateWrongClass }.exceptionOrNull()
+    if (wrong is IllegalStateException && wrong.message?.contains("is a Node3D, not a Camera3D") == true) {
+      mask = mask or 4L
+    }
+    val missing = runCatching { delegateMissing }.exceptionOrNull()
+    if (missing?.message?.contains("no node at \"NoSuchNode\" under /root/") == true) mask = mask or 8L
+    val playerNode = self.getNodeOrNull("Player")
+    if (playerNode != null && delegatePlayer === playerNode.asScript<Player>()) mask = mask or 16L
+    if (delegateBeep === delegateBeep && delegateBeep.castOrNull<AudioStream>() != null) mask = mask or 32L
+    val scene = ResourceLoader.loadPackedScene("res://probe_instance.tscn")
+    if (scene != null) {
+      val area = runCatching { scene.instantiateAs<Area3D>() }.getOrNull()
+      val wrongRoot = runCatching { scene.instantiateAs<Camera3D>() }.exceptionOrNull()
+      if (area != null && wrongRoot?.message?.contains("has a Area3D root, not a Camera3D") == true) {
+        mask = mask or 64L
+      }
+      area?.queueFree()
+      val coin = runCatching { scene.instantiateScript<Coin>() }.getOrNull()
+      if (coin != null) mask = mask or 128L
+      coin?.self?.queueFree()
+    }
+    return mask
+  }
+
+  /**
+   * Task 142: the typed node lookups and checked casts the user pages teach, on Web (driver method
+   * `typed_lookup_probe`). Spinner is a Node3D, Box a MeshInstance3D. bit 1 = `getNodeAsOrNull`
+   * finds Spinner as a Node3D, bit 2 = it answers null for Camera3D (the class is asked), bit 4 =
+   * `getNodeAs<Node3D>` finds it and `getNodeAs<Camera3D>` does not, bit 8 = `requireAs<Node3D>`
+   * returns it and `requireAs<Camera3D>` throws, bit 16 = that error names the class found
+   * (`is a Node3D, not a Camera3D`), bit 32 = `castOrNull`/`cast` on a node (a MeshInstance3D is a
+   * Node3D, not a Camera3D; `cast` throws ClassCastException), bit 64 = a Resource cast:
+   * `probeCurve` is a Resource and not a Texture2D. A healthy run returns 127.
+   */
+  fun typedLookupProbe(value: Long): Long {
+    var mask = 0L
+    if (self.getNodeAsOrNull("Spinner", "Node3D", ::Node3D) != null) mask = mask or 1L
+    if (self.getNodeAsOrNull("Spinner", "Camera3D", ::Camera3D) == null) mask = mask or 2L
+    if (self.getNodeAs<Node3D>("Spinner") != null && self.getNodeAs<Camera3D>("Spinner") == null) {
+      mask = mask or 4L
+    }
+    val required = runCatching { self.requireAs<Node3D>("Spinner") }.getOrNull()
+    val wrongClass = runCatching { self.requireAs<Camera3D>("Spinner") }.exceptionOrNull()
+    if (required != null && wrongClass is IllegalStateException) mask = mask or 8L
+    if (wrongClass?.message?.contains("is a Node3D, not a Camera3D") == true) mask = mask or 16L
+    val box: GodotObject = self.requireAs<MeshInstance3D>("Spinner/Box")
+    if (
+      box.castOrNull<Node3D>() != null &&
+        box.castOrNull<Camera3D>() == null &&
+        runCatching { box.cast<Camera3D>() }.exceptionOrNull() is ClassCastException
+    ) {
+      mask = mask or 32L
+    }
+    val curve = probeCurve
+    if (curve != null && curve.castOrNull<Resource>() != null && curve.castOrNull<Texture2D>() == null) {
+      mask = mask or 64L
+    }
     return mask
   }
 

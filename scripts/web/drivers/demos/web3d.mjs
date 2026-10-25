@@ -148,6 +148,74 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`curveProbe: mask=${curveProbe}`);
 
+  // Task 142: the typed node lookups and checked casts on Web (see Main.typed_lookup_probe). A
+  // healthy run returns 127: every lookup finds what it should, asks Godot the class, and fails
+  // with the class it found.
+  const typedLookupProbe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("typed_lookup_probe")}, 0)`,
+    ),
+  );
+  trace(`typedLookupProbe: mask=${typedLookupProbe}`);
+
+  // Task 142: the node/script/preload delegates and the instantiate functions on Web (see
+  // Main.delegate_probe). A healthy run returns 255.
+  const delegateProbe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("delegate_probe")}, 0)`,
+    ),
+  );
+  trace(`delegateProbe: mask=${delegateProbe}`);
+
+  // Task 142: a preloaded resource whose handle the bridge released (the last proxy that could
+  // route it went, as on a scene change with no Kotlin autoload) is loaded again on the next read.
+  // The driver releases the handle with the bridge's own owner-release steps.
+  const preloadToken = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("preload_handle_probe")}, 0)`,
+    ),
+  );
+  const preloadReleased = Number(
+    await evaluate(`(() => {
+      const b = globalThis.KanamaWebBridge;
+      const handle = ${preloadToken};
+      const slot = b.browserHandleSlot(handle);
+      if (!slot) return -1;
+      const owner = b.handleOwners.get(handle);
+      b.forgetHandleKindState(handle, slot, owner, false);
+      b.eraseObjectHandleEntry(handle, owner);
+      b.api.kanamaWebDiscardBrowserHandle(handle);
+      b.retireBrowserSlot(handle, slot);
+      return 1;
+    })()`),
+  );
+  const preloadReload = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("preload_reload_probe")}, 0)`,
+    ),
+  );
+  trace(`preloadReload: token=${preloadToken} released=${preloadReleased} mask=${preloadReload}`);
+
+  // Task 142: request_ready() runs _ready again on the next tree entry, as on desktop.
+  const readyCounts = async () =>
+    JSON.parse(
+      await evaluate(`(() => {
+        const b = globalThis.KanamaWebBridge;
+        const pick = (table) => Object.entries(table ?? {}).find(([n]) => n.endsWith(".InitProbe"))?.[1] ?? 0;
+        return JSON.stringify({ ready: pick(b.match3ReadyByClass), live: pick(b.liveScriptsByClass) });
+      })()`),
+    );
+  const beforeReReady = await readyCounts();
+  await evaluate(
+    `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("re_ready_probe")}, 0)`,
+  );
+  let afterReReady = await readyCounts();
+  for (let i = 0; i < 40 && afterReReady.ready <= beforeReReady.ready; i++) {
+    await delay(50);
+    afterReReady = await readyCounts();
+  }
+  trace(`reReady: before=${JSON.stringify(beforeReReady)} after=${JSON.stringify(afterReReady)}`);
+
   // Task 64 DemoPage set (protocol 24): Main.demo_page_probe (Int->Int) returns a mask -- bit 1 =
   // SceneTree.is_paused read the pause back, bit 2 = Input.get_connected_joypads answered (the new
   // Long-list singleton shape; empty on a headless runner), bit 4 = Environment SSIL/SDFGI toggles
@@ -711,6 +779,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // non-null and Curve.sample reads back the VALUE the linear probe curve predicts, not
     // merely a successful call.
     curveResourceHydrationDeliversValue: curveProbe === 3,
+    typedLookupsAndChecksCasts: typedLookupProbe === 127,
+    scriptDelegatesAndInstancing: delegateProbe === 255,
+    preloadReloadsReleasedHandle: preloadReleased === 1 && preloadReload === 15,
+    requestReadyRunsReadyAgain: afterReReady.ready === beforeReReady.ready + 1 && afterReReady.live === beforeReReady.live,
     // Task 64 DemoPage set: pause read-back, joypad enumeration, Environment toggles, focus release
     // and the postAfterFrames hop chain (the readback runs after the coroutine section's pumps).
     demoPageSetDelivers: demoPageProbe === 31 && demoPageProbeAfter === 1,

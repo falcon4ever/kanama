@@ -1,23 +1,23 @@
 # Export for the Web
 
 !!! note "Web is experimental"
-    This release exports only the Kanama demo projects to the Web. It cannot
-    export your own game. Use this page to try the Web build with a demo, and
-    to keep your scripts ready for the Web. What does not work is listed in
+    You can export your own project to the Web. Kanama checks exports in
+    desktop Chrome and Firefox; Safari and phones are checked by hand. What
+    does not work on the Web is listed in
     [Limitations](../reference/limitations.md#web).
 
-The Web backend compiles Kanama project scripts to **Kotlin/Wasm** and runs
-them against a Godot Web export through a generated per-call proxy and a
-versioned JavaScript bridge (protocol 39). <!-- kanama-claim: protocol -->
-In plain terms: your scripts become a WebAssembly module that runs next to
-Godot's own in the browser, with no Java. [Web Internals](../contributing/backends/web.md)
-explains how the two talk.
+Kanama compiles your Kotlin scripts to WebAssembly, the code format browsers
+run natively, and Godot's Web export runs them in the page next to your game.
+[Web Internals](../contributing/backends/web.md) explains how the two talk.
 
 ## Requirements
 
-- A checkout of the Kanama repository, set up as in
+- A Kanama project: a Godot project with its Kotlin scripts in a
+  `kotlin-src/` folder, such as one made by `createStarterProject`.
+- A checkout of the Kanama repository and a JDK 25, set up as in
   [Install from a Source Checkout](../getting-started/source-checkout.md).
-- A checkout of the [Kanama demos](https://github.com/falcon4ever/kanama-demos).
+  A project made from a release kit or the store addon also exports from the
+  checkout; see [Limitations](../reference/limitations.md#web).
 - Godot 4.7.2 and its export templates, installed from **Editor > Manage
   Export Templates**. The Web export uses `web_nothreads_release.zip` from the
   templates folder:
@@ -28,31 +28,130 @@ explains how the two talk.
     | Linux | `~/.local/share/godot/export_templates/4.7.2.stable/` |
     | Windows | `%APPDATA%\Godot\export_templates\4.7.2.stable\` |
 
-- A desktop browser recent enough to run the WebAssembly features Kanama's
-  scripts use: Chrome 130, Firefox 141 or Safari 26.5, or newer.
+- Chrome 130 or Firefox 141, or newer, to run the export.
 
-## Trying the Web Build with a Demo
+## Exporting Your Project
 
-### Exporting a Demo
-
-Run this from the Kanama checkout. `-PkanamaWebDemo` picks the demo, and the
-matching `-PkanamaWeb<Demo>ProjectDir` points at its folder in the demos
-checkout:
+Run this in the Kanama checkout, and pass the folder that holds your
+project's `project.godot`:
 
 ```sh
 cd /path/to/kanama
-./gradlew --no-daemon -Pkotlin.compiler.execution.strategy=in-process \
-  :web-runtime:exportWeb \
-  -PkanamaWebDemo=match3 \
-  -PkanamaGodotExecutable=/path/to/godot \
-  -PkanamaWebTemplateRelease=/path/to/web_nothreads_release.zip \
-  -PkanamaWebMatch3ProjectDir=/path/to/kanama-demos/Starter-Kit-Match3
+./gradlew :web-runtime:exportWeb -PkanamaWebProjectDir=/path/to/your-project
 ```
 
-Keep `--no-daemon -Pkotlin.compiler.execution.strategy=in-process`: the
-Kotlin compiler can run out of memory on this build without them. The export
-works on a copy of the demo and leaves the demo folder unchanged. It lands in
-`web-runtime/build/web-export/<demo>/`.
+The export compiles the scripts in your project's `kotlin-src/` folder,
+exports a copy of the project with Godot, and puts the two together. It lands
+in `web-runtime/build/web-export/project/` inside the Kanama checkout. Your
+project folder is not changed.
+
+The game's name, icon, window size and main scene come from your Project
+Settings, as in any export. The settings of your own Web export preset do not
+apply; [Limitations](../reference/limitations.md#web) says what to do instead.
+
+The export finds Godot and its Web template where Godot installs them: the
+templates folder above, and `/Applications/Godot.app` on macOS. If yours are
+somewhere else, name them:
+
+```sh
+cd /path/to/kanama
+./gradlew :web-runtime:exportWeb -PkanamaWebProjectDir=/path/to/your-project \
+  -PkanamaGodotExecutable=/path/to/godot \
+  -PkanamaWebTemplateRelease=/path/to/web_nothreads_release.zip
+```
+
+When the build stops on one of your scripts, the error names the script and
+the function. See [Web-Compatible Scripts](#web-compatible-scripts).
+
+## Running the Export
+
+Serve the export over HTTP. Opening `index.html` from disk does not load the
+game. Any static server works; Kanama's sends the right type for `.wasm`
+files and listens on this machine only:
+
+```sh
+cd /path/to/kanama
+python3 scripts/web/serve_export.py web-runtime/build/web-export/project
+```
+
+It prints `PORT=<n>`. Open `http://127.0.0.1:<n>/` in your browser. The
+server runs until you press **Ctrl+C**.
+
+## Testing on a Phone or Tablet
+
+To open the export from another device on your network, serve it over HTTPS.
+Godot's Web export only starts from a secure address, and `127.0.0.1` is the
+only plain-HTTP address that counts as one:
+
+```sh
+cd /path/to/kanama
+python3 scripts/web/serve_export.py --lan --https web-runtime/build/web-export/project
+```
+
+It prints `LAN=https://<this-machine>:<n>/`. `--https` makes a self-signed
+certificate with the `openssl` command the first time and reuses it for 30
+days. Open the address on the device and accept the certificate warning once.
+On iPhone and iPad Safari, tap **Show Details**, then **visit this website**.
+
+## Publishing
+
+`packageWebExport` zips an export you have already built and tried:
+
+```sh
+cd /path/to/kanama
+./gradlew :web-runtime:packageWebExport -PkanamaWebProjectDir=/path/to/your-project
+```
+
+The zip lands in `web-runtime/build/distributions/`. It is named after your
+project folder and the version of your Kanama checkout, such as
+`kanama-web-my-game-v0.5.0.zip`, with `index.html` at its root. The task
+builds nothing. It fails when the export is missing, older than the current
+build or made from another project, when the export contains a path from your
+machine, or when it exceeds itch.io's limits of 500 MB and 1000 files.
+
+To publish on **itch.io**,
+[install butler](https://itch.io/docs/butler/installing.html), log in once
+with `butler login`, and upload the zip:
+
+```sh
+butler push web-runtime/build/distributions/kanama-web-my-game-v0.5.0.zip \
+  <user>/<game>:html5
+```
+
+On the game's edit page, set the upload to **This file will be played in the
+browser**. Leave **SharedArrayBuffer support** off: the export uses a single
+thread and needs no special headers.
+
+To publish on **any other static host**, such as GitHub Pages, unzip the zip
+into a folder the host serves over HTTPS. The host must send `.wasm` files with
+the `application/wasm` content type; GitHub Pages does.
+
+## Web-Compatible Scripts
+
+The Web build compiles the same `kotlin-src/` folder as desktop, and most
+scripts need no change: `by node<Timer>("Timer")`, `requireAs<T>()`,
+`castOrNull<T>()`, `preload` and `instantiateAs<T>()` work the same way. When
+the build stops on a script, the error names the script and the function.
+[Limitations](../reference/limitations.md#web) lists what the Web build cannot
+compile, with what to do instead.
+
+For a script that must differ on the Web, a file with the same name in
+`web/kotlin-src/` replaces the shared file in the Web build only. A
+desktop-only script is left out by listing its path, relative to
+`kotlin-src/`, in `web/kotlin-src-excludes.txt`, one per line. The demos use
+both.
+
+## Trying the Web Build with a Demo
+
+The [Kanama demos](https://github.com/falcon4ever/kanama-demos) export the
+same way. `-PkanamaWebDemo` picks the demo, and the matching
+`-PkanamaWeb<Demo>ProjectDir` points at its folder in the demos checkout:
+
+```sh
+cd /path/to/kanama
+./gradlew :web-runtime:exportWeb -PkanamaWebDemo=match3 \
+  -PkanamaWebMatch3ProjectDir=/path/to/kanama-demos/Starter-Kit-Match3
+```
 
 | `-PkanamaWebDemo` | Demo folder | `-PkanamaWebDemo` | Demo folder |
 |---|---|---|---|
@@ -64,99 +163,32 @@ works on a copy of the demo and leaves the demo folder unchanged. It lands in
 | `fps` | `Starter-Kit-FPS` | `web3d` | none; it is built into Kanama |
 
 The property name capitalizes the key: `dodge` takes
-`-PkanamaWebDodgeProjectDir`, `charactercontroller` takes
-`-PkanamaWebCharactercontrollerProjectDir`. Bunnymark also takes
+`-PkanamaWebDodgeProjectDir`. Bunnymark also takes
 `-PkanamaWebBunnymarkVariant=BunnymarkV1Sprites`, the variant that runs on the
-Web.
-
-### Running the Export
-
-Serve the export over HTTP. Opening `index.html` from disk does not load the
-WebAssembly modules. Any static server works; Kanama's sends the right
-`application/wasm` type and listens on this machine only:
-
-```sh
-python3 scripts/web/serve_export.py web-runtime/build/web-export/match3
-```
-
-It prints `PORT=<n>`. Open `http://127.0.0.1:<n>/` in your browser.
-
-### Testing on a Phone or Tablet
-
-To open the export from another device on your network, serve it over HTTPS.
-Godot's Web export only starts from a secure address, and `127.0.0.1` is the
-only plain-HTTP address that counts as one:
-
-```sh
-python3 scripts/web/serve_export.py --lan --https web-runtime/build/web-export/match3
-```
-
-It prints `LAN=https://<this-machine>:<n>/`. Open that address on the device
-and accept the warning about the self-signed certificate once. On iPhone and
-iPad Safari, tap **Show Details**, then **visit this website**.
-
-### Publishing the Demo
-
-`packageWebExport` zips an export you have already built and tried:
-
-```sh
-cd /path/to/kanama
-./gradlew --no-daemon -Pkotlin.compiler.execution.strategy=in-process \
-  :web-runtime:packageWebExport -PkanamaWebDemo=match3
-```
-
-The zip lands in `web-runtime/build/distributions/kanama-web-<demo>-v<version>.zip`,
-with `index.html` at its root. The task builds nothing. It fails when the
-export is missing or older than the current build, when the export contains a
-path from your machine, or when it exceeds itch.io's limits of 500 MB and 1000
-files.
-
-To publish on **itch.io**, upload the zip with
-[butler](https://itch.io/docs/butler/):
-
-```sh
-butler push web-runtime/build/distributions/kanama-web-match3-v<version>.zip \
-  <user>/<game>:html5
-```
-
-On the game's edit page, set the upload to **This file will be played in the
-browser**. Leave **SharedArrayBuffer support** off: the export uses a single
-thread and needs no special headers.
-
-To publish on **any other static host**, unzip the zip into a folder the host
-serves over HTTPS, with the `application/wasm` content type for `.wasm` files.
-
-## Web-Compatible Scripts
-
-The Web build compiles the same `kotlin-src/` folder as desktop, and most
-scripts need no change. If you plan to ship on the Web later, avoid what the
-Web build stops on, with an error that names the script:
-
-- uses Java classes such as `java.io.File`, which do not exist in the browser;
-- compares raw handles with `handle.address()`; use `isSameInstance()`;
-- calls a Godot method the Web build does not have;
-- gives an exported property a default that is not a literal or a constant
-  expression. `Mathf.PI / 3.0` works; another property's value does not;
-- exports a property type the Web build does not carry.
-
-For a script that must differ on the Web, a file with the same name in
-`web/kotlin-src/` replaces the shared file in the Web build only. A
-desktop-only script is left out by listing its path, relative to
-`kotlin-src/`, in `web/kotlin-src-excludes.txt`, one per line. The demos use
-both.
+Web. A demo's export lands in `web-runtime/build/web-export/<demo>/`.
+`tpsdemo` is larger than itch.io's 500 MB limit, so `packageWebExport` refuses
+it; serve it from your own host.
 
 ## Troubleshooting
 
 | Problem | Fix |
 | --- | --- |
-| The page loads but the game never starts, on a phone or another computer. | Serve with `--lan --https`. A plain-HTTP network address is not secure, so Godot does not start. |
+| `exportWeb` says `Pass -PkanamaWebProjectDir=...`. | Add `-PkanamaWebProjectDir` with your project folder. Check its spelling: Gradle ignores a property it does not know. |
+| `exportWeb` says `Web project not found` or `has no project.godot`. | Pass the folder that holds your `project.godot`, as an absolute path. |
+| `exportWeb` says the project `has no kotlin-src/`. | The Web export compiles your Kotlin scripts from `kotlin-src/`. Point it at a Kanama project. |
+| `exportWeb` says the project `has no main scene`, or that the main scene does not exist or matches no scene file. | Set **Project > Project Settings > Application > Run > Main Scene** to a scene of the project, and save it. |
+| The build stops on one of your scripts. | See [Web-Compatible Scripts](#web-compatible-scripts). |
+| `exportWeb` says `Godot was not found` or `Godot not found at`. | Add `-PkanamaGodotExecutable=/path/to/godot`. |
+| `exportWeb` says the Web export template is not installed or not found. | Install the 4.7.2 export templates from **Editor > Manage Export Templates**, or add `-PkanamaWebTemplateRelease=/path/to/web_nothreads_release.zip`. |
+| The page loads but the game never starts, on a phone or another computer. | See [Testing on a Phone or Tablet](#testing-on-a-phone-or-tablet). |
 | The page is blank when opened from disk. | Serve the folder over HTTP as in [Running the Export](#running-the-export). |
-| The Gradle build runs out of memory. | Add `--no-daemon -Pkotlin.compiler.execution.strategy=in-process`. |
-| `exportWeb` fails with `Unsupported -PkanamaWebDemo=...`. | Use one of the demo keys in the table. |
-| `packageWebExport` says the export is stale. | Run `exportWeb` again, then package. |
-| `packageWebExport` rejects `tpsdemo`. | Its assets exceed itch.io's 500 MB limit. Serve it from your own host instead. |
-| Enemies pile up and never leave the screen. | See the open defect under [Limitations](../reference/limitations.md#web). |
+| `packageWebExport` says the export is stale. | Run `exportWeb` again for the same project, then package. |
+| `exportWeb` fails with `Unsupported -PkanamaWebDemo=...`. | Use one of the demo keys in the table, or `-PkanamaWebProjectDir` for your own project. |
 
 ## On Other Platforms
 
-On **Windows**, run `.\gradlew.bat` wherever this page says `./gradlew`.
+On **Windows**, run `.\gradlew.bat` wherever this page says `./gradlew`, and
+`python` wherever it says `python3`. Put a command on one line, or end each
+line with a backtick (`` ` ``) instead of a backslash, which is the PowerShell
+line continuation. On **Linux** and **Windows**, the export finds Godot when it
+is on your `PATH` as `godot`; otherwise pass `-PkanamaGodotExecutable`.

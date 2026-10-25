@@ -3,9 +3,9 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.web.webScriptInstance
 
 // The part of the task 133 script-authoring API the Web contract already carries: script checks and
-// the tree accessors, with the native spelling so a shared script compiles for both. The node,
-// script and preload delegates and the checked casts need a class-token table and `get_class` /
-// `is_node_ready` in the Web call contract; they are a Web follow-up.
+// the tree accessors, with the native spelling so a shared script compiles for both. The checked casts
+// are in WebCheckedCasts.kt (task 142); the node, script and preload delegates need `is_node_ready` in
+// the Web call contract and are a Web follow-up.
 
 /** True when a Kotlin script of type [T] is attached to this object: GDScript's `body is Player`. */
 inline fun <reified T : Any> GodotObject.isScript(): Boolean = webScriptInstance(handle.value) is T

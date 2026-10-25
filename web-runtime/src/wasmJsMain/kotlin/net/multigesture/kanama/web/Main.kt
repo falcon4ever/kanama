@@ -309,6 +309,8 @@ fun kanamaWebEnterTree(objectId: Int): Int {
 @JsExport
 fun kanamaWebReady(objectId: Int): Int {
   return webCallbackBoundary(objectId, "_ready") { record ->
+    // Task 142: a new ready cycle for the node/script delegates, before @OnReady reads them.
+    record.script.webReadyCycle()
     userScript { KanamaWebProjectRegistry.ready(record.scriptId, record.script) }
     commands.flush()
     1

@@ -89,6 +89,9 @@
             " MB";
         };
         const engine = new Engine(config);
+        // The smoke drivers end a project with no teardown script of its own (the starter cell)
+        // the way a player closing the tab would: engine.requestQuit() quits the scene tree.
+        globalThis.KanamaWebEngine = engine;
         globalThis
           .bootstrapKanamaWeb(globalThis["web-runtime"])
           .then(() => engine.startGame())
