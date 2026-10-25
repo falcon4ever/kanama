@@ -1452,6 +1452,12 @@ class KanamaScript(
       allowPlaceholder: Boolean,
     ) {
       val retPtr = MemorySegment.ofAddress(rRet.address()).reinterpret(8)
+      // Godot reads this slot as the new ScriptInstance* whatever happens below, and its
+      // virtual-call wrapper leaves it uninitialized: a failure that skipped the write (a script
+      // constructor that threw) handed Godot a garbage pointer, and it crashed with signal 11 right
+      // after the script error. NULL is GDScript's answer for an instance it could not build: the
+      // object keeps its script, without an instance.
+      retPtr.set(ADDRESS, 0, MemorySegment.NULL)
       val handle = instance.address()
       val script = ObjectRegistry.get(handle) as? KanamaScript
       if (script == null) {
@@ -1491,7 +1497,16 @@ class KanamaScript(
           )
         } else {
           traceStage(script, "factory invoke")
-          script.factory?.invoke(forObject)
+          val built =
+            try {
+              script.factory?.invoke(forObject)
+            } catch (t: Throwable) {
+              // The script's constructor (or a property initializer) threw: report it as a script
+              // error with the Kotlin file and line, and leave the object without an instance.
+              Upcalls.logUpcallFailure("${script.kotlinClassName} constructor", t)
+              return
+            }
+          built
             ?: run {
               System.err.println(
                 "[kanama:kt] callInstanceCreate: no factory for ${script.kotlinClassName}"

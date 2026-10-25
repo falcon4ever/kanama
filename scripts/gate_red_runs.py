@@ -735,6 +735,12 @@ case("check_wrapper_generator.py (iOS region body)", py("check_wrapper_generator
 case("check_wrapper_generator.py (keep-reachable sweep)", py("check_wrapper_generator.py"),
      [Edit("scripts/check_wrapper_generator.py", "reads_receiver = (receiver or owner) in refcounted and", "reads_receiver = False and")],
      "the sweep misses a known-bad shape", "the keep-reachable sweep stops seeing a RefCounted body that reads `segment` without its fence (expression body, header on several lines, no checkOpen(); task 138 item 6)")
+case("check_wrapper_generator.py (create for every instantiable class)", py("check_wrapper_generator.py"),
+     [Edit("scripts/generate_api_wrapper.py", '    return bool(family & {"Node", "RefCounted"})\n', '    return class_name in {"Sprite2D", "PackedScene"}\n')],
+     "single-tree drift-gate", "`create()` goes back to a hand-kept allowlist: GDScript's `Label.new()` / `Area2D.new()` have no Kotlin spelling again (the Bulletmark port's finding)")
+case("generate_web_wrappers.py --check (create for every instantiable class)", py("generate_web_wrappers.py", "--check"),
+     [Edit("scripts/generate_web_wrappers.py", '    return bool({"Node", "RefCounted"} & set(api.chain(godot_name)))\n', '    return godot_name == "Sprite2D"\n')],
+     "FAIL", "the Web `create()` goes back to a hand-kept allowlist (native's rule is every instantiable Node or RefCounted)")
 case("check_wrapper_generator.py (expect ObjectCalls)", py("check_wrapper_generator.py"),
      [Append(f"{COMMON}/binding/runtime/ObjectCalls.expect.kt", "\nval redRunHandEdit = 1\n")],
      "ObjectCalls.expect.kt", "the generated `expect object ObjectCalls` file is hand-edited (it is in the drift compare since task 119 finding 25)")
@@ -1030,6 +1036,17 @@ case("runtime_smoke.sh", ["bash", "scripts/runtime_smoke.sh", GODOT],
      "missing pattern", "the example script no longer logs its scene-delivered properties",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 JVM_OBJECT_CALLS = "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt"
+case("runtime_smoke.sh (throwing script constructor)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt", "      retPtr.set(ADDRESS, 0, MemorySegment.NULL)\n      val handle = instance.address()\n",
+           "      val handle = instance.address()\n")],
+     "missing pattern", "_instance_create stops writing NULL before it builds the instance: a script constructor that throws during set_script leaves Godot's return slot unwritten, and Godot crashes with signal 11 right after the script error (the Bulletmark port's finding)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("processor ScriptNameClashTest", ["./gradlew", "-p", ".", ":processor:test", "--tests", "*ScriptNameClashTest*"],
+     [Edit("processor/src/main/kotlin/net/multigesture/kanama/processor/KanamaProcessor.kt",
+           'VariantType")\n    sb.appendLine("import net.multigesture.kanama.api.kotlinScriptInstance")\n    sb.appendLine("import ${model.fqName} as $SCRIPT_TYPE_ALIAS")',
+           'VariantType")\n    sb.appendLine("import net.multigesture.kanama.api.kotlinScriptInstance")\n    sb.appendLine("import ${model.fqName}")')],
+     "ScriptNameClashTest", "the desktop registrar imports its script class by its simple name again: a script called Arena (java.lang.foreign.Arena) or Signals does not compile (the Bulletmark port's finding)",
+     slow=True)
 case("runtime_smoke.sh (progress read-back)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit(JVM_OBJECT_CALLS, "(BuiltinTypes.readArrayScalars(argArray).firstOrNull() as? Number)?.toDouble()",
            "(emptyList<Any?>().firstOrNull() as? Number)?.toDouble()"),

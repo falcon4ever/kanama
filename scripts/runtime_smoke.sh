@@ -70,6 +70,9 @@ KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BI
 # (signal_leak_smoke.tscn), each in its own process so nothing else touches their state.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_error_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://signal_leak_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+# A script whose constructor throws, attached with set_script (constructor_error_smoke.tscn); the
+# scene quits itself once both attaches have printed, --quit-after is only the cap.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://constructor_error_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
 # task 131 items 2 + 6 -- wrapper equality and a call through a wrapper of a freed object.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 134 D4 -- typed engine signals (connect, close, one-shot, deferred, await, freed receiver,
@@ -456,6 +459,19 @@ check "^SCRIPT ERROR: java\.lang\.IllegalStateException: kanama smoke: deliberat
 check "^ +at: ScriptErrorSmoke\.ready \(res://ScriptErrorSmoke\.kt:${script_error_line}\)$"
 # The stderr trace is kept beside it.
 check "\[kanama:kt\] script method failed script=net\.multigesture\.kanama\.example\.ScriptErrorSmoke "
+# A script constructor that throws during set_script is a script error with the Kotlin file:line,
+# and the object is left without a script instance: Godot's _instance_create return slot is now
+# written NULL first. Before, the throw skipped the write, Godot used the garbage slot as the
+# instance and crashed with signal 11 right after the script error, so no line below printed. The
+# GDScript twin keeps a half-built instance (a run-time error does not abort its construction); a
+# Kotlin constructor that threw leaves no object to keep.
+constructor_error_line="$(grep -n 'deliberate constructor failure' "$PROJECT_DIR/ConstructorErrorSmoke.kt" | cut -d: -f1)"
+check "^SCRIPT ERROR: java\.lang\.IllegalStateException: kanama smoke: deliberate constructor failure$"
+check "^ +at: ConstructorErrorSmoke\.fail \(res://ConstructorErrorSmoke\.kt:${constructor_error_line}\)$"
+check "\[kanama-smoke\] constructor_error attach in_tree script=false instance=false"
+check "\[kanama-smoke\] constructor_error attach detached script=false instance=false"
+check "\[kanama-smoke\] constructor_error gdscript_twin script=true instance=true"
+check "\[kanama-smoke\] constructor_error done"
 # task 131 (F9) -- a lambda connection's closure is released whenever Godot drops the connection's
 # custom Callable: the receiver freed, the emitter freed, a ONE_SHOT connection fired. The registry
 # returns to its size before the connect. Before task 131 every *_released was false (only
