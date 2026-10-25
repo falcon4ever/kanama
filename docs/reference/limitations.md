@@ -28,6 +28,7 @@ script. Most games use `@ScriptClass` only, as in
 | A change to a `@RegisterClass` type takes effect only after you restart the editor. | Godot reads extension classes once, at startup, so hot reload covers `@ScriptClass` scripts only. | Restart the editor after changing one, and keep code you change often in `@ScriptClass` scripts. |
 | A macOS export downloaded from the internet does not open on a player's Mac. | Kanama signs the `.app` for your own machine only, and Gatekeeper wants a Developer ID signature and Apple's notarization. | Sign and notarize the game yourself, as [Signing for Distribution](../exporting/desktop.md#signing-for-distribution) shows. |
 | A macOS export does not run on an Intel Mac, and there is no Windows on Arm export. | The bundled Java runtime is built for `macos-arm64`, `windows-x64`, `linux-x64` and `linux-arm64` only. | Export macOS games for `arm64`, and ship Windows games for x64. |
+| A library you add to `build.gradle.kts` compiles, but the game fails with `ClassNotFoundException` or `NoClassDefFoundError` when it uses it. | The editor and a desktop export load Kanama, the Kotlin standard library, kotlinx.coroutines and `kanama-scripts.jar`, which holds only your own compiled scripts. | Copy a pure-Kotlin library's source into `kotlin-src/`, or do without the library. |
 | A Godot build compiled with `precision=double` does not work with Kanama. | Parts of Kanama's value passing assume Godot's default single-precision sizes. | Use the official Godot 4.7.2 builds, which are single precision. |
 
 ## Android

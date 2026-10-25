@@ -120,8 +120,13 @@ The knobs live in the `ktfmt { ... }` block in `build.gradle.kts`.
 ## Wrapper Work
 
 - Every Godot class is generated from `extension_api.json`; public wrappers must stay
-  regeneratable. The few hand-written roots and the per-platform table are the exception, and
-  the drift gate (`check_wrapper_generator.py`) fails on any hand edit of generated output.
+  regeneratable. The few hand-written roots and the per-platform table (`PER_PLATFORM_WRAPPERS`
+  in `scripts/generate_api_wrapper.py`) are the exception, and the drift gate
+  (`check_wrapper_generator.py`) fails on any hand edit of generated output. Keep that table and
+  the generator policy audits current when you change this boundary: the full drift gate fails
+  otherwise.
+- Before adding wrappers, check the coverage report (`python3 scripts/api_wrapper_coverage.py`)
+  and the candidate report (`python3 scripts/api_wrapper_candidates.py`).
 - Only add methods whose types have a known `ObjectCalls` marshal path. A method that needs a
   new ABI shape gets the exact helper and its audit coverage first.
 - Validate method binds after wrapper changes
@@ -131,8 +136,10 @@ The knobs live in the `ktfmt { ... }` block in `build.gradle.kts`.
 - Virtual methods (`"is_virtual": true`) are override points, never generated as callable
   wrappers; scripts override them with `@OverrideVirtual`.
 - Hand-written code under `api/` is a budget, not a default: `scripts/check_hand_code_budget.py`
-  fails on an unlisted hand-written API file and on growth past its line ratchet. Sugar for a
-  generated class goes into the generator's tables, not into a hand class.
+  fails on an unlisted hand-written API file and on growth past its line ratchet. A legitimate
+  seam, runtime-core or sugar change raises the ratchet with
+  `python3 scripts/check_hand_code_budget.py --write --reason "<why>"`. Sugar for a generated
+  class goes into the generator's tables, not into a hand class.
 
 The steps, the boundary between generated and hand-written code, and the virtual-return
 coverage are in [Wrapper Maintenance](docs/contributing/wrapper-maintenance.md#working-on-wrappers).

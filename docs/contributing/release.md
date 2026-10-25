@@ -184,7 +184,7 @@ gives each platform one word:
 A platform moves to Supported only on evidence, on the current Godot pin:
 
 - its smoke path passed: local CI and the desktop demo smokes for a desktop
-  platform, the device matrix for a mobile one
+  platform, the device matrix for a mobile one, the browser matrix for Web
   ([Device and Browser Runs](device-runs.md)), recorded in the
   `evidence/gates.json` ledger that the
   [Gates Index](../reference/generated/gates.md) shows;
@@ -197,10 +197,10 @@ A platform moves to Supported only on evidence, on the current Godot pin:
 
 The runs, dates and devices go on [Platform Evidence](platform-evidence.md).
 The status word then changes in the same pull request on Requirements and
-Platform Status, in `README.md`, in the `AGENTS.md` baseline and in
-`CHANGELOG.md`. Never word a claim wider than the runs: a package zip that
-installs is not proof that exported games work, and a desktop pass says
-nothing about a device.
+Platform Status, in `README.md` and in `CHANGELOG.md`. Never word a claim
+wider than the device or browser runs validated: a package zip that installs
+is not proof that exported games work, and a desktop pass says nothing about
+a device.
 
 ## Cutting a Release
 

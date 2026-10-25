@@ -67,7 +67,8 @@ you type:
 
 Save the file under `kotlin-src/` in your Godot project, in a folder for its
 package: `kotlin-src/com/mygame/Player.kt`. Every script file declares a
-package. Then press **Build Scripts** in the Godot toolbar (see
+package, and is named after its class: `Player.kt` holds `class Player`,
+because Kanama finds a script's class by the file name. Then press **Build Scripts** in the Godot toolbar (see
 [Building Your Scripts](#building-your-scripts)) and attach the script as you
 would a `.gd` file: drag `Player.kt` from the FileSystem dock onto the node, or
 use **Attach Script** on the node and pick the file.
