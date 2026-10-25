@@ -1542,8 +1542,8 @@ fun kanamaIosRuntimeScriptResourceRpcConfigChannel(scriptHandle: Long, rpcConfig
 @CName("kanama_ios_runtime_script_instance_create")
 fun kanamaIosRuntimeScriptInstanceCreate(scriptHandle: Long, ownerObject: Long): Long =
   // Contain a throwing script constructor: an exception crossing this @CName export terminates the
-  // app. It is reported as a Godot script error with the Kotlin file:line, and 0 makes the shim hand
-  // Godot no instance (NULL), GDScript's answer for an instance it could not build; desktop's
+  // app. It is reported as a Godot script error with the Kotlin file:line, and 0 makes the shim
+  // hand Godot no instance (NULL), GDScript's answer for an instance it could not build; desktop's
   // KanamaScript.callCreateInternal does the same.
   try {
     KanamaIosRuntime.createScriptInstance(scriptHandle, ownerObject)
