@@ -31,8 +31,10 @@ temporary clone:
 scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7.2-stable
 ```
 
-For package validation, build the packaged artifacts and smoke them without a
-sibling Kanama checkout:
+For package validation, build the packaged artifacts (packaging needs the Android
+SDK; see [Release Process](release.md#desktop-kit)) and smoke them without a
+sibling Kanama checkout. Add `--android` to a smoke to export an APK from the
+package as well:
 
 ```sh
 ./gradlew packageDistributions

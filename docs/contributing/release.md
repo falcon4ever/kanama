@@ -20,6 +20,9 @@ kit and the local host store addon together with:
 ./gradlew packageDistributions
 ```
 
+Every package carries the Android runtime AAR, so packaging needs the Android
+SDK, NDK and CMake, or `-PkanamaAndroidPackageDir`; see [Desktop Kit](#desktop-kit).
+
 ### Desktop Kit
 
 A desktop kit is built per platform:
@@ -68,8 +71,8 @@ export from the kit alone, and check the APK (no device).
 
 Packaging builds the Android runtime AAR with the nested Android build, so it
 needs the Android SDK (`ANDROID_HOME`) with the NDK 29.0.14206865 and CMake
-3.22.1 packages, the ones [Export for Android](../exporting/android.md#requirements)
-lists. Without them, pass `-PkanamaAndroidPackageDir=<dir>`: a directory that
+3.22.1 packages ([Export for Android](../exporting/android.md#requirements)
+lists the SDK packages; CMake is the runtime build's own). Without them, pass `-PkanamaAndroidPackageDir=<dir>`: a directory that
 holds a `kanama-android` Maven tree of the same Kanama version
 (`<dir>/net/multigesture/kanama/kanama-android/<version>/`), such as the
 `addons/kanama/maven` of a kit built elsewhere, or the `kanama-android-maven`
