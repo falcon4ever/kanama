@@ -1039,7 +1039,7 @@ JVM_OBJECT_CALLS = "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt"
 case("runtime_smoke.sh (throwing script constructor)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt", "      retPtr.set(ADDRESS, 0, MemorySegment.NULL)\n      val handle = instance.address()\n",
            "      val handle = instance.address()\n")],
-     "missing pattern", "_instance_create stops writing NULL before it builds the instance: a script constructor that throws during set_script leaves Godot's return slot unwritten, and Godot crashes with signal 11 right after the script error (the Bulletmark port's finding)",
+     "[runtime_smoke] exit 1", "_instance_create stops writing NULL before it builds the instance: a script constructor that throws during set_script leaves Godot's return slot unwritten, and Godot crashes with signal 11 right after the script error (the Bulletmark port's finding)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("processor ScriptNameClashTest", ["./gradlew", "-p", ".", ":processor:test", "--tests", "*ScriptNameClashTest*"],
      [Edit("processor/src/main/kotlin/net/multigesture/kanama/processor/KanamaProcessor.kt",
