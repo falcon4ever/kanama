@@ -14,6 +14,7 @@ from pathlib import Path
 from generate_api_wrapper import (
     DESKTOP_COMPANION_SUFFIX,
     DESKTOP_HANDSHAPED,
+    DESKTOP_OBJECTCALLS,
     DESKTOP_ONLY_GENERATED,
     GAP_INDEX_PATH,
     IOS_COMPANION_SUFFIX,
@@ -27,6 +28,7 @@ from generate_api_wrapper import (
     SHARED_HAND_ROOT_FILES,
     TYPES_DIR,
     TreeResult,
+    desktop_actual_state,
     formatted_code_key,
     generated_companion_paths,
     ios_generated_region_key,
@@ -241,6 +243,13 @@ ADOPTED_CLASSES_WITH_VIRTUAL_SKIPS = (
     "XRInterfaceExtension",
 )
 VIRTUAL_SKIP_REASON = "internal/virtual callback methods are not emitted as public wrappers"
+# Methods of a class in the lists above that skip because their call shape has no ObjectCalls helper
+# yet, each with its reason (task 139 P5). The class stays held to "no other skip": a Godot bump that
+# gives a listed class a method of a new shape adds a row here (upgrade_godot.sh prints it) instead of
+# taking the whole class out of its list, which would let every later skip on it through unseen. A
+# row whose method generates again, or that names no listed class, fails as stale.
+PENDING_HELPER_SKIPS: dict[tuple[str, str], str] = {}
+_SKIP_METHOD_RE = re.compile(r"(\w+)\(")
 # Strip generated-doc KDoc blocks (single- OR multi-line) so the drift-gate compares wrapper
 # *behavior*, letting `sync_kdoc_from_godot_docs.py` own the prose independently. The lazy
 # `(?:(?!\*/).)*?` never spans two blocks. Single-line short docs (`/** text. Generated from
@@ -479,22 +488,82 @@ def _api_class_names() -> set[str]:
     return {cls["name"] for cls in data["classes"]}
 
 
-def check_adopted_skips(tree: TreeResult, class_name: str, allow_virtual_skips: bool = False) -> int:
-    """Adopted classes may only skip Godot virtual callbacks (override-registration design)."""
+def _skip_method(line: str) -> str:
+    match = _SKIP_METHOD_RE.search(line)
+    return match.group(1) if match else line
+
+
+def check_adopted_skips(
+    tree: TreeResult,
+    class_name: str,
+    allow_virtual_skips: bool = False,
+    baseline_methods: dict[str, set[str]] | None = None,
+    pending: list[str] | None = None,
+) -> int:
+    """Adopted classes may only skip Godot virtual callbacks (override-registration design).
+
+    A non-virtual skip listed in PENDING_HELPER_SKIPS is reported, not failed. With
+    [baseline_methods] (the previous Godot's methods per class, `--baseline-api`: an upgrade run) a
+    skip of a method the previous Godot did not have is reported too, as helper work the bump found
+    (appended to [pending]); a method that existed before and skips now is still a failure."""
     skips = tree.skips.get(class_name)
     if skips is None:
         print(f"[wrapper_generator] FAIL adopted class {class_name} is not in the generated tree", file=sys.stderr)
         return 1
-    if skips and not allow_virtual_skips:
-        print(f"[wrapper_generator] FAIL adopted source {class_name} has skipped methods", file=sys.stderr)
-        print("\n".join(skips), file=sys.stderr)
+    bad_skips = [line for line in skips if not (allow_virtual_skips and VIRTUAL_SKIP_REASON in line)]
+    failing: list[str] = []
+    for line in bad_skips:
+        method = _skip_method(line)
+        if (class_name, method) in PENDING_HELPER_SKIPS:
+            print(f"[wrapper_generator] pending helper: {class_name}.{method} skips "
+                  f"({PENDING_HELPER_SKIPS[(class_name, method)]})")
+        elif baseline_methods is not None and method not in baseline_methods.get(class_name, set()):
+            if pending is not None:
+                pending.append(f"{class_name}: {line}")
+        else:
+            failing.append(line)
+    if failing:
+        kind = "non-virtual skipped methods" if allow_virtual_skips else "skipped methods"
+        print(f"[wrapper_generator] FAIL adopted source {class_name} has {kind}", file=sys.stderr)
+        print("\n".join(failing), file=sys.stderr)
+        print("    add the helper shape, or a PENDING_HELPER_SKIPS row with its reason "
+              "(scripts/check_wrapper_generator.py); do not take the class out of its list", file=sys.stderr)
         return 1
-    if allow_virtual_skips:
-        bad_skips = [line for line in skips if VIRTUAL_SKIP_REASON not in line]
-        if bad_skips:
-            print(f"[wrapper_generator] FAIL adopted source {class_name} has non-virtual skipped methods", file=sys.stderr)
-            print("\n".join(bad_skips), file=sys.stderr)
-            return 1
+    return 0
+
+
+def stale_pending_skips(tree: TreeResult, listed: set[str]) -> list[str]:
+    """PENDING_HELPER_SKIPS rows whose class is in no list or whose method no longer skips."""
+    problems: list[str] = []
+    for (class_name, method), _reason in sorted(PENDING_HELPER_SKIPS.items()):
+        if class_name not in listed:
+            problems.append(f"{class_name}.{method}: {class_name} is in none of the adopted-class lists")
+        elif method not in {_skip_method(line) for line in tree.skips.get(class_name, [])}:
+            problems.append(f"{class_name}.{method}: generates now; delete the row")
+    return problems
+
+
+def baseline_api_methods(path: Path) -> dict[str, set[str]]:
+    """Method names per class of an `extension_api.json` (the previous Godot's, for `--baseline-api`)."""
+    import json
+
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {cls["name"]: {m["name"] for m in cls.get("methods") or []} for cls in data.get("classes", [])}
+
+
+def check_adoption(tree: TreeResult) -> int:
+    """Task 139 P5: every class of the API has a wrapper (ADOPTION_EXCLUDED names the exceptions).
+    `--write-tree` adopts a class the API gained, so a missing one means the tree was not re-adopted."""
+    from generate_api_wrapper import unadopted_api_classes
+    from wrapper_model import load_api_classes
+
+    missing = unadopted_api_classes(load_api_classes(ROOT / "extension_api.json"))
+    if missing:
+        print(f"[wrapper_generator] FAIL {len(missing)} Godot class(es) in extension_api.json have no wrapper: "
+              f"{', '.join(missing[:20])}{' ...' if len(missing) > 20 else ''}", file=sys.stderr)
+        print("    adopt them: python3 scripts/generate_api_wrapper.py --write-tree  (or list one in "
+              "ADOPTION_EXCLUDED in generate_api_wrapper.py with its reason)", file=sys.stderr)
+        return 1
     return 0
 
 
@@ -526,6 +595,17 @@ def check_single_tree(tree: TreeResult) -> int:
             # drift, layout is not. The member names and their parameter names are also held to
             # desktop's by scripts/check_objectcalls_parity.py, a local_ci stage.
             same = ios_generated_region_key(committed) == ios_generated_region_key(content)
+        elif rel == _rel(DESKTOP_OBJECTCALLS):
+            # Hand-written except for WHICH members carry `actual` (task 139 P4): that set is the
+            # generated expect's, and the regen toggles only the modifier. Compare the set, so a
+            # ktfmt re-wrap is not drift but a hand-added or hand-dropped `actual` is.
+            want = desktop_actual_state(content)[0]
+            have = desktop_actual_state(committed)[0]
+            same = want == have
+            for name, _params in sorted(want - have):
+                print(f"[wrapper_generator]     {rel}: {name} is in the expect but not `actual`", file=sys.stderr)
+            for name, _params in sorted(have - want):
+                print(f"[wrapper_generator]     {rel}: {name} is `actual` but not in the expect", file=sys.stderr)
         elif rel == _rel(OBJECTCALLS_EXPECT):
             # Under ktfmt like any hand-formatted source (the generator emits it unwrapped), so
             # compare with ktfmt's changes normalised away, as for the iOS region above.
@@ -1065,6 +1145,18 @@ def check_keep_reachable(tree: TreeResult) -> int:
 
 
 def main() -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--baseline-api",
+        type=Path,
+        help="the previous Godot's extension_api.json (upgrade_godot.sh passes HEAD's): a skip of a method "
+             "that Godot did not have is reported as pending helper work instead of failing its class's list",
+    )
+    args = parser.parse_args()
+    baseline = baseline_api_methods(args.baseline_api) if args.baseline_api else None
+
     if check_no_shared_api_dir() != 0:
         return 1
     name_constants = subprocess.run(
@@ -1086,12 +1178,36 @@ def main() -> int:
             return 1
 
     tree = regenerate_tree(ROOT / "extension_api.json")
+    pending: list[str] = []
+    rc = 0
     for class_name in ADOPTED_CLASSES + ADOPTED_RESOURCE_DOWNCAST_CLASSES + ADOPTED_SHELL_ONLY_CLASSES:
-        if check_adopted_skips(tree, class_name) != 0:
-            return 1
+        rc |= check_adopted_skips(tree, class_name, baseline_methods=baseline, pending=pending)
     for class_name in ADOPTED_CLASSES_WITH_HELPERS_AND_VIRTUAL_SKIPS + ADOPTED_CLASSES_WITH_VIRTUAL_SKIPS:
-        if check_adopted_skips(tree, class_name, allow_virtual_skips=True) != 0:
-            return 1
+        rc |= check_adopted_skips(tree, class_name, allow_virtual_skips=True, baseline_methods=baseline, pending=pending)
+    listed = set(
+        ADOPTED_CLASSES
+        + ADOPTED_RESOURCE_DOWNCAST_CLASSES
+        + ADOPTED_SHELL_ONLY_CLASSES
+        + ADOPTED_CLASSES_WITH_HELPERS_AND_VIRTUAL_SKIPS
+        + ADOPTED_CLASSES_WITH_VIRTUAL_SKIPS
+    )
+    stale = stale_pending_skips(tree, listed)
+    if stale:
+        print("[wrapper_generator] FAIL stale PENDING_HELPER_SKIPS rows:", file=sys.stderr)
+        for problem in stale:
+            print(f"    {problem}", file=sys.stderr)
+        rc = 1
+    if pending:
+        print(f"[wrapper_generator] PENDING {len(pending)} method(s) the new Godot added to an adopted-list class "
+              "skip for want of a helper (reported, not failed, under --baseline-api). Add the helper, or one "
+              "PENDING_HELPER_SKIPS row each in scripts/check_wrapper_generator.py:")
+        for line in pending:
+            cls, _, rest = line.partition(": ")
+            print(f'    ("{cls}", "{_skip_method(rest)}"): "{rest.split(": ", 1)[-1]}",')
+    if rc != 0:
+        return rc
+    if check_adoption(tree) != 0:
+        return 1
     if check_single_tree(tree) != 0:
         return 1
     if check_shared_tree_pointer() != 0:
