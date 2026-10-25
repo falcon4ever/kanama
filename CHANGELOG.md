@@ -52,7 +52,8 @@ SDK Path setting. `packageMobileAddonAndroid` and its runtime-only zip are gone.
 missing or half-unzipped addon stops the Gradle build with one line, and the Kanama Tools plugin offers
 **Sync Addon** when `kanama-scripts.jar` was built for another Kanama version than the addon. Fixed with
 it: Gradle's `build/` folder now carries a `.gdignore`, so the editor no longer registers KSP's generated
-`.kt` files as a second copy of each script class and exports no longer ship them; the kit's
+`.kt` files as a second copy of each script class and exports no longer ship them (the store addon's
+`addons/kanama/templates` folder, whose `HelloScript.kt` the editor registered the same way, gets one too); the kit's
 `project.godot` turns on the ETC2/ASTC texture import Android export needs; and the editor plugin's
 `plugin.cfg` states the Kanama version instead of `0.1`.
 
