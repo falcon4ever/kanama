@@ -1036,10 +1036,17 @@ case("runtime_smoke.sh", ["bash", "scripts/runtime_smoke.sh", GODOT],
      "missing pattern", "the example script no longer logs its scene-delivered properties",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 JVM_OBJECT_CALLS = "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt"
+KANAMA_SCRIPT = "src/jvmMain/kotlin/binding/KanamaScript.kt"
+CTOR_PLACEHOLDER = ("              placeholder = true\n              placeholder()\n", "              return\n")
 case("runtime_smoke.sh (throwing script constructor)", ["bash", "scripts/runtime_smoke.sh", GODOT],
-     [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt", "      retPtr.set(ADDRESS, 0, MemorySegment.NULL)\n      val handle = instance.address()\n",
-           "      val handle = instance.address()\n")],
-     "[runtime_smoke] exit 1", "_instance_create stops writing NULL before it builds the instance: a script constructor that throws during set_script leaves Godot's return slot unwritten, and Godot crashes with signal 11 right after the script error (the Bulletmark port's finding)",
+     [Edit(KANAMA_SCRIPT, "      retPtr.set(ADDRESS, 0, MemorySegment.NULL)\n      val handle = instance.address()\n",
+           "      val handle = instance.address()\n"),
+      Edit(KANAMA_SCRIPT, *CTOR_PLACEHOLDER)],
+     "[runtime_smoke] exit 134", "a script constructor that throws during set_script returns without writing _instance_create's return slot again: Godot uses the uninitialized slot as the instance and crashes with signal 11 right after the script error, so the smoke stops at the crash (the Bulletmark port's finding)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (throwing @Tool constructor)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit(KANAMA_SCRIPT, *CTOR_PLACEHOLDER)],
+     "missing pattern", "a @Tool script constructor that throws in the editor returns NULL instead of a placeholder: Godot drops the script from the node (get_script() reads through the instance) and saving the scene writes it without the script",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("processor ScriptNameClashTest", ["./gradlew", "-p", ".", ":processor:test", "--tests", "*ScriptNameClashTest*"],
      [Edit("processor/src/main/kotlin/net/multigesture/kanama/processor/KanamaProcessor.kt",

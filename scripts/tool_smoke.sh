@@ -41,6 +41,8 @@ if [[ "${KANAMA_TOOL_SMOKE_TRACE_INSTANCES:-0}" == "1" ]]; then
 else
   "$GODOT_BIN" --headless --editor --quit --path "$PROJECT_DIR_FOR_GODOT" >"$LOG_FILE" 2>&1
 fi
+# A @Tool script whose constructor throws, opened in the editor (constructor_error_tool_smoke.tscn).
+"$GODOT_BIN" --headless --editor --quit --path "$PROJECT_DIR_FOR_GODOT" res://constructor_error_tool_smoke.tscn >>"$LOG_FILE" 2>&1
 
 # See runtime_smoke.sh: the reason is restated after the log tail so it is the last thing
 # printed, rather than being buried under ~120 lines of Godot verbose output.
@@ -70,6 +72,13 @@ check_absent() {
 }
 
 check "registered class HelloKanama : Node"
+# The @Tool script's throwing constructor is a script error, and the node keeps the script and its
+# value through a repack (a save): Kanama gives it a placeholder instance. Before, Godot dropped the
+# script (get_script() reads through the instance) and a save wrote the scene without it.
+check "^SCRIPT ERROR: java\.lang\.IllegalStateException: kanama smoke: deliberate tool constructor failure$"
+check "\[kanama-smoke\] constructor_error_tool scene script=true rounds=7$"
+check "\[kanama-smoke\] constructor_error_tool attach script=true$"
+check "\[kanama-smoke\] constructor_error_tool saved pack=0 script=true rounds=true$"
 check "KanamaScript.construct kotlinClass=net\\.multigesture\\.kanama\\.example\\.HelloScript globalName=HelloScript"
 check "HelloKanama\\._ready\\(\\)"
 check "HelloScript\\(file\\)\\._ready health=99 speed=5\\.1 label=from_tscn"

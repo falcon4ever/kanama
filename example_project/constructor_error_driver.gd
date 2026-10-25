@@ -1,10 +1,10 @@
 extends Node
 
 # Attaches ConstructorErrorSmoke.kt, whose constructor throws, twice: once to a node in the tree and
-# once to a node that never enters it. Each attach must leave the node usable and without a script
-# instance (no `probe` method), and the process must reach the last line. The GDScript twin's
-# constructor fails too, but GDScript keeps its half-built instance (a run-time error does not abort
-# construction); a Kotlin constructor that threw leaves no object to keep.
+# once to a node that never enters it. Each attach must leave the node usable, with its script and an
+# inert placeholder instance (no `probe` method), and the process must reach the last line. The
+# GDScript twin's constructor fails too, but GDScript keeps its half-built live instance (a run-time
+# error does not abort construction); a Kotlin constructor that threw leaves no object to keep.
 func _ready() -> void:
 	var script: Script = load("res://ConstructorErrorSmoke.kt")
 	var in_tree := Node.new()
