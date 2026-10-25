@@ -211,8 +211,8 @@ The demos repository exposes:
 Android is Supported on Godot 4.7 stable (promoted from Experimental
 2026-07-14): the Pixel 7 debug demo matrix, an R8-minified release APK (via
 Kanama's PanamaPort fork), and the nine-demo Vulkan/Mobile renderer smoke have
-all passed, alongside debug breadth on three more models. Note that release
-builds require Android 13+ and packaged addons are runtime-only; see
+all passed, alongside debug breadth on three more models. Note that Android 13
+(API 33) is the minimum and packaged addons are runtime-only; see
 `docs/reference/version-support.md` for the support status and
 `docs/contributing/platform-evidence.md` for the evidence behind it.
 

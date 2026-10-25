@@ -427,6 +427,5 @@ Exports and custom resources work the same way on desktop and Android. iOS
 and Web cannot carry a few export types, and the build stops and names the
 property when you use one. iOS converts a value of the wrong type only for
 value types, `NodePath` and `Color`. iOS has no `newScriptInstance`, and on Web a custom
-resource's script object does not keep its resource alive. On Android 8 to 12
-the garbage collector does not release a resource you forget to close.
+resource's script object does not keep its resource alive.
 [Limitations](../reference/limitations.md) lists each case with its workaround.

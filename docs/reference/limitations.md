@@ -34,8 +34,6 @@ script. Most games use `@ScriptClass` only, as in
 
 | What does not work | Why | What to do instead |
 |---|---|---|
-| A release build crashes at startup on Android 12 and older; debug builds run there. | Release builds on those versions hit a constraint in PanamaPort, the library Kanama uses to call Godot on Android. | Set the release preset's **Min SDK** to `33` (Android 13), or ship a debug build to older phones. |
-| On Android 8 to 12, the garbage collector never releases a resource you forget to close. | Those versions lack the Java API Kanama uses to notice a dropped wrapper; this affects debug installs only, because release builds need Android 13. | `close()` or `use { }` what you load, as the [ownership rules](../game-dev/godot-api.md#resource-ownership) recommend. |
 | A script error in a minified release build names the callback, not the file and line. | R8, Android's release shrinker, removes the file and line information. | Reproduce the error in a debug build to get the line. |
 | Exporting needs a checkout of the Kanama repository; a project made from the release kit or the store addon cannot export to Android on its own. | The Android build compiles your scripts from the checkout. The prebuilt Android addon in a release carries the runtime only. | Install Kanama from a [source checkout](../getting-started/source-checkout.md) and run the Android install commands from it, as [Export for Android](../exporting/android.md) shows. |
 | Hot reload and the IntelliJ debugger do not work on a phone. | Kanama starts the reload watcher and the debugger port on desktop only. | Iterate and debug on desktop, then export. |

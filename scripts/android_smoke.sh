@@ -270,9 +270,10 @@ export_status=0
   --path "$DEMO_DIR" \
   --export-debug Android "$APK_PATH" 2>&1 | tee "$EXPORT_LOG" || export_status="${PIPESTATUS[0]}"
 # The Kanama Tools export guard prints this line, and ends the export, when a .kt script the export
-# uses does not bind in the export-time editor (desktop addon missing, or kanama-scripts.jar stale).
+# uses does not bind in the export-time editor (desktop addon missing, or kanama-scripts.jar stale), or
+# when the Android preset's Min SDK is below 33 or empty.
 if grep -q 'Kanama: Export stopped' "$EXPORT_LOG"; then
-  echo "[android_smoke] the Kanama export guard stopped the export: the export-time editor cannot bind the project's .kt scripts (see the 'Kanama: Export stopped' message above); log: $EXPORT_LOG" >&2
+  echo "[android_smoke] the Kanama export guard stopped the export: a .kt script does not bind in the export-time editor, or the preset's Min SDK is below 33 (the 'Kanama: Export stopped' message above names which); log: $EXPORT_LOG" >&2
   exit 1
 fi
 if [[ "$export_status" -ne 0 ]]; then
@@ -322,7 +323,7 @@ adb_retry shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 || true
 adb_retry shell input keyevent KEYCODE_WAKEUP >/dev/null 2>&1 || true
 # justified: best effort; a screen that stayed locked fails the launch/renderer/screenshot checks below.
 adb_retry shell wm dismiss-keyguard >/dev/null 2>&1 || true
-adb_retry shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null
+adb_retry shell monkey --pct-syskeys 0 -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null
 PACKAGE_LAUNCHED=1
 # Task 118: take the app's FIRST pid as soon as it appears and judge `logcat --pid <pid>` after the launch wait,
 # instead of requiring the process to be alive at the end of it (a demo may quit on its own; a crash is read
@@ -378,18 +379,11 @@ check_log "\\[kanama\\] SIGNAL SELFTEST: [1-9][0-9]* passed, 0 failed"
 check_log_absent "SIGNAL SELFTEST FAIL"
 check_log_absent "SIGNAL SELFTEST: [0-9]+ passed, [1-9][0-9]* failed"
 # task 138 item 6 -- the ownership self-test (OwnershipSelfTest.kt, shared desktop/Android code), switched
-# on above: owned wrappers a worker thread drops are released (or the row says the fallback is off, as on
-# Android 8-12, which has no java.lang.ref.Cleaner), 5 s of worker calls through fresh owned wrappers
-# while every frame collects end without a fault, and the getter microbench line (the fence's cost on ART).
-# The GC fallback exists from Android 13 (API 33, java.lang.ref.Cleaner): there the row must release every
-# wrapper and the stress row must run; "skipped" is accepted only below API 33.
-device_sdk="$(adb_retry shell getprop ro.build.version.sdk | tr -d '\r[:space:]')"
-if [[ "$device_sdk" =~ ^[0-9]+$ ]] && (( device_sdk >= 33 )); then
-  check_log "\\[kanama\\] OWNERSHIP SELFTEST worker-owned GC releases: created=10000 released=10000 leaked=0 "
-  check_log "\\[kanama\\] OWNERSHIP SELFTEST worker GC stress: seconds=[0-9]+ calls=[1-9][0-9]* faults=0"
-else
-  check_log "\\[kanama\\] OWNERSHIP SELFTEST worker-owned GC releases: (created=10000 released=10000 leaked=0 |skipped )"
-fi
+# on above: owned wrappers a worker thread drops are released, 5 s of worker calls through fresh owned
+# wrappers while every frame collects end without a fault, and the getter microbench line (the fence's
+# cost on ART). Every supported device has java.lang.ref.Cleaner (Android 13, API 33, is the minimum).
+check_log "\\[kanama\\] OWNERSHIP SELFTEST worker-owned GC releases: created=10000 released=10000 leaked=0 "
+check_log "\\[kanama\\] OWNERSHIP SELFTEST worker GC stress: seconds=[0-9]+ calls=[1-9][0-9]* faults=0"
 check_log "\\[kanama\\] OWNERSHIP SELFTEST getter microbench ns/call: fence_off=[0-9.]+ fence_on=[0-9.]+ "
 check_log "\\[kanama\\] OWNERSHIP SELFTEST: [1-9][0-9]* passed, 0 failed"
 check_log_absent "OWNERSHIP SELFTEST FAIL"

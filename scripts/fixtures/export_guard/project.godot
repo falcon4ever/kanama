@@ -1,5 +1,6 @@
 ; Fixture for scripts/export_guard_selftest.sh: one scene that attaches a Kotlin script, the
-; kanama_tools editor plugin (copied in by the self-test) and Web, Android (APK) and macOS presets.
+; kanama_tools editor plugin (copied in by the self-test) and Web, Android (APK), macOS and Android
+; Gradle (Min SDK 26) presets.
 config_version=5
 
 [application]

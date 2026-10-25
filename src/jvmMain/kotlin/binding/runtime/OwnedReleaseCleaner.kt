@@ -13,50 +13,27 @@ import net.multigesture.kanama.api.GD
  *
  * One shared `java.lang.ref.Cleaner` (one daemon thread, `kanama-owned-releases`) runs the cleanup
  * actions; the queue they feed is a `ConcurrentLinkedQueue` (lock-free). `java.lang.ref.Cleaner`
- * exists on every desktop JDK and on Android from API 33 (Android 13, the floor of Kanama's Android
- * release builds); on older Android debug installs [available] is false and `close()` stays the
- * only release. [register] runs on any thread (the cleaner and the queue are thread-agnostic). The
- * `Cleaner` type is touched only inside [JdkCleaner], which loads once the class is known to exist.
+ * exists on every desktop JDK and on Android from API 33 (Android 13, Kanama's Android minimum).
+ * [register] runs on any thread (the cleaner and the queue are thread-agnostic).
  */
 internal actual object OwnedReleaseCleaner {
-  private val cleaner: JdkCleaner? =
-    try {
-      Class.forName("java.lang.ref.Cleaner")
-      JdkCleaner()
-    } catch (_: ClassNotFoundException) {
-      null
-    } catch (_: LinkageError) {
-      null
+  private val cleaner: Cleaner =
+    Cleaner.create { runnable ->
+      Thread(runnable, "kanama-owned-releases").apply { isDaemon = true }
     }
 
   private val pending = ConcurrentLinkedQueue<PendingRelease>()
-
-  // Both or nothing (task 138 item 6): a wrapper built on a worker registers a release, which is
-  // only safe while ObjectCalls.keepReachable keeps it reachable through each engine call.
-  // `Reference.reachabilityFence` is on Android from API 28 and `Cleaner` from API 33, so on stock
-  // runtimes the second condition never decides; it keeps the race closed on one that has a
-  // Cleaner but no fence.
-  actual val available: Boolean
-    get() = cleaner != null && ObjectCalls.hasReachabilityFence
-
-  actual val unavailableReason: String
-    get() =
-      when {
-        cleaner == null -> "java.lang.ref.Cleaner needs Android 13 (API 33)"
-        !ObjectCalls.hasReachabilityFence -> "java.lang.ref.Reference.reachabilityFence is missing"
-        else -> ""
-      }
 
   actual val mechanism: String
     get() = "java.lang.ref.Cleaner"
 
   actual fun register(wrapper: Any, release: PendingRelease): Any? =
-    cleaner?.register(wrapper, release)
+    cleaner.register(wrapper, FireRelease(release))
 
   actual fun cancel(registration: Any?) {
     // Runs the (disarmed, so no-op) action now and drops the phantom reference, so a closed
     // wrapper costs the cleaner nothing more.
-    if (registration != null) cleaner?.cancel(registration)
+    (registration as? Cleaner.Cleanable)?.clean()
   }
 
   actual fun enqueue(release: PendingRelease) {
@@ -66,12 +43,11 @@ internal actual object OwnedReleaseCleaner {
   actual fun poll(): PendingRelease? = pending.poll()
 
   actual fun collectGarbage(timeoutMillis: Long) {
-    val cleaner = cleaner ?: return
     // Two rounds: a sentinel registered just before each System.gc() is unreachable at once, so
     // when its action has run the cleaner thread has processed that collection's references.
     repeat(2) {
       val done = CountDownLatch(1)
-      cleaner.registerSentinel(done)
+      cleaner.register(Any(), done::countDown)
       // Runtime.gc(), not System.gc(): ART ignores System.gc() unless a finalization ran since
       // the last one; Runtime.gc() always collects (on HotSpot the two are the same call).
       Runtime.getRuntime().gc()
@@ -95,25 +71,6 @@ internal actual object OwnedReleaseCleaner {
 
   actual fun ownerHasPlainScript(address: Long): Boolean =
     net.multigesture.kanama.binding.ScriptOwnerLinks.ownerHasPlainScript(address)
-
-  /** The `java.lang.ref.Cleaner` itself, isolated so a runtime without the class never loads it. */
-  private class JdkCleaner {
-    private val cleaner: Cleaner =
-      Cleaner.create { runnable ->
-        Thread(runnable, "kanama-owned-releases").apply { isDaemon = true }
-      }
-
-    fun register(wrapper: Any, release: PendingRelease): Cleaner.Cleanable =
-      cleaner.register(wrapper, FireRelease(release))
-
-    fun cancel(registration: Any) {
-      (registration as Cleaner.Cleanable).clean()
-    }
-
-    fun registerSentinel(done: CountDownLatch) {
-      cleaner.register(Any(), done::countDown)
-    }
-  }
 
   /** The cleanup action: holds the release, never the wrapper. */
   private class FireRelease(private val release: PendingRelease) : Runnable {

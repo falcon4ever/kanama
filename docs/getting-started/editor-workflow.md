@@ -196,6 +196,11 @@ the shipping page for your platform shows, and export again. Turn the check
 off with `kanama/tools/export_guard_enabled` only to export knowingly without
 those scripts.
 
+An Android export stops the same way when the preset's **Min SDK** is below
+`33` or empty, because Kanama needs Android 13 or newer. The Export dialog
+also shows the warning on the Min SDK field. Set it to `33` under **Gradle
+Build**.
+
 ## On Other Platforms
 
 On **Windows**, run `.\gradlew.bat` wherever this page says `./gradlew`.

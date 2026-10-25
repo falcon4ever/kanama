@@ -349,8 +349,8 @@ In short:
   emitter is freed, a one-shot connection fires, or it is disconnected, on every
   platform. `SignalConnection.close()` is only needed to disconnect early. See
   [Signals and Await](../game-dev/signals.md).
-- A forgotten `close()` is a late release, not a leak, on desktop, Android 13
-  and newer, iOS and Web: once the garbage collector drops the wrapper, the
+- A forgotten `close()` is a late release, not a leak, on desktop, Android,
+  iOS and Web: once the garbage collector drops the wrapper, the
   reference is released on the main thread at the next frame. `close()`
   releases it at once, and only once. At shutdown a collection runs before
   Godot's leak report. The project setting `kanama/debug/log_gc_releases` logs
@@ -362,7 +362,7 @@ In short:
   wrapper it came from. `fromHandle` and wrapper constructors are borrowed
   views; `close()` on one releases nothing, and debug builds warn.
 - A script on a `RefCounted` owner, such as a custom resource, keeps its owner
-  alive, as in GDScript and C#, on desktop, Android 13 and newer, and iOS. See
+  alive, as in GDScript and C#, on desktop, Android and iOS. See
   [Keeping a Resource through Its Script](../game-dev/properties-resources.md#keeping-a-resource-through-its-script).
 - **Exported resource slots** are a fixed list, because Kanama keeps each one
   alive while the script holds it: `PackedScene`, `Texture`, `Texture2D`,

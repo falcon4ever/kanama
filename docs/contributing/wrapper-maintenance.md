@@ -532,8 +532,7 @@ The wrapper convention on desktop/Android:
 - **Only an owned wrapper registers the GC fallback** (task 132 D2-D5,
   `binding/runtime/OwnedReleases.kt`): a cleanup holding the raw handle and
   instance id (never the wrapper) through `OwnedReleaseCleaner` -- one shared
-  `java.lang.ref.Cleaner` on desktop/Android (absent before Android API 33:
-  the fallback is off there), `kotlin.native.ref.createCleaner` on iOS. The
+  `java.lang.ref.Cleaner` on desktop/Android, `kotlin.native.ref.createCleaner` on iOS. The
   cleanup only enqueues on a lock-free queue; the main thread drains it once
   per frame (`ScriptLanguage._frame` on desktop/Android,
   `KanamaIosRuntime.frame()` on iOS) and at SCENE deinitialization after a

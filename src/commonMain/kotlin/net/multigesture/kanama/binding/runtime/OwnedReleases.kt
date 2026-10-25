@@ -104,10 +104,6 @@ internal object OwnedReleases {
         else -> null
       }
     val log = if (logGcReleases) ", logging GC releases" else ""
-    if (!OwnedReleaseCleaner.available) {
-      enabled = false
-      return "off (${OwnedReleaseCleaner.unavailableReason}); close() is the only release"
-    }
     enabled = forced ?: true
     return when {
       forced == false -> "off ($ENVIRONMENT_VARIABLE=${environment.trim()})"

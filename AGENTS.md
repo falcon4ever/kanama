@@ -13,8 +13,9 @@ release shape.
 - Desktop runtime/build JDK: JDK `25+`.
 - Mobile is Supported (4.7 stable), promoted from Experimental 2026-07-14 once
   the §7 mobile promotion bar went green. Android is device-validated across
-  four models (Pixel 7, Moto g 5G 2023, Galaxy S10+, Pixel 3 XL): debug
-  validated to Android 9, but **release builds require Android 13+**. iOS is
+  four models (Pixel 7, Moto g 5G 2023, Galaxy S10+, Pixel 3 XL), and
+  **Android 13 (API 33) is the minimum** for every build (plugin `minSdk`, the
+  export guard's Min SDK check). iOS is
   device-validated on iPhone 12 and iPhone 15 Pro. Carried caveats: packaged
   mobile addons are runtime-only (compiling project scripts needs the Kanama
   checkout), the Android release path depends on the JitPack PanamaPort fork,
@@ -316,7 +317,7 @@ gates); steps are in the upgrade runbook.
 
 Android is Supported (4.7 stable), but never widen a support claim past what
 the matching APK/emulator or device smoke path has actually validated — the
-release floor (Android 13+) and the runtime-only addon caveat both still hold.
+Android 13 (API 33) minimum and the runtime-only addon caveat both still hold.
 Use the Gradle AAR workflow documented in `docs/exporting/android.md`; do not
 infer Android support from desktop package success.
 

@@ -209,9 +209,10 @@ export_status=0
   --path "$DEMO_DIR" \
   --export-release Android "$APK_PATH" 2>&1 | tee "$EXPORT_LOG" || export_status="${PIPESTATUS[0]}"
 # The Kanama Tools export guard prints this line, and ends the export, when a .kt script the export
-# uses does not bind in the export-time editor (desktop addon missing, or kanama-scripts.jar stale).
+# uses does not bind in the export-time editor (desktop addon missing, or kanama-scripts.jar stale), or
+# when the Android preset's Min SDK is below 33 or empty.
 if grep -q 'Kanama: Export stopped' "$EXPORT_LOG"; then
-  echo "[android_minified] the Kanama export guard stopped the export: the export-time editor cannot bind the project's .kt scripts (see the 'Kanama: Export stopped' message above); log: $EXPORT_LOG" >&2
+  echo "[android_minified] the Kanama export guard stopped the export: a .kt script does not bind in the export-time editor, or the preset's Min SDK is below 33 (the 'Kanama: Export stopped' message above names which); log: $EXPORT_LOG" >&2
   exit 1
 fi
 if [[ "$export_status" -ne 0 ]]; then
@@ -253,7 +254,7 @@ fi
 "$ADB_BIN" logcat -c
 # justified: the app may not be running yet; the launch below and the pid check after it decide.
 "$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 || true
-"$ADB_BIN" shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null
+"$ADB_BIN" shell monkey --pct-syskeys 0 -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null
 PACKAGE_LAUNCHED=1
 # Task 118: take the app's FIRST pid as soon as it appears and judge `logcat --pid <pid>` after the launch wait,
 # instead of requiring the process to be alive at the end of it (a demo may quit on its own; a crash is read

@@ -213,9 +213,8 @@ internal object ScriptOwnerLinks {
     val instanceId = ObjectCalls.objectGetInstanceId(owner)
     if (instanceId >= 0L) return si
     val kotlinObject = si.kotlinObject
-    // No cleaner (Android before API 33) or the fallback off: no instance +1, no parking either,
-    // the pre-task-132 lifetime.
-    if (!OwnedReleaseCleaner.available || !enabled || !OwnedReleases.enabled) return si
+    // The fallback off: no instance +1, no parking either, the pre-task-132 lifetime.
+    if (!enabled || !OwnedReleases.enabled) return si
     val anchorable = kotlinObject is net.multigesture.kanama.api.KanamaScript<*>
     val link = ScriptOwnerLink(si, owner, instanceId, script, anchorable)
     if (anchorable) adopt(link, si) else plainScriptOwners += owner.address()
