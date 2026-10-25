@@ -1225,6 +1225,47 @@ case("tool_smoke.sh (export guard one-click clean-up)", ["bash", "scripts/tool_s
       Edit("example_project/addons/kanama_tools/kanama_export_guard.gd", *GUARD_ONE_CLICK_NAME)],
      "[export_guard_discard] FAIL: discard_export deleted", "the guard takes any export into the temp folder for a one-click deploy: a user's /tmp/game.apk would be deleted after a failed check",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+# The editor build loop (scripts/check_editor_build_loop.gd), Set Up Kanama Project
+# (scripts/check_editor_project_setup.gd) and the deleted-jar install check, all driven by tool_smoke.sh. A plugin
+# mutation goes into both copies of the plugin.
+def plugin_edit(old: str, new: str) -> list:
+    return [Edit("templates/starter/addons/kanama_tools/plugin.gd", old, new),
+            Edit("example_project/addons/kanama_tools/plugin.gd", old, new)]
+
+
+case("tool_smoke.sh (status light)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     plugin_edit("    if last_build_failed:\n        return STATUS_FAILED\n", "    if false:\n        return STATUS_FAILED\n"),
+     "status light after a failing build: expected failed", "the status light forgets a failed build: it must turn red after a failing build, not yellow or green",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (build on save on by default)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     plugin_edit("        settings.set_setting(SETTING_BUILD_ON_SAVE, true)\n", "        settings.set_setting(SETTING_BUILD_ON_SAVE, false)\n"),
+     "build on save is off by default", "the plugin creates the Build On Save editor setting switched off: a fresh editor must build on save",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (build on save builds once)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     plugin_edit('    return parent_path == "res://" and (name == "build" or name == "android")',
+                 '    return parent_path == "res://" and name == "android"'),
+     "the watcher took the build's own output under build/ for a save", "the watcher scans Gradle's build/ again: the .kt files KSP writes there make every build start another one",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (build ends with the editor)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     plugin_edit("        OS.kill(_build_pid)\n", "        pass\n"),
+     "still runs after the plugin left", "the plugin leaves its running build alone when it exits: a Gradle client would outlive the editor",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+SETUP_SH = "templates/store-addon/setup-kanama-project.sh"
+case("tool_smoke.sh (setup keeps existing files)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit(SETUP_SH, 'copy_file() {\n    src="$1"\n    dst="$2"\n    if [ -e "$dst" ] && [ "$force" -ne 1 ]; then',
+           'copy_file() {\n    src="$1"\n    dst="$2"\n    if false; then')],
+     "the setup overwrote the project's own settings.gradle.kts", "the setup script copies a template file over one the project already has: Set Up Kanama Project must never overwrite",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (setup adds nothing twice)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit(SETUP_SH, 'if [ -e "$project_dir/build/.gdignore" ]; then', "if false; then")],
+     "the second setup run added", "the setup script writes build/.gdignore on every run: a second Set Up Kanama Project must add nothing",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (deleted scripts jar restored)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit("build.gradle.kts",
+           "            installedFile.isFile &&\n              java.nio.file.Files.mismatch(details.file.toPath(), installedFile.toPath()) == -1L",
+           "            true")],
+     "installAddonJar did not restore a deleted kanama-scripts.jar", "installAddonJar skips the scripts jar whatever is installed: a deleted kanama-scripts.jar must come back with the next Build Scripts",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("export_guard_selftest.sh",["bash", "scripts/export_guard_selftest.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", "    if not problems.is_empty():\n        messages.append", "    if false:\n        messages.append")],
      "the stale export exited 0", "the export guard stops finding problems: a stale-jar export must still exit non-zero with the message (its own green and red exports are inside the self-test)",

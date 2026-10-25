@@ -215,6 +215,26 @@ if [[ "$discard_rc" -ne 0 ]] || ! grep -Fq "[export_guard_discard] PASS" "$LOG_F
   smoke_fail "export guard one-click clean-up test failed (exit $discard_rc)" "scripts/check_export_guard_discard.gd (log: $LOG_FILE.discard)"
 fi
 
+# Build Scripts in a project without its own Gradle build runs installAddonJar from the checkout. It skips
+# copying a jar that is byte-identical to the installed one, and Gradle then no longer counted that jar as
+# the task's output: once deleted, installAddonJar stayed UP-TO-DATE and the project had no scripts jar.
+# --rerun stands for the run where the jar came out identical (a runtime change, or a comment-only edit).
+INSTALL_PROJECT="$JDK_SCRATCH/install_project"
+mkdir -p "$INSTALL_PROJECT"
+printf 'config_version=5\n' >"$INSTALL_PROJECT/project.godot"
+install_args=(-p "$ROOT_DIR" installAddonJar -PkanamaProjectDir="$INSTALL_PROJECT" -PkanamaProjectScriptsDir="$INSTALL_PROJECT")
+"$ROOT_DIR/gradlew" "${install_args[@]}" -q >"$LOG_FILE.install" 2>&1 &&
+  "$ROOT_DIR/gradlew" "${install_args[@]}" -q --rerun >>"$LOG_FILE.install" 2>&1 ||
+  smoke_fail "installAddonJar into a scratch project failed" "$LOG_FILE.install"
+for installed in kanama-scripts.jar kanama.jar; do
+  rm -f "$INSTALL_PROJECT/addons/kanama/$installed"
+  "$ROOT_DIR/gradlew" "${install_args[@]}" -q >>"$LOG_FILE.install" 2>&1 ||
+    smoke_fail "installAddonJar after deleting $installed failed" "$LOG_FILE.install"
+  if [[ ! -f "$INSTALL_PROJECT/addons/kanama/$installed" ]]; then
+    smoke_fail "installAddonJar did not restore a deleted $installed (the task stayed UP-TO-DATE)" "build.gradle.kts installAddonJar"
+  fi
+done
+
 # The editor build loop and the setup action (scripts/check_editor_build_loop.gd,
 # scripts/check_editor_project_setup.gd) run as editor plugins beside Kanama Tools in scratch projects.
 # They switch the Build On Save editor setting, so the editor's settings live in the scratch folder:
@@ -262,7 +282,7 @@ control="$KANAMA_FAKE_GRADLE_CONTROL"
 project="$2"
 echo "$3" >>"$control/runs"
 echo "fake gradle: $3 in $project with JAVA_HOME=$JAVA_HOME"
-mode=$(cat "$control/mode" 2>/dev/null || echo ok)
+mode=$(cat "$control/mode" 2>/dev/null || echo ok) # justified: no mode file means the default mode, ok
 if [ "$mode" = hang ]; then
   echo $$ >"$control/hang.pid"
   exec sleep 60
@@ -284,7 +304,7 @@ EOF
     (cd "$LOOP_PROJECT" && editor_env JAVA_HOME="$FAKE_JDK" KANAMA_FAKE_GRADLE_CONTROL="$LOOP_CONTROL" \
       "$GODOT_BIN" --headless --editor --path . --quit-after 30000) >"$LOG_FILE.loop" 2>&1 || loop_rc=$?
     if [[ -f "$LOOP_CONTROL/hang.pid" ]]; then
-      kill "$(cat "$LOOP_CONTROL/hang.pid")" 2>/dev/null || true
+      kill "$(cat "$LOOP_CONTROL/hang.pid")" 2>/dev/null || true # justified: clean-up only; the check itself asserts the plugin ended it
     fi
     if [[ "$loop_rc" -ne 0 ]] || ! grep -Fq "[build_loop] PASS" "$LOG_FILE.loop" || grep -Fq "SCRIPT ERROR" "$LOG_FILE.loop"; then
       grep -E "build_loop|kanama:tools|SCRIPT ERROR|ERROR:|at: " "$LOG_FILE.loop" >&2 || tail -n 60 "$LOG_FILE.loop" >&2

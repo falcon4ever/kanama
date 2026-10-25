@@ -132,8 +132,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_bootstrap_jdk_resolution.sh:23` | `if ! command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/check_bootstrap_jdk_resolution.sh:31` | `REAL_JDK="$(/usr/libexec/java_home -v 25 2>/dev/null \|\| true)"` | justified: no JDK 25 leaves REAL_JDK empty, which the "need a real JDK 25+" check just below turns into exit 2. |
 | `scripts/check_expect_no_defaults.py:155` | `except (Unparsed, ValueError):` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_exported_scene_properties_selftest.sh:55` | `printf '%s\n' "$green" \| grep -E '^\[check_exported_scenes\]' \| sed 's/^/ /' \|\| true` | justified: echoing the evidence lines; the assertions on "$green" follow. |
-| `scripts/check_exported_scene_properties_selftest.sh:90` | `printf '%s\n' "$red" \| grep -E '^\[check_exported_scenes\] FAIL' \| sed 's/^/ /' \|\| true` | justified: echoing the evidence lines; the assertion on "$red" follows. |
+| `scripts/check_exported_scene_properties_selftest.sh:57` | `printf '%s\n' "$green" \| grep -E '^\[check_exported_scenes\]' \| sed 's/^/ /' \|\| true` | justified: echoing the evidence lines; the assertions on "$green" follow. |
+| `scripts/check_exported_scene_properties_selftest.sh:92` | `printf '%s\n' "$red" \| grep -E '^\[check_exported_scenes\] FAIL' \| sed 's/^/ /' \|\| true` | justified: echoing the evidence lines; the assertion on "$red" follows. |
 | `scripts/check_gate_evidence.py:63` | `except ValueError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_gate_evidence.py:76` | `except json.JSONDecodeError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_ios_shim_faults.py:276` | `except Exception as exc:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -172,8 +172,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:205` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:247` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:249` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1424` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:1498` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1469` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1543` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:682` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:725` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -254,12 +254,12 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/package_install_smoke.sh:135` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
 | `scripts/package_install_smoke.sh:156` | `if command -v xattr >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/package_install_smoke.sh:158` | `xattr -dr com.apple.quarantine "$project_dir" 2>/dev/null \|\| true` | justified: clearing quarantine is best effort; a quarantined binary that cannot load fails the Godot launch below. |
-| `scripts/package_install_smoke.sh:363` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/package_install_smoke.sh:381` | `pkill -TERM -P "$pid" 2>/dev/null \|\| true` | justified: the command may have exited between the sleep and the kill. |
-| `scripts/package_install_smoke.sh:383` | `kill -TERM "$pid" 2>/dev/null \|\| true` | justified: as above. |
-| `scripts/package_install_smoke.sh:388` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
-| `scripts/package_install_smoke.sh:390` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
-| `scripts/package_install_smoke.sh:392` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
+| `scripts/package_install_smoke.sh:362` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/package_install_smoke.sh:380` | `pkill -TERM -P "$pid" 2>/dev/null \|\| true` | justified: the command may have exited between the sleep and the kill. |
+| `scripts/package_install_smoke.sh:382` | `kill -TERM "$pid" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/package_install_smoke.sh:387` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
+| `scripts/package_install_smoke.sh:389` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/package_install_smoke.sh:391` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
 | `scripts/record_gate_evidence.py:40` | `except (OSError, subprocess.CalledProcessError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/runtime_smoke.sh:30` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/runtime_smoke.sh:40` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar -PkanamaApiExercise=true >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
@@ -279,6 +279,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/tool_smoke.sh:29` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:37` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/tool_smoke.sh:143` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/tool_smoke.sh:285` | `mode=$(cat "$control/mode" 2>/dev/null \|\| echo ok)` | justified: no mode file means the default mode, ok |
+| `scripts/tool_smoke.sh:307` | `kill "$(cat "$LOOP_CONTROL/hang.pid")" 2>/dev/null \|\| true` | justified: clean-up only; the check itself asserts the plugin ended it |
 | `scripts/upgrade_godot.sh:150` | `restore="$(git -C "$ROOT_DIR" diff --name-only --diff-filter=MDT HEAD \| grep -vxF "$pins" \|\| true)"` | justified: grep -v exits 1 when every changed file is a pin file, which leaves nothing to restore. |
 | `scripts/upgrade_godot.sh:162` | `left="$(git -C "$ROOT_DIR" status --porcelain \| grep -vc '^??' \|\| true)"` | justified: grep -c prints 0 and exits 1 when no tracked change is left, which is the reset's goal. |
 | `scripts/upgrade_godot.sh:206` | `BIN_VERSION="$(run_with_timeout "${KANAMA_GODOT_DUMP_TIMEOUT:-300}" "$GODOT_BIN" --version 2>/dev/null \| grep ` | justified: a binary that prints no version leaves BIN_VERSION empty, which fails the pin comparison just below. |
