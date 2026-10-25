@@ -15,7 +15,8 @@ import net.multigesture.kanama.api.Node
  */
 @Tool
 @ScriptClass(attachTo = "Node")
-class ToolConstructorErrorSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
+class ToolConstructorErrorSmoke(godotObject: GodotHandle) :
+  KanamaScript<Node>(godotObject, ::Node) {
   @Export var rounds: Long = 3
 
   val budget: Long = fail()
