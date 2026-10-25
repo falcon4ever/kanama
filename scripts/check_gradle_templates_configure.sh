@@ -14,12 +14,19 @@
 #   2. `./gradlew tasks --all` configures (no dependency resolution, no compile),
 #   3. every task the getting-started and shipping pages and the README Quick Start tell the user to run in a project exists there,
 #      and every task they tell the user to run in the Kanama checkout exists in the repo build.
-# The templates are used as shipped (only @KANAMA_VERSION@ is substituted, as the packaging tasks do).
+# The templates are used as shipped (only @KANAMA_VERSION@ is substituted, as the packaging tasks do). The Kanama Gradle
+# plugin comes from addons/kanama/maven as in a kit: this gate publishes it from the checkout and copies it there.
+#
+# 4. The version lock (task 143 item 1): settings.gradle.kts takes the plugin's version from addons/kanama/kanama.version.
+#    A missing file, a version the addon's Maven repository lacks (a half-unzipped addon), and a plugin version pinned
+#    by hand that disagrees with the file each stop the build with their one line.
 #
 # Needs network the first time (the Kotlin and KSP plugins come from the plugin portal).
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=scripts/portable.sh
+source "$ROOT_DIR/scripts/portable.sh"
 TAG="[check_gradle_templates_configure]"
 
 TMP_ROOT="${TMPDIR:-/tmp}"
@@ -97,6 +104,22 @@ PY
 grep -q '^project ' "$documented" || fail "no project-side ./gradlew command found in the docs (scan is vacuous)"
 grep -q '^repo ' "$documented" || fail "no checkout-side ./gradlew command found in the docs (scan is vacuous)"
 
+# The Kanama Gradle plugin, published from this checkout, as each layout's addons/kanama/maven carries it.
+KANAMA_VERSION="$(sed -n 's/^version = "\(.*\)"$/\1/p' "$ROOT_DIR/build.gradle.kts")"
+[[ -n "$KANAMA_VERSION" ]] || fail "no version = \"...\" line in build.gradle.kts"
+plugin_log="$WORK/plugin.publish.log"
+if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon -q :gradle-plugin:publishAllPublicationsToKanamaPackageRepository \
+  >"$plugin_log" 2>&1; then
+  fail "publishing the Kanama Gradle plugin failed:" "$plugin_log"
+fi
+add_kanama_plugin() {
+  local maven="$1/addons/kanama/maven/net/multigesture/kanama" artifact
+  mkdir -p "$maven"
+  for artifact in kanama-gradle-plugin net.multigesture.kanama.gradle.plugin; do
+    cp -R "$ROOT_DIR/build/package/maven/net/multigesture/kanama/$artifact" "$maven/"
+  done
+}
+
 # check_tasks <name> <dir> <context>: the layout configures and has every documented <context> task.
 check_tasks() {
   local name="$1" dir="$2" context="$3" log="$WORK/$1.tasks.log"
@@ -136,6 +159,8 @@ for file in project.godot main.tscn settings.gradle.kts build.gradle.kts kotlin-
   addons/kanama/kanama-project.gradle.kts addons/kanama_tools/plugin.cfg; do
   [[ -f "$starter/$file" ]] || fail "createStarterProject wrote no $file"
 done
+[[ -f "$starter/addons/kanama/kanama.version" ]] || fail "createStarterProject wrote no addons/kanama/kanama.version"
+add_kanama_plugin "$starter"
 check_wrapper "source-checkout starter" "$starter"
 check_tasks "source-checkout starter" "$starter" project
 
@@ -145,14 +170,16 @@ store="$WORK/store"
 template="$store/addons/kanama/templates/release-kit"
 mkdir -p "$template/kotlin-src" "$template/gradle"
 for file in settings.gradle.kts build.gradle.kts README.md; do
-  sed 's/@KANAMA_VERSION@/0.0.0/g' "$ROOT_DIR/templates/release-kit/$file" >"$template/$file"
+  sed "s/@KANAMA_VERSION@/$KANAMA_VERSION/g" "$ROOT_DIR/templates/release-kit/$file" >"$template/$file"
 done
 cp "$ROOT_DIR/templates/starter/HelloScript.kt" "$template/kotlin-src/HelloScript.kt"
 cp "$ROOT_DIR/gradlew" "$ROOT_DIR/gradlew.bat" "$template/"
 chmod +x "$template/gradlew"
 cp -R "$ROOT_DIR/gradle/wrapper" "$template/gradle/wrapper"
-sed 's/@KANAMA_VERSION@/0.0.0/g' "$ROOT_DIR/templates/consumer-gradle/kanama-project.gradle.kts" \
-  >"$store/addons/kanama/kanama-project.gradle.kts"
+cp "$ROOT_DIR/templates/consumer-gradle/kanama-project.gradle.kts" "$store/addons/kanama/kanama-project.gradle.kts"
+sed "s/@KANAMA_VERSION@/$KANAMA_VERSION/g" "$ROOT_DIR/templates/consumer-gradle/kanama.version" \
+  >"$store/addons/kanama/kanama.version"
+add_kanama_plugin "$store"
 cp "$ROOT_DIR/templates/store-addon/setup-kanama-project.sh" "$store/addons/kanama/setup-kanama-project.sh"
 printf '%s\n' 'config_version=5' '' '[application]' '' 'config/name="Existing"' >"$store/project.godot"
 setup_log="$WORK/store.setup.log"
@@ -162,4 +189,32 @@ fi
 check_wrapper "store-addon project" "$store"
 check_tasks "store-addon project" "$store" project
 
-echo "$TAG PASS starter, store-addon project and repo build configure; $(wc -l <"$documented" | tr -d ' ') documented ./gradlew commands exist where the docs run them"
+# 4. The version lock, on copies of the starter: each broken state stops the build with its one line.
+# expect_lock_failure <case> <dir> <text>: configuring <dir> fails and prints <text>.
+expect_lock_failure() {
+  local name="$1" dir="$2" text="$3" log="$WORK/lock.$1.log"
+  if (cd "$dir" && ./gradlew --no-daemon -q tasks >"$log" 2>&1); then
+    fail "version lock: $name configured; it must stop the build" "$log"
+  fi
+  grep -Fq -- "$text" "$log" || fail "version lock: $name did not fail with the line \"$text\":" "$log"
+}
+lock="$WORK/lock-missing"
+cp -R "$starter" "$lock"
+rm "$lock/addons/kanama/kanama.version"
+expect_lock_failure missing "$lock" "Kanama addon not found: addons/kanama/kanama.version is missing."
+lock="$WORK/lock-unpublished"
+cp -R "$starter" "$lock"
+printf '9.9.9\n' >"$lock/addons/kanama/kanama.version"
+expect_lock_failure unpublished "$lock" "Kanama addon is incomplete: addons/kanama/maven has no Kanama 9.9.9."
+# An existing build whose own settings.gradle.kts pins the plugin by hand: the plugin itself refuses an addon of
+# another version.
+lock="$WORK/lock-pinned"
+cp -R "$starter" "$lock"
+printf '%s\n' 'pluginManagement { repositories { maven { url = uri("addons/kanama/maven") }; gradlePluginPortal() } }' \
+  'rootProject.name = "pinned"' >"$lock/settings.gradle.kts"
+sed_inplace "$lock/build.gradle.kts" "s/id(\"net.multigesture.kanama\")/id(\"net.multigesture.kanama\") version \"$KANAMA_VERSION\"/"
+grep -Fq "version \"$KANAMA_VERSION\"" "$lock/build.gradle.kts" || fail "version lock: could not pin the plugin in the copy's build.gradle.kts"
+printf '9.9.9\n' >"$lock/addons/kanama/kanama.version"
+expect_lock_failure pinned "$lock" "The Kanama Gradle plugin is $KANAMA_VERSION but the addon is 9.9.9"
+
+echo "$TAG PASS starter, store-addon project and repo build configure; the version lock stops 3 broken states; $(wc -l <"$documented" | tr -d ' ') documented ./gradlew commands exist where the docs run them"
