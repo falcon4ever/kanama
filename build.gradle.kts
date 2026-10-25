@@ -975,13 +975,8 @@ tasks.register<Zip>("packageStoreNativeArtifact") {
   from(prepareStoreNativeArtifact)
 }
 
-// The Gradle project shape of a new Kanama game: the release-kit project and Gradle files, the
-// Gradle wrapper, kotlin-src/HelloScript.kt, the editor tools and the consumer build script that
-// declares Kanama's repositories, dependencies and `buildScripts`. The desktop kit zips it and
-// createStarterProject copies it, so a starter made from a source checkout is the same IntelliJ-
-// importable Gradle project as a kit (installAddonJar then adds the runtime and addons/kanama/maven).
-// Each adds its own README.md: the kit's speaks of downloaded zips, the starter's of the checkout.
-// Godot need not scan the addon's Maven repository (thousands of files, none a Godot resource).
+// An empty .gdignore for the addon folders Godot must not scan: the Maven repository (thousands of
+// files, none a Godot resource) and the store addon's templates.
 val packageMavenGdignore by
   tasks.registering {
     val out = layout.buildDirectory.file("generated/package-maven-gdignore/.gdignore")
@@ -1006,6 +1001,12 @@ fun CopySpec.kanamaVersionSubstitution() {
   filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
 }
 
+// The Gradle project shape of a new Kanama game: the release-kit project and Gradle files, the
+// Gradle wrapper, kotlin-src/HelloScript.kt, the editor tools and the consumer build script that
+// declares Kanama's repositories, dependencies and `buildScripts`. The desktop kit zips it and
+// createStarterProject copies it, so a starter made from a source checkout is the same IntelliJ-
+// importable Gradle project as a kit (installAddonJar then adds the runtime and addons/kanama/maven).
+// Each adds its own README.md: the kit's speaks of downloaded zips, the starter's of the checkout.
 val kanamaGradleProjectSpec = copySpec {
   from(layout.projectDirectory.dir("templates/release-kit")) {
     exclude("README.md")
@@ -1118,6 +1119,9 @@ tasks.register<Zip>("packageStoreAddon") {
   }
   from(packageMavenRepositoryDir) { into("addons/kanama/maven") }
   from(packageMavenGdignore) { into("addons/kanama/maven") }
+  // The template's kotlin-src/HelloScript.kt is the setup script's input, not a resource: Godot
+  // would register it as a second HelloScript class and export it.
+  from(packageMavenGdignore) { into("addons/kanama/templates") }
   from(layout.projectDirectory.file("LICENSE")) { into("addons/kanama") }
   from(layout.projectDirectory.file("templates/store-addon/README.md")) { into("addons/kanama") }
   from(layout.projectDirectory.file("templates/store-addon/setup-kanama-project.sh")) {
