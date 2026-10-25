@@ -46,7 +46,8 @@ abstract class BuildAndroidScripts : DefaultTask() {
     if (!runtimeAar.isFile) {
       throw GradleException(
         "addons/kanama/maven has no Kanama Android runtime (kanama-android $version). " +
-          "Unzip the Kanama $version kit or addon into this project again."
+          "Unzip the Kanama $version kit or addon into this project again; in a project built " +
+          "from a Kanama checkout, run installAndroidPluginAar in the checkout instead."
       )
     }
     val sdk = AndroidSdk.find() ?: throw GradleException(AndroidSdk.NOT_FOUND)

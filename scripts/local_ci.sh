@@ -710,7 +710,7 @@ case "$HOST_UNAME" in
     exit 1
     ;;
 esac
-for artifact in kanama.jar kanama-scripts.jar kanama.gdextension "$native_artifact"; do
+for artifact in kanama.jar kanama-scripts.jar kanama.gdextension kanama.version kanama-scripts.version "$native_artifact"; do
   if [[ ! -f "$install_check_dir/addons/kanama/$artifact" ]]; then
     echo "[local_ci] missing installed artifact: $artifact" >&2
     exit 1
