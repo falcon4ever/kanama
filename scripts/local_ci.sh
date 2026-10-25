@@ -338,6 +338,10 @@ stage "Kotlin/KSP pin consistency"
 # root build.gradle.kts Kotlin/KSP versions; a bump that misses one fails here.
 python3 "$ROOT_DIR/scripts/check_kotlin_pins.py"
 
+stage "kit version pin lockstep"
+# A kit carries prebuilt artifacts beside build files that restate the checkout's pins (task 135 item 5).
+python3 "$ROOT_DIR/scripts/check_kit_version_pins.py"
+
 stage "GDExtension modernization + backend convergence"
 python3 "$ROOT_DIR/scripts/check_gdextension_modernization.py"
 

@@ -12,7 +12,6 @@ import org.gradle.process.ExecOperations
 /**
  * `./gradlew buildAndroidScripts`: what `installAndroidPluginAar` does in a Kanama checkout, from
  * the addon alone.
- *
  * 1. The project's `kotlin-src` and the registrars `buildScripts` generated (KSP) are audited,
  *    remapped for PanamaPort (the checkout's `KanamaAndroidRemap`) and written to the inner build.
  * 2. The inner build (`build/kanama/android`, rewritten on every run) compiles them into an Android
@@ -56,7 +55,9 @@ abstract class BuildAndroidScripts : DefaultTask() {
     val scripts = scriptsDirectory.get().asFile
     val ksp = kspDirectory.get().asFile
     if (!ksp.isDirectory) {
-      throw GradleException("No generated script registrars in $ksp: run ./gradlew buildScripts first.")
+      throw GradleException(
+        "No generated script registrars in $ksp: run ./gradlew buildScripts first."
+      )
     }
     val inner = innerBuildDirectory.get().asFile
     val sources = inner.resolve("src/main/kotlin")

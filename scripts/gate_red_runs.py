@@ -371,6 +371,22 @@ case("check_kotlin_pins.py (doc version)", py("check_kotlin_pins.py"),
 case("check_kotlin_pins.py (doc line reworded)", py("check_kotlin_pins.py"),
      [Edit("docs/reference/version-support.md", "The current source build uses Kotlin `", "The current source build is on Kotlin `")],
      "docs/reference/version-support.md: the kotlin pin is gone or reworded", "the version-support toolchain line is reworded: the check must fail, not pass on nothing")
+PANAMAPORT = "com.github.falcon4ever.PanamaPort:Core:0.1.5-kanama-r8.1"
+case("check_kit_version_pins.py", py("check_kit_version_pins.py"),
+     [Edit("templates/release-kit/build.gradle.kts", 'id("com.google.devtools.ksp") version "2.3.12"', 'id("com.google.devtools.ksp") version "2.3.11"')],
+     "templates/release-kit/build.gradle.kts: KSP 2.3.11, but build.gradle.kts builds the kit's artifacts with KSP 2.3.12", "the kit template pins another KSP than the checkout that builds its processor")
+case("check_kit_version_pins.py (PanamaPort)", py("check_kit_version_pins.py"),
+     [Edit("android/godot-plugin/scripts/build.gradle.kts", f'"{PANAMAPORT}"', '"com.github.falcon4ever.PanamaPort:Core:0.1.4"')],
+     "android/godot-plugin/scripts/build.gradle.kts: PanamaPort com.github.falcon4ever.PanamaPort:Core:0.1.4", "the scripts AAR compiles against another PanamaPort than the runtime AAR and the plugin's .gdap name")
+case("check_kit_version_pins.py (Min SDK)", py("check_kit_version_pins.py"),
+     [Edit("scripts/package_install_smoke.sh", 'gradle_build/min_sdk="33"', 'gradle_build/min_sdk="26"')],
+     "the smoke's preset has Min SDK 26, but the scripts AAR is built for 33", "the package smoke exports with a lower Min SDK than the plugin's inner build targets")
+case("check_kit_version_pins.py (Godot)", py("check_kit_version_pins.py"),
+     [Edit("templates/release-kit/project.godot", 'config/features=PackedStringArray("4.7")', 'config/features=PackedStringArray("4.6")')],
+     "config/features 4.6, but kanamaGodotVersion is 4.7.2.stable", "the kit's project.godot names an older Godot than the pin")
+case("check_kit_version_pins.py (plugin.cfg)", py("check_kit_version_pins.py"),
+     [Edit("templates/starter/addons/kanama_tools/plugin.cfg", 'version="@KANAMA_VERSION@"', 'version="0.1"')],
+     "the version must be version=\"@KANAMA_VERSION@\"", "the editor plugin's plugin.cfg states a literal version again (it was a stale 0.1)")
 case("check_ios_no_silent_stubs.py", py("check_ios_no_silent_stubs.py"),
      [Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nclass ZzRedRun {\n    fun redRun(): Boolean = false\n}\n")],
      "un-annotated silent stub", "a shared wrapper function whose whole body is a bare default, without a marker")
@@ -1223,6 +1239,28 @@ case("stageWebProject (undispatched virtual)", WEB_STAGE_STARTER,
      "is not dispatched by the Kanama Web backend", "the starter script gains an @OnShortcutInput: the Web build must stop on it through the user path, naming the virtual",
      pre=[WEB_MAKE_STARTER], timeout=1800, slow=True)
 
+case("check_gradle_templates_configure.sh (version lock, missing file)", ["bash", "scripts/check_gradle_templates_configure.sh"],
+     [Edit("templates/release-kit/settings.gradle.kts", "        if (!it.isFile) {", "        if (false) {")],
+     "version lock: missing did not fail with the line", "settings.gradle.kts stops naming a missing addons/kanama/kanama.version (Gradle then fails on a file read instead)", slow=True)
+case("check_gradle_templates_configure.sh (version lock, half-unzipped addon)", ["bash", "scripts/check_gradle_templates_configure.sh"],
+     [Edit("templates/release-kit/settings.gradle.kts", '    if (!File(settingsDir, "addons/kanama/maven/', '    if (false && !File(settingsDir, "addons/kanama/maven/')],
+     "version lock: unpublished did not fail with the line", "settings.gradle.kts stops checking that addons/kanama/maven has the version kanama.version names (Gradle then prints a plugin-not-found page)", slow=True)
+case("check_gradle_templates_configure.sh (version lock, pinned plugin)", ["bash", "scripts/check_gradle_templates_configure.sh"],
+     [Edit("gradle-plugin/src/main/kotlin/net/multigesture/kanama/gradle/KanamaPlugin.kt", "      if (addon != KanamaVersions.KANAMA) {", "      if (false) {")],
+     "version lock: pinned configured; it must stop the build", "the Kanama Gradle plugin applies to a project whose addon is another Kanama version", slow=True)
+case("tool_smoke.sh (addon version lock)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit("templates/starter/addons/kanama_tools/plugin.gd", "    if addon.is_empty() or scripts.is_empty() or addon == scripts:", "    if true:"),
+      Edit("example_project/addons/kanama_tools/plugin.gd", "    if addon.is_empty() or scripts.is_empty() or addon == scripts:", "    if true:")],
+     "addon version lock test failed", "the editor plugin stops noticing a kanama-scripts.jar built for another Kanama than the addon",
+     pre=[WARM_EXAMPLE], requires_env="KANAMA_GODOT_BIN", slow=True)
+# The desktop kit from this tree (packaging builds the Android runtime AAR too, so it needs the Android SDK), then the
+# smoke's pack export: without build/.gdignore Godot exports KSP's .kt registrars from build/.
+KIT_SMOKE = ["bash", "-c", './gradlew -p . -q packageDesktopKit && '
+             f'scripts/package_install_smoke.sh --desktop-kit build/distributions/kanama-desktop-kit-*.zip "{GODOT}"']
+case("package_install_smoke.sh (build/.gdignore)", KIT_SMOKE,
+     [Edit("templates/consumer-gradle/kanama-project.gradle.kts", '.configureEach { dependsOn(ignoreBuildDirInGodot) }', '.configureEach { }')],
+     "the export carries", "the kit build stops writing build/.gdignore: a pack export then carries KSP's generated .kt registrars from build/",
+     timeout=3600, requires_env="KANAMA_GODOT_BIN", slow=True)
 
 case("web/scaffold_selftest.sh", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_budgets.py" "$RESULT"; then', 'if false; then')],

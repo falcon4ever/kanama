@@ -2,7 +2,9 @@ package net.multigesture.kanama.gradle
 
 import java.io.File
 
-/** Edits of a project's `project.godot` that an export needs and the user should not have to make. */
+/**
+ * Edits of a project's `project.godot` that an export needs and the user should not have to make.
+ */
 internal object ProjectGodot {
   const val ETC2_ASTC_SETTING = "rendering/textures/vram_compression/import_etc2_astc"
 
@@ -19,9 +21,9 @@ internal object ProjectGodot {
   }
 
   /**
-   * Sets `section/key` (the part before the first `/` is the section) to [value], keeping every other
-   * line: the key's line is replaced, or the key is added at the end of its section, or the section
-   * is appended.
+   * Sets `section/key` (the part before the first `/` is the section) to [value], keeping every
+   * other line: the key's line is replaced, or the key is added at the end of its section, or the
+   * section is appended.
    */
   fun setSetting(text: String, setting: String, value: String): String {
     val section = setting.substringBefore('/')

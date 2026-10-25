@@ -4,8 +4,9 @@ import java.io.File
 
 /**
  * Finds the Android SDK the way a Godot user has already set it up: `ANDROID_HOME` (or
- * `ANDROID_SDK_ROOT`), then the **Android SDK Path** in Godot's own editor settings, then the folder
- * Android Studio installs to. A user who exports Android from Godot today needs no new setting.
+ * `ANDROID_SDK_ROOT`), then the **Android SDK Path** in Godot's own editor settings, then the
+ * folder Android Studio installs to. A user who exports Android from Godot today needs no new
+ * setting.
  */
 internal object AndroidSdk {
   data class Found(val dir: File, val source: String)
@@ -53,15 +54,18 @@ internal object AndroidSdk {
     val configDir =
       when {
         osName.startsWith("Mac") -> home.resolve("Library/Application Support/Godot")
-        osName.startsWith("Windows") -> env["APPDATA"]?.let { File(it).resolve("Godot") } ?: return null
+        osName.startsWith("Windows") ->
+          env["APPDATA"]?.let { File(it).resolve("Godot") } ?: return null
         else ->
-          (env["XDG_CONFIG_HOME"]?.takeIf { it.isNotBlank() }?.let(::File) ?: home.resolve(".config"))
+          (env["XDG_CONFIG_HOME"]?.takeIf { it.isNotBlank() }?.let(::File)
+              ?: home.resolve(".config"))
             .resolve("godot")
       }
     return configDir.resolve("editor_settings-$majorMinor.tres")
   }
 
-  private val SDK_PATH = Regex("""^export/android/android_sdk_path\s*=\s*"(.*)"\s*$""", RegexOption.MULTILINE)
+  private val SDK_PATH =
+    Regex("""^export/android/android_sdk_path\s*=\s*"(.*)"\s*$""", RegexOption.MULTILINE)
 
   fun editorSettingsSdkPath(text: String): String? =
     SDK_PATH.find(text)?.groupValues?.get(1)?.replace("\\\\", "\\")?.takeIf { it.isNotBlank() }

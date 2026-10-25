@@ -6,9 +6,9 @@ import java.io.File
  * The files that make Godot's Android export load Kanama: the two AARs under `android/plugins/`,
  * the `.gdap` that names them, and the Android lines of `addons/kanama/kanama.gdextension`.
  *
- * One copy for both writers: the Kanama Gradle plugin's `buildAndroidScripts` (a kit or
- * store-addon project) and the checkout's `installAndroidPluginAar` (the root buildSrc compiles
- * this directory too). Plain Kotlin, no Gradle API.
+ * One copy for both writers: the Kanama Gradle plugin's `buildAndroidScripts` (a kit or store-addon
+ * project) and the checkout's `installAndroidPluginAar` (the root buildSrc compiles this directory
+ * too). Plain Kotlin, no Gradle API.
  */
 object KanamaAndroidPluginFiles {
   const val PLUGINS_DIR = "android/plugins"

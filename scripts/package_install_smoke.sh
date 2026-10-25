@@ -8,8 +8,9 @@ usage: scripts/package_install_smoke.sh [options] /path/to/kanama-package.zip [/
 
 Unzips a packaged Kanama desktop kit or store addon into a temporary project,
 builds the starter Kotlin script without a sibling Kanama source checkout, and
-optionally launches Godot. With --android it also exports the project for
-Android from the package alone and checks the APK.
+optionally launches Godot: the starter must run, and a pack export must hold
+nothing from the Gradle build directory. With --android it also exports the
+project for Android from the package alone and checks the APK.
 
 Options:
   --desktop-kit                  Require a desktop-kit zip.
@@ -373,6 +374,74 @@ if ! grep -Fq "[kanama:starter] Hello from Kanama" "$log_file"; then
   exit 1
 fi
 
+# An export carries the project's resources and nothing from the Gradle build directory: without build/.gdignore
+# Godot imports KSP's .kt registrars as a second copy of every script class and ships them, and the Android
+# inner build's sources with them. A pack export needs no export template. The Android preset is the one
+# Export for Android tells the user to make, as Godot saves it.
+if [[ ! -f "$project_dir/export_presets.cfg" ]]; then
+  cat >"$project_dir/export_presets.cfg" <<'EOF'
+[preset.0]
+
+name="Pack"
+platform="Linux"
+runnable=false
+export_filter="all_resources"
+export_path=""
+
+[preset.0.options]
+
+[preset.1]
+
+name="Android"
+platform="Android"
+runnable=true
+export_filter="all_resources"
+export_path=""
+
+[preset.1.options]
+
+gradle_build/use_gradle_build=true
+gradle_build/min_sdk="33"
+architectures/arm64-v8a=true
+package/unique_name="net.multigesture.kanama.packagesmoke"
+package/name="Kanama Package Smoke"
+plugins/KanamaAndroid=true
+EOF
+fi
+
+# check_export_contents <zip-or-apk> <resource prefix>: no file from build/, no .kt outside kotlin-src/.
+check_export_contents() {
+  python3 - "$1" "$2" <<'PY'
+import sys
+import zipfile
+
+names = zipfile.ZipFile(sys.argv[1]).namelist()
+prefix = sys.argv[2]
+problems = []
+leaked = [n for n in names if n.startswith(prefix + "build/")]
+if leaked:
+    problems.append(f"the export carries {len(leaked)} file(s) from build/ (is build/.gdignore missing?): {', '.join(leaked[:4])}")
+stray = [n for n in names if n.endswith(".kt") and not n.startswith(prefix + "kotlin-src/")]
+if stray:
+    problems.append(f"the export carries .kt sources outside kotlin-src/: {', '.join(stray[:4])}")
+for problem in problems:
+    print(f"[package_install_smoke] {sys.argv[1].rsplit('/', 1)[-1]}: {problem}", file=sys.stderr)
+sys.exit(1 if problems else 0)
+PY
+}
+
+pack="$work_dir/kanama-package-smoke.zip"
+pack_log="$work_dir/godot.pack.log"
+if ! "$godot_bin" --headless --path "$project_dir_for_godot" --export-pack Pack "$pack" >"$pack_log" 2>&1 || [[ ! -f "$pack" ]]; then
+  tail -n 40 "$pack_log" >&2
+  echo "[package_install_smoke] FAIL -- the pack export failed (log: $pack_log)" >&2
+  exit 1
+fi
+if ! check_export_contents "$pack" ""; then
+  echo "[package_install_smoke] FAIL -- the exported pack holds files from the Gradle build: $pack" >&2
+  exit 1
+fi
+
 if [[ "$android_export" -eq 0 ]]; then
   echo "[package_install_smoke] PASS"
   exit 0
@@ -421,28 +490,6 @@ if ! grep -q '^android_aar_plugin = true' "$project_dir/addons/kanama/kanama.gde
   exit 1
 fi
 
-# The preset Export for Android tells the user to make, as Godot saves it.
-if [[ ! -f "$project_dir/export_presets.cfg" ]]; then
-  cat >"$project_dir/export_presets.cfg" <<'EOF'
-[preset.0]
-
-name="Android"
-platform="Android"
-runnable=true
-export_filter="all_resources"
-export_path=""
-
-[preset.0.options]
-
-gradle_build/use_gradle_build=true
-gradle_build/min_sdk="33"
-architectures/arm64-v8a=true
-package/unique_name="net.multigesture.kanama.packagesmoke"
-package/name="Kanama Package Smoke"
-plugins/KanamaAndroid=true
-EOF
-fi
-
 apk="$work_dir/kanama-package-smoke.apk"
 export_log="$work_dir/android-export.log"
 echo "[package_install_smoke] android: godot --headless --export-debug Android"
@@ -459,8 +506,7 @@ if [[ "$export_rc" -ne 0 || ! -f "$apk" ]]; then
 fi
 
 # The APK: the scripts and their registrars (the scripts AAR), the runtime and PanamaPort (the runtime AAR and
-# its remote dependency), the native bootstrap, and nothing from the Gradle build directory: an export that
-# carries build/ ships KSP's .kt registrars as resources (build/.gdignore missing).
+# its remote dependency), the native bootstrap, and nothing from the Gradle build directory.
 if ! python3 - "$apk" <<'PY'
 import sys
 import zipfile
@@ -481,18 +527,16 @@ for label, needle in (
         problems.append(f"no {label} ({needle.decode()}) in the APK's dex")
 if "lib/arm64-v8a/libkanama_bootstrap.so" not in names:
     problems.append("no lib/arm64-v8a/libkanama_bootstrap.so")
-leaked = [n for n in names if n.startswith("assets/build/")]
-if leaked:
-    problems.append(f"the export carries {len(leaked)} file(s) from build/ (is build/.gdignore missing?): {', '.join(leaked[:5])}")
-stray = [n for n in names if n.endswith(".kt") and not n.startswith("assets/kotlin-src/")]
-if stray:
-    problems.append(f"the export carries .kt sources outside kotlin-src/: {', '.join(stray[:5])}")
 for problem in problems:
     print(f"[package_install_smoke] APK: {problem}", file=sys.stderr)
 sys.exit(1 if problems else 0)
 PY
 then
   echo "[package_install_smoke] FAIL -- the exported APK is incomplete: $apk" >&2
+  exit 1
+fi
+if ! check_export_contents "$apk" "assets/"; then
+  echo "[package_install_smoke] FAIL -- the exported APK holds files from the Gradle build: $apk" >&2
   exit 1
 fi
 echo "[package_install_smoke] PASS (android: buildAndroidScripts and a headless export from the package alone)"
