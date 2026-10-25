@@ -165,13 +165,14 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/export_game_smoke.sh:153` | `buildNativeBootstrap syncExampleAddonJar jlinkGameRuntime >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/export_game_smoke.sh:298` | `system_root="$(cygpath -u "${SYSTEMROOT:-C:\\Windows}" 2>/dev/null \|\| printf '/c/Windows')"` | justified: the fallback is the standard Windows root; a wrong PATH makes the game fail to launch, which is the verdict. |
 | `scripts/export_game_smoke.sh:350` | `export_dir_native="$(cygpath -m "$export_dir" 2>/dev/null \|\| printf '%s' "$export_dir")"` | justified: without cygpath the path is already native; a wrong one fails the launch below. |
-| `scripts/gate_red_runs.py:157` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/gate_red_runs.py:177` | `except OSError:` | justified: a directory a gate filled meanwhile is the gate's own output; it is not ours to delete |
-| `scripts/gate_red_runs.py:196` | `except subprocess.TimeoutExpired:` | justified: reported as exit 124 with the partial output; the case then fails |
-| `scripts/gate_red_runs.py:199` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
-| `scripts/gate_red_runs.py:241` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
-| `scripts/gate_red_runs.py:243` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1312` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:163` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:183` | `except OSError:` | justified: a directory a gate filled meanwhile is the gate's own output; it is not ours to delete |
+| `scripts/gate_red_runs.py:202` | `except subprocess.TimeoutExpired:` | justified: reported as exit 124 with the partial output; the case then fails |
+| `scripts/gate_red_runs.py:205` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
+| `scripts/gate_red_runs.py:247` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
+| `scripts/gate_red_runs.py:249` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
+| `scripts/gate_red_runs.py:1336` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1407` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:682` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:725` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -258,23 +259,25 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/runtime_smoke.sh:230` | `grep -A 12 "Program crashed" "$API_EXERCISE_LOG" >&2 \|\| true` | justified: diagnostics before the verdict; a crash without Godot's crash banner still fails below |
 | `scripts/runtime_smoke.sh:612` | `wts_color_errors="$(grep -c 'Invalid color name: kanama_not_a_color' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
 | `scripts/runtime_smoke.sh:682` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
-| `scripts/runtime_smoke.sh:839` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/runtime_smoke.sh:843` | `kill -TERM "$sigterm_pid" 2>/dev/null \|\| true` | justified: it may have exited already; its exit status decides below |
-| `scripts/runtime_smoke.sh:845` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/runtime_smoke.sh:848` | `if kill -0 "$sigterm_pid" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/runtime_smoke.sh:849` | `kill -KILL "$sigterm_pid" 2>/dev/null \|\| true` | justified: the hang itself fails the leg (sigterm_rc=hang) |
-| `scripts/runtime_smoke.sh:852` | `set +e` | justified: the status of the wait below is the verdict, checked against 143 |
-| `scripts/runtime_smoke.sh:853` | `wait "$sigterm_pid" 2>/dev/null` | justified: its status is captured on the next line and checked |
-| `scripts/runtime_smoke.sh:862` | `elif compgen -G "$SIGTERM_ERR_DIR/hs_err_*" >/dev/null \|\| grep -q "A fatal error has been detected" "$SIGTERM_` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/runtime_smoke.sh:870` | `cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null \| head -n 40 >&2 \|\| true` | justified: diagnostics only; the leg fails just below |
+| `scripts/runtime_smoke.sh:846` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/runtime_smoke.sh:850` | `kill -TERM "$sigterm_pid" 2>/dev/null \|\| true` | justified: it may have exited already; its exit status decides below |
+| `scripts/runtime_smoke.sh:852` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/runtime_smoke.sh:855` | `if kill -0 "$sigterm_pid" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/runtime_smoke.sh:856` | `kill -KILL "$sigterm_pid" 2>/dev/null \|\| true` | justified: the hang itself fails the leg (sigterm_rc=hang) |
+| `scripts/runtime_smoke.sh:859` | `set +e` | justified: the status of the wait below is the verdict, checked against 143 |
+| `scripts/runtime_smoke.sh:860` | `wait "$sigterm_pid" 2>/dev/null` | justified: its status is captured on the next line and checked |
+| `scripts/runtime_smoke.sh:869` | `elif compgen -G "$SIGTERM_ERR_DIR/hs_err_*" >/dev/null \|\| grep -q "A fatal error has been detected" "$SIGTERM_` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/runtime_smoke.sh:877` | `cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null \| head -n 40 >&2 \|\| true` | justified: diagnostics only; the leg fails just below |
 | `scripts/scene_connection_lint.py:103` | `except OSError:` | justified: an unreadable script registers no methods, so every connection to it is reported missing |
 | `scripts/tool_smoke.sh:29` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:37` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/tool_smoke.sh:134` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/upgrade_godot.sh:96` | `BIN_VERSION="$("$GODOT_BIN" --version 2>/dev/null \| grep -E '^[0-9]' \| tail -n 1)"` | justified: a binary that prints no version leaves BIN_VERSION empty, which fails the pin comparison just below. |
-| `scripts/upgrade_godot.sh:129` | `DOCS_VERSION_PY="$(cd "$GODOT_DOCS_DIR/../.." 2>/dev/null && pwd)/version.py"` | justified: an unreachable docs dir yields a version.py path that does not exist, which fails loudly just below. |
-| `scripts/upgrade_godot.sh:168` | `unexpected="$(printf '%s\n' "$STATUS_BEFORE" \| grep -v '^??' \| grep -vE "$allowed_dirty" \| grep -v '^$' \|\| tru` | justified: grep -v exits 1 when it filters every line out, which is the clean case (no unexpected change). |
-| `scripts/upgrade_godot.sh:326` | `diff <(printf '%s\n' "$STATUS_BEFORE") <(printf '%s\n' "$STATUS_AFTER") >&2 \|\| true` | justified: diff exits 1 on a difference, which is the very thing being printed; the next line exits 1. |
+| `scripts/upgrade_godot.sh:149` | `BIN_VERSION="$(run_with_timeout "${KANAMA_GODOT_DUMP_TIMEOUT:-300}" "$GODOT_BIN" --version 2>/dev/null \| grep ` | justified: a binary that prints no version leaves BIN_VERSION empty, which fails the pin comparison just below. |
+| `scripts/upgrade_godot.sh:174` | `DOCS_VERSION_PY="$(cd "$GODOT_DOCS_DIR/../.." 2>/dev/null && pwd)/version.py"` | justified: an unreachable docs dir yields a version.py path that does not exist, which fails loudly just below. |
+| `scripts/upgrade_godot.sh:212` | `unexpected="$(printf '%s\n' "$STATUS_BEFORE" \| grep -v '^??' \| grep -vE "$allowed_dirty" \| grep -v '^$' \|\| tru` | justified: grep -v exits 1 when it filters every line out, which is the clean case (no unexpected change). |
+| `scripts/upgrade_godot.sh:236` | `TEMPLATES="$(find "$TEMPLATES" -maxdepth 1 -name '*.tpz' \| head -n 1 \|\| true)"` | justified: no .tpz in the directory leaves the path empty, which the -f test below reports. |
+| `scripts/upgrade_godot.sh:252` | `tpz_version="$(unzip -p "$TEMPLATES" templates/version.txt 2>/dev/null \| tr -d '[:space:]' \|\| true)"` | justified: an archive without templates/version.txt leaves the version empty, which the comparison below rejects. |
+| `scripts/upgrade_godot.sh:551` | `status_diff="$(diff <(printf '%s\n' "$STATUS_BEFORE") <(printf '%s\n' "$STATUS_AFTER") \|\| true)"` | justified: diff exits 1 on a difference, which is the very thing being recorded as a failure here. |
 | `scripts/validate_godot_api.py:232` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/validate_godot_api.py:254` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/validate_godot_api.py:280` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
