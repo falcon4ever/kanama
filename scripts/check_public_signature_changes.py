@@ -101,7 +101,7 @@ SNAPSHOT_HEADER = (
 @dataclass(frozen=True)
 class Surface:
     name: str
-    sources: tuple[str, ...]  # directories relative to the root, read recursively
+    sources: tuple[str, ...]  # directories relative to the root, read recursively, or single .kt files
     what: str  # one line for the snapshot header
     package: str = API_PACKAGE  # declarations in this package are named without it
     # Gradle tasks in the root build.gradle.kts whose `"""...""".trimMargin()` template IS a source
@@ -139,6 +139,19 @@ SURFACES = (
         "ios",
         ("src/iosMain/kotlin/net/multigesture/kanama/api",),
         "iOS only: the per-platform classes, the <Class>.ios.kt companions and the actuals",
+    ),
+    Surface(
+        "ios-seam",
+        # Task 135 item 5: the runtime declarations the processor's generated iOS script registry names.
+        # They were internal while that code compiled inside the runtime's module; a kit project compiles it
+        # in a module of its own against the prebuilt runtime klib, so they are public, each behind the
+        # ERROR-level @InternalKanamaIosApi opt-in that game code never writes. The processor and the klib
+        # ship together, so a change here is a change of the processor's output too.
+        ("src/iosMain/kotlin/net/multigesture/kanama/ios/KanamaIosScriptSeam.kt",),
+        "iOS only: the runtime declarations the generated iOS script registry calls, public (behind "
+        "@InternalKanamaIosApi) so a kit project's own build can compile that registry against the prebuilt "
+        "runtime klib; not for game code",
+        "net.multigesture.kanama.ios",
     ),
     Surface(
         "web",
@@ -1006,7 +1019,8 @@ def rendered_sources(root: Path, surface: Surface) -> list[tuple[str, str]]:
 def surface_files(root: Path, surface: Surface) -> list[Path]:
     files: list[Path] = []
     for source in surface.sources:
-        found = sorted((root / source).rglob("*.kt"))
+        path = root / source
+        found = [path] if path.is_file() else sorted(path.rglob("*.kt"))
         if not found:
             raise ParseError(f"{source}: no Kotlin sources (wrong --root, or the tree moved)")
         files += found

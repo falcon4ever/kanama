@@ -180,6 +180,7 @@ PLATFORM_ONLY_USES: dict[tuple[str, str], tuple[int, str]] = {
     ("scripts/local_ci.sh", "ldd"): (2, "Linux native bootstrap preflight, inside the `uname -s` = Linux branch (macOS has otool -L)"),
     ("scripts/local_ci.sh", "readelf"): (4, "same Linux-only preflight; probed with `command -v` because binutils may be absent"),
     ("scripts/package_install_smoke.sh", "xattr"): (2, "inside the `Darwin)` arm of the platform `case`: clears the macOS quarantine flag"),
+    ("scripts/package_install_smoke.sh", "xcrun"): (1, "in the `--ios` stage, which the option checks refuse off a Mac (`uname -s` is not Darwin): reads the built app's symbols"),
     ("scripts/export_game_assemble.sh", "codesign"): (2, "re-seals a macOS .app after the export; reached only for a macOS export target"),
     ("scripts/check_bootstrap_jdk_resolution.sh", "/usr/libexec/java_home"): (1, "behind `uname -s` = Darwin: finds a JDK 25 on a Mac (elsewhere JAVA_HOME / KANAMA_TEST_JDK)"),
     ("scripts/check_jdk_lookup_parity.sh", "/usr/libexec/java_home"): (1, "behind `uname -s` = Darwin: finds a JDK 25 on a Mac (elsewhere JAVA_HOME / KANAMA_TEST_JDK)"),

@@ -10,13 +10,12 @@ Unzips a packaged Kanama desktop kit or store addon into a temporary project,
 builds the starter Kotlin script without a sibling Kanama source checkout, and
 optionally launches Godot: the starter must run, and a pack export must hold
 nothing from the Gradle build directory. With --android it also exports the
-project for Android from the package alone and checks the APK.
+project for Android from the package alone and checks the APK; with --ios
+(on a Mac) it exports an Xcode project and builds it for the device SDK.
 
 Options:
   --desktop-kit                  Require a desktop-kit zip.
   --store-addon                  Require a store-addon zip.
-  --ios-addon                    Require an iOS mobile-addon zip (structure
-                                 checks only; device-free, no Godot needed).
   --android                      After the desktop checks, run the documented
                                  Android commands (buildAndroidScripts, then a
                                  headless Godot export) and check the APK holds
@@ -26,7 +25,15 @@ Options:
                                  templates, an Android SDK (ANDROID_HOME or
                                  Godot's editor setting) and the editor's Java
                                  SDK Path set for Godot's Android build. No device.
-  --require-all-store-platforms  Require all store-addon desktop native libs.
+  --ios                          After the desktop checks (and --android), run
+                                 the documented iOS commands (buildIosScripts,
+                                 then a headless Godot export of an Xcode
+                                 project) and build that project with xcodebuild
+                                 for the device SDK, unsigned. Needs a Mac with
+                                 Xcode, the Godot binary and Godot's iOS export
+                                 templates. No device.
+  --require-all-store-platforms  Require all store-addon desktop native libs
+                                 and the iOS runtime.
   --work-dir DIR                 Existing empty or non-existing workspace dir.
   --keep-work-dir                Do not delete a generated temporary workspace.
   --help, -h                     Show this help.
@@ -40,6 +47,7 @@ godot_bin=""
 package_kind="auto"
 require_all_store_platforms=0
 android_export=0
+ios_export=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -51,12 +59,12 @@ while [[ $# -gt 0 ]]; do
       package_kind="store-addon"
       shift
       ;;
-    --ios-addon)
-      package_kind="ios-addon"
-      shift
-      ;;
     --android)
       android_export=1
+      shift
+      ;;
+    --ios)
+      ios_export=1
       shift
       ;;
     --require-all-store-platforms)
@@ -112,6 +120,14 @@ if [[ -n "$godot_bin" && ! -x "$godot_bin" ]]; then
 fi
 if [[ "$android_export" -eq 1 && -z "$godot_bin" ]]; then
   echo "[package_install_smoke] --android needs the Godot binary: the APK is a real Godot export" >&2
+  exit 2
+fi
+if [[ "$ios_export" -eq 1 && -z "$godot_bin" ]]; then
+  echo "[package_install_smoke] --ios needs the Godot binary: the Xcode project is a real Godot export" >&2
+  exit 2
+fi
+if [[ "$ios_export" -eq 1 && "$(uname -s)" != "Darwin" ]]; then
+  echo "[package_install_smoke] --ios needs a Mac with Xcode" >&2
   exit 2
 fi
 
@@ -179,6 +195,7 @@ config_version=5
 
 config/name="Kanama Store Addon Smoke"
 run/main_scene="res://main.tscn"
+config/icon="res://icon.svg"
 config/features=PackedStringArray("4.7")
 
 [editor_plugins]
@@ -191,6 +208,11 @@ tools/kotlin_sources_dir="res://kotlin-src"
 tools/auto_build_on_save=false
 tools/auto_build_debounce_ms=800
 tools/reload_scene_after_sync=true
+EOF
+
+  # A Godot project has an app icon (the new-project wizard writes icon.svg); an iOS export stops without one.
+  cat >"$project_dir/icon.svg" <<'EOF'
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect width="128" height="128" fill="#478cbf"/></svg>
 EOF
 
   cat >"$project_dir/main.tscn" <<'EOF'
@@ -254,8 +276,6 @@ if [[ -f "$project_dir/project.godot" && -f "$project_dir/build.gradle.kts" ]]; 
   detected_kind="desktop-kit"
 elif [[ -f "$project_dir/addons/kanama/templates/release-kit/build.gradle.kts" ]]; then
   detected_kind="store-addon"
-elif [[ -d "$project_dir/addons/kanama/bin/ios" ]]; then
-  detected_kind="ios-addon"
 else
   echo "[package_install_smoke] could not detect package kind for: $zip_path" >&2
   exit 1
@@ -282,41 +302,14 @@ if [[ "$detected_kind" == "store-addon" ]]; then
     require_native_library "linux-x64"
     require_native_library "linux-arm64"
     require_native_library "windows-x64"
+    # The iOS runtime, which the macOS kit job builds.
+    store_version="$(tr -d '[:space:]' <"$project_dir/addons/kanama/kanama.version")"
+    check_file "addons/kanama/maven/net/multigesture/kanama/kanama-iosarm64/$store_version/kanama-iosarm64-$store_version.klib"
+    check_file "addons/kanama/maven/net/multigesture/kanama/kanama-ios-shim/$store_version/kanama-ios-shim-$store_version.zip"
   fi
 fi
 
 echo "[package_install_smoke] package kind: $detected_kind"
-
-if [[ "$detected_kind" == "ios-addon" ]]; then
-  # Device-free structure validation of the packaged iOS runtime (B3 design,
-  # §7 mobile promotion bar, internal task repo): both device xcframework variants with
-  # their arm64 static slices, the descriptor merge fragment, and the README
-  # carrying the script-compile caveat. Script compilation and on-device
-  # behavior stay covered by installIosAddon + ios_device_gate.sh.
-  for variant in debug release; do
-    check_file "addons/kanama/bin/ios/kanama_ios.$variant.xcframework/Info.plist"
-    check_file "addons/kanama/bin/ios/kanama_ios.$variant.xcframework/ios-arm64/libkanama_ios.a"
-    if find "$project_dir/addons/kanama/bin/ios/kanama_ios.$variant.xcframework" \
-        -type d -name "*simulator*" | grep -q .; then
-      echo "[package_install_smoke] packaged iOS addon must be device-only ($variant has a simulator slice)" >&2
-      exit 1
-    fi
-  done
-  check_file "kanama.gdextension-ios-entries.txt"
-  check_file "README.md"
-  for entry in "ios.debug.arm64" "ios.release.arm64"; do
-    if ! grep -q "^$entry = " "$project_dir/kanama.gdextension-ios-entries.txt"; then
-      echo "[package_install_smoke] descriptor fragment missing $entry entry" >&2
-      exit 1
-    fi
-  done
-  if ! grep -q "still requires a Kanama source" "$project_dir/README.md"; then
-    echo "[package_install_smoke] README lost the script-compile caveat" >&2
-    exit 1
-  fi
-  echo "[package_install_smoke] PASS (ios-addon structure checks)"
-  exit 0
-fi
 
 check_file "project.godot"
 check_file "build.gradle.kts"
@@ -435,6 +428,24 @@ architectures/arm64-v8a=true
 package/unique_name="net.multigesture.kanama.packagesmoke"
 package/name="Kanama Package Smoke"
 plugins/KanamaAndroid=true
+
+[preset.2]
+
+name="iOS"
+platform="iOS"
+runnable=false
+export_filter="all_resources"
+include_filter=""
+exclude_filter=""
+export_path=""
+
+[preset.2.options]
+
+architectures/arm64=true
+application/app_store_team_id="ABCDE12345"
+application/bundle_identifier="net.multigesture.kanama.packagesmoke"
+application/export_project_only=true
+application/min_ios_version="15.0"
 EOF
 fi
 
@@ -472,46 +483,59 @@ if ! check_export_contents "$pack" ""; then
   exit 1
 fi
 
-if [[ "$android_export" -eq 0 ]]; then
+if [[ "$android_export" -eq 0 && "$ios_export" -eq 0 ]]; then
   echo "[package_install_smoke] PASS"
   exit 0
 fi
 
-# --- Android from the package alone (task 135 item 5): the commands Export for Android documents. ---
+# check_scene_properties <label>: the scene check the export pages tell the user to run, as the package ships it.
+check_scene_properties() {
+  local scene_check_log="$work_dir/$1-scene-check.log"
+  check_file "addons/kanama/checks/check_exported_scene_properties.gd"
+  if ! run_bounded 600 "$godot_bin" --headless --path "$project_dir_for_godot" \
+    --script res://addons/kanama/checks/check_exported_scene_properties.gd -- --require-converted >"$scene_check_log" 2>&1; then
+    tail -n 40 "$scene_check_log" >&2
+    echo "[package_install_smoke] FAIL -- the exported scenes lost script properties, or the check did not run (log: $scene_check_log)" >&2
+    exit 1
+  fi
+}
 
-android_log="$work_dir/android.log"
-echo "[package_install_smoke] android: ./gradlew buildAndroidScripts"
-if ! run_bounded 1800 "$project_dir/gradlew" --no-daemon -p "$project_dir" buildAndroidScripts >"$android_log" 2>&1; then
-  tail -n 80 "$android_log" >&2
-  echo "[package_install_smoke] FAIL -- buildAndroidScripts failed (log: $android_log)" >&2
-  exit 1
-fi
-for file in KanamaAndroid.debug.aar KanamaAndroidScripts.debug.aar KanamaAndroid.gdap; do
-  check_file "android/plugins/$file"
-done
-if ! grep -q '^android_aar_plugin = true' "$project_dir/addons/kanama/kanama.gdextension"; then
-  echo "[package_install_smoke] buildAndroidScripts did not add the Android entries to kanama.gdextension" >&2
-  exit 1
-fi
+if [[ "$android_export" -eq 1 ]]; then
+  # --- Android from the package alone (task 135 item 5): the commands Export for Android documents. ---
 
-apk="$work_dir/kanama-package-smoke.apk"
-export_log="$work_dir/android-export.log"
-echo "[package_install_smoke] android: godot --headless --export-debug Android"
-rm -rf "$project_dir/.godot/exported"
-# --install-android-build-template is Project > Install Android Build Template; run headless it only takes
-# effect together with an export.
-export_rc=0
-run_bounded 1800 "$godot_bin" --headless --path "$project_dir_for_godot" --install-android-build-template \
-  --export-debug Android "$apk" >"$export_log" 2>&1 || export_rc=$?
-if [[ "$export_rc" -ne 0 || ! -f "$apk" ]]; then
-  tail -n 80 "$export_log" >&2
-  echo "[package_install_smoke] FAIL -- the Android export failed (exit $export_rc, log: $export_log)" >&2
-  exit 1
-fi
+  android_log="$work_dir/android.log"
+  echo "[package_install_smoke] android: ./gradlew buildAndroidScripts"
+  if ! run_bounded 1800 "$project_dir/gradlew" --no-daemon -p "$project_dir" buildAndroidScripts >"$android_log" 2>&1; then
+    tail -n 80 "$android_log" >&2
+    echo "[package_install_smoke] FAIL -- buildAndroidScripts failed (log: $android_log)" >&2
+    exit 1
+  fi
+  for file in KanamaAndroid.debug.aar KanamaAndroidScripts.debug.aar KanamaAndroid.gdap; do
+    check_file "android/plugins/$file"
+  done
+  if ! grep -q '^android_aar_plugin = true' "$project_dir/addons/kanama/kanama.gdextension"; then
+    echo "[package_install_smoke] buildAndroidScripts did not add the Android entries to kanama.gdextension" >&2
+    exit 1
+  fi
 
-# The APK: the scripts and their registrars (the scripts AAR), the runtime and PanamaPort (the runtime AAR and
-# its remote dependency), the native bootstrap, and nothing from the Gradle build directory.
-if ! python3 - "$apk" <<'PY'
+  apk="$work_dir/kanama-package-smoke.apk"
+  export_log="$work_dir/android-export.log"
+  echo "[package_install_smoke] android: godot --headless --export-debug Android"
+  rm -rf "$project_dir/.godot/exported"
+  # --install-android-build-template is Project > Install Android Build Template; run headless it only takes
+  # effect together with an export.
+  export_rc=0
+  run_bounded 1800 "$godot_bin" --headless --path "$project_dir_for_godot" --install-android-build-template \
+    --export-debug Android "$apk" >"$export_log" 2>&1 || export_rc=$?
+  if [[ "$export_rc" -ne 0 || ! -f "$apk" ]]; then
+    tail -n 80 "$export_log" >&2
+    echo "[package_install_smoke] FAIL -- the Android export failed (exit $export_rc, log: $export_log)" >&2
+    exit 1
+  fi
+
+  # The APK: the scripts and their registrars (the scripts AAR), the runtime and PanamaPort (the runtime AAR and
+  # its remote dependency), the native bootstrap, and nothing from the Gradle build directory.
+  if ! python3 - "$apk" <<'PY'
 import sys
 import zipfile
 
@@ -535,21 +559,81 @@ for problem in problems:
     print(f"[package_install_smoke] APK: {problem}", file=sys.stderr)
 sys.exit(1 if problems else 0)
 PY
-then
-  echo "[package_install_smoke] FAIL -- the exported APK is incomplete: $apk" >&2
-  exit 1
+  then
+    echo "[package_install_smoke] FAIL -- the exported APK is incomplete: $apk" >&2
+    exit 1
+  fi
+  if ! check_export_contents "$apk" "assets/"; then
+    echo "[package_install_smoke] FAIL -- the exported APK holds files from the Gradle build: $apk" >&2
+    exit 1
+  fi
+  check_scene_properties android
+  echo "[package_install_smoke] android: buildAndroidScripts and a headless export from the package alone"
 fi
-if ! check_export_contents "$apk" "assets/"; then
-  echo "[package_install_smoke] FAIL -- the exported APK holds files from the Gradle build: $apk" >&2
-  exit 1
+
+# --- iOS from the package alone (task 135 item 5): the commands Export for iOS documents, then the Xcode build a
+# user runs, for the device SDK without signing (that proves the link of the scripts against the prebuilt runtime).
+if [[ "$ios_export" -eq 1 ]]; then
+  ios_log="$work_dir/ios.log"
+  echo "[package_install_smoke] ios: ./gradlew buildIosScripts"
+  if ! run_bounded 3600 "$project_dir/gradlew" --no-daemon -p "$project_dir" buildIosScripts >"$ios_log" 2>&1; then
+    tail -n 80 "$ios_log" >&2
+    echo "[package_install_smoke] FAIL -- buildIosScripts failed (log: $ios_log)" >&2
+    exit 1
+  fi
+  for variant in debug release; do
+    check_file "addons/kanama/bin/ios/kanama_ios.$variant.xcframework/Info.plist"
+    check_file "addons/kanama/bin/ios/kanama_ios.$variant.xcframework/ios-arm64/libkanama_ios.a"
+    if ! grep -q "^ios.$variant.arm64 = " "$project_dir/addons/kanama/kanama.gdextension"; then
+      echo "[package_install_smoke] buildIosScripts did not add ios.$variant.arm64 to kanama.gdextension" >&2
+      exit 1
+    fi
+  done
+
+  ios_export_dir="$work_dir/ios-export"
+  export_log="$work_dir/ios-export.log"
+  echo "[package_install_smoke] ios: godot --headless --export-debug iOS"
+  rm -rf "$project_dir/.godot/exported" "$ios_export_dir"
+  mkdir -p "$ios_export_dir"
+  export_rc=0
+  run_bounded 1800 "$godot_bin" --headless --path "$project_dir_for_godot" \
+    --export-debug iOS "$ios_export_dir/KanamaSmoke.ipa" >"$export_log" 2>&1 || export_rc=$?
+  pbxproj="$ios_export_dir/KanamaSmoke.xcodeproj/project.pbxproj"
+  if [[ "$export_rc" -ne 0 || ! -f "$pbxproj" ]]; then
+    tail -n 80 "$export_log" >&2
+    echo "[package_install_smoke] FAIL -- the iOS export failed (exit $export_rc, log: $export_log)" >&2
+    exit 1
+  fi
+  if ! grep -q 'kanama_ios.debug.xcframework' "$pbxproj"; then
+    echo "[package_install_smoke] FAIL -- the exported Xcode project does not link kanama_ios.debug.xcframework" >&2
+    exit 1
+  fi
+  check_scene_properties ios
+
+  # The app links the shim, the runtime and the project's script registry (the shim's weak reference to it).
+  xcode_log="$work_dir/ios-xcodebuild.log"
+  derived_dir="$work_dir/ios-derived-data"
+  echo "[package_install_smoke] ios: xcodebuild -sdk iphoneos CODE_SIGNING_ALLOWED=NO"
+  if ! run_bounded 1800 xcodebuild -project "$ios_export_dir/KanamaSmoke.xcodeproj" -scheme KanamaSmoke \
+    -configuration Debug -sdk iphoneos -destination generic/platform=iOS -derivedDataPath "$derived_dir" \
+    CODE_SIGNING_ALLOWED=NO build >"$xcode_log" 2>&1; then
+    tail -n 80 "$xcode_log" >&2
+    echo "[package_install_smoke] FAIL -- xcodebuild of the exported project failed (log: $xcode_log)" >&2
+    exit 1
+  fi
+  app_binary="$derived_dir/Build/Products/Debug-iphoneos/KanamaSmoke.app/KanamaSmoke"
+  if [[ ! -f "$app_binary" ]]; then
+    echo "[package_install_smoke] FAIL -- xcodebuild wrote no app binary: $app_binary" >&2
+    exit 1
+  fi
+  symbols="$(xcrun nm -gU -j "$app_binary")"
+  for symbol in _kanama_entry _kanama_ios_runtime_entry _kanama_ios_project_scripts_register; do
+    if ! grep -Fxq "$symbol" <<<"$symbols"; then
+      echo "[package_install_smoke] FAIL -- the app does not define $symbol: $app_binary" >&2
+      exit 1
+    fi
+  done
+  echo "[package_install_smoke] ios: buildIosScripts, a headless export and an unsigned device build: $app_binary"
 fi
-# The scene check Export for Android tells the user to run, as the package ships it.
-check_file "addons/kanama/checks/check_exported_scene_properties.gd"
-scene_check_log="$work_dir/android-scene-check.log"
-if ! run_bounded 600 "$godot_bin" --headless --path "$project_dir_for_godot" \
-  --script res://addons/kanama/checks/check_exported_scene_properties.gd -- --require-converted >"$scene_check_log" 2>&1; then
-  tail -n 40 "$scene_check_log" >&2
-  echo "[package_install_smoke] FAIL -- the exported scenes lost script properties, or the check did not run (log: $scene_check_log)" >&2
-  exit 1
-fi
-echo "[package_install_smoke] PASS (android: buildAndroidScripts and a headless export from the package alone)"
+
+echo "[package_install_smoke] PASS"

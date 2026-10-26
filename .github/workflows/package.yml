@@ -126,6 +126,16 @@ jobs:
           name: kanama-android-maven
           path: build/android-package/net/multigesture/kanama/kanama-android
 
+      # The macOS kit carries the iOS runtime klib, which Kotlin/Native compiles here (its toolchain is ~1 GB).
+      - name: Cache the Kotlin/Native toolchain
+        if: matrix.classifier == 'macos-arm64'
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('build.gradle.kts') }}
+          restore-keys: |
+            konan-${{ runner.os }}-
+
       - name: Build package artifacts
         shell: bash
         run: ./gradlew packageDesktopKit packageStoreNativeArtifact -PkanamaPlatformClassifier=${{ matrix.classifier }} -PkanamaAndroidPackageDir=build/android-package
@@ -146,6 +156,17 @@ jobs:
         with:
           name: kanama-store-native-${{ matrix.classifier }}
           path: build/package/store-native/${{ matrix.classifier }}
+          if-no-files-found: error
+
+      # The iOS runtime (kanama-iosarm64 and kanama-ios-shim) for the store addon, which is assembled on Linux.
+      - name: Upload the iOS runtime Maven trees
+        if: matrix.classifier == 'macos-arm64'
+        uses: actions/upload-artifact@v6
+        with:
+          name: kanama-ios-maven
+          path: |
+            build/package/maven/net/multigesture/kanama/kanama-iosarm64
+            build/package/maven/net/multigesture/kanama/kanama-ios-shim
           if-no-files-found: error
 
   # ---------------------------------------------------------------------------
@@ -423,8 +444,14 @@ jobs:
           name: kanama-android-maven
           path: build/android-package/net/multigesture/kanama/kanama-android
 
+      - name: Download the iOS runtime Maven trees
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-ios-maven
+          path: build/ios-package/net/multigesture/kanama
+
       - name: Build store addon
-        run: ./gradlew packageStoreAddon -PkanamaBuildNativeBootstrap=false -PkanamaStoreNativeArtifactsDir=build/store-native-artifacts -PkanamaAndroidPackageDir=build/android-package
+        run: ./gradlew packageStoreAddon -PkanamaBuildNativeBootstrap=false -PkanamaStoreNativeArtifactsDir=build/store-native-artifacts -PkanamaAndroidPackageDir=build/android-package -PkanamaIosPackageDir=build/ios-package
 
       - name: Smoke store addon package
         shell: bash
@@ -539,11 +566,108 @@ jobs:
           chmod +x "$godot_bin"
           scripts/package_install_smoke.sh --${{ matrix.package }} --android packages/kanama-*.zip "$godot_bin"
 
+  # iOS export from the packages alone (task 135 item 5): the macOS kit and the store addon, each unzipped into a fresh
+  # project with a fresh GRADLE_USER_HOME, run buildIosScripts and a headless Godot export of an Xcode project, which
+  # xcodebuild then builds for the device SDK without signing. No device.
+  ios-export:
+    name: ios-export (${{ matrix.package }})
+    runs-on: macos-15
+    needs: [desktop-kit, store-addon]
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [desktop-kit, store-addon]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Cache the Kotlin/Native toolchain
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('build.gradle.kts') }}
+          restore-keys: |
+            konan-${{ runner.os }}-
+
+      # The newest Xcode on the runner, through DEVELOPER_DIR, which buildIosScripts and xcodebuild both read.
+      - name: Select Xcode
+        shell: bash
+        run: |
+          developer_dir="$(python3 - <<'PY'
+          import glob, re
+          def version(path):
+              return [int(n) for n in re.findall(r"\d+", path.rsplit("/", 1)[-1])]
+          apps = sorted(glob.glob("/Applications/Xcode*.app"), key=version)
+          print(apps[-1] + "/Contents/Developer" if apps else "")
+          PY
+          )"
+          test -n "$developer_dir"
+          echo "DEVELOPER_DIR=$developer_dir" >>"$GITHUB_ENV"
+          echo "Xcode: $developer_dir"
+
+      - name: Cache Godot and the iOS export template
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-ios-${{ env.GODOT_VERSION }}-macos
+
+      - name: Download Godot and the iOS export template
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p "$HOME/godot"
+          godot_zip="$(mktemp)"
+          curl -fL -o "$godot_zip" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_macos.universal.zip"
+          unzip -q "$godot_zip" -d "$HOME/godot"
+          rm -f "$godot_zip"
+          tpz="$(mktemp)"
+          curl -fL -o "$tpz" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q -j "$tpz" "templates/ios.zip" -d "$HOME/godot"
+          rm -f "$tpz"
+
+      - name: Install the iOS export template
+        shell: bash
+        run: |
+          templates="$HOME/Library/Application Support/Godot/export_templates/${GODOT_VERSION/-/.}"
+          mkdir -p "$templates"
+          cp "$HOME/godot/ios.zip" "$templates/"
+
+      - name: Download the macOS desktop kit
+        if: matrix.package == 'desktop-kit'
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-desktop-kit-macos-arm64
+          path: packages
+
+      - name: Download the store addon
+        if: matrix.package == 'store-addon'
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-store-addon
+          path: packages
+
+      - name: Export for iOS from the ${{ matrix.package }}
+        shell: bash
+        run: |
+          scripts/package_install_smoke.sh --${{ matrix.package }} --ios packages/kanama-*.zip \
+            "$HOME/godot/Godot.app/Contents/MacOS/Godot"
+
   publish-release:
     name: publish-release
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-24.04
-    needs: [store-addon, android-export]
+    needs: [store-addon, android-export, ios-export]
     permissions:
       contents: write
 
