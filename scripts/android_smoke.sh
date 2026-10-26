@@ -293,9 +293,19 @@ if grep -qE 'No loader found for resource: res://.*\.kt|ResourceFormatLoader\._l
   exit 1
 fi
 # Task 112: every converted scene keeps its script-declared properties.
+# The check quits on its first frame, so Godot's exit-time leak report is the project's own shutdown:
+# a leak there (an autoload's playing stream, a Resource a script holds) fails the run too.
 SCENE_PARITY_CHECK="$ROOT_DIR/scripts/check_exported_scene_properties.gd"
-if ! "$GODOT_BIN" --headless --path "$DEMO_DIR" --script "$SCENE_PARITY_CHECK" -- --require-converted; then
+SCENE_CHECK_LOG="${APK_PATH%.apk}.scene_check.log"
+scene_check_status=0
+"$GODOT_BIN" --headless --path "$DEMO_DIR" --script "$SCENE_PARITY_CHECK" -- --require-converted >"$SCENE_CHECK_LOG" 2>&1 || scene_check_status=$?
+cat "$SCENE_CHECK_LOG"
+if [[ "$scene_check_status" -ne 0 ]]; then
   echo "[android_smoke] exported scenes lost script properties (see [check_exported_scenes] lines above); refusing to install." >&2
+  exit 1
+fi
+if grep -qE 'leaked at exit|still in use at exit' "$SCENE_CHECK_LOG"; then
+  echo "[android_smoke] the exported-scene check leaked at exit (above; rerun it with --verbose to name the instances): $SCENE_CHECK_LOG" >&2
   exit 1
 fi
 

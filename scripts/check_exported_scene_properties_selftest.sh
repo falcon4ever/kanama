@@ -9,7 +9,10 @@
 #   red   — a property is added to the SOURCE main.tscn after the export (`extra = 5`, default 1),
 #           so the converted scene lacks it and the check must FAIL naming node `Sub/inner`;
 #   none  — before the export, `-- --require-converted` must FAIL (nothing converted), and pass after it;
-#   off   — with editor/export/convert_text_resources_to_binary=false, `--require-converted` passes with a note.
+#   off   — with editor/export/convert_text_resources_to_binary=false, `--require-converted` passes with a note;
+#   leak  — the fixture's autoplaying Music autoload must not leak at exit (the green run's output).
+# The green run also covers a scriptless AnimationPlayer whose `libraries` (a property ClassDB does not
+# list) the export re-packs away: no script, so no loss to report (the TPS demo's Skeleton3D bones too).
 # Needs the pinned Godot's Web export templates (web_nothreads_*.zip) installed.
 # Finding while building this (task 119): Godot's re-pack keeps an override on an instanced child
 # ONLY when the instance is editable (`[editable path="Sub"]`, which the editor always writes); a
@@ -70,6 +73,14 @@ if ! printf '%s\n' "$green" | grep -qE 'ok res://main.tscn \([0-9]+ nodes, 1 scr
   echo "[scene_check_selftest] FAIL: the override node's property was not checked (expected 1 on main.tscn)" >&2
   exit 1
 fi
+# The fixture's Music autoload autoplays, as Squash the Creeps' MusicPlayer does. A check that lets it
+# start leaks the playing stream at exit (Godot never drains its playback list), and every caller's
+# scene-check step (android_smoke.sh, ios_visual_smoke.sh, ...) fails on that leak.
+if printf '%s\n' "$green" | grep -qE 'leaked at exit|still in use at exit'; then
+  printf '%s\n' "$green" | grep -E 'leaked at exit|still in use at exit' | sed 's/^/    /' >&2
+  echo "[scene_check_selftest] FAIL: the scene check leaked at exit (the Music autoload's stream?)" >&2
+  exit 1
+fi
 
 echo "[scene_check_selftest] red run: a source property the export never saw must be reported"
 # Insert beside the existing override (a property line after the [editable] tag would not parse).
@@ -113,4 +124,4 @@ if [[ "$ovr_rc" -eq 0 ]] || printf '%s\n' "$ovr" | grep -q 'PASS: conversion dis
   printf '%s\n' "$ovr" | tail -5 >&2
   exit 1
 fi
-echo "[scene_check_selftest] PASS (green run kept the override, red run caught the loss, --require-converted fails with nothing converted and passes with conversion off unless a feature override converts again)"
+echo "[scene_check_selftest] PASS (green run kept the override and left no leak at exit, red run caught the loss, --require-converted fails with nothing converted and passes with conversion off unless a feature override converts again)"

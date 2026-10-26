@@ -552,4 +552,9 @@ if ! run_bounded 600 "$godot_bin" --headless --path "$project_dir_for_godot" \
   echo "[package_install_smoke] FAIL -- the exported scenes lost script properties, or the check did not run (log: $scene_check_log)" >&2
   exit 1
 fi
+if grep -qE 'leaked at exit|still in use at exit' "$scene_check_log"; then
+  grep -E 'leaked at exit|still in use at exit' "$scene_check_log" >&2
+  echo "[package_install_smoke] FAIL -- the scene check leaked at exit (log: $scene_check_log)" >&2
+  exit 1
+fi
 echo "[package_install_smoke] PASS (android: buildAndroidScripts and a headless export from the package alone)"

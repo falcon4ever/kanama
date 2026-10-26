@@ -45,7 +45,17 @@ func _has_feature_override(setting: String) -> bool:
 	return false
 
 func _initialize() -> void:
+	_keep_autoloads_silent()
 	quit(_run())
+
+## The project's autoloads are under root but not yet in the tree here. One with an autoplaying
+## AudioStreamPlayer (Squash the Creeps' MusicPlayer) would start its stream on the frame this
+## check quits, and Godot 4.7 leaks a stream that is still playing at exit (AudioServer::finish
+## never drains its playback list): 4 ObjectDB instances in every Squash run. The check plays nothing.
+func _keep_autoloads_silent() -> void:
+	for type in ["AudioStreamPlayer", "AudioStreamPlayer2D", "AudioStreamPlayer3D"]:
+		for player in root.find_children("*", type, true, false):
+			player.autoplay = false
 
 func _run() -> int:
 	var require_converted := OS.get_cmdline_user_args().has("--require-converted")
@@ -223,6 +233,11 @@ func _compare(source: String, saved: String) -> int:
 		# loss we are looking for. The declared list is used only when the type cannot be resolved.
 		var resolved_type := _node_type(ss, i)
 		var script := _node_script(ss, i)
+		if script == null:
+			# No script anywhere in its instance chain: nothing on this node is a script property. A
+			# native class with properties ClassDB does not list (Skeleton3D's `bones/N/position`,
+			# AnimationPlayer's `libraries`, both in the TPS demo) is not a loss for this check to report.
+			continue
 		var declared := {}
 		if script != null:
 			for info in script.get_script_property_list():
