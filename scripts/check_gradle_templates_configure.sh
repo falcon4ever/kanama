@@ -181,12 +181,41 @@ printf '%s\n' "$KANAMA_VERSION" >"$store/addons/kanama/kanama.version"
 add_kanama_plugin "$store"
 cp "$ROOT_DIR/templates/store-addon/setup-kanama-project.sh" "$store/addons/kanama/setup-kanama-project.sh"
 printf '%s\n' 'config_version=5' '' '[application]' '' 'config/name="Existing"' >"$store/project.godot"
+# Two copies before the setup: a project with a settings.gradle.kts of its own, which the setup merges the
+# Kanama pluginManagement block into (the template's build.gradle.kts applies the Kanama Gradle plugin, so the
+# build only configures if it is), and one whose settings file has its own pluginManagement block, where the
+# setup must stop before it changes anything and say what to merge.
+store_merge="$WORK/store-merge"
+cp -R "$store" "$store_merge"
+printf '%s\n' '// the project'"'"'s own settings' 'rootProject.name = "existing"' >"$store_merge/settings.gradle.kts"
+store_own="$WORK/store-own"
+cp -R "$store" "$store_own"
+printf '%s\n' 'pluginManagement {' '    repositories { gradlePluginPortal() }' '}' 'rootProject.name = "existing"' >"$store_own/settings.gradle.kts"
 setup_log="$WORK/store.setup.log"
 if ! (cd "$store" && sh addons/kanama/setup-kanama-project.sh >"$setup_log" 2>&1); then
   fail "setup-kanama-project.sh failed:" "$setup_log"
 fi
 check_wrapper "store-addon project" "$store"
 check_tasks "store-addon project" "$store" project
+
+setup_log="$WORK/store-merge.setup.log"
+if ! (cd "$store_merge" && sh addons/kanama/setup-kanama-project.sh >"$setup_log" 2>&1); then
+  fail "setup-kanama-project.sh failed on a project with its own settings.gradle.kts:" "$setup_log"
+fi
+grep -Fq "[kanama] merged settings.gradle.kts" "$setup_log" ||
+  fail "setup-kanama-project.sh did not merge the Kanama pluginManagement block into the project's settings.gradle.kts:" "$setup_log"
+tail -n 1 "$store_merge/settings.gradle.kts" | grep -Fxq 'rootProject.name = "existing"' ||
+  fail "the merged settings.gradle.kts lost the project's own lines" "$store_merge/settings.gradle.kts"
+check_tasks "store-addon project with its own settings.gradle.kts" "$store_merge" project
+
+setup_log="$WORK/store-own.setup.log"
+if (cd "$store_own" && sh addons/kanama/setup-kanama-project.sh >"$setup_log" 2>&1); then
+  fail "setup-kanama-project.sh went on over a settings.gradle.kts with its own pluginManagement block" "$setup_log"
+fi
+grep -Fq "has a pluginManagement block of its own: merge the one in addons/kanama/templates/release-kit/settings.gradle.kts" "$setup_log" ||
+  fail "setup-kanama-project.sh stopped without saying what to merge:" "$setup_log"
+[[ ! -e "$store_own/build.gradle.kts" && ! -e "$store_own/gradlew" ]] ||
+  fail "setup-kanama-project.sh wrote files before it stopped on the project's own pluginManagement block"
 
 # 4. The version lock, on copies of the starter: each broken state stops the build with its one line.
 # expect_lock_failure <case> <dir> <text>: configuring <dir> fails and prints <text>.
@@ -216,4 +245,4 @@ grep -Fq "version \"$KANAMA_VERSION\"" "$lock/build.gradle.kts" || fail "version
 printf '9.9.9\n' >"$lock/addons/kanama/kanama.version"
 expect_lock_failure pinned "$lock" "The Kanama Gradle plugin is $KANAMA_VERSION but the addon is 9.9.9"
 
-echo "$TAG PASS starter, store-addon project and repo build configure; the version lock stops 3 broken states; $(wc -l <"$documented" | tr -d ' ') documented ./gradlew commands exist where the docs run them"
+echo "$TAG PASS starter, store-addon projects (new, merged settings, own pluginManagement stops) and repo build configure; the version lock stops 3 broken states; $(wc -l <"$documented" | tr -d ' ') documented ./gradlew commands exist where the docs run them"

@@ -24,6 +24,23 @@ if (-not (Test-Path -LiteralPath $TemplateDir -PathType Container)) {
     Write-Error "[kanama] missing template directory: $TemplateDir. Run this script from the Godot project root where the addon was unzipped, or pass -ProjectDir."
 }
 
+# A settings.gradle.kts of the project's own must resolve the Kanama Gradle plugin, which the template's
+# build.gradle.kts applies: its pluginManagement block reads addons/kanama/kanama.version. A file without a
+# pluginManagement block gets the template's in front (once: the version file's path marks it). A file with a
+# block of its own is not edited: the setup stops before it changes anything and says what to merge.
+$Settings = Join-Path $ProjectDir "settings.gradle.kts"
+$MergeSettings = $false
+if ((Test-Path -LiteralPath $Settings) -and -not $Force) {
+    $SettingsText = [System.IO.File]::ReadAllText($Settings)
+    if ($SettingsText.Contains("addons/kanama/kanama.version")) {
+    } elseif ($SettingsText -match '(?m)^\s*pluginManagement\s*\{') {
+        [Console]::Error.WriteLine("[kanama] settings.gradle.kts has a pluginManagement block of its own: merge the one in addons/kanama/templates/release-kit/settings.gradle.kts into it (Add Kanama to an Existing Project, Projects That Already Have a Gradle Build), then run the setup again. Nothing was changed.")
+        exit 1
+    } else {
+        $MergeSettings = $true
+    }
+}
+
 function Copy-KanamaFile {
     param(
         [string]$Source,
@@ -56,7 +73,21 @@ function Copy-KanamaDirectory {
 }
 
 Copy-KanamaFile (Join-Path $TemplateDir "build.gradle.kts") (Join-Path $ProjectDir "build.gradle.kts")
-Copy-KanamaFile (Join-Path $TemplateDir "settings.gradle.kts") (Join-Path $ProjectDir "settings.gradle.kts")
+if ($MergeSettings) {
+    # The template's pluginManagement block goes first, as Gradle requires; the user's lines follow.
+    $Block = New-Object System.Collections.Generic.List[string]
+    $Keep = $false
+    foreach ($Line in [System.IO.File]::ReadAllLines((Join-Path $TemplateDir "settings.gradle.kts"))) {
+        if ($Line -match '^pluginManagement \{') { $Keep = $true }
+        if ($Keep) { $Block.Add($Line) }
+        if ($Keep -and $Line -match '^\}') { break }
+    }
+    $Merged = ($Block -join "`n") + "`n`n" + $SettingsText
+    [System.IO.File]::WriteAllText($Settings, $Merged)
+    Write-Host "[kanama] merged settings.gradle.kts (added the Kanama pluginManagement block)"
+} else {
+    Copy-KanamaFile (Join-Path $TemplateDir "settings.gradle.kts") $Settings
+}
 Copy-KanamaFile (Join-Path $TemplateDir "gradlew") (Join-Path $ProjectDir "gradlew")
 Copy-KanamaFile (Join-Path $TemplateDir "gradlew.bat") (Join-Path $ProjectDir "gradlew.bat")
 Copy-KanamaDirectory (Join-Path $TemplateDir "gradle") (Join-Path $ProjectDir "gradle")

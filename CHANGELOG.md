@@ -110,8 +110,11 @@ The Kanama Tools row in the editor toolbar starts with a status light: green whe
 built and no `.kt` file changed since, yellow while a build runs or when a `.kt` file changed or
 `kanama-scripts.jar` is missing or was built for another Kanama version than the addon, red when the
 last build failed. Click it for the last build's
-output, with the compiler's error. Builds now run beside the editor, so the editor stays usable
-while Gradle works. Build on save is on by default: saving a `.kt` file starts one build, however
+output, with the compiler's error, and **Cancel Build** while one runs. Builds now run beside the
+editor, so the editor stays usable while Gradle works; a build that runs past
+`kanama/build/build_timeout_sec` (1200 s) is stopped and the light turns red. The watcher reads only
+`kotlin-src/` (and `web/kotlin-src/`), and Build Scripts runs `installAddonJar` only in a real Kanama
+checkout, never in some other Gradle repository the project sits in. Build on save is on by default: saving a `.kt` file starts one build, however
 many files you save in a row. Turn it off in **Editor > Editor Settings > Kanama > Build > Build On
 Save** (`kanama/build/build_on_save`). It is an editor setting now; the old project setting
 `kanama/tools/auto_build_on_save` is no longer read, and you can delete it from `project.godot`. A
@@ -123,7 +126,10 @@ and Web commands of the export pages in a project set up from a Kanama checkout.
 **Project > Tools > Kanama Tools: Set Up Kanama Project** turns a Godot project with the store
 addon into a Kanama project without a terminal. It adds only what is missing (the Gradle build and
 wrapper, `kotlin-src/HelloScript.kt` when `kotlin-src/` has no Kotlin script, and
-`build/.gdignore`), never replaces a file, and lists what it added; a second run adds nothing. It
+`build/.gdignore`), never replaces a file, and lists what it added; a second run adds nothing. A
+`settings.gradle.kts` of your own gets the Kanama `pluginManagement` block at the top, so the Kanama
+Gradle plugin resolves; one with a `pluginManagement` block of its own stops the setup before it
+changes anything, with one line that says what to merge. It
 runs the addon's `setup-kanama-project.sh` (or `.ps1` on Windows), which gains `--project-dir`
 (`-ProjectDir`), adds the starter script only to a `kotlin-src/` without Kotlin scripts (the script
 added it next to your own before), and writes `build/.gdignore`. See

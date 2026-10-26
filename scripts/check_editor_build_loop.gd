@@ -17,8 +17,9 @@ extends EditorPlugin
 const TAG := "[build_loop]"
 const KANAMA_PLUGIN := "res://addons/kanama_tools/plugin.gd"
 const BUILD_ON_SAVE := "kanama/build/build_on_save"
+const BUILD_TIMEOUT := "kanama/build/build_timeout_sec"
 const HELLO := "res://kotlin-src/HelloScript.kt"
-const TIMEOUT_SEC := 150.0
+const TIMEOUT_SEC := 240.0
 
 var _failures := PackedStringArray()
 var _control := OS.get_environment("KANAMA_FAKE_GRADLE_CONTROL")
@@ -151,6 +152,11 @@ func _run() -> void:
     _expect_status("stale", "after a save with build on save off")
     await _wait(3.0)
     _expect(_runs() == 3, "build on save is off, but a save started a build (%d builds)" % _runs())
+    # A build outside the editor (./gradlew buildScripts in a terminal or IntelliJ) installs a newer jar and
+    # no stamp: the light follows the jar.
+    _write(ProjectSettings.globalize_path("res://addons/kanama/kanama-scripts.jar"), "built in a terminal\n")
+    await _wait_for(func() -> bool: return _kanama.get_build_status() == "current", 5.0)
+    _expect_status("current", "after a build outside the editor installed a newer jar")
     EditorInterface.get_editor_settings().set_setting(BUILD_ON_SAVE, true)
 
     # 6. The scripts jar disappears (deleted, or never restored by a build): the light must not stay
@@ -183,7 +189,54 @@ func _run() -> void:
     DirAccess.remove_absolute(addon_version)
     DirAccess.remove_absolute(scripts_version)
 
+    # A save while a build runs: that build finishes, then exactly one more build follows.
+    _write(_control.path_join("mode"), "slow")
+    var runs_before := _runs()
+    build.pressed.emit()
+    await _wait_for(func() -> bool: return _runs() > runs_before, 5.0)
+    await _wait(1.1)
+    _append(HELLO, "// saved during a build\n")
+    await _wait_for(func() -> bool: return _runs() >= runs_before + 2, 20.0)
+    _write(_control.path_join("mode"), "ok")
+    await _wait_while_building()
+    await _wait(3.5)
+    _expect(_runs() == runs_before + 2, "a save during a running build was followed by %d builds, expected exactly 1" % (_runs() - runs_before - 1))
+    _expect_status("current", "after the build that followed a save during a build")
+
+    # A hung build: the timeout stops it, the light turns red and says it timed out.
+    EditorInterface.get_editor_settings().set_setting(BUILD_TIMEOUT, 2)
+    DirAccess.remove_absolute(_control.path_join("hang.pid"))
+    _write(_control.path_join("mode"), "hang")
+    build.pressed.emit()
+    await _wait_for(func() -> bool: return FileAccess.file_exists(_control.path_join("hang.pid")), 10.0)
+    var hung := FileAccess.get_file_as_string(_control.path_join("hang.pid")).strip_edges()
+    await _wait_for(func() -> bool: return _kanama.get_build_status() != "building", 10.0)
+    _expect_status("failed", "after a build ran past the timeout")
+    _expect(_light.tooltip_text.contains("timed out"), "the light's tooltip does not say the build timed out: %s" % _light.tooltip_text)
+    _expect_gone(hung, "the timed-out build")
+    EditorInterface.get_editor_settings().set_setting(BUILD_TIMEOUT, 1200)
+
+    # Cancel Build in the light's output dialog ends a running build.
+    DirAccess.remove_absolute(_control.path_join("hang.pid"))
+    build.pressed.emit()
+    await _wait_for(func() -> bool: return FileAccess.file_exists(_control.path_join("hang.pid")), 10.0)
+    var cancelled := FileAccess.get_file_as_string(_control.path_join("hang.pid")).strip_edges()
+    _light.pressed.emit()
+    await get_tree().process_frame
+    var cancel := _find_control("CancelBuild") as Button
+    _expect(cancel != null and cancel.visible, "the build output dialog has no Cancel Build while a build runs")
+    if cancel != null:
+        cancel.pressed.emit()
+    await _wait_for(func() -> bool: return _kanama.get_build_status() != "building", 5.0)
+    _expect(_kanama.get_build_status() != "building", "Cancel Build left the build running")
+    _expect(String(_kanama._last_build.get("reason", "")) == "cancelled", "the cancelled build is recorded as %s" % _kanama._last_build.get("reason", ""))
+    _expect_gone(cancelled, "the cancelled build")
+    var output_dialog := _find_control("KanamaBuildOutput") as AcceptDialog
+    if output_dialog != null:
+        output_dialog.hide()
+
     # 7. Leaving the editor mid-build ends the build: no Gradle client outlives the plugin.
+    DirAccess.remove_absolute(_control.path_join("hang.pid"))
     _write(_control.path_join("mode"), "hang")
     build.pressed.emit()
     await _wait_for(func() -> bool: return FileAccess.file_exists(_control.path_join("hang.pid")), 10.0)
@@ -197,6 +250,16 @@ func _run() -> void:
         if alive:
             OS.kill(int(pid))
     _finish()
+
+
+func _expect_gone(pid: String, what: String) -> void:
+    if pid.is_empty():
+        _failures.append("%s never started" % what)
+        return
+    var alive := OS.execute("sh", ["-c", "kill -0 %s 2>/dev/null" % pid]) == 0
+    _expect(not alive, "%s (pid %s) still runs" % [what, pid])
+    if alive:
+        OS.kill(int(pid))
 
 
 func _find_kanama_plugin() -> EditorPlugin:

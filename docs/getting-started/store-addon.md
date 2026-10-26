@@ -41,8 +41,10 @@ Gradle and the Kotlin compiler, so it needs a network connection.
     - `kotlin-src/HelloScript.kt`, when `kotlin-src/` has no Kotlin script;
     - `build/.gdignore`, so Godot skips Gradle's build folder.
 
-    It never replaces a file that is already there. Choosing it again adds
-    nothing.
+    It never replaces a file that is already there; a `settings.gradle.kts`
+    of your own gets the Kanama block added at the top (see
+    [Projects That Already Have a Gradle Build](#projects-that-already-have-a-gradle-build)).
+    Choosing it again adds nothing.
 
 5. Press **Build Scripts** in the toolbar. The build compiles every `.kt` file
    in `kotlin-src/` into `addons/kanama/kanama-scripts.jar`, and the status
@@ -74,6 +76,13 @@ It adds the same files, prints `wrote` for each one it adds and
 `.godot/extension_list.cfg`.
 
 ## Projects That Already Have a Gradle Build
+
+If your project already has a `settings.gradle.kts`, the setup keeps your
+lines and puts the template's `pluginManagement { }` block at the top, which
+resolves the Kanama Gradle plugin from the addon. If your file has a
+`pluginManagement { }` block of its own, the setup changes nothing and says
+so: merge the template's block into yours as step 1 below shows, then run it
+again.
 
 If your project already has a `build.gradle.kts`, the setup keeps it.
 It still adds the Gradle wrapper if the project has none, so

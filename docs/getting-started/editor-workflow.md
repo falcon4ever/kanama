@@ -75,11 +75,15 @@ run the code you see:
 | --- | --- |
 | Green | Your scripts are built, and no `.kt` file changed since. |
 | Yellow | A build is running, a `.kt` file changed since the last build, `kanama-scripts.jar` is missing, or your scripts were built for another Kanama version than the addon. |
-| Red | The last build failed. |
+| Red | The last build failed, or ran longer than the build timeout and was stopped. |
 | Grey | The project has no Kotlin scripts yet. |
 
 Click the light to see the output of the last build, with the compiler's
-error when it failed. The Output panel shows the same text.
+error when it failed; when a build fails, the Output panel shows the same
+text. While a build runs, the same window has **Cancel Build**. A build that
+runs longer than **Editor > Editor Settings > Kanama > Build > Build Timeout
+Sec** (`kanama/build/build_timeout_sec`, 1200 seconds by default) is stopped,
+and the light turns red.
 
 ### Platform Builds
 
@@ -213,11 +217,12 @@ under `[kanama]`.
 | `kanama/debug/jdwp_enabled`, `kanama/debug/jdwp_port` | The debugger; see [Debugging](#debugging). |
 | `kanama/jvm/options` | Extra Java options for the game; see [JVM Options](../exporting/desktop.md#jvm-options). |
 
-Two Kanama settings are editor settings, under **Editor > Editor Settings >
+Three Kanama settings are editor settings, under **Editor > Editor Settings >
 Kanama > Build**, because they belong to your machine and not to the project:
 **Build On Save** (`kanama/build/build_on_save`, on by default; see
-[Building Scripts](#building-scripts)) and **JDK Path** (see
-[JDK Selection](#jdk-selection)).
+[Building Scripts](#building-scripts)), **Build Timeout Sec**
+(`kanama/build/build_timeout_sec`; see [The Status Light](#the-status-light))
+and **JDK Path** (see [JDK Selection](#jdk-selection)).
 
 ## Export Guard
 

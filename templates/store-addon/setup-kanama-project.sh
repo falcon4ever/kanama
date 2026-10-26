@@ -49,23 +49,40 @@ if [ ! -d "$template_dir" ]; then
     exit 1
 fi
 
+# A settings.gradle.kts of the project's own must resolve the Kanama Gradle plugin, which the template's
+# build.gradle.kts applies: its pluginManagement block reads addons/kanama/kanama.version. A file without a
+# pluginManagement block gets the template's in front (once: the version file's path marks it). A file with a
+# block of its own is not edited: the setup stops before it changes anything and says what to merge.
+settings="$project_dir/settings.gradle.kts"
+merge_settings=0
+if [ -f "$settings" ] && [ "$force" -ne 1 ]; then
+    if grep -Fq 'addons/kanama/kanama.version' "$settings"; then
+        :
+    elif grep -Eq '^[[:space:]]*pluginManagement[[:space:]]*[{]' "$settings"; then
+        echo "[kanama] settings.gradle.kts has a pluginManagement block of its own: merge the one in addons/kanama/templates/release-kit/settings.gradle.kts into it (Add Kanama to an Existing Project, Projects That Already Have a Gradle Build), then run the setup again. Nothing was changed." >&2
+        exit 1
+    else
+        merge_settings=1
+    fi
+fi
+
 copy_file() {
     src="$1"
     dst="$2"
     if [ -e "$dst" ] && [ "$force" -ne 1 ]; then
-        echo "[kanama] keeping existing ${dst#$project_dir/}"
+        echo "[kanama] keeping existing ${dst#"$project_dir"/}"
         return
     fi
     mkdir -p "$(dirname "$dst")"
     cp "$src" "$dst"
-    echo "[kanama] wrote ${dst#$project_dir/}"
+    echo "[kanama] wrote ${dst#"$project_dir"/}"
 }
 
 copy_dir() {
     src="$1"
     dst="$2"
     if [ -e "$dst" ] && [ "$force" -ne 1 ]; then
-        echo "[kanama] keeping existing ${dst#$project_dir/}"
+        echo "[kanama] keeping existing ${dst#"$project_dir"/}"
         return
     fi
     if [ -e "$dst" ]; then
@@ -73,11 +90,21 @@ copy_dir() {
     fi
     mkdir -p "$(dirname "$dst")"
     cp -R "$src" "$dst"
-    echo "[kanama] wrote ${dst#$project_dir/}"
+    echo "[kanama] wrote ${dst#"$project_dir"/}"
 }
 
 copy_file "$template_dir/build.gradle.kts" "$project_dir/build.gradle.kts"
-copy_file "$template_dir/settings.gradle.kts" "$project_dir/settings.gradle.kts"
+if [ "$merge_settings" -eq 1 ]; then
+    # The template's pluginManagement block goes first, as Gradle requires; the user's lines follow.
+    merged="$settings.kanama-merge"
+    awk '/^pluginManagement \{/ { keep = 1 } keep { print } keep && /^\}/ { exit }' "$template_dir/settings.gradle.kts" >"$merged"
+    printf '\n' >>"$merged"
+    cat "$settings" >>"$merged"
+    mv "$merged" "$settings"
+    echo "[kanama] merged settings.gradle.kts (added the Kanama pluginManagement block)"
+else
+    copy_file "$template_dir/settings.gradle.kts" "$settings"
+fi
 copy_file "$template_dir/gradlew" "$project_dir/gradlew"
 copy_file "$template_dir/gradlew.bat" "$project_dir/gradlew.bat"
 copy_dir "$template_dir/gradle" "$project_dir/gradle"
