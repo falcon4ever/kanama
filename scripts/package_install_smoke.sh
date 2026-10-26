@@ -292,6 +292,9 @@ if [[ "$detected_kind" == "store-addon" ]]; then
   fi
 
   write_smoke_project_files
+  # An existing project's own settings.gradle.kts: the setup puts the Kanama pluginManagement block in front of
+  # it (the build below only resolves the Kanama Gradle plugin if it does) and keeps its lines.
+  printf '%s\n' "// the project's own settings" 'rootProject.name = "existing"' >"$project_dir/settings.gradle.kts"
   # run_store_setup <log>: the addon's setup script on the project, as the docs (.sh) or the Kanama Tools
   # menu item on Windows (.ps1 with -ProjectDir) run it.
   run_store_setup() {
@@ -314,6 +317,11 @@ if [[ "$detected_kind" == "store-addon" ]]; then
     exit 1
   fi
   cat "$setup_log"
+  if ! grep -Fq "[kanama] merged settings.gradle.kts" "$setup_log" || ! head -n 1 "$project_dir/settings.gradle.kts" | grep -Fxq "pluginManagement {" ||
+    ! tail -n 1 "$project_dir/settings.gradle.kts" | grep -Fxq 'rootProject.name = "existing"'; then
+    echo "[package_install_smoke] the setup did not put the Kanama pluginManagement block in front of the project's settings.gradle.kts" >&2
+    exit 1
+  fi
   # A second run must add nothing (no wrote/created/registered line) and change no file: the files are copied
   # aside first and compared byte for byte after.
   setup_snapshot="$work_dir/setup_snapshot"
