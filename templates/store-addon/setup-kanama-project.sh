@@ -51,14 +51,20 @@ fi
 
 # A settings.gradle.kts of the project's own must resolve the Kanama Gradle plugin, which the template's
 # build.gradle.kts applies: its pluginManagement block reads addons/kanama/kanama.version. A file without a
-# pluginManagement block gets the template's in front (once: the version file's path marks it). A file with a
-# block of its own is not edited: the setup stops before it changes anything and says what to merge.
+# pluginManagement block gets the template's after its leading @file: and import lines (once: the version
+# file's path marks it). A file with a block of its own (`pluginManagement {`, the brace on the same line or
+# the next), or a Groovy settings.gradle, is not edited: the setup stops before it changes anything and says
+# what to merge. It never writes a settings.gradle.kts beside a settings.gradle.
 settings="$project_dir/settings.gradle.kts"
 merge_settings=0
+if [ -f "$project_dir/settings.gradle" ]; then
+    echo "[kanama] the project has a Groovy settings.gradle: merge the pluginManagement block of addons/kanama/templates/release-kit/settings.gradle.kts into it (Add Kanama to an Existing Project, Projects That Already Have a Gradle Build), then run the setup again. Nothing was changed." >&2
+    exit 1
+fi
 if [ -f "$settings" ] && [ "$force" -ne 1 ]; then
     if grep -Fq 'addons/kanama/kanama.version' "$settings"; then
         :
-    elif grep -Eq '^[[:space:]]*pluginManagement[[:space:]]*[{]' "$settings"; then
+    elif grep -Eq '^[[:space:]]*pluginManagement[[:space:]]*([{]|$)' "$settings"; then
         echo "[kanama] settings.gradle.kts has a pluginManagement block of its own: merge the one in addons/kanama/templates/release-kit/settings.gradle.kts into it (Add Kanama to an Existing Project, Projects That Already Have a Gradle Build), then run the setup again. Nothing was changed." >&2
         exit 1
     else
@@ -95,11 +101,32 @@ copy_dir() {
 
 copy_file "$template_dir/build.gradle.kts" "$project_dir/build.gradle.kts"
 if [ "$merge_settings" -eq 1 ]; then
-    # The template's pluginManagement block goes first, as Gradle requires; the user's lines follow.
+    # Gradle wants pluginManagement before every other statement; only @file: annotations and imports may
+    # precede it. The block goes after the file's leading ones (comments and blank lines among them stay),
+    # and the rest of the user's lines follow.
+    block="$settings.kanama-block"
     merged="$settings.kanama-merge"
-    awk '/^pluginManagement \{/ { keep = 1 } keep { print } keep && /^\}/ { exit }' "$template_dir/settings.gradle.kts" >"$merged"
-    printf '\n' >>"$merged"
-    cat "$settings" >>"$merged"
+    awk '/^pluginManagement \{/ { keep = 1 } keep { print } keep && /^\}/ { exit }' "$template_dir/settings.gradle.kts" >"$block"
+    awk -v block_file="$block" '
+        BEGIN { while ((getline line < block_file) > 0) block = block line "\n" }
+        { lines[NR] = $0 }
+        END {
+            after = 0
+            for (i = 1; i <= NR; i++) {
+                text = lines[i]
+                sub(/^[ \t]+/, "", text)
+                sub(/\r$/, "", text)
+                if (text ~ /^(import[ \t]|@file:)/) { after = i; continue }
+                if (text == "" || text ~ /^\/\//) continue
+                break
+            }
+            for (i = 1; i <= after; i++) print lines[i]
+            if (after > 0) print ""
+            printf "%s", block
+            print ""
+            for (i = after + 1; i <= NR; i++) print lines[i]
+        }' "$settings" >"$merged"
+    rm -f "$block"
     mv "$merged" "$settings"
     echo "[kanama] merged settings.gradle.kts (added the Kanama pluginManagement block)"
 else

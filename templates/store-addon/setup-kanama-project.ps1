@@ -26,14 +26,22 @@ if (-not (Test-Path -LiteralPath $TemplateDir -PathType Container)) {
 
 # A settings.gradle.kts of the project's own must resolve the Kanama Gradle plugin, which the template's
 # build.gradle.kts applies: its pluginManagement block reads addons/kanama/kanama.version. A file without a
-# pluginManagement block gets the template's in front (once: the version file's path marks it). A file with a
-# block of its own is not edited: the setup stops before it changes anything and says what to merge.
+# pluginManagement block gets the template's after its leading @file: and import lines (once: the version
+# file's path marks it). A file with a block of its own (`pluginManagement {`, the brace on the same line or
+# the next), or a Groovy settings.gradle, is not edited: the setup stops before it changes anything and says
+# what to merge. It never writes a settings.gradle.kts beside a settings.gradle. The same rules as the .sh.
 $Settings = Join-Path $ProjectDir "settings.gradle.kts"
 $MergeSettings = $false
+if (Test-Path -LiteralPath (Join-Path $ProjectDir "settings.gradle")) {
+    [Console]::Error.WriteLine("[kanama] the project has a Groovy settings.gradle: merge the pluginManagement block of addons/kanama/templates/release-kit/settings.gradle.kts into it (Add Kanama to an Existing Project, Projects That Already Have a Gradle Build), then run the setup again. Nothing was changed.")
+    exit 1
+}
 if ((Test-Path -LiteralPath $Settings) -and -not $Force) {
+    $SettingsBytes = [System.IO.File]::ReadAllBytes($Settings)
+    $SettingsBom = $SettingsBytes.Length -ge 3 -and $SettingsBytes[0] -eq 0xEF -and $SettingsBytes[1] -eq 0xBB -and $SettingsBytes[2] -eq 0xBF
     $SettingsText = [System.IO.File]::ReadAllText($Settings)
     if ($SettingsText.Contains("addons/kanama/kanama.version")) {
-    } elseif ($SettingsText -match '(?m)^\s*pluginManagement\s*\{') {
+    } elseif ($SettingsText -match '(?m)^[ \t]*pluginManagement[ \t]*(\{|\r?$)') {
         [Console]::Error.WriteLine("[kanama] settings.gradle.kts has a pluginManagement block of its own: merge the one in addons/kanama/templates/release-kit/settings.gradle.kts into it (Add Kanama to an Existing Project, Projects That Already Have a Gradle Build), then run the setup again. Nothing was changed.")
         exit 1
     } else {
@@ -47,12 +55,12 @@ function Copy-KanamaFile {
         [string]$Destination
     )
     if ((Test-Path -LiteralPath $Destination) -and -not $Force) {
-        Write-Host "[kanama] keeping existing $($Destination.Substring($ProjectDir.Length + 1))"
+        Write-Host "[kanama] keeping existing $($Destination.Substring($ProjectDir.Length + 1).Replace('\', '/'))"
         return
     }
     New-Item -ItemType Directory -Force -Path (Split-Path -Parent $Destination) | Out-Null
     Copy-Item -LiteralPath $Source -Destination $Destination -Force
-    Write-Host "[kanama] wrote $($Destination.Substring($ProjectDir.Length + 1))"
+    Write-Host "[kanama] wrote $($Destination.Substring($ProjectDir.Length + 1).Replace('\', '/'))"
 }
 
 function Copy-KanamaDirectory {
@@ -61,7 +69,7 @@ function Copy-KanamaDirectory {
         [string]$Destination
     )
     if ((Test-Path -LiteralPath $Destination) -and -not $Force) {
-        Write-Host "[kanama] keeping existing $($Destination.Substring($ProjectDir.Length + 1))"
+        Write-Host "[kanama] keeping existing $($Destination.Substring($ProjectDir.Length + 1).Replace('\', '/'))"
         return
     }
     if (Test-Path -LiteralPath $Destination) {
@@ -69,12 +77,14 @@ function Copy-KanamaDirectory {
     }
     New-Item -ItemType Directory -Force -Path (Split-Path -Parent $Destination) | Out-Null
     Copy-Item -LiteralPath $Source -Destination $Destination -Recurse -Force
-    Write-Host "[kanama] wrote $($Destination.Substring($ProjectDir.Length + 1))"
+    Write-Host "[kanama] wrote $($Destination.Substring($ProjectDir.Length + 1).Replace('\', '/'))"
 }
 
 Copy-KanamaFile (Join-Path $TemplateDir "build.gradle.kts") (Join-Path $ProjectDir "build.gradle.kts")
 if ($MergeSettings) {
-    # The template's pluginManagement block goes first, as Gradle requires; the user's lines follow.
+    # Gradle wants pluginManagement before every other statement; only @file: annotations and imports may
+    # precede it. The block goes after the file's leading ones (comments and blank lines among them stay),
+    # and the rest of the user's lines follow, in the file's own line endings and byte order mark.
     $Block = New-Object System.Collections.Generic.List[string]
     $Keep = $false
     foreach ($Line in [System.IO.File]::ReadAllLines((Join-Path $TemplateDir "settings.gradle.kts"))) {
@@ -82,8 +92,22 @@ if ($MergeSettings) {
         if ($Keep) { $Block.Add($Line) }
         if ($Keep -and $Line -match '^\}') { break }
     }
-    $Merged = ($Block -join "`n") + "`n`n" + $SettingsText
-    [System.IO.File]::WriteAllText($Settings, $Merged)
+    $NewLine = if ($SettingsText.Contains("`r`n")) { "`r`n" } else { "`n" }
+    $UserLines = $SettingsText -split "\r?\n"
+    $After = 0
+    for ($i = 0; $i -lt $UserLines.Length; $i++) {
+        $Text = $UserLines[$i].TrimStart()
+        if ($Text -match '^(import[ \t]|@file:)') { $After = $i + 1; continue }
+        if ($Text -eq "" -or $Text.StartsWith("//")) { continue }
+        break
+    }
+    $Out = New-Object System.Collections.Generic.List[string]
+    for ($i = 0; $i -lt $After; $i++) { $Out.Add($UserLines[$i]) }
+    if ($After -gt 0) { $Out.Add("") }
+    $Out.AddRange($Block)
+    $Out.Add("")
+    for ($i = $After; $i -lt $UserLines.Length; $i++) { $Out.Add($UserLines[$i]) }
+    [System.IO.File]::WriteAllText($Settings, ($Out -join $NewLine), (New-Object System.Text.UTF8Encoding($SettingsBom)))
     Write-Host "[kanama] merged settings.gradle.kts (added the Kanama pluginManagement block)"
 } else {
     Copy-KanamaFile (Join-Path $TemplateDir "settings.gradle.kts") $Settings

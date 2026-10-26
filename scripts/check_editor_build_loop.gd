@@ -231,6 +231,9 @@ func _run() -> void:
     _expect(_kanama.get_build_status() != "building", "Cancel Build left the build running")
     _expect(String(_kanama._last_build.get("reason", "")) == "cancelled", "the cancelled build is recorded as %s" % _kanama._last_build.get("reason", ""))
     _expect_gone(cancelled, "the cancelled build")
+    _expect(_kanama.get_build_status() != "failed", "after Cancel Build the light is red: a cancelled build is no failure")
+    await get_tree().process_frame
+    _expect(cancel == null or not cancel.visible, "the open output dialog still shows Cancel Build after the build ended")
     var output_dialog := _find_control("KanamaBuildOutput") as AcceptDialog
     if output_dialog != null:
         output_dialog.hide()

@@ -187,7 +187,12 @@ printf '%s\n' 'config_version=5' '' '[application]' '' 'config/name="Existing"' 
 # setup must stop before it changes anything and say what to merge.
 store_merge="$WORK/store-merge"
 cp -R "$store" "$store_merge"
-printf '%s\n' '// the project'"'"'s own settings' 'rootProject.name = "existing"' >"$store_merge/settings.gradle.kts"
+# It starts with an import, which Gradle allows only before pluginManagement: the block must go after it.
+printf '%s\n' '// the project'"'"'s own settings' 'import java.util.Locale' '' 'rootProject.name = "existing".lowercase(Locale.ROOT)' \
+  >"$store_merge/settings.gradle.kts"
+store_groovy="$WORK/store-groovy"
+cp -R "$store" "$store_groovy"
+printf '%s\n' 'rootProject.name = "existing"' >"$store_groovy/settings.gradle"
 store_own="$WORK/store-own"
 cp -R "$store" "$store_own"
 printf '%s\n' 'pluginManagement {' '    repositories { gradlePluginPortal() }' '}' 'rootProject.name = "existing"' >"$store_own/settings.gradle.kts"
@@ -204,8 +209,12 @@ if ! (cd "$store_merge" && sh addons/kanama/setup-kanama-project.sh >"$setup_log
 fi
 grep -Fq "[kanama] merged settings.gradle.kts" "$setup_log" ||
   fail "setup-kanama-project.sh did not merge the Kanama pluginManagement block into the project's settings.gradle.kts:" "$setup_log"
-tail -n 1 "$store_merge/settings.gradle.kts" | grep -Fxq 'rootProject.name = "existing"' ||
+tail -n 1 "$store_merge/settings.gradle.kts" | grep -Fxq 'rootProject.name = "existing".lowercase(Locale.ROOT)' ||
   fail "the merged settings.gradle.kts lost the project's own lines" "$store_merge/settings.gradle.kts"
+import_line="$(grep -n '^import java.util.Locale$' "$store_merge/settings.gradle.kts" | cut -d: -f1)"
+block_line="$(grep -n '^pluginManagement {$' "$store_merge/settings.gradle.kts" | cut -d: -f1)"
+[[ -n "$import_line" && -n "$block_line" && "$import_line" -lt "$block_line" ]] ||
+  fail "the Kanama pluginManagement block was not put after the settings file's import" "$store_merge/settings.gradle.kts"
 check_tasks "store-addon project with its own settings.gradle.kts" "$store_merge" project
 
 setup_log="$WORK/store-own.setup.log"
@@ -216,6 +225,15 @@ grep -Fq "has a pluginManagement block of its own: merge the one in addons/kanam
   fail "setup-kanama-project.sh stopped without saying what to merge:" "$setup_log"
 [[ ! -e "$store_own/build.gradle.kts" && ! -e "$store_own/gradlew" ]] ||
   fail "setup-kanama-project.sh wrote files before it stopped on the project's own pluginManagement block"
+
+setup_log="$WORK/store-groovy.setup.log"
+if (cd "$store_groovy" && sh addons/kanama/setup-kanama-project.sh >"$setup_log" 2>&1); then
+  fail "setup-kanama-project.sh went on in a project with a Groovy settings.gradle" "$setup_log"
+fi
+grep -Fq "the project has a Groovy settings.gradle: merge the pluginManagement block" "$setup_log" ||
+  fail "setup-kanama-project.sh stopped on a Groovy settings.gradle without saying what to merge:" "$setup_log"
+[[ ! -e "$store_groovy/settings.gradle.kts" && ! -e "$store_groovy/build.gradle.kts" ]] ||
+  fail "setup-kanama-project.sh wrote a Kotlin build beside the project's Groovy settings.gradle"
 
 # 4. The version lock, on copies of the starter: each broken state stops the build with its one line.
 # expect_lock_failure <case> <dir> <text>: configuring <dir> fails and prints <text>.
@@ -245,4 +263,4 @@ grep -Fq "version \"$KANAMA_VERSION\"" "$lock/build.gradle.kts" || fail "version
 printf '9.9.9\n' >"$lock/addons/kanama/kanama.version"
 expect_lock_failure pinned "$lock" "The Kanama Gradle plugin is $KANAMA_VERSION but the addon is 9.9.9"
 
-echo "$TAG PASS starter, store-addon projects (new, merged settings, own pluginManagement stops) and repo build configure; the version lock stops 3 broken states; $(wc -l <"$documented" | tr -d ' ') documented ./gradlew commands exist where the docs run them"
+echo "$TAG PASS starter, store-addon projects (new, merged settings after an import, own pluginManagement and Groovy settings stop) and repo build configure; the version lock stops 3 broken states; $(wc -l <"$documented" | tr -d ' ') documented ./gradlew commands exist where the docs run them"

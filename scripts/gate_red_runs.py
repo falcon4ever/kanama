@@ -1282,6 +1282,14 @@ case("check_gradle_templates_configure.sh (own pluginManagement)", ["bash", "scr
      [Edit(SETUP_SH, "Nothing was changed.\" >&2\n        exit 1\n", "Nothing was changed.\" >&2\n")],
      "setup-kanama-project.sh went on over a settings.gradle.kts with its own pluginManagement block", "the setup goes on past a settings.gradle.kts with its own pluginManagement block: it adds a build that cannot resolve the Kanama Gradle plugin",
      timeout=1800, slow=True)
+case("check_gradle_templates_configure.sh (Groovy settings)", ["bash", "scripts/check_gradle_templates_configure.sh"],
+     [Edit(SETUP_SH, 'run the setup again. Nothing was changed." >&2\n    exit 1\nfi\n', 'run the setup again. Nothing was changed." >&2\nfi\n')],
+     "setup-kanama-project.sh went on in a project with a Groovy settings.gradle", "the setup goes on beside a Groovy settings.gradle: it writes a second, Kotlin settings file next to it",
+     timeout=1800, slow=True)
+case("check_gradle_templates_configure.sh (settings import)", ["bash", "scripts/check_gradle_templates_configure.sh"],
+     [Edit(SETUP_SH, "if (text ~ /^(import[ \\t]|@file:)/) { after = i; continue }", "if (0) { after = i; continue }")],
+     "the Kanama pluginManagement block was not put after the settings file's import", "the setup puts the pluginManagement block above a settings file's imports again: Gradle rejects the file",
+     timeout=1800, slow=True)
 case("tool_smoke.sh (setup adds nothing twice)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Edit(SETUP_SH, 'if [ -e "$project_dir/build/.gdignore" ]; then', "if false; then")],
      "the second setup run added", "the setup script writes build/.gdignore on every run: a second Set Up Kanama Project must add nothing",

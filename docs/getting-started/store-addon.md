@@ -78,11 +78,12 @@ It adds the same files, prints `wrote` for each one it adds and
 ## Projects That Already Have a Gradle Build
 
 If your project already has a `settings.gradle.kts`, the setup keeps your
-lines and puts the template's `pluginManagement { }` block at the top, which
-resolves the Kanama Gradle plugin from the addon. If your file has a
-`pluginManagement { }` block of its own, the setup changes nothing and says
-so: merge the template's block into yours as step 1 below shows, then run it
-again.
+lines and adds the template's `pluginManagement { }` block, which resolves the
+Kanama Gradle plugin from the addon. The block goes at the top, after any
+`import` and `@file:` lines. If your file has a `pluginManagement { }` block
+of its own, or your project has a Groovy `settings.gradle`, the setup changes
+nothing and says so: merge the template's block into yours as step 1 below
+shows, then run it again.
 
 If your project already has a `build.gradle.kts`, the setup keeps it.
 It still adds the Gradle wrapper if the project has none, so

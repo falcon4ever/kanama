@@ -137,6 +137,8 @@ trap exit_jdk_scratch EXIT
 mkdir -p "$JDK_SCRATCH/project/addons" "$JDK_SCRATCH/jdks"
 cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$JDK_SCRATCH/project/addons/"
 cp "$ROOT_DIR/scripts/check_editor_jdk_resolution.gd" "$JDK_SCRATCH/project/"
+# The Windows build launch is held to the gradlew.bat Kanama ships (check_editor_jdk_resolution.gd reads it).
+cp "$ROOT_DIR/gradlew.bat" "$JDK_SCRATCH/project/gradlew.bat.txt"
 printf 'config_version=5\n\n[application]\nconfig/name="kanama-jdk-resolution"\n' >"$JDK_SCRATCH/project/project.godot"
 JDK_PROJECT_FOR_GODOT="$JDK_SCRATCH/project"
 JDK_TMP_FOR_GODOT="$JDK_SCRATCH/jdks"

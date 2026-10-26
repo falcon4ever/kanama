@@ -24,7 +24,7 @@ func _init() -> void:
         printerr("[jdk_test] FAIL cannot load res://addons/kanama_tools/plugin.gd")
         quit(2)
         return
-    for required in ["resolve_build_jdk", "resolve_build_jdk_from_environment", "parse_java_version", "compare_version_parts", "spawn_with_java_home", "detect_desktop_jvm", "resolve_runtime_jdk", "resolve_runtime_jdk_from_environment", "write_runtime_jdk_hint", "jdk_install_candidates", "runtime_restart_message", "read_runtime_jdk_hint"]:
+    for required in ["resolve_build_jdk", "resolve_build_jdk_from_environment", "parse_java_version", "compare_version_parts", "spawn_with_java_home", "gradle_wrapper_java_args", "split_command_options", "detect_desktop_jvm", "resolve_runtime_jdk", "resolve_runtime_jdk_from_environment", "write_runtime_jdk_hint", "jdk_install_candidates", "runtime_restart_message", "read_runtime_jdk_hint"]:
         if not _plugin.has_method(required):
             printerr("[jdk_test] FAIL the plugin has no %s()" % required)
             quit(1)
@@ -194,6 +194,8 @@ func _init() -> void:
 
     # --- the process JAVA_HOME is set for the child and restored after
     _check_execute_restores_env(jdk25)
+    # --- the Windows build launch: what gradlew.bat runs, on the resolved JDK
+    _check_windows_gradle_launch()
 
     if _failures > 0:
         printerr("[jdk_test] FAIL %d case(s)" % _failures)
@@ -238,6 +240,31 @@ func _spawn_and_read(jdk_home: String, exe: String, args: Array) -> String:
     (process["stderr"] as FileAccess).close()
     _expect("spawned child exited 0", OS.get_process_exit_code(pid) == 0)
     return bytes.get_string_from_utf8().strip_edges()
+
+
+## The plugin starts the Gradle client on Windows itself (gradlew.bat under cmd.exe would expand % in
+## paths and orphan the client when killed): its arguments must be gradlew.bat's, in gradlew.bat's order.
+func _check_windows_gradle_launch() -> void:
+    _expect("split options", _plugin.split_command_options(' -Da=1  "-Db=x y"\t-Dc ') == ["-Da=1", "-Db=x y", "-Dc"])
+    _expect("split empty options", _plugin.split_command_options("") == [])
+    var bat := FileAccess.get_file_as_string("res://gradlew.bat.txt")
+    _expect("gradlew.bat copied for the check", not bat.is_empty())
+    var defaults: Array = []
+    var launch := ""
+    for raw in bat.split("\n"):
+        var line := raw.strip_edges()
+        if line.begins_with("set DEFAULT_JVM_OPTS="):
+            defaults = _plugin.split_command_options(line.trim_prefix("set DEFAULT_JVM_OPTS="))
+        if line.begins_with("\"%JAVA_EXE%\""):
+            launch = line
+    _expect("the plugin's wrapper JVM defaults are gradlew.bat's DEFAULT_JVM_OPTS %s" % [defaults], defaults == _plugin.GRADLE_WRAPPER_DEFAULT_JVM_OPTS)
+    _expect("gradlew.bat still launches %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% appname -jar wrapper: " + launch,
+        launch.contains("%DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% \"-Dorg.gradle.appname=%APP_BASE_NAME%\" -jar \"%APP_HOME%\\gradle\\wrapper\\gradle-wrapper.jar\" %*"))
+    var args: Array = _plugin.gradle_wrapper_java_args("C:/p/gradle/wrapper/gradle-wrapper.jar", "-Dhttps.proxyHost=proxy -Xss2m", "\"-Djavax.net.ssl.trustStore=C:/a b/ts\"", ["-p", "C:/p", "buildScripts"])
+    var want: Array = _plugin.GRADLE_WRAPPER_DEFAULT_JVM_OPTS.duplicate()
+    want.append_array(["-Dhttps.proxyHost=proxy", "-Xss2m", "-Djavax.net.ssl.trustStore=C:/a b/ts", "-Dorg.gradle.appname=gradlew",
+        "-jar", "C:/p/gradle/wrapper/gradle-wrapper.jar", "-p", "C:/p", "buildScripts"])
+    _expect("the Windows launch arguments mirror gradlew.bat: %s" % [args], args == want)
 
 
 # A directory shaped like a JDK home: bin/java(.exe), a release file with JAVA_VERSION, and libjvm.

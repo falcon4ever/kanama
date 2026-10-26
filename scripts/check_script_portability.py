@@ -190,6 +190,7 @@ PLATFORM_ONLY_USES: dict[tuple[str, str], tuple[int, str]] = {
     ("scripts/hot_reload_smoke.sh", "cygpath"): (3, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),
     ("scripts/hot_reload_in_process_smoke.sh", "cygpath"): (3, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),
     ("scripts/package_install_smoke.sh", "cygpath"): (5, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary; and twice in --setup-ps1, which exits 2 on a host that is not MINGW*/MSYS*/CYGWIN*"),
+    ("scripts/store_addon_editor_smoke.sh", "cygpath"): (2, "behind `command -v cygpath` in the `MINGW*|MSYS*|CYGWIN*)` arm: the Windows path of the project for Godot"),
     ("scripts/package_install_smoke.sh", "powershell.exe"): (1, "only with --setup-ps1, which exits 2 on a host that is not MINGW*/MSYS*/CYGWIN* (the Windows store-addon job runs the addon's .ps1 setup)"),
     ("scripts/runtime_smoke.sh", "cygpath"): (3, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),
     ("scripts/tool_smoke.sh", "cygpath"): (7, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),

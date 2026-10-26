@@ -59,7 +59,10 @@ kit, the starter and the store addon all set up that task; a project with a
 `gradlew` of its own needs it too.
 
 You rarely need to press it: build on save is on. The plugin watches the
-`.kt` files in your project and builds once you stop saving for a moment
+`.kt` files in the folder your build compiles, `kotlin-src/` (and
+`web/kotlin-src/` when there is one; `kanamaProjectScriptsDir` in
+`gradle.properties` names another folder), and builds once you stop saving
+for a moment
 (`kanama/tools/auto_build_debounce_ms`, 800 ms by default). Saving several
 files in a row starts one build. To build only when you ask, turn off
 **Editor > Editor Settings > Kanama > Build > Build On Save**

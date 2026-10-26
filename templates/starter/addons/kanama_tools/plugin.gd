@@ -247,6 +247,8 @@ func _on_platform_build_selected(index: int) -> void:
 func _process(delta: float) -> void:
     _refresh_developer_mode_controls()
     _poll_build()
+    if _output_dialog != null and _output_dialog.visible:
+        _render_build_output()
 
     _scan_accum_sec += delta
     if _scan_accum_sec < KT_SCAN_INTERVAL_SEC:
@@ -686,7 +688,12 @@ func _collect_kt_mtimes() -> Dictionary:
 func _kt_scan_roots() -> Array:
     var roots: Array = []
     var configured := String(ProjectSettings.get_setting(SETTING_KOTLIN_SOURCES_DIR, "")).strip_edges()
-    if configured.begins_with("res://") and configured.trim_suffix("/") != "res:/" and DirAccess.dir_exists_absolute(configured):
+    var gradle_dir := gradle_scripts_dir(FileAccess.get_file_as_string("res://gradle.properties"), ProjectSettings.globalize_path("res://"))
+    if not gradle_dir.is_empty():
+        # The project's build compiles this folder (kanamaProjectScriptsDir in its gradle.properties).
+        if DirAccess.dir_exists_absolute(gradle_dir):
+            roots.append(ProjectSettings.localize_path(gradle_dir).trim_suffix("/"))
+    elif configured.begins_with("res://") and configured.trim_suffix("/") != "res:/" and DirAccess.dir_exists_absolute(configured):
         roots.append(configured.trim_suffix("/"))
     elif DirAccess.dir_exists_absolute("res://kotlin-src"):
         roots.append("res://kotlin-src")
@@ -730,6 +737,23 @@ func _collect_kt_mtimes_recursive(dir_path: String, sink: Dictionary) -> void:
         elif name.to_lower().ends_with(".kt"):
             sink[child] = FileAccess.get_modified_time(child)
     dir.list_dir_end()
+
+
+## The folder a project's gradle.properties points kanamaProjectScriptsDir at (absolute; a relative
+## value is relative to the project), or "" when it sets none. The consumer build reads the same property.
+static func gradle_scripts_dir(gradle_properties: String, project_dir: String) -> String:
+    for raw in gradle_properties.split("\n"):
+        var line := raw.strip_edges()
+        if line.begins_with("#") or line.begins_with("!"):
+            continue
+        for separator in ["=", ":"]:
+            var at := line.find(separator)
+            if at > 0 and line.left(at).strip_edges() == "kanamaProjectScriptsDir":
+                var value := line.substr(at + 1).strip_edges()
+                if value.is_empty():
+                    return ""
+                return value if value.is_absolute_path() else project_dir.path_join(value).simplify_path()
+    return ""
 
 
 ## How Build Scripts builds this project: `buildScripts` of its own Gradle build, or `installAddonJar` of
@@ -824,15 +848,13 @@ func _spawn_gradle_step(repo_dir: String, task_name: String, extra_args: Array) 
     var program := gradlew
     if windows:
         # gradlew.bat would run under cmd.exe, which expands %...% in the arguments (a project path with
-        # a % in it) and whose death leaves the Gradle java client running. What gradlew.bat runs is the
-        # wrapper's main class on the JDK: start that directly, so the process is the client itself.
+        # a % in it) and whose death leaves the Gradle java client running. Start what gradlew.bat starts,
+        # on the resolved JDK, directly: the process is then the client itself.
         program = String(jdk["home"]).path_join("bin/java.exe")
         var wrapper_jar := repo_dir.path_join("gradle/wrapper/gradle-wrapper.jar")
         if not FileAccess.file_exists(wrapper_jar):
             return "[kanama:tools] the Gradle wrapper is incomplete: %s is missing" % wrapper_jar
-        var java_args := ["-Xmx64m", "-Xms64m", "-classpath", wrapper_jar, "org.gradle.wrapper.GradleWrapperMain"]
-        java_args.append_array(args)
-        args = java_args
+        args = gradle_wrapper_java_args(wrapper_jar, OS.get_environment("JAVA_OPTS"), OS.get_environment("GRADLE_OPTS"), args)
     var command := "%s %s" % [program, " ".join(args)]
     print("[kanama:tools] Running: %s" % command)
     _append_build_output("$ %s\n" % command)
@@ -843,6 +865,49 @@ func _spawn_gradle_step(repo_dir: String, task_name: String, extra_args: Array) 
     _build_stdio = process["stdio"]
     _build_stderr = process["stderr"]
     return ""
+
+
+## The Gradle wrapper's default JVM options: `set DEFAULT_JVM_OPTS=` in gradlew.bat (and gradlew).
+## tool_smoke's JDK check reads them from the gradlew.bat Kanama ships and fails when they drift.
+const GRADLE_WRAPPER_DEFAULT_JVM_OPTS := ["-Xmx64m", "-Xms64m"]
+
+
+## The java arguments gradlew.bat (Gradle 9.4.1) passes:
+##   "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% "-Dorg.gradle.appname=%APP_BASE_NAME%"
+##     -jar "%APP_HOME%\gradle\wrapper\gradle-wrapper.jar" %*
+## -jar keeps the jar manifest's Enable-Native-Access, and JAVA_OPTS and GRADLE_OPTS (a proxy or a
+## truststore for the wrapper's download) go in split at spaces, as cmd.exe splits them.
+static func gradle_wrapper_java_args(wrapper_jar: String, java_opts: String, gradle_opts: String, gradle_args: Array) -> Array:
+    var result: Array = GRADLE_WRAPPER_DEFAULT_JVM_OPTS.duplicate()
+    result.append_array(split_command_options(java_opts))
+    result.append_array(split_command_options(gradle_opts))
+    result.append("-Dorg.gradle.appname=gradlew")
+    result.append_array(["-jar", wrapper_jar])
+    result.append_array(gradle_args)
+    return result
+
+
+## "a \"b c\" d" -> ["a", "b c", "d"]: words at spaces and tabs, a double-quoted run kept whole.
+static func split_command_options(text: String) -> Array:
+    var words: Array = []
+    var word := ""
+    var quoted := false
+    var has_word := false
+    for ch in text:
+        if ch == "\"":
+            quoted = not quoted
+            has_word = true
+        elif (ch == " " or ch == "\t") and not quoted:
+            if has_word:
+                words.append(word)
+            word = ""
+            has_word = false
+        else:
+            word += ch
+            has_word = true
+    if has_word:
+        words.append(word)
+    return words
 
 
 ## Called every frame: reads the running step's output (a full pipe would stall Gradle) and, once
@@ -905,6 +970,7 @@ func _finish_build(code: int) -> void:
     _set_build_buttons_busy(false)
     if _build_end_reason == "cancelled":
         # A cancelled build says nothing about the scripts: the light goes back to what the files say.
+        _last_build_failed = false
         print("[kanama:tools] %s cancelled." % _build_label)
     elif code == 0:
         _last_build_failed = false
@@ -949,7 +1015,7 @@ func _end_build(reason: String, message: String) -> void:
 
 func _on_cancel_build_pressed() -> void:
     _end_build("cancelled", "[kanama:tools] %s was cancelled." % _build_label)
-    _show_last_build_output()
+    _render_build_output()
 
 
 static func build_timeout_sec() -> int:
@@ -1107,6 +1173,14 @@ static func _status_light_texture() -> Texture2D:
 
 
 func _show_last_build_output() -> void:
+    _render_build_output()
+    if _output_dialog != null:
+        _output_dialog.popup_centered()
+
+
+## Fills the output dialog (made on first use) with the running or last build. Called again while the
+## dialog is open, so its text and Cancel Build follow the build.
+func _render_build_output() -> void:
     var text := ""
     if _is_build_running:
         text = "%s is running.\n\n%s" % [_build_label, _build_output.get_string_from_utf8()]
@@ -1144,9 +1218,9 @@ func _show_last_build_output() -> void:
     var cancel_button := _output_dialog.find_child("CancelBuild", true, false) as Button
     if cancel_button != null:
         cancel_button.visible = _is_build_running
-    text_edit.text = text
-    text_edit.scroll_vertical = text_edit.get_line_count()
-    _output_dialog.popup_centered()
+    if text_edit.text != text:
+        text_edit.text = text
+        text_edit.scroll_vertical = text_edit.get_line_count()
 
 
 ## JDK lookup (kanama#277). Two questions share one lookup order and one ranking:
