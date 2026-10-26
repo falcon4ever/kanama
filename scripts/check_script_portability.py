@@ -79,6 +79,7 @@ ALLOWED_COMMANDS = frozenset(
 # fails with the reason here. (task 138 item 34 review N3; cmake/shellcheck/mkdocs/ktfmt are toolchain installs.)
 NOT_EVERYWHERE = {
     "cygpath": "exists only under Git-Bash/MSYS on Windows; use it behind a Windows (`uname -s` MINGW*/MSYS*/CYGWIN*) guard",
+    "powershell.exe": "Windows PowerShell, only on Windows; use it behind a Windows (`uname -s` MINGW*/MSYS*/CYGWIN*) guard",
     "cmake": "a toolchain install (not on a stock macOS; the ubuntu runner has it); use it only after a `command -v cmake` skip or in a script whose job is the native build",
     "shellcheck": "a toolchain install (brew/apt), not part of either stock image; the lint gate probes for it and skips with a reason",
     "mkdocs": "a pip install (docs extra); run it only behind the docs gate's own availability check",
@@ -188,7 +189,8 @@ PLATFORM_ONLY_USES: dict[tuple[str, str], tuple[int, str]] = {
     ("scripts/export_game_smoke.sh", "cygpath"): (2, "only in the `Windows Desktop` preset branch, with a `|| printf` fallback to the native path"),
     ("scripts/hot_reload_smoke.sh", "cygpath"): (3, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),
     ("scripts/hot_reload_in_process_smoke.sh", "cygpath"): (3, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),
-    ("scripts/package_install_smoke.sh", "cygpath"): (3, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),
+    ("scripts/package_install_smoke.sh", "cygpath"): (5, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary; and twice in --setup-ps1, which exits 2 on a host that is not MINGW*/MSYS*/CYGWIN*"),
+    ("scripts/package_install_smoke.sh", "powershell.exe"): (1, "only with --setup-ps1, which exits 2 on a host that is not MINGW*/MSYS*/CYGWIN* (the Windows store-addon job runs the addon's .ps1 setup)"),
     ("scripts/runtime_smoke.sh", "cygpath"): (3, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),
     ("scripts/tool_smoke.sh", "cygpath"): (7, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),
     ("scripts/local_ci.sh", "cmake"): (3, "behind `command -v cmake`; absent cmake is a named gate_skip (bootstrap-cmake), never a silent pass"),

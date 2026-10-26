@@ -437,6 +437,35 @@ jobs:
           path: build/distributions/kanama-store-addon-*.zip
           if-no-files-found: error
 
+  # The store addon set up on Windows: the addon's setup-kanama-project.ps1 (what Kanama Tools' Set Up Kanama
+  # Project runs there) on a plain project, with the same file checks as the .sh setup above, a second run that
+  # must add and change nothing, and buildScripts.
+  store-addon-windows:
+    name: store-addon-windows
+    runs-on: windows-2025
+    needs: [store-addon]
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Download the store addon
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-store-addon
+          path: packages
+
+      - name: Set up the store addon with the PowerShell script
+        shell: bash
+        run: scripts/package_install_smoke.sh --store-addon --setup-ps1 packages/kanama-store-addon-*.zip
+
   # Android export from the packages alone (task 135 item 5): the Linux kit and the store addon, each unzipped
   # into a fresh project with a fresh GRADLE_USER_HOME, run buildAndroidScripts and a headless Godot export, and
   # the APK is checked (scripts, registrars, runtime, libkanama_bootstrap.so, nothing from build/). No device.

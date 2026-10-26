@@ -27,6 +27,10 @@ Options:
                                  Godot's editor setting) and the editor's Java
                                  SDK Path set for Godot's Android build. No device.
   --require-all-store-platforms  Require all store-addon desktop native libs.
+  --setup-ps1                    Set a store addon up with setup-kanama-project.ps1
+                                 (Windows PowerShell, -ProjectDir) instead of the
+                                 .sh script. Either way the setup runs twice, and
+                                 the second run must add and change nothing.
   --work-dir DIR                 Existing empty or non-existing workspace dir.
   --keep-work-dir                Do not delete a generated temporary workspace.
   --help, -h                     Show this help.
@@ -39,6 +43,7 @@ zip_path=""
 godot_bin=""
 package_kind="auto"
 require_all_store_platforms=0
+setup_ps1=0
 android_export=0
 
 while [[ $# -gt 0 ]]; do
@@ -57,6 +62,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --android)
       android_export=1
+      shift
+      ;;
+    --setup-ps1)
+      setup_ps1=1
       shift
       ;;
     --require-all-store-platforms)
@@ -113,6 +122,16 @@ fi
 if [[ "$android_export" -eq 1 && -z "$godot_bin" ]]; then
   echo "[package_install_smoke] --android needs the Godot binary: the APK is a real Godot export" >&2
   exit 2
+fi
+
+if [[ "$setup_ps1" -eq 1 ]]; then
+  case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*) ;;
+    *)
+      echo "[package_install_smoke] --setup-ps1 runs Windows PowerShell under Git-Bash; it needs a Windows host" >&2
+      exit 2
+      ;;
+  esac
 fi
 
 created_work_dir=0
@@ -273,7 +292,55 @@ if [[ "$detected_kind" == "store-addon" ]]; then
   fi
 
   write_smoke_project_files
-  (cd "$project_dir" && sh addons/kanama/setup-kanama-project.sh)
+  # run_store_setup <log>: the addon's setup script on the project, as the docs (.sh) or the Kanama Tools
+  # menu item on Windows (.ps1 with -ProjectDir) run it.
+  run_store_setup() {
+    if [[ "$setup_ps1" -eq 1 ]]; then
+      # Windows only (the option's check above): Git-Bash's cygpath hands PowerShell Windows paths.
+      powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$project_dir/addons/kanama/setup-kanama-project.ps1")" \
+        -ProjectDir "$(cygpath -w "$project_dir")" >"$1" 2>&1
+    else
+      (cd "$project_dir" && sh addons/kanama/setup-kanama-project.sh) >"$1" 2>&1
+    fi
+  }
+  # The project's files outside addons/ and .godot/, one path per line.
+  project_files() {
+    (cd "$project_dir" && find . \( -path ./addons -o -path ./.godot \) -prune -o -type f -print | LC_ALL=C sort)
+  }
+  setup_log="$work_dir/setup.log"
+  if ! run_store_setup "$setup_log"; then
+    cat "$setup_log" >&2
+    echo "[package_install_smoke] the store addon's setup script failed" >&2
+    exit 1
+  fi
+  cat "$setup_log"
+  # A second run must add nothing (no wrote/created/registered line) and change no file: the files are copied
+  # aside first and compared byte for byte after.
+  setup_snapshot="$work_dir/setup_snapshot"
+  files_before="$(project_files)"
+  while IFS= read -r file; do
+    mkdir -p "$setup_snapshot/$(dirname "$file")"
+    cp -p "$project_dir/$file" "$setup_snapshot/$file"
+  done <<<"$files_before"
+  if ! run_store_setup "$setup_log.second"; then
+    cat "$setup_log.second" >&2
+    echo "[package_install_smoke] the second run of the store addon's setup script failed" >&2
+    exit 1
+  fi
+  if grep -E '^\[kanama\] (wrote|created|registered) ' "$setup_log.second" >&2; then
+    echo "[package_install_smoke] the second run of the store addon's setup script added the files above" >&2
+    exit 1
+  fi
+  if [[ "$(project_files)" != "$files_before" ]]; then
+    echo "[package_install_smoke] the second run of the store addon's setup script added or removed project files" >&2
+    exit 1
+  fi
+  while IFS= read -r file; do
+    if ! cmp -s "$project_dir/$file" "$setup_snapshot/$file"; then
+      echo "[package_install_smoke] the second run of the store addon's setup script changed $file" >&2
+      exit 1
+    fi
+  done <<<"$files_before"
 
   require_native_library "$(host_platform_classifier)"
   if [[ "$require_all_store_platforms" -eq 1 ]]; then
