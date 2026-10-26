@@ -75,7 +75,11 @@ log="$work/editor.log"
 rc=0
 # The check plugin quits the editor when it is done (it gives up itself after 420 s); the bound covers an
 # editor that never gets that far.
-run_bounded 900 "$godot_bin" --headless --editor --path "$project_for_godot" >"$log" 2>&1 || rc=$?
+# No Gradle daemon (GRADLE_OPTS reaches the build through the plugin's launch): a daemon would outlive the
+# check, and on Windows it inherits the console Godot's output pipe, so the console wrapper never saw it close
+# and the editor never exited.
+run_bounded 900 env GRADLE_OPTS="${GRADLE_OPTS:+$GRADLE_OPTS }-Dorg.gradle.daemon=false" \
+  "$godot_bin" --headless --editor --path "$project_for_godot" >"$log" 2>&1 || rc=$?
 if [[ "$rc" -ne 0 ]] || ! grep -Fq "[project_setup] PASS" "$log" || grep -Fq "SCRIPT ERROR" "$log"; then
   grep -E "project_setup|kanama:tools|kanama\]|SCRIPT ERROR|ERROR:|at: " "$log" >&2 || true # justified: the tail below
   echo "$TAG editor log tail:" >&2

@@ -307,6 +307,9 @@ date >"$project/addons/kanama/kanama-scripts.jar"
 echo "BUILD SUCCESSFUL"
 EOF
     chmod +x "$LOOP_PROJECT/gradlew"
+    # The plugin counts a project's own Gradle build only with its wrapper jar beside gradlew; the fake never runs it.
+    mkdir -p "$LOOP_PROJECT/gradle/wrapper"
+    : >"$LOOP_PROJECT/gradle/wrapper/gradle-wrapper.jar"
     loop_rc=0
     (cd "$LOOP_PROJECT" && editor_env JAVA_HOME="$FAKE_JDK" KANAMA_FAKE_GRADLE_CONTROL="$LOOP_CONTROL" \
       "$GODOT_BIN" --headless --editor --path . --quit-after 30000) >"$LOG_FILE.loop" 2>&1 || loop_rc=$?

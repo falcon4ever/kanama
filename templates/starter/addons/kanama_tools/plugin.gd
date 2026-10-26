@@ -1580,12 +1580,14 @@ func _set_build_buttons_busy(busy: bool) -> void:
         _jar_button.text = JAR_BUTTON_BUSY_TEXT if busy and _build_label == "jar" else JAR_BUTTON_IDLE_TEXT
 
 
+## The project's own Gradle build: its gradlew (gradlew.bat on Windows) and the wrapper jar both run,
+## and Windows starts the wrapper jar itself. A gradlew without the jar is no build to run.
 func _project_dir_with_gradle_wrapper() -> String:
     var project_dir := ProjectSettings.globalize_path("res://")
     var gradlew := project_dir.path_join("gradlew")
     if OS.get_name() == "Windows":
         gradlew += ".bat"
-    if FileAccess.file_exists(gradlew):
+    if FileAccess.file_exists(gradlew) and FileAccess.file_exists(project_dir.path_join("gradle/wrapper/gradle-wrapper.jar")):
         return project_dir
     return ""
 
