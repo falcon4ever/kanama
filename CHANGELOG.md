@@ -86,6 +86,13 @@ the editor no longer disappears from the scene), and none of its code runs. GDSc
 half-built instance instead; a Kotlin constructor that threw leaves no object to run. On iOS, which
 has no placeholder instances, the node is left without the script. Web already handled it.
 
+### Fixed — forgotten wrappers are released at low frame rates too
+
+A wrapper you drop without `close()` is released by the garbage-collector fallback within a small
+time budget each frame. At a few frames a second (a phone under heavy load) that budget released a
+few hundred a minute; it now grows with the number waiting and with the frame time, up to 4 ms a
+frame. At a normal frame rate nothing changes.
+
 ### Changed — `Mathf`'s math runs in Kotlin
 
 `Mathf.sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `sinh`, `cosh`, `tanh`, `pow`, `exp`,
