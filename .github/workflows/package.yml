@@ -569,15 +569,22 @@ jobs:
   # iOS export from the packages alone (task 135 item 5): the macOS kit and the store addon, each unzipped into a fresh
   # project with a fresh GRADLE_USER_HOME, run buildIosScripts and a headless Godot export of an Xcode project, which
   # xcodebuild then builds for the device SDK without signing. No device.
+  # The third cell exports a project with no Kotlin script: its app links the shim's default of the script registry.
   ios-export:
-    name: ios-export (${{ matrix.package }})
+    name: ios-export (${{ matrix.package }}${{ matrix.mode == '--ios-without-scripts' && ', no scripts' || '' }})
     runs-on: macos-15
     needs: [desktop-kit, store-addon]
     timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
-        package: [desktop-kit, store-addon]
+        include:
+          - package: desktop-kit
+            mode: --ios
+          - package: store-addon
+            mode: --ios
+          - package: desktop-kit
+            mode: --ios-without-scripts
 
     steps:
       - name: Checkout
@@ -660,7 +667,7 @@ jobs:
       - name: Export for iOS from the ${{ matrix.package }}
         shell: bash
         run: |
-          scripts/package_install_smoke.sh --${{ matrix.package }} --ios packages/kanama-*.zip \
+          scripts/package_install_smoke.sh --${{ matrix.package }} ${{ matrix.mode }} packages/kanama-*.zip \
             "$HOME/godot/Godot.app/Contents/MacOS/Godot"
 
   publish-release:

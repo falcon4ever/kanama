@@ -76,25 +76,6 @@ import net.multigesture.kanama.types.basisFromRows
  */
 internal class ScopeProbeScript(handle: GodotHandle) : KanamaScript<Node>(handle, ::Node)
 
-/**
- * Sentinel returned by [KanamaIosScriptBridge.callVReturning] when the method is not a
- * value-returning one handled by this bridge (so the void [KanamaIosScriptBridge.callV] path runs).
- */
-object KanamaIosNoReturn
-
-/**
- * Sentinel for a property index the generated bridge does not expose through ScriptInstance.get.
- */
-object KanamaIosNoProperty
-
-/**
- * A typed `Map<K, V>` @Export read back by the generated bridge's getProperty: its [entries] keep
- * their int, enum (already ordinals) and value-type keys, so they leave as the any-key Dictionary
- * (KANAMA_IOS_PT_DICTIONARY_ANY) instead of the generic String-keyed one — the iOS twin of
- * desktop's `BuiltinTypes.initVariantDictionaryAny`.
- */
-class KanamaIosTypedDictionary(val entries: Map<*, *>)
-
 internal object KanamaIosRuntime {
   private const val PROBE_GROUP = "kanama_ios_probe"
   private const val PROBE_LABEL_GIVE_UP_FRAME = 120

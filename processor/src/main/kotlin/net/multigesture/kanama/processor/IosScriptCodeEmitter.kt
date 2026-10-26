@@ -303,13 +303,13 @@ internal class IosScriptCodeEmitter(
    * The combined registry file: `kanamaIosProjectScriptsRegister()` + bridge classes.
    *
    * The register function is the seam between the runtime and the project's scripts: a
-   * `@CName("kanama_ios_project_scripts_register")` export that the C shim calls (a weak reference,
-   * `kanama_ios_load_project_scripts`), so the runtime never names generated code. That lets the
+   * `@CName("kanama_ios_project_scripts_register")` export that the C shim calls
+   * (`kanama_ios_load_project_scripts`), so the runtime never names generated code. That lets the
    * scripts compile in the runtime's own module (a Kanama checkout) or in a module of their own
    * against the prebuilt runtime klib (a kit project's `buildIosScripts`). The runtime declarations
-   * this file names are public behind `@InternalKanamaIosApi`. With no scripts there is no export:
-   * a runtime built without a project, like the klib a kit carries, must not define the symbol the
-   * project's own build defines.
+   * this file names are public behind `@InternalKanamaIosApi`. With no scripts there is no export
+   * (the shim's weak default of it stands in): a runtime built without a project, like the klib a
+   * kit carries, must not define the symbol the project's own build defines.
    */
   fun registrySource(): String {
     val imports =

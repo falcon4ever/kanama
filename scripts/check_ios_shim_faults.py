@@ -73,12 +73,6 @@ TAG = "[check-ios-shim-faults]"
 # Each is documented in the function's own comment in the shim; see the task 124 contract table.
 BENIGN = [
     (
-        "kanama_ios_load_project_scripts",
-        "kanama_ios_project_scripts_register == NULL",
-        "a build without @ScriptClass scripts defines no register function (the weak reference is null): "
-        "nothing to register is the right answer, and the shim logs that once",
-    ),
-    (
         "kanama_ios_godot_is_instance_id_valid",
         "instance_id == 0",
         "a zero instance id is a legitimate question whose honest answer is 'invalid'",

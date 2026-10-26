@@ -1276,6 +1276,16 @@ case("package_install_smoke.sh --ios (shim and runtime from different Kanamas)",
            "extern void kanama_ios_runtime_initialize(int32_t level);\nextern void kanama_ios_runtime_red_run(void);\n")],
      "lacks 1 Kanama entry the shim calls (kanama_ios_runtime_red_run)", "the kit's shim calls a runtime entry its runtime klib does not define (a shim and a klib of different versions)",
      timeout=5400, requires_env=IOS_KIT_ENV, slow=True)
+IOS_KIT_SMOKE_NO_SCRIPTS = ["bash", "-c", './gradlew -p . -q packageDesktopKit && '
+                            'scripts/package_install_smoke.sh --desktop-kit --ios-without-scripts '
+                            f'build/distributions/kanama-desktop-kit-*macos*.zip "{GODOT}"']
+case("package_install_smoke.sh --ios-without-scripts (no default registry)", IOS_KIT_SMOKE_NO_SCRIPTS,
+     [Edit("ios/bootstrap/kanama_ios_shim.c",
+           '__attribute__((weak, visibility("default"))) void kanama_ios_project_scripts_register(void) {\n'
+           '    fprintf(stderr, "[kanama][ios][c] this build has no project scripts\\n");\n}\n',
+           "extern void kanama_ios_project_scripts_register(void) __attribute__((weak_import));\n")],
+     "_kanama_ios_project_scripts_register", "the shim only references the script registry weakly again, with no default: Xcode's link of a project without scripts fails on the undefined symbol",
+     timeout=5400, requires_env=IOS_KIT_ENV, slow=True)
 case("package_install_smoke.sh --ios (kit without the iOS runtime)", IOS_KIT_SMOKE,
      [Edit("build.gradle.kts", 'if (packagePlatformClassifier.get().startsWith("macos")) dependsOn("publishKanamaIosPackage")', "")],
      "addons/kanama/maven has no Kanama iOS runtime (kanama-iosarm64", "the macOS kit stops carrying the iOS runtime: buildIosScripts must say which zip to unzip again",

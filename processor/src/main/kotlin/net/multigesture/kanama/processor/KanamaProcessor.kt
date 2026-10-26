@@ -1733,7 +1733,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
 
   private fun emitIosScriptRegistry() {
     // The registry file is always emitted; with zero scripts it defines no register function
-    // (IosScriptCodeEmitter.registrySource), so the shim's weak reference stays null.
+    // (IosScriptCodeEmitter.registrySource), and the shim's weak default of it stands in.
     // Gate phase: emit as `.kt.txt` resources (not compiled) so the regex-generated registry
     // still drives the build and a verify task can diff the two. Cutover flips this to `.kt`
     // via -Pkanama…=false → the KSP option below. Default stays resource until the gate passes.

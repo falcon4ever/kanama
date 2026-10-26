@@ -32,6 +32,9 @@ Options:
                                  for the device SDK, unsigned. Needs a Mac with
                                  Xcode, the Godot binary and Godot's iOS export
                                  templates. No device.
+  --ios-without-scripts          --ios for a project with no Kotlin script: the
+                                 starter script leaves kotlin-src/ and its scene
+                                 before buildIosScripts.
   --require-all-store-platforms  Require all store-addon desktop native libs
                                  and the iOS runtime.
   --work-dir DIR                 Existing empty or non-existing workspace dir.
@@ -48,6 +51,7 @@ package_kind="auto"
 require_all_store_platforms=0
 android_export=0
 ios_export=0
+ios_without_scripts=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -65,6 +69,11 @@ while [[ $# -gt 0 ]]; do
       ;;
     --ios)
       ios_export=1
+      shift
+      ;;
+    --ios-without-scripts)
+      ios_export=1
+      ios_without_scripts=1
       shift
       ;;
     --require-all-store-platforms)
@@ -574,6 +583,18 @@ fi
 # --- iOS from the package alone (task 135 item 5): the commands Export for iOS documents, then the Xcode build a
 # user runs, for the device SDK without signing (that proves the link of the scripts against the prebuilt runtime).
 if [[ "$ios_export" -eq 1 ]]; then
+  if [[ "$ios_without_scripts" -eq 1 ]]; then
+    # A project with no @ScriptClass: its iOS build defines no script registry, and the app must still link.
+    rm -f "$project_dir"/kotlin-src/*.kt
+    python3 - "$project_dir/main.tscn" <<'PY'
+import sys
+from pathlib import Path
+
+scene = Path(sys.argv[1])
+lines = [l for l in scene.read_text().splitlines() if "HelloScript.kt" not in l and l != 'script = ExtResource("1")']
+scene.write_text("\n".join(lines).replace("load_steps=2", "load_steps=1") + "\n")
+PY
+  fi
   ios_log="$work_dir/ios.log"
   echo "[package_install_smoke] ios: ./gradlew buildIosScripts"
   if ! run_bounded 3600 "$project_dir/gradlew" --no-daemon -p "$project_dir" buildIosScripts >"$ios_log" 2>&1; then
@@ -595,50 +616,68 @@ if [[ "$ios_export" -eq 1 ]]; then
     exit 1
   fi
 
-  ios_export_dir="$work_dir/ios-export"
-  export_log="$work_dir/ios-export.log"
-  echo "[package_install_smoke] ios: godot --headless --export-debug iOS"
-  rm -rf "$project_dir/.godot/exported" "$ios_export_dir"
-  mkdir -p "$ios_export_dir"
-  export_rc=0
-  run_bounded 1800 "$godot_bin" --headless --path "$project_dir_for_godot" \
-    --export-debug iOS "$ios_export_dir/KanamaSmoke.ipa" >"$export_log" 2>&1 || export_rc=$?
-  pbxproj="$ios_export_dir/KanamaSmoke.xcodeproj/project.pbxproj"
-  if [[ "$export_rc" -ne 0 || ! -f "$pbxproj" ]]; then
-    tail -n 80 "$export_log" >&2
-    echo "[package_install_smoke] FAIL -- the iOS export failed (exit $export_rc, log: $export_log)" >&2
-    exit 1
-  fi
-  if ! grep -q 'kanama_ios.debug.xcframework' "$pbxproj"; then
-    echo "[package_install_smoke] FAIL -- the exported Xcode project does not link kanama_ios.debug.xcframework" >&2
-    exit 1
-  fi
-  check_scene_properties ios
-
-  # The app links the shim, the runtime and the project's script registry (the shim's weak reference to it).
-  xcode_log="$work_dir/ios-xcodebuild.log"
-  derived_dir="$work_dir/ios-derived-data"
-  echo "[package_install_smoke] ios: xcodebuild -sdk iphoneos CODE_SIGNING_ALLOWED=NO"
-  if ! run_bounded 1800 xcodebuild -project "$ios_export_dir/KanamaSmoke.xcodeproj" -scheme KanamaSmoke \
-    -configuration Debug -sdk iphoneos -destination generic/platform=iOS -derivedDataPath "$derived_dir" \
-    CODE_SIGNING_ALLOWED=NO build >"$xcode_log" 2>&1; then
-    tail -n 80 "$xcode_log" >&2
-    echo "[package_install_smoke] FAIL -- xcodebuild of the exported project failed (log: $xcode_log)" >&2
-    exit 1
-  fi
-  app_binary="$derived_dir/Build/Products/Debug-iphoneos/KanamaSmoke.app/KanamaSmoke"
-  if [[ ! -f "$app_binary" ]]; then
-    echo "[package_install_smoke] FAIL -- xcodebuild wrote no app binary: $app_binary" >&2
-    exit 1
-  fi
-  symbols="$(xcrun nm -gU -j "$app_binary")"
-  for symbol in _kanama_entry _kanama_ios_runtime_entry _kanama_ios_project_scripts_register; do
-    if ! grep -Fxq "$symbol" <<<"$symbols"; then
-      echo "[package_install_smoke] FAIL -- the app does not define $symbol: $app_binary" >&2
+  # A debug export built in Debug and a release export built in Release: each configuration links its own
+  # library, and the app holds the shim's entry, the runtime's, and the project's script registry: the Kotlin
+  # one (a strong definition) when the project has scripts, else the shim's weak default of it.
+  for variant in debug release; do
+    configuration="$(printf '%s' "$variant" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')"
+    ios_export_dir="$work_dir/ios-export-$variant"
+    export_log="$work_dir/ios-export-$variant.log"
+    echo "[package_install_smoke] ios: godot --headless --export-$variant iOS"
+    rm -rf "$project_dir/.godot/exported" "$ios_export_dir"
+    mkdir -p "$ios_export_dir"
+    export_rc=0
+    run_bounded 1800 "$godot_bin" --headless --path "$project_dir_for_godot" \
+      "--export-$variant" iOS "$ios_export_dir/KanamaSmoke.ipa" >"$export_log" 2>&1 || export_rc=$?
+    pbxproj="$ios_export_dir/KanamaSmoke.xcodeproj/project.pbxproj"
+    if [[ "$export_rc" -ne 0 || ! -f "$pbxproj" ]]; then
+      tail -n 80 "$export_log" >&2
+      echo "[package_install_smoke] FAIL -- the iOS $variant export failed (exit $export_rc, log: $export_log)" >&2
       exit 1
     fi
+    if ! grep -q "kanama_ios.$variant.xcframework" "$pbxproj"; then
+      echo "[package_install_smoke] FAIL -- the exported Xcode project does not link kanama_ios.$variant.xcframework" >&2
+      exit 1
+    fi
+    if [[ "$variant" == "debug" ]]; then
+      check_scene_properties ios
+    fi
+
+    xcode_log="$work_dir/ios-xcodebuild-$variant.log"
+    derived_dir="$work_dir/ios-derived-data-$variant"
+    echo "[package_install_smoke] ios: xcodebuild -configuration $configuration -sdk iphoneos CODE_SIGNING_ALLOWED=NO"
+    if ! run_bounded 1800 xcodebuild -project "$ios_export_dir/KanamaSmoke.xcodeproj" -scheme KanamaSmoke \
+      -configuration "$configuration" -sdk iphoneos -destination generic/platform=iOS -derivedDataPath "$derived_dir" \
+      CODE_SIGNING_ALLOWED=NO build >"$xcode_log" 2>&1; then
+      tail -n 80 "$xcode_log" >&2
+      echo "[package_install_smoke] FAIL -- xcodebuild ($configuration) of the exported project failed (log: $xcode_log)" >&2
+      exit 1
+    fi
+    app_binary="$derived_dir/Build/Products/$configuration-iphoneos/KanamaSmoke.app/KanamaSmoke"
+    if [[ ! -f "$app_binary" ]]; then
+      echo "[package_install_smoke] FAIL -- xcodebuild ($configuration) wrote no app binary: $app_binary" >&2
+      exit 1
+    fi
+    # `nm -m`: `<address> (<segment,section>) [weak ]external <symbol>` per defined symbol.
+    symbols="$(xcrun nm -m "$app_binary")"
+    for symbol in _kanama_entry _kanama_ios_runtime_entry; do
+      if ! grep -Eq " external $symbol\$" <<<"$symbols"; then
+        echo "[package_install_smoke] FAIL -- the $configuration app does not define $symbol: $app_binary" >&2
+        exit 1
+      fi
+    done
+    register="$(grep -E ' _kanama_ios_project_scripts_register$' <<<"$symbols" || true)"  # justified: no match is reported as `none` on the next lines
+    if [[ "$ios_without_scripts" -eq 1 ]]; then
+      expected="weak external"
+    else
+      expected=") external"
+    fi
+    if [[ "$register" != *"$expected _kanama_ios_project_scripts_register" ]]; then
+      echo "[package_install_smoke] FAIL -- the $configuration app's script registry is not the expected one ($expected): ${register:-none}" >&2
+      exit 1
+    fi
+    echo "[package_install_smoke] ios: $variant export and $configuration build: $app_binary"
   done
-  echo "[package_install_smoke] ios: buildIosScripts, a headless export and an unsigned device build: $app_binary"
 fi
 
 echo "[package_install_smoke] PASS"

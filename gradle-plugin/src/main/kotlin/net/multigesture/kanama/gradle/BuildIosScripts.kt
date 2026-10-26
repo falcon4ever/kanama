@@ -38,6 +38,8 @@ abstract class BuildIosScripts : DefaultTask() {
   @get:Internal abstract val xcodeDeveloperDir: Property<String>
   /** `-PkanamaIosAllowSkips=true`: a member iOS cannot carry is left out with a warning. */
   @get:Internal abstract val allowSkips: Property<Boolean>
+  /** `-PkanamaIosHeap=10g`: the inner build's heap, for a project too large for the default. */
+  @get:Internal abstract val heap: Property<String>
 
   @get:Inject abstract val execOperations: ExecOperations
 
@@ -80,8 +82,12 @@ abstract class BuildIosScripts : DefaultTask() {
         "No Kotlin scripts folder at $scripts: iOS compiles the project's kotlin-src."
       )
     }
+    val heapSize = heap.getOrElse("${INNER_HEAP_GB}g").trim()
+    if (!Regex("[1-9][0-9]*[gGmM]").matches(heapSize)) {
+      throw GradleException("-PkanamaIosHeap=$heapSize is not a heap size: write it like 10g.")
+    }
     val inner = innerBuildDirectory.get().asFile
-    writeInnerBuild(inner, project, scripts)
+    writeInnerBuild(inner, project, scripts, heapSize)
     stateFirstBuildCosts()
 
     val gradlew = project.resolve("gradlew")
@@ -93,6 +99,9 @@ abstract class BuildIosScripts : DefaultTask() {
           gradlew.absolutePath,
           "-p",
           inner.absolutePath,
+          // On the command line, so it wins over an org.gradle.jvmargs in the user's
+          // ~/.gradle/gradle.properties, which the inner build's own gradle.properties loses to.
+          "-Dorg.gradle.jvmargs=${innerJvmArgs(heapSize)}",
           "linkDebugStaticIosArm64",
           "linkReleaseStaticIosArm64",
         )
@@ -111,14 +120,29 @@ abstract class BuildIosScripts : DefaultTask() {
       "[kanama] iOS scripts compiled and linked in ${(System.nanoTime() - started) / 1_000_000_000} s."
     )
 
+    val work = inner.resolve("build/kanama-ios")
+    // What the steps below read. When the links were up to date, these are unchanged and the
+    // xcframeworks they made are reused (and, when already installed, not copied again).
+    val inputs =
+      (BUILD_TYPES.map { runtimeLib(inner, it) } + shimZip).joinToString("\n") {
+        "${it.path} ${it.length()} ${it.lastModified()}"
+      } +
+        "\nscripts ${scripts.canonicalPath}\nkanama ${KanamaVersions.KANAMA}\n" +
+        "ios ${KanamaVersions.IOS_MIN_VERSION}\nxcode $developerDir\n"
+    val stamp = work.resolve(INPUTS_STAMP)
+    val built = BUILD_TYPES.map { work.resolve("$it/${xcframeworkName(it)}") }
+    if (stamp.isFile && stamp.readText() == inputs && built.all { it.isDirectory }) {
+      logger.lifecycle("[kanama] The iOS libraries are up to date.")
+      install(project, built, inputs)
+      return
+    }
     val shim = inner.resolve("shim")
     unzip(shimZip, shim)
-    val work = inner.resolve("build/kanama-ios")
     work.deleteRecursively()
     val registersScripts = generatedRegistryHasEntry(inner)
     val frameworks =
       BUILD_TYPES.associateWith { type ->
-        val runtimeLib = inner.resolve("build/bin/iosArm64/${type}Static/libkanama_ios_runtime.a")
+        val runtimeLib = runtimeLib(inner, type)
         if (!runtimeLib.isFile) throw GradleException("The iOS scripts build wrote no $runtimeLib.")
         val dir = work.resolve(type)
         dir.mkdirs()
@@ -169,11 +193,7 @@ abstract class BuildIosScripts : DefaultTask() {
           sourceLinesObject.absolutePath,
           runtimeLib.absolutePath,
         )
-        val framework =
-          dir.resolve(
-            if (type == "debug") KanamaIosAddonFiles.DEBUG_XCFRAMEWORK
-            else KanamaIosAddonFiles.RELEASE_XCFRAMEWORK
-          )
+        val framework = dir.resolve(xcframeworkName(type))
         run(
           developerDir,
           "xcodebuild",
@@ -187,14 +207,31 @@ abstract class BuildIosScripts : DefaultTask() {
         )
         framework
       }
-    install(project, frameworks.values.toList())
+    stamp.writeText(inputs)
+    install(project, frameworks.values.toList(), inputs)
   }
 
-  private fun install(project: File, frameworks: List<File>) {
+  private fun runtimeLib(inner: File, type: String) =
+    inner.resolve("build/bin/iosArm64/${type}Static/libkanama_ios_runtime.a")
+
+  private fun xcframeworkName(type: String) =
+    if (type == "debug") KanamaIosAddonFiles.DEBUG_XCFRAMEWORK
+    else KanamaIosAddonFiles.RELEASE_XCFRAMEWORK
+
+  private fun install(project: File, frameworks: List<File>, inputs: String) {
     val bin = project.resolve(KanamaIosAddonFiles.BIN_DIR)
-    bin.deleteRecursively()
-    bin.mkdirs()
-    for (framework in frameworks) framework.copyRecursively(bin.resolve(framework.name))
+    // The installed copy names the inputs it was built from (a dot file: Godot does not import it).
+    val installed = bin.resolve(".$INPUTS_STAMP")
+    if (
+      !(installed.isFile &&
+        installed.readText() == inputs &&
+        frameworks.all { bin.resolve(it.name).isDirectory })
+    ) {
+      bin.deleteRecursively()
+      bin.mkdirs()
+      for (framework in frameworks) framework.copyRecursively(bin.resolve(framework.name))
+      installed.writeText(inputs)
+    }
 
     val descriptor = project.resolve("addons/kanama/kanama.gdextension")
     if (!descriptor.isFile) {
@@ -253,8 +290,10 @@ abstract class BuildIosScripts : DefaultTask() {
   /**
    * Every Kanama entry the shim calls must be in the library. Kotlin/Native drops a dependency's
    * `@CName` functions unless the binary exports that klib, and Xcode's link would only fail later,
-   * naming one symbol. With project scripts, the generated register function must be there too: the
-   * shim's reference to it is weak, so without it the game would start with no scripts at all.
+   * naming one symbol. With project scripts, the generated register function must be there too, in
+   * the same object as the runtime entries: the shim carries a weak default of it, which the linker
+   * replaces only when it links the object holding the Kotlin one, and it links that object for the
+   * runtime entries. Without either, the game would start with no scripts at all.
    */
   private fun checkRuntimeEntries(
     developerDir: String,
@@ -268,11 +307,14 @@ abstract class BuildIosScripts : DefaultTask() {
         .map { it.trim() }
         .filter { it.startsWith("_kanama_ios_") && it != "_$REGISTER_SYMBOL" }
         .toSet() + if (registersScripts) setOf("_$REGISTER_SYMBOL") else emptySet()
-    val defined =
-      output(developerDir, "xcrun", "nm", "-gU", "-j", runtimeLib.absolutePath)
+    // `<library>:<member>: <address> T <symbol>`: each defined global symbol and its archive
+    // member.
+    val memberOf =
+      output(developerDir, "xcrun", "nm", "-A", "-gU", runtimeLib.absolutePath)
         .lines()
-        .map { it.trim() }
-        .toSet()
+        .filter { it.isNotBlank() }
+        .associate { line -> line.substringAfterLast(' ') to line.substringBeforeLast(": ") }
+    val defined = memberOf.keys
     val missing = (needed - defined).sorted()
     if (missing.isNotEmpty()) {
       throw GradleException(
@@ -284,6 +326,15 @@ abstract class BuildIosScripts : DefaultTask() {
           "): the runtime klib was not exported into it, or the shim and the runtime klib in " +
           "addons/kanama/maven are from different Kanama versions. Unzip the Kanama kit or addon " +
           "into this project again."
+      )
+    }
+    val registerMember = memberOf["_$REGISTER_SYMBOL"]
+    val runtimeMember = memberOf["_kanama_ios_runtime_entry"]
+    if (registersScripts && registerMember != runtimeMember) {
+      throw GradleException(
+        "The iOS library ${runtimeLib.name} defines $REGISTER_SYMBOL in another object than the " +
+          "Kanama runtime ($registerMember, not $runtimeMember): Xcode's link would keep the " +
+          "shim's empty default of it, and the game would start with no scripts."
       )
     }
   }
@@ -374,7 +425,7 @@ abstract class BuildIosScripts : DefaultTask() {
     }
   }
 
-  private fun writeInnerBuild(inner: File, project: File, scripts: File) {
+  private fun writeInnerBuild(inner: File, project: File, scripts: File, heapSize: String) {
     val projectPath = project.canonicalFile
     val scriptsPath = scripts.canonicalFile
     // A script's `res://` path is its path in the project, wherever kotlin-src is.
@@ -390,7 +441,7 @@ abstract class BuildIosScripts : DefaultTask() {
         "SCRIPT_ROOT" to kotlinString(scriptRoot.invariantSeparatorsPath),
         "PROJECT_DIR" to kotlinString(projectPath.invariantSeparatorsPath),
         "ALLOW_SKIPS" to allowSkips.getOrElse(false).toString(),
-        "HEAP" to "${INNER_HEAP_GB}g",
+        "JVM_ARGS" to innerJvmArgs(heapSize),
         "HEAP_NOTE" to HEAP_NOTE,
       )
     for ((resource, target) in INNER_FILES) {
@@ -409,6 +460,9 @@ abstract class BuildIosScripts : DefaultTask() {
   private fun kotlinString(text: String): String =
     text.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$")
 
+  private fun innerJvmArgs(heapSize: String) =
+    "-Xmx$heapSize -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8"
+
   internal companion object {
     const val INNER_PROJECT = "kanama-ios-scripts"
     val BUILD_TYPES = listOf("debug", "release")
@@ -419,6 +473,7 @@ abstract class BuildIosScripts : DefaultTask() {
         "gradle.properties.in" to "gradle.properties",
       )
     const val REGISTER_SYMBOL = "kanama_ios_project_scripts_register"
+    const val INPUTS_STAMP = "kanama-ios-inputs.txt"
 
     // The inner build's Gradle heap, in which Kotlin/Native compiles and links. Measured on an M1
     // Max (Kotlin 2.4.21, the starter): the release link runs out of a 2 GB heap and links in 3 GB,

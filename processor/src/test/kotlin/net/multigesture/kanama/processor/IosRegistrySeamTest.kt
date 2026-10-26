@@ -7,11 +7,11 @@ import kotlin.test.assertTrue
 
 /**
  * The seam between the iOS runtime and a project's generated script registry (task 135 item 5). The
- * registry is a `@CName("kanama_ios_project_scripts_register")` function the C shim calls through a
- * weak reference, never an `actual` of a runtime `expect` (which cannot cross a module: a kit
- * project compiles its scripts in a module of its own against the prebuilt runtime klib). It opts
- * in to the runtime declarations it names, and a build without scripts defines no such function, so
- * the runtime klib a kit carries never collides with the project's own.
+ * registry is a `@CName("kanama_ios_project_scripts_register")` function the C shim calls, never an
+ * `actual` of a runtime `expect` (which cannot cross a module: a kit project compiles its scripts
+ * in a module of its own against the prebuilt runtime klib). It opts in to the runtime declarations
+ * it names, and a build without scripts defines no such function (the shim's weak default stands
+ * in), so the runtime klib a kit carries never collides with the project's own strong definition.
  */
 class IosRegistrySeamTest {
   private fun script(name: String) =

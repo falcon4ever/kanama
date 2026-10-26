@@ -128,17 +128,26 @@ The seam that makes the separate compile possible: the generated registry is
 a `@CName("kanama_ios_project_scripts_register")` function
 (`IosScriptCodeEmitter.registrySource`), not an `actual` of a runtime
 `expect`, which cannot cross a module. The runtime calls it once, before its
-first script lookup, through the shim's `kanama_ios_load_project_scripts`,
-whose reference to it is weak: a build without scripts, such as the klib the
-kit carries, defines no register function. The runtime declarations that
+first script lookup, through the shim's `kanama_ios_load_project_scripts`. A
+build without scripts, such as the klib the kit carries, defines no register
+function, so the shim carries a weak default of it that only logs. The linker
+keeps the strong Kotlin definition because it sits in the same object as every
+`kanama_ios_runtime_*` entry the shim calls (`buildIosScripts` checks that); a
+`weak_import` reference instead would leave the symbol undefined at Xcode's
+link of a build without scripts. The runtime declarations that
 generated code names live in `src/iosMain/.../ios/KanamaIosScriptSeam.kt`,
 public behind the ERROR-level `@InternalKanamaIosApi` opt-in (the generated
 file opts in; the runtime's own iOS source sets opt in module-wide), and
 `api-snapshots/ios-seam.txt` records them. Publishing the klib from a build
 that compiles a project's scripts or the self-tests into it fails.
 
-The inner build's daemon heap is 6 GB (`BuildIosScripts.INNER_HEAP_GB`):
-measured on an M1 Max, the release link runs out of a 2 GB heap and links in
+The inner build's daemon heap is 6 GB (`BuildIosScripts.INNER_HEAP_GB`,
+`-PkanamaIosHeap` for a larger project), passed as `-Dorg.gradle.jvmargs` on
+the inner `gradlew` command line so an `org.gradle.jvmargs` in the user's
+`~/.gradle/gradle.properties` cannot shrink it. Once its links are up to date
+and the shim zip is unchanged, `buildIosScripts` reuses the xcframeworks it
+made, and copies them only when the installed ones came from other inputs.
+Measured on an M1 Max, the release link runs out of a 2 GB heap and links in
 3 GB, and its process peaks at 9 to 11 GB with LLVM's native memory, which is
 why the user page asks for a 16 GB Mac. The checkout's own libraries measure
 roughly 168 MB debug / 110 MB release; a kit project's debug library is about 195 MB. <!-- kanama-claim: ios-static-size -->
