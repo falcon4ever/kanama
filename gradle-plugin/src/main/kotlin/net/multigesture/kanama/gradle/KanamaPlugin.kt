@@ -12,7 +12,8 @@ import org.gradle.api.Project
  * The project stays the `kotlin("jvm")` build IntelliJ imports; `buildScripts` stays in
  * `addons/kanama/kanama-project.gradle.kts`. Each export task writes a small plugin-owned Gradle
  * build under `build/kanama/<platform>/` and runs it with the project's own `gradlew`, so nothing
- * Android-specific is configured until an Android build is asked for.
+ * Android- or iOS-specific is configured, and no Kotlin/Native is downloaded, until that platform's
+ * build is asked for.
  */
 class KanamaPlugin : Plugin<Project> {
   override fun apply(project: Project) {
@@ -31,6 +32,26 @@ class KanamaPlugin : Plugin<Project> {
       )
       task.kspDirectory.set(project.layout.buildDirectory.dir("generated/ksp/main/kotlin"))
       task.innerBuildDirectory.set(project.layout.buildDirectory.dir("kanama/android"))
+    }
+
+    project.tasks.register("buildIosScripts", BuildIosScripts::class.java) { task ->
+      task.group = "kanama"
+      task.description =
+        "Compile kotlin-src for iOS and install the Kanama iOS libraries into addons/kanama/bin/ios."
+      // The editor loads the desktop scripts during the export (the export guard and the scenes'
+      // script properties).
+      task.dependsOn("buildScripts")
+      task.projectDirectory.set(project.layout.projectDirectory)
+      task.scriptsDirectory.set(
+        project.layout.projectDirectory.dir(
+          project.providers.gradleProperty("kanamaProjectScriptsDir").orElse("kotlin-src")
+        )
+      )
+      task.innerBuildDirectory.set(project.layout.buildDirectory.dir("kanama/ios"))
+      task.xcodeDeveloperDir.set(project.providers.gradleProperty("kanamaXcodeDeveloperDir"))
+      task.allowSkips.set(
+        project.providers.gradleProperty("kanamaIosAllowSkips").map { it.trim() == "true" }
+      )
     }
   }
 

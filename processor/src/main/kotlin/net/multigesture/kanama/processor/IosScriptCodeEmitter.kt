@@ -9,7 +9,7 @@ import java.security.MessageDigest
 // generateIosCompatibilitySources). Phase 3.2, script-model-unification-design.md.
 //
 // It is AGGREGATING (takes all scripts at once) because the regex path emits one combined
-// `registerKanamaIosProjectScripts()` + per-script bridge file in package
+// `kanamaIosProjectScriptsRegister()` + per-script bridge file in package
 // `net.multigesture.kanama.ios`, plus one constants file in `net.multigesture.kanama.generated`,
 // plus per-package compatibility shims. Reproducing that exact shape lets the Phase-3.2
 // parallel-run gate compare this output against the regex output for the demo scripts.
@@ -229,6 +229,9 @@ internal data class IosScript(
  */
 internal const val ALLOW_IOS_SKIPS_OPTION = "kanamaIosAllowSkips"
 
+/** The C name of the generated register function, which the iOS shim calls (weak). */
+internal const val REGISTER_SYMBOL = "kanama_ios_project_scripts_register"
+
 internal class IosScriptCodeEmitter(
   inputs: List<IosScriptInput>,
   private val warn: (String) -> Unit = {},
@@ -296,7 +299,18 @@ internal class IosScriptCodeEmitter(
     )
   }
 
-  /** The combined registry file: `registerKanamaIosProjectScripts()` + bridge classes. */
+  /**
+   * The combined registry file: `kanamaIosProjectScriptsRegister()` + bridge classes.
+   *
+   * The register function is the seam between the runtime and the project's scripts: a
+   * `@CName("kanama_ios_project_scripts_register")` export that the C shim calls (a weak reference,
+   * `kanama_ios_load_project_scripts`), so the runtime never names generated code. That lets the
+   * scripts compile in the runtime's own module (a Kanama checkout) or in a module of their own
+   * against the prebuilt runtime klib (a kit project's `buildIosScripts`). The runtime declarations
+   * this file names are public behind `@InternalKanamaIosApi`. With no scripts there is no export:
+   * a runtime built without a project, like the klib a kit carries, must not define the symbol the
+   * project's own build defines.
+   */
   fun registrySource(): String {
     val imports =
       scripts
@@ -304,18 +318,22 @@ internal class IosScriptCodeEmitter(
         .distinct()
         .sorted()
     val builder = StringBuilder()
+    builder.appendLine(
+      "@file:OptIn(net.multigesture.kanama.ios.InternalKanamaIosApi::class, " +
+        "kotlin.experimental.ExperimentalNativeApi::class)"
+    )
+    builder.appendLine()
     builder.appendLine("package net.multigesture.kanama.ios")
     builder.appendLine()
     builder.appendLine("import java.lang.foreign.MemorySegment")
     imports.forEach { builder.appendLine("import $it") }
     builder.appendLine()
-    // `actual` of the `expect` declared in the shared iosMain source set: KSP emits this
-    // registry into the per-target leaf source sets (iosArm64Main / iosSimulatorArm64Main),
-    // which the shared KanamaIosRuntime cannot reference directly, so the call site is an
-    // expect/actual pair. (The pre-cutover regex path emitted into iosMain itself.)
-    builder.appendLine("internal actual fun registerKanamaIosProjectScripts() {")
-    builder.appendLine("    if (KanamaIosGeneratedProjectScripts.registered) return")
-    builder.appendLine("    KanamaIosGeneratedProjectScripts.registered = true")
+    if (scripts.isNotEmpty()) {
+      builder.appendLine("@kotlin.native.CName(\"$REGISTER_SYMBOL\")")
+      builder.appendLine("fun kanamaIosProjectScriptsRegister() {")
+      builder.appendLine("    if (KanamaIosGeneratedProjectScripts.registered) return")
+      builder.appendLine("    KanamaIosGeneratedProjectScripts.registered = true")
+    }
     scripts.forEach { script ->
       val bridgeName = "${script.className}IosBridge_${shortHash(script.resourcePath)}"
       builder.appendLine("    KanamaIosProjectRegistry.register(")
@@ -363,7 +381,7 @@ internal class IosScriptCodeEmitter(
       builder.appendLine("        ),")
       builder.appendLine("    )")
     }
-    builder.appendLine("}")
+    if (scripts.isNotEmpty()) builder.appendLine("}")
     builder.appendLine()
     builder.appendLine("private object KanamaIosGeneratedProjectScripts {")
     builder.appendLine("    var registered: Boolean = false")

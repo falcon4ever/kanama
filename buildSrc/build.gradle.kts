@@ -18,7 +18,8 @@ dependencies {
 
 tasks.test { useJUnitPlatform() }
 
-// The Android `.gdap` and descriptor writer, one copy shared with the Kanama Gradle plugin.
+// One copy shared with the Kanama Gradle plugin: the Android `.gdap` and descriptor writer, the iOS
+// descriptor lines and the iOS source-line table generator.
 sourceSets.named("main") { kotlin.srcDir("../gradle-plugin/src/shared/kotlin") }
 
 // The root build's ktfmt knobs (build.gradle.kts, `allprojects`), so buildSrc reads the same.

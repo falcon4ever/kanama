@@ -1,0 +1,38 @@
+// Written by the Kanama Gradle plugin (buildIosScripts) on every run. Do not edit.
+//
+// The project's Kotlin scripts for iOS: kotlin-src compiled for the iPhone (iosArm64) with the
+// script registry KSP generates from it, against the prebuilt Kanama iOS runtime klib from
+// addons/kanama/maven, and linked with that runtime into one static library per build type. The
+// runtime klib is export()ed: Kotlin/Native keeps a dependency's @CName functions (the
+// kanama_ios_runtime_* entries the C shim calls) only in a binary that exports it.
+plugins {
+    kotlin("multiplatform") version "@KOTLIN@"
+    id("com.google.devtools.ksp") version "@KSP@"
+}
+
+kotlin {
+    iosArm64 {
+        binaries.staticLib {
+            baseName = "kanama_ios_runtime"
+            export("net.multigesture.kanama:kanama-iosarm64:@KANAMA@")
+        }
+    }
+    sourceSets.named("iosArm64Main") {
+        kotlin.srcDir("@SCRIPTS_DIR@")
+        dependencies { api("net.multigesture.kanama:kanama-iosarm64:@KANAMA@") }
+    }
+}
+
+dependencies { add("kspIosArm64", "net.multigesture.kanama:processor:@KANAMA@") }
+
+ksp {
+    // The `res://` path of each script is its path in the Godot project.
+    arg("kanamaScriptRoots", "@SCRIPT_ROOT@")
+    arg("kanamaGodotProjectDir", "@PROJECT_DIR@")
+    arg("kanamaIosRegistryAsResource", "false")
+    arg("kanamaIosAllowSkips", "@ALLOW_SKIPS@")
+}
+
+// KSP also reads project.godot and the autoloads' scenes, which are not Kotlin sources: it runs
+// every time. When its output is unchanged, the compile and the links stay up to date.
+tasks.matching { it.name == "kspKotlinIosArm64" }.configureEach { outputs.upToDateWhen { false } }
