@@ -277,7 +277,13 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/runtime_smoke.sh:936` | `cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null \| head -n 40 >&2 \|\| true` | justified: diagnostics only; the leg fails just below |
 | `scripts/scene_connection_lint.py:103` | `except OSError:` | justified: an unreadable script registers no methods, so every connection to it is reported missing |
 | `scripts/store_addon_editor_smoke.sh:42` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/store_addon_editor_smoke.sh:57` | `grep -E "\[kanama:tools\] (Running\|Build JDK\|Set Up)" "$log" \|\| true` | justified: context lines for the log only |
+| `scripts/store_addon_editor_smoke.sh:59` | `pkill -TERM -P "$pid" 2>/dev/null \|\| true` | justified: the command may have exited between the sleep and the kill. |
+| `scripts/store_addon_editor_smoke.sh:61` | `kill -TERM "$pid" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/store_addon_editor_smoke.sh:66` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
+| `scripts/store_addon_editor_smoke.sh:68` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/store_addon_editor_smoke.sh:70` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
+| `scripts/store_addon_editor_smoke.sh:80` | `grep -E "project_setup\|kanama:tools\|kanama\]\|SCRIPT ERROR\|ERROR:\|at: " "$log" >&2 \|\| true` | justified: the tail below |
+| `scripts/store_addon_editor_smoke.sh:86` | `grep -E "\[kanama:tools\] (Running\|Build JDK\|Set Up)" "$log" \|\| true` | justified: context lines for the log only |
 | `scripts/tool_smoke.sh:29` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:37` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/tool_smoke.sh:145` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |

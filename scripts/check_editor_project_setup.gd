@@ -44,6 +44,7 @@ func _run() -> void:
         _failures.append("the Kanama Tools plugin is not loaded")
         _finish()
         return
+    print("%s the Kanama Tools plugin is loaded; checking the project before the setup" % TAG)
     var project := ProjectSettings.globalize_path("res://").trim_suffix("/")
     _write(project.path_join(USER_FILE), USER_FILE_TEXT)
     _expect(FileAccess.get_file_as_string(project.path_join("settings.gradle.kts")) == USER_SETTINGS, "the scratch project does not start with the user's settings.gradle.kts")
@@ -58,7 +59,9 @@ func _run() -> void:
 
     # First run, through the menu action's handler: only the missing files.
     var before := _snapshot(project)
+    print("%s running Set Up Kanama Project" % TAG)
     kanama._on_setup_project_pressed()
+    print("%s Set Up Kanama Project returned" % TAG)
     await get_tree().process_frame
     var dialog := _find_control("KanamaSetupResult") as AcceptDialog
     _expect(dialog != null and dialog.visible, "Set Up Kanama Project shows no result dialog")
@@ -90,11 +93,13 @@ func _run() -> void:
         "after the setup the Platforms menu does not offer the project's buildAndroidScripts")
 
     # The project builds: the merged settings resolve the Kanama Gradle plugin from the addon.
+    print("%s pressing Build Scripts" % TAG)
     (_find_control("KanamaBuildScripts") as Button).pressed.emit()
     await get_tree().process_frame
     var deadline := Time.get_ticks_msec() + 360000
     while kanama.get_build_status() == "building" and Time.get_ticks_msec() < deadline:
         await get_tree().process_frame
+    print("%s Build Scripts ended: %s" % [TAG, kanama.get_build_status()])
     _expect(kanama.get_build_status() == "current", "Build Scripts after the setup ended %s, expected current:\n%s" % [kanama.get_build_status(), String(kanama._last_build.get("output", "")).right(3000)])
     var after_build := _snapshot(project)
 

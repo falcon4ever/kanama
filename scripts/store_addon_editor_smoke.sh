@@ -45,12 +45,41 @@ case "$(uname -s)" in
     ;;
 esac
 
+# run_bounded <seconds> <command...>: the command's exit status, or a failure once the limit passed (the command
+# and its children are then stopped), as in package_install_smoke.sh.
+run_bounded() {
+  local limit="$1" pid watchdog rc=0
+  shift
+  "$@" &
+  pid=$!
+  (
+    sleep "$limit"
+    echo "$TAG timed out after ${limit}s: $*" >&2
+    # justified: the command may have exited between the sleep and the kill.
+    pkill -TERM -P "$pid" 2>/dev/null || true
+    # justified: as above.
+    kill -TERM "$pid" 2>/dev/null || true
+  ) &
+  watchdog=$!
+  wait "$pid" || rc=$?
+  # justified: the watchdog and its sleep only have to be gone; it may already have fired.
+  pkill -P "$watchdog" 2>/dev/null || true
+  # justified: as above.
+  kill "$watchdog" 2>/dev/null || true
+  # justified: reaping the watchdog; its status is not the verdict.
+  wait "$watchdog" 2>/dev/null || true
+  return "$rc"
+}
+
 log="$work/editor.log"
 rc=0
-# --quit-after bounds the run if the check plugin never finishes (it quits on its own when done).
-"$godot_bin" --headless --editor --path "$project_for_godot" --quit-after 200000 >"$log" 2>&1 || rc=$?
+# The check plugin quits the editor when it is done (it gives up itself after 420 s); the bound covers an
+# editor that never gets that far.
+run_bounded 900 "$godot_bin" --headless --editor --path "$project_for_godot" >"$log" 2>&1 || rc=$?
 if [[ "$rc" -ne 0 ]] || ! grep -Fq "[project_setup] PASS" "$log" || grep -Fq "SCRIPT ERROR" "$log"; then
-  grep -E "project_setup|kanama:tools|kanama\]|SCRIPT ERROR|ERROR:|at: " "$log" >&2 || tail -n 80 "$log" >&2
+  grep -E "project_setup|kanama:tools|kanama\]|SCRIPT ERROR|ERROR:|at: " "$log" >&2 || true # justified: the tail below
+  echo "$TAG editor log tail:" >&2
+  tail -n 80 "$log" >&2
   echo "$TAG FAIL (exit $rc): the store addon's Set Up Kanama Project and Build Scripts in the editor" >&2
   exit 1
 fi

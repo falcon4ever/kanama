@@ -302,7 +302,7 @@ if [[ "$detected_kind" == "store-addon" ]]; then
   run_store_setup() {
     if [[ "$setup_ps1" -eq 1 ]]; then
       # Windows only (the option's check above): Git-Bash's cygpath hands PowerShell Windows paths.
-      powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$project_dir/addons/kanama/setup-kanama-project.ps1")" \
+      powershell.exe -NoProfile -NonInteractive -InputFormat None -ExecutionPolicy Bypass -File "$(cygpath -w "$project_dir/addons/kanama/setup-kanama-project.ps1")" \
         -ProjectDir "$(cygpath -w "$project_dir")" >"$1" 2>&1
     else
       (cd "$project_dir" && sh addons/kanama/setup-kanama-project.sh) >"$1" 2>&1

@@ -1733,7 +1733,8 @@ static func setup_kanama_project(project_dir: String, os_name: String) -> Dictio
     var args := PackedStringArray([dir.path_join(SETUP_SCRIPT_SH), "--project-dir", dir])
     if os_name == "Windows":
         exe = "powershell.exe"
-        args = PackedStringArray(["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", dir.path_join(SETUP_SCRIPT_PS1), "-ProjectDir", dir])
+        # -NonInteractive and -InputFormat None: PowerShell must never wait on the editor's standard input.
+        args = PackedStringArray(["-NoProfile", "-NonInteractive", "-InputFormat", "None", "-ExecutionPolicy", "Bypass", "-File", dir.path_join(SETUP_SCRIPT_PS1), "-ProjectDir", dir])
     var output: Array = []
     var code := OS.execute(exe, args, output, true)
     var text := "".join(output)
