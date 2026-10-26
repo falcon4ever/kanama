@@ -659,14 +659,15 @@ PY
       exit 1
     fi
     # `nm -m`: `<address> (<segment,section>) [weak ]external <symbol>` per defined symbol.
-    symbols="$(xcrun nm -m "$app_binary")"
+    symbols="$work_dir/ios-symbols-$variant.txt"
+    xcrun nm -m "$app_binary" >"$symbols"
     for symbol in _kanama_entry _kanama_ios_runtime_entry; do
-      if ! grep -Eq " external $symbol\$" <<<"$symbols"; then
+      if ! grep -Eq " external $symbol\$" "$symbols"; then
         echo "[package_install_smoke] FAIL -- the $configuration app does not define $symbol: $app_binary" >&2
         exit 1
       fi
     done
-    register="$(grep -E ' _kanama_ios_project_scripts_register$' <<<"$symbols" || true)"  # justified: no match is reported as `none` on the next lines
+    register="$(grep -E ' _kanama_ios_project_scripts_register$' "$symbols" || true)"  # justified: no match is reported as `none` on the next lines
     if [[ "$ios_without_scripts" -eq 1 ]]; then
       expected="weak external"
     else
