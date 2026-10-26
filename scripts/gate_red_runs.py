@@ -1055,7 +1055,7 @@ case("runtime_smoke.sh (self-test workers at shutdown)", ["bash", "scripts/runti
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("OwnedReleasesTest (low frame rate drain)", ["./gradlew", "-p", ".", ":jvmTest", "--tests", "*OwnedReleasesTest*"],
      [Edit("src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/OwnedReleases.kt",
-           "internal fun drainAfter(sinceLastDrain: Duration): Int = drain(budget = null, sinceLastDrain = sinceLastDrain)", "internal fun drainAfter(sinceLastDrain: Duration): Int = drain(budget = frameBudget, sinceLastDrain = sinceLastDrain)")],
+           "    drain(budget = null, sinceLastDrain = sinceLastDrain)\n", "    drain(budget = frameBudget, sinceLastDrain = sinceLastDrain)\n")],
      "aLargeBacklogAtALowFrameRateDrainsInAFewFrames", "the per-frame drain goes back to a fixed 1 ms: at a few frames a second, with releases at a loaded phone's cost, 10,000 dropped wrappers take minutes to release (the Pixel 7 Bunnymark run: 1,361 of 10,000 in 30 s)",
      slow=True)
 case("processor ScriptNameClashTest", ["./gradlew", "-p", ".", ":processor:test", "--tests", "*ScriptNameClashTest*"],
