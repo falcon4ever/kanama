@@ -123,12 +123,19 @@ internal object OwnershipSelfTest {
    * threads and waits for them. A run that quits while the test is going (an editor `--script`
    * check quits after a few frames) otherwise left a worker making `Resource`s while Godot tore
    * down the ObjectDB and its allocator: thousands of leaked instances at exit, and now and then an
-   * abort in `realloc` ("pointer being freed was not allocated").
+   * abort in `realloc` ("pointer being freed was not allocated"). When a worker was started it says
+   * how many it stopped and how many are still running (runtime_smoke.sh holds a quick-quit run to
+   * `0 still running`: the leak is a race that some hosts never lose, the line is not).
    */
   fun shutdown() {
     stopping = true
     run = null
+    if (workers.isEmpty()) return
     for (worker in workers) worker.join(WORKER_JOIN_MILLIS)
+    print(
+      "shutdown: stopped ${workers.size} worker(s), ${workers.count { it.isAlive }} still running"
+    )
+    workers.removeIf { !it.isAlive } // deinitialize runs once per level: report each worker once
   }
 
   // Frames seen, for the stress worker's per-frame allowance.

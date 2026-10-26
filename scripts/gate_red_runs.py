@@ -86,7 +86,9 @@ class Case:
     gate: str  # name shown in the table
     cmd: list[str]  # run from WORK
     mutations: list  # Edit | Create | Delete | Rename | Append
-    expect: str  # substring the red run must print (stdout + stderr)
+    # Substring the red run must print (stdout + stderr); a tuple names alternatives, any one of which will
+    # do (a crash ends in SIGABRT through Godot's macOS crash handler but SIGSEGV on Linux).
+    expect: str | tuple[str, ...]
     how: str  # one line for the table: what the mutation does
     env: dict[str, str] = field(default_factory=dict)
     timeout: int = 600
@@ -1048,7 +1050,7 @@ case("runtime_smoke.sh (throwing script constructor)", ["bash", "scripts/runtime
      [Edit(KANAMA_SCRIPT, "      retPtr.set(ADDRESS, 0, MemorySegment.NULL)\n      val handle = instance.address()\n",
            "      val handle = instance.address()\n"),
       Edit(KANAMA_SCRIPT, *CTOR_PLACEHOLDER)],
-     "[runtime_smoke] exit 134", "a script constructor that throws during set_script returns without writing _instance_create's return slot again: Godot uses the uninitialized slot as the instance and crashes with signal 11 right after the script error, so the smoke stops at the crash (the Bulletmark port's finding)",
+     ("[runtime_smoke] exit 134", "[runtime_smoke] exit 139"), "a script constructor that throws during set_script returns without writing _instance_create's return slot again: Godot uses the uninitialized slot as the instance and crashes with signal 11 right after the script error, so the smoke stops at the crash (the Bulletmark port's finding)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("tool_smoke.sh (throwing @Tool constructor)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Edit(KANAMA_SCRIPT, *CTOR_PLACEHOLDER)],
@@ -1057,7 +1059,7 @@ case("tool_smoke.sh (throwing @Tool constructor)", ["bash", "scripts/tool_smoke.
 case("runtime_smoke.sh (self-test workers at shutdown)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/jvmMain/kotlin/binding/runtime/OwnershipSelfTest.kt", "  fun shutdown() {\n    stopping = true\n",
            "  fun shutdown() {\n    return\n    stopping = true\n")],
-     "self-test quick quit leaked or aborted at exit", "engine shutdown no longer stops the ownership self-test's worker: a run that quits while it makes Resources leaks thousands of ObjectDB instances at exit and can abort in realloc (the Android Platformer scene check); the race leaks most runs, and the smoke runs it three times",
+     "self-test quick quit: shutdown did not stop the worker", "engine shutdown no longer stops the ownership self-test's worker: a run that quits while it makes Resources leaks thousands of ObjectDB instances at exit and can abort in realloc (the Android Platformer scene check); the leak is a race (most runs on macOS, none seen on Linux CI), so the smoke holds every run to shutdown's own `stopped N worker(s), 0 still running` line",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("OwnedReleasesTest (low frame rate drain)", ["./gradlew", "-p", ".", ":jvmTest", "--tests", "*OwnedReleasesTest*"],
      [Edit("src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/OwnedReleases.kt",
@@ -1518,11 +1520,13 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
             rows.append(f"| `{c.gate}` | {c.how} | UNPROVEN | - |")
             continue
         green_rc, green_out, _ = run(c)
+        alternatives = (c.expect,) if isinstance(c.expect, str) else c.expect
+        matched = next((text for text in alternatives if text in red_out), None)
         ok = True
         if red_rc == 0:
             failures.append(f"{c.gate}: STAYED GREEN after the mutation ({c.how}); the gate does not catch it")
             ok = False
-        elif c.expect not in red_out:
+        elif matched is None:
             failures.append(
                 f"{c.gate}: failed (exit {red_rc}) but without the expected text {c.expect!r}:\n{red_out[-800:]}"
             )
@@ -1530,7 +1534,7 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
         if green_rc != 0:
             failures.append(f"{c.gate}: NOT green after the revert (exit {green_rc}):\n{green_out[-800:]}")
             ok = False
-        excerpt = red_excerpt(red_out, c.expect).replace("|", "\\|")
+        excerpt = red_excerpt(red_out, matched or alternatives[0]).replace("|", "\\|")
         print(f"   red   exit {red_rc} in {red_secs:.1f}s: {excerpt}", flush=True)
         print(f"   green after revert: exit {green_rc}", flush=True)
         rows.append(
