@@ -124,6 +124,44 @@ effect. The user page names the coordinate only as "PanamaPort";
 `-PkanamaPanamaPortCore=<coordinate>` on `installAndroidPluginAar` selects
 another build, and the coordinate is printed in the Gradle build log.
 
+## The Kit Path
+
+A project made from a desktop kit or the store addon has no checkout to build
+from. Its `build.gradle.kts` applies the Kanama Gradle plugin
+(`net.multigesture.kanama`, `gradle-plugin/`), which kits and the store addon
+carry in `addons/kanama/maven` beside the runtime AAR (`kanama-android`, the
+`:plugin` AAR, published by `publishKanamaAndroidPackage`). The plugin's
+`buildAndroidScripts` is `installAndroidPluginAar` without the checkout:
+
+1. It depends on the project's `buildScripts`, so the registrars come from the
+   project's own KSP run of the kit's processor
+   (`build/generated/ksp/main/kotlin`), the same processor the checkout runs.
+2. It audits `kotlin-src/` and remaps it and the registrars with
+   `KanamaAndroidRemap`, compiled into the plugin from
+   `android/godot-plugin/buildSrc` (one copy of the remap and its audits).
+3. It writes a plugin-owned Gradle build to `build/kanama/android/` (the
+   resources under `gradle-plugin/src/main/resources/.../android/`, rewritten
+   on every run) and runs it with the project's `gradlew`: an AGP library
+   module, `compileOnly` on `kanama-android`, PanamaPort and coroutines, the
+   same API level as `:scripts`. Its settings declare exactly four
+   repositories, with `addons/kanama/maven` the only one allowed to serve
+   `net.multigesture.kanama` and no `mavenLocal()`.
+4. It installs both AARs and the `.gdap`, edits the descriptor
+   (`KanamaAndroidPluginFiles`, `gradle-plugin/src/shared`, which the root
+   `buildSrc` compiles too, so `installAndroidPluginAar` writes the same files),
+   and turns on `rendering/textures/vram_compression/import_etc2_astc` in
+   `project.godot`.
+
+Every version the inner build uses (AGP, the Android Kotlin, `compileSdk`,
+`minSdk`, the API level, coroutines, PanamaPort) is in the generated
+`KanamaVersions` object, which `gradle-plugin/build.gradle.kts` reads from the
+files that pin them for the checkout (`android/godot-plugin/build.gradle.kts`,
+`gradle.properties` and `scripts/build.gradle.kts`; the root build for
+PanamaPort). `scripts/check_kit_version_pins.py` holds the copies the kit
+restates by hand. `scripts/package_install_smoke.sh --android` runs the
+documented commands from an unzipped kit or store addon with a fresh
+`GRADLE_USER_HOME` and checks the APK; `package.yml` runs it on Linux.
+
 ## PanamaPort
 
 The Android implementation uses a forked
@@ -291,8 +329,8 @@ check) get `KANAMA_API_EXERCISE=0`, which wins over the project setting the smok
 a crash names its row). Without the variable the smoke checks that no `API EXERCISE` line appears. The
 rows run as platform `android`: `DirAccess.get_drive_name(0)` may be `""` there, where a zero counts weak
 (`STATIC_ZERO_ON`). A flagged AAR is for that debug APK only: the plugin
-build refuses a release variant or a publication with the flag, `packageMobileAddonAndroid` reads the AAR
-it zips for exercise classes, and `android_export_minified.sh` (the release path) and CI's Android lane
+build refuses a release variant or a publication with the flag, `publishKanamaAndroidPackage` reads the AAR
+it publishes for exercise classes, and `android_export_minified.sh` (the release path) and CI's Android lane
 run `generate_api_exercise.py --check-jar` on the AAR. The demo keeps the flagged AAR until the next
 `installAndroidPluginAar` without the flag (the setting is restored, so the rows do not run).
 
@@ -307,8 +345,9 @@ into two AAR modules (task 36; mirrors desktop's `kanama.jar` /
   `libkanama_bootstrap.so`, the Android native bootstrap library, the remapped
   Kanama runtime + annotations sources, and a `.gdextension` file marked as an
   Android AAR plugin. Builds with no consumer project
-  (`assembleAndroidPluginAar`), which is what `packageMobileAddonAndroid`
-  ships.
+  (`assembleAndroidPluginAar`); `publishKanamaAndroidPackage` publishes it as
+  `net.multigesture.kanama:kanama-android` into the package repository, so
+  every kit and the store addon carry it in `addons/kanama/maven`.
 - **`:scripts` — scripts AAR** (per project, `KanamaAndroidScripts.debug.aar`):
   the consumer project's `kotlin-src/` scripts and generated KSP registrars,
   remapped identically and compiled against the runtime classes

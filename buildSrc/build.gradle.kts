@@ -18,6 +18,9 @@ dependencies {
 
 tasks.test { useJUnitPlatform() }
 
+// The Android `.gdap` and descriptor writer, one copy shared with the Kanama Gradle plugin.
+sourceSets.named("main") { kotlin.srcDir("../gradle-plugin/src/shared/kotlin") }
+
 // The root build's ktfmt knobs (build.gradle.kts, `allprojects`), so buildSrc reads the same.
 ktfmt {
   googleStyle()

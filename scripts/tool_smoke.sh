@@ -146,6 +146,14 @@ if ! grep -Fq "[jdk_test] PASS" "$LOG_FILE.jdk"; then
   smoke_fail "JDK resolution test did not report PASS" "scripts/check_editor_jdk_resolution.gd (log: $LOG_FILE.jdk)"
 fi
 
+# Task 143 item 1: the plugin names a scripts jar built for another Kanama than the addon and offers Sync Addon.
+cp "$ROOT_DIR/scripts/check_addon_version_lock.gd" "$JDK_SCRATCH/project/"
+if ! "$GODOT_BIN" --headless --path "$JDK_PROJECT_FOR_GODOT" --script res://check_addon_version_lock.gd \
+  >"$LOG_FILE.version" 2>&1 || ! grep -Fq "[version_lock] PASS" "$LOG_FILE.version"; then
+  cat "$LOG_FILE.version" >&2
+  smoke_fail "addon version lock test failed" "scripts/check_addon_version_lock.gd (log: $LOG_FILE.version)"
+fi
+
 # A failing headless export of a project without .godot/ must exit 1 like a GDScript project, not crash
 # on exit (134). The Kanama extension loads during that first scan, which restarts the editor's doc
 # thread right before the export fails; the editor plugin's _exit_tree lets that thread finish

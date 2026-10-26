@@ -1,7 +1,12 @@
 import org.gradle.jvm.tasks.Jar
 
-val kanamaVersion = providers.gradleProperty("kanamaVersion")
-    .orElse("@KANAMA_VERSION@")
+// The Kanama version is the one line of addons/kanama/kanama.version, which comes with the addon
+// (settings.gradle.kts resolves the Kanama Gradle plugin from the same file).
+val kanamaVersionFile = file("addons/kanama/kanama.version")
+if (!kanamaVersionFile.isFile) {
+    throw GradleException("Kanama addon not found: addons/kanama/kanama.version is missing. Unzip the Kanama addon into addons/ again.")
+}
+val kanamaVersion = kanamaVersionFile.readText().trim()
 val kotlinSourcesDir = providers.gradleProperty("kanamaProjectScriptsDir")
     .orElse("kotlin-src")
 val defaultGodotBin = file("/Applications/Godot.app/Contents/MacOS/Godot")
@@ -13,18 +18,20 @@ val godotBin = providers.gradleProperty("kanama.godot.executable")
     .orElse(providers.environmentVariable("KANAMA_GODOT"))
     .getOrElse(defaultGodotBin)
 
+// Kanama comes only from the addon: no other repository may serve net.multigesture artifacts.
 repositories {
-    maven {
-        url = uri("addons/kanama/maven")
+    exclusiveContent {
+        forRepository { maven { url = uri("addons/kanama/maven") } }
+        filter { includeGroupByRegex("net\\.multigesture(\\..*)?") }
     }
     mavenCentral()
 }
 
 dependencies {
-    "implementation"("net.multigesture.kanama:kanama:${kanamaVersion.get()}")
-    "implementation"("net.multigesture.kanama:annotations:${kanamaVersion.get()}")
+    "implementation"("net.multigesture.kanama:kanama:$kanamaVersion")
+    "implementation"("net.multigesture.kanama:annotations:$kanamaVersion")
     "implementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
-    "ksp"("net.multigesture.kanama:processor:${kanamaVersion.get()}")
+    "ksp"("net.multigesture.kanama:processor:$kanamaVersion")
 }
 
 // Task 133 C: KSP generates `Autoloads` from this project's `project.godot` `[autoload]` section,
@@ -81,6 +88,16 @@ fun kanamaAutoloadInputs(projectGodot: File): List<File> {
         }.filter { it.name.endsWith(".tscn") || it.name.endsWith(".gd") || it.name.endsWith(".uid") }
 }
 
+// Godot must neither import nor export the Gradle build directory: it holds KSP's generated `.kt`
+// registrars (the editor would register a second class for each script, and exports would carry
+// them) and the inner builds of the export tasks.
+val ignoreBuildDirInGodot by tasks.registering {
+    val gdignore = layout.buildDirectory.file(".gdignore")
+    outputs.file(gdignore)
+    doLast { gdignore.get().asFile.writeText("") }
+}
+tasks.matching { it.name == "kspKotlin" }.configureEach { dependsOn(ignoreBuildDirInGodot) }
+
 tasks.named<Jar>("jar") {
     archiveFileName.set("kanama-scripts.jar")
     isPreserveFileTimestamps = false
@@ -93,6 +110,12 @@ val installScriptJar by tasks.registering(Copy::class) {
     dependsOn(tasks.named("jar"))
     from(tasks.named<Jar>("jar").flatMap { it.archiveFile })
     into(layout.projectDirectory.dir("addons/kanama"))
+    // The Kanama version this jar was built with: the editor compares it with
+    // addons/kanama/kanama.version and offers to rebuild when an addon update moved the version.
+    val stamp = layout.projectDirectory.file("addons/kanama/kanama-scripts.version")
+    val version = kanamaVersion
+    inputs.property("kanamaVersion", version)
+    doLast { stamp.asFile.writeText(version + "\n") }
 }
 
 tasks.register("buildScripts") {

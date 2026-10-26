@@ -338,6 +338,10 @@ stage "Kotlin/KSP pin consistency"
 # root build.gradle.kts Kotlin/KSP versions; a bump that misses one fails here.
 python3 "$ROOT_DIR/scripts/check_kotlin_pins.py"
 
+stage "kit version pin lockstep"
+# A kit carries prebuilt artifacts beside build files that restate the checkout's pins (task 135 item 5).
+python3 "$ROOT_DIR/scripts/check_kit_version_pins.py"
+
 stage "GDExtension modernization + backend convergence"
 python3 "$ROOT_DIR/scripts/check_gdextension_modernization.py"
 
@@ -706,7 +710,7 @@ case "$HOST_UNAME" in
     exit 1
     ;;
 esac
-for artifact in kanama.jar kanama-scripts.jar kanama.gdextension "$native_artifact"; do
+for artifact in kanama.jar kanama-scripts.jar kanama.gdextension kanama.version kanama-scripts.version "$native_artifact"; do
   if [[ ! -f "$install_check_dir/addons/kanama/$artifact" ]]; then
     echo "[local_ci] missing installed artifact: $artifact" >&2
     exit 1

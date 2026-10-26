@@ -35,6 +35,14 @@ const SYNC_BUTTON_BUSY_TEXT := "Building..."
 const JAR_BUTTON_IDLE_TEXT := "Build Runtime"
 const JAR_BUTTON_BUSY_TEXT := "Building..."
 const KT_SCAN_INTERVAL_SEC := 0.6
+# The version lock (task 143 item 1): the addon's Kanama version, and the one buildScripts built
+# kanama-scripts.jar with.
+const ADDON_VERSION_FILE := "res://addons/kanama/kanama.version"
+const SCRIPTS_VERSION_FILE := "res://addons/kanama/kanama-scripts.version"
+const SYNC_ADDON_TEXT := "Sync Addon"
+# While the editor has the project open: its process id, so the Kanama Gradle plugin can warn that an
+# edit it makes to project.godot needs Project > Reload Current Project (Godot leaves no such mark).
+const EDITOR_PID_FILE := "res://.godot/kanama_editor.pid"
 const KotlinSyntaxHighlighter := preload("res://addons/kanama_tools/kotlin_syntax_highlighter.gd")
 const KanamaExportGuard := preload("res://addons/kanama_tools/kanama_export_guard.gd")
 
@@ -72,11 +80,15 @@ func _enter_tree() -> void:
     add_export_plugin(_export_guard)
     _install_toolbar_buttons()
     _known_kt_mtimes = _collect_kt_mtimes()
+    call_deferred("_check_addon_version")
+    _write_editor_pid()
     set_process(true)
 
 
 func _exit_tree() -> void:
     set_process(false)
+    if FileAccess.file_exists(EDITOR_PID_FILE):
+        DirAccess.remove_absolute(ProjectSettings.globalize_path(EDITOR_PID_FILE))
     _finish_pending_editor_docs()
     var editor_settings := get_editor_interface().get_editor_settings()
     if editor_settings != null and editor_settings.settings_changed.is_connected(_on_editor_settings_changed):
@@ -143,6 +155,46 @@ func _process(delta: float) -> void:
         _pending_auto_sync = false
         print("[kanama:tools] Kotlin save detected; running Build Scripts")
         _run_script_build()
+
+
+## The version lock (task 143 item 1). kanama-scripts.jar must be built for the addon Godot loads:
+## buildScripts writes the Kanama version it compiled against beside the jar, and unzipping a newer
+## addon moves addons/kanama/kanama.version. Returns the one line to show on a mismatch, or "" when
+## the two agree or either is missing (no jar built yet; a project without the version files).
+static func addon_version_mismatch(addon_version_text: String, scripts_version_text: String) -> String:
+    var addon := addon_version_text.strip_edges()
+    var scripts := scripts_version_text.strip_edges()
+    if addon.is_empty() or scripts.is_empty() or addon == scripts:
+        return ""
+    return "Kanama: your scripts were built for Kanama %s, but the addon is Kanama %s. Press %s to rebuild them for the addon." % [scripts, addon, SYNC_ADDON_TEXT]
+
+
+func _write_editor_pid() -> void:
+    var file := FileAccess.open(EDITOR_PID_FILE, FileAccess.WRITE)
+    if file != null:
+        file.store_line(str(OS.get_process_id()))
+
+
+func _check_addon_version() -> void:
+    var message := addon_version_mismatch(
+        FileAccess.get_file_as_string(ADDON_VERSION_FILE),
+        FileAccess.get_file_as_string(SCRIPTS_VERSION_FILE))
+    if message.is_empty():
+        return
+    push_error(message)
+    var base_control := get_editor_interface().get_base_control()
+    if base_control == null:
+        return
+    var dialog := ConfirmationDialog.new()
+    dialog.title = "Kanama Version Mismatch"
+    dialog.dialog_text = message
+    dialog.ok_button_text = SYNC_ADDON_TEXT
+    base_control.add_child(dialog)
+    dialog.confirmed.connect(func() -> void:
+        dialog.queue_free()
+        _run_script_build())
+    dialog.canceled.connect(dialog.queue_free)
+    dialog.popup_centered()
 
 
 func _install_toolbar_buttons() -> void:
@@ -493,6 +545,8 @@ func _run_gradle_task(task_name: String, extra_args: Array = [], repo_dir_overri
     _set_build_buttons_busy(task_name, false)
     if code == 0:
         print("[kanama:tools] %s succeeded." % task_name)
+        if _is_script_build_task(task_name):
+            _check_addon_version()
         if _is_script_build_task(task_name) and bool(ProjectSettings.get_setting(SETTING_RELOAD_SCENE_AFTER_SYNC, true)):
             _queue_reload_edited_scene()
     else:

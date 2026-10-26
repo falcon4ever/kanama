@@ -15,6 +15,9 @@ val panamaPortCoreDependency =
     .gradleProperty("kanamaPanamaPortCore")
     .orElse("com.github.falcon4ever.PanamaPort:Core:0.1.5-kanama-r8.1")
 
+// The Kanama Gradle plugin's KanamaVersions reads it (gradle-plugin/build.gradle.kts).
+extra["kanamaPanamaPortCoreDependency"] = panamaPortCoreDependency.get()
+
 fun PublishingExtension.addKanamaPackageRepository() {
   repositories {
     maven {
@@ -80,8 +83,11 @@ subprojects {
   pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
     extensions.configure<JavaPluginExtension> { withSourcesJar() }
 
-    extensions.configure<PublishingExtension> {
-      publications { create<MavenPublication>("maven") { from(components["java"]) } }
+    // java-gradle-plugin publishes :gradle-plugin itself (the jar and the plugin marker).
+    if (project.name != "gradle-plugin") {
+      extensions.configure<PublishingExtension> {
+        publications { create<MavenPublication>("maven") { from(components["java"]) } }
+      }
     }
   }
 }
@@ -657,44 +663,10 @@ val buildNativeBootstrap by
     }
   }
 
-fun File.enableAndroidKanamaGdextensionMetadata() {
-  val requiredLibraryLines =
-    listOf(
-      "android.debug.arm64 = \"libkanama_bootstrap.so\"",
-      "android.release.arm64 = \"libkanama_bootstrap.so\"",
-      "android.debug.x86_64 = \"libkanama_bootstrap.so\"",
-      "android.release.x86_64 = \"libkanama_bootstrap.so\"",
-    )
-  val lines = readLines().toMutableList()
-  if ("android_aar_plugin = true" !in lines) {
-    val librariesIndex = lines.indexOf("[libraries]").takeIf { it >= 0 } ?: lines.size
-    val insertIndex =
-      if (librariesIndex > 0 && lines[librariesIndex - 1].isBlank()) {
-        librariesIndex - 1
-      } else {
-        librariesIndex
-      }
-    lines.add(insertIndex, "android_aar_plugin = true")
-  }
-
-  val missingLibraryLines = requiredLibraryLines.filter { it !in lines }
-  if (missingLibraryLines.isNotEmpty()) {
-    val librariesIndex =
-      lines.indexOf("[libraries]").takeIf { it >= 0 }
-        ?: run {
-          if (lines.lastOrNull()?.isNotBlank() == true) {
-            lines.add("")
-          }
-          lines.add("[libraries]")
-          lines.lastIndex
-        }
-    val insertIndex =
-      lines.withIndex().drop(librariesIndex + 1).firstOrNull { it.value.startsWith("[") }?.index
-        ?: lines.size
-    lines.addAll(insertIndex, missingLibraryLines)
-  }
-  writeText(lines.joinToString(System.lineSeparator()) + System.lineSeparator())
-}
+// The Android descriptor lines: one copy, shared with the Kanama Gradle plugin (buildSrc compiles
+// gradle-plugin/src/shared).
+fun File.enableAndroidKanamaGdextensionMetadata() =
+  net.multigesture.kanama.gradle.KanamaAndroidPluginFiles.enableAndroidGdextensionMetadata(this)
 
 fun File.enableIosKanamaGdextensionMetadata() {
   val requiredLibraryLines =
@@ -784,6 +756,8 @@ val publishKanamaPackageMavenRepository by
     ":kanama-common-api:publishJvmPublicationToKanamaPackageRepository",
     ":kanama-common-api:publishKotlinMultiplatformPublicationToKanamaPackageRepository",
     ":processor:publishMavenPublicationToKanamaPackageRepository",
+    // The Kanama Gradle plugin (net.multigesture.kanama) and its plugin marker.
+    ":gradle-plugin:publishAllPublicationsToKanamaPackageRepository",
   )
   }
 
@@ -1001,6 +975,50 @@ tasks.register<Zip>("packageStoreNativeArtifact") {
   from(prepareStoreNativeArtifact)
 }
 
+// An empty .gdignore for the addon folders Godot must not scan: the Maven repository (thousands of
+// files, none a Godot resource) and the store addon's templates.
+val packageMavenGdignore by
+  tasks.registering {
+    val out = layout.buildDirectory.file("generated/package-maven-gdignore/.gdignore")
+    outputs.file(out)
+    doLast { out.get().asFile.apply { parentFile.mkdirs() }.writeText("") }
+  }
+
+// addons/kanama/checks: the export check a user runs on an exported project (Export for Android),
+// with a .gdignore so Godot neither imports it as a resource nor ships it in exports. `--script`
+// still loads it by path.
+val kanamaChecksSpec = copySpec {
+  into("checks")
+  from(layout.projectDirectory.file("scripts/check_exported_scene_properties.gd"))
+  from(packageMavenGdignore)
+}
+
+// The editor tools as every layout gets them: plugin.cfg states this Kanama version.
+fun CopySpec.kanamaToolsFiles() {
+  filesMatching("plugin.cfg") {
+    filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
+  }
+}
+
+// addons/kanama/kanama.version, the one line that ties a project's addon, its Gradle plugin and its
+// runtime dependencies to one Kanama version (task 143 item 1): settings.gradle.kts resolves the
+// plugin from it, kanama-project.gradle.kts the runtime, and the editor plugin compares it with the
+// stamp buildScripts writes beside kanama-scripts.jar. Written here, with a bare `\n`, rather than
+// copied from a template: a Windows checkout would give a template file CRLF line endings.
+val kanamaVersionFileDir = layout.buildDirectory.dir("generated/kanama-version")
+val generateKanamaVersionFile by
+  tasks.registering {
+    val version = project.version.toString()
+    val out = kanamaVersionFileDir
+    inputs.property("version", version)
+    outputs.dir(out)
+    doLast {
+      val dir = out.get().asFile
+      dir.mkdirs()
+      dir.resolve("kanama.version").writeText(version + "\n")
+    }
+  }
+
 // The Gradle project shape of a new Kanama game: the release-kit project and Gradle files, the
 // Gradle wrapper, kotlin-src/HelloScript.kt, the editor tools and the consumer build script that
 // declares Kanama's repositories, dependencies and `buildScripts`. The desktop kit zips it and
@@ -1015,12 +1033,13 @@ val kanamaGradleProjectSpec = copySpec {
   from(layout.projectDirectory.file("templates/starter/HelloScript.kt")) { into("kotlin-src") }
   from(layout.projectDirectory.dir("templates/starter/addons/kanama_tools")) {
     into("addons/kanama_tools")
+    kanamaToolsFiles()
   }
   from(layout.projectDirectory.file("LICENSE")) { into("addons/kanama_tools") }
   from(layout.projectDirectory.file("templates/consumer-gradle/kanama-project.gradle.kts")) {
     into("addons/kanama")
-    filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
   }
+  from(generateKanamaVersionFile) { into("addons/kanama") }
   from(layout.projectDirectory.file("gradlew")) { filePermissions { unix("rwxr-xr-x") } }
   from(layout.projectDirectory.file("gradlew.bat"))
   from(layout.projectDirectory.dir("gradle")) { into("gradle") }
@@ -1032,6 +1051,7 @@ tasks.register<Zip>("packageDesktopKit") {
   dependsOn(
     tasks.named("jvmJar"),
     publishKanamaPackageMavenRepository,
+    publishKanamaAndroidPackage,
     generatePackageGdextensionDescriptor,
     generatePackageExtensionList,
     verifyNativeBootstrapArtifact,
@@ -1052,6 +1072,8 @@ tasks.register<Zip>("packageDesktopKit") {
   }
   from(layout.buildDirectory.file("libs/kanama.jar")) { into("addons/kanama") }
   from(packageMavenRepositoryDir) { into("addons/kanama/maven") }
+  from(packageMavenGdignore) { into("addons/kanama/maven") }
+  into("addons/kanama") { with(kanamaChecksSpec) }
   from(nativeBootstrapArtifact) { into("addons/kanama/bin/${packagePlatformClassifier.get()}") }
   from(packageExtensionListFile) {
     into(".godot")
@@ -1066,6 +1088,7 @@ tasks.register<Zip>("packageStoreAddon") {
   dependsOn(
     tasks.named("jvmJar"),
     publishKanamaPackageMavenRepository,
+    publishKanamaAndroidPackage,
     generatePackageGdextensionDescriptor,
   )
   val nativeArtifactsDir =
@@ -1095,6 +1118,7 @@ tasks.register<Zip>("packageStoreAddon") {
 
   from(layout.projectDirectory.dir("templates/starter/addons/kanama_tools")) {
     into("addons/kanama_tools")
+    kanamaToolsFiles()
   }
   from(layout.projectDirectory.file("LICENSE")) { into("addons/kanama_tools") }
   from(packageGdextensionDescriptorFile) {
@@ -1104,9 +1128,14 @@ tasks.register<Zip>("packageStoreAddon") {
   from(layout.buildDirectory.file("libs/kanama.jar")) { into("addons/kanama") }
   from(layout.projectDirectory.file("templates/consumer-gradle/kanama-project.gradle.kts")) {
     into("addons/kanama")
-    filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
   }
+  from(generateKanamaVersionFile) { into("addons/kanama") }
   from(packageMavenRepositoryDir) { into("addons/kanama/maven") }
+  from(packageMavenGdignore) { into("addons/kanama/maven") }
+  // The template's kotlin-src/HelloScript.kt is the setup script's input, not a resource: Godot
+  // would register it as a second HelloScript class and export it.
+  from(packageMavenGdignore) { into("addons/kanama/templates") }
+  into("addons/kanama") { with(kanamaChecksSpec) }
   from(layout.projectDirectory.file("LICENSE")) { into("addons/kanama") }
   from(layout.projectDirectory.file("templates/store-addon/README.md")) { into("addons/kanama") }
   from(layout.projectDirectory.file("templates/store-addon/setup-kanama-project.sh")) {
@@ -2251,10 +2280,14 @@ tasks.register<Copy>("installAddonJar") {
   if (consumerGradleProject) {
     dependsOn(publishKanamaPackageMavenRepository)
     from(packageMavenRepositoryDir) { into("maven") }
-    from(layout.projectDirectory.file("templates/consumer-gradle/kanama-project.gradle.kts")) {
-      filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
-    }
+    from(packageMavenGdignore) { into("maven") }
+    from(layout.projectDirectory.file("templates/consumer-gradle/kanama-project.gradle.kts"))
   }
+  // The version lock (task 143 item 1): the addon's version, and the stamp of the version the
+  // kanama-scripts.jar copied above was built with (this checkout's).
+  with(kanamaChecksSpec)
+  from(generateKanamaVersionFile)
+  from(generateKanamaVersionFile) { rename { "kanama-scripts.version" } }
   into(targetProjectDir.map { file(it).resolve("addons/kanama") })
   outputs.file(extensionListFile)
 
@@ -2321,6 +2354,7 @@ tasks.register<Copy>("installStarterTemplate") {
   // the project's own.
   from(layout.projectDirectory.dir("templates/starter")) {
     include("HelloScript.kt", "addons/kanama_tools/**")
+    kanamaToolsFiles()
   }
   into(targetProjectDir.map { file(it) })
 
@@ -2470,25 +2504,10 @@ tasks.register("installAndroidPluginAar") {
       rename { "KanamaAndroidScripts.debug.aar" }
     }
 
-    // custom_maven_repos: the PanamaPort fork is published on JitPack, which Godot's Android build
-    // template does not list; Godot passes this repo to its Gradle build, so a plain editor export
-    // resolves the remote dependency without patching android/build.
     pluginsDir
-      .resolve("KanamaAndroid.gdap")
+      .resolve(net.multigesture.kanama.gradle.KanamaAndroidPluginFiles.GDAP)
       .writeText(
-        """
-            |[config]
-            |
-            |name="KanamaAndroid"
-            |binary_type="local"
-            |binary="KanamaAndroid.debug.aar"
-            |
-            |[dependencies]
-            |local=["KanamaAndroidScripts.debug.aar"]
-            |remote=["${panamaPortCoreDependency.get()}"]
-            |custom_maven_repos=["https://jitpack.io"]
-            |"""
-          .trimMargin()
+        net.multigesture.kanama.gradle.KanamaAndroidPluginFiles.gdap(panamaPortCoreDependency.get())
       )
 
     val extensionFile = file(kanamaAndroidDemoDir.get()).resolve("addons/kanama/kanama.gdextension")
@@ -2571,138 +2590,84 @@ tasks.register<Zip>("packageMobileAddonIos") {
   from(layout.projectDirectory.file("LICENSE"))
 }
 
-// --- Packaged mobile add-on, Android (task 25 B3 / task 36 AAR split). The
-// runtime AAR is project-agnostic since the task-36 split, so it can ship
-// prebuilt. The packaged .gdap deliberately carries NO `local=` scripts entry:
-// Godot's plugin-config validation requires listed local dependencies to
-// exist, and the per-project scripts AAR is produced by the consumer's own
-// installAndroidPluginAar run (which rewrites the .gdap with the local
-// entry). Maintainer-built (needs the Android SDK), so it does not join
-// packageDistributions or the CI package workflow. Validate with
-// scripts/package_install_smoke.sh --android-addon.
+// --- The Android runtime AAR in the package repository (task 135 item 5). Kits and the store addon
+// carry it as net.multigesture.kanama:kanama-android in addons/kanama/maven; a kit project's
+// `buildAndroidScripts` (the Kanama Gradle plugin) compiles the project's scripts against it and
+// installs it, so Android exports need no Kanama checkout. Built by the nested Android build, which
+// needs the Android SDK; -PkanamaAndroidPackageDir=<dir> takes a kanama-android Maven tree another
+// build published instead (package.yml builds the AAR once, on Linux, for every kit job).
+val kanamaAndroidPackageDir = providers.gradleProperty("kanamaAndroidPackageDir")
+val kanamaAndroidPackagePath = "net/multigesture/kanama/kanama-android"
 
-val mobileAddonAndroidExtrasDir = layout.buildDirectory.dir("generated/mobile-addon/android")
-val prepareMobileAddonAndroidExtras by
-  tasks.registering {
-    outputs.dir(mobileAddonAndroidExtrasDir)
-    doLast {
-      val dir = mobileAddonAndroidExtrasDir.get().asFile
-      dir.mkdirs()
-      dir
-        .resolve("KanamaAndroid.gdap")
-        .writeText(
-          """
-            |[config]
-            |
-            |name="KanamaAndroid"
-            |binary_type="local"
-            |binary="KanamaAndroid.debug.aar"
-            |
-            |[dependencies]
-            |remote=["${panamaPortCoreDependency.get()}"]
-            |custom_maven_repos=["https://jitpack.io"]
-            |"""
-            .trimMargin()
+val buildKanamaAndroidPackage by
+  tasks.registering(Exec::class) {
+    group = "publishing"
+    description = "Build the Kanama Android runtime AAR and publish it as kanama-android into build/package/maven."
+    onlyIf { !kanamaAndroidPackageDir.isPresent }
+    mustRunAfter(cleanKanamaPackageMavenRepository)
+    doFirst {
+      if (!kanamaAndroidSdkDir.isPresent) {
+        throw GradleException(
+          "Set ANDROID_HOME to your Android SDK: kits and the store addon carry the Kanama Android " +
+            "runtime AAR (or pass -PkanamaAndroidPackageDir=<a published kanama-android tree>)"
         )
-      dir
-        .resolve("kanama.gdextension-android-entries.txt")
-        .writeText(
-          """
-            |# Merge into addons/kanama/kanama.gdextension (README step 3).
-            |# Do not replace the whole descriptor.
-            |#
-            |# [configuration] section:
-            |android_aar_plugin = true
-            |# [libraries] section:
-            |android.debug.arm64 = "libkanama_bootstrap.so"
-            |android.release.arm64 = "libkanama_bootstrap.so"
-            |android.debug.x86_64 = "libkanama_bootstrap.so"
-            |android.release.x86_64 = "libkanama_bootstrap.so"
-            |"""
-            .trimMargin()
-        )
-      dir
-        .resolve("README.md")
-        .writeText(
-          """
-            |# Kanama Android add-on (experimental, prebuilt runtime, debug-only)
-            |
-            |Prebuilt Kanama Android runtime plugin AAR (arm64-v8a + x86_64,
-            |debug build) for an existing Kanama Godot project using Godot's
-            |Gradle Android build.
-            |
-            |**Honest caveats:**
-            |- Debug-only: no release AAR exists yet (recorded in the Kanama
-            |  release-support decision record).
-            |- This delivers the *runtime* only. Compiling your project's Kotlin
-            |  scripts for Android still requires a Kanama source checkout today
-            |  (`installAndroidPluginAar` builds the per-project scripts AAR and
-            |  rewrites KanamaAndroid.gdap to reference it). Use this artifact
-            |  for script-less evaluation or prebuilt-runtime updates; see
-            |  docs/exporting/android.md.
-            |- The PanamaPort dependency resolves remotely from JitPack
-            |  (declared in KanamaAndroid.gdap); the export machine needs
-            |  network access or a local Maven mirror.
-            |
-            |1. Unzip at your Godot project root (adds android/plugins/*).
-            |2. The project must already carry the desktop Kanama addon with
-            |   matching version ${project.version}, and the Android export
-            |   preset must use the Gradle build with the KanamaAndroid plugin
-            |   enabled.
-            |3. Merge kanama.gdextension-android-entries.txt into
-            |   addons/kanama/kanama.gdextension.
-            |4. Export with the Godot ${godotVersion.get()} Android templates.
-            |"""
-            .trimMargin()
-        )
-    }
-  }
-
-tasks.register<Zip>("packageMobileAddonAndroid") {
-  group = "distribution"
-  description =
-    "Zip the experimental project-agnostic Android runtime AAR + install notes; maintainer-built, see release-support-decision §7 B3."
-  dependsOn(tasks.named("assembleAndroidPluginAar"), prepareMobileAddonAndroidExtras)
-  archiveFileName.set("kanama-mobile-addon-android-v${project.version}.zip")
-  destinationDirectory.set(layout.buildDirectory.dir("distributions"))
-  isPreserveFileTimestamps = false
-  isReproducibleFileOrder = true
-  // The users' AAR carries no API exercise rows (a -PkanamaApiExercise=true runtime AAR is for
-  // android_smoke.sh only; the graph guard above refuses this task with the flag, and this reads
-  // the AAR it zips, whatever built it).
-  doFirst {
-    val aar =
-      layout.projectDirectory
-        .file("android/godot-plugin/plugin/build/outputs/aar/plugin-debug.aar")
-        .asFile
-    val found =
-      java.util.zip.ZipFile(aar).use { outer ->
-        val classes =
-          outer.getEntry("classes.jar")
-            ?: throw GradleException("${aar.absolutePath} has no classes.jar")
-        java.util.zip.ZipInputStream(outer.getInputStream(classes)).use { jar ->
-          generateSequence { jar.nextEntry }
-            .map { it.name }
-            .firstOrNull { it.startsWith("net/multigesture/kanama/exercise/") && !it.endsWith("/") }
-        }
       }
-    if (found != null) {
-      throw GradleException(
-        "${aar.absolutePath} carries the API exercise rows ($found): it was built with " +
-          "-PkanamaApiExercise=true, which is for android_smoke.sh only. Rebuild without the flag."
+      environment("ANDROID_HOME", kanamaAndroidSdkDir.get())
+      environment("ANDROID_SDK_ROOT", kanamaAndroidSdkDir.get())
+      commandLine(
+        layout.projectDirectory.file("gradlew").asFile.absolutePath,
+        "-p",
+        "android/godot-plugin",
+        ":plugin:publishKanamaAndroidPublicationToKanamaPackageRepository",
+        "-PkanamaVersion=${project.version}",
+        "-PkanamaPanamaPortCore=${panamaPortCoreDependency.get()}",
       )
     }
   }
-  from(
-    layout.projectDirectory.file("android/godot-plugin/plugin/build/outputs/aar/plugin-debug.aar")
-  ) {
-    into("android/plugins")
-    rename { "KanamaAndroid.debug.aar" }
+
+val publishKanamaAndroidPackage by
+  tasks.registering {
+    group = "publishing"
+    description =
+      "Put the Kanama Android runtime AAR (kanama-android) into the package-local Maven repository."
+    dependsOn(buildKanamaAndroidPackage)
+    mustRunAfter(cleanKanamaPackageMavenRepository)
+    val repository = packageMavenRepositoryDir
+    val version = project.version.toString()
+    doLast {
+      val target = repository.get().asFile.resolve(kanamaAndroidPackagePath)
+      if (kanamaAndroidPackageDir.isPresent) {
+        val source = file(kanamaAndroidPackageDir.get()).resolve(kanamaAndroidPackagePath)
+        if (!source.resolve(version).isDirectory) {
+          throw GradleException(
+            "-PkanamaAndroidPackageDir=${kanamaAndroidPackageDir.get()} has no $kanamaAndroidPackagePath/$version"
+          )
+        }
+        copy {
+          from(source)
+          into(target)
+        }
+      }
+      val aar = target.resolve("$version/kanama-android-$version.aar")
+      if (!aar.isFile) throw GradleException("kanama-android was not published: ${aar.absolutePath}")
+      // The users' AAR carries no API exercise rows (a -PkanamaApiExercise=true runtime AAR is for
+      // android_smoke.sh only; the plugin build refuses to publish one, and this reads what it got).
+      val found =
+        java.util.zip.ZipFile(aar).use { outer ->
+          val classes =
+            outer.getEntry("classes.jar")
+              ?: throw GradleException("${aar.absolutePath} has no classes.jar")
+          java.util.zip.ZipInputStream(outer.getInputStream(classes)).use { jar ->
+            generateSequence { jar.nextEntry }
+              .map { it.name }
+              .firstOrNull { it.startsWith("net/multigesture/kanama/exercise/") && !it.endsWith("/") }
+          }
+        }
+      if (found != null) {
+        throw GradleException(
+          "${aar.absolutePath} carries the API exercise rows ($found): it was built with " +
+            "-PkanamaApiExercise=true, which is for android_smoke.sh only. Rebuild without the flag."
+        )
+      }
+    }
   }
-  from(mobileAddonAndroidExtrasDir.map { it.file("KanamaAndroid.gdap") }) {
-    into("android/plugins")
-  }
-  from(mobileAddonAndroidExtrasDir.map { it.file("kanama.gdextension-android-entries.txt") })
-  from(mobileAddonAndroidExtrasDir.map { it.file("README.md") })
-  from(layout.projectDirectory.file("LICENSE"))
-}

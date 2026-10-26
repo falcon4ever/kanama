@@ -32,11 +32,15 @@ you write now.
     - *Store addon:* unzip the 0.5 `kanama-store-addon` zip at the root of your
       Godot project (it replaces `addons/kanama` and `addons/kanama_tools`).
       Your root `build.gradle.kts` and `settings.gradle.kts` are yours; compare
-      them with `addons/kanama/templates/release-kit`. Two things changed: the
+      them with `addons/kanama/templates/release-kit`. Three things changed: the
       JDK toolchain resolver in `settings.gradle.kts` (see
-      [Tooling](#tooling-gradle-and-the-editor)), and the `kotlin("jvm")` and
+      [Tooling](#tooling-gradle-and-the-editor)); the `kotlin("jvm")` and
       `com.google.devtools.ksp` plugin versions in `build.gradle.kts`, now
-      2.4.21 and 2.3.12 (the 0.4 versions, 2.3.21 and 2.3.9, still build).
+      2.4.21 and 2.3.12 (the 0.4 versions, 2.3.21 and 2.3.9, still build); and
+      the Kanama Gradle plugin, which needs the template's `pluginManagement { }`
+      block in `settings.gradle.kts` and `id("net.multigesture.kanama")` in
+      `build.gradle.kts`. Without the plugin, desktop builds still work, but
+      [Android export](../exporting/android.md) needs it.
     - *Release kit:* a kit is for new projects. Copy your `kotlin-src` into a
       project made from the 0.5 kit, or apply the store-addon steps above.
     - Use the **Godot 4.7.2** editor and export templates for the build
@@ -991,6 +995,10 @@ Script: none.
 - The class-token tables behind `castOrNull`, `requireAs` and `node<T>()` keep
   every wrapper class's constructor reachable, so **R8 can no longer drop unused
   wrapper classes**: expect a larger minified release build.
+- **Android exports from a release kit or the store addon.** Run
+  `./gradlew buildAndroidScripts` in the project, then export from Godot; a
+  source checkout is no longer needed. See
+  [Export for Android](../exporting/android.md).
 - **Android 13 is now the minimum**, for debug and release builds. Set **Min
   SDK** to `33` under **Gradle Build** in your Android export preset; an export
   with a lower or empty Min SDK stops with a message that says so.
@@ -1006,6 +1014,10 @@ Script: none.
   JDK itself (the `kanama/build/jdk_path` editor setting, then `JAVA_HOME`, then
   the usual install locations), and a `JAVA_HOME` older than 25 is skipped. See
   [JDK Selection](editor-workflow.md#jdk-selection).
+- **`addons/kanama/kanama.version`** names the addon's Kanama version. The
+  Gradle build takes the Kanama libraries and the Kanama Gradle plugin from it,
+  `buildScripts` stamps `kanama-scripts.jar` with it, and the editor offers
+  **Sync Addon** when your scripts were built for another version.
 - **`addons/kanama/kanama-project.gradle.kts`** gains the KSP inputs that make
   `Autoloads` regenerate when `project.godot` changes. It ships inside the addon,
   so the new addon brings it; a copy you edited by hand needs the same block.

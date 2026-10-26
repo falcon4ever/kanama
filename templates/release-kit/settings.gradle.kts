@@ -1,7 +1,26 @@
 pluginManagement {
+    // The Kanama version is the one line in addons/kanama/kanama.version, so unzipping a new addon
+    // moves the Kanama Gradle plugin and the Kanama libraries together.
+    val kanamaVersion = File(settingsDir, "addons/kanama/kanama.version").let {
+        if (!it.isFile) {
+            throw GradleException("Kanama addon not found: addons/kanama/kanama.version is missing. Unzip the Kanama addon into addons/ again.")
+        }
+        it.readText().trim()
+    }
+    if (!File(settingsDir, "addons/kanama/maven/net/multigesture/kanama/kanama-gradle-plugin/$kanamaVersion").isDirectory) {
+        throw GradleException("Kanama addon is incomplete: addons/kanama/maven has no Kanama $kanamaVersion. Unzip the Kanama $kanamaVersion addon into addons/ again.")
+    }
     repositories {
+        // The Kanama Gradle plugin comes only from the addon, never from the plugin portal.
+        exclusiveContent {
+            forRepository { maven { url = uri("addons/kanama/maven") } }
+            filter { includeGroupByRegex("net\\.multigesture(\\..*)?") }
+        }
         gradlePluginPortal()
         mavenCentral()
+    }
+    resolutionStrategy.eachPlugin {
+        if (requested.id.id == "net.multigesture.kanama") useVersion(kanamaVersion)
     }
 }
 

@@ -1,0 +1,4 @@
+# Written by the Kanama Gradle plugin (buildAndroidScripts) on every run. Do not edit.
+org.gradle.jvmargs=-Xmx2g -Dfile.encoding=UTF-8
+# Compile inside this build's Gradle process: no separate Kotlin daemon.
+kotlin.compiler.execution.strategy=in-process

@@ -1,6 +1,8 @@
 plugins {
     kotlin("jvm") version "2.4.21"
     id("com.google.devtools.ksp") version "2.3.12"
+    // Its version comes from addons/kanama/kanama.version (settings.gradle.kts).
+    id("net.multigesture.kanama")
 }
 
 val kotlinSourcesDir = providers.gradleProperty("kanamaProjectScriptsDir")

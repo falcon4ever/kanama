@@ -7,6 +7,7 @@ plugins { id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 rootProject.name = "kanama"
 
 include(":annotations")
+include(":gradle-plugin")
 include(":kanama-common-api")
 include(":processor")
 include(":project-scripts")

@@ -68,6 +68,10 @@ example_project/addons/kanama/libkanama_bootstrap.*
 example_project/addons/kanama/kanama_bootstrap.*
 example_project/addons/kanama/kanama.jar
 example_project/addons/kanama/kanama-scripts.jar
+# The version lock files installAddonJar (Build Scripts in this project) writes beside the jars.
+example_project/addons/kanama/kanama.version
+example_project/addons/kanama/kanama-scripts.version
+example_project/addons/kanama/checks/
 example_project/hs_err_pid*.log
 # A JVM crash (seen once: a C2 JIT SIGSEGV during a Gradle build) drops these
 # in whatever directory it ran from; they must never reach a commit.

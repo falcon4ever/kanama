@@ -51,10 +51,46 @@ jobs:
           path: gdextension/gdextension_interface.h
           if-no-files-found: error
 
+  # The Android runtime AAR (kanama-android) every kit and the store addon carry in addons/kanama/maven (task 135
+  # item 5). It needs the Android SDK and NDK, which the ubuntu runner has; it is built once, here, and handed to
+  # every kit job, as the store addon is assembled from the per-platform native artifacts.
+  android-aar:
+    name: android-aar
+    runs-on: ubuntu-24.04
+    needs: gdextension-header
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Download GDExtension header
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-gdextension-interface
+          path: gdextension
+
+      - name: Build the Android runtime AAR
+        shell: bash
+        run: ./gradlew publishKanamaAndroidPackage
+
+      - name: Upload the kanama-android Maven tree
+        uses: actions/upload-artifact@v6
+        with:
+          name: kanama-android-maven
+          path: build/package/maven/net/multigesture/kanama/kanama-android
+          if-no-files-found: error
+
   desktop-kit:
     name: ${{ matrix.classifier }}
     runs-on: ${{ matrix.runner }}
-    needs: gdextension-header
+    needs: [gdextension-header, android-aar]
     strategy:
       fail-fast: false
       matrix:
@@ -84,9 +120,15 @@ jobs:
           name: kanama-gdextension-interface
           path: gdextension
 
+      - name: Download the kanama-android Maven tree
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-android-maven
+          path: build/android-package/net/multigesture/kanama/kanama-android
+
       - name: Build package artifacts
         shell: bash
-        run: ./gradlew packageDesktopKit packageStoreNativeArtifact -PkanamaPlatformClassifier=${{ matrix.classifier }}
+        run: ./gradlew packageDesktopKit packageStoreNativeArtifact -PkanamaPlatformClassifier=${{ matrix.classifier }} -PkanamaAndroidPackageDir=build/android-package
 
       - name: Smoke desktop kit package
         shell: bash
@@ -356,7 +398,7 @@ jobs:
   store-addon:
     name: store-addon
     runs-on: ubuntu-24.04
-    needs: desktop-kit
+    needs: [desktop-kit, android-aar]
 
     steps:
       - name: Checkout
@@ -375,8 +417,14 @@ jobs:
           path: build/store-native-artifacts
           merge-multiple: true
 
+      - name: Download the kanama-android Maven tree
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-android-maven
+          path: build/android-package/net/multigesture/kanama/kanama-android
+
       - name: Build store addon
-        run: ./gradlew packageStoreAddon -PkanamaBuildNativeBootstrap=false -PkanamaStoreNativeArtifactsDir=build/store-native-artifacts
+        run: ./gradlew packageStoreAddon -PkanamaBuildNativeBootstrap=false -PkanamaStoreNativeArtifactsDir=build/store-native-artifacts -PkanamaAndroidPackageDir=build/android-package
 
       - name: Smoke store addon package
         shell: bash
@@ -389,11 +437,113 @@ jobs:
           path: build/distributions/kanama-store-addon-*.zip
           if-no-files-found: error
 
+  # Android export from the packages alone (task 135 item 5): the Linux kit and the store addon, each unzipped
+  # into a fresh project with a fresh GRADLE_USER_HOME, run buildAndroidScripts and a headless Godot export, and
+  # the APK is checked (scripts, registrars, runtime, libkanama_bootstrap.so, nothing from build/). No device.
+  android-export:
+    name: android-export (${{ matrix.package }})
+    runs-on: ubuntu-24.04
+    needs: [desktop-kit, store-addon]
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [desktop-kit, store-addon]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      # JDK 21 for Godot's Android Gradle build (Editor Settings > Export > Android > Java SDK Path), then JDK 25,
+      # which stays JAVA_HOME for Kanama's own builds.
+      - name: Setup Java 21 for Godot's Android build
+        id: java21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Setup Java 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Cache Godot and the Android export template
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-android-${{ env.GODOT_VERSION }}-linux-x86_64
+
+      - name: Download Godot and the Android export template
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p "$HOME/godot"
+          godot_zip="$(mktemp)"
+          curl -fL -o "$godot_zip" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q "$godot_zip" -d "$HOME/godot"
+          rm -f "$godot_zip"
+          tpz="$(mktemp)"
+          curl -fL -o "$tpz" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q -j "$tpz" "templates/android_source.zip" -d "$HOME/godot"
+          rm -f "$tpz"
+
+      # What a user sets once in Godot: the export template, the Android SDK and Java SDK paths, and a debug keystore.
+      - name: Set up Godot for Android export
+        shell: bash
+        env:
+          JAVA21_HOME: ${{ steps.java21.outputs.path }}
+        run: |
+          godot_dot="${GODOT_VERSION/-/.}"
+          templates="$HOME/.local/share/godot/export_templates/$godot_dot"
+          mkdir -p "$templates" "$HOME/.config/godot"
+          cp "$HOME/godot/android_source.zip" "$templates/"
+          keystore="$HOME/.config/godot/debug.keystore"
+          "$JAVA21_HOME/bin/keytool" -genkeypair -noprompt -keystore "$keystore" -storepass android \
+            -alias androiddebugkey -keypass android -keyalg RSA -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          settings="$HOME/.config/godot/editor_settings-$(echo "$godot_dot" | cut -d. -f1-2).tres"
+          {
+            echo '[gd_resource type="EditorSettings" format=3]'
+            echo
+            echo '[resource]'
+            echo "export/android/android_sdk_path = \"$ANDROID_HOME\""
+            echo "export/android/java_sdk_path = \"$JAVA21_HOME\""
+            echo "export/android/debug_keystore = \"$keystore\""
+            echo 'export/android/debug_keystore_user = "androiddebugkey"'
+            echo 'export/android/debug_keystore_pass = "android"'
+          } >"$settings"
+          cat "$settings"
+
+      - name: Download the Linux desktop kit
+        if: matrix.package == 'desktop-kit'
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-desktop-kit-linux-x64
+          path: packages
+
+      - name: Download the store addon
+        if: matrix.package == 'store-addon'
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-store-addon
+          path: packages
+
+      - name: Export for Android from the ${{ matrix.package }}
+        shell: bash
+        run: |
+          godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
+          chmod +x "$godot_bin"
+          scripts/package_install_smoke.sh --${{ matrix.package }} --android packages/kanama-*.zip "$godot_bin"
+
   publish-release:
     name: publish-release
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-24.04
-    needs: store-addon
+    needs: [store-addon, android-export]
     permissions:
       contents: write
 

@@ -288,8 +288,10 @@ Device-validated across four models: **Pixel 7** (Android 16; Android 17 on
 before Android 13 became the minimum.
 The R8/release path is tied to the PanamaPort fork
 `com.github.falcon4ever.PanamaPort:Core:0.1.5-kanama-r8.1` (Android 17 needs
-it), not upstream. The packaged Android addon is runtime-only (a debug AAR;
-compiling project scripts needs the Kanama checkout).
+it), not upstream. Kits and the store addon carry the runtime as the debug AAR
+`kanama-android` and compile a project's scripts with the Kanama Gradle
+plugin's `buildAndroidScripts`; `package.yml`'s `android-export` job exports
+an APK from the Linux kit and from the store addon, with no device.
 
 ### Android Demo Matrix
 

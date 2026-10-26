@@ -1,0 +1,25 @@
+// Written by the Kanama Gradle plugin (buildAndroidScripts) on every run. Do not edit.
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+// The project's addon is the only place a Kanama artifact can come from: no mavenLocal(), and no
+// other repository may serve net.multigesture artifacts.
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        exclusiveContent {
+            forRepository { maven { name = "kanamaAddon"; url = uri("@KANAMA_MAVEN@") } }
+            filter { includeGroupByRegex("net\\.multigesture(\\..*)?") }
+        }
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
+}
+
+rootProject.name = "@INNER_PROJECT@"

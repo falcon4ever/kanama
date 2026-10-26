@@ -72,12 +72,19 @@ If your project already has a `build.gradle.kts`, the setup script keeps it.
 It still adds the Gradle wrapper if the project has none, so
 `./gradlew buildScripts` works once your build has the Kanama parts:
 
-1. Copy the `plugins { }` block from
+1. Merge the `pluginManagement { }` block of
+   `addons/kanama/templates/release-kit/settings.gradle.kts` into your
+   `settings.gradle.kts`: add its lines to your own `pluginManagement { }`
+   block, or add the whole block at the top of the file if it has none. It
+   reads the Kanama version from `addons/kanama/kanama.version` and finds the
+   Kanama Gradle plugin in `addons/kanama/maven`, so a newer addon updates
+   both.
+2. Merge the `plugins { }` block of
    `addons/kanama/templates/release-kit/build.gradle.kts` into your build. It
-   applies Kotlin and KSP, the Kotlin compiler plugin that generates the code
-   that registers your scripts with Godot, at the versions this Kanama release
-   is built with.
-2. Add the rest:
+   applies Kotlin, KSP (the Kotlin compiler plugin that generates the code
+   that registers your scripts with Godot) and the Kanama Gradle plugin, which
+   adds the [Android export](../exporting/android.md) command.
+3. Add the rest:
 
     ```kotlin
     kotlin {
@@ -125,6 +132,8 @@ your own machine's platform only.
 | Godot cannot find `libjvm`. | Install a JDK 25 or newer. Kanama looks in the usual install folders; if yours is elsewhere, set **Editor Settings > Kanama > Build > JDK Path** (`kanama/build/jdk_path`) to the JDK folder, or set `JAVA_HOME`, and restart Godot. See [JDK Selection](editor-workflow.md#jdk-selection). |
 | macOS reports `"libkanama_bootstrap.dylib" Not Opened`. | Gatekeeper quarantined the zip. Clear the quarantine as shown in [On Other Platforms](#on-other-platforms) and open the project again. |
 | Gradle cannot resolve the Kanama libraries. | Check that `addons/kanama/maven` exists and that `build.gradle.kts` ends with `apply(from = "addons/kanama/kanama-project.gradle.kts")`. |
+| Gradle stops with `Kanama addon not found` or `Kanama addon is incomplete`. | Part of `addons/kanama` is missing. Unzip the store addon at the project root again. |
+| Godot says `your scripts were built for Kanama` one version `but the addon is` another. | You unzipped a newer addon. Press **Sync Addon** in that message, or **Build Scripts**, to rebuild your scripts for it. |
 | Godot does not recognize `.kt` scripts. | Check that `.godot/extension_list.cfg` contains `res://addons/kanama/kanama.gdextension`, then reopen the project. |
 | The game still runs your old Kotlin code. | Press **Build Scripts** or run `./gradlew buildScripts`, then run the scene again. |
 
