@@ -45,8 +45,8 @@ tools, about 1 GB, into `~/.konan`, so it needs a network connection. Expect
 the first run to take around ten minutes and later runs a few: most of that
 is the release library, whose link uses up to about 11 GB of memory.
 
-It uses the Xcode that `xcode-select -p` names, or the one `DEVELOPER_DIR`
-names. If Xcode is not in `/Applications` and neither names it, add
+It uses the Xcode that `DEVELOPER_DIR` names, or else the one
+`xcode-select -p` prints. If Xcode is not in `/Applications` and neither names it, add
 `-PkanamaXcodeDeveloperDir=/path/to/Xcode.app/Contents/Developer`.
 
 Run it again after every change to your scripts, before you export. When the

@@ -12050,6 +12050,7 @@ static void kanama_ios_deinitialize(void *userdata, GDExtensionInitializationLev
     kanama_ios_runtime_deinitialize((int32_t)level);
 }
 
+/* No register function is not a fault: a build without @ScriptClass scripts has none. */
 int32_t kanama_ios_load_project_scripts(void) {
     if (kanama_ios_project_scripts_register == NULL) {
         fprintf(stderr, "[kanama][ios][c] this build has no project scripts\n");
