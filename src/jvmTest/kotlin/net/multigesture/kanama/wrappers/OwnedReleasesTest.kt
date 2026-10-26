@@ -162,7 +162,8 @@ class OwnedReleasesTest {
       OwnedReleases.frameBudget = kotlin.time.Duration.ZERO
       dropMany(0x100000, 500)
       repeat(3) { OwnedReleaseCleaner.collectGarbage(200) } // all 500 queued, none drained yet
-      OwnedReleases.drain()
+      // A normal frame: a slow one (the collections above took ~600 ms) would earn a larger budget.
+      OwnedReleases.drainAfter(kotlin.time.Duration.parse("16ms"))
       // A zero budget still releases one clock-check batch (65) per drain, never all 500 at once.
       assertTrue(released.size < 500, "released ${released.size} in one budget-less drain")
       assertTrue(OwnedReleases.backlogSize > 0)

@@ -263,8 +263,12 @@ internal object OwnedReleases {
     val now = TimeSource.Monotonic.markNow()
     val sinceLastDrain = lastDrain?.let { now - it } ?: Duration.ZERO
     lastDrain = now
-    return drain(budget = null, sinceLastDrain = sinceLastDrain)
+    return drainAfter(sinceLastDrain)
   }
+
+  /** [drain] as if the previous one ran [sinceLastDrain] ago (tests). */
+  internal fun drainAfter(sinceLastDrain: Duration): Int =
+    drain(budget = null, sinceLastDrain = sinceLastDrain)
 
   // [budget] null: [budgetFor] the backlog once the queue is taken in.
   private fun drain(budget: Duration?, sinceLastDrain: Duration = Duration.ZERO): Int {
