@@ -25,7 +25,9 @@ Usage:
     python3 scripts/gate_red_runs.py --markdown out.md   # also write the README-gates.md table rows
 
 `--strict` is implied when `CI` is true/1/yes. `--allow-skip NAME[,NAME]` names the cases a runner
-may skip on purpose (CI has no Godot docs checkout: `--allow-skip sync_kdoc`).
+may skip on purpose (CI has no Godot docs checkout: `--allow-skip sync_kdoc`). A case is SKIPPED when
+an environment variable it needs is unset (`requires_env`) or when its gate's baseline says it could
+not run the mutated row (`skip_when`, e.g. no Android export template): never a vacuous red run.
 
 Gates that need a device, a browser, a Godot binary or a long export are NOT all here: they carry
 their own `--self-test` or red-run recipe, documented in scripts/README-gates.md.
@@ -90,6 +92,10 @@ class Case:
     timeout: int = 600
     pre: list[list[str]] = field(default_factory=list)  # commands run (must succeed) before the baseline
     requires_env: str = ""  # environment variables (comma-separated) that must each name an existing path, else the case is skipped
+    # A line the gate prints when it cannot run the row this case mutates (a missing export template, an editor
+    # with no Android SDK): found in the baseline output, the case is SKIPPED with that line as the reason, never
+    # a red run that stays green for want of a prerequisite (or, worse, a green row that proved nothing).
+    skip_when: str = ""
     slow: bool = False  # needs a Godot binary / Gradle and runs for minutes: only with --slow
 
 
@@ -1225,7 +1231,7 @@ case("export_guard_selftest.sh (Android Min SDK)", ["bash", "scripts/export_guar
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd",
            '            messages.append("Export stopped: " + sdk_problem)', "            pass")],
      "the min_sdk export did not print the guard's Min SDK line", "the export guard's _export_begin drops its Android Min SDK check: a real headless Android Gradle export with Min SDK 26 must still stop with the line",
-     requires_env="KANAMA_GODOT_BIN", slow=True)
+     requires_env="KANAMA_GODOT_BIN", skip_when="[export_guard_selftest] SKIP min_sdk:", slow=True)
 case("check_jdk_lookup_parity.sh", ["bash", "scripts/check_jdk_lookup_parity.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/plugin.gd", '["all", "~/.jdks", "", ""]', '["all", "~/.jdkz", "", ""]')],
      "FAIL table_home_dot_jdks", "the editor plugin's JDK location table drifts from bootstrap.c's (a `~/.jdks` row renamed)",
@@ -1477,15 +1483,19 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
     skipped: list[str] = []
     for c in cases:
         print(f"== {c.gate}: {c.how}", flush=True)
+
+        def skip(reason: str) -> None:
+            print(f"SKIP: {c.gate}: {reason}", flush=True)
+            skipped.append(c.gate)
+            cell = reason.replace("|", "\\|")
+            rows.append(f"| `{c.gate}` | {c.how} | SKIPPED: {cell} | - |")
+            if strict and not any(a in c.gate for a in allowed_skips):
+                failures.append(f"{c.gate}: SKIPPED ({reason}) in a strict run; provide it, or pass --allow-skip")
+
         missing_env = [name for name in filter(None, c.requires_env.split(","))
                        if not Path(os.environ.get(name, "/nonexistent")).exists()]
         if missing_env:
-            needs = " and ".join(missing_env)
-            print(f"SKIP: {c.gate}: needs {needs} to name an existing path", flush=True)
-            skipped.append(c.gate)
-            rows.append(f"| `{c.gate}` | {c.how} | SKIPPED: needs {needs} | - |")
-            if strict and not any(a in c.gate for a in allowed_skips):
-                failures.append(f"{c.gate}: SKIPPED (needs {needs}) in a strict run; set it, or pass --allow-skip")
+            skip(f"needs {' and '.join(missing_env)} to name an existing path")
             continue
         for pre in c.pre:
             pre_rc, pre_out, _ = run(Case(c.gate, pre, [], "", "", env=c.env, timeout=c.timeout))
@@ -1495,6 +1505,9 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
         if rc != 0:
             failures.append(f"{c.gate}: not green before the mutation (exit {rc}):\n{out[-800:]}")
             print(f"   baseline NOT green (exit {rc}); skipped", flush=True)
+            continue
+        if c.skip_when and c.skip_when in out:
+            skip(next(line.strip() for line in out.splitlines() if c.skip_when in line))
             continue
         try:
             with Mutator(c.mutations):

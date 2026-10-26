@@ -46,14 +46,14 @@ jobs:
           java-version: "25"
           cache: gradle
 
-      - name: Cache Godot binary and Web export template
+      - name: Cache Godot binary and the Web and Android export templates
         id: godot-cache
         uses: actions/cache@v4
         with:
           path: ~/godot
-          key: godot-web-${{ env.GODOT_VERSION }}-linux-x86_64
+          key: godot-web-android-${{ env.GODOT_VERSION }}-linux-x86_64
 
-      - name: Download Godot and the Web export template
+      - name: Download Godot and the Web and Android export templates
         if: steps.godot-cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
@@ -66,16 +66,38 @@ jobs:
           tpz="$(mktemp)"
           curl -fL -o "$tpz" \
             "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q -j "$tpz" "templates/web_nothreads_release.zip" -d "$HOME/godot"
+          unzip -q -j "$tpz" "templates/web_nothreads_release.zip" "templates/android_debug.apk" -d "$HOME/godot"
           rm -f "$tpz"
 
-      # Must run even on a cache hit: the scene-check self-test exports a fixture for Web headless.
-      - name: Install the Web export template
+      # Must run even on a cache hit: the scene-check self-test exports a fixture for Web headless, and
+      # export_guard_selftest.sh runs real headless Android exports (APK, and Gradle with Min SDK 26), which
+      # need the Android template plus what a user sets once in Godot: the runner image's Android SDK, a Java
+      # SDK and a debug keystore (as package.yml's android-export job). Without them that self-test skips its
+      # Android rows and gate_red_runs.py reports the Min SDK case SKIPPED, which --strict fails.
+      - name: Install the export templates and Godot's Android settings
         shell: bash
         run: |
-          template_dir="$HOME/.local/share/godot/export_templates/${GODOT_VERSION/-/.}"
-          mkdir -p "$template_dir"
-          cp "$HOME/godot/web_nothreads_release.zip" "$template_dir/"
+          godot_dot="${GODOT_VERSION/-/.}"
+          template_dir="$HOME/.local/share/godot/export_templates/$godot_dot"
+          mkdir -p "$template_dir" "$HOME/.config/godot"
+          cp "$HOME/godot/web_nothreads_release.zip" "$HOME/godot/android_debug.apk" "$template_dir/"
+          [[ -x "$ANDROID_HOME/platform-tools/adb" ]] || { echo "no Android SDK at ANDROID_HOME=$ANDROID_HOME" >&2; exit 1; }
+          keystore="$HOME/.config/godot/debug.keystore"
+          rm -f "$keystore"
+          "$JAVA_HOME/bin/keytool" -genkeypair -noprompt -keystore "$keystore" -storepass android \
+            -alias androiddebugkey -keypass android -keyalg RSA -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          settings="$HOME/.config/godot/editor_settings-$(echo "$godot_dot" | cut -d. -f1-2).tres"
+          {
+            echo '[gd_resource type="EditorSettings" format=3]'
+            echo
+            echo '[resource]'
+            echo "export/android/android_sdk_path = \"$ANDROID_HOME\""
+            echo "export/android/java_sdk_path = \"$JAVA_HOME\""
+            echo "export/android/debug_keystore = \"$keystore\""
+            echo 'export/android/debug_keystore_user = "androiddebugkey"'
+            echo 'export/android/debug_keystore_pass = "android"'
+          } >"$settings"
+          cat "$settings"
 
       - name: Run every gate red run, slow ones included
         shell: bash
