@@ -280,8 +280,9 @@ abstract class BuildIosScripts : DefaultTask() {
           " the shim calls (" +
           missing.take(5).joinToString { it.removePrefix("_") } +
           (if (missing.size > 5) ", ..." else "") +
-          "): the runtime klib was not exported into it. Its build file is written by the Kanama " +
-          "Gradle plugin; unzip the Kanama kit or addon into this project again."
+          "): the runtime klib was not exported into it, or the shim and the runtime klib in " +
+          "addons/kanama/maven are from different Kanama versions. Unzip the Kanama kit or addon " +
+          "into this project again."
       )
     }
   }
@@ -384,9 +385,9 @@ abstract class BuildIosScripts : DefaultTask() {
         "KANAMA" to KanamaVersions.KANAMA,
         "KOTLIN" to KanamaVersions.KOTLIN,
         "KSP" to KanamaVersions.KSP,
-        "SCRIPTS_DIR" to scriptsPath.invariantSeparatorsPath,
-        "SCRIPT_ROOT" to scriptRoot.invariantSeparatorsPath,
-        "PROJECT_DIR" to projectPath.invariantSeparatorsPath,
+        "SCRIPTS_DIR" to kotlinString(scriptsPath.invariantSeparatorsPath),
+        "SCRIPT_ROOT" to kotlinString(scriptRoot.invariantSeparatorsPath),
+        "PROJECT_DIR" to kotlinString(projectPath.invariantSeparatorsPath),
         "ALLOW_SKIPS" to allowSkips.getOrElse(false).toString(),
         "HEAP" to "${INNER_HEAP_GB}g",
         "HEAP_NOTE" to HEAP_NOTE,
@@ -402,6 +403,10 @@ abstract class BuildIosScripts : DefaultTask() {
       if (!file.isFile || file.readText() != written) file.writeText(written)
     }
   }
+
+  /** [text] as the inside of a Kotlin string literal of the inner build script. */
+  private fun kotlinString(text: String): String =
+    text.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$")
 
   internal companion object {
     const val INNER_PROJECT = "kanama-ios-scripts"

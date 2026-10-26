@@ -132,6 +132,7 @@ Parsed from `.github/workflows/{ci,web,package}.yml`. Scripts are the repo gate 
 | `package.yml` | exported-game (${{ matrix.target }}, macOS-built runtime) (`exported-game`) | tag `v*` + manual | `scripts/check_godot_version_pin.py`, `scripts/export_game_smoke.sh` |
 | `package.yml` | store-addon (`store-addon`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |
 | `package.yml` | android-export (${{ matrix.package }}) (`android-export`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |
+| `package.yml` | ios-export (${{ matrix.package }}) (`ios-export`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |
 | `package.yml` | publish-release (`publish-release`) | tag `v*` only | — |
 
 ## Local-only gates
