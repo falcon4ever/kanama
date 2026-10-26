@@ -17,7 +17,7 @@ class ButtonGroup(godotObject: GodotHandle) : Resource(godotObject) {
   }
 
   companion object {
-    /** Constructs a new ButtonGroup engine-side; the wrapper owns the handle (close what you create). */
+    /** A new ButtonGroup, GDScript's `ButtonGroup.new()`. You own the reference: `close()` or `use { }`. */
     fun create(): ButtonGroup =
       ButtonGroup(checkNotNull(ClassDB.instantiate("ButtonGroup")) { "Godot could not instantiate ButtonGroup" }.toWebId())
   }

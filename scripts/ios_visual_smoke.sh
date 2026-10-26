@@ -1213,19 +1213,19 @@ elif [[ "$kanama_bunnymark_probe" -eq 1 ]]; then
   launch_sleep=10
   mkdir -p "$project_dir/kotlin-src" "$project_dir/images"
   cp "$bunnymark_demo_dir/images/godot_bunny.png" "$project_dir/images/godot_bunny.png"
-  cp "$bunnymark_demo_dir/kotlin-src/BunnymarkV1SpritesKanama.kt" "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
+  cp "$bunnymark_demo_dir/kotlin-src/BunnymarkSpritesKanama.kt" "$project_dir/kotlin-src/BunnymarkSpritesKanama.kt"
   # Replace the demo's own leading `package …` (the demo source declares
   # `package net.multigesture.kanama.demos.bunnymark`) with the iOS package the generated .tscn
   # and iOS registration expect — do NOT prepend, or two package declarations become a syntax
   # error. The optional group also handles a demo source that carries no package line.
   perl -0pi -e 's/\A(\s*package[^\n]*\n)?/package net.multigesture.kanama.iosbunnymark\n\n/' \
-    "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
+    "$project_dir/kotlin-src/BunnymarkSpritesKanama.kt"
   perl -0pi -e 's/(private var bunnyTexture: Texture2D\? = null\n)/$1    private var frame = 0\n/' \
-    "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
+    "$project_dir/kotlin-src/BunnymarkSpritesKanama.kt"
   perl -0pi -e 's/fun process\(delta: Double\) \{\n/fun process(delta: Double) {\n        frame += 1\n        if (frame == 3) {\n            println("[kanama][ios][kn] bunnymark process frame=3")\n        }\n/' \
-    "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
+    "$project_dir/kotlin-src/BunnymarkSpritesKanama.kt"
   perl -0pi -e 's/\n}\s*\z/\n\n    fun signalAck() {\n        println("[kanama][ios][kn] bunnymark signal ack")\n    }\n}\n/' \
-    "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
+    "$project_dir/kotlin-src/BunnymarkSpritesKanama.kt"
   cat >"$project_dir/main.gd" <<'EOF'
 extends Control
 
@@ -1237,7 +1237,7 @@ func _ready():
     call_deferred("_start_bunnymark")
 
 func _start_bunnymark():
-    var script = load("res://kotlin-src/BunnymarkV1SpritesKanama.kt")
+    var script = load("res://kotlin-src/BunnymarkSpritesKanama.kt")
     benchmark_node = Node2D.new()
     benchmark_node.set_script(script)
     benchmark_node.add_user_signal("benchmark_finished", [{"name": "output", "type": TYPE_INT}])

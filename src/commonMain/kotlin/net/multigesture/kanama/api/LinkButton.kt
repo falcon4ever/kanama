@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A button that represents a link.
@@ -275,6 +276,11 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
 
         internal fun wrap(handle: RawSegment): LinkButton? =
             if (handle.address() == 0L) null else LinkButton(GodotHandle(handle))
+
+        /** A new LinkButton, GDScript's `LinkButton.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): LinkButton =
+            LinkButton(GodotHandle(requireConstructed(ObjectCalls.constructObject("LinkButton"), "LinkButton")))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A custom visual shader graph expression written in Godot Shading Language.
@@ -55,6 +56,11 @@ open class VisualShaderNodeExpression(handle: GodotHandle) : VisualShaderNodeGro
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeExpression? =
             if (handle.address() == 0L) null else VisualShaderNodeExpression(GodotHandle(handle))
+
+        /** A new VisualShaderNodeExpression, GDScript's `VisualShaderNodeExpression.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeExpression =
+            RefCounted.owned(VisualShaderNodeExpression(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeExpression"), "VisualShaderNodeExpression"))))
     }
 
     private object Binds {

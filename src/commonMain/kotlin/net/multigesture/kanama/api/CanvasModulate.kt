@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -44,6 +45,11 @@ class CanvasModulate(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): CanvasModulate? =
             if (handle.address() == 0L) null else CanvasModulate(GodotHandle(handle))
+
+        /** A new CanvasModulate, GDScript's `CanvasModulate.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CanvasModulate =
+            CanvasModulate(GodotHandle(requireConstructed(ObjectCalls.constructObject("CanvasModulate"), "CanvasModulate")))
     }
 
     private object Binds {

@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A base class of the limitation that interacts with `ChainIK3D`.
@@ -22,5 +23,10 @@ open class JointLimitation3D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): JointLimitation3D? =
             if (handle.address() == 0L) null else JointLimitation3D(GodotHandle(handle))
+
+        /** A new JointLimitation3D, GDScript's `JointLimitation3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): JointLimitation3D =
+            RefCounted.owned(JointLimitation3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("JointLimitation3D"), "JointLimitation3D"))))
     }
 }

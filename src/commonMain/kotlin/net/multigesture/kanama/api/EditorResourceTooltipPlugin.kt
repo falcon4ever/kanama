@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A plugin that advanced tooltip for its handled resource type.
@@ -34,6 +35,11 @@ class EditorResourceTooltipPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorResourceTooltipPlugin? =
             if (handle.address() == 0L) null else EditorResourceTooltipPlugin(GodotHandle(handle))
+
+        /** A new EditorResourceTooltipPlugin, GDScript's `EditorResourceTooltipPlugin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorResourceTooltipPlugin =
+            RefCounted.owned(EditorResourceTooltipPlugin(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorResourceTooltipPlugin"), "EditorResourceTooltipPlugin"))))
     }
 
     private object Binds {

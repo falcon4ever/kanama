@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
@@ -607,6 +608,11 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TileSetAtlasSource? =
             if (handle.address() == 0L) null else TileSetAtlasSource(GodotHandle(handle))
+
+        /** A new TileSetAtlasSource, GDScript's `TileSetAtlasSource.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TileSetAtlasSource =
+            RefCounted.owned(TileSetAtlasSource(GodotHandle(requireConstructed(ObjectCalls.constructObject("TileSetAtlasSource"), "TileSetAtlasSource"))))
     }
 
     private object Binds {

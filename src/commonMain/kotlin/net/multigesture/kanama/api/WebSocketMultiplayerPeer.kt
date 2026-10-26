@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for WebSocket server and client.
@@ -273,6 +274,11 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WebSocketMultiplayerPeer? =
             if (handle.address() == 0L) null else WebSocketMultiplayerPeer(GodotHandle(handle))
+
+        /** A new WebSocketMultiplayerPeer, GDScript's `WebSocketMultiplayerPeer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): WebSocketMultiplayerPeer =
+            RefCounted.owned(WebSocketMultiplayerPeer(GodotHandle(requireConstructed(ObjectCalls.constructObject("WebSocketMultiplayerPeer"), "WebSocketMultiplayerPeer"))))
     }
 
     private object Binds {

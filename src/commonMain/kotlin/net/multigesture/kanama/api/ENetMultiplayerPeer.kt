@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A MultiplayerPeer implementation using the ENet (http://enet.bespin.org/index.html) library.
@@ -143,10 +144,10 @@ class ENetMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
         internal fun wrapBorrowed(handle: RawSegment): ENetMultiplayerPeer? =
             if (handle.address() == 0L) null else ENetMultiplayerPeer(GodotHandle(handle))
 
-        // Instantiate an ENetMultiplayerPeer.
+        /** A new ENetMultiplayerPeer, GDScript's `ENetMultiplayerPeer.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ENetMultiplayerPeer =
-            RefCounted.owned(ENetMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("ENetMultiplayerPeer"))))
+            RefCounted.owned(ENetMultiplayerPeer(GodotHandle(requireConstructed(ObjectCalls.constructObject("ENetMultiplayerPeer"), "ENetMultiplayerPeer"))))
     }
 
     private object Binds {

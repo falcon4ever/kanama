@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Shader source code (used by `RenderingDevice`).
@@ -134,6 +135,11 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDShaderSource? =
             if (handle.address() == 0L) null else RDShaderSource(GodotHandle(handle))
+
+        /** A new RDShaderSource, GDScript's `RDShaderSource.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDShaderSource =
+            RefCounted.owned(RDShaderSource(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDShaderSource"), "RDShaderSource"))))
     }
 
     private object Binds {

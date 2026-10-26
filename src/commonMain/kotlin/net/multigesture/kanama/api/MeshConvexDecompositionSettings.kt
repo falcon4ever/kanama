@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Parameters to be used with a `Mesh` convex decomposition operation.
@@ -429,6 +430,11 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): MeshConvexDecompositionSettings? =
             if (handle.address() == 0L) null else MeshConvexDecompositionSettings(GodotHandle(handle))
+
+        /** A new MeshConvexDecompositionSettings, GDScript's `MeshConvexDecompositionSettings.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MeshConvexDecompositionSettings =
+            RefCounted.owned(MeshConvexDecompositionSettings(GodotHandle(requireConstructed(ObjectCalls.constructObject("MeshConvexDecompositionSettings"), "MeshConvexDecompositionSettings"))))
     }
 
     private object Binds {

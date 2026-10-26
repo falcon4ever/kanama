@@ -59,6 +59,52 @@ it: Gradle's `build/` folder now carries a `.gdignore`, so the editor no longer 
 `project.godot` turns on the ETC2/ASTC texture import Android export needs; and the editor plugin's
 `plugin.cfg` states the Kanama version instead of `0.1`.
 
+### Added — `X.create()` for every class GDScript can `new`
+
+`Label.create()`, `Area2D.create()`, `Timer.create()`, `RandomNumberGenerator.create()`: every
+class Godot can instantiate that is a `Node` or a `RefCounted` now has `create()`, GDScript's
+`X.new()`, on desktop, Android and iOS (845 classes; about 20 had one before), and on Web for the
+classes Web wraps. A new node is yours to add to the tree or `queueFree()`; a new resource is a
+reference of your own, as before. Plain `Object` classes (`UndoRedo`, `JSONRPC`) get none, since
+Kotlin has no `free()` for them. Ports no longer need a local `ClassDB.instantiate` helper.
+
+### Fixed — a script class named `Arena` or `Signals` compiles
+
+A script class whose name matched a type Kanama's generated registration code imports
+(`java.lang.foreign.Arena`, the runtime's `Signals`, `MemorySegment`, and on Web `GodotHandle`)
+failed to compile with "Conflicting import". The generated code now refers to the script class by
+an alias, so any class name works, and two script classes may share a simple name in different
+packages.
+
+### Fixed — a script constructor that throws no longer crashes Godot
+
+When a script's constructor (or a property initializer) threw while the script was attached, Godot
+crashed with signal 11 right after printing the script error. It now reports the error with your
+file and line. On desktop and Android the node keeps the script with an inert placeholder: its
+`@Export` values stay, an editor save keeps the script (a `@Tool` script whose constructor fails in
+the editor no longer disappears from the scene), and none of its code runs. GDScript keeps a
+half-built instance instead; a Kotlin constructor that threw leaves no object to run. On iOS, which
+has no placeholder instances, the node is left without the script. Web already handled it.
+
+### Fixed — forgotten wrappers are released at low frame rates too
+
+A wrapper you drop without `close()` is released by the garbage-collector fallback within a small
+time budget each frame. At a few frames a second (a phone under heavy load) that budget released a
+few hundred a minute; it now grows with the number waiting and with the frame time, up to 4 ms a
+frame. At a normal frame rate nothing changes.
+
+### Changed — `Mathf`'s math runs in Kotlin
+
+`Mathf.sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `sinh`, `cosh`, `tanh`, `pow`, `exp`,
+`log`, `ease`, `dbToLinear` and `linearToDb` are now computed in Kotlin with Godot's formulas
+instead of calling Godot, so a math-heavy loop costs what `kotlin.math` costs. Only `asinh`,
+`acosh`, `atanh`, the `floorToInt` / `ceilToInt` / `roundToInt` conversions, `snapped` to a `Long`
+step and `posmod` by zero still call the engine. On Android and iOS the
+results are bit-identical to GDScript's; on desktop and Web the transcendental ones can differ in
+the last bit or two (Kotlin's math library is not the host's). On Web, `GD.asin` and `GD.acos` now
+clamp outside [-1, 1] as Godot does (they answered NaN), and `asinh`, `acosh` and `atanh` run in
+the engine, since Kotlin's lose precision near zero.
+
 ### Changed — Android 13 is now the minimum — BREAKING
 
 Android 13 (API 33) is now the minimum; set **Min SDK** to `33` in your Android export preset

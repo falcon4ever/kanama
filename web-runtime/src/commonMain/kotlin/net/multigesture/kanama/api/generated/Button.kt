@@ -17,6 +17,12 @@ class Button(godotObject: GodotHandle) : BaseButton(godotObject) {
   var text: String
     get() = unsupportedWebGameplayFamily("Button.get_text")
     set(newValue) = setText(newValue)
+
+  companion object {
+    /** A new Button, GDScript's `Button.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): Button =
+      Button(checkNotNull(ClassDB.instantiate("Button")) { "Godot could not instantiate Button" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

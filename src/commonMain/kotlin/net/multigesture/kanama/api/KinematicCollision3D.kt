@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 
@@ -200,6 +201,11 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): KinematicCollision3D? =
             if (handle.address() == 0L) null else KinematicCollision3D(GodotHandle(handle))
+
+        /** A new KinematicCollision3D, GDScript's `KinematicCollision3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): KinematicCollision3D =
+            RefCounted.owned(KinematicCollision3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("KinematicCollision3D"), "KinematicCollision3D"))))
     }
 
     private object Binds {

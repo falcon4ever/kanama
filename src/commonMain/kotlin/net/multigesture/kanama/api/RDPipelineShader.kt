@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 
 /**
@@ -81,6 +82,11 @@ class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineShader? =
             if (handle.address() == 0L) null else RDPipelineShader(GodotHandle(handle))
+
+        /** A new RDPipelineShader, GDScript's `RDPipelineShader.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDPipelineShader =
+            RefCounted.owned(RDPipelineShader(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDPipelineShader"), "RDPipelineShader"))))
     }
 
     private object Binds {

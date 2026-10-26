@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -150,6 +151,11 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): RemoteTransform2D? =
             if (handle.address() == 0L) null else RemoteTransform2D(GodotHandle(handle))
+
+        /** A new RemoteTransform2D, GDScript's `RemoteTransform2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): RemoteTransform2D =
+            RemoteTransform2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("RemoteTransform2D"), "RemoteTransform2D")))
     }
 
     private object Binds {

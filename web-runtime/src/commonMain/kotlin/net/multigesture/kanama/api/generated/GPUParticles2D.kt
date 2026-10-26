@@ -52,6 +52,12 @@ class GPUParticles2D(godotObject: GodotHandle) : Node2D(godotObject) {
       val CUSTOM: EmitFlags get() = EmitFlags(16L)
     }
   }
+
+  companion object {
+    /** A new GPUParticles2D, GDScript's `GPUParticles2D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): GPUParticles2D =
+      GPUParticles2D(checkNotNull(ClassDB.instantiate("GPUParticles2D")) { "Godot could not instantiate GPUParticles2D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

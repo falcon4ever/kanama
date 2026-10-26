@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Rect2
@@ -913,6 +914,11 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): GPUParticles2D? =
             if (handle.address() == 0L) null else GPUParticles2D(GodotHandle(handle))
+
+        /** A new GPUParticles2D, GDScript's `GPUParticles2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GPUParticles2D =
+            GPUParticles2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("GPUParticles2D"), "GPUParticles2D")))
     }
 
     private object Binds {

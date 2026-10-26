@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Helper class to implement a UDP server.
@@ -147,6 +148,11 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): UDPServer? =
             if (handle.address() == 0L) null else UDPServer(GodotHandle(handle))
+
+        /** A new UDPServer, GDScript's `UDPServer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): UDPServer =
+            RefCounted.owned(UDPServer(GodotHandle(requireConstructed(ObjectCalls.constructObject("UDPServer"), "UDPServer"))))
     }
 
     private object Binds {

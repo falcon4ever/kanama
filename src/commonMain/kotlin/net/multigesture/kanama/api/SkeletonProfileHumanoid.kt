@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A humanoid `SkeletonProfile` preset.
@@ -22,5 +23,10 @@ class SkeletonProfileHumanoid(handle: GodotHandle) : SkeletonProfile(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonProfileHumanoid? =
             if (handle.address() == 0L) null else SkeletonProfileHumanoid(GodotHandle(handle))
+
+        /** A new SkeletonProfileHumanoid, GDScript's `SkeletonProfileHumanoid.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SkeletonProfileHumanoid =
+            RefCounted.owned(SkeletonProfileHumanoid(GodotHandle(requireConstructed(ObjectCalls.constructObject("SkeletonProfileHumanoid"), "SkeletonProfileHumanoid"))))
     }
 }

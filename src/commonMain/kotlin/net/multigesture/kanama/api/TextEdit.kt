@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2
@@ -3177,6 +3178,11 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): TextEdit? =
             if (handle.address() == 0L) null else TextEdit(GodotHandle(handle))
+
+        /** A new TextEdit, GDScript's `TextEdit.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): TextEdit =
+            TextEdit(GodotHandle(requireConstructed(ObjectCalls.constructObject("TextEdit"), "TextEdit")))
     }
 
     private object Binds {

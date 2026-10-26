@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a phaser audio effect to an audio bus. Creates several notch and peak filters that sweep
@@ -178,6 +179,11 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectPhaser? =
             if (handle.address() == 0L) null else AudioEffectPhaser(GodotHandle(handle))
+
+        /** A new AudioEffectPhaser, GDScript's `AudioEffectPhaser.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectPhaser =
+            RefCounted.owned(AudioEffectPhaser(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectPhaser"), "AudioEffectPhaser"))))
     }
 
     private object Binds {

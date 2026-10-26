@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A node for audio playback.
@@ -426,10 +427,10 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
         internal fun wrap(handle: RawSegment): AudioStreamPlayer? =
             if (handle.address() == 0L) null else AudioStreamPlayer(GodotHandle(handle))
 
-        // Instantiate an AudioStreamPlayer.
+        /** A new AudioStreamPlayer, GDScript's `AudioStreamPlayer.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): AudioStreamPlayer =
-            AudioStreamPlayer(GodotHandle(ObjectCalls.constructObject("AudioStreamPlayer")))
+            AudioStreamPlayer(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamPlayer"), "AudioStreamPlayer")))
     }
 
     private object Binds {

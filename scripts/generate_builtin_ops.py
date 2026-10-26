@@ -1893,6 +1893,24 @@ MATHF_ENTRIES: list[tuple[str, str, str]] = [
     ("atanh", "atanh", "f"),
 ]
 _MATHF_DRAW = {"f": ("nv()", "nv()"), "i": ("ri().toLong()", "ri()"), "z": ("rnz().toLong()", "rnz()")}
+# The Mathf members computed with kotlin.math's transcendentals (the C library calls Godot makes, in
+# Kotlin): (member, GDScript function) -> (GD member, bound). The desktop JVM and Kotlin/Wasm have
+# their own libm, a last bit or two away from the host's, so the Kotlin row mixes the ENGINE's
+# result (GD.<fn>, bit for bit GDScript's) and holds Mathf to it within the bound (`mathfbound=`): a
+# bound in double ulps, or a text bound in absolute terms where a subtraction cancels (ease's
+# 1 - pow). Measured on macOS arm64 over 200,000 draws against the host libm: 1 ulp, 3 for tan and 2
+# for sinh and tanh; the bounds leave one more for another libm (glibc on the Linux runners). Each
+# Float overload is held to the engine's result narrowed to Float, within one float ulp. iOS and
+# Android call the libm Godot calls, so there the difference is 0.
+MATHF_LIBM_BOUNDS: dict[tuple[str, str], tuple[str, int | str]] = {
+    ("sin", "sin"): ("GD.sin", 2), ("cos", "cos"): ("GD.cos", 2), ("tan", "tan"): ("GD.tan", 4),
+    ("asin", "asin"): ("GD.asin", 2), ("acos", "acos"): ("GD.acos", 2), ("atan", "atan"): ("GD.atan", 2),
+    ("atan2", "atan2"): ("GD.atan2", 2), ("pow", "pow"): ("GD.pow", 2), ("log", "log"): ("GD.log", 2),
+    ("exp", "exp"): ("GD.exp", 2), ("sinh", "sinh"): ("GD.sinh", 3), ("cosh", "cosh"): ("GD.cosh", 2),
+    ("tanh", "tanh"): ("GD.tanh", 3), ("dbToLinear", "db_to_linear"): ("GD.dbToLinear", 2),
+    ("linearToDb", "linear_to_db"): ("GD.linearToDb", 3),
+    ("ease", "ease"): ("GD.ease", "2^-52 absolute"),
+}
 # (key, kotlin expression, gdscript expression): GD's boxed path (Variant / String / vararg / packed /
 # Object) once each, against the same GDScript call.
 GD_ENTRIES: list[tuple[str, str, str]] = [
@@ -1948,9 +1966,29 @@ def mathf_entry(index: int, gd: bool) -> list[str]:
     for i, d in enumerate(draws):
         lines.append(f"var a{i} = {_MATHF_DRAW[d][1]}" if gd else f"val a{i} = {_MATHF_DRAW[d][0]}")
     names = ", ".join(f"a{i}" for i in range(len(draws)))
-    call = f"{function}({names})" if gd else f"Mathf.{member}({names})"
-    lines.append(f'mix("Mathf.{member}/{function}", {call})')
+    key = f"Mathf.{member}/{function}"
+    bounded = MATHF_LIBM_BOUNDS.get((member, function))
+    if gd:
+        lines.append(f'mix("{key}", {function}({names}))')
+    elif bounded is None:
+        lines.append(f'mix("{key}", Mathf.{member}({names}))')
+    else:
+        engine, bound = bounded
+        floats = ", ".join(f"a{i}.toFloat()" for i in range(len(draws)))
+        widened = ", ".join(f"a{i}.toFloat().toDouble()" for i in range(len(draws)))
+        limit = f"{bound}, 0.0" if isinstance(bound, int) else "0, MATHF_ABSOLUTE_BOUND"
+        lines.append(f'bounded("{key}", Mathf.{member}({names}), {engine}({names}), {limit})')
+        lines.append(f'boundedFloat("{key}(Float)", Mathf.{member}({floats}), {engine}({widened}).toFloat())')
     return lines
+
+
+def check_mathf_bounds() -> list[str]:
+    """Every bounded Mathf row is a parity entry, and a text bound is the one absolute bound the probe knows."""
+    entries = {(m, f) for m, f, _ in MATHF_ENTRIES}
+    problems = [f"MATHF_LIBM_BOUNDS {k}: not a MATHF_ENTRIES row" for k in MATHF_LIBM_BOUNDS if k not in entries]
+    problems += [f"MATHF_LIBM_BOUNDS {k}: unknown text bound {b!r}" for k, (_, b) in MATHF_LIBM_BOUNDS.items()
+                 if isinstance(b, str) and b != "2^-52 absolute"]
+    return problems
 
 
 # The parity probe is a project script, so `:project-scripts:ktfmtCheck` formats-checks it (task 129
@@ -2086,6 +2124,8 @@ def render_parity_kt(pure, facade) -> str:
         "    edge = false",
         f"    report(\"mathfedge=n={EDGE_INPUTS} \" + summary())",
         "    hashes.clear()",
+        "    val outOfBound = boundFailures.joinToString(\",\").ifEmpty { \"none\" }",
+        "    report(\"mathfbound=n=$boundChecks out=$outOfBound\")",
         "    utilities()",
         "    report(\"gd=n=1 \" + summary())",
         "    hashes.clear()",
@@ -2138,6 +2178,44 @@ def render_parity_kt(pure, facade) -> str:
         "",
         *[line for i in range(len(MATHF_ENTRIES)) for line in
           (f"  private fun mathf{i}() {{", *("    " + x for x in mathf_entry(i, False)), "  }", "")],
+        "  // A Mathf transcendental (kotlin.math) against the engine's result: the row mixes the engine's,",
+        "  // which GDScript's must equal bit for bit, and `mathfbound=` names every entry beyond its bound",
+        "  // (MATHF_LIBM_BOUNDS in scripts/generate_builtin_ops.py).",
+        "  private val boundFailures = linkedSetOf<String>()",
+        "",
+        "  private var boundChecks = 0",
+        "",
+        "  private fun bounded(key: String, mine: Double, engine: Double, ulps: Int, absolute: Double) {",
+        "    mix(key, engine)",
+        "    boundChecks++",
+        "    if (mine.isNaN() && engine.isNaN()) return",
+        "    if (mine == engine) return",
+        "    if (ulps > 0 && mine.isFinite() && engine.isFinite() && ulpsApart(mine, engine) <= ulps) return",
+        "    if (absolute > 0.0 && kotlin.math.abs(mine - engine) <= absolute) return",
+        "    boundFailures += key.replace(' ', '_')",
+        "  }",
+        "",
+        "  private fun boundedFloat(key: String, mine: Float, engine: Float) {",
+        "    boundChecks++",
+        "    if (mine.isNaN() && engine.isNaN()) return",
+        "    if (mine == engine) return",
+        "    if (mine.isFinite() && engine.isFinite() && ulpsApart(mine, engine) <= 1L) return",
+        "    boundFailures += key.replace(' ', '_')",
+        "  }",
+        "",
+        "  // Neighbouring doubles (floats) are 1 apart in these orderings; opposite signs are never close.",
+        "  private fun ulpsApart(a: Double, b: Double): Long {",
+        "    val x = a.toRawBits().let { if (it < 0L) Long.MIN_VALUE - it else it }",
+        "    val y = b.toRawBits().let { if (it < 0L) Long.MIN_VALUE - it else it }",
+        "    return if ((x xor y) < 0L) Long.MAX_VALUE else kotlin.math.abs(x - y)",
+        "  }",
+        "",
+        "  private fun ulpsApart(a: Float, b: Float): Long {",
+        "    val x = a.toRawBits().let { if (it < 0) Int.MIN_VALUE.toLong() - it else it.toLong() }",
+        "    val y = b.toRawBits().let { if (it < 0) Int.MIN_VALUE.toLong() - it else it.toLong() }",
+        "    return kotlin.math.abs(x - y)",
+        "  }",
+        "",
         "  private fun utilities() {",
         *[f'    mix("{k}", {kt})' for k, kt, _ in GD_ENTRIES],
         "  }",
@@ -2252,6 +2330,7 @@ def render_parity_kt(pure, facade) -> str:
             "",
             "  private companion object {",
             "    val SCALES = doubleArrayOf(0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0)",
+            "    const val MATHF_ABSOLUTE_BOUND = 2.220446049250313e-16 // 2^-52",
             "    val EDGE =",
             "      doubleArrayOf(0.0, -0.0, Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0)",
             "    val EDGE_FINITE = doubleArrayOf(0.0, -0.0, 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0)",
@@ -2647,7 +2726,7 @@ def main() -> int:
     outputs = regenerate(api)
     sources = {cls: class_file(cls).read_text(encoding="utf-8") for cls in OWNED_CLASSES}
     members = build_members(api, {cls: class_body(src, cls) for cls, src in sources.items()})
-    portability = check_transcendental_bounds() + check_pure_is_portable(members)
+    portability = check_transcendental_bounds() + check_pure_is_portable(members) + check_mathf_bounds()
     if portability:
         print("[generate_builtin_ops] FAIL: a parity check would depend on the CPU's libm:", file=sys.stderr)
         for line in portability:

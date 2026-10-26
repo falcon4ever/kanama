@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
 
@@ -345,6 +346,11 @@ class RayCast2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): RayCast2D? =
             if (handle.address() == 0L) null else RayCast2D(GodotHandle(handle))
+
+        /** A new RayCast2D, GDScript's `RayCast2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): RayCast2D =
+            RayCast2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("RayCast2D"), "RayCast2D")))
     }
 
     private object Binds {

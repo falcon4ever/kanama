@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A vertical slider that goes from bottom (min) to top (max).
@@ -19,5 +20,10 @@ class VSlider(handle: GodotHandle) : Slider(handle) {
 
         internal fun wrap(handle: RawSegment): VSlider? =
             if (handle.address() == 0L) null else VSlider(GodotHandle(handle))
+
+        /** A new VSlider, GDScript's `VSlider.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VSlider =
+            VSlider(GodotHandle(requireConstructed(ObjectCalls.constructObject("VSlider"), "VSlider")))
     }
 }

@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A TCP server.
@@ -62,6 +63,11 @@ class TCPServer(handle: GodotHandle) : SocketServer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TCPServer? =
             if (handle.address() == 0L) null else TCPServer(GodotHandle(handle))
+
+        /** A new TCPServer, GDScript's `TCPServer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TCPServer =
+            RefCounted.owned(TCPServer(GodotHandle(requireConstructed(ObjectCalls.constructObject("TCPServer"), "TCPServer"))))
     }
 
     private object Binds {

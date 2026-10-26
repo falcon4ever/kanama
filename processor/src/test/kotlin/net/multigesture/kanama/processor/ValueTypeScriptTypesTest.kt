@@ -311,13 +311,13 @@ class ValueTypeScriptTypesTest {
     assertTrue(registry.contains("fun setPackedValueProperty("), registry)
     assertTrue(
       registry.contains(
-        "(script as Shapes).rect2 = (net.multigesture.kanama.web.WebPackedValues.decode(packed, $t.Rect2::class) as $t.Rect2)"
+        "(script as S1_Shapes).rect2 = (net.multigesture.kanama.web.WebPackedValues.decode(packed, $t.Rect2::class) as $t.Rect2)"
       ),
       registry,
     )
     assertTrue(
       registry.contains(
-        "net.multigesture.kanama.web.WebPackedValues.encode((script as Shapes).basis)"
+        "net.multigesture.kanama.web.WebPackedValues.encode((script as S1_Shapes).basis)"
       )
     )
     model.methods.forEach { method ->
@@ -330,7 +330,7 @@ class ValueTypeScriptTypesTest {
     assertTrue(registry.contains("fun callPackedArgs("), registry)
     assertTrue(
       registry.contains(
-        "net.multigesture.kanama.web.WebPackedValues.encode((script as Shapes).echo_projection(" +
+        "net.multigesture.kanama.web.WebPackedValues.encode((script as S1_Shapes).echo_projection(" +
           "(net.multigesture.kanama.web.WebPackedValues.decode(packedArgs[0], $t.Projection::class) as $t.Projection)))"
       ),
       registry,

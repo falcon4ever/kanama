@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Parent class for camera settings.
@@ -183,6 +184,11 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CameraAttributes? =
             if (handle.address() == 0L) null else CameraAttributes(GodotHandle(handle))
+
+        /** A new CameraAttributes, GDScript's `CameraAttributes.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CameraAttributes =
+            RefCounted.owned(CameraAttributes(GodotHandle(requireConstructed(ObjectCalls.constructObject("CameraAttributes"), "CameraAttributes"))))
     }
 
     private object Binds {

@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for custom `EditorExportPlatform` implementations (plugins).
@@ -75,6 +76,11 @@ class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformExtension? =
             if (handle.address() == 0L) null else EditorExportPlatformExtension(GodotHandle(handle))
+
+        /** A new EditorExportPlatformExtension, GDScript's `EditorExportPlatformExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorExportPlatformExtension =
+            RefCounted.owned(EditorExportPlatformExtension(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorExportPlatformExtension"), "EditorExportPlatformExtension"))))
     }
 
     private object Binds {

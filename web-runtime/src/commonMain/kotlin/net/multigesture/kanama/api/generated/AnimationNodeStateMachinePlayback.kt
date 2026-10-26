@@ -43,6 +43,12 @@ class AnimationNodeStateMachinePlayback(godotObject: GodotHandle) : Resource(god
     const val stateStarted: String = "state_started"
     const val stateFinished: String = "state_finished"
   }
+
+  companion object {
+    /** A new AnimationNodeStateMachinePlayback, GDScript's `AnimationNodeStateMachinePlayback.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): AnimationNodeStateMachinePlayback =
+      AnimationNodeStateMachinePlayback(checkNotNull(ClassDB.instantiate("AnimationNodeStateMachinePlayback")) { "Godot could not instantiate AnimationNodeStateMachinePlayback" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

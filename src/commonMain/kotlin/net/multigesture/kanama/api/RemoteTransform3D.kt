@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -150,6 +151,11 @@ class RemoteTransform3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): RemoteTransform3D? =
             if (handle.address() == 0L) null else RemoteTransform3D(GodotHandle(handle))
+
+        /** A new RemoteTransform3D, GDScript's `RemoteTransform3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): RemoteTransform3D =
+            RemoteTransform3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("RemoteTransform3D"), "RemoteTransform3D")))
     }
 
     private object Binds {

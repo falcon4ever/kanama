@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents all data of a glTF file.
@@ -1084,6 +1085,11 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFState? =
             if (handle.address() == 0L) null else GLTFState(GodotHandle(handle))
+
+        /** A new GLTFState, GDScript's `GLTFState.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFState =
+            RefCounted.owned(GLTFState(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFState"), "GLTFState"))))
     }
 
     private object Binds {

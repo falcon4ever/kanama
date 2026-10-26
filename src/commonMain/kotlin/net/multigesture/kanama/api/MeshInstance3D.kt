@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -276,6 +277,11 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): MeshInstance3D? =
             if (handle.address() == 0L) null else MeshInstance3D(GodotHandle(handle))
+
+        /** A new MeshInstance3D, GDScript's `MeshInstance3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): MeshInstance3D =
+            MeshInstance3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("MeshInstance3D"), "MeshInstance3D")))
     }
 
     private object Binds {

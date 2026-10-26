@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Pipeline rasterization state (used by `RenderingDevice`).
@@ -357,6 +358,11 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineRasterizationState? =
             if (handle.address() == 0L) null else RDPipelineRasterizationState(GodotHandle(handle))
+
+        /** A new RDPipelineRasterizationState, GDScript's `RDPipelineRasterizationState.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDPipelineRasterizationState =
+            RefCounted.owned(RDPipelineRasterizationState(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDPipelineRasterizationState"), "RDPipelineRasterizationState"))))
     }
 
     private object Binds {

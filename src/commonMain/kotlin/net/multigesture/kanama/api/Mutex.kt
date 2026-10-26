@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A binary `Semaphore` for synchronization of multiple `Thread`s.
@@ -61,6 +62,11 @@ class Mutex(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Mutex? =
             if (handle.address() == 0L) null else Mutex(GodotHandle(handle))
+
+        /** A new Mutex, GDScript's `Mutex.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Mutex =
+            RefCounted.owned(Mutex(GodotHandle(requireConstructed(ObjectCalls.constructObject("Mutex"), "Mutex"))))
     }
 
     private object Binds {

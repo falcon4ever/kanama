@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents a gamepad button being pressed or released.
@@ -81,6 +82,11 @@ class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventJoypadButton? =
             if (handle.address() == 0L) null else InputEventJoypadButton(GodotHandle(handle))
+
+        /** A new InputEventJoypadButton, GDScript's `InputEventJoypadButton.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): InputEventJoypadButton =
+            RefCounted.owned(InputEventJoypadButton(GodotHandle(requireConstructed(ObjectCalls.constructObject("InputEventJoypadButton"), "InputEventJoypadButton"))))
     }
 
     private object Binds {

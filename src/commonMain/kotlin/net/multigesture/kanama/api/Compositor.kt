@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Stores attributes used to customize how a Viewport is rendered.
@@ -53,6 +54,11 @@ class Compositor(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Compositor? =
             if (handle.address() == 0L) null else Compositor(GodotHandle(handle))
+
+        /** A new Compositor, GDScript's `Compositor.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Compositor =
+            RefCounted.owned(Compositor(GodotHandle(requireConstructed(ObjectCalls.constructObject("Compositor"), "Compositor"))))
     }
 
     private object Binds {

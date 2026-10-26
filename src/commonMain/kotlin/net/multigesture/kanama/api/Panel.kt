@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A GUI control that displays a `StyleBox`.
@@ -19,5 +20,10 @@ class Panel(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): Panel? =
             if (handle.address() == 0L) null else Panel(GodotHandle(handle))
+
+        /** A new Panel, GDScript's `Panel.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Panel =
+            Panel(GodotHandle(requireConstructed(ObjectCalls.constructObject("Panel"), "Panel")))
     }
 }

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Class representing a torus `PrimitiveMesh`.
@@ -138,6 +139,11 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TorusMesh? =
             if (handle.address() == 0L) null else TorusMesh(GodotHandle(handle))
+
+        /** A new TorusMesh, GDScript's `TorusMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TorusMesh =
+            RefCounted.owned(TorusMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("TorusMesh"), "TorusMesh"))))
     }
 
     private object Binds {

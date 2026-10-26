@@ -74,7 +74,7 @@ class Camera3D(godotObject: GodotHandle) : Node3D(godotObject) {
   }
 
   companion object {
-    /** Constructs a new Camera3D engine-side; the wrapper owns the handle (close what you create). */
+    /** A new Camera3D, GDScript's `Camera3D.new()`. Add it to the tree, or `queueFree()` it. */
     fun create(): Camera3D =
       Camera3D(checkNotNull(ClassDB.instantiate("Camera3D")) { "Godot could not instantiate Camera3D" }.toWebId())
   }

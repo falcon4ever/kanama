@@ -29,7 +29,7 @@ class InputEventMouseButton(godotObject: GodotHandle) : InputEventMouse(godotObj
     set(newValue) = setButtonIndex(newValue)
 
   companion object {
-    /** Constructs a new InputEventMouseButton engine-side; the wrapper owns the handle (close what you create). */
+    /** A new InputEventMouseButton, GDScript's `InputEventMouseButton.new()`. You own the reference: `close()` or `use { }`. */
     fun create(): InputEventMouseButton =
       InputEventMouseButton(checkNotNull(ClassDB.instantiate("InputEventMouseButton")) { "Godot could not instantiate InputEventMouseButton" }.toWebId())
     /** Engine-side class check: null when [value] is not a InputEventMouseButton. */

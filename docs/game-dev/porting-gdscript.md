@@ -46,6 +46,7 @@ The everyday script constructs, inside a `KanamaScript<T>` subclass (see
 | `area.body_entered.connect(func(body): ...)` | `area.bodyEntered.connect { body -> ... }` (`body: Node3D`, typed from Godot's API) |
 | `timer.timeout.connect(_on_timeout, CONNECT_ONE_SHOT)` | `timer.timeout.connect(GodotObject.ConnectFlags.ONE_SHOT) { onTimeout() }` |
 | `button.pressed.emit()` | `button.pressed.emit()` |
+| `var label := Label.new()`, `var rng := RandomNumberGenerator.new()` | `val label = Label.create()`, `val rng = RandomNumberGenerator.create()` (any class GDScript can `new`; [who frees it](godot-api.md#resource-ownership)) |
 | `func _ready():` | `@OnReady fun ready()` |
 | `func _input(event):` | `@OnInput fun input(event: InputEvent)` |
 | `func show_message(text):` | `fun showMessage(text: String)` (every public function is registered) |

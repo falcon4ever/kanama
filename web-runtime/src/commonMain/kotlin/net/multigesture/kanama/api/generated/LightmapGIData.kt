@@ -15,4 +15,10 @@ class LightmapGIData(godotObject: GodotHandle) : Resource(godotObject) {
       val OVERLAY: ShadowmaskMode get() = ShadowmaskMode(2L)
     }
   }
+
+  companion object {
+    /** A new LightmapGIData, GDScript's `LightmapGIData.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): LightmapGIData =
+      LightmapGIData(checkNotNull(ClassDB.instantiate("LightmapGIData")) { "Godot could not instantiate LightmapGIData" }.toWebId())
+  }
 }

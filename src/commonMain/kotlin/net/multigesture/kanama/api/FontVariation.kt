@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Transform2D
 
@@ -333,6 +334,11 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): FontVariation? =
             if (handle.address() == 0L) null else FontVariation(GodotHandle(handle))
+
+        /** A new FontVariation, GDScript's `FontVariation.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): FontVariation =
+            RefCounted.owned(FontVariation(GodotHandle(requireConstructed(ObjectCalls.constructObject("FontVariation"), "FontVariation"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An input field for numbers.
@@ -250,6 +251,11 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
 
         internal fun wrap(handle: RawSegment): SpinBox? =
             if (handle.address() == 0L) null else SpinBox(GodotHandle(handle))
+
+        /** A new SpinBox, GDScript's `SpinBox.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SpinBox =
+            SpinBox(GodotHandle(requireConstructed(ObjectCalls.constructObject("SpinBox"), "SpinBox")))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -92,6 +93,11 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorNode3DGizmoPlugin? =
             if (handle.address() == 0L) null else EditorNode3DGizmoPlugin(GodotHandle(handle))
+
+        /** A new EditorNode3DGizmoPlugin, GDScript's `EditorNode3DGizmoPlugin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorNode3DGizmoPlugin =
+            RefCounted.owned(EditorNode3DGizmoPlugin(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorNode3DGizmoPlugin"), "EditorNode3DGizmoPlugin"))))
     }
 
     private object Binds {

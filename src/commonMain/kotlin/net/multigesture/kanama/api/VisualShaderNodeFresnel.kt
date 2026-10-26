@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A Fresnel effect to be used within the visual shader graph.
@@ -22,5 +23,10 @@ class VisualShaderNodeFresnel(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFresnel? =
             if (handle.address() == 0L) null else VisualShaderNodeFresnel(GodotHandle(handle))
+
+        /** A new VisualShaderNodeFresnel, GDScript's `VisualShaderNodeFresnel.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeFresnel =
+            RefCounted.owned(VisualShaderNodeFresnel(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeFresnel"), "VisualShaderNodeFresnel"))))
     }
 }

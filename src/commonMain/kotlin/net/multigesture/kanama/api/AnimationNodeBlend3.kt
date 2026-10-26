@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Blends two of three animations linearly inside of an `AnimationNodeBlendTree`.
@@ -22,5 +23,10 @@ class AnimationNodeBlend3(handle: GodotHandle) : AnimationNodeSync(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeBlend3? =
             if (handle.address() == 0L) null else AnimationNodeBlend3(GodotHandle(handle))
+
+        /** A new AnimationNodeBlend3, GDScript's `AnimationNodeBlend3.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeBlend3 =
+            RefCounted.owned(AnimationNodeBlend3(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationNodeBlend3"), "AnimationNodeBlend3"))))
     }
 }

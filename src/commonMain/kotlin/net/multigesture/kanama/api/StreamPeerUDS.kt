@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A stream peer that handles UNIX Domain Socket (UDS) connections.
@@ -59,6 +60,11 @@ class StreamPeerUDS(handle: GodotHandle) : StreamPeerSocket(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerUDS? =
             if (handle.address() == 0L) null else StreamPeerUDS(GodotHandle(handle))
+
+        /** A new StreamPeerUDS, GDScript's `StreamPeerUDS.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): StreamPeerUDS =
+            RefCounted.owned(StreamPeerUDS(GodotHandle(requireConstructed(ObjectCalls.constructObject("StreamPeerUDS"), "StreamPeerUDS"))))
     }
 
     private object Binds {

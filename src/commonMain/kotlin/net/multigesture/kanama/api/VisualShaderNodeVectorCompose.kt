@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Composes a `Vector2`, `Vector3` or 4D vector (represented as a `Quaternion`) from scalars within
@@ -23,5 +24,10 @@ class VisualShaderNodeVectorCompose(handle: GodotHandle) : VisualShaderNodeVecto
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorCompose? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorCompose(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVectorCompose, GDScript's `VisualShaderNodeVectorCompose.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVectorCompose =
+            RefCounted.owned(VisualShaderNodeVectorCompose(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeVectorCompose"), "VisualShaderNodeVectorCompose"))))
     }
 }

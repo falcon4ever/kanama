@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A `MultiplayerPeer` which is always connected and acts as a server.
@@ -23,9 +24,9 @@ class OfflineMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
         internal fun wrapBorrowed(handle: RawSegment): OfflineMultiplayerPeer? =
             if (handle.address() == 0L) null else OfflineMultiplayerPeer(GodotHandle(handle))
 
-        // Instantiate an OfflineMultiplayerPeer.
+        /** A new OfflineMultiplayerPeer, GDScript's `OfflineMultiplayerPeer.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): OfflineMultiplayerPeer =
-            RefCounted.owned(OfflineMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("OfflineMultiplayerPeer"))))
+            RefCounted.owned(OfflineMultiplayerPeer(GodotHandle(requireConstructed(ObjectCalls.constructObject("OfflineMultiplayerPeer"), "OfflineMultiplayerPeer"))))
     }
 }

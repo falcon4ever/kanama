@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 
 /**
@@ -181,6 +182,11 @@ class World3D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): World3D? =
             if (handle.address() == 0L) null else World3D(GodotHandle(handle))
+
+        /** A new World3D, GDScript's `World3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): World3D =
+            RefCounted.owned(World3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("World3D"), "World3D"))))
     }
 
     private object Binds {

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * This resource allows for creating a custom rendering effect.
@@ -289,6 +290,11 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CompositorEffect? =
             if (handle.address() == 0L) null else CompositorEffect(GodotHandle(handle))
+
+        /** A new CompositorEffect, GDScript's `CompositorEffect.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CompositorEffect =
+            RefCounted.owned(CompositorEffect(GodotHandle(requireConstructed(ObjectCalls.constructObject("CompositorEffect"), "CompositorEffect"))))
     }
 
     private object Binds {

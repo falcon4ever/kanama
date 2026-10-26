@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A `Cubemap` without image data.
@@ -22,5 +23,10 @@ class PlaceholderCubemap(handle: GodotHandle) : PlaceholderTextureLayered(handle
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderCubemap? =
             if (handle.address() == 0L) null else PlaceholderCubemap(GodotHandle(handle))
+
+        /** A new PlaceholderCubemap, GDScript's `PlaceholderCubemap.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PlaceholderCubemap =
+            RefCounted.owned(PlaceholderCubemap(GodotHandle(requireConstructed(ObjectCalls.constructObject("PlaceholderCubemap"), "PlaceholderCubemap"))))
     }
 }

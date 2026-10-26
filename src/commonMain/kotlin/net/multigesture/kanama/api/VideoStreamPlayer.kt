@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A control used for video playback.
@@ -381,6 +382,11 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): VideoStreamPlayer? =
             if (handle.address() == 0L) null else VideoStreamPlayer(GodotHandle(handle))
+
+        /** A new VideoStreamPlayer, GDScript's `VideoStreamPlayer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VideoStreamPlayer =
+            VideoStreamPlayer(GodotHandle(requireConstructed(ObjectCalls.constructObject("VideoStreamPlayer"), "VideoStreamPlayer")))
     }
 
     private object Binds {

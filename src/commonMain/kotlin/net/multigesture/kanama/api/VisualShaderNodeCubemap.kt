@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A `Cubemap` sampling node to be used within the visual shader graph.
@@ -183,6 +184,11 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeCubemap? =
             if (handle.address() == 0L) null else VisualShaderNodeCubemap(GodotHandle(handle))
+
+        /** A new VisualShaderNodeCubemap, GDScript's `VisualShaderNodeCubemap.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeCubemap =
+            RefCounted.owned(VisualShaderNodeCubemap(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeCubemap"), "VisualShaderNodeCubemap"))))
     }
 
     private object Binds {

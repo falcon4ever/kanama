@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Computes a `Transform3D` function within the visual shader graph.
@@ -83,6 +84,11 @@ class VisualShaderNodeTransformFunc(handle: GodotHandle) : VisualShaderNode(hand
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformFunc? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformFunc(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTransformFunc, GDScript's `VisualShaderNodeTransformFunc.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTransformFunc =
+            RefCounted.owned(VisualShaderNodeTransformFunc(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTransformFunc"), "VisualShaderNodeTransformFunc"))))
     }
 
     private object Binds {

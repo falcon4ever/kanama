@@ -8,4 +8,9 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class Texture(godotObject: GodotHandle) : Resource(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  companion object {
+    /** A new Texture, GDScript's `Texture.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): Texture =
+      Texture(checkNotNull(ClassDB.instantiate("Texture")) { "Godot could not instantiate Texture" }.toWebId())
+  }
 }

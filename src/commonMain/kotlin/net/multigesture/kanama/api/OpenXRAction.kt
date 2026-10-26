@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An OpenXR action.
@@ -142,6 +143,11 @@ class OpenXRAction(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRAction? =
             if (handle.address() == 0L) null else OpenXRAction(GodotHandle(handle))
+
+        /** A new OpenXRAction, GDScript's `OpenXRAction.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRAction =
+            RefCounted.owned(OpenXRAction(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRAction"), "OpenXRAction"))))
     }
 
     private object Binds {

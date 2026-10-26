@@ -88,6 +88,10 @@ class GridMap(godotObject: GodotHandle) : Node3D(godotObject) {
   }
 
   companion object {
+    /** A new GridMap, GDScript's `GridMap.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): GridMap =
+      GridMap(checkNotNull(ClassDB.instantiate("GridMap")) { "Godot could not instantiate GridMap" }.toWebId())
+
     const val INVALID_CELL_ITEM: Long = -1L
   }
 }

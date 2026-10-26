@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 
@@ -237,6 +238,11 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationMeshSourceGeometryData2D? =
             if (handle.address() == 0L) null else NavigationMeshSourceGeometryData2D(GodotHandle(handle))
+
+        /** A new NavigationMeshSourceGeometryData2D, GDScript's `NavigationMeshSourceGeometryData2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): NavigationMeshSourceGeometryData2D =
+            RefCounted.owned(NavigationMeshSourceGeometryData2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("NavigationMeshSourceGeometryData2D"), "NavigationMeshSourceGeometryData2D"))))
     }
 
     private object Binds {

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Godot editor's control for editing numeric values.
@@ -292,6 +293,11 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
 
         internal fun wrap(handle: RawSegment): EditorSpinSlider? =
             if (handle.address() == 0L) null else EditorSpinSlider(GodotHandle(handle))
+
+        /** A new EditorSpinSlider, GDScript's `EditorSpinSlider.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): EditorSpinSlider =
+            EditorSpinSlider(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorSpinSlider"), "EditorSpinSlider")))
     }
 
     private object Binds {

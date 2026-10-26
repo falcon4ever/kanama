@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -81,6 +82,11 @@ class SegmentShape2D(handle: GodotHandle) : Shape2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SegmentShape2D? =
             if (handle.address() == 0L) null else SegmentShape2D(GodotHandle(handle))
+
+        /** A new SegmentShape2D, GDScript's `SegmentShape2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SegmentShape2D =
+            RefCounted.owned(SegmentShape2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SegmentShape2D"), "SegmentShape2D"))))
     }
 
     private object Binds {

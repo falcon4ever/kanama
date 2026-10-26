@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A stream peer used to handle binary data streams.
@@ -124,6 +125,11 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerBuffer? =
             if (handle.address() == 0L) null else StreamPeerBuffer(GodotHandle(handle))
+
+        /** A new StreamPeerBuffer, GDScript's `StreamPeerBuffer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): StreamPeerBuffer =
+            RefCounted.owned(StreamPeerBuffer(GodotHandle(requireConstructed(ObjectCalls.constructObject("StreamPeerBuffer"), "StreamPeerBuffer"))))
     }
 
     private object Binds {

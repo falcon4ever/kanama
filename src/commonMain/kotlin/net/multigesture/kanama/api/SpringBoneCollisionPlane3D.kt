@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An infinite plane collision that interacts with `SpringBoneSimulator3D`.
@@ -19,5 +20,10 @@ class SpringBoneCollisionPlane3D(handle: GodotHandle) : SpringBoneCollision3D(ha
 
         internal fun wrap(handle: RawSegment): SpringBoneCollisionPlane3D? =
             if (handle.address() == 0L) null else SpringBoneCollisionPlane3D(GodotHandle(handle))
+
+        /** A new SpringBoneCollisionPlane3D, GDScript's `SpringBoneCollisionPlane3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SpringBoneCollisionPlane3D =
+            SpringBoneCollisionPlane3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SpringBoneCollisionPlane3D"), "SpringBoneCollisionPlane3D")))
     }
 }

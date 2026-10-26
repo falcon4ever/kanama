@@ -64,7 +64,7 @@ class ConfigFile(godotObject: GodotHandle) : RefCounted(godotObject) {
   }
 
   companion object {
-    /** Constructs a new ConfigFile engine-side; the wrapper owns the handle (close what you create). */
+    /** A new ConfigFile, GDScript's `ConfigFile.new()`. You own the reference: `close()` or `use { }`. */
     fun create(): ConfigFile =
       ConfigFile(checkNotNull(ClassDB.instantiate("ConfigFile")) { "Godot could not instantiate ConfigFile" }.toWebId())
   }

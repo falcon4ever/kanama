@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 
 /**
@@ -52,6 +53,11 @@ class VisualShaderNodeTransformConstant(handle: GodotHandle) : VisualShaderNodeC
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformConstant(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTransformConstant, GDScript's `VisualShaderNodeTransformConstant.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTransformConstant =
+            RefCounted.owned(VisualShaderNodeTransformConstant(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTransformConstant"), "VisualShaderNodeTransformConstant"))))
     }
 
     private object Binds {

@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Vector3
 
@@ -1016,6 +1017,11 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationMesh? =
             if (handle.address() == 0L) null else NavigationMesh(GodotHandle(handle))
+
+        /** A new NavigationMesh, GDScript's `NavigationMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): NavigationMesh =
+            RefCounted.owned(NavigationMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("NavigationMesh"), "NavigationMesh"))))
     }
 
     private object Binds {

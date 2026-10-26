@@ -8,4 +8,9 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class CallbackTweener(godotObject: GodotHandle) : Tweener(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  companion object {
+    /** A new CallbackTweener, GDScript's `CallbackTweener.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): CallbackTweener =
+      CallbackTweener(checkNotNull(ClassDB.instantiate("CallbackTweener")) { "Godot could not instantiate CallbackTweener" }.toWebId())
+  }
 }

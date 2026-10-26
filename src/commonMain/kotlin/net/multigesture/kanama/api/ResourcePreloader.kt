@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A node used to preload sub-resources inside a scene.
@@ -76,6 +77,11 @@ class ResourcePreloader(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): ResourcePreloader? =
             if (handle.address() == 0L) null else ResourcePreloader(GodotHandle(handle))
+
+        /** A new ResourcePreloader, GDScript's `ResourcePreloader.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ResourcePreloader =
+            ResourcePreloader(GodotHandle(requireConstructed(ObjectCalls.constructObject("ResourcePreloader"), "ResourcePreloader")))
     }
 
     private object Binds {

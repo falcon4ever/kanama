@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2i
@@ -1648,6 +1649,11 @@ class Image(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Image? =
             if (handle.address() == 0L) null else Image(GodotHandle(handle))
+
+        /** A new Image, GDScript's `Image.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Image =
+            RefCounted.owned(Image(GodotHandle(requireConstructed(ObjectCalls.constructObject("Image"), "Image"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.AABB
 
 /**
@@ -55,6 +56,11 @@ open class VisibleOnScreenNotifier3D(handle: GodotHandle) : VisualInstance3D(han
 
         internal fun wrap(handle: RawSegment): VisibleOnScreenNotifier3D? =
             if (handle.address() == 0L) null else VisibleOnScreenNotifier3D(GodotHandle(handle))
+
+        /** A new VisibleOnScreenNotifier3D, GDScript's `VisibleOnScreenNotifier3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VisibleOnScreenNotifier3D =
+            VisibleOnScreenNotifier3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisibleOnScreenNotifier3D"), "VisibleOnScreenNotifier3D")))
     }
 
     private object Binds {

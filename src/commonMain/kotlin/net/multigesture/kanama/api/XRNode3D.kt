@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A 3D node that has its position automatically updated by the `XRServer`.
@@ -149,6 +150,11 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRNode3D? =
             if (handle.address() == 0L) null else XRNode3D(GodotHandle(handle))
+
+        /** A new XRNode3D, GDScript's `XRNode3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): XRNode3D =
+            XRNode3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("XRNode3D"), "XRNode3D")))
     }
 
     private object Binds {

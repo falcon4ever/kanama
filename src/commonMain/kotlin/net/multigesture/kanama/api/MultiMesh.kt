@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Transform2D
@@ -511,6 +512,11 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MultiMesh? =
             if (handle.address() == 0L) null else MultiMesh(GodotHandle(handle))
+
+        /** A new MultiMesh, GDScript's `MultiMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MultiMesh =
+            RefCounted.owned(MultiMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("MultiMesh"), "MultiMesh"))))
     }
 
     private object Binds {

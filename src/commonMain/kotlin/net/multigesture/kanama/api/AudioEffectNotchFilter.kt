@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a notch filter to an audio bus.
@@ -22,5 +23,10 @@ class AudioEffectNotchFilter(handle: GodotHandle) : AudioEffectFilter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectNotchFilter? =
             if (handle.address() == 0L) null else AudioEffectNotchFilter(GodotHandle(handle))
+
+        /** A new AudioEffectNotchFilter, GDScript's `AudioEffectNotchFilter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectNotchFilter =
+            RefCounted.owned(AudioEffectNotchFilter(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectNotchFilter"), "AudioEffectNotchFilter"))))
     }
 }

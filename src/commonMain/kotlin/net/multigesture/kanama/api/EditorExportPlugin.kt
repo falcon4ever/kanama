@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A script that is executed when exporting the project.
@@ -273,6 +274,11 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlugin? =
             if (handle.address() == 0L) null else EditorExportPlugin(GodotHandle(handle))
+
+        /** A new EditorExportPlugin, GDScript's `EditorExportPlugin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorExportPlugin =
+            RefCounted.owned(EditorExportPlugin(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorExportPlugin"), "EditorExportPlugin"))))
     }
 
     private object Binds {

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Calculates a derivative within the visual shader graph.
@@ -236,6 +237,11 @@ class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(han
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeDerivativeFunc? =
             if (handle.address() == 0L) null else VisualShaderNodeDerivativeFunc(GodotHandle(handle))
+
+        /** A new VisualShaderNodeDerivativeFunc, GDScript's `VisualShaderNodeDerivativeFunc.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeDerivativeFunc =
+            RefCounted.owned(VisualShaderNodeDerivativeFunc(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeDerivativeFunc"), "VisualShaderNodeDerivativeFunc"))))
     }
 
     private object Binds {

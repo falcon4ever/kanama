@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A snippet of shader code to be included in a `Shader` with `#include`.
@@ -53,6 +54,11 @@ class ShaderInclude(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ShaderInclude? =
             if (handle.address() == 0L) null else ShaderInclude(GodotHandle(handle))
+
+        /** A new ShaderInclude, GDScript's `ShaderInclude.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ShaderInclude =
+            RefCounted.owned(ShaderInclude(GodotHandle(requireConstructed(ObjectCalls.constructObject("ShaderInclude"), "ShaderInclude"))))
     }
 
     private object Binds {

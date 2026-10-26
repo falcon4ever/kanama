@@ -12,3 +12,15 @@ package net.multigesture.kanama.binding.runtime
  */
 internal fun <T : Any> requireGodotReturn(value: T?, godotMethod: String): T =
   value ?: throw IllegalStateException("Godot returned null from required $godotMethod")
+
+/**
+ * The object a generated `X.create()` constructed, or a loud failure: Godot answers null for a
+ * class it cannot instantiate here, such as an editor class in an exported game (GDScript does not
+ * even parse `EditorPlugin.new()` there), and a wrapper over null would crash on its first call.
+ */
+internal fun requireConstructed(segment: RawSegment, className: String): RawSegment {
+  check(segment.address() != 0L) {
+    "Godot could not instantiate $className: it is not available here (an editor class outside the editor?)"
+  }
+  return segment
+}

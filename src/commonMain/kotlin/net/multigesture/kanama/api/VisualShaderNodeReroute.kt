@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A node that allows rerouting a connection within the visual shader graph.
@@ -38,6 +39,11 @@ class VisualShaderNodeReroute(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeReroute? =
             if (handle.address() == 0L) null else VisualShaderNodeReroute(GodotHandle(handle))
+
+        /** A new VisualShaderNodeReroute, GDScript's `VisualShaderNodeReroute.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeReroute =
+            RefCounted.owned(VisualShaderNodeReroute(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeReroute"), "VisualShaderNodeReroute"))))
     }
 
     private object Binds {

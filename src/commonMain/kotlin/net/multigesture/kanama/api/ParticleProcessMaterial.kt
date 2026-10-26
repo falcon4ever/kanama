@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
@@ -2634,6 +2635,11 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ParticleProcessMaterial? =
             if (handle.address() == 0L) null else ParticleProcessMaterial(GodotHandle(handle))
+
+        /** A new ParticleProcessMaterial, GDScript's `ParticleProcessMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ParticleProcessMaterial =
+            RefCounted.owned(ParticleProcessMaterial(GodotHandle(requireConstructed(ObjectCalls.constructObject("ParticleProcessMaterial"), "ParticleProcessMaterial"))))
 
         // Downcast a Resource to ParticleProcessMaterial (null if not).
         @JvmStatic

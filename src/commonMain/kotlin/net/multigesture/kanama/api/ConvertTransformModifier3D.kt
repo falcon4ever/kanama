@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -237,6 +238,11 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
 
         internal fun wrap(handle: RawSegment): ConvertTransformModifier3D? =
             if (handle.address() == 0L) null else ConvertTransformModifier3D(GodotHandle(handle))
+
+        /** A new ConvertTransformModifier3D, GDScript's `ConvertTransformModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ConvertTransformModifier3D =
+            ConvertTransformModifier3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("ConvertTransformModifier3D"), "ConvertTransformModifier3D")))
     }
 
     private object Binds {

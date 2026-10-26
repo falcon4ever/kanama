@@ -8,4 +8,9 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class MultiMeshInstance3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  companion object {
+    /** A new MultiMeshInstance3D, GDScript's `MultiMeshInstance3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): MultiMeshInstance3D =
+      MultiMeshInstance3D(checkNotNull(ClassDB.instantiate("MultiMeshInstance3D")) { "Godot could not instantiate MultiMeshInstance3D" }.toWebId())
+  }
 }

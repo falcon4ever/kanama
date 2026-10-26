@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -52,6 +53,11 @@ class VisualShaderNodeVec3Constant(handle: GodotHandle) : VisualShaderNodeConsta
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVec3Constant? =
             if (handle.address() == 0L) null else VisualShaderNodeVec3Constant(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVec3Constant, GDScript's `VisualShaderNodeVec3Constant.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVec3Constant =
+            RefCounted.owned(VisualShaderNodeVec3Constant(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeVec3Constant"), "VisualShaderNodeVec3Constant"))))
     }
 
     private object Binds {

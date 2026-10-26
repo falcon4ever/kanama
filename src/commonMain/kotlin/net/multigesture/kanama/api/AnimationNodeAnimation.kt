@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An input animation for an `AnimationNodeBlendTree`.
@@ -305,6 +306,11 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeAnimation? =
             if (handle.address() == 0L) null else AnimationNodeAnimation(GodotHandle(handle))
+
+        /** A new AnimationNodeAnimation, GDScript's `AnimationNodeAnimation.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeAnimation =
+            RefCounted.owned(AnimationNodeAnimation(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationNodeAnimation"), "AnimationNodeAnimation"))))
     }
 
     private object Binds {

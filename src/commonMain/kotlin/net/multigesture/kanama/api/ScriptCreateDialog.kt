@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Godot editor's popup dialog for creating new `Script` files.
@@ -37,6 +38,11 @@ class ScriptCreateDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
 
         internal fun wrap(handle: RawSegment): ScriptCreateDialog? =
             if (handle.address() == 0L) null else ScriptCreateDialog(GodotHandle(handle))
+
+        /** A new ScriptCreateDialog, GDScript's `ScriptCreateDialog.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ScriptCreateDialog =
+            ScriptCreateDialog(GodotHandle(requireConstructed(ObjectCalls.constructObject("ScriptCreateDialog"), "ScriptCreateDialog")))
     }
 
     private object Binds {

@@ -172,7 +172,10 @@ cp "$PROJECT_GODOT" "$PROJECT_GODOT_BACKUP"
 # off for users), and task 138 item 6: into the ownership self-test (OwnershipSelfTest.kt); with
 # KANAMA_ANDROID_API_EXERCISE=1 also into the API exercise (ApiExerciseHook.kt). The settings sit
 # under [kanama]; an existing key is replaced, a missing section added.
-SELFTEST_KEYS=(signal_self_test ownership_self_test)
+# `demo_smoke` tells a demo this is a smoke run, as KANAMA_DEMO_SMOKE_QUIT=1 does on iOS (Android
+# passes the game no environment): Bunnymark then holds a small fixed population instead of its
+# warm-up and ramp, which load a phone to a few frames a minute.
+SELFTEST_KEYS=(signal_self_test ownership_self_test demo_smoke)
 if [[ "$API_EXERCISE" == "1" ]]; then
   SELFTEST_KEYS+=(api_exercise)
   if [[ "$API_EXERCISE_TRACE" == "1" ]]; then
@@ -203,7 +206,7 @@ for key in "${SELFTEST_KEYS[@]}"; do
     exit 1
   }
 done
-echo "[android_smoke] self-tests enabled for this run: $(printf 'kanama/debug/%s ' "${SELFTEST_KEYS[@]}")"
+echo "[android_smoke] self-tests and smoke mode enabled for this run: $(printf 'kanama/debug/%s ' "${SELFTEST_KEYS[@]}")"
 # The desktop Godot runs below (template install, export, exported-scene check) load the same project
 # with the user-shaped desktop jar, which has no exercise rows: the environment override (it wins over
 # the project setting, as for the other self-tests) keeps the exercise off there. The device never sees it.

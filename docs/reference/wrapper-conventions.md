@@ -616,7 +616,9 @@ val body = collider.castOrNull<Node3D>() ?: return
   [Limitations](limitations.md#web).
 - `X.fromHandle(handle)` wraps an existing object as a borrowed view
   ([Nullability](#6-nullability) has its return type).
-- `X.create()` makes a new object, and the `from*` downcasts
+- `X.create()` makes a new object, GDScript's `X.new()`. Every class Godot can
+  instantiate that is a `Node` or a `RefCounted` has one; a plain `Object`
+  class does not, since Kotlin has no `free()` for it. The `from*` downcasts
   (`ArrayMesh.fromResource(res)`, `Mesh.fromObject(obj)`) return `null` when the
   object is not that class.
 

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Occludes light cast by a Light2D, casting shadows.
@@ -97,6 +98,11 @@ class LightOccluder2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): LightOccluder2D? =
             if (handle.address() == 0L) null else LightOccluder2D(GodotHandle(handle))
+
+        /** A new LightOccluder2D, GDScript's `LightOccluder2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): LightOccluder2D =
+            LightOccluder2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("LightOccluder2D"), "LightOccluder2D")))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2
 
 /**
@@ -331,6 +332,11 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MobileVRInterface? =
             if (handle.address() == 0L) null else MobileVRInterface(GodotHandle(handle))
+
+        /** A new MobileVRInterface, GDScript's `MobileVRInterface.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MobileVRInterface =
+            RefCounted.owned(MobileVRInterface(GodotHandle(requireConstructed(ObjectCalls.constructObject("MobileVRInterface"), "MobileVRInterface"))))
     }
 
     private object Binds {

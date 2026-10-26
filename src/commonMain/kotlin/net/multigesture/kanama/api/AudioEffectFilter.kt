@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for filters. Use effects that inherit this class instead of using it directly.
@@ -195,6 +196,11 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectFilter? =
             if (handle.address() == 0L) null else AudioEffectFilter(GodotHandle(handle))
+
+        /** A new AudioEffectFilter, GDScript's `AudioEffectFilter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectFilter =
+            RefCounted.owned(AudioEffectFilter(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectFilter"), "AudioEffectFilter"))))
     }
 
     private object Binds {

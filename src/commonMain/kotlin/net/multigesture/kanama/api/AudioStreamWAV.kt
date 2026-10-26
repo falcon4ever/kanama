@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Stores audio data loaded from WAV files.
@@ -389,6 +390,11 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamWAV? =
             if (handle.address() == 0L) null else AudioStreamWAV(GodotHandle(handle))
+
+        /** A new AudioStreamWAV, GDScript's `AudioStreamWAV.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioStreamWAV =
+            RefCounted.owned(AudioStreamWAV(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamWAV"), "AudioStreamWAV"))))
     }
 
     private object Binds {

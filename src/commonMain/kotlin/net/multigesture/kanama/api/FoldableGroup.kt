@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A group of foldable containers that doesn't allow more than one container to be expanded at a
@@ -87,6 +88,11 @@ class FoldableGroup(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): FoldableGroup? =
             if (handle.address() == 0L) null else FoldableGroup(GodotHandle(handle))
+
+        /** A new FoldableGroup, GDScript's `FoldableGroup.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): FoldableGroup =
+            RefCounted.owned(FoldableGroup(GodotHandle(requireConstructed(ObjectCalls.constructObject("FoldableGroup"), "FoldableGroup"))))
     }
 
     private object Binds {

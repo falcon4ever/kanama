@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Decomposes a `Vector2`, `Vector3` or 4D vector (represented as a `Quaternion`) into scalars
@@ -23,5 +24,10 @@ class VisualShaderNodeVectorDecompose(handle: GodotHandle) : VisualShaderNodeVec
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorDecompose? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorDecompose(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVectorDecompose, GDScript's `VisualShaderNodeVectorDecompose.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVectorDecompose =
+            RefCounted.owned(VisualShaderNodeVectorDecompose(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeVectorDecompose"), "VisualShaderNodeVectorDecompose"))))
     }
 }

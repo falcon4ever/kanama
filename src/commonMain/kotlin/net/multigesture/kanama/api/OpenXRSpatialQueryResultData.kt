@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Object for storing the main query result data.
@@ -57,6 +58,11 @@ class OpenXRSpatialQueryResultData(handle: GodotHandle) : OpenXRSpatialComponent
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialQueryResultData? =
             if (handle.address() == 0L) null else OpenXRSpatialQueryResultData(GodotHandle(handle))
+
+        /** A new OpenXRSpatialQueryResultData, GDScript's `OpenXRSpatialQueryResultData.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialQueryResultData =
+            RefCounted.owned(OpenXRSpatialQueryResultData(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialQueryResultData"), "OpenXRSpatialQueryResultData"))))
     }
 
     private object Binds {

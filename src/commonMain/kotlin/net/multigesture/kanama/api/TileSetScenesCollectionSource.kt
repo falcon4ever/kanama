@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Exposes a set of scenes as tiles for a `TileSet` resource.
@@ -156,6 +157,11 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): TileSetScenesCollectionSource? =
             if (handle.address() == 0L) null else TileSetScenesCollectionSource(GodotHandle(handle))
+
+        /** A new TileSetScenesCollectionSource, GDScript's `TileSetScenesCollectionSource.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TileSetScenesCollectionSource =
+            RefCounted.owned(TileSetScenesCollectionSource(GodotHandle(requireConstructed(ObjectCalls.constructObject("TileSetScenesCollectionSource"), "TileSetScenesCollectionSource"))))
     }
 
     private object Binds {

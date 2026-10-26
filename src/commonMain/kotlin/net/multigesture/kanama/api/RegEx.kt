@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Class for searching text for patterns using regular expressions.
@@ -160,6 +161,11 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RegEx? =
             if (handle.address() == 0L) null else RegEx(GodotHandle(handle))
+
+        /** A new RegEx, GDScript's `RegEx.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RegEx =
+            RefCounted.owned(RegEx(GodotHandle(requireConstructed(ObjectCalls.constructObject("RegEx"), "RegEx"))))
     }
 
     private object Binds {

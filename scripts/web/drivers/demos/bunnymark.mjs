@@ -103,7 +103,7 @@ export async function runBunnymark({ url, evaluate, navigate, deadline }) {
   const crossingDelta = running.kotlinToGodotCalls - windowStart.kotlinToGodotCalls;
 
   const checks = {
-    mode: running.mode === "bunnymark" && running.bunnymarkVariant === "BunnymarkV1Sprites",
+    mode: running.mode === "bunnymark" && running.bunnymarkVariant === "BunnymarkSprites",
     ready: running.readyCount === 1 && running.handle > 0,
     exactAdds: running.addBunnyCalls === BUNNY_COUNT,
     exactConstruction:

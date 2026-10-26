@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Class that can be inherited to implement custom multiplayer API networking layers via
@@ -23,5 +24,10 @@ class MultiplayerPeerExtension(handle: GodotHandle) : MultiplayerPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MultiplayerPeerExtension? =
             if (handle.address() == 0L) null else MultiplayerPeerExtension(GodotHandle(handle))
+
+        /** A new MultiplayerPeerExtension, GDScript's `MultiplayerPeerExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MultiplayerPeerExtension =
+            RefCounted.owned(MultiplayerPeerExtension(GodotHandle(requireConstructed(ObjectCalls.constructObject("MultiplayerPeerExtension"), "MultiplayerPeerExtension"))))
     }
 }

@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that sets a value of a varying.
@@ -22,5 +23,10 @@ class VisualShaderNodeVaryingSetter(handle: GodotHandle) : VisualShaderNodeVaryi
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVaryingSetter? =
             if (handle.address() == 0L) null else VisualShaderNodeVaryingSetter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVaryingSetter, GDScript's `VisualShaderNodeVaryingSetter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVaryingSetter =
+            RefCounted.owned(VisualShaderNodeVaryingSetter(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeVaryingSetter"), "VisualShaderNodeVaryingSetter"))))
     }
 }

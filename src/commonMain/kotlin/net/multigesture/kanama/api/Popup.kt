@@ -4,6 +4,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for contextual windows and panels with fixed position.
@@ -29,5 +30,10 @@ open class Popup(handle: GodotHandle) : Window(handle) {
 
         internal fun wrap(handle: RawSegment): Popup? =
             if (handle.address() == 0L) null else Popup(GodotHandle(handle))
+
+        /** A new Popup, GDScript's `Popup.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Popup =
+            Popup(GodotHandle(requireConstructed(ObjectCalls.constructObject("Popup"), "Popup")))
     }
 }

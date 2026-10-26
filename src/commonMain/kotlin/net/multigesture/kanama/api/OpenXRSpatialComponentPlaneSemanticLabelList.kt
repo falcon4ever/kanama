@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Object for storing the queries plane semantic label result data.
@@ -77,6 +78,11 @@ class OpenXRSpatialComponentPlaneSemanticLabelList(handle: GodotHandle) : OpenXR
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentPlaneSemanticLabelList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPlaneSemanticLabelList(GodotHandle(handle))
+
+        /** A new OpenXRSpatialComponentPlaneSemanticLabelList, GDScript's `OpenXRSpatialComponentPlaneSemanticLabelList.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialComponentPlaneSemanticLabelList =
+            RefCounted.owned(OpenXRSpatialComponentPlaneSemanticLabelList(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialComponentPlaneSemanticLabelList"), "OpenXRSpatialComponentPlaneSemanticLabelList"))))
     }
 
     private object Binds {

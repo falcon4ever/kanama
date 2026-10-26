@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 
 /**
@@ -34,6 +35,11 @@ class OpenXRSpatialComponentAnchorList(handle: GodotHandle) : OpenXRSpatialCompo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentAnchorList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentAnchorList(GodotHandle(handle))
+
+        /** A new OpenXRSpatialComponentAnchorList, GDScript's `OpenXRSpatialComponentAnchorList.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialComponentAnchorList =
+            RefCounted.owned(OpenXRSpatialComponentAnchorList(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialComponentAnchorList"), "OpenXRSpatialComponentAnchorList"))))
     }
 
     private object Binds {

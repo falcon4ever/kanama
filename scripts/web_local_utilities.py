@@ -90,23 +90,21 @@ WEB_LOCAL_UTILITIES: dict[str, tuple[int | str, str, str, str]] = {
     "cubic_interpolate_angle_in_time": (0, "", "cubicInterpolateAngleInTime(a1, a2, a3, a4, a5, a6, a7, a8)", ""),
     "bezier_interpolate": (0, "", "bezierInterpolate(a1, a2, a3, a4, a5)", ""),
     "bezier_derivative": (0, "", "bezierDerivative(a1, a2, a3, a4, a5)", ""),
-    # libm transcendentals: Kotlin/Wasm's kotlin.math against the engine's libm.
-    "sin": (1, "sin: " + LIBM, "kotlin.math.sin(a1)", ""),
-    "cos": (1, "cos: " + LIBM, "kotlin.math.cos(a1)", ""),
-    "tan": (1, "tan: " + LIBM, "kotlin.math.tan(a1)", ""),
-    "asin": (1, "asin: " + LIBM, "kotlin.math.asin(a1)", ""),
-    "acos": (1, "acos: " + LIBM, "kotlin.math.acos(a1)", ""),
-    "atan": (1, "atan: " + LIBM, "kotlin.math.atan(a1)", ""),
-    "atan2": (1, "atan2: " + LIBM, "kotlin.math.atan2(a1, a2)", ""),
-    "sinh": (1, "sinh: " + LIBM, "kotlin.math.sinh(a1)", ""),
-    "cosh": (1, "cosh: " + LIBM, "kotlin.math.cosh(a1)", ""),
-    "tanh": (1, "tanh: " + LIBM, "kotlin.math.tanh(a1)", ""),
-    "asinh": (1, "asinh: " + LIBM, "kotlin.math.asinh(a1)", ""),
-    "acosh": (1, "acosh: " + LIBM, "kotlin.math.acosh(a1)", ""),
-    "atanh": (1, "atanh: " + LIBM, "kotlin.math.atanh(a1)", ""),
-    "pow": (1, "pow: " + LIBM, "a1.pow(a2)", ""),
-    "log": (1, "log: " + LIBM, "kotlin.math.ln(a1)", ""),
-    "exp": (1, "exp: " + LIBM, "kotlin.math.exp(a1)", ""),
+    # libm transcendentals: Kotlin/Wasm's kotlin.math against the engine's libm, through the shared
+    # Mathf (the same body as every native backend's: Godot's asin / acos clamps, C's pow(1, y) = 1).
+    "sin": (1, "sin: " + LIBM, "Mathf.sin(a1)", ""),
+    "cos": (1, "cos: " + LIBM, "Mathf.cos(a1)", ""),
+    "tan": (1, "tan: " + LIBM, "Mathf.tan(a1)", ""),
+    "asin": (1, "asin: " + LIBM, "Mathf.asin(a1)", ""),
+    "acos": (1, "acos: " + LIBM, "Mathf.acos(a1)", ""),
+    "atan": (1, "atan: " + LIBM, "Mathf.atan(a1)", ""),
+    "atan2": (1, "atan2: " + LIBM, "Mathf.atan2(a1, a2)", ""),
+    "sinh": (1, "sinh: " + LIBM, "Mathf.sinh(a1)", ""),
+    "cosh": (1, "cosh: " + LIBM, "Mathf.cosh(a1)", ""),
+    "tanh": (1, "tanh: " + LIBM, "Mathf.tanh(a1)", ""),
+    "pow": (1, "pow: " + LIBM, "Mathf.pow(a1, a2)", ""),
+    "log": (1, "log: " + LIBM, "Mathf.log(a1)", ""),
+    "exp": (1, "exp: " + LIBM, "Mathf.exp(a1)", ""),
     # Composites (measured over the web3d sweep, BundleProbe.sweepsWithinBounds): `ease` subtracts a pow
     # from 1 on some branches, so a 1-ulp pow near 1 is an absolute error, unbounded in ulps of a small
     # result (worst over 12 curves x 257 points: 1.1e-16, 8 ulps).
@@ -163,6 +161,10 @@ WEB_ENGINE_UTILITIES: dict[str, str] = {
         "weakref", "instance_from_id", "is_instance_id_valid", "is_instance_valid")},
     **{name: "RID allocation: the engine's counter" for name in ("rid_allocate_id", "rid_from_int64")},
     "step_decimals": "an editor helper with a 32-bit int conversion; not a per-frame call",
+    # kotlin.math's inverse hyperbolics are ln(x + sqrt(x * x + 1)) and friends: hundreds of ulps off
+    # near zero (asinh(0.001): 237), and they skip Godot's acosh / atanh clamps (NaN, not 0 / INF).
+    **{name: "kotlin.math's loses hundreds of ulps near zero; the engine's libm does not" for name in (
+        "asinh", "acosh", "atanh")},
     **{name: RNG_ENGINE for name in (
         "randf", "randi", "randf_range", "randi_range", "randfn", "randomize", "seed", "rand_from_seed")},
 }

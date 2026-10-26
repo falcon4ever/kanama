@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for texture types which contain the data of multiple `Image`s. Each image is of the
@@ -138,6 +139,11 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextureLayered? =
             if (handle.address() == 0L) null else TextureLayered(GodotHandle(handle))
+
+        /** A new TextureLayered, GDScript's `TextureLayered.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TextureLayered =
+            RefCounted.owned(TextureLayered(GodotHandle(requireConstructed(ObjectCalls.constructObject("TextureLayered"), "TextureLayered"))))
     }
 
     private object Binds {

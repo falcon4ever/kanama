@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -710,6 +711,11 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
 
         internal fun wrap(handle: RawSegment): CharacterBody2D? =
             if (handle.address() == 0L) null else CharacterBody2D(GodotHandle(handle))
+
+        /** A new CharacterBody2D, GDScript's `CharacterBody2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CharacterBody2D =
+            CharacterBody2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CharacterBody2D"), "CharacterBody2D")))
     }
 
     private object Binds {

@@ -735,6 +735,12 @@ case("check_wrapper_generator.py (iOS region body)", py("check_wrapper_generator
 case("check_wrapper_generator.py (keep-reachable sweep)", py("check_wrapper_generator.py"),
      [Edit("scripts/check_wrapper_generator.py", "reads_receiver = (receiver or owner) in refcounted and", "reads_receiver = False and")],
      "the sweep misses a known-bad shape", "the keep-reachable sweep stops seeing a RefCounted body that reads `segment` without its fence (expression body, header on several lines, no checkOpen(); task 138 item 6)")
+case("check_wrapper_generator.py (create for every instantiable class)", py("check_wrapper_generator.py"),
+     [Edit("scripts/generate_api_wrapper.py", '    return bool(family & {"Node", "RefCounted"})\n', '    return class_name in {"Sprite2D", "PackedScene"}\n')],
+     "single-tree drift-gate", "`create()` goes back to a hand-kept allowlist: GDScript's `Label.new()` / `Area2D.new()` have no Kotlin spelling again (the Bulletmark port's finding)")
+case("generate_web_wrappers.py --check (create for every instantiable class)", py("generate_web_wrappers.py", "--check"),
+     [Edit("scripts/generate_web_wrappers.py", '    return bool({"Node", "RefCounted"} & set(api.chain(godot_name)))\n', '    return godot_name == "Sprite2D"\n')],
+     "FAIL", "the Web `create()` goes back to a hand-kept allowlist (native's rule is every instantiable Node or RefCounted)")
 case("check_wrapper_generator.py (expect ObjectCalls)", py("check_wrapper_generator.py"),
      [Append(f"{COMMON}/binding/runtime/ObjectCalls.expect.kt", "\nval redRunHandEdit = 1\n")],
      "ObjectCalls.expect.kt", "the generated `expect object ObjectCalls` file is hand-edited (it is in the drift compare since task 119 finding 25)")
@@ -1030,6 +1036,40 @@ case("runtime_smoke.sh", ["bash", "scripts/runtime_smoke.sh", GODOT],
      "missing pattern", "the example script no longer logs its scene-delivered properties",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 JVM_OBJECT_CALLS = "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt"
+KANAMA_SCRIPT = "src/jvmMain/kotlin/binding/KanamaScript.kt"
+CTOR_PLACEHOLDER = ("              placeholder = true\n              placeholder()\n", "              return\n")
+case("runtime_smoke.sh (throwing script constructor)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit(KANAMA_SCRIPT, "      retPtr.set(ADDRESS, 0, MemorySegment.NULL)\n      val handle = instance.address()\n",
+           "      val handle = instance.address()\n"),
+      Edit(KANAMA_SCRIPT, *CTOR_PLACEHOLDER)],
+     "[runtime_smoke] exit 134", "a script constructor that throws during set_script returns without writing _instance_create's return slot again: Godot uses the uninitialized slot as the instance and crashes with signal 11 right after the script error, so the smoke stops at the crash (the Bulletmark port's finding)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (throwing @Tool constructor)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit(KANAMA_SCRIPT, *CTOR_PLACEHOLDER)],
+     "missing pattern", "a @Tool script constructor that throws in the editor returns NULL instead of a placeholder: Godot drops the script from the node (get_script() reads through the instance) and saving the scene writes it without the script",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("runtime_smoke.sh (self-test workers at shutdown)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/jvmMain/kotlin/binding/runtime/OwnershipSelfTest.kt", "  fun shutdown() {\n    stopping = true\n",
+           "  fun shutdown() {\n    return\n    stopping = true\n")],
+     "self-test quick quit leaked or aborted at exit", "engine shutdown no longer stops the ownership self-test's worker: a run that quits while it makes Resources leaks thousands of ObjectDB instances at exit and can abort in realloc (the Android Platformer scene check); the race leaks most runs, and the smoke runs it three times",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("OwnedReleasesTest (low frame rate drain)", ["./gradlew", "-p", ".", ":jvmTest", "--tests", "*OwnedReleasesTest*"],
+     [Edit("src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/OwnedReleases.kt",
+           "    drain(budget = null, sinceLastDrain = sinceLastDrain)\n", "    drain(budget = frameBudget, sinceLastDrain = sinceLastDrain)\n")],
+     "aLargeBacklogAtALowFrameRateDrainsInAFewFrames", "the per-frame drain goes back to a fixed 1 ms: at a few frames a second, with releases at a loaded phone's cost, 10,000 dropped wrappers take minutes to release (the Pixel 7 Bunnymark run: 1,361 of 10,000 in 30 s)",
+     slow=True)
+case("processor ScriptNameClashTest", ["./gradlew", "-p", ".", ":processor:test", "--tests", "*ScriptNameClashTest*"],
+     [Edit("processor/src/main/kotlin/net/multigesture/kanama/processor/KanamaProcessor.kt",
+           'VariantType")\n    sb.appendLine("import net.multigesture.kanama.api.kotlinScriptInstance")\n    sb.appendLine("import ${model.fqName} as $SCRIPT_TYPE_ALIAS")',
+           'VariantType")\n    sb.appendLine("import net.multigesture.kanama.api.kotlinScriptInstance")\n    sb.appendLine("import ${model.fqName}")')],
+     "ScriptNameClashTest", "the desktop registrar imports its script class by its simple name again: a script called Arena (java.lang.foreign.Arena) or Signals does not compile (the Bulletmark port's finding)",
+     slow=True)
+case("runtime_smoke.sh (Mathf libm bound)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/commonMain/kotlin/net/multigesture/kanama/api/Mathf.kt",
+           "    fun cos(value: Double): Double = kotlin.math.cos(value)\n",
+           "    fun cos(value: Double): Double = kotlin.math.cos(value) * (1.0 + 1e-12)\n")],
+     "missing pattern", "Mathf.cos drifts from Godot's libm by thousands of ulps: the pure-Kotlin transcendentals must stay within their MATHF_LIBM_BOUNDS bound of the engine's result (`mathfbound=`)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (progress read-back)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit(JVM_OBJECT_CALLS, "(BuiltinTypes.readArrayScalars(argArray).firstOrNull() as? Number)?.toDouble()",
            "(emptyList<Any?>().firstOrNull() as? Number)?.toDouble()"),

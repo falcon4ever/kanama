@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 
@@ -175,6 +176,11 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): CollisionPolygon3D? =
             if (handle.address() == 0L) null else CollisionPolygon3D(GodotHandle(handle))
+
+        /** A new CollisionPolygon3D, GDScript's `CollisionPolygon3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CollisionPolygon3D =
+            CollisionPolygon3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CollisionPolygon3D"), "CollisionPolygon3D")))
     }
 
     private object Binds {

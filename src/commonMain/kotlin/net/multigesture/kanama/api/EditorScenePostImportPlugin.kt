@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Plugin to control and modifying the process of importing a scene.
@@ -80,6 +81,11 @@ class EditorScenePostImportPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorScenePostImportPlugin? =
             if (handle.address() == 0L) null else EditorScenePostImportPlugin(GodotHandle(handle))
+
+        /** A new EditorScenePostImportPlugin, GDScript's `EditorScenePostImportPlugin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorScenePostImportPlugin =
+            RefCounted.owned(EditorScenePostImportPlugin(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorScenePostImportPlugin"), "EditorScenePostImportPlugin"))))
     }
 
     private object Binds {

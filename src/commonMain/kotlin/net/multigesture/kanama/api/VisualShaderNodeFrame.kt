@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -192,6 +193,11 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFrame? =
             if (handle.address() == 0L) null else VisualShaderNodeFrame(GodotHandle(handle))
+
+        /** A new VisualShaderNodeFrame, GDScript's `VisualShaderNodeFrame.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeFrame =
+            RefCounted.owned(VisualShaderNodeFrame(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeFrame"), "VisualShaderNodeFrame"))))
     }
 
     private object Binds {

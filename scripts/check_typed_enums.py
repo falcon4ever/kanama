@@ -298,6 +298,15 @@ def main() -> int:
                 godot_method = godot_method_named(godot_class, fun.name) if godot_class in classes else None
                 if godot_method is None:
                     continue
+                # The generated `X.create()` factory (GDScript's `X.new()`) is no Godot method: a
+                # class with a `create` of its own (`ImageTexture3D.create(format, ...)`) takes
+                # arguments, so a no-argument `create()` is the factory and is not tied to it.
+                if fun.name == "create" and not fun.params and any(
+                    "default_value" not in a
+                    for m in methods_of(godot_class, godot_method)
+                    for a in m.get("arguments", [])
+                ):
+                    continue
                 checked_bindless += 1
             if godot_class not in classes:
                 continue

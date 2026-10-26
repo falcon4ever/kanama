@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A capsule shape collision that interacts with `SpringBoneSimulator3D`.
@@ -127,6 +128,11 @@ class SpringBoneCollisionCapsule3D(handle: GodotHandle) : SpringBoneCollision3D(
 
         internal fun wrap(handle: RawSegment): SpringBoneCollisionCapsule3D? =
             if (handle.address() == 0L) null else SpringBoneCollisionCapsule3D(GodotHandle(handle))
+
+        /** A new SpringBoneCollisionCapsule3D, GDScript's `SpringBoneCollisionCapsule3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SpringBoneCollisionCapsule3D =
+            SpringBoneCollisionCapsule3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SpringBoneCollisionCapsule3D"), "SpringBoneCollisionCapsule3D")))
     }
 
     private object Binds {

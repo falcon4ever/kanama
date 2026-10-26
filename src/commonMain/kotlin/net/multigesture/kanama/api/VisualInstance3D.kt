@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.RID
 
@@ -190,6 +191,11 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): VisualInstance3D? =
             if (handle.address() == 0L) null else VisualInstance3D(GodotHandle(handle))
+
+        /** A new VisualInstance3D, GDScript's `VisualInstance3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VisualInstance3D =
+            VisualInstance3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualInstance3D"), "VisualInstance3D")))
     }
 
     private object Binds {

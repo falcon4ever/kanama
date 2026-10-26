@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Audio stream that can playback music interactively, combining clips and a transition table.
@@ -469,6 +470,11 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamInteractive? =
             if (handle.address() == 0L) null else AudioStreamInteractive(GodotHandle(handle))
+
+        /** A new AudioStreamInteractive, GDScript's `AudioStreamInteractive.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioStreamInteractive =
+            RefCounted.owned(AudioStreamInteractive(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamInteractive"), "AudioStreamInteractive"))))
     }
 
     private object Binds {

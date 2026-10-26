@@ -8,4 +8,9 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class Marker3D(godotObject: GodotHandle) : Node3D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  companion object {
+    /** A new Marker3D, GDScript's `Marker3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): Marker3D =
+      Marker3D(checkNotNull(ClassDB.instantiate("Marker3D")) { "Godot could not instantiate Marker3D" }.toWebId())
+  }
 }

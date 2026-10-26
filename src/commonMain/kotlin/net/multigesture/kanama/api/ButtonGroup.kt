@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A group of buttons that doesn't allow more than one button to be pressed at a time.
@@ -86,10 +87,10 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
         internal fun wrapBorrowed(handle: RawSegment): ButtonGroup? =
             if (handle.address() == 0L) null else ButtonGroup(GodotHandle(handle))
 
-        // Instantiate a ButtonGroup.
+        /** A new ButtonGroup, GDScript's `ButtonGroup.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): ButtonGroup =
-            RefCounted.owned(ButtonGroup(GodotHandle(ObjectCalls.constructObject("ButtonGroup"))))
+            RefCounted.owned(ButtonGroup(GodotHandle(requireConstructed(ObjectCalls.constructObject("ButtonGroup"), "ButtonGroup"))))
     }
 
     private object Binds {

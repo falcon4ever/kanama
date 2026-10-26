@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for 3-dimensional textures.
@@ -111,6 +112,11 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Texture3D? =
             if (handle.address() == 0L) null else Texture3D(GodotHandle(handle))
+
+        /** A new Texture3D, GDScript's `Texture3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Texture3D =
+            RefCounted.owned(Texture3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Texture3D"), "Texture3D"))))
     }
 
     private object Binds {

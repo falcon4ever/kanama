@@ -1452,6 +1452,12 @@ class KanamaScript(
       allowPlaceholder: Boolean,
     ) {
       val retPtr = MemorySegment.ofAddress(rRet.address()).reinterpret(8)
+      // Godot reads this slot as the new ScriptInstance* whatever happens below, and its
+      // virtual-call wrapper leaves it uninitialized: a failure that skipped the write handed Godot
+      // a garbage pointer, and it crashed with signal 11 right after the script error. NULL is the
+      // answer for every early return below (Godot then drops the script: get_script() reads
+      // through the instance); a constructor that throws gets a placeholder instead.
+      retPtr.set(ADDRESS, 0, MemorySegment.NULL)
       val handle = instance.address()
       val script = ObjectRegistry.get(handle) as? KanamaScript
       if (script == null) {
@@ -1474,24 +1480,40 @@ class KanamaScript(
         script,
         "begin obj=0x${forObject.address().toString(16)} placeholder=$allowPlaceholder",
       )
+      // Carry the script's property list onto the placeholder so the editor inspector renders
+      // @Export fields even when the script isn't @Tool. Dispatch lambdas stay as defaults (no-ops
+      // returning false) so user code can't run; ScriptBridge falls back to the script-level
+      // get/set/property-default path for inspector reads of @Export values.
+      fun placeholder() =
+        KanamaScriptInstance(
+          kotlinObject = KanamaPlaceholderScriptInstanceData,
+          ownerObject = forObject,
+          propertyListPtr = script.propertyListPtr,
+          propertyCount = script.propertyCount,
+          placeholderPropertyValues = LinkedHashMap(),
+        )
+      var placeholder = allowPlaceholder
       val si =
         if (allowPlaceholder) {
-          // Carry the script's property list onto the placeholder so the
-          // editor inspector renders @Export fields even when
-          // the script isn't @Tool. Dispatch lambdas stay as defaults
-          // (no-ops returning false) so user code can't run; ScriptBridge
-          // falls back to the script-level get/set/property-default
-          // path for inspector reads of @Export values.
-          KanamaScriptInstance(
-            kotlinObject = KanamaPlaceholderScriptInstanceData,
-            ownerObject = forObject,
-            propertyListPtr = script.propertyListPtr,
-            propertyCount = script.propertyCount,
-            placeholderPropertyValues = LinkedHashMap(),
-          )
+          placeholder()
         } else {
           traceStage(script, "factory invoke")
-          script.factory?.invoke(forObject)
+          val built =
+            try {
+              script.factory?.invoke(forObject)
+            } catch (t: Throwable) {
+              // The script's constructor (or a property initializer) threw: report it as a script
+              // error with the Kotlin file and line, and give the object a placeholder instance.
+              // GDScript keeps a half-built instance after a run-time error in its initializer; a
+              // Kotlin constructor that threw left no object, so the nearest is an inert one: the
+              // object keeps its script (get_script() reads through the instance, so NULL would
+              // drop it, and an editor save would write the scene without it), its @Export values
+              // stay settable, and no script code runs on it.
+              Upcalls.logUpcallFailure("${script.kotlinClassName} constructor", t)
+              placeholder = true
+              placeholder()
+            }
+          built
             ?: run {
               System.err.println(
                 "[kanama:kt] callInstanceCreate: no factory for ${script.kotlinClassName}"
@@ -1510,7 +1532,7 @@ class KanamaScript(
       script.trackOwnerObject(forObject.address())
       // A RefCounted owner gets a ScriptOwnerLink in front of the instance (task 132): the
       // instance holds a +1 on its owner and the native link goes weak when only it is left.
-      val entry: Any = if (allowPlaceholder) si else ScriptOwnerLinks.linkFor(si, forObject, script)
+      val entry: Any = if (placeholder) si else ScriptOwnerLinks.linkFor(si, forObject, script)
       ScriptBridge.trackScriptInstance(forObject, entry)
       ScriptBridge.trackKotlinObject(
         forObject,
@@ -1531,9 +1553,9 @@ class KanamaScript(
       retPtr.set(ADDRESS, 0, instancePtr)
       if (traceInstances) {
         System.err.println(
-          "[kanama:kt] ${if (allowPlaceholder) "callPlaceholderInstanceCreate" else "callInstanceCreate"}: " +
+          "[kanama:kt] ${if (placeholder) "callPlaceholderInstanceCreate" else "callInstanceCreate"}: " +
             "${script.kotlinClassName} obj=0x${forObject.address().toString(16)} siHandle=$siHandle " +
-            "placeholder=$allowPlaceholder"
+            "placeholder=$placeholder"
         )
       }
     }

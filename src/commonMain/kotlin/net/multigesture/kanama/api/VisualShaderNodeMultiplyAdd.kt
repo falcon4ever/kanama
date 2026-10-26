@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Performs a fused multiply-add operation within the visual shader graph.
@@ -95,6 +96,11 @@ class VisualShaderNodeMultiplyAdd(handle: GodotHandle) : VisualShaderNode(handle
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeMultiplyAdd? =
             if (handle.address() == 0L) null else VisualShaderNodeMultiplyAdd(GodotHandle(handle))
+
+        /** A new VisualShaderNodeMultiplyAdd, GDScript's `VisualShaderNodeMultiplyAdd.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeMultiplyAdd =
+            RefCounted.owned(VisualShaderNodeMultiplyAdd(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeMultiplyAdd"), "VisualShaderNodeMultiplyAdd"))))
     }
 
     private object Binds {

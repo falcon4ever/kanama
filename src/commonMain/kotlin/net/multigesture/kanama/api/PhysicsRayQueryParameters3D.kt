@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 
@@ -283,6 +284,11 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PhysicsRayQueryParameters3D? =
             if (handle.address() == 0L) null else PhysicsRayQueryParameters3D(GodotHandle(handle))
+
+        /** A new PhysicsRayQueryParameters3D, GDScript's `PhysicsRayQueryParameters3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PhysicsRayQueryParameters3D =
+            RefCounted.owned(PhysicsRayQueryParameters3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PhysicsRayQueryParameters3D"), "PhysicsRayQueryParameters3D"))))
     }
 
     private object Binds {

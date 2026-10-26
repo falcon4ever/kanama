@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -349,6 +350,11 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AStar3D? =
             if (handle.address() == 0L) null else AStar3D(GodotHandle(handle))
+
+        /** A new AStar3D, GDScript's `AStar3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AStar3D =
+            RefCounted.owned(AStar3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("AStar3D"), "AStar3D"))))
     }
 
     private object Binds {

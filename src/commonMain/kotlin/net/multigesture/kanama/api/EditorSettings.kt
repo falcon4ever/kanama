@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Object that holds the project-independent editor settings.
@@ -314,6 +315,11 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorSettings? =
             if (handle.address() == 0L) null else EditorSettings(GodotHandle(handle))
+
+        /** A new EditorSettings, GDScript's `EditorSettings.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorSettings =
+            RefCounted.owned(EditorSettings(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorSettings"), "EditorSettings"))))
     }
 
     private object Binds {

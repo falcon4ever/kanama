@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
@@ -1038,6 +1039,11 @@ class Tree(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): Tree? =
             if (handle.address() == 0L) null else Tree(GodotHandle(handle))
+
+        /** A new Tree, GDScript's `Tree.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Tree =
+            Tree(GodotHandle(requireConstructed(ObjectCalls.constructObject("Tree"), "Tree")))
     }
 
     private object Binds {

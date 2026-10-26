@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Sprite frame library for AnimatedSprite2D and AnimatedSprite3D.
@@ -295,6 +296,11 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SpriteFrames? =
             if (handle.address() == 0L) null else SpriteFrames(GodotHandle(handle))
+
+        /** A new SpriteFrames, GDScript's `SpriteFrames.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SpriteFrames =
+            RefCounted.owned(SpriteFrames(GodotHandle(requireConstructed(ObjectCalls.constructObject("SpriteFrames"), "SpriteFrames"))))
     }
 
     private object Binds {

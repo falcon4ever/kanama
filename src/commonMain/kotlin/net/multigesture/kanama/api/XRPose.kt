@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
 
@@ -259,6 +260,11 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRPose? =
             if (handle.address() == 0L) null else XRPose(GodotHandle(handle))
+
+        /** A new XRPose, GDScript's `XRPose.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): XRPose =
+            RefCounted.owned(XRPose(GodotHandle(requireConstructed(ObjectCalls.constructObject("XRPose"), "XRPose"))))
     }
 
     private object Binds {

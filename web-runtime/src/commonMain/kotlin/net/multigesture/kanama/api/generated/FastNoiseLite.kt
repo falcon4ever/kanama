@@ -101,7 +101,7 @@ class FastNoiseLite(godotObject: GodotHandle) : Noise(godotObject) {
   }
 
   companion object {
-    /** Constructs a new FastNoiseLite engine-side; the wrapper owns the handle (close what you create). */
+    /** A new FastNoiseLite, GDScript's `FastNoiseLite.new()`. You own the reference: `close()` or `use { }`. */
     fun create(): FastNoiseLite =
       FastNoiseLite(checkNotNull(ClassDB.instantiate("FastNoiseLite")) { "Godot could not instantiate FastNoiseLite" }.toWebId())
   }

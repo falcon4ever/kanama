@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Rect2i
@@ -71,6 +72,11 @@ class XRInterfaceExtension(handle: GodotHandle) : XRInterface(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRInterfaceExtension? =
             if (handle.address() == 0L) null else XRInterfaceExtension(GodotHandle(handle))
+
+        /** A new XRInterfaceExtension, GDScript's `XRInterfaceExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): XRInterfaceExtension =
+            RefCounted.owned(XRInterfaceExtension(GodotHandle(requireConstructed(ObjectCalls.constructObject("XRInterfaceExtension"), "XRInterfaceExtension"))))
     }
 
     private object Binds {

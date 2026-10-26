@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a 6-band equalizer audio effect to an audio bus. Gives you control over frequencies from 32
@@ -23,5 +24,10 @@ class AudioEffectEQ6(handle: GodotHandle) : AudioEffectEQ(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectEQ6? =
             if (handle.address() == 0L) null else AudioEffectEQ6(GodotHandle(handle))
+
+        /** A new AudioEffectEQ6, GDScript's `AudioEffectEQ6.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectEQ6 =
+            RefCounted.owned(AudioEffectEQ6(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectEQ6"), "AudioEffectEQ6"))))
     }
 }

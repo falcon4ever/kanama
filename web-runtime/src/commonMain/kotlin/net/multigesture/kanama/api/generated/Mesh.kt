@@ -119,6 +119,9 @@ class Mesh(godotObject: GodotHandle) : Resource(godotObject) {
   }
 
   companion object {
+    /** A new Mesh, GDScript's `Mesh.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): Mesh =
+      Mesh(checkNotNull(ClassDB.instantiate("Mesh")) { "Godot could not instantiate Mesh" }.toWebId())
     fun fromObject(value: GodotObject?): Mesh? =
       value?.takeIf { it.isClass("Mesh") }?.let { Mesh(it.handle) }
   }

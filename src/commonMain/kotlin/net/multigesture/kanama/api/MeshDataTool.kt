@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Vector2
@@ -481,10 +482,10 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
         internal fun wrapBorrowed(handle: RawSegment): MeshDataTool? =
             if (handle.address() == 0L) null else MeshDataTool(GodotHandle(handle))
 
-        // Instantiate a MeshDataTool.
+        /** A new MeshDataTool, GDScript's `MeshDataTool.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): MeshDataTool =
-            RefCounted.owned(MeshDataTool(GodotHandle(ObjectCalls.constructObject("MeshDataTool"))))
+            RefCounted.owned(MeshDataTool(GodotHandle(requireConstructed(ObjectCalls.constructObject("MeshDataTool"), "MeshDataTool"))))
     }
 
     private object Binds {

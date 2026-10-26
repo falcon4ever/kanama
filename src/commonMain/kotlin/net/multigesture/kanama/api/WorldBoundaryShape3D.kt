@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Plane
 
 /**
@@ -52,6 +53,11 @@ class WorldBoundaryShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WorldBoundaryShape3D? =
             if (handle.address() == 0L) null else WorldBoundaryShape3D(GodotHandle(handle))
+
+        /** A new WorldBoundaryShape3D, GDScript's `WorldBoundaryShape3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): WorldBoundaryShape3D =
+            RefCounted.owned(WorldBoundaryShape3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("WorldBoundaryShape3D"), "WorldBoundaryShape3D"))))
     }
 
     private object Binds {

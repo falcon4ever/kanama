@@ -52,6 +52,12 @@ class PropertyTweener(godotObject: GodotHandle) : Tweener(godotObject) {
             "(the Web backend has the Color arm only)"
         )
     }
+
+  companion object {
+    /** A new PropertyTweener, GDScript's `PropertyTweener.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): PropertyTweener =
+      PropertyTweener(checkNotNull(ClassDB.instantiate("PropertyTweener")) { "Godot could not instantiate PropertyTweener" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

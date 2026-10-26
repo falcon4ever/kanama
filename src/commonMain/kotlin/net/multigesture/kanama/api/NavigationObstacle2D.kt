@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
 
@@ -263,6 +264,11 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationObstacle2D? =
             if (handle.address() == 0L) null else NavigationObstacle2D(GodotHandle(handle))
+
+        /** A new NavigationObstacle2D, GDScript's `NavigationObstacle2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): NavigationObstacle2D =
+            NavigationObstacle2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("NavigationObstacle2D"), "NavigationObstacle2D")))
     }
 
     private object Binds {

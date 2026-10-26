@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -407,6 +408,11 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFObjectModelProperty? =
             if (handle.address() == 0L) null else GLTFObjectModelProperty(GodotHandle(handle))
+
+        /** A new GLTFObjectModelProperty, GDScript's `GLTFObjectModelProperty.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFObjectModelProperty =
+            RefCounted.owned(GLTFObjectModelProperty(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFObjectModelProperty"), "GLTFObjectModelProperty"))))
     }
 
     private object Binds {

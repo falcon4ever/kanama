@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
@@ -1117,6 +1118,11 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationAgent2D? =
             if (handle.address() == 0L) null else NavigationAgent2D(GodotHandle(handle))
+
+        /** A new NavigationAgent2D, GDScript's `NavigationAgent2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): NavigationAgent2D =
+            NavigationAgent2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("NavigationAgent2D"), "NavigationAgent2D")))
     }
 
     private object Binds {

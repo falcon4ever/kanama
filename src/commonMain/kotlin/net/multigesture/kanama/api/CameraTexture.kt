@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Texture provided by a `CameraFeed`.
@@ -111,6 +112,11 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CameraTexture? =
             if (handle.address() == 0L) null else CameraTexture(GodotHandle(handle))
+
+        /** A new CameraTexture, GDScript's `CameraTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CameraTexture =
+            RefCounted.owned(CameraTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("CameraTexture"), "CameraTexture"))))
     }
 
     private object Binds {

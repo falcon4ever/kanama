@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Provides methods for generating pseudo-random numbers.
@@ -185,6 +186,11 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RandomNumberGenerator? =
             if (handle.address() == 0L) null else RandomNumberGenerator(GodotHandle(handle))
+
+        /** A new RandomNumberGenerator, GDScript's `RandomNumberGenerator.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RandomNumberGenerator =
+            RefCounted.owned(RandomNumberGenerator(GodotHandle(requireConstructed(ObjectCalls.constructObject("RandomNumberGenerator"), "RandomNumberGenerator"))))
     }
 
     private object Binds {

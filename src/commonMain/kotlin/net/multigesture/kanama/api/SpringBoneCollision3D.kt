@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.Vector3
 
@@ -126,6 +127,11 @@ open class SpringBoneCollision3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): SpringBoneCollision3D? =
             if (handle.address() == 0L) null else SpringBoneCollision3D(GodotHandle(handle))
+
+        /** A new SpringBoneCollision3D, GDScript's `SpringBoneCollision3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SpringBoneCollision3D =
+            SpringBoneCollision3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SpringBoneCollision3D"), "SpringBoneCollision3D")))
     }
 
     private object Binds {

@@ -235,6 +235,12 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
       val OUT_IN: EaseType get() = EaseType(3L)
     }
   }
+
+  companion object {
+    /** A new Tween, GDScript's `Tween.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): Tween =
+      Tween(checkNotNull(ClassDB.instantiate("Tween")) { "Godot could not instantiate Tween" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

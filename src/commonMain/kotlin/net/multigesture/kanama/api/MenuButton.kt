@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A button that brings up a `PopupMenu` when clicked.
@@ -108,6 +109,11 @@ class MenuButton(handle: GodotHandle) : Button(handle) {
 
         internal fun wrap(handle: RawSegment): MenuButton? =
             if (handle.address() == 0L) null else MenuButton(GodotHandle(handle))
+
+        /** A new MenuButton, GDScript's `MenuButton.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): MenuButton =
+            MenuButton(GodotHandle(requireConstructed(ObjectCalls.constructObject("MenuButton"), "MenuButton")))
     }
 
     private object Binds {

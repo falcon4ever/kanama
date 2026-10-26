@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Performs an SDF (signed-distance field) normal texture lookup within the visual shader graph.
@@ -22,5 +23,10 @@ class VisualShaderNodeTextureSDFNormal(handle: GodotHandle) : VisualShaderNode(h
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTextureSDFNormal? =
             if (handle.address() == 0L) null else VisualShaderNodeTextureSDFNormal(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTextureSDFNormal, GDScript's `VisualShaderNodeTextureSDFNormal.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTextureSDFNormal =
+            RefCounted.owned(VisualShaderNodeTextureSDFNormal(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTextureSDFNormal"), "VisualShaderNodeTextureSDFNormal"))))
     }
 }

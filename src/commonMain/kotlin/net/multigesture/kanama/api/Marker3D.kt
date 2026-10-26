@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Generic 3D position hint for editing.
@@ -43,6 +44,11 @@ class Marker3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): Marker3D? =
             if (handle.address() == 0L) null else Marker3D(GodotHandle(handle))
+
+        /** A new Marker3D, GDScript's `Marker3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Marker3D =
+            Marker3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Marker3D"), "Marker3D")))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Custom control for editing properties that can be added to the `EditorInspector`.
@@ -503,6 +504,11 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): EditorProperty? =
             if (handle.address() == 0L) null else EditorProperty(GodotHandle(handle))
+
+        /** A new EditorProperty, GDScript's `EditorProperty.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): EditorProperty =
+            EditorProperty(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorProperty"), "EditorProperty")))
     }
 
     private object Binds {

@@ -70,6 +70,19 @@ KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BI
 # (signal_leak_smoke.tscn), each in its own process so nothing else touches their state.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_error_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://signal_leak_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+# A script whose constructor throws, attached with set_script (constructor_error_smoke.tscn); the
+# scene quits itself once both attaches have printed, --quit-after is only the cap.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://constructor_error_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
+# The ownership self-test (forced on) with a run that quits one frame after its worker started, as
+# the Android smoke's editor `--script` scene check does: three runs, each with its own log, so the
+# exit status and Godot's exit-time leak report are this run's alone.
+QUICK_QUIT_LOG="${LOG_FILE}.selftest_quick_quit"
+quick_quit_status=""
+for quick_quit_run in 1 2 3; do
+  quick_quit_rc=0
+  KANAMA_OWNERSHIP_SELFTEST=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --script res://selftest_quick_quit.gd >"$QUICK_QUIT_LOG.$quick_quit_run" 2>&1 || quick_quit_rc=$?
+  quick_quit_status="$quick_quit_status $quick_quit_run:$quick_quit_rc"
+done
 # task 131 items 2 + 6 -- wrapper equality and a call through a wrapper of a freed object.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 134 D4 -- typed engine signals (connect, close, one-shot, deferred, await, freed receiver,
@@ -173,6 +186,11 @@ exit_ownership() {
 trap exit_ownership EXIT
 printf '[kanama]\n\ndebug/ownership_self_test=true\n' >"$OWNERSHIP_OVERRIDE"
 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://ownership_self_test.tscn --verbose >"$OWNERSHIP_LOG" 2>&1
+# The same self-test at 1 fps (KANAMA_SLOW_FRAME_MS=1000, a game a phone's load slows to a crawl):
+# the drain's budget grows with the backlog and the frame time, so 10,000 worker-owned releases
+# still drain within the test's wait.
+OWNERSHIP_SLOW_LOG="${LOG_FILE}.ownership_self_test_slow"
+KANAMA_SLOW_FRAME_MS=1000 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://ownership_self_test.tscn >"$OWNERSHIP_SLOW_LOG" 2>&1
 rm -f "$OWNERSHIP_OVERRIDE"
 # The generated API exercise (exercise/ApiExercise.generated.kt, scripts/generate_api_exercise.py): one
 # row per ObjectCalls helper the shared tree calls (a value-asserting or a reach-only row) and one per
@@ -456,6 +474,36 @@ check "^SCRIPT ERROR: java\.lang\.IllegalStateException: kanama smoke: deliberat
 check "^ +at: ScriptErrorSmoke\.ready \(res://ScriptErrorSmoke\.kt:${script_error_line}\)$"
 # The stderr trace is kept beside it.
 check "\[kanama:kt\] script method failed script=net\.multigesture\.kanama\.example\.ScriptErrorSmoke "
+# A script constructor that throws during set_script is a script error with the Kotlin file:line,
+# and the object keeps its script with an inert placeholder instance (no `probe`). Before, the throw
+# skipped the write of Godot's _instance_create return slot, Godot used the garbage as the instance
+# and crashed with signal 11 right after the script error, so no line below printed. The GDScript
+# twin keeps a half-built live instance (a run-time error does not abort its construction); a
+# Kotlin constructor that threw leaves no object, so no script code runs on the node.
+constructor_error_line="$(grep -n 'deliberate constructor failure' "$PROJECT_DIR/ConstructorErrorSmoke.kt" | cut -d: -f1)"
+check "^SCRIPT ERROR: java\.lang\.IllegalStateException: kanama smoke: deliberate constructor failure$"
+check "^ +at: ConstructorErrorSmoke\.fail \(res://ConstructorErrorSmoke\.kt:${constructor_error_line}\)$"
+check "\[kanama-smoke\] constructor_error attach in_tree script=true instance=false"
+check "\[kanama-smoke\] constructor_error attach detached script=true instance=false"
+check "\[kanama-smoke\] constructor_error gdscript_twin script=true instance=true"
+check "\[kanama-smoke\] constructor_error done"
+# A run that quits while the ownership self-test's worker makes Resources: shutdown stops and joins
+# the worker first (OwnershipSelfTest.shutdown). Before, it kept calling into Godot while the
+# ObjectDB was torn down: thousands of leaked instances at exit and, now and then, an abort in
+# realloc (the Android smoke's Platformer scene check, kanama-demos 9903ceb). The race leaks most
+# runs without the fix, so three runs make a miss unlikely.
+for quick_quit_run in 1 2 3; do
+  quick_quit_log="$QUICK_QUIT_LOG.$quick_quit_run"
+  if ! grep -q "\[kanama-smoke\] selftest_quick_quit quitting" "$quick_quit_log"; then
+    smoke_fail "self-test quick quit did not run (run $quick_quit_run)" "$quick_quit_log"
+  fi
+  if grep -qE "ObjectDB instances were leaked at exit|Abort trap|pointer being freed was not allocated" "$quick_quit_log"; then
+    smoke_fail "self-test quick quit leaked or aborted at exit (run $quick_quit_run)" "$(grep -E 'were leaked at exit|Abort|pointer being freed' "$quick_quit_log" | head -3 | tr '\n' ' ')"
+  fi
+done
+if [[ "$quick_quit_status" != " 1:0 2:0 3:0" ]]; then
+  smoke_fail "self-test quick quit exit status (want 0 each)" "$quick_quit_status"
+fi
 # task 131 (F9) -- a lambda connection's closure is released whenever Godot drops the connection's
 # custom Callable: the receiver freed, the emitter freed, a ONE_SHOT connection fired. The registry
 # returns to its size before the connect. Before task 131 every *_released was false (only
@@ -530,6 +578,14 @@ for pattern in \
     exit 1
   fi
 done
+if ! grep -q "GC stress: every frame sleeps 1000 ms" "$OWNERSHIP_SLOW_LOG" ||
+  ! grep -Eq "\[kanama\] OWNERSHIP SELFTEST worker-owned GC releases: created=10000 released=10000 leaked=0 " "$OWNERSHIP_SLOW_LOG" ||
+  ! grep -Eq "\[kanama\] OWNERSHIP SELFTEST: 3 passed, 0 failed" "$OWNERSHIP_SLOW_LOG" ||
+  grep -Eq "OWNERSHIP SELFTEST FAIL|ObjectDB instances were leaked at exit|SIGSEGV|crashed" "$OWNERSHIP_SLOW_LOG"; then
+  grep -E "OWNERSHIP SELFTEST|sleeps|leaked" "$OWNERSHIP_SLOW_LOG" >&2 || tail -n 40 "$OWNERSHIP_SLOW_LOG" >&2
+  echo "[runtime_smoke] FAIL -- the ownership self-test at 1 fps did not drain its releases or leaked (log: $OWNERSHIP_SLOW_LOG)" >&2
+  exit 1
+fi
 if grep -Eq "OWNERSHIP SELFTEST FAIL|Leaked instance|ObjectDB instances leaked|previously freed|SIGSEGV|crashed" "$OWNERSHIP_LOG"; then
   grep -E "OWNERSHIP SELFTEST FAIL|Leaked instance|leaked|previously freed|SIGSEGV|crashed" "$OWNERSHIP_LOG" >&2
   echo "[runtime_smoke] FAIL -- the ownership self-test reported a failure, a leak or a fault (log: $OWNERSHIP_LOG)" >&2
@@ -632,6 +688,9 @@ check "BuiltinParity kotlin const=n=1 [^ ]+=[0-9a-f]+ "
 # the same sequence as GDScript, and the same first value again after a second seed()).
 check "BuiltinParity kotlin mathf=n=256 [^ ]+=[0-9a-f]+ "
 check "BuiltinParity kotlin mathfedge=n=64 [^ ]+=[0-9a-f]+ "
+# The Mathf transcendentals are kotlin.math (no engine call): the rows above mix the engine's result,
+# and each Mathf value, Double and Float overload, must be within its MATHF_LIBM_BOUNDS bound of it.
+check "BuiltinParity kotlin mathfbound=n=[1-9][0-9]* out=none$"
 check "BuiltinParity kotlin gd=n=1 [^ ]+=[0-9a-f]+ "
 check "BuiltinParity kotlin rand=n=8 [^ ]+=[0-9a-f]+ "
 # task 134 D2 -- the PackedByteArray byte codecs ported to Kotlin over 64 random arrays (`bytes=`:

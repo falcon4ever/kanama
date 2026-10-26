@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that makes particles move in a cone shape.
@@ -22,5 +23,10 @@ class VisualShaderNodeParticleConeVelocity(handle: GodotHandle) : VisualShaderNo
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleConeVelocity? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleConeVelocity(GodotHandle(handle))
+
+        /** A new VisualShaderNodeParticleConeVelocity, GDScript's `VisualShaderNodeParticleConeVelocity.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeParticleConeVelocity =
+            RefCounted.owned(VisualShaderNodeParticleConeVelocity(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeParticleConeVelocity"), "VisualShaderNodeParticleConeVelocity"))))
     }
 }

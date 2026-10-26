@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A stream peer that handles TCP connections.
@@ -100,6 +101,11 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerTCP? =
             if (handle.address() == 0L) null else StreamPeerTCP(GodotHandle(handle))
+
+        /** A new StreamPeerTCP, GDScript's `StreamPeerTCP.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): StreamPeerTCP =
+            RefCounted.owned(StreamPeerTCP(GodotHandle(requireConstructed(ObjectCalls.constructObject("StreamPeerTCP"), "StreamPeerTCP"))))
     }
 
     private object Binds {

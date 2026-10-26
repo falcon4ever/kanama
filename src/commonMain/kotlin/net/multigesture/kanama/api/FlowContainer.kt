@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A container that arranges its child controls horizontally or vertically and wraps them around at
@@ -211,6 +212,11 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): FlowContainer? =
             if (handle.address() == 0L) null else FlowContainer(GodotHandle(handle))
+
+        /** A new FlowContainer, GDScript's `FlowContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): FlowContainer =
+            FlowContainer(GodotHandle(requireConstructed(ObjectCalls.constructObject("FlowContainer"), "FlowContainer")))
     }
 
     private object Binds {

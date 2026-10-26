@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -276,6 +277,11 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
 
         internal fun wrap(handle: RawSegment): GPUParticlesCollisionHeightField3D? =
             if (handle.address() == 0L) null else GPUParticlesCollisionHeightField3D(GodotHandle(handle))
+
+        /** A new GPUParticlesCollisionHeightField3D, GDScript's `GPUParticlesCollisionHeightField3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GPUParticlesCollisionHeightField3D =
+            GPUParticlesCollisionHeightField3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("GPUParticlesCollisionHeightField3D"), "GPUParticlesCollisionHeightField3D")))
     }
 
     private object Binds {

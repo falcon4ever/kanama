@@ -47,6 +47,12 @@ open class Node2D(godotObject: GodotHandle) : CanvasItem(godotObject) {
   var rotation: Double
     get() = getRotation()
     set(newValue) = setRotation(newValue)
+
+  companion object {
+    /** A new Node2D, GDScript's `Node2D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): Node2D =
+      Node2D(checkNotNull(ClassDB.instantiate("Node2D")) { "Godot could not instantiate Node2D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

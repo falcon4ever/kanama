@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A scalar integer constant to be used within the visual shader graph.
@@ -51,6 +52,11 @@ class VisualShaderNodeIntConstant(handle: GodotHandle) : VisualShaderNodeConstan
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeIntConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeIntConstant(GodotHandle(handle))
+
+        /** A new VisualShaderNodeIntConstant, GDScript's `VisualShaderNodeIntConstant.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeIntConstant =
+            RefCounted.owned(VisualShaderNodeIntConstant(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeIntConstant"), "VisualShaderNodeIntConstant"))))
     }
 
     private object Binds {

@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents a glTF accessor.
@@ -667,6 +668,11 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFAccessor? =
             if (handle.address() == 0L) null else GLTFAccessor(GodotHandle(handle))
+
+        /** A new GLTFAccessor, GDScript's `GLTFAccessor.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFAccessor =
+            RefCounted.owned(GLTFAccessor(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFAccessor"), "GLTFAccessor"))))
     }
 
     private object Binds {

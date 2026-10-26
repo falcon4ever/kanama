@@ -298,16 +298,25 @@ internal class IosScriptCodeEmitter(
 
   /** The combined registry file: `registerKanamaIosProjectScripts()` + bridge classes. */
   fun registrySource(): String {
+    // Each packaged script class is imported under an alias (`import <fq> as S1_Arena`), never its
+    // simple name, which can be a name this file also imports (`MemorySegment`) or a second
+    // script's in another package. See `SCRIPT_TYPE_ALIAS` for the desktop registrar.
     val imports =
       scripts
         .mapNotNull { script -> script.packageName?.let { "$it.${script.className}" } }
         .distinct()
         .sorted()
+    val aliases =
+      imports.withIndex().associate { (index, fq) ->
+        fq to "S${index + 1}_${fq.substringAfterLast('.')}"
+      }
+    fun IosScript.typeRef(): String =
+      packageName?.let { aliases.getValue("$it.$className") } ?: className
     val builder = StringBuilder()
     builder.appendLine("package net.multigesture.kanama.ios")
     builder.appendLine()
     builder.appendLine("import java.lang.foreign.MemorySegment")
-    imports.forEach { builder.appendLine("import $it") }
+    imports.forEach { builder.appendLine("import $it as ${aliases.getValue(it)}") }
     builder.appendLine()
     // `actual` of the `expect` declared in the shared iosMain source set: KSP emits this
     // registry into the per-target leaf source sets (iosArm64Main / iosSimulatorArm64Main),
@@ -357,7 +366,7 @@ internal class IosScriptCodeEmitter(
       builder.appendLine("            ),")
       builder.appendLine("            factory = { ownerObject ->")
       builder.appendLine(
-        "                $bridgeName(${script.className}(net.multigesture.kanama.api.GodotHandle(MemorySegment.ofAddress(ownerObject))))"
+        "                $bridgeName(${script.typeRef()}(net.multigesture.kanama.api.GodotHandle(MemorySegment.ofAddress(ownerObject))))"
       )
       builder.appendLine("            },")
       builder.appendLine("        ),")
@@ -372,7 +381,7 @@ internal class IosScriptCodeEmitter(
       val bridgeName = "${script.className}IosBridge_${shortHash(script.resourcePath)}"
       builder.appendLine()
       builder.appendLine("private class $bridgeName(")
-      builder.appendLine("    private val script: ${script.className},")
+      builder.appendLine("    private val script: ${script.typeRef()},")
       builder.appendLine(") : KanamaIosScriptBridge {")
       builder.appendLine("    override val scriptInstance: Any get() = script")
       builder.appendLine()

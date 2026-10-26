@@ -116,12 +116,12 @@ kanama_web_demo_project_property() {
 }
 
 # Extra `exportWeb` arguments a demo needs, one per line (empty for most).
-# Bunnymark's validated Web configuration is the 256-sprite V1Sprites variant.
+# Bunnymark's validated Web configuration is the 256-sprite Sprites variant.
 # The starter (export key `project`) is the project web_ci_matrix.sh creates
 # with createStarterProject and names in KANAMA_WEB_STARTER_DIR.
 kanama_web_demo_export_args() {
   case "$1" in
-    bunnymark) echo "-PkanamaWebBunnymarkVariant=BunnymarkV1Sprites" ;;
+    bunnymark) echo "-PkanamaWebBunnymarkVariant=BunnymarkSprites" ;;
     starter|project) echo "-PkanamaWebProjectDir=${KANAMA_WEB_STARTER_DIR:?KANAMA_WEB_STARTER_DIR names the starter project to export}" ;;
     *) : ;;
   esac

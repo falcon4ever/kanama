@@ -361,6 +361,12 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
       val DISABLED: AutoTranslateMode get() = AutoTranslateMode(2L)
     }
   }
+
+  companion object {
+    /** A new Node, GDScript's `Node.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): Node =
+      Node(checkNotNull(ClassDB.instantiate("Node")) { "Godot could not instantiate Node" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

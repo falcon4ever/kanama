@@ -33,6 +33,12 @@ class Curve(godotObject: GodotHandle) : Resource(godotObject) {
       val MODE_COUNT: TangentMode get() = TangentMode(2L)
     }
   }
+
+  companion object {
+    /** A new Curve, GDScript's `Curve.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): Curve =
+      Curve(checkNotNull(ClassDB.instantiate("Curve")) { "Godot could not instantiate Curve" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

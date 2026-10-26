@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Imports a bitmap font in the BMFont (`.fnt`) format.
@@ -22,5 +23,10 @@ class ResourceImporterBMFont(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterBMFont? =
             if (handle.address() == 0L) null else ResourceImporterBMFont(GodotHandle(handle))
+
+        /** A new ResourceImporterBMFont, GDScript's `ResourceImporterBMFont.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterBMFont =
+            RefCounted.owned(ResourceImporterBMFont(GodotHandle(requireConstructed(ObjectCalls.constructObject("ResourceImporterBMFont"), "ResourceImporterBMFont"))))
     }
 }

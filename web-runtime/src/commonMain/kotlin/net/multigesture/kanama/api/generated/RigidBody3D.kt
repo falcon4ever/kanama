@@ -160,6 +160,12 @@ class RigidBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
       val REPLACE: DampMode get() = DampMode(1L)
     }
   }
+
+  companion object {
+    /** A new RigidBody3D, GDScript's `RigidBody3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): RigidBody3D =
+      RigidBody3D(checkNotNull(ClassDB.instantiate("RigidBody3D")) { "Godot could not instantiate RigidBody3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

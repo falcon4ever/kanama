@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Position based forward and backward reaching inverse kinematics solver.
@@ -19,5 +20,10 @@ class FABRIK3D(handle: GodotHandle) : IterateIK3D(handle) {
 
         internal fun wrap(handle: RawSegment): FABRIK3D? =
             if (handle.address() == 0L) null else FABRIK3D(GodotHandle(handle))
+
+        /** A new FABRIK3D, GDScript's `FABRIK3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): FABRIK3D =
+            FABRIK3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("FABRIK3D"), "FABRIK3D")))
     }
 }

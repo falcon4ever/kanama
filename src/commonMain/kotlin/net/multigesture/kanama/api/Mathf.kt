@@ -1,14 +1,22 @@
 package net.multigesture.kanama.api
 
+import kotlin.math.pow as kotlinPow
+
 /**
  * Godot/C#-style math helpers, written once for every platform (task 129 B).
  *
- * Where Godot's own function is plain arithmetic (lerp, clamp, wrap, snapped, move_toward,
- * smoothstep, ...) the body is Godot's formula in Godot's operand order, so the result is the same
- * double, bit for bit, as GDScript's (the runtime smoke's parity pair checks it). Anything with a
- * transcendental (sin, pow, exp, log, ...) or a float-to-int conversion is the engine's own
- * function, through [GD]. `Mathf.abs(-1)` and friends therefore behave exactly like GDScript's
- * `abs(-1)` on every platform.
+ * The bodies are Godot's formulas in Godot's operand order (core/math/math_funcs.h), in Kotlin, so
+ * `Mathf` costs what `kotlin.math` costs (the exceptions that call [GD] are below). Where Godot's function is
+ * plain arithmetic (lerp, clamp, wrap, snapped, move_toward, smoothstep, ...) the result is the same
+ * double, bit for bit, as GDScript's. The transcendentals (sin, cos, tan, asin, acos, atan, atan2,
+ * sinh, cosh, tanh, pow, exp, log, and ease, dbToLinear, linearToDb over them) are the C library
+ * calls Godot makes (`std::sin`, ...), with Godot's clamps, through `kotlin.math`: on iOS and
+ * Android that is the same libm Godot calls, so the result is bit-identical; the desktop JVM and
+ * Kotlin/Wasm have their own implementations, which differ from the host libm in the last bit or
+ * two (the runtime smoke's parity pair holds each to a recorded ulp bound of the engine's own
+ * result). The rest calls the engine through [GD]: the float-to-int conversions (`floorToInt`, ...,
+ * whose out-of-range and NaN answers are Godot's), `posmod` by zero (Godot's error), and asinh,
+ * acosh and atanh (`kotlin.math`'s lose hundreds of ulps near zero).
  *
  * The `Float` overloads mirror the C# binding's `Mathf`: every decimal Kanama hands out is `Double`
  * (task 134), so they serve user code that keeps its own `Float`s; each computes in `Double` and
@@ -54,7 +62,21 @@ object Mathf {
         return s * s * (3.0 - 2.0 * s)
     }
 
-    fun ease(x: Double, curve: Double): Double = GD.ease(x, curve)
+    // Godot's Math::ease (core/math/math_funcs.cpp).
+    fun ease(x: Double, curve: Double): Double {
+        val clamped = if (x < 0.0) 0.0 else if (x > 1.0) 1.0 else x
+        return if (curve > 0.0) {
+            if (curve < 1.0) 1.0 - pow(1.0 - clamped, 1.0 / curve) else pow(clamped, curve)
+        } else if (curve < 0.0) {
+            if (clamped < 0.5) {
+                pow(clamped * 2.0, -curve) * 0.5
+            } else {
+                (1.0 - pow(1.0 - (clamped - 0.5) * 2.0, -curve)) * 0.5 + 0.5
+            }
+        } else {
+            0.0
+        }
+    }
 
     fun remap(value: Double, istart: Double, istop: Double, ostart: Double, ostop: Double): Double =
         lerp(ostart, ostop, inverseLerp(istart, istop, value))
@@ -106,24 +128,29 @@ object Mathf {
 
     fun isInf(value: Double): Boolean = value.isInfinite()
 
-    fun sin(value: Double): Double = GD.sin(value)
+    fun sin(value: Double): Double = kotlin.math.sin(value)
 
-    fun cos(value: Double): Double = GD.cos(value)
+    fun cos(value: Double): Double = kotlin.math.cos(value)
 
-    fun tan(value: Double): Double = GD.tan(value)
+    fun tan(value: Double): Double = kotlin.math.tan(value)
 
-    fun asin(value: Double): Double = GD.asin(value)
+    // Godot clamps asin and acos: an argument outside [-1, 1] answers the end of the range, not NaN.
+    fun asin(value: Double): Double =
+        if (value < -1.0) -PI / 2.0 else if (value > 1.0) PI / 2.0 else kotlin.math.asin(value)
 
-    fun acos(value: Double): Double = GD.acos(value)
+    fun acos(value: Double): Double = if (value < -1.0) PI else if (value > 1.0) 0.0 else kotlin.math.acos(value)
 
-    fun atan(value: Double): Double = GD.atan(value)
+    fun atan(value: Double): Double = kotlin.math.atan(value)
 
-    fun atan2(y: Double, x: Double): Double = GD.atan2(y, x)
+    fun atan2(y: Double, x: Double): Double = kotlin.math.atan2(y, x)
 
     // IEEE square root and remainder are exact on every platform (Godot calls std::sqrt / std::fmod).
     fun sqrt(value: Double): Double = kotlin.math.sqrt(value)
 
-    fun pow(x: Double, y: Double): Double = GD.pow(x, y)
+    // C's pow (Godot's std::pow): 1 to any power is 1, and so is -1 to an infinite one; the JVM's
+    // Math.pow answers NaN for both.
+    fun pow(x: Double, y: Double): Double =
+        if (x == 1.0 || (x == -1.0 && y.isInfinite())) 1.0 else x.kotlinPow(y)
 
     fun fmod(x: Double, y: Double): Double = x % y
 
@@ -141,9 +168,9 @@ object Mathf {
         return value
     }
 
-    fun log(value: Double): Double = GD.log(value)
+    fun log(value: Double): Double = kotlin.math.ln(value)
 
-    fun exp(value: Double): Double = GD.exp(value)
+    fun exp(value: Double): Double = kotlin.math.exp(value)
 
     fun floor(value: Double): Double = kotlin.math.floor(value)
 
@@ -170,9 +197,9 @@ object Mathf {
 
     fun sign(value: Long): Long = if (value > 0L) 1L else if (value < 0L) -1L else 0L
 
-    fun dbToLinear(value: Double): Double = GD.dbToLinear(value)
+    fun dbToLinear(value: Double): Double = exp(value * 0.11512925464970228420089957273422)
 
-    fun linearToDb(value: Double): Double = GD.linearToDb(value)
+    fun linearToDb(value: Double): Double = log(value) * 8.6858896380650365530225783783321
 
     // Godot's nearest_power_of_2_templated on the uint64 of [value].
     fun nearestPo2(value: Long): Long {
@@ -184,11 +211,11 @@ object Mathf {
     fun pingPong(value: Double, length: Double): Double =
         if (length != 0.0) kotlin.math.abs(fract((value - length) / (length * 2.0)) * length * 2.0 - length) else 0.0
 
-    fun sinh(value: Double): Double = GD.sinh(value)
+    fun sinh(value: Double): Double = kotlin.math.sinh(value)
 
-    fun cosh(value: Double): Double = GD.cosh(value)
+    fun cosh(value: Double): Double = kotlin.math.cosh(value)
 
-    fun tanh(value: Double): Double = GD.tanh(value)
+    fun tanh(value: Double): Double = kotlin.math.tanh(value)
 
     fun asinh(value: Double): Double = GD.asinh(value)
 

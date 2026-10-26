@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a pitch-shifting audio effect to an audio bus. Raises or lowers the pitch of the input
@@ -175,6 +176,11 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectPitchShift? =
             if (handle.address() == 0L) null else AudioEffectPitchShift(GodotHandle(handle))
+
+        /** A new AudioEffectPitchShift, GDScript's `AudioEffectPitchShift.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectPitchShift =
+            RefCounted.owned(AudioEffectPitchShift(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectPitchShift"), "AudioEffectPitchShift"))))
     }
 
     private object Binds {

@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Texture Array for Cubemaps that is bound to a texture created on the `RenderingDevice`.
@@ -22,5 +23,10 @@ class TextureCubemapArrayRD(handle: GodotHandle) : TextureLayeredRD(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextureCubemapArrayRD? =
             if (handle.address() == 0L) null else TextureCubemapArrayRD(GodotHandle(handle))
+
+        /** A new TextureCubemapArrayRD, GDScript's `TextureCubemapArrayRD.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TextureCubemapArrayRD =
+            RefCounted.owned(TextureCubemapArrayRD(GodotHandle(requireConstructed(ObjectCalls.constructObject("TextureCubemapArrayRD"), "TextureCubemapArrayRD"))))
     }
 }

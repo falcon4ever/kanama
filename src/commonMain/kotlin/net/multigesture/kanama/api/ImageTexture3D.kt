@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Texture with 3 dimensions.
@@ -47,6 +48,11 @@ class ImageTexture3D(handle: GodotHandle) : Texture3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ImageTexture3D? =
             if (handle.address() == 0L) null else ImageTexture3D(GodotHandle(handle))
+
+        /** A new ImageTexture3D, GDScript's `ImageTexture3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ImageTexture3D =
+            RefCounted.owned(ImageTexture3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("ImageTexture3D"), "ImageTexture3D"))))
     }
 
     private object Binds {

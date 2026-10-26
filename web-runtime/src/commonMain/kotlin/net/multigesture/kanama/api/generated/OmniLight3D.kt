@@ -14,4 +14,10 @@ class OmniLight3D(godotObject: GodotHandle) : Light3D(godotObject) {
       val CUBE: ShadowMode get() = ShadowMode(1L)
     }
   }
+
+  companion object {
+    /** A new OmniLight3D, GDScript's `OmniLight3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): OmniLight3D =
+      OmniLight3D(checkNotNull(ClassDB.instantiate("OmniLight3D")) { "Godot could not instantiate OmniLight3D" }.toWebId())
+  }
 }

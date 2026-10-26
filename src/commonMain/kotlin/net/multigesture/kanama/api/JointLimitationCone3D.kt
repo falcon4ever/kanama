@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A cone shape limitation that interacts with `ChainIK3D`.
@@ -53,6 +54,11 @@ class JointLimitationCone3D(handle: GodotHandle) : JointLimitation3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): JointLimitationCone3D? =
             if (handle.address() == 0L) null else JointLimitationCone3D(GodotHandle(handle))
+
+        /** A new JointLimitationCone3D, GDScript's `JointLimitationCone3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): JointLimitationCone3D =
+            RefCounted.owned(JointLimitationCone3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("JointLimitationCone3D"), "JointLimitationCone3D"))))
     }
 
     private object Binds {

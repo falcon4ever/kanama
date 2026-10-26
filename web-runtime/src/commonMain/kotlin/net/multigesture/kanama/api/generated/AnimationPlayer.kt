@@ -96,6 +96,12 @@ class AnimationPlayer(godotObject: GodotHandle) : AnimationMixer(godotObject) {
       val IMMEDIATE: AnimationMethodCallMode get() = AnimationMethodCallMode(1L)
     }
   }
+
+  companion object {
+    /** A new AnimationPlayer, GDScript's `AnimationPlayer.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): AnimationPlayer =
+      AnimationPlayer(checkNotNull(ClassDB.instantiate("AnimationPlayer")) { "Godot could not instantiate AnimationPlayer" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

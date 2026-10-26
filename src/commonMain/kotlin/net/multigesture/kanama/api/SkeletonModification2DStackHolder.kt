@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A modification that holds and executes a `SkeletonModificationStack2D`.
@@ -47,6 +48,11 @@ class SkeletonModification2DStackHolder(handle: GodotHandle) : SkeletonModificat
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DStackHolder? =
             if (handle.address() == 0L) null else SkeletonModification2DStackHolder(GodotHandle(handle))
+
+        /** A new SkeletonModification2DStackHolder, GDScript's `SkeletonModification2DStackHolder.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SkeletonModification2DStackHolder =
+            RefCounted.owned(SkeletonModification2DStackHolder(GodotHandle(requireConstructed(ObjectCalls.constructObject("SkeletonModification2DStackHolder"), "SkeletonModification2DStackHolder"))))
     }
 
     private object Binds {

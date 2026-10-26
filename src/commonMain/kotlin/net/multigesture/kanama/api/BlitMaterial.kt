@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A material that processes blit calls to a DrawableTexture.
@@ -94,6 +95,11 @@ class BlitMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): BlitMaterial? =
             if (handle.address() == 0L) null else BlitMaterial(GodotHandle(handle))
+
+        /** A new BlitMaterial, GDScript's `BlitMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): BlitMaterial =
+            RefCounted.owned(BlitMaterial(GodotHandle(requireConstructed(ObjectCalls.constructObject("BlitMaterial"), "BlitMaterial"))))
     }
 
     private object Binds {

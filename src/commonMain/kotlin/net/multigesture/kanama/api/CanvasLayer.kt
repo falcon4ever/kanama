@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
@@ -303,6 +304,11 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): CanvasLayer? =
             if (handle.address() == 0L) null else CanvasLayer(GodotHandle(handle))
+
+        /** A new CanvasLayer, GDScript's `CanvasLayer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CanvasLayer =
+            CanvasLayer(GodotHandle(requireConstructed(ObjectCalls.constructObject("CanvasLayer"), "CanvasLayer")))
     }
 
     private object Binds {

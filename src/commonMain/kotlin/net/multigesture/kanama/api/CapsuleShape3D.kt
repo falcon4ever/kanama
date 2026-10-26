@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A 3D capsule shape used for physics collision.
@@ -121,6 +122,11 @@ class CapsuleShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CapsuleShape3D? =
             if (handle.address() == 0L) null else CapsuleShape3D(GodotHandle(handle))
+
+        /** A new CapsuleShape3D, GDScript's `CapsuleShape3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CapsuleShape3D =
+            RefCounted.owned(CapsuleShape3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CapsuleShape3D"), "CapsuleShape3D"))))
     }
 
     private object Binds {

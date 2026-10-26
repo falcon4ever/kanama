@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Vertex attribute (used by `RenderingDevice`).
@@ -204,6 +205,11 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDVertexAttribute? =
             if (handle.address() == 0L) null else RDVertexAttribute(GodotHandle(handle))
+
+        /** A new RDVertexAttribute, GDScript's `RDVertexAttribute.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDVertexAttribute =
+            RefCounted.owned(RDVertexAttribute(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDVertexAttribute"), "RDVertexAttribute"))))
     }
 
     private object Binds {

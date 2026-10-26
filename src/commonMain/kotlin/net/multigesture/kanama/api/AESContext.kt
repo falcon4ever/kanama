@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Provides access to AES encryption/decryption of raw data.
@@ -117,6 +118,11 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AESContext? =
             if (handle.address() == 0L) null else AESContext(GodotHandle(handle))
+
+        /** A new AESContext, GDScript's `AESContext.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AESContext =
+            RefCounted.owned(AESContext(GodotHandle(requireConstructed(ObjectCalls.constructObject("AESContext"), "AESContext"))))
     }
 
     private object Binds {

@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
@@ -673,6 +674,11 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): Skeleton3D? =
             if (handle.address() == 0L) null else Skeleton3D(GodotHandle(handle))
+
+        /** A new Skeleton3D, GDScript's `Skeleton3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Skeleton3D =
+            Skeleton3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Skeleton3D"), "Skeleton3D")))
     }
 
     private object Binds {

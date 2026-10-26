@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Proxy texture for simple frame-based animations.
@@ -237,6 +238,11 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimatedTexture? =
             if (handle.address() == 0L) null else AnimatedTexture(GodotHandle(handle))
+
+        /** A new AnimatedTexture, GDScript's `AnimatedTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimatedTexture =
+            RefCounted.owned(AnimatedTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimatedTexture"), "AnimatedTexture"))))
     }
 
     private object Binds {

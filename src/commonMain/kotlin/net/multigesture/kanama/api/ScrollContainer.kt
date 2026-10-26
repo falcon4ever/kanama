@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A container used to provide scrollbars to a child control when needed.
@@ -467,6 +468,11 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): ScrollContainer? =
             if (handle.address() == 0L) null else ScrollContainer(GodotHandle(handle))
+
+        /** A new ScrollContainer, GDScript's `ScrollContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ScrollContainer =
+            ScrollContainer(GodotHandle(requireConstructed(ObjectCalls.constructObject("ScrollContainer"), "ScrollContainer")))
     }
 
     private object Binds {

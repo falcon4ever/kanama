@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -96,6 +97,11 @@ class ReferenceRect(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): ReferenceRect? =
             if (handle.address() == 0L) null else ReferenceRect(GodotHandle(handle))
+
+        /** A new ReferenceRect, GDScript's `ReferenceRect.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ReferenceRect =
+            ReferenceRect(GodotHandle(requireConstructed(ObjectCalls.constructObject("ReferenceRect"), "ReferenceRect")))
     }
 
     private object Binds {

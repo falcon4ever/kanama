@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Holds physics-related properties of a surface, namely its roughness and bounciness.
@@ -152,6 +153,11 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PhysicsMaterial? =
             if (handle.address() == 0L) null else PhysicsMaterial(GodotHandle(handle))
+
+        /** A new PhysicsMaterial, GDScript's `PhysicsMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PhysicsMaterial =
+            RefCounted.owned(PhysicsMaterial(GodotHandle(requireConstructed(ObjectCalls.constructObject("PhysicsMaterial"), "PhysicsMaterial"))))
     }
 
     private object Binds {

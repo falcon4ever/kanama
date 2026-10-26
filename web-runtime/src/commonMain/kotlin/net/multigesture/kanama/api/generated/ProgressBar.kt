@@ -16,4 +16,10 @@ class ProgressBar(godotObject: GodotHandle) : Range(godotObject) {
       val BOTTOM_TO_TOP: FillMode get() = FillMode(3L)
     }
   }
+
+  companion object {
+    /** A new ProgressBar, GDScript's `ProgressBar.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): ProgressBar =
+      ProgressBar(checkNotNull(ClassDB.instantiate("ProgressBar")) { "Godot could not instantiate ProgressBar" }.toWebId())
+  }
 }

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A horizontal menu bar that creates a menu for each `PopupMenu` child.
@@ -285,6 +286,11 @@ class MenuBar(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): MenuBar? =
             if (handle.address() == 0L) null else MenuBar(GodotHandle(handle))
+
+        /** A new MenuBar, GDScript's `MenuBar.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): MenuBar =
+            MenuBar(GodotHandle(requireConstructed(ObjectCalls.constructObject("MenuBar"), "MenuBar")))
     }
 
     private object Binds {

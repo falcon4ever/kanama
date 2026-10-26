@@ -15,4 +15,10 @@ class AudioStream(godotObject: GodotHandle) : Resource(godotObject) {
   object Signals {
     const val parameterListChanged: String = "parameter_list_changed"
   }
+
+  companion object {
+    /** A new AudioStream, GDScript's `AudioStream.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): AudioStream =
+      AudioStream(checkNotNull(ClassDB.instantiate("AudioStream")) { "Godot could not instantiate AudioStream" }.toWebId())
+  }
 }

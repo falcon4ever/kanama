@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents a class from the Java Native Interface.
@@ -74,6 +75,11 @@ class JavaClass(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): JavaClass? =
             if (handle.address() == 0L) null else JavaClass(GodotHandle(handle))
+
+        /** A new JavaClass, GDScript's `JavaClass.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): JavaClass =
+            RefCounted.owned(JavaClass(GodotHandle(requireConstructed(ObjectCalls.constructObject("JavaClass"), "JavaClass"))))
     }
 
     private object Binds {

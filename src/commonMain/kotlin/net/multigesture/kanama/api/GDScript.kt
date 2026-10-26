@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A script implemented in the GDScript programming language.
@@ -33,6 +34,11 @@ class GDScript(handle: GodotHandle) : Script(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GDScript? =
             if (handle.address() == 0L) null else GDScript(GodotHandle(handle))
+
+        /** A new GDScript, GDScript's `GDScript.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GDScript =
+            RefCounted.owned(GDScript(GodotHandle(requireConstructed(ObjectCalls.constructObject("GDScript"), "GDScript"))))
     }
 
     private object Binds {

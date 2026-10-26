@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Plane
@@ -554,10 +555,10 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
         internal fun wrapBorrowed(handle: RawSegment): SurfaceTool? =
             if (handle.address() == 0L) null else SurfaceTool(GodotHandle(handle))
 
-        // Instantiate a SurfaceTool.
+        /** A new SurfaceTool, GDScript's `SurfaceTool.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): SurfaceTool =
-            RefCounted.owned(SurfaceTool(GodotHandle(ObjectCalls.constructObject("SurfaceTool"))))
+            RefCounted.owned(SurfaceTool(GodotHandle(requireConstructed(ObjectCalls.constructObject("SurfaceTool"), "SurfaceTool"))))
     }
 
     private object Binds {

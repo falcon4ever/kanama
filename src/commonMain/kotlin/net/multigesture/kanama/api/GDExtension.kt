@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A native library for GDExtension.
@@ -85,6 +86,11 @@ class GDExtension(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GDExtension? =
             if (handle.address() == 0L) null else GDExtension(GodotHandle(handle))
+
+        /** A new GDExtension, GDScript's `GDExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GDExtension =
+            RefCounted.owned(GDExtension(GodotHandle(requireConstructed(ObjectCalls.constructObject("GDExtension"), "GDExtension"))))
     }
 
     private object Binds {

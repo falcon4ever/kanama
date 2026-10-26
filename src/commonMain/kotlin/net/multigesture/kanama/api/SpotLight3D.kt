@@ -4,6 +4,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A spotlight, such as a reflector spotlight or a lantern.
@@ -44,5 +45,10 @@ class SpotLight3D(handle: GodotHandle) : Light3D(handle) {
 
         internal fun wrap(handle: RawSegment): SpotLight3D? =
             if (handle.address() == 0L) null else SpotLight3D(GodotHandle(handle))
+
+        /** A new SpotLight3D, GDScript's `SpotLight3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SpotLight3D =
+            SpotLight3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SpotLight3D"), "SpotLight3D")))
     }
 }

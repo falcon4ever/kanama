@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Post-processes scenes after import.
@@ -33,6 +34,11 @@ class EditorScenePostImport(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorScenePostImport? =
             if (handle.address() == 0L) null else EditorScenePostImport(GodotHandle(handle))
+
+        /** A new EditorScenePostImport, GDScript's `EditorScenePostImport.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorScenePostImport =
+            RefCounted.owned(EditorScenePostImport(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorScenePostImport"), "EditorScenePostImport"))))
     }
 
     private object Binds {

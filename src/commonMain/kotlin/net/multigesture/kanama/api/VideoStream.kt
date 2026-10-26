@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base resource for video streams.
@@ -53,6 +54,11 @@ open class VideoStream(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VideoStream? =
             if (handle.address() == 0L) null else VideoStream(GodotHandle(handle))
+
+        /** A new VideoStream, GDScript's `VideoStream.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VideoStream =
+            RefCounted.owned(VideoStream(GodotHandle(requireConstructed(ObjectCalls.constructObject("VideoStream"), "VideoStream"))))
     }
 
     private object Binds {

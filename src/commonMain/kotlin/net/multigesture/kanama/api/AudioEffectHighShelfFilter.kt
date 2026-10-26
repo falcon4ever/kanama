@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a high-shelf filter to an audio bus.
@@ -22,5 +23,10 @@ class AudioEffectHighShelfFilter(handle: GodotHandle) : AudioEffectFilter(handle
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectHighShelfFilter? =
             if (handle.address() == 0L) null else AudioEffectHighShelfFilter(GodotHandle(handle))
+
+        /** A new AudioEffectHighShelfFilter, GDScript's `AudioEffectHighShelfFilter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectHighShelfFilter =
+            RefCounted.owned(AudioEffectHighShelfFilter(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectHighShelfFilter"), "AudioEffectHighShelfFilter"))))
     }
 }

@@ -8,4 +8,9 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class SpinBox(godotObject: GodotHandle) : Range(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  companion object {
+    /** A new SpinBox, GDScript's `SpinBox.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): SpinBox =
+      SpinBox(checkNotNull(ClassDB.instantiate("SpinBox")) { "Godot could not instantiate SpinBox" }.toWebId())
+  }
 }

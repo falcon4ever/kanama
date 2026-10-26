@@ -42,7 +42,7 @@ class Sprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
   }
 
   companion object {
-    /** Constructs a new Sprite2D engine-side; the wrapper owns the handle (close what you create). */
+    /** A new Sprite2D, GDScript's `Sprite2D.new()`. Add it to the tree, or `queueFree()` it. */
     fun create(): Sprite2D =
       Sprite2D(checkNotNull(ClassDB.instantiate("Sprite2D")) { "Godot could not instantiate Sprite2D" }.toWebId())
   }

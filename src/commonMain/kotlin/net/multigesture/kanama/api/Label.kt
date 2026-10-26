@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2
 
 /**
@@ -636,6 +637,11 @@ class Label(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): Label? =
             if (handle.address() == 0L) null else Label(GodotHandle(handle))
+
+        /** A new Label, GDScript's `Label.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Label =
+            Label(GodotHandle(requireConstructed(ObjectCalls.constructObject("Label"), "Label")))
     }
 
     private object Binds {

@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Calculates a dot product of two vectors within the visual shader graph.
@@ -22,5 +23,10 @@ class VisualShaderNodeDotProduct(handle: GodotHandle) : VisualShaderNode(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeDotProduct? =
             if (handle.address() == 0L) null else VisualShaderNodeDotProduct(GodotHandle(handle))
+
+        /** A new VisualShaderNodeDotProduct, GDScript's `VisualShaderNodeDotProduct.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeDotProduct =
+            RefCounted.owned(VisualShaderNodeDotProduct(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeDotProduct"), "VisualShaderNodeDotProduct"))))
     }
 }

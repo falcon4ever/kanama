@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Imports an image for use in scripting, with no rendering capabilities.
@@ -22,5 +23,10 @@ class ResourceImporterImage(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterImage? =
             if (handle.address() == 0L) null else ResourceImporterImage(GodotHandle(handle))
+
+        /** A new ResourceImporterImage, GDScript's `ResourceImporterImage.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterImage =
+            RefCounted.owned(ResourceImporterImage(GodotHandle(requireConstructed(ObjectCalls.constructObject("ResourceImporterImage"), "ResourceImporterImage"))))
     }
 }

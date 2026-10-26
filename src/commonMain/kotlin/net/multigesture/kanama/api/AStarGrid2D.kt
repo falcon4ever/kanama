@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
@@ -638,6 +639,11 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AStarGrid2D? =
             if (handle.address() == 0L) null else AStarGrid2D(GodotHandle(handle))
+
+        /** A new AStarGrid2D, GDScript's `AStarGrid2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AStarGrid2D =
+            RefCounted.owned(AStarGrid2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("AStarGrid2D"), "AStarGrid2D"))))
     }
 
     private object Binds {

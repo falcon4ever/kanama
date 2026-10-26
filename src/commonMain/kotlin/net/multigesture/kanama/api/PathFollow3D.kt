@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 
 /**
@@ -321,6 +322,11 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): PathFollow3D? =
             if (handle.address() == 0L) null else PathFollow3D(GodotHandle(handle))
+
+        /** A new PathFollow3D, GDScript's `PathFollow3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): PathFollow3D =
+            PathFollow3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PathFollow3D"), "PathFollow3D")))
     }
 
     private object Binds {

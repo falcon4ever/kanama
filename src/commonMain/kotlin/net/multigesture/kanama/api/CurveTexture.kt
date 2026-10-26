@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A 1D texture where pixel brightness corresponds to points on a curve.
@@ -124,6 +125,11 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CurveTexture? =
             if (handle.address() == 0L) null else CurveTexture(GodotHandle(handle))
+
+        /** A new CurveTexture, GDScript's `CurveTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CurveTexture =
+            RefCounted.owned(CurveTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("CurveTexture"), "CurveTexture"))))
     }
 
     private object Binds {

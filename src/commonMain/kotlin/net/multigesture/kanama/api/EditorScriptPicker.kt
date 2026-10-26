@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Godot editor's control for selecting the `script` property of a `Node`.
@@ -42,6 +43,11 @@ class EditorScriptPicker(handle: GodotHandle) : EditorResourcePicker(handle) {
 
         internal fun wrap(handle: RawSegment): EditorScriptPicker? =
             if (handle.address() == 0L) null else EditorScriptPicker(GodotHandle(handle))
+
+        /** A new EditorScriptPicker, GDScript's `EditorScriptPicker.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): EditorScriptPicker =
+            EditorScriptPicker(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorScriptPicker"), "EditorScriptPicker")))
     }
 
     private object Binds {

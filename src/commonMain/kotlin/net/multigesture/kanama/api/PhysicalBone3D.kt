@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
 
@@ -569,6 +570,11 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
 
         internal fun wrap(handle: RawSegment): PhysicalBone3D? =
             if (handle.address() == 0L) null else PhysicalBone3D(GodotHandle(handle))
+
+        /** A new PhysicalBone3D, GDScript's `PhysicalBone3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): PhysicalBone3D =
+            PhysicalBone3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PhysicalBone3D"), "PhysicalBone3D")))
     }
 
     private object Binds {

@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector3
 
@@ -444,6 +445,11 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): Decal? =
             if (handle.address() == 0L) null else Decal(GodotHandle(handle))
+
+        /** A new Decal, GDScript's `Decal.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Decal =
+            Decal(GodotHandle(requireConstructed(ObjectCalls.constructObject("Decal"), "Decal")))
     }
 
     private object Binds {

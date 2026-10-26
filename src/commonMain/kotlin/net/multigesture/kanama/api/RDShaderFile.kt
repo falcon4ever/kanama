@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Compiled shader file in SPIR-V form (used by `RenderingDevice`). Not to be confused with Godot's
@@ -93,6 +94,11 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDShaderFile? =
             if (handle.address() == 0L) null else RDShaderFile(GodotHandle(handle))
+
+        /** A new RDShaderFile, GDScript's `RDShaderFile.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDShaderFile =
+            RefCounted.owned(RDShaderFile(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDShaderFile"), "RDShaderFile"))))
     }
 
     private object Binds {

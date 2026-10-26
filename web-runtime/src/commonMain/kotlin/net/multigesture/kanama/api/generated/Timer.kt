@@ -41,6 +41,12 @@ class Timer(godotObject: GodotHandle) : Node(godotObject) {
       val IDLE: TimerProcessCallback get() = TimerProcessCallback(1L)
     }
   }
+
+  companion object {
+    /** A new Timer, GDScript's `Timer.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): Timer =
+      Timer(checkNotNull(ClassDB.instantiate("Timer")) { "Godot could not instantiate Timer" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

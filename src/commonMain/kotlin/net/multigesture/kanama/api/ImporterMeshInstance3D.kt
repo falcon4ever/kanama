@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -161,6 +162,11 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): ImporterMeshInstance3D? =
             if (handle.address() == 0L) null else ImporterMeshInstance3D(GodotHandle(handle))
+
+        /** A new ImporterMeshInstance3D, GDScript's `ImporterMeshInstance3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ImporterMeshInstance3D =
+            ImporterMeshInstance3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("ImporterMeshInstance3D"), "ImporterMeshInstance3D")))
     }
 
     private object Binds {

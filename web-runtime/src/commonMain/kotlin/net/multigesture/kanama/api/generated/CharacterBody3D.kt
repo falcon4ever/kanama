@@ -83,6 +83,12 @@ class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
       val DO_NOTHING: PlatformOnLeave get() = PlatformOnLeave(2L)
     }
   }
+
+  companion object {
+    /** A new CharacterBody3D, GDScript's `CharacterBody3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): CharacterBody3D =
+      CharacterBody3D(checkNotNull(ClassDB.instantiate("CharacterBody3D")) { "Godot could not instantiate CharacterBody3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

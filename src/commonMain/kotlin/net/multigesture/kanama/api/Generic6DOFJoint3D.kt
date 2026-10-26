@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A physics joint that allows for complex movement and rotation between two 3D physics bodies.
@@ -298,6 +299,11 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
 
         internal fun wrap(handle: RawSegment): Generic6DOFJoint3D? =
             if (handle.address() == 0L) null else Generic6DOFJoint3D(GodotHandle(handle))
+
+        /** A new Generic6DOFJoint3D, GDScript's `Generic6DOFJoint3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Generic6DOFJoint3D =
+            Generic6DOFJoint3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Generic6DOFJoint3D"), "Generic6DOFJoint3D")))
     }
 
     private object Binds {

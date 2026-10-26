@@ -174,7 +174,9 @@ class ColorScriptTypeTest {
     val registry = emitter.registrySource()
     assertTrue(registry.contains("fun setColorProperty("), registry)
     assertTrue(
-      registry.contains("(script as Tinted).tint = net.multigesture.kanama.types.Color(r, g, b, a)")
+      registry.contains(
+        "(script as S1_Tinted).tint = net.multigesture.kanama.types.Color(r, g, b, a)"
+      )
     )
     assertTrue(
       registry.contains("net.multigesture.kanama.web.WebPackedFloats.encode(it.a)}"),

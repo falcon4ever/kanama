@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An advanced text server with support for BiDi, complex text layout, and contextual OpenType
@@ -23,5 +24,10 @@ class TextServerAdvanced(handle: GodotHandle) : TextServerExtension(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextServerAdvanced? =
             if (handle.address() == 0L) null else TextServerAdvanced(GodotHandle(handle))
+
+        /** A new TextServerAdvanced, GDScript's `TextServerAdvanced.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TextServerAdvanced =
+            RefCounted.owned(TextServerAdvanced(GodotHandle(requireConstructed(ObjectCalls.constructObject("TextServerAdvanced"), "TextServerAdvanced"))))
     }
 }

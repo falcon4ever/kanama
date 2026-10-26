@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -399,6 +400,11 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeStateMachine? =
             if (handle.address() == 0L) null else AnimationNodeStateMachine(GodotHandle(handle))
+
+        /** A new AnimationNodeStateMachine, GDScript's `AnimationNodeStateMachine.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeStateMachine =
+            RefCounted.owned(AnimationNodeStateMachine(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationNodeStateMachine"), "AnimationNodeStateMachine"))))
     }
 
     private object Binds {

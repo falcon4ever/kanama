@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Container for `Animation` resources.
@@ -134,6 +135,11 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationLibrary? =
             if (handle.address() == 0L) null else AnimationLibrary(GodotHandle(handle))
+
+        /** A new AnimationLibrary, GDScript's `AnimationLibrary.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationLibrary =
+            RefCounted.owned(AnimationLibrary(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationLibrary"), "AnimationLibrary"))))
     }
 
     private object Binds {

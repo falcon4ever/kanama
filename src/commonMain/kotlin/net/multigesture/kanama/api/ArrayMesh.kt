@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Transform3D
 
@@ -403,6 +404,11 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ArrayMesh? =
             if (handle.address() == 0L) null else ArrayMesh(GodotHandle(handle))
+
+        /** A new ArrayMesh, GDScript's `ArrayMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ArrayMesh =
+            RefCounted.owned(ArrayMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("ArrayMesh"), "ArrayMesh"))))
 
         // Downcast a Resource to ArrayMesh (null if not).
         @JvmStatic

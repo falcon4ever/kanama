@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that accelerates particles.
@@ -90,6 +91,11 @@ class VisualShaderNodeParticleAccelerator(handle: GodotHandle) : VisualShaderNod
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleAccelerator? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleAccelerator(GodotHandle(handle))
+
+        /** A new VisualShaderNodeParticleAccelerator, GDScript's `VisualShaderNodeParticleAccelerator.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeParticleAccelerator =
+            RefCounted.owned(VisualShaderNodeParticleAccelerator(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeParticleAccelerator"), "VisualShaderNodeParticleAccelerator"))))
     }
 
     private object Binds {

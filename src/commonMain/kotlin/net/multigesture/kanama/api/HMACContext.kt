@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Used to create an HMAC for a message using a key.
@@ -59,6 +60,11 @@ class HMACContext(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): HMACContext? =
             if (handle.address() == 0L) null else HMACContext(GodotHandle(handle))
+
+        /** A new HMACContext, GDScript's `HMACContext.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): HMACContext =
+            RefCounted.owned(HMACContext(GodotHandle(requireConstructed(ObjectCalls.constructObject("HMACContext"), "HMACContext"))))
     }
 
     private object Binds {
