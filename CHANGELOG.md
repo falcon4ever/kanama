@@ -71,8 +71,9 @@ and the release link uses up to about 11 GB of memory, so a 16 GB Mac is recomme
 `DEVELOPER_DIR` or `xcode-select -p` names. The generated iOS script registry is now a `@CName` function
 the shim calls, so it compiles outside the runtime's own module; the runtime declarations it names are
 public behind the `@InternalKanamaIosApi` opt-in, which game code never needs (`api-snapshots/ios-seam.txt`).
-The runtime-only `kanama-mobile-addon-ios` zip (`packageMobileAddonIos`) is gone. Fixed with it: the
-kit's project has an app icon, without which Godot's iOS export stops.
+The runtime-only `kanama-mobile-addon-ios` zip (`packageMobileAddonIos`) is gone. Like
+`buildAndroidScripts`, it turns on the ETC2/ASTC texture import Godot's iOS export needs. Fixed with it:
+the kit's project has an app icon, without which Godot's iOS export stops.
 
 ### Changed — Android 13 is now the minimum — BREAKING
 

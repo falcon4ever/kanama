@@ -203,6 +203,7 @@ abstract class BuildIosScripts : DefaultTask() {
       )
     }
     KanamaIosAddonFiles.enableIosGdextensionMetadata(descriptor)
+    ProjectGodot.enableEtc2AstcImportFor(project, "iOS", logger)
     // Godot loads the descriptor only when the project's extension list names it (the kit's does).
     val extensionList = project.resolve(".godot/extension_list.cfg")
     val entry = "res://addons/kanama/kanama.gdextension"

@@ -120,7 +120,9 @@ that repository, so they share its version. The plugin's `buildIosScripts` is
 5. It installs the two xcframeworks under `addons/kanama/bin/ios/` and the iOS
    descriptor lines (`KanamaIosAddonFiles`, `gradle-plugin/src/shared`, which
    the root `buildSrc` compiles too, so `installIosAddon` writes the same
-   lines).
+   lines), and turns on `rendering/textures/vram_compression/import_etc2_astc`
+   in `project.godot`, which Godot's iOS export requires as its Android export
+   does.
 
 The seam that makes the separate compile possible: the generated registry is
 a `@CName("kanama_ios_project_scripts_register")` function

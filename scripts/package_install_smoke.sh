@@ -589,6 +589,11 @@ if [[ "$ios_export" -eq 1 ]]; then
       exit 1
     fi
   done
+  # Godot's iOS export refuses to start without it (a store-addon project starts without it).
+  if ! grep -q '^textures/vram_compression/import_etc2_astc=true' "$project_dir/project.godot"; then
+    echo "[package_install_smoke] buildIosScripts did not turn on the ETC2/ASTC import in project.godot" >&2
+    exit 1
+  fi
 
   ios_export_dir="$work_dir/ios-export"
   export_log="$work_dir/ios-export.log"

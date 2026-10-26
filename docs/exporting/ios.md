@@ -38,7 +38,11 @@ the editor loads them during the export. Then it compiles the scripts in
 into two libraries, one debug and one release. It writes them to
 `addons/kanama/bin/ios/` as `.xcframework` bundles, Apple's format for a
 prebuilt library, and adds their entries to `addons/kanama/kanama.gdextension`,
-keeping the desktop and Android entries already there.
+keeping the desktop and Android entries already there. It also turns on the
+ETC2/ASTC texture import in `project.godot`, which Godot's iOS export needs. If
+the project is open in Godot when that happens, choose **Project > Reload
+Current Project**: until you do, the editor keeps its old settings and would
+write them back over the change.
 
 The first run on a Mac downloads the Kotlin/Native compiler and its iOS
 tools, about 1 GB, into `~/.konan`, so it needs a network connection. Expect
@@ -194,6 +198,7 @@ the scene checker is in the checkout's `scripts/` folder.
 | `buildIosScripts` stops with `addons/kanama/maven has no Kanama iOS runtime`. | The project's addon came from a Linux or Windows kit, or the unzip was incomplete. Unzip the macOS kit or the store addon of the same Kanama version into the project again. |
 | `buildIosScripts` fails with `Java heap space` or the Mac runs out of memory. | Linking the release library needs about 11 GB. Close other large apps and run it again. |
 | Godot cannot export for iOS. | Install the iOS export templates for Godot 4.7.2. |
+| The export fails with `Cannot export project with preset "iOS" due to configuration errors`. | Godot's iOS export needs the ETC2/ASTC texture import. Run `./gradlew buildIosScripts`, which turns it on, then choose **Project > Reload Current Project** in Godot and export again. |
 | The export fails with `Export Icons: Invalid icon`. | Set an app icon in **Project Settings > Application > Config > Icon**. |
 | Xcode reports no signing team. | Set the team in the preset, or under **Signing & Capabilities** in Xcode. |
 | Xcode cannot create a provisioning profile. | Sign in to your Apple Developer account in Xcode and allow provisioning updates, or create the profile in the Apple Developer portal. |
