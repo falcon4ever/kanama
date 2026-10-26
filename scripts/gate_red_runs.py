@@ -1187,6 +1187,14 @@ case("check_exported_scene_properties_selftest.sh (conversion off)", ["bash", "s
      [Edit("scripts/check_exported_scene_properties.gd", "\tif not bool(ProjectSettings.get_setting(CONVERT_SETTING, true)) and not _has_feature_override(CONVERT_SETTING):", "\tif false:")],
      "on a project that turns conversion off", "the scene check ignores editor/export/convert_text_resources_to_binary=false: --require-converted fails a project whose scenes ship as text with their values",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+case("check_exported_scene_properties_selftest.sh (exit leak)", ["bash", "scripts/check_exported_scene_properties_selftest.sh", GODOT],
+     [Edit("scripts/check_exported_scene_properties.gd", "\t_keep_autoloads_silent()\n\tquit(_run())", "\tquit(_run())")],
+     "the scene check leaked at exit", "the scene check lets an autoplaying autoload start its stream on the frame it quits: Godot leaks the playing stream at exit (Squash the Creeps, 4 instances)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("check_exported_scene_properties_selftest.sh (scriptless node)", ["bash", "scripts/check_exported_scene_properties_selftest.sh", GODOT],
+     [Edit("scripts/check_exported_scene_properties.gd", "\t\tif script == null:\n", "\t\tif false:\n")],
+     "the green run exited 1", "the scene check judges a node with no script: an AnimationPlayer's `libraries` (not in ClassDB's list) is reported as a lost script property",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("tool_smoke.sh (export guard check)",["bash", "scripts/tool_smoke.sh", GODOT],
      [Create("example_project/export_guard_red.tscn",
              '[gd_scene load_steps=2 format=3]\n\n[ext_resource type="Script" path="res://ExportGuardRed.kt" id="1"]\n\n[node name="Red" type="Node"]\nscript = ExtResource("1")\n'),

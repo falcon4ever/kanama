@@ -68,6 +68,16 @@ classes Web wraps. A new node is yours to add to the tree or `queueFree()`; a ne
 reference of your own, as before. Plain `Object` classes (`UndoRedo`, `JSONRPC`) get none, since
 Kotlin has no `free()` for them. Ports no longer need a local `ClassDB.instantiate` helper.
 
+### Fixed — the exported-scene check no longer leaks a project's music at exit
+
+`check_exported_scene_properties.gd` quits on its first frame. A project with an autoplaying audio
+autoload, like Squash the Creeps' `MusicPlayer`, started its stream on that frame, and Godot 4.7 leaks
+a stream that is still playing when the engine shuts down: `4 ObjectDB instances were leaked at exit`.
+The check now turns autoplay off on the autoloads before they enter the tree. The Android and iOS
+smokes now fail when their scene check leaks at exit. The check also skips nodes without a script:
+it reported the TPS demo's Skeleton3D `bones/N/position` and AnimationPlayer `libraries` as lost
+script properties, because ClassDB does not list those native properties.
+
 ### Fixed — a script class named `Arena` or `Signals` compiles
 
 A script class whose name matched a type Kanama's generated registration code imports

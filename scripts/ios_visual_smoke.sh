@@ -2684,8 +2684,18 @@ fi
 # binary and keeps only the properties the script instance reports; a project whose desktop
 # kanama-scripts.jar does not match its .kt scripts loses every scene-stored @Export value
 # silently (task 106). Compare each converted scene with its source before building the app.
-if ! "$godot_bin" --headless --path "$project_dir" --script "$ROOT_DIR/scripts/check_exported_scene_properties.gd" -- --require-converted; then
+# The check quits on its first frame, so Godot's exit-time leak report is the project's own shutdown:
+# a leak there (an autoload's playing stream, a Resource a script holds) fails the run too.
+scene_check_log="$work_dir/ios_scene_check.log"
+scene_check_status=0
+"$godot_bin" --headless --path "$project_dir" --script "$ROOT_DIR/scripts/check_exported_scene_properties.gd" -- --require-converted >"$scene_check_log" 2>&1 || scene_check_status=$?
+cat "$scene_check_log"
+if [[ "$scene_check_status" -ne 0 ]]; then
   echo "[ios_visual_smoke] exported scenes lost script properties (see [check_exported_scenes] lines above)" >&2
+  exit 1
+fi
+if grep -qE 'leaked at exit|still in use at exit' "$scene_check_log"; then
+  echo "[ios_visual_smoke] the exported-scene check leaked at exit (above; rerun it with --verbose to name the instances): $scene_check_log" >&2
   exit 1
 fi
 

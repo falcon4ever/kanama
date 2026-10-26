@@ -497,8 +497,8 @@ for quick_quit_run in 1 2 3; do
   if ! grep -q "\[kanama-smoke\] selftest_quick_quit quitting" "$quick_quit_log"; then
     smoke_fail "self-test quick quit did not run (run $quick_quit_run)" "$quick_quit_log"
   fi
-  if grep -qE "ObjectDB instances were leaked at exit|Abort trap|pointer being freed was not allocated" "$quick_quit_log"; then
-    smoke_fail "self-test quick quit leaked or aborted at exit (run $quick_quit_run)" "$(grep -E 'were leaked at exit|Abort|pointer being freed' "$quick_quit_log" | head -3 | tr '\n' ' ')"
+  if grep -qE "leaked at exit|Abort trap|pointer being freed was not allocated" "$quick_quit_log"; then
+    smoke_fail "self-test quick quit leaked or aborted at exit (run $quick_quit_run)" "$(grep -E 'leaked at exit|Abort|pointer being freed' "$quick_quit_log" | head -3 | tr '\n' ' ')"
   fi
 done
 if [[ "$quick_quit_status" != " 1:0 2:0 3:0" ]]; then
@@ -531,7 +531,7 @@ if grep -q "SIGNAL SELFTEST" "$SIGNAL_SETTING_OFF_LOG"; then
   smoke_fail "the self-test ran without the setting or the environment override" "$SIGNAL_SETTING_OFF_LOG"
 fi
 # The API exercise's leak and setting-off checks (its FAIL and pass lines are checked first, above).
-if grep -Eq "Leaked instance|ObjectDB instances leaked|Resources still in use at exit|RID allocations .* were leaked" "$API_EXERCISE_LOG"; then
+if grep -Eq "Leaked instance|leaked at exit|Resources still in use at exit|RID allocations .* were leaked" "$API_EXERCISE_LOG"; then
   grep -E "Leaked instance|leaked|still in use" "$API_EXERCISE_LOG" >&2
   smoke_fail "the API exercise run leaked" "$API_EXERCISE_LOG"
 fi
@@ -553,7 +553,7 @@ fi
 check "OwnedReleaseSmoke baseline=[0-9]+ after_drop=[0-9]+ after_gc=[0-9]+ back_to_baseline=true mesh_refcount=2 "
 # A wrapper dropped just before quit() is released by the shutdown GC (D4, at the editor or scene
 # deinitialization level), so Godot's leak report names nothing; the drain is timed (no stall).
-if grep -Eq "Leaked instance|ObjectDB instances leaked|Resources still in use at exit" "$OWNED_RELEASE_GREEN_LOG"; then
+if grep -Eq "Leaked instance|leaked at exit|Resources still in use at exit" "$OWNED_RELEASE_GREEN_LOG"; then
   echo "[runtime_smoke] FAIL -- a wrapper dropped before quit leaked:" >&2
   grep -E "Leaked instance|leaked|still in use" "$OWNED_RELEASE_GREEN_LOG" >&2
   exit 1
@@ -581,12 +581,12 @@ done
 if ! grep -q "GC stress: every frame sleeps 1000 ms" "$OWNERSHIP_SLOW_LOG" ||
   ! grep -Eq "\[kanama\] OWNERSHIP SELFTEST worker-owned GC releases: created=10000 released=10000 leaked=0 " "$OWNERSHIP_SLOW_LOG" ||
   ! grep -Eq "\[kanama\] OWNERSHIP SELFTEST: 3 passed, 0 failed" "$OWNERSHIP_SLOW_LOG" ||
-  grep -Eq "OWNERSHIP SELFTEST FAIL|ObjectDB instances were leaked at exit|SIGSEGV|crashed" "$OWNERSHIP_SLOW_LOG"; then
+  grep -Eq "OWNERSHIP SELFTEST FAIL|leaked at exit|SIGSEGV|crashed" "$OWNERSHIP_SLOW_LOG"; then
   grep -E "OWNERSHIP SELFTEST|sleeps|leaked" "$OWNERSHIP_SLOW_LOG" >&2 || tail -n 40 "$OWNERSHIP_SLOW_LOG" >&2
   echo "[runtime_smoke] FAIL -- the ownership self-test at 1 fps did not drain its releases or leaked (log: $OWNERSHIP_SLOW_LOG)" >&2
   exit 1
 fi
-if grep -Eq "OWNERSHIP SELFTEST FAIL|Leaked instance|ObjectDB instances leaked|previously freed|SIGSEGV|crashed" "$OWNERSHIP_LOG"; then
+if grep -Eq "OWNERSHIP SELFTEST FAIL|Leaked instance|leaked at exit|previously freed|SIGSEGV|crashed" "$OWNERSHIP_LOG"; then
   grep -E "OWNERSHIP SELFTEST FAIL|Leaked instance|leaked|previously freed|SIGSEGV|crashed" "$OWNERSHIP_LOG" >&2
   echo "[runtime_smoke] FAIL -- the ownership self-test reported a failure, a leak or a fault (log: $OWNERSHIP_LOG)" >&2
   exit 1
