@@ -26,17 +26,6 @@ the snapshots are regenerated with `--write`, so the pull request shows every ch
 Additions and source-compatible changes (a parameter gains a default, a declaration becomes `open`,
 a class gains a supertype) need only `--write`. Every public declaration must state its type.
 
-## Unreleased` says what changed and how to migrate, and carries a line that starts exactly with
-`- **Source break:**` (the marker the gate below looks for).
-
-`scripts/check_public_signature_changes.py` (a `local_ci.sh` stage) compares every public
-declaration of the API (the shared native tree, the value types, each platform's own classes, and
-the Web wrappers and facades) with the snapshots in
-`docs/reference/generated/public-api-signatures-*.txt`. It fails when a signature was removed or
-changed and `## Unreleased` has no marker line; once the line is there it fails until the snapshot
-is regenerated with `--write`, so the pull request shows every changed signature. Additions need
-only `--write`.
-
 ## Unreleased
 
 Upgrading from 0.4? See [Upgrading from 0.4 to 0.5](docs/getting-started/upgrading-0.4-to-0.5.md).
@@ -173,7 +162,7 @@ so the starter script and the code the guides teach compile for the Web. See
 
 A new page, [Open in IntelliJ IDEA](docs/getting-started/intellij.md), takes a starter from
 **File > Open** to completion on the Godot API and a debugger stopped in your script, with the
-common problems. [The Editor Loop](docs/getting-started/editor-workflow.md#how-long-the-loop-takes)
+common problems. [Edit Loop Timing](docs/contributing/hot-reload-internals.md#edit-loop-timing)
 now records how long a save takes to show (median 3.7 s in the editor with build on save, 2.0 s for
 the build alone, on an Apple M1 Max) and sets a budget of 5 s. `scripts/measure_edit_loop.py`
 measures it on your machine.

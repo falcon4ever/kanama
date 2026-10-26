@@ -28,8 +28,8 @@ The release kit and a starter project have the plugin enabled. Elsewhere,
 enable it in **Project > Project Settings > Plugins**. It adds:
 
 - a row in the editor toolbar: the build status light, **Build Scripts**,
-  **Platforms** in a project set up from a Kanama checkout, and **Open
-  Kotlin**, which opens your Kotlin source folder in the file manager;
+  **Platforms** for the Android, iOS and Web builds, and **Open Kotlin**,
+  which opens your Kotlin source folder in the file manager;
 - **Build Scripts** and **Set Up Kanama Project** in **Project > Tools**. The
   second turns a Godot project with the store addon into a Kanama project; see
   [Add Kanama to an Existing Project](store-addon.md#installation).
@@ -74,7 +74,7 @@ run the code you see:
 | Light | Meaning |
 | --- | --- |
 | Green | Your scripts are built, and no `.kt` file changed since. |
-| Yellow | A build is running, or a `.kt` file changed since the last build, or `kanama-scripts.jar` is missing. |
+| Yellow | A build is running, a `.kt` file changed since the last build, `kanama-scripts.jar` is missing, or your scripts were built for another Kanama version than the addon. |
 | Red | The last build failed. |
 | Grey | The project has no Kotlin scripts yet. |
 
@@ -83,8 +83,12 @@ error when it failed. The Output panel shows the same text.
 
 ### Platform Builds
 
-In a project set up from a Kanama checkout, **Platforms** runs the commands
-the export pages give, in that checkout:
+**Platforms** builds your scripts for another platform's export. In a project
+made from a release kit or the store addon, it has **Android**, which runs
+`./gradlew buildAndroidScripts`; see [Export for Android](../exporting/android.md).
+
+In a project set up from a Kanama checkout, it runs the commands the export
+pages give, in that checkout:
 
 - **Android** runs `installAndroidPluginAar` and then `installAddonJar`; see
   [Export for Android](../exporting/android.md).
@@ -93,7 +97,10 @@ the export pages give, in that checkout:
 - **Web** runs `:web-runtime:exportWeb`; see
   [Export for the Web](../exporting/web.md).
 
-The status light follows these builds like any other.
+The status light follows these builds like any other. When your scripts were
+built for another Kanama version than the addon, the light turns yellow and
+its tooltip says which versions; **Build Scripts**, or **Sync Addon** in the
+message Godot shows, rebuilds them.
 
 ### Projects without Their Own Gradle Build
 

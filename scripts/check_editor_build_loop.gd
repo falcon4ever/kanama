@@ -66,21 +66,38 @@ func _run() -> void:
     _expect(_find_control("KanamaBuildRelease") == null, "Build Release is shown, but no release build of the scripts exists")
     _expect(_find_control("KanamaPlatformBuilds") == null, "the Platforms menu is shown in a project without a Kanama checkout")
 
-    # The Platforms menu beside a Kanama checkout: the commands the export pages give, run in the
-    # checkout; iOS only on macOS; nothing without a checkout or a project task.
-    var mac: Array = _kanama.platform_builds_for("macOS", "/p", "/k", "/p", "/p/kotlin-src")
-    var linux: Array = _kanama.platform_builds_for("Linux", "/p", "/k", "/p", "/p/kotlin-src")
+    # The Platforms menu. Beside a Kanama checkout: the commands the export pages give, run in the
+    # checkout, iOS only on macOS. In a project whose build applies the Kanama Gradle plugin (a kit or
+    # store-addon project): Android is its buildAndroidScripts. Nothing with neither.
+    var mac: Array = _kanama.platform_builds_for("macOS", "", "/k", "/p", "/p/kotlin-src")
+    var linux: Array = _kanama.platform_builds_for("Linux", "", "/k", "/p", "/p/kotlin-src")
     _expect(_platform_ids(mac) == ["android", "ios", "web"], "platform builds on macOS beside a checkout: %s" % [_platform_ids(mac)])
     _expect(_platform_ids(linux) == ["android", "web"], "platform builds on Linux beside a checkout: %s" % [_platform_ids(linux)])
-    _expect(_platform_ids(_kanama.platform_builds_for("macOS", "/p", "", "/p", "/p/kotlin-src")).is_empty(), "platform builds without a checkout")
+    _expect(_platform_ids(_kanama.platform_builds_for("macOS", "", "", "/p", "/p/kotlin-src")).is_empty(), "platform builds without a checkout or the Kanama Gradle plugin")
     if mac.size() == 3:
         var android: Array = mac[0]["steps"]
         _expect(android.size() == 2 and android[0]["dir"] == "/k" and android[0]["task"] == "installAndroidPluginAar"
             and android[0]["args"] == ["-PkanamaAndroidProjectDir=/p"] and android[1]["task"] == "installAddonJar"
             and android[1]["args"] == ["-PkanamaProjectDir=/p", "-PkanamaProjectScriptsDir=/p/kotlin-src"],
             "the Android platform build runs %s, not the two commands of the Android export page" % [android])
+        _expect(bool(mac[0]["script_build"]), "the checkout's Android build (it ends with installAddonJar) is not a script build")
         _expect(mac[2]["steps"][0]["task"] == ":web-runtime:exportWeb" and mac[2]["steps"][0]["args"] == ["-PkanamaWebProjectDir=/p"],
             "the Web platform build runs %s" % [mac[2]["steps"]])
+    var kit: Array = _kanama.platform_builds_for("Linux", "/p", "", "/p", "/p/kotlin-src")
+    _expect(_platform_ids(kit) == ["android"], "platform builds of a kit project: %s" % [_platform_ids(kit)])
+    if kit.size() == 1:
+        _expect(kit[0]["steps"] == [{"dir": "/p", "task": "buildAndroidScripts", "args": []}],
+            "a kit project's Android build runs %s, not the project's buildAndroidScripts" % [kit[0]["steps"]])
+    var both: Array = _kanama.platform_builds_for("macOS", "/p", "/k", "/p", "/p/kotlin-src")
+    _expect(both.size() == 3 and both[0]["steps"][0]["task"] == "buildAndroidScripts" and both[1]["steps"][0]["dir"] == "/k",
+        "a project with the Kanama Gradle plugin beside a checkout: Android must be the plugin's task, iOS the checkout's: %s" % [both])
+    _expect(_kanama.applies_kanama_gradle_plugin('plugins {\n    kotlin("jvm") version "2.4.21"\n    id("net.multigesture.kanama")\n}\n'),
+        "the release kit's build.gradle.kts is not seen to apply the Kanama Gradle plugin")
+    _expect(not _kanama.applies_kanama_gradle_plugin('plugins {\n    // id("net.multigesture.kanama")\n}\n'),
+        "a commented-out plugin line counts as applying the Kanama Gradle plugin")
+    # The version lock: scripts built for another Kanama than the addon are yellow, not green.
+    _expect(_kanama.build_status(false, false, true, true, true, true) == "stale", "scripts built for another Kanama version than the addon do not turn the light yellow")
+    _expect(_kanama.build_status(false, false, true, true, true, false) == "current", "built, current scripts are not green")
 
     # 1. A .kt file and no scripts jar: never built.
     _expect_status("stale", "a project with a .kt file and no kanama-scripts.jar")
@@ -149,6 +166,22 @@ func _run() -> void:
     await get_tree().process_frame
     await _wait_while_building()
     _expect_status("current", "after the build that restored the jar")
+
+    # The version lock: a jar built for another Kanama than the addon turns the light yellow, and its
+    # tooltip says so; agreeing versions turn it green again.
+    var addon_version := ProjectSettings.globalize_path("res://addons/kanama/kanama.version")
+    var scripts_version := ProjectSettings.globalize_path("res://addons/kanama/kanama-scripts.version")
+    _write(addon_version, "9.9.9\n")
+    _write(scripts_version, "0.0.1\n")
+    await _wait_for(func() -> bool: return _kanama.get_build_status() == "stale", 5.0)
+    _expect_status("stale", "with scripts built for Kanama 0.0.1 and the addon at 9.9.9")
+    _expect(_light.tooltip_text.contains("built for Kanama 0.0.1") and _light.tooltip_text.contains("9.9.9"),
+        "the status light's tooltip does not name the version mismatch: %s" % _light.tooltip_text)
+    _write(scripts_version, "9.9.9\n")
+    await _wait_for(func() -> bool: return _kanama.get_build_status() == "current", 5.0)
+    _expect_status("current", "once the scripts version matches the addon again")
+    DirAccess.remove_absolute(addon_version)
+    DirAccess.remove_absolute(scripts_version)
 
     # 7. Leaving the editor mid-build ends the build: no Gradle client outlives the plugin.
     _write(_control.path_join("mode"), "hang")
