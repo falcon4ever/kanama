@@ -62,14 +62,15 @@ internal object Xcode {
 
   private fun xcodeSelectPath(): String? =
     runCatching {
+        // Its output (one path) fits the pipe buffer, so it is read after the bounded wait: a
+        // hung xcode-select costs 10 s, never the build.
         val process = ProcessBuilder("xcode-select", "-p").redirectErrorStream(true).start()
-        val out = process.inputStream.bufferedReader().readText()
-        if (
-          process.waitFor(10, java.util.concurrent.TimeUnit.SECONDS) && process.exitValue() == 0
-        ) {
-          out
+        if (!process.waitFor(10, java.util.concurrent.TimeUnit.SECONDS)) {
+          process.destroyForcibly()
+          null
+        } else if (process.exitValue() == 0) {
+          process.inputStream.bufferedReader().readText()
         } else {
-          process.destroy()
           null
         }
       }

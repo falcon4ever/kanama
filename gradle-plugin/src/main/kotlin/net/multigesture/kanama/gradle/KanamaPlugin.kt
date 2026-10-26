@@ -52,6 +52,7 @@ class KanamaPlugin : Plugin<Project> {
       task.allowSkips.set(
         project.providers.gradleProperty("kanamaIosAllowSkips").map { it.trim() == "true" }
       )
+      task.heap.set(project.providers.gradleProperty("kanamaIosHeap"))
     }
   }
 

@@ -67,7 +67,8 @@ macOS kit and the store addon carry the iOS runtime in `addons/kanama/maven` (th
 `kanama-iosarm64` and `kanama-ios-shim`, the C shim's sources); the task compiles `kotlin-src` against
 it in its own build under `build/kanama/ios`, and installs the two device xcframeworks and the
 descriptor lines into the project. The first run downloads Kotlin/Native (about 1 GB, into `~/.konan`),
-and the release link uses up to about 11 GB of memory, so a 16 GB Mac is recommended. Xcode is the one
+and the release link uses up to about 11 GB of memory, so a 16 GB Mac is recommended
+(`-PkanamaIosHeap=10g` gives a large project's build more heap). Xcode is the one
 `DEVELOPER_DIR` or `xcode-select -p` names. The generated iOS script registry is now a `@CName` function
 the shim calls, so it compiles outside the runtime's own module; the runtime declarations it names are
 public behind the `@InternalKanamaIosApi` opt-in, which game code never needs (`api-snapshots/ios-seam.txt`).

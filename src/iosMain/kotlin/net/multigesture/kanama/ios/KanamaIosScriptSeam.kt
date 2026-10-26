@@ -1,9 +1,8 @@
 package net.multigesture.kanama.ios
 
 // The seam between the iOS runtime and the code Kanama's processor generates for a project's
-// scripts (IosScriptCodeEmitter): every runtime declaration that code names, besides the
-// KanamaIosNoReturn / KanamaIosNoProperty / KanamaIosTypedDictionary sentinels in
-// KanamaIosRuntime.kt. Public behind @InternalKanamaIosApi because a kit project compiles that code
+// scripts (IosScriptCodeEmitter): every runtime declaration that code names. Public behind
+// @InternalKanamaIosApi because a kit project compiles that code
 // in its own module against the prebuilt runtime klib (task 135 item 5);
 // api-snapshots/ios-seam.txt records them (check_public_signature_changes.py).
 
@@ -105,11 +104,11 @@ interface KanamaIosScriptBridge {
 /**
  * The project's `@ScriptClass` scripts. The processor generates a
  * `@CName("kanama_ios_project_scripts_register")` function (IosScriptCodeEmitter) that registers
- * each one here; the C shim calls it once from `kanama_entry`, after the runtime started. It is
- * bound at link time, so the runtime never names generated code: the scripts compile in the
- * runtime's own module in a Kanama checkout and in a module of their own against the prebuilt
- * runtime klib in a kit project (`buildIosScripts`). A build with no scripts has no such function,
- * and the shim's weak reference to it is null.
+ * each one here; the runtime has the C shim call it once, before its first script lookup
+ * (`kanama_ios_load_project_scripts`). It is bound at link time, so the runtime never names
+ * generated code: the scripts compile in the runtime's own module in a Kanama checkout and in a
+ * module of their own against the prebuilt runtime klib in a kit project (`buildIosScripts`). A
+ * build with no scripts has no such function; the shim's weak default of it then only logs that.
  */
 @InternalKanamaIosApi
 object KanamaIosProjectRegistry {
@@ -126,3 +125,22 @@ object KanamaIosProjectRegistry {
 @InternalKanamaIosApi
 fun iosScriptInstanceForOwner(ownerObject: Long): Any? =
   KanamaIosRuntime.scriptInstanceForOwner(ownerObject)
+
+/**
+ * Sentinel returned by [KanamaIosScriptBridge.callVReturning] when the method is not a
+ * value-returning one handled by this bridge (so the void [KanamaIosScriptBridge.callV] path runs).
+ */
+@InternalKanamaIosApi object KanamaIosNoReturn
+
+/**
+ * Sentinel for a property index the generated bridge does not expose through ScriptInstance.get.
+ */
+@InternalKanamaIosApi object KanamaIosNoProperty
+
+/**
+ * A typed `Map<K, V>` @Export read back by the generated bridge's getProperty: its [entries] keep
+ * their int, enum (already ordinals) and value-type keys, so they leave as the any-key Dictionary
+ * (KANAMA_IOS_PT_DICTIONARY_ANY) instead of the generic String-keyed one — the iOS twin of
+ * desktop's `BuiltinTypes.initVariantDictionaryAny`.
+ */
+@InternalKanamaIosApi class KanamaIosTypedDictionary(val entries: Map<*, *>)
