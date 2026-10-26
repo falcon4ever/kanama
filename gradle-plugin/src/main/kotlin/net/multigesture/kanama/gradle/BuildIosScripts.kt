@@ -471,6 +471,7 @@ abstract class BuildIosScripts : DefaultTask() {
         "settings.gradle.kts.in" to "settings.gradle.kts",
         "build.gradle.kts.in" to "build.gradle.kts",
         "gradle.properties.in" to "gradle.properties",
+        "KanamaIosScriptsBuild.kt.in" to "src/iosArm64Main/kotlin/KanamaIosScriptsBuild.kt",
       )
     const val REGISTER_SYMBOL = "kanama_ios_project_scripts_register"
     const val INPUTS_STAMP = "kanama-ios-inputs.txt"

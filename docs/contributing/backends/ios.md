@@ -99,7 +99,8 @@ that repository, so they share its version. The plugin's `buildIosScripts` is
    `xcode-select -p`, then `/Applications/Xcode.app`; never the Command Line
    Tools) and writes a plugin-owned Gradle build to `build/kanama/ios/` (the
    resources under `gradle-plugin/src/main/resources/.../ios/`, rewritten on
-   every run): one `iosArm64` target with `kotlin-src` as its source root,
+   every run): one `iosArm64` target with `kotlin-src` as its source root
+   (plus one empty file of its own, so a project without scripts still links),
    KSP from the kit's processor with the checkout's options, the klib as an
    `api` dependency, and a static library that `export()`s it. Kotlin/Native
    keeps a dependency klib's `@CName` functions, the `kanama_ios_runtime_*`
