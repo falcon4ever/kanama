@@ -83,7 +83,8 @@ It still adds the Gradle wrapper if the project has none, so
    `addons/kanama/templates/release-kit/build.gradle.kts` into your build. It
    applies Kotlin, KSP (the Kotlin compiler plugin that generates the code
    that registers your scripts with Godot) and the Kanama Gradle plugin, which
-   adds the [Android export](../exporting/android.md) command.
+   adds the [Android](../exporting/android.md) and [iOS](../exporting/ios.md)
+   export commands.
 3. Add the rest:
 
     ```kotlin

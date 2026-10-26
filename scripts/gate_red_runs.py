@@ -324,8 +324,8 @@ case("check_doc_claims.py", py("check_doc_claims.py"),
      [Edit("docs/contributing/platform-evidence.md", "the versions the corpus is driven on (protocol 39)", "the versions the corpus is driven on (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
 case("check_doc_claims.py (iOS size, marked doc)", py("check_doc_claims.py"),
-     [Edit("docs/exporting/ios.md", "roughly 168 MB debug", "roughly 200 MB debug")],
-     "claims 200 MB debug / 110 MB release, but", "the iOS export guide states an iOS static library size the measurement in version-support.md does not")
+     [Edit("docs/contributing/backends/ios.md", "roughly 168 MB debug", "roughly 200 MB debug")],
+     "claims 200 MB debug / 110 MB release, but", "the iOS backend page states an iOS static library size the measurement in version-support.md does not")
 case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
      [Create(f"{COMMON}/api/ZzRedRun.expect.kt", "package net.multigesture.kanama.api\n\nexpect fun redRun(a: Int = 1)\n")],
      "default argument(s) on an `expect` declaration", "an `expect fun` declares a default argument")

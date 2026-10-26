@@ -11,7 +11,7 @@ and how far each platform is supported. The current release is Kanama
 | A desktop project, from a release kit, the store addon or a source checkout | **Godot 4.7.2 stable**, the editor and its export templates, from the [Godot 4.7.2 archive](https://godotengine.org/download/archive/4.7.2-stable/). A **JDK 25** or newer; Temurin 25 is a good choice. A computer running macOS on Apple silicon, Windows x64, Linux x64 or Linux arm64. |
 | A source checkout | Everything in the first row, plus **CMake 3.22** or newer and a C compiler, because the checkout builds Kanama's native library. Release kits and the store addon ship that library prebuilt. You do not need Godot's source code. |
 | Exporting for Android | Godot 4.7.2's Android export templates, a **JDK 21** for Godot's Android build, and the Android SDK packages listed in [Export for Android](../exporting/android.md#requirements). Kanama and your scripts still build with your JDK 25. |
-| Exporting for iOS | Godot 4.7.2's iOS export templates, a Mac with the full Xcode app, and an Apple Developer account. See [Export for iOS](../exporting/ios.md#requirements). |
+| Exporting for iOS | Godot 4.7.2's iOS export templates, a Mac with the full Xcode app and 16 GB of memory, and an Apple Developer account. See [Export for iOS](../exporting/ios.md#requirements). |
 | Exporting for the Web | Godot 4.7.2 and its `web_nothreads_release` export template, and a source checkout. See [Export for the Web](../exporting/web.md#requirements). |
 
 ## Platform Status
@@ -23,7 +23,7 @@ and how far each platform is supported. The current release is Kanama
 | Linux x64 | Supported | Edit, build and export. |
 | Linux arm64 | Supported | Edit, build and export. |
 | Android | Supported | Export from a release kit, the store addon or a source checkout. Requires Android 13 (API 33) or newer; set **Min SDK** to `33` in the Android export preset. |
-| iOS | Supported | Export from a source checkout. Requires iOS 15 or newer on the iPhone or iPad. |
+| iOS | Supported | Export on a Mac, from the macOS release kit, the store addon or a source checkout. Requires iOS 15 or newer on the iPhone or iPad. |
 | Web | Experimental | Exports your project, from a source checkout, to desktop Chrome 130 and Firefox 141 or newer. Safari and phones are checked by hand. |
 
 **Supported** means you can build and ship your own game on that platform.
@@ -56,7 +56,8 @@ a newer API fails the build, not the device.
 
 The iOS build adds Kanama to your game as two prebuilt libraries,
 ~168.0 MB debug / ~109.6 MB release static `.a`, measured on a clean link with
-Kotlin 2.4.21. Both libraries sit in your project's `addons/kanama/bin/ios/`
+Kotlin 2.4.21. A project built from a release kit links a larger debug library,
+about 195 MB. Both libraries sit in your project's `addons/kanama/bin/ios/`
 folder, so keep them out of version control or use Git LFS.
 
 ## Next Steps

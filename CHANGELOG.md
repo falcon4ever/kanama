@@ -59,6 +59,21 @@ it: Gradle's `build/` folder now carries a `.gdignore`, so the editor no longer 
 `project.godot` turns on the ETC2/ASTC texture import Android export needs; and the editor plugin's
 `plugin.cfg` states the Kanama version instead of `0.1`.
 
+### Added — iOS export from the release kit and the store addon
+
+A project made from the macOS release kit or the store addon now exports for iOS without a Kanama
+checkout: `./gradlew buildIosScripts` on a Mac, then export the Xcode project from Godot as before. The
+macOS kit and the store addon carry the iOS runtime in `addons/kanama/maven` (the device klib
+`kanama-iosarm64` and `kanama-ios-shim`, the C shim's sources); the task compiles `kotlin-src` against
+it in its own build under `build/kanama/ios`, and installs the two device xcframeworks and the
+descriptor lines into the project. The first run downloads Kotlin/Native (about 1 GB, into `~/.konan`),
+and the release link uses up to about 11 GB of memory, so a 16 GB Mac is recommended. Xcode is the one
+`DEVELOPER_DIR` or `xcode-select -p` names. The generated iOS script registry is now a `@CName` function
+the shim calls, so it compiles outside the runtime's own module; the runtime declarations it names are
+public behind the `@InternalKanamaIosApi` opt-in, which game code never needs (`api-snapshots/ios-seam.txt`).
+The runtime-only `kanama-mobile-addon-ios` zip (`packageMobileAddonIos`) is gone. Fixed with it: the
+kit's project has an app icon, without which Godot's iOS export stops.
+
 ### Changed — Android 13 is now the minimum — BREAKING
 
 Android 13 (API 33) is now the minimum; set **Min SDK** to `33` in your Android export preset

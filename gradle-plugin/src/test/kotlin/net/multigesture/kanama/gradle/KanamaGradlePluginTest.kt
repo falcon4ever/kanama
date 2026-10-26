@@ -108,4 +108,54 @@ class KanamaGradlePluginTest {
     project.resolve(ProjectGodot.EDITOR_PID_FILE).writeText("not a pid\n")
     kotlin.test.assertFalse(ProjectGodot.isOpenInEditor(project))
   }
+
+  private fun fakeXcode(root: File, name: String): File =
+    root.resolve("$name/Contents/Developer").apply {
+      resolve("usr/bin").mkdirs()
+      resolve("usr/bin/xcodebuild").writeText("")
+    }
+
+  @Test
+  fun `Xcode is the property, then DEVELOPER_DIR, then xcode-select, then the default`() {
+    val root = tempDir()
+    val property = fakeXcode(root, "Property.app")
+    val env = fakeXcode(root, "Env.app")
+    val selected = fakeXcode(root, "Selected.app")
+    val default = fakeXcode(root, "Xcode.app")
+    val envMap = mapOf("DEVELOPER_DIR" to env.path)
+    assertEquals(
+      property,
+      Xcode.find(property.path, envMap, { selected.path }, default).developerDir,
+    )
+    assertEquals(env, Xcode.find(null, envMap, { selected.path }, default).developerDir)
+    assertEquals(selected, Xcode.find(null, emptyMap(), { selected.path }, default).developerDir)
+    assertEquals(default, Xcode.find(null, emptyMap(), { null }, default).developerDir)
+  }
+
+  @Test
+  fun `the Command Line Tools are not an Xcode`() {
+    val root = tempDir()
+    val tools =
+      root.resolve("Library/Developer/CommandLineTools").apply {
+        resolve("usr/bin").mkdirs()
+        resolve("usr/bin/xcodebuild").writeText("")
+      }
+    val missing = root.resolve("NoXcode.app/Contents/Developer")
+    // xcode-select pointing at the Command Line Tools falls through to the default Xcode.
+    val default = fakeXcode(root, "Xcode.app")
+    assertEquals(default, Xcode.find(null, emptyMap(), { tools.path }, default).developerDir)
+    val none =
+      assertFailsWith<IllegalArgumentException> {
+        Xcode.find(null, emptyMap(), { tools.path }, missing)
+      }
+    assertEquals(Xcode.NOT_FOUND, none.message)
+    // A DEVELOPER_DIR the user set is never skipped for another Xcode.
+    val named =
+      assertFailsWith<IllegalArgumentException> {
+        Xcode.find(null, mapOf("DEVELOPER_DIR" to tools.path), { null }, default)
+      }
+    assertTrue(
+      named.message!!.startsWith("DEVELOPER_DIR=${tools.path} is not the Developer folder")
+    )
+  }
 }
