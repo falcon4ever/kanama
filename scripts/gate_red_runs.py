@@ -1053,6 +1053,11 @@ case("runtime_smoke.sh (self-test workers at shutdown)", ["bash", "scripts/runti
            "  fun shutdown() {\n    return\n    stopping = true\n")],
      "self-test quick quit leaked or aborted at exit", "engine shutdown no longer stops the ownership self-test's worker: a run that quits while it makes Resources leaks thousands of ObjectDB instances at exit and can abort in realloc (the Android Platformer scene check); the race leaks most runs, and the smoke runs it three times",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+case("OwnedReleasesTest (low frame rate drain)", ["./gradlew", "-p", ".", ":jvmTest", "--tests", "*OwnedReleasesTest*"],
+     [Edit("src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/OwnedReleases.kt",
+           "return drain(budget = null, sinceLastDrain = sinceLastDrain)", "return drain(budget = frameBudget, sinceLastDrain = sinceLastDrain)")],
+     "aLargeBacklogAtALowFrameRateDrainsInAFewFrames", "the per-frame drain goes back to a fixed 1 ms: at a few frames a second, with releases at a loaded phone's cost, 10,000 dropped wrappers take minutes to release (the Pixel 7 Bunnymark run: 1,361 of 10,000 in 30 s)",
+     slow=True)
 case("processor ScriptNameClashTest", ["./gradlew", "-p", ".", ":processor:test", "--tests", "*ScriptNameClashTest*"],
      [Edit("processor/src/main/kotlin/net/multigesture/kanama/processor/KanamaProcessor.kt",
            'VariantType")\n    sb.appendLine("import net.multigesture.kanama.api.kotlinScriptInstance")\n    sb.appendLine("import ${model.fqName} as $SCRIPT_TYPE_ALIAS")',

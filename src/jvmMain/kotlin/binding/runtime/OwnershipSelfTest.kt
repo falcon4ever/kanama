@@ -20,18 +20,42 @@ import net.multigesture.kanama.api.StandardMaterial3D
 internal object GcStress {
   const val ENVIRONMENT_VARIABLE: String = "KANAMA_GC_STRESS"
 
+  /**
+   * `KANAMA_SLOW_FRAME_MS=<n>`: the main thread sleeps n ms at the start of every frame, a test
+   * knob for a game at a very low frame rate (the runtime smoke runs the ownership self-test at 1
+   * fps).
+   */
+  const val SLOW_FRAME_VARIABLE: String = "KANAMA_SLOW_FRAME_MS"
+
   @Volatile private var fromEnvironment = false
   @Volatile internal var window = false
+  @Volatile private var slowFrameMillis = 0L
 
-  /** Reads [ENVIRONMENT_VARIABLE]; returns the line to log, or null when it is off. */
+  /**
+   * Reads [ENVIRONMENT_VARIABLE] and [SLOW_FRAME_VARIABLE]; returns the line to log, or null when
+   * both are off.
+   */
   fun configureFromEngine(): String? {
     val value = runCatching { OS.getEnvironment(ENVIRONMENT_VARIABLE) }.getOrDefault("")
     fromEnvironment = value.trim().lowercase() in setOf("1", "true", "on")
-    return if (fromEnvironment) "a full collection every frame ($ENVIRONMENT_VARIABLE=1)" else null
+    slowFrameMillis =
+      runCatching { OS.getEnvironment(SLOW_FRAME_VARIABLE) }
+        .getOrDefault("")
+        .trim()
+        .toLongOrNull()
+        ?.coerceIn(0L, 5_000L) ?: 0L
+    val lines =
+      listOfNotNull(
+        if (fromEnvironment) "a full collection every frame ($ENVIRONMENT_VARIABLE=1)" else null,
+        if (slowFrameMillis > 0) "every frame sleeps $slowFrameMillis ms ($SLOW_FRAME_VARIABLE)"
+        else null,
+      )
+    return lines.takeIf { it.isNotEmpty() }?.joinToString("; ")
   }
 
   /** Main thread, at the start of each frame. */
   fun onFrame() {
+    if (slowFrameMillis > 0) Thread.sleep(slowFrameMillis)
     if (fromEnvironment || window) Runtime.getRuntime().gc()
   }
 }
@@ -77,6 +101,8 @@ internal object OwnershipSelfTest {
   private const val CREATED = 10_000
   private const val RELEASE_WAIT_MILLIS = 30_000L
   private const val CHECKS_PER_FRAME = 256
+  private const val CHECK_SLICE_NANOS = 2_000_000L
+  private const val STRESS_PER_FRAME = 2_000
   private const val GC_EVERY_FRAMES = 10
   private const val SLICE_NANOS = 20_000_000L
   private const val BENCH_ROUNDS = 10 // one a frame: the warm-up rounds, then the five medians
@@ -105,8 +131,12 @@ internal object OwnershipSelfTest {
     for (worker in workers) worker.join(WORKER_JOIN_MILLIS)
   }
 
+  // Frames seen, for the stress worker's per-frame allowance.
+  @Volatile private var frames = 0L
+
   /** Called on every main-loop frame (after the drain); the test advances one step per frame. */
   fun onFrame() {
+    frames++
     if (!decided) {
       decided = true
       if (!enabled()) return
@@ -200,8 +230,11 @@ internal object OwnershipSelfTest {
       val waited = (System.nanoTime() - waitStarted) / 1_000_000
       val timedOut = waited >= RELEASE_WAIT_MILLIS || dropError != null
       // A bounded slice per frame (all of them once, at the end): one is an FFI call, ~1 us on ART.
+      // At least CHECKS_PER_FRAME, then more while the slice is under CHECK_SLICE_NANOS, so a slow
+      // frame rate is not a slow check.
       var budget = if (timedOut) alive else minOf(CHECKS_PER_FRAME, alive)
-      while (budget-- > 0 && alive > 0) {
+      val sliceStart = System.nanoTime()
+      while (alive > 0 && (budget-- > 0 || System.nanoTime() - sliceStart < CHECK_SLICE_NANOS)) {
         if (cursor >= alive) cursor = 0
         if (!GD.isInstanceIdValid(ids[cursor])) ids[cursor] = ids[--alive] else cursor++
       }
@@ -229,9 +262,21 @@ internal object OwnershipSelfTest {
         val deadline = System.nanoTime() + STRESS_MILLIS * 1_000_000
         var sink = 0L
         try {
+          var allowanceFrame = frames
+          var madeThisFrame = 0
           while (!stopping && System.nanoTime() < deadline) {
-            // Bounded so the drain (about 1 ms a frame) keeps up and the registration cap is
-            // never reached: about 100,000 wrappers a second.
+            // Bounded so the drain keeps up and the registration cap is never reached: about
+            // 100,000 wrappers a second, and at most STRESS_PER_FRAME between two frames (a game at
+            // 1 fps drains a few thousand a frame, not 100,000).
+            if (madeThisFrame >= STRESS_PER_FRAME) {
+              if (frames == allowanceFrame) {
+                Thread.sleep(1)
+                continue
+              }
+              allowanceFrame = frames
+              madeThisFrame = 0
+            }
+            madeThisFrame += 100
             repeat(100) {
               try {
                 sink += Resource.create().getRid().value // the call is the wrapper's last use

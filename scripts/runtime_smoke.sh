@@ -186,6 +186,11 @@ exit_ownership() {
 trap exit_ownership EXIT
 printf '[kanama]\n\ndebug/ownership_self_test=true\n' >"$OWNERSHIP_OVERRIDE"
 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://ownership_self_test.tscn --verbose >"$OWNERSHIP_LOG" 2>&1
+# The same self-test at 1 fps (KANAMA_SLOW_FRAME_MS=1000, a game a phone's load slows to a crawl):
+# the drain's budget grows with the backlog and the frame time, so 10,000 worker-owned releases
+# still drain within the test's wait.
+OWNERSHIP_SLOW_LOG="${LOG_FILE}.ownership_self_test_slow"
+KANAMA_SLOW_FRAME_MS=1000 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://ownership_self_test.tscn >"$OWNERSHIP_SLOW_LOG" 2>&1
 rm -f "$OWNERSHIP_OVERRIDE"
 # The generated API exercise (exercise/ApiExercise.generated.kt, scripts/generate_api_exercise.py): one
 # row per ObjectCalls helper the shared tree calls (a value-asserting or a reach-only row) and one per
@@ -573,6 +578,14 @@ for pattern in \
     exit 1
   fi
 done
+if ! grep -q "GC stress: every frame sleeps 1000 ms" "$OWNERSHIP_SLOW_LOG" ||
+  ! grep -Eq "\[kanama\] OWNERSHIP SELFTEST worker-owned GC releases: created=10000 released=10000 leaked=0 " "$OWNERSHIP_SLOW_LOG" ||
+  ! grep -Eq "\[kanama\] OWNERSHIP SELFTEST: 3 passed, 0 failed" "$OWNERSHIP_SLOW_LOG" ||
+  grep -Eq "OWNERSHIP SELFTEST FAIL|ObjectDB instances were leaked at exit|SIGSEGV|crashed" "$OWNERSHIP_SLOW_LOG"; then
+  grep -E "OWNERSHIP SELFTEST|sleeps|leaked" "$OWNERSHIP_SLOW_LOG" >&2 || tail -n 40 "$OWNERSHIP_SLOW_LOG" >&2
+  echo "[runtime_smoke] FAIL -- the ownership self-test at 1 fps did not drain its releases or leaked (log: $OWNERSHIP_SLOW_LOG)" >&2
+  exit 1
+fi
 if grep -Eq "OWNERSHIP SELFTEST FAIL|Leaked instance|ObjectDB instances leaked|previously freed|SIGSEGV|crashed" "$OWNERSHIP_LOG"; then
   grep -E "OWNERSHIP SELFTEST FAIL|Leaked instance|leaked|previously freed|SIGSEGV|crashed" "$OWNERSHIP_LOG" >&2
   echo "[runtime_smoke] FAIL -- the ownership self-test reported a failure, a leak or a fault (log: $OWNERSHIP_LOG)" >&2

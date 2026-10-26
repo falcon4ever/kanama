@@ -464,8 +464,10 @@ the collector's thread. The details the user page summarizes:
   collects; it is not a deadline. Measured on an Apple M1 Max (desktop JVM, 600 frames of about
   7 ms): dropping 200 owned getter results a frame, one collection ran and a dropped wrapper waited
   about 260 frames on average; dropping 5 a frame, no collection ran at all, so nothing was released
-  in those 10 seconds. Releases run within about 1 ms per frame (the rest waits for the next frame),
-  and above 100,000 waiting wrappers new ones stop registering and a warning names
+  in those 10 seconds. Releases run within about 1 ms per frame (the rest waits for the next frame);
+  a backlog over 4,096 or a frame over 20 ms raises that to at most 4 ms, with at least 512 releases
+  a frame when the backlog is large or the frame took over 50 ms, so a game at a few frames a second
+  still drains its backlog. Above 100,000 waiting wrappers new ones stop registering and a warning names
   `kanama/debug/log_gc_releases`. The image, mesh or audio behind a wrapper lives in Godot's memory,
   which the collector does not see, so dropping a few large resources does not make it collect
   sooner.

@@ -175,6 +175,48 @@ class OwnedReleasesTest {
   }
 
   @Test
+  fun aLargeBacklogAtALowFrameRateDrainsInAFewFrames() {
+    // A phone under load: each release costs ~20 us and a frame comes every 200 ms. With the
+    // fixed 1 ms budget, 10,000 releases took ~200 frames; the budget now grows with the backlog
+    // and the frame time (capped at a few ms), with a minimum count per frame.
+    val overrideBefore = OwnedReleases.releaseOverride
+    try {
+      OwnedReleases.releaseOverride = { handle ->
+        released += handle.address()
+        val until = System.nanoTime() + 20_000
+        while (System.nanoTime() < until) Unit
+      }
+      dropMany(0x400000, 10_000)
+      repeat(3) { OwnedReleaseCleaner.collectGarbage(200) }
+      OwnedReleases.drain() // takes the queue in; the next drains see a 200 ms frame
+      var frames = 1
+      while (released.size < 10_000 && frames < 60) {
+        Thread.sleep(200)
+        OwnedReleases.drain()
+        frames++
+      }
+      assertEquals(10_000, released.size, "released ${released.size} in $frames frames")
+      assertTrue(frames <= 25, "10,000 releases took $frames frames at 5 fps")
+    } finally {
+      OwnedReleases.releaseOverride = overrideBefore
+    }
+  }
+
+  @Test
+  fun theBudgetIsUnchangedForASmallBacklogAndCappedForALargeOne() {
+    val frame = kotlin.time.Duration.parse("16ms")
+    val slow = kotlin.time.Duration.parse("2s")
+    // A normal frame with a small backlog: the old 1 ms, nothing more.
+    assertEquals(OwnedReleases.frameBudget, OwnedReleases.budgetFor(100, frame))
+    assertEquals(OwnedReleases.frameBudget, OwnedReleases.budgetFor(4096, frame))
+    assertTrue(OwnedReleases.budgetFor(20_000, frame) > OwnedReleases.frameBudget)
+    assertTrue(OwnedReleases.budgetFor(100, slow) > OwnedReleases.frameBudget)
+    // Never more than the cap, however large the backlog or slow the frame.
+    assertEquals(kotlin.time.Duration.parse("4ms"), OwnedReleases.budgetFor(1_000_000, slow))
+    assertEquals(kotlin.time.Duration.parse("4ms"), OwnedReleases.budgetFor(1_000_000, frame))
+  }
+
+  @Test
   fun aboveTheRegistrationCapNewWrappersStayOwnedButUnregistered() {
     val capBefore = OwnedReleases.registrationCap
     try {
