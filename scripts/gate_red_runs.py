@@ -25,7 +25,9 @@ Usage:
     python3 scripts/gate_red_runs.py --markdown out.md   # also write the README-gates.md table rows
 
 `--strict` is implied when `CI` is true/1/yes. `--allow-skip NAME[,NAME]` names the cases a runner
-may skip on purpose (CI has no Godot docs checkout: `--allow-skip sync_kdoc`).
+may skip on purpose (CI has no Godot docs checkout: `--allow-skip sync_kdoc`). A case is SKIPPED when
+an environment variable it needs is unset (`requires_env`) or when its gate's baseline says it could
+not run the mutated row (`skip_when`, e.g. no Android export template): never a vacuous red run.
 
 Gates that need a device, a browser, a Godot binary or a long export are NOT all here: they carry
 their own `--self-test` or red-run recipe, documented in scripts/README-gates.md.
@@ -84,12 +86,18 @@ class Case:
     gate: str  # name shown in the table
     cmd: list[str]  # run from WORK
     mutations: list  # Edit | Create | Delete | Rename | Append
-    expect: str  # substring the red run must print (stdout + stderr)
+    # Substring the red run must print (stdout + stderr); a tuple names alternatives, any one of which will
+    # do (a crash ends in SIGABRT through Godot's macOS crash handler but SIGSEGV on Linux).
+    expect: str | tuple[str, ...]
     how: str  # one line for the table: what the mutation does
     env: dict[str, str] = field(default_factory=dict)
     timeout: int = 600
     pre: list[list[str]] = field(default_factory=list)  # commands run (must succeed) before the baseline
     requires_env: str = ""  # environment variables (comma-separated) that must each name an existing path, else the case is skipped
+    # A line the gate prints when it cannot run the row this case mutates (a missing export template, an editor
+    # with no Android SDK): found in the baseline output, the case is SKIPPED with that line as the reason, never
+    # a red run that stays green for want of a prerequisite (or, worse, a green row that proved nothing).
+    skip_when: str = ""
     slow: bool = False  # needs a Godot binary / Gradle and runs for minutes: only with --slow
 
 
@@ -1042,7 +1050,7 @@ case("runtime_smoke.sh (throwing script constructor)", ["bash", "scripts/runtime
      [Edit(KANAMA_SCRIPT, "      retPtr.set(ADDRESS, 0, MemorySegment.NULL)\n      val handle = instance.address()\n",
            "      val handle = instance.address()\n"),
       Edit(KANAMA_SCRIPT, *CTOR_PLACEHOLDER)],
-     "[runtime_smoke] exit 134", "a script constructor that throws during set_script returns without writing _instance_create's return slot again: Godot uses the uninitialized slot as the instance and crashes with signal 11 right after the script error, so the smoke stops at the crash (the Bulletmark port's finding)",
+     ("[runtime_smoke] exit 134", "[runtime_smoke] exit 139"), "a script constructor that throws during set_script returns without writing _instance_create's return slot again: Godot uses the uninitialized slot as the instance and crashes with signal 11 right after the script error, so the smoke stops at the crash (the Bulletmark port's finding)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("tool_smoke.sh (throwing @Tool constructor)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Edit(KANAMA_SCRIPT, *CTOR_PLACEHOLDER)],
@@ -1051,7 +1059,7 @@ case("tool_smoke.sh (throwing @Tool constructor)", ["bash", "scripts/tool_smoke.
 case("runtime_smoke.sh (self-test workers at shutdown)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/jvmMain/kotlin/binding/runtime/OwnershipSelfTest.kt", "  fun shutdown() {\n    stopping = true\n",
            "  fun shutdown() {\n    return\n    stopping = true\n")],
-     "self-test quick quit leaked or aborted at exit", "engine shutdown no longer stops the ownership self-test's worker: a run that quits while it makes Resources leaks thousands of ObjectDB instances at exit and can abort in realloc (the Android Platformer scene check); the race leaks most runs, and the smoke runs it three times",
+     "self-test quick quit: shutdown did not stop the worker", "engine shutdown no longer stops the ownership self-test's worker: a run that quits while it makes Resources leaks thousands of ObjectDB instances at exit and can abort in realloc (the Android Platformer scene check); the leak is a race (most runs on macOS, none seen on Linux CI), so the smoke holds every run to shutdown's own `stopped N worker(s), 0 still running` line",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("OwnedReleasesTest (low frame rate drain)", ["./gradlew", "-p", ".", ":jvmTest", "--tests", "*OwnedReleasesTest*"],
      [Edit("src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/OwnedReleases.kt",
@@ -1225,7 +1233,7 @@ case("export_guard_selftest.sh (Android Min SDK)", ["bash", "scripts/export_guar
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd",
            '            messages.append("Export stopped: " + sdk_problem)', "            pass")],
      "the min_sdk export did not print the guard's Min SDK line", "the export guard's _export_begin drops its Android Min SDK check: a real headless Android Gradle export with Min SDK 26 must still stop with the line",
-     requires_env="KANAMA_GODOT_BIN", slow=True)
+     requires_env="KANAMA_GODOT_BIN", skip_when="[export_guard_selftest] SKIP min_sdk:", slow=True)
 case("check_jdk_lookup_parity.sh", ["bash", "scripts/check_jdk_lookup_parity.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/plugin.gd", '["all", "~/.jdks", "", ""]', '["all", "~/.jdkz", "", ""]')],
      "FAIL table_home_dot_jdks", "the editor plugin's JDK location table drifts from bootstrap.c's (a `~/.jdks` row renamed)",
@@ -1477,15 +1485,19 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
     skipped: list[str] = []
     for c in cases:
         print(f"== {c.gate}: {c.how}", flush=True)
+
+        def skip(reason: str) -> None:
+            print(f"SKIP: {c.gate}: {reason}", flush=True)
+            skipped.append(c.gate)
+            cell = reason.replace("|", "\\|")
+            rows.append(f"| `{c.gate}` | {c.how} | SKIPPED: {cell} | - |")
+            if strict and not any(a in c.gate for a in allowed_skips):
+                failures.append(f"{c.gate}: SKIPPED ({reason}) in a strict run; provide it, or pass --allow-skip")
+
         missing_env = [name for name in filter(None, c.requires_env.split(","))
                        if not Path(os.environ.get(name, "/nonexistent")).exists()]
         if missing_env:
-            needs = " and ".join(missing_env)
-            print(f"SKIP: {c.gate}: needs {needs} to name an existing path", flush=True)
-            skipped.append(c.gate)
-            rows.append(f"| `{c.gate}` | {c.how} | SKIPPED: needs {needs} | - |")
-            if strict and not any(a in c.gate for a in allowed_skips):
-                failures.append(f"{c.gate}: SKIPPED (needs {needs}) in a strict run; set it, or pass --allow-skip")
+            skip(f"needs {' and '.join(missing_env)} to name an existing path")
             continue
         for pre in c.pre:
             pre_rc, pre_out, _ = run(Case(c.gate, pre, [], "", "", env=c.env, timeout=c.timeout))
@@ -1496,6 +1508,9 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
             failures.append(f"{c.gate}: not green before the mutation (exit {rc}):\n{out[-800:]}")
             print(f"   baseline NOT green (exit {rc}); skipped", flush=True)
             continue
+        if c.skip_when and c.skip_when in out:
+            skip(next(line.strip() for line in out.splitlines() if c.skip_when in line))
+            continue
         try:
             with Mutator(c.mutations):
                 red_rc, red_out, red_secs = run(c)
@@ -1505,11 +1520,13 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
             rows.append(f"| `{c.gate}` | {c.how} | UNPROVEN | - |")
             continue
         green_rc, green_out, _ = run(c)
+        alternatives = (c.expect,) if isinstance(c.expect, str) else c.expect
+        matched = next((text for text in alternatives if text in red_out), None)
         ok = True
         if red_rc == 0:
             failures.append(f"{c.gate}: STAYED GREEN after the mutation ({c.how}); the gate does not catch it")
             ok = False
-        elif c.expect not in red_out:
+        elif matched is None:
             failures.append(
                 f"{c.gate}: failed (exit {red_rc}) but without the expected text {c.expect!r}:\n{red_out[-800:]}"
             )
@@ -1517,7 +1534,7 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
         if green_rc != 0:
             failures.append(f"{c.gate}: NOT green after the revert (exit {green_rc}):\n{green_out[-800:]}")
             ok = False
-        excerpt = red_excerpt(red_out, c.expect).replace("|", "\\|")
+        excerpt = red_excerpt(red_out, matched or alternatives[0]).replace("|", "\\|")
         print(f"   red   exit {red_rc} in {red_secs:.1f}s: {excerpt}", flush=True)
         print(f"   green after revert: exit {green_rc}", flush=True)
         rows.append(

@@ -490,12 +490,16 @@ check "\[kanama-smoke\] constructor_error done"
 # A run that quits while the ownership self-test's worker makes Resources: shutdown stops and joins
 # the worker first (OwnershipSelfTest.shutdown). Before, it kept calling into Godot while the
 # ObjectDB was torn down: thousands of leaked instances at exit and, now and then, an abort in
-# realloc (the Android smoke's Platformer scene check, kanama-demos 9903ceb). The race leaks most
-# runs without the fix, so three runs make a miss unlikely.
+# realloc (the Android smoke's Platformer scene check, kanama-demos 9903ceb). The leak is a race (most
+# runs on macOS without the fix, none seen on Linux CI), so each run must also print shutdown's own
+# line: it started the worker, and stopped it before Godot tore down.
 for quick_quit_run in 1 2 3; do
   quick_quit_log="$QUICK_QUIT_LOG.$quick_quit_run"
   if ! grep -q "\[kanama-smoke\] selftest_quick_quit quitting" "$quick_quit_log"; then
     smoke_fail "self-test quick quit did not run (run $quick_quit_run)" "$quick_quit_log"
+  fi
+  if ! grep -qE "OWNERSHIP SELFTEST shutdown: stopped [1-9][0-9]* worker\(s\), 0 still running" "$quick_quit_log"; then
+    smoke_fail "self-test quick quit: shutdown did not stop the worker (run $quick_quit_run)" "$(grep -E 'OWNERSHIP SELFTEST' "$quick_quit_log" | tail -3 | tr '\n' ' ')"
   fi
   if grep -qE "leaked at exit|Abort trap|pointer being freed was not allocated" "$quick_quit_log"; then
     smoke_fail "self-test quick quit leaked or aborted at exit (run $quick_quit_run)" "$(grep -E 'leaked at exit|Abort|pointer being freed' "$quick_quit_log" | head -3 | tr '\n' ' ')"

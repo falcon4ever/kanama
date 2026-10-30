@@ -431,14 +431,16 @@ it is, a reversible mutation (an edit, a created, deleted or renamed file) makes
 expected text, and it passes again after the revert. Every case runs in a **throwaway `git worktree`** of HEAD carrying
 the dev checkout's uncommitted changes, so a killed run (SIGTERM, a timeout, a crash) cannot leave a mutation in the
 checkout you work in; a timeout kills the case's whole process group; `--strict` (implied under `CI`) makes a SKIPPED
-case (a missing `GODOT_DOCS`, ...) a failure unless named by `--allow-skip`. The rows below were produced by that command
+case (a missing `GODOT_DOCS`, or a gate whose baseline says it could not run the mutated row, such as
+`export_guard_selftest.sh` with no Android export template) a failure unless named by `--allow-skip`. The rows below were produced by that command
 on the committed branch (`--markdown`): the fast set (171 cases) took about 25 minutes (about 55 on a loaded machine); the Godot and Gradle smokes run
 with `--slow` (`KANAMA_GODOT_BIN` set). Gates that drive a browser, a device or a long export are in the second table.
 
 **CI.** `ci.yml` job `gate-red-runs` runs the fast set with `--strict --allow-skip sync_kdoc` on every push to main and on
 every pull request that touches `scripts/` or `.github/workflows/` (gated by the `changes` job), split over three
 parallel shards (`--shard 1/3` … `3/3`, every third case; about 10 minutes each).
-`gate-red-runs-nightly.yml` runs `--slow` nightly. It is not part of `local_ci.sh` (it takes minutes).
+`gate-red-runs-nightly.yml` runs `--slow` nightly; it installs the Android export template and Godot's Android settings
+(the runner's SDK, a debug keystore) so the export guard's real Android exports run there too. It is not part of `local_ci.sh` (it takes minutes).
 
 ### 2a. `scripts/gate_red_runs.py` (exercised on this branch)
 
