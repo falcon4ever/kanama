@@ -131,6 +131,7 @@ Parsed from `.github/workflows/{ci,web,package}.yml`. Scripts are the repo gate 
 | `package.yml` | cross-runtime (${{ matrix.target }} built on macOS) (`cross-runtimes`) | tag `v*` + manual | — |
 | `package.yml` | exported-game (${{ matrix.target }}, macOS-built runtime) (`exported-game`) | tag `v*` + manual | `scripts/check_godot_version_pin.py`, `scripts/export_game_smoke.sh` |
 | `package.yml` | store-addon (`store-addon`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |
+| `package.yml` | store-addon-windows (`store-addon-windows`) | tag `v*` + manual | `scripts/package_install_smoke.sh`, `scripts/store_addon_editor_smoke.sh` |
 | `package.yml` | android-export (${{ matrix.package }}) (`android-export`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |
 | `package.yml` | publish-release (`publish-release`) | tag `v*` only | — |
 

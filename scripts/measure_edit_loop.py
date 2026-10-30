@@ -25,8 +25,9 @@ Usage:
     python3 scripts/measure_edit_loop.py /path/to/godot --runs 5 --budget 5
     python3 scripts/measure_edit_loop.py /path/to/godot --project /path/to/existing-starter
 
-`--project` reuses a starter made by `createStarterProject` (it edits `kotlin-src/HelloScript.kt`
-and sets `kanama/tools/auto_build_on_save=true` in its `project.godot`). JAVA_HOME should name a
+`--project` reuses a starter made by `createStarterProject` (it edits `kotlin-src/HelloScript.kt`).
+The editor leg needs build on save, the Editor Settings > Kanama > Build > Build On Save setting
+(`kanama/build/build_on_save`), which is on unless you turned it off. JAVA_HOME should name a
 JDK 25+, as for any Kanama build.
 """
 
@@ -183,18 +184,6 @@ def make_starter(parent: Path) -> Path:
     return project
 
 
-def enable_build_on_save(project: Path) -> None:
-    godot_file = project / "project.godot"
-    text = godot_file.read_text()
-    if "tools/auto_build_on_save=" in text:
-        text = re.sub(r"tools/auto_build_on_save=\w+", "tools/auto_build_on_save=true", text)
-    elif "[kanama]" in text:
-        text = text.replace("[kanama]\n", "[kanama]\n\ntools/auto_build_on_save=true\n", 1)
-    else:
-        text += "\n[kanama]\n\ntools/auto_build_on_save=true\n"
-    godot_file.write_text(text)
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("godot", nargs="?", default=os.environ.get("GODOT_BIN", ""), help="Godot 4.7.2 binary")
@@ -222,7 +211,6 @@ def main() -> int:
         if not script.is_file() or not gradlew.is_file():
             fail(f"{project} is not a starter (needs kotlin-src/HelloScript.kt and its own gradlew)")
         restore = [(script, script.read_text()), (project / "project.godot", (project / "project.godot").read_text())]
-        enable_build_on_save(project)
         log(f"project: {project}")
         run([godot, "--headless", "--path", str(project), "--import"], project, GODOT_TIMEOUT_S)
 

@@ -525,8 +525,9 @@ if grep -Eq 'debug/jdwp_port_editor' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DI
   echo "[local_ci] obsolete JDWP editor project setting should not be registered" >&2
   exit 1
 fi
-if grep -Eq 'set_initial_value\([^,]+,[^,]+,' "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
-  echo "[local_ci] Godot plugin set_initial_value must use the GDScript two-argument form" >&2
+# ProjectSettings.set_initial_value takes two arguments; EditorSettings.set_initial_value takes three.
+if grep -Eq 'ProjectSettings\.set_initial_value\([^,]+,[^,]+,' "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
+  echo "[local_ci] Godot plugin ProjectSettings.set_initial_value must use the GDScript two-argument form" >&2
   exit 1
 fi
 if ! grep -Eq 'is_editor_process' "$ROOT_DIR/bootstrap/bootstrap.c"; then

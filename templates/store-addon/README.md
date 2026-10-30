@@ -14,7 +14,14 @@ This addon package is install-safe for existing Godot projects. It provides:
 The template directory is safe to keep under `addons/`: it does not include a
 nested `project.godot` or `main.tscn`.
 
-From the root of your Godot project, initialize Kanama:
+Open the project in Godot, enable **Kanama Tools** in **Project > Project
+Settings > Plugins**, then choose **Project > Tools > Kanama Tools: Set Up
+Kanama Project**. It adds the Gradle build, the Gradle wrapper, a starter
+Kotlin script and `build/.gdignore`, keeps every file that is already there,
+and lists what it added. Press **Build Scripts** to build your scripts.
+
+The menu item runs the setup script, which you can also run yourself from the
+root of your Godot project:
 
 ```sh
 sh addons/kanama/setup-kanama-project.sh

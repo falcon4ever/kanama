@@ -2290,6 +2290,12 @@ tasks.register<Copy>("installAddonJar") {
   from(generateKanamaVersionFile) { rename { "kanama-scripts.version" } }
   into(targetProjectDir.map { file(it).resolve("addons/kanama") })
   outputs.file(extensionListFile)
+  // The byte-stable exclusion below leaves an identical jar out of the copy, so Gradle does not
+  // record it as an output of this task: deleting the jar afterwards left the task UP-TO-DATE, and
+  // Build Scripts reported success with no kanama-scripts.jar. Whichever jar is missing, run again.
+  val installedByteStableFiles =
+    targetProjectDir.map { dir -> byteStableFiles.map { file(dir).resolve("addons/kanama/$it") } }
+  outputs.upToDateWhen { installedByteStableFiles.getOrElse(emptyList()).all { it.isFile } }
 
   eachFile(
     object : org.gradle.api.Action<org.gradle.api.file.FileCopyDetails> {

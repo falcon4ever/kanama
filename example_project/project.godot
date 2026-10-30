@@ -26,5 +26,4 @@ enabled=PackedStringArray("res://addons/kanama_tools/plugin.cfg")
 
 [kanama]
 
-tools/auto_build_on_save=true
 tools/auto_build_debounce_ms=800

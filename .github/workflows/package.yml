@@ -437,6 +437,56 @@ jobs:
           path: build/distributions/kanama-store-addon-*.zip
           if-no-files-found: error
 
+  # The store addon set up on Windows: the addon's setup-kanama-project.ps1 (what Kanama Tools' Set Up Kanama
+  # Project runs there) on a plain project, with the same file checks as the .sh setup above, a second run that
+  # must add and change nothing, and buildScripts.
+  store-addon-windows:
+    name: store-addon-windows
+    runs-on: windows-2025
+    needs: [store-addon]
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Download the store addon
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-store-addon
+          path: packages
+
+      - name: Set up the store addon with the PowerShell script
+        shell: bash
+        run: scripts/package_install_smoke.sh --store-addon --setup-ps1 packages/kanama-store-addon-*.zip
+
+      # The editor plugin's own Windows path: Set Up Kanama Project (the .ps1) and Build Scripts, which starts
+      # the Gradle client on the JDK itself, in a headless editor; the status light must end green.
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Download Godot
+        shell: bash
+        run: |
+          mkdir -p godot-tools
+          curl -fL -o godot.zip \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_win64.exe.zip"
+          python3 -c "import sys, zipfile; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])" godot.zip godot-tools
+          rm -f godot.zip
+          ls -la godot-tools
+
+      - name: Set up and build the store addon from the editor
+        shell: bash
+        run: scripts/store_addon_editor_smoke.sh packages/kanama-store-addon-*.zip "godot-tools/Godot_v${GODOT_VERSION}_win64_console.exe"
+
   # Android export from the packages alone (task 135 item 5): the Linux kit and the store addon, each unzipped
   # into a fresh project with a fresh GRADLE_USER_HOME, run buildAndroidScripts and a headless Godot export, and
   # the APK is checked (scripts, registrars, runtime, libkanama_bootstrap.so, nothing from build/). No device.

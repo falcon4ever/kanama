@@ -26,17 +26,6 @@ the snapshots are regenerated with `--write`, so the pull request shows every ch
 Additions and source-compatible changes (a parameter gains a default, a declaration becomes `open`,
 a class gains a supertype) need only `--write`. Every public declaration must state its type.
 
-## Unreleased` says what changed and how to migrate, and carries a line that starts exactly with
-`- **Source break:**` (the marker the gate below looks for).
-
-`scripts/check_public_signature_changes.py` (a `local_ci.sh` stage) compares every public
-declaration of the API (the shared native tree, the value types, each platform's own classes, and
-the Web wrappers and facades) with the snapshots in
-`docs/reference/generated/public-api-signatures-*.txt`. It fails when a signature was removed or
-changed and `## Unreleased` has no marker line; once the line is there it fails until the snapshot
-is regenerated with `--write`, so the pull request shows every changed signature. Additions need
-only `--write`.
-
 ## Unreleased
 
 Upgrading from 0.4? See [Upgrading from 0.4 to 0.5](docs/getting-started/upgrading-0.4-to-0.5.md).
@@ -115,6 +104,46 @@ the last bit or two (Kotlin's math library is not the host's). On Web, `GD.asin`
 clamp outside [-1, 1] as Godot does (they answered NaN), and `asinh`, `acosh` and `atanh` run in
 the engine, since Kotlin's lose precision near zero.
 
+### Added — a build status light, and build on save by default
+
+The Kanama Tools row in the editor toolbar starts with a status light: green when your scripts are
+built and no `.kt` file changed since, yellow while a build runs or when a `.kt` file changed or
+`kanama-scripts.jar` is missing or was built for another Kanama version than the addon, red when the
+last build failed. Click it for the last build's
+output, with the compiler's error, and **Cancel Build** while one runs. Builds now run beside the
+editor, so the editor stays usable while Gradle works; a build that runs past
+`kanama/build/build_timeout_sec` (1200 s) is stopped and the light turns red. The watcher reads only
+`kotlin-src/` (and `web/kotlin-src/`), and Build Scripts runs `installAddonJar` only in a real Kanama
+checkout, never in some other Gradle repository the project sits in. Build on save is on by default: saving a `.kt` file starts one build, however
+many files you save in a row. Turn it off in **Editor > Editor Settings > Kanama > Build > Build On
+Save** (`kanama/build/build_on_save`). It is an editor setting now; the old project setting
+`kanama/tools/auto_build_on_save` is no longer read, and you can delete it from `project.godot`. A
+**Platforms** menu runs `buildAndroidScripts` in a kit or store-addon project, and the Android, iOS
+and Web commands of the export pages in a project set up from a Kanama checkout. See [Edit, Build, Run](docs/getting-started/editor-workflow.md#the-status-light).
+
+### Added — Set Up Kanama Project, from the editor
+
+**Project > Tools > Kanama Tools: Set Up Kanama Project** turns a Godot project with the store
+addon into a Kanama project without a terminal. It adds only what is missing (the Gradle build and
+wrapper, `kotlin-src/HelloScript.kt` when `kotlin-src/` has no Kotlin script, and
+`build/.gdignore`), never replaces a file, and lists what it added; a second run adds nothing. A
+`settings.gradle.kts` of your own gets the Kanama `pluginManagement` block at the top, so the Kanama
+Gradle plugin resolves; one with a `pluginManagement` block of its own stops the setup before it
+changes anything, with one line that says what to merge. It
+runs the addon's `setup-kanama-project.sh` (or `.ps1` on Windows), which gains `--project-dir`
+(`-ProjectDir`), adds the starter script only to a `kotlin-src/` without Kotlin scripts (the script
+added it next to your own before), and writes `build/.gdignore`. See
+[Add Kanama to an Existing Project](docs/getting-started/store-addon.md#installation).
+
+### Fixed — a deleted kanama-scripts.jar came back only with --rerun
+
+`installAddonJar` skips copying a jar that is byte-identical to the installed one. Gradle then no
+longer counted that jar as the task's output, so after you deleted `addons/kanama/kanama-scripts.jar`
+(or `kanama.jar`), **Build Scripts** in a project without its own Gradle build reported success and
+left the jar missing until `installAddonJar --rerun`. The task now runs again whenever an installed
+jar is missing. The build-on-save watcher also skips folders with a `.gdignore`, so the store
+addon's setup template no longer counts as one of your scripts.
+
 ### Changed — Android 13 is now the minimum — BREAKING
 
 Android 13 (API 33) is now the minimum; set **Min SDK** to `33` in your Android export preset
@@ -139,7 +168,7 @@ so the starter script and the code the guides teach compile for the Web. See
 
 A new page, [Open in IntelliJ IDEA](docs/getting-started/intellij.md), takes a starter from
 **File > Open** to completion on the Godot API and a debugger stopped in your script, with the
-common problems. [The Editor Loop](docs/getting-started/editor-workflow.md#how-long-the-loop-takes)
+common problems. [Edit Loop Timing](docs/contributing/hot-reload-internals.md#edit-loop-timing)
 now records how long a save takes to show (median 3.7 s in the editor with build on save, 2.0 s for
 the build alone, on an Apple M1 Max) and sets a budget of 5 s. `scripts/measure_edit_loop.py`
 measures it on your machine.

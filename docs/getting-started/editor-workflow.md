@@ -27,8 +27,12 @@ A Kanama project has two addons:
 The release kit and a starter project have the plugin enabled. Elsewhere,
 enable it in **Project > Project Settings > Plugins**. It adds:
 
-- **Build Scripts** to the editor toolbar and to **Project > Tools**;
-- **Open Kotlin**, which opens your Kotlin source folder in the file manager;
+- a row in the editor toolbar: the build status light, **Build Scripts**,
+  **Platforms** for the Android, iOS and Web builds, and **Open Kotlin**,
+  which opens your Kotlin source folder in the file manager;
+- **Build Scripts** and **Set Up Kanama Project** in **Project > Tools**. The
+  second turns a Godot project with the store addon into a Kanama project; see
+  [Add Kanama to an Existing Project](store-addon.md#installation).
 - build on save and scene reload after a build, both described below;
 - Kotlin syntax colors in Godot's script editor, for a quick look or a small
   edit. IntelliJ IDEA is where you get completion, navigation and the
@@ -54,10 +58,56 @@ can also run `buildScripts` from IntelliJ's Gradle tool window. The release
 kit, the starter and the store addon all set up that task; a project with a
 `gradlew` of its own needs it too.
 
-To build without pressing anything, turn on `kanama/tools/auto_build_on_save`
-in **Project > Project Settings** (switch on **Advanced Settings** to see it).
-The plugin then watches your `.kt` files and builds once you stop saving for
-`kanama/tools/auto_build_debounce_ms` (800 ms by default).
+You rarely need to press it: build on save is on. The plugin watches the
+`.kt` files in the folder your build compiles, `kotlin-src/` (and
+`web/kotlin-src/` when there is one; `kanamaProjectScriptsDir` in
+`gradle.properties` names another folder), and builds once you stop saving
+for a moment
+(`kanama/tools/auto_build_debounce_ms`, 800 ms by default). Saving several
+files in a row starts one build. To build only when you ask, turn off
+**Editor > Editor Settings > Kanama > Build > Build On Save**
+(`kanama/build/build_on_save`). It is an editor setting, so it applies to you
+on this machine and is not stored in the project.
+
+### The Status Light
+
+The dot at the left of the Kanama toolbar row tells you whether the game will
+run the code you see:
+
+| Light | Meaning |
+| --- | --- |
+| Green | Your scripts are built, and no `.kt` file changed since. |
+| Yellow | A build is running, a `.kt` file changed since the last build, `kanama-scripts.jar` is missing, or your scripts were built for another Kanama version than the addon. |
+| Red | The last build failed, or ran longer than the build timeout and was stopped. |
+| Grey | The project has no Kotlin scripts yet. |
+
+Click the light to see the output of the last build, with the compiler's
+error when it failed; when a build fails, the Output panel shows the same
+text. While a build runs, the same window has **Cancel Build**. A build that
+runs longer than **Editor > Editor Settings > Kanama > Build > Build Timeout
+Sec** (`kanama/build/build_timeout_sec`, 1200 seconds by default) is stopped,
+and the light turns red.
+
+### Platform Builds
+
+**Platforms** builds your scripts for another platform's export. In a project
+made from a release kit or the store addon, it has **Android**, which runs
+`./gradlew buildAndroidScripts`; see [Export for Android](../exporting/android.md).
+
+In a project set up from a Kanama checkout, it runs the commands the export
+pages give, in that checkout:
+
+- **Android** runs `installAndroidPluginAar` and then `installAddonJar`; see
+  [Export for Android](../exporting/android.md).
+- **iOS**, on macOS, runs `installIosAddon`; see
+  [Export for iOS](../exporting/ios.md).
+- **Web** runs `:web-runtime:exportWeb`; see
+  [Export for the Web](../exporting/web.md).
+
+The status light follows these builds like any other. When your scripts were
+built for another Kanama version than the addon, the light turns yellow and
+its tooltip says which versions; **Build Scripts**, or **Sync Addon** in the
+message Godot shows, rebuilds them.
 
 ### Projects without Their Own Gradle Build
 
@@ -160,7 +210,6 @@ under `[kanama]`.
 
 | Setting | What it does |
 | --- | --- |
-| `kanama/tools/auto_build_on_save` | Builds your scripts when you save a `.kt` file. Off by default. |
 | `kanama/tools/auto_build_debounce_ms` | How long build on save waits after the last save. Default 800 ms. |
 | `kanama/tools/reload_scene_after_sync` | Reloads the current scene after a successful build. On by default. |
 | `kanama/tools/kotlin_sources_dir` | The folder **Open Kotlin** opens, absolute or `res://`. Empty opens the project folder. |
@@ -171,8 +220,12 @@ under `[kanama]`.
 | `kanama/debug/jdwp_enabled`, `kanama/debug/jdwp_port` | The debugger; see [Debugging](#debugging). |
 | `kanama/jvm/options` | Extra Java options for the game; see [JVM Options](../exporting/desktop.md#jvm-options). |
 
-JDK Path is an editor setting, not a project setting; see
-[JDK Selection](#jdk-selection).
+Three Kanama settings are editor settings, under **Editor > Editor Settings >
+Kanama > Build**, because they belong to your machine and not to the project:
+**Build On Save** (`kanama/build/build_on_save`, on by default; see
+[Building Scripts](#building-scripts)), **Build Timeout Sec**
+(`kanama/build/build_timeout_sec`; see [The Status Light](#the-status-light))
+and **JDK Path** (see [JDK Selection](#jdk-selection)).
 
 ## Export Guard
 
