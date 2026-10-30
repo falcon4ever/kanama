@@ -417,6 +417,8 @@ def collect_api_replacements(path: Path, docs: GodotClassDocs) -> tuple[list[Rep
         if not fun_match:
             continue
         kotlin_name = fun_match.group(2)
+        if is_generated_factory(lines, index):
+            continue
         doc_entry = method_docs.get(kotlin_name)
         if not doc_entry:
             continue
@@ -443,11 +445,20 @@ def collect_api_replacements(path: Path, docs: GodotClassDocs) -> tuple[list[Rep
 
     documented_godot_methods = {
         method_docs[match.group(2)][0]
-        for line in lines
-        if (match := FUN_RE.match(line)) and match.group(2) in method_docs
+        for i, line in enumerate(lines)
+        if (match := FUN_RE.match(line)) and match.group(2) in method_docs and not is_generated_factory(lines, i)
     }
     missing_methods = len(wrapped_methods - documented_godot_methods)
     return replacements, documented_methods, missing_methods
+
+
+def is_generated_factory(lines: list[str], index: int) -> bool:
+    """The generated no-argument `create()` (GDScript's `X.new()`, generate_api_wrapper.py's
+    render_factory_helpers), which carries its own KDoc: a Godot method named `create` (`BitMap.create(size)`,
+    `Image.create(...)`) documents its own Kotlin member, not this one."""
+    if "fun create():" not in lines[index]:
+        return False
+    return any("requireConstructed(ObjectCalls.constructObject(" in line for line in lines[index + 1 : index + 3])
 
 
 _ENUM_NAME_MAPS: dict[str, dict[str, str]] | None = None

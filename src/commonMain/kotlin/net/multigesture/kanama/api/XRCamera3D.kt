@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A camera node which automatically positions itself based on XR tracking data.
@@ -19,5 +20,10 @@ class XRCamera3D(handle: GodotHandle) : Camera3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRCamera3D? =
             if (handle.address() == 0L) null else XRCamera3D(GodotHandle(handle))
+
+        /** A new XRCamera3D, GDScript's `XRCamera3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): XRCamera3D =
+            XRCamera3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("XRCamera3D"), "XRCamera3D")))
     }
 }

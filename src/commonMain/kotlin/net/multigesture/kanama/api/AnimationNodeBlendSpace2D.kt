@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -599,6 +600,11 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeBlendSpace2D? =
             if (handle.address() == 0L) null else AnimationNodeBlendSpace2D(GodotHandle(handle))
+
+        /** A new AnimationNodeBlendSpace2D, GDScript's `AnimationNodeBlendSpace2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeBlendSpace2D =
+            RefCounted.owned(AnimationNodeBlendSpace2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationNodeBlendSpace2D"), "AnimationNodeBlendSpace2D"))))
     }
 
     private object Binds {

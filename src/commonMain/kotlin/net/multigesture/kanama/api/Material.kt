@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Virtual base class for applying visual properties to an object, such as color and roughness.
@@ -138,6 +139,11 @@ open class Material(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Material? =
             if (handle.address() == 0L) null else Material(GodotHandle(handle))
+
+        /** A new Material, GDScript's `Material.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Material =
+            RefCounted.owned(Material(GodotHandle(requireConstructed(ObjectCalls.constructObject("Material"), "Material"))))
 
         // Downcast a Resource to Material (null if not).
         @JvmStatic

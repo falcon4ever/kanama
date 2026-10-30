@@ -17,4 +17,10 @@ class SpringArm3D(godotObject: GodotHandle) : Node3D(godotObject) {
   /** Desktop's `removeExcludedObject`: true when [rid] was excluded. One immediate call. */
   fun removeExcludedObject(rid: RID): Boolean =
     webGenericCall(this, "remove_excluded_object", listOf(rid)) as Boolean
+
+  companion object {
+    /** A new SpringArm3D, GDScript's `SpringArm3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): SpringArm3D =
+      SpringArm3D(checkNotNull(ClassDB.instantiate("SpringArm3D")) { "Godot could not instantiate SpringArm3D" }.toWebId())
+  }
 }

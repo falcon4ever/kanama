@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Class representing a spherical `PrimitiveMesh`.
@@ -169,6 +170,11 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SphereMesh? =
             if (handle.address() == 0L) null else SphereMesh(GodotHandle(handle))
+
+        /** A new SphereMesh, GDScript's `SphereMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SphereMesh =
+            RefCounted.owned(SphereMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("SphereMesh"), "SphereMesh"))))
 
         // Downcast a Resource to SphereMesh (null if not).
         @JvmStatic

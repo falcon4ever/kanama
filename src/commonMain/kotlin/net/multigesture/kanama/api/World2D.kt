@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 
 /**
@@ -90,6 +91,11 @@ class World2D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): World2D? =
             if (handle.address() == 0L) null else World2D(GodotHandle(handle))
+
+        /** A new World2D, GDScript's `World2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): World2D =
+            RefCounted.owned(World2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("World2D"), "World2D"))))
     }
 
     private object Binds {

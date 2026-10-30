@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A 1D texture that uses colors obtained from a `Gradient`.
@@ -99,6 +100,11 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GradientTexture1D? =
             if (handle.address() == 0L) null else GradientTexture1D(GodotHandle(handle))
+
+        /** A new GradientTexture1D, GDScript's `GradientTexture1D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GradientTexture1D =
+            RefCounted.owned(GradientTexture1D(GodotHandle(requireConstructed(ObjectCalls.constructObject("GradientTexture1D"), "GradientTexture1D"))))
     }
 
     private object Binds {

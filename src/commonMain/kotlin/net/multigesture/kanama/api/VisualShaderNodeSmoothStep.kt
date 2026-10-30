@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Calculates a SmoothStep function within the visual shader graph.
@@ -113,6 +114,11 @@ class VisualShaderNodeSmoothStep(handle: GodotHandle) : VisualShaderNode(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeSmoothStep? =
             if (handle.address() == 0L) null else VisualShaderNodeSmoothStep(GodotHandle(handle))
+
+        /** A new VisualShaderNodeSmoothStep, GDScript's `VisualShaderNodeSmoothStep.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeSmoothStep =
+            RefCounted.owned(VisualShaderNodeSmoothStep(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeSmoothStep"), "VisualShaderNodeSmoothStep"))))
     }
 
     private object Binds {

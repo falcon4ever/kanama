@@ -561,11 +561,11 @@ class FunctionRegistrationTest {
       WebScriptCodeEmitter(listOf(WebScriptInput(model, "res://InputFixture.kt"))).registrySource()
     assertContains(
       source,
-      "(script as InputFixture).input($inputEvent(GodotHandle.fromBackendToken(eventHandle.toLong())))",
+      "(script as S1_InputFixture).input($inputEvent(GodotHandle.fromBackendToken(eventHandle.toLong())))",
     )
     assertContains(
       source,
-      "(script as InputFixture).unhandledInput($inputEvent(GodotHandle.fromBackendToken(eventHandle.toLong())))",
+      "(script as S1_InputFixture).unhandledInput($inputEvent(GodotHandle.fromBackendToken(eventHandle.toLong())))",
     )
   }
 
@@ -593,7 +593,7 @@ class FunctionRegistrationTest {
     val source = ScriptCodeEmitter(model, "InputFixtureScriptRegistrar").emit()
     assertContains(
       source,
-      "fun aim(kanamaInstance: InputFixture, target: net.multigesture.kanama.api.GodotObject, instance: Long) {",
+      "fun aim(kanamaInstance: ThisClass, target: net.multigesture.kanama.api.GodotObject, instance: Long) {",
     )
     assertContains(
       source,

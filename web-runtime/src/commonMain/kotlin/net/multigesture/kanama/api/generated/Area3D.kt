@@ -69,6 +69,12 @@ class Area3D(godotObject: GodotHandle) : CollisionObject3D(godotObject) {
       val REPLACE_COMBINE: SpaceOverride get() = SpaceOverride(4L)
     }
   }
+
+  companion object {
+    /** A new Area3D, GDScript's `Area3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): Area3D =
+      Area3D(checkNotNull(ClassDB.instantiate("Area3D")) { "Godot could not instantiate Area3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

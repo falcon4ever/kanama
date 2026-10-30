@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 
@@ -1425,6 +1426,11 @@ class CodeEdit(handle: GodotHandle) : TextEdit(handle) {
 
         internal fun wrap(handle: RawSegment): CodeEdit? =
             if (handle.address() == 0L) null else CodeEdit(GodotHandle(handle))
+
+        /** A new CodeEdit, GDScript's `CodeEdit.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CodeEdit =
+            CodeEdit(GodotHandle(requireConstructed(ObjectCalls.constructObject("CodeEdit"), "CodeEdit")))
     }
 
     private object Binds {

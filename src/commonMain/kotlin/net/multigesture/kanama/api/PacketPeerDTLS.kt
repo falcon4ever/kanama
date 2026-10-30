@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * DTLS packet peer.
@@ -119,6 +120,11 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PacketPeerDTLS? =
             if (handle.address() == 0L) null else PacketPeerDTLS(GodotHandle(handle))
+
+        /** A new PacketPeerDTLS, GDScript's `PacketPeerDTLS.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PacketPeerDTLS =
+            RefCounted.owned(PacketPeerDTLS(GodotHandle(requireConstructed(ObjectCalls.constructObject("PacketPeerDTLS"), "PacketPeerDTLS"))))
     }
 
     private object Binds {

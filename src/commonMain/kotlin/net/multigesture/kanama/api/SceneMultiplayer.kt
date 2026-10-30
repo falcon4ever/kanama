@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -393,6 +394,11 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SceneMultiplayer? =
             if (handle.address() == 0L) null else SceneMultiplayer(GodotHandle(handle))
+
+        /** A new SceneMultiplayer, GDScript's `SceneMultiplayer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SceneMultiplayer =
+            RefCounted.owned(SceneMultiplayer(GodotHandle(requireConstructed(ObjectCalls.constructObject("SceneMultiplayer"), "SceneMultiplayer"))))
 
         // Downcast a MultiplayerAPI to SceneMultiplayer (null if not).
         @JvmStatic

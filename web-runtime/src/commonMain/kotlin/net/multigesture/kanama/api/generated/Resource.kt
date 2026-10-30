@@ -45,6 +45,9 @@ open class Resource(godotObject: GodotHandle) : RefCounted(godotObject) {
   }
 
   companion object {
+    /** A new Resource, GDScript's `Resource.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): Resource =
+      Resource(checkNotNull(ClassDB.instantiate("Resource")) { "Godot could not instantiate Resource" }.toWebId())
     /** Re-types any Godot object as a Resource (the Web bridge carries no class metadata). */
     fun fromObject(value: GodotObject?): Resource? = value?.let { Resource(it.handle) }
     fun fromHandle(handle: GodotHandle): Resource = Resource(handle)

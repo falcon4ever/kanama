@@ -8,4 +8,9 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class StaticBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  companion object {
+    /** A new StaticBody3D, GDScript's `StaticBody3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): StaticBody3D =
+      StaticBody3D(checkNotNull(ClassDB.instantiate("StaticBody3D")) { "Godot could not instantiate StaticBody3D" }.toWebId())
+  }
 }

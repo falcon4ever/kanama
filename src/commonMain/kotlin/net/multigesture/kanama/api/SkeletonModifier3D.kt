@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A node that may modify a Skeleton3D's bones.
@@ -294,6 +295,11 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): SkeletonModifier3D? =
             if (handle.address() == 0L) null else SkeletonModifier3D(GodotHandle(handle))
+
+        /** A new SkeletonModifier3D, GDScript's `SkeletonModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SkeletonModifier3D =
+            SkeletonModifier3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SkeletonModifier3D"), "SkeletonModifier3D")))
     }
 
     private object Binds {

@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A dummy text server that can't render text or manage fonts.
@@ -22,5 +23,10 @@ class TextServerDummy(handle: GodotHandle) : TextServerExtension(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextServerDummy? =
             if (handle.address() == 0L) null else TextServerDummy(GodotHandle(handle))
+
+        /** A new TextServerDummy, GDScript's `TextServerDummy.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TextServerDummy =
+            RefCounted.owned(TextServerDummy(GodotHandle(requireConstructed(ObjectCalls.constructObject("TextServerDummy"), "TextServerDummy"))))
     }
 }

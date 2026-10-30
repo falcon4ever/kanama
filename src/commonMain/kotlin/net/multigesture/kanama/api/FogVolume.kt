@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -122,6 +123,11 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): FogVolume? =
             if (handle.address() == 0L) null else FogVolume(GodotHandle(handle))
+
+        /** A new FogVolume, GDScript's `FogVolume.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): FogVolume =
+            FogVolume(GodotHandle(requireConstructed(ObjectCalls.constructObject("FogVolume"), "FogVolume")))
     }
 
     private object Binds {

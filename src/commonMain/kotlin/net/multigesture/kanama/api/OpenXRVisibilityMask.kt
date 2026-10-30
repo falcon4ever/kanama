@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Draws a stereo correct visibility mask.
@@ -19,5 +20,10 @@ class OpenXRVisibilityMask(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): OpenXRVisibilityMask? =
             if (handle.address() == 0L) null else OpenXRVisibilityMask(GodotHandle(handle))
+
+        /** A new OpenXRVisibilityMask, GDScript's `OpenXRVisibilityMask.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OpenXRVisibilityMask =
+            OpenXRVisibilityMask(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRVisibilityMask"), "OpenXRVisibilityMask")))
     }
 }

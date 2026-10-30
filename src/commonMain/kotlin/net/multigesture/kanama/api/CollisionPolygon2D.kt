@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -208,6 +209,11 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): CollisionPolygon2D? =
             if (handle.address() == 0L) null else CollisionPolygon2D(GodotHandle(handle))
+
+        /** A new CollisionPolygon2D, GDScript's `CollisionPolygon2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CollisionPolygon2D =
+            CollisionPolygon2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CollisionPolygon2D"), "CollisionPolygon2D")))
     }
 
     private object Binds {

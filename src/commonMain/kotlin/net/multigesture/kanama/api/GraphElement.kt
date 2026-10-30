@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -219,6 +220,11 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): GraphElement? =
             if (handle.address() == 0L) null else GraphElement(GodotHandle(handle))
+
+        /** A new GraphElement, GDScript's `GraphElement.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GraphElement =
+            GraphElement(GodotHandle(requireConstructed(ObjectCalls.constructObject("GraphElement"), "GraphElement")))
     }
 
     private object Binds {

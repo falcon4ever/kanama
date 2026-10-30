@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -483,6 +484,11 @@ class Curve(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Curve? =
             if (handle.address() == 0L) null else Curve(GodotHandle(handle))
+
+        /** A new Curve, GDScript's `Curve.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Curve =
+            RefCounted.owned(Curve(GodotHandle(requireConstructed(ObjectCalls.constructObject("Curve"), "Curve"))))
     }
 
     private object Binds {

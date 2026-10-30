@@ -345,6 +345,12 @@ internal object KanamaIosRuntime {
     return "${path.substringAfterLast('/').removeSuffix(".kt")}.$methodName"
   }
 
+  /** `<script>.<init>` for a contained script-constructor error: no instance handle exists yet. */
+  fun scriptConstructorLabel(scriptHandle: Long): String {
+    val path = scriptResources[scriptHandle]?.path ?: "<script>"
+    return "${path.substringAfterLast('/').removeSuffix(".kt")}.<init>"
+  }
+
   /**
    * `<script> property <name> <op>` for a contained property-accessor error (task 131 item 11), the
    * label desktop's ScriptBridge reports for the same failure.
@@ -1409,7 +1415,16 @@ fun kanamaIosRuntimeScriptResourceRpcConfigChannel(scriptHandle: Long, rpcConfig
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_create")
 fun kanamaIosRuntimeScriptInstanceCreate(scriptHandle: Long, ownerObject: Long): Long =
-  KanamaIosRuntime.createScriptInstance(scriptHandle, ownerObject)
+  // Contain a throwing script constructor: an exception crossing this @CName export terminates the
+  // app. It is reported as a Godot script error with the Kotlin file:line, and 0 makes the shim
+  // hand Godot no instance (NULL), GDScript's answer for an instance it could not build; desktop's
+  // KanamaScript.callCreateInternal does the same.
+  try {
+    KanamaIosRuntime.createScriptInstance(scriptHandle, ownerObject)
+  } catch (t: Throwable) {
+    IosScriptErrors.report(t, KanamaIosRuntime.scriptConstructorLabel(scriptHandle))
+    0L
+  }
 
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_ready")

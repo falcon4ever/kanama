@@ -207,8 +207,42 @@ internal object OwnedReleases {
     )
   }
 
-  /** Time the drain may spend on owned-wrapper releases per frame; the rest carries over. */
+  /**
+   * Time the drain may spend on owned-wrapper releases per frame while the backlog is small; the
+   * rest carries over. A large backlog gets more ([budgetFor]).
+   */
   internal var frameBudget: Duration = 1.milliseconds
+
+  /**
+   * The drain's time budget for this frame. At a normal frame rate with up to [BACKLOG_STEP]
+   * waiting releases it is [frameBudget], what a game always paid. A larger backlog adds one
+   * [frameBudget] per [BACKLOG_STEP] waiting, and a slow frame earns a share ([SLOW_FRAME_SHARE])
+   * of the time since the last drain (more than [frameBudget] only for frames over 20 ms), both
+   * capped at [MAX_FRAME_BUDGET]: a game at a few frames a second, such as a phone under a
+   * benchmark's load, otherwise drained 10,000 dropped wrappers over minutes. Main thread only,
+   * like every release.
+   */
+  internal fun budgetFor(backlog: Int, sinceLastDrain: Duration): Duration {
+    val byBacklog =
+      if (backlog > BACKLOG_STEP) frameBudget * (backlog / BACKLOG_STEP + 1) else frameBudget
+    val byFrame = sinceLastDrain * SLOW_FRAME_SHARE
+    val wanted = maxOf(byBacklog, byFrame)
+    return if (wanted <= frameBudget) frameBudget else minOf(MAX_FRAME_BUDGET, wanted)
+  }
+
+  /**
+   * The fewest releases a drain runs, whatever the clock says, while more than [BACKLOG_STEP] wait
+   * or the frame took longer than [SLOW_FRAME]: a release can cost tens of microseconds on a loaded
+   * phone, where the time budget alone covers a few hundred.
+   */
+  internal const val MIN_RELEASES_LARGE_BACKLOG: Int = 512
+  private const val BACKLOG_STEP = 4096
+  private const val SLOW_FRAME_SHARE = 0.05
+  private val SLOW_FRAME = 50.milliseconds
+  private val MAX_FRAME_BUDGET = 4.milliseconds
+
+  // When the previous drain ran (main thread), for the slow-frame share of [budgetFor].
+  private var lastDrain: kotlin.time.TimeSource.Monotonic.ValueTimeMark? = null
 
   // Owned-wrapper releases taken off the queue but not yet run (the budget ran out); main thread.
   private val backlog = ArrayDeque<PendingRelease>()
@@ -225,9 +259,19 @@ internal object OwnedReleases {
    * to the next frame, so a burst of millions of dropped wrappers does not stall one frame. Returns
    * how many it released.
    */
-  fun drain(): Int = drain(frameBudget)
+  fun drain(): Int {
+    val now = TimeSource.Monotonic.markNow()
+    val sinceLastDrain = lastDrain?.let { now - it } ?: Duration.ZERO
+    lastDrain = now
+    return drainAfter(sinceLastDrain)
+  }
 
-  private fun drain(budget: Duration): Int {
+  /** [drain] as if the previous one ran [sinceLastDrain] ago (tests). */
+  internal fun drainAfter(sinceLastDrain: Duration): Int =
+    drain(budget = null, sinceLastDrain = sinceLastDrain)
+
+  // [budget] null: [budgetFor] the backlog once the queue is taken in.
+  private fun drain(budget: Duration?, sinceLastDrain: Duration = Duration.ZERO): Int {
     var released = 0
     while (true) {
       val release = OwnedReleaseCleaner.poll() ?: break
@@ -237,14 +281,23 @@ internal object OwnedReleases {
         else -> backlog.addLast(release)
       }
     }
+    val minimum =
+      if (budget == null && (backlog.size > BACKLOG_STEP || sinceLastDrain > SLOW_FRAME)) {
+        MIN_RELEASES_LARGE_BACKLOG
+      } else {
+        0
+      }
+    val limit = budget ?: budgetFor(backlog.size, sinceLastDrain)
     val start = TimeSource.Monotonic.markNow()
     var sinceCheck = 0
+    var taken = 0
     while (backlog.isNotEmpty()) {
       // The clock is read every 64 releases: a release is ~0.1-1 us, the clock ~20 ns.
       if (sinceCheck++ == 64) {
         sinceCheck = 0
-        if (start.elapsedNow() >= budget) break
+        if (taken >= minimum && start.elapsedNow() >= limit) break
       }
+      taken++
       val release = backlog.removeFirst()
       // An owned wrapper of an object whose script object is a plain class: keep the object (the
       // script object cannot anchor it, see ScriptOwnerLinks), park the release until the script

@@ -80,6 +80,12 @@ open class BaseButton(godotObject: GodotHandle) : Control(godotObject) {
       val RELEASE: ActionMode get() = ActionMode(1L)
     }
   }
+
+  companion object {
+    /** A new BaseButton, GDScript's `BaseButton.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): BaseButton =
+      BaseButton(checkNotNull(ClassDB.instantiate("BaseButton")) { "Godot could not instantiate BaseButton" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

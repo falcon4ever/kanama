@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Object for storing the queries plane alignment result data.
@@ -71,6 +72,11 @@ class OpenXRSpatialComponentPlaneAlignmentList(handle: GodotHandle) : OpenXRSpat
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentPlaneAlignmentList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPlaneAlignmentList(GodotHandle(handle))
+
+        /** A new OpenXRSpatialComponentPlaneAlignmentList, GDScript's `OpenXRSpatialComponentPlaneAlignmentList.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialComponentPlaneAlignmentList =
+            RefCounted.owned(OpenXRSpatialComponentPlaneAlignmentList(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialComponentPlaneAlignmentList"), "OpenXRSpatialComponentPlaneAlignmentList"))))
     }
 
     private object Binds {

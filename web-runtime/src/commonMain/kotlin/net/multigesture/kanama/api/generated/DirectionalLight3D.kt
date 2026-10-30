@@ -37,6 +37,12 @@ class DirectionalLight3D(godotObject: GodotHandle) : Light3D(godotObject) {
       val SKY_ONLY: SkyMode get() = SkyMode(2L)
     }
   }
+
+  companion object {
+    /** A new DirectionalLight3D, GDScript's `DirectionalLight3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): DirectionalLight3D =
+      DirectionalLight3D(checkNotNull(ClassDB.instantiate("DirectionalLight3D")) { "Godot could not instantiate DirectionalLight3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

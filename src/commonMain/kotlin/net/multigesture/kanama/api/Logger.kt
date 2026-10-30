@@ -4,6 +4,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Custom logger to receive messages from the internal error/warning stream.
@@ -59,5 +60,10 @@ class Logger(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Logger? =
             if (handle.address() == 0L) null else Logger(GodotHandle(handle))
+
+        /** A new Logger, GDScript's `Logger.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Logger =
+            RefCounted.owned(Logger(GodotHandle(requireConstructed(ObjectCalls.constructObject("Logger"), "Logger"))))
     }
 }

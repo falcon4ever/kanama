@@ -525,8 +525,9 @@ if grep -Eq 'debug/jdwp_port_editor' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DI
   echo "[local_ci] obsolete JDWP editor project setting should not be registered" >&2
   exit 1
 fi
-if grep -Eq 'set_initial_value\([^,]+,[^,]+,' "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
-  echo "[local_ci] Godot plugin set_initial_value must use the GDScript two-argument form" >&2
+# ProjectSettings.set_initial_value takes two arguments; EditorSettings.set_initial_value takes three.
+if grep -Eq 'ProjectSettings\.set_initial_value\([^,]+,[^,]+,' "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
+  echo "[local_ci] Godot plugin ProjectSettings.set_initial_value must use the GDScript two-argument form" >&2
   exit 1
 fi
 if ! grep -Eq 'is_editor_process' "$ROOT_DIR/bootstrap/bootstrap.c"; then
@@ -610,6 +611,14 @@ if ! grep -Eq 'ClassDB\.PropertySpec\("smoke_resources", VariantType\.ARRAY, 23,
   echo "[local_ci] generated script-property custom Resource array metadata is missing" >&2
   exit 1
 fi
+# example_project/name_clash/: script classes named like types the registrar imports (Arena,
+# Signals). The build above compiled their registrars; this keeps the fixtures from dropping out.
+for clash_script in Arena Signals; do
+  if [[ ! -f "$(find_project_script_registrar "${clash_script}ScriptRegistrar.kt")" ]]; then
+    echo "[local_ci] missing generated registrar for the name-clash fixture ${clash_script}" >&2
+    exit 1
+  fi
+done
 resource_owner_registrar="$(find_project_script_registrar "ResourceOwnerSmokeScriptRegistrar.kt")"
 if ! grep -Eq 'ClassDB\.PropertySpec\("smoke_resource", VariantType\.OBJECT, 17, "SmokeResource", 6, "SmokeResource"\)' "$resource_owner_registrar"; then
   echo "[local_ci] generated script-property custom Resource metadata is missing" >&2
@@ -620,7 +629,10 @@ if [[ ! -f "$self_smoke_registrar" ]]; then
   echo "[local_ci] missing generated self-smoke registrar" >&2
   exit 1
 fi
-if ! grep -Eq 'val kt = SelfSmoke\(net\.multigesture\.kanama\.api\.GodotHandle\(godotObject\)\)' "$self_smoke_registrar"; then
+# The registrar reaches its class through `import <fqName> as ThisClass` (SCRIPT_TYPE_ALIAS), never by
+# its simple name, so a script may be called Arena or Signals (example_project/name_clash/).
+if ! grep -Eq 'val kt = ThisClass\(net\.multigesture\.kanama\.api\.GodotHandle\(godotObject\)\)' "$self_smoke_registrar" ||
+  ! grep -Fq 'import net.multigesture.kanama.example.SelfSmoke as ThisClass' "$self_smoke_registrar"; then
   echo "[local_ci] generated self-smoke registrar does not construct the KanamaScript base-class example" >&2
   exit 1
 fi
@@ -667,7 +679,7 @@ if ! grep -Eq 'object HelloScriptMethods' "$hello_script_registrar"; then
   echo "[local_ci] generated method helper object is missing" >&2
   exit 1
 fi
-if ! grep -Eq 'fun greet\(instance: HelloScript, name: String\): String =' "$hello_script_registrar"; then
+if ! grep -Eq 'fun greet\(instance: ThisClass, name: String\): String =' "$hello_script_registrar"; then
   echo "[local_ci] generated direct method helper is missing" >&2
   exit 1
 fi
@@ -683,15 +695,15 @@ if ! grep -Eq 'object HelloScriptRpcs' "$hello_script_registrar"; then
   echo "[local_ci] generated RPC sender helper object is missing" >&2
   exit 1
 fi
-if ! grep -Eq 'fun rpcReplaceSmokeScene\(instance: HelloScript\): net\.multigesture\.kanama\.api\.GodotError =' "$hello_script_registrar"; then
+if ! grep -Eq 'fun rpcReplaceSmokeScene\(instance: ThisClass\): net\.multigesture\.kanama\.api\.GodotError =' "$hello_script_registrar"; then
   echo "[local_ci] generated RPC sender helper is missing" >&2
   exit 1
 fi
-if ! grep -Eq 'fun rpcIdReplaceSmokeScene\(instance: HelloScript, peerId: Long\): net\.multigesture\.kanama\.api\.GodotError =' "$hello_script_registrar"; then
+if ! grep -Eq 'fun rpcIdReplaceSmokeScene\(instance: ThisClass, peerId: Long\): net\.multigesture\.kanama\.api\.GodotError =' "$hello_script_registrar"; then
   echo "[local_ci] generated RPC peer-targeted sender helper is missing" >&2
   exit 1
 fi
-if ! grep -Eq 'fun callLocalReplaceSmokeScene\(instance: HelloScript\)' "$hello_script_registrar"; then
+if ! grep -Eq 'fun callLocalReplaceSmokeScene\(instance: ThisClass\)' "$hello_script_registrar"; then
   echo "[local_ci] generated call-local RPC sender helper is missing" >&2
   exit 1
 fi

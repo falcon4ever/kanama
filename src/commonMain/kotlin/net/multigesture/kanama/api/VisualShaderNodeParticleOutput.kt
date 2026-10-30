@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Visual shader node that defines output values for particle emitting.
@@ -22,5 +23,10 @@ class VisualShaderNodeParticleOutput(handle: GodotHandle) : VisualShaderNodeOutp
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleOutput? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleOutput(GodotHandle(handle))
+
+        /** A new VisualShaderNodeParticleOutput, GDScript's `VisualShaderNodeParticleOutput.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeParticleOutput =
+            RefCounted.owned(VisualShaderNodeParticleOutput(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeParticleOutput"), "VisualShaderNodeParticleOutput"))))
     }
 }

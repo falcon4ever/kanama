@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Imports native GLSL shaders (not Godot shaders) as an `RDShaderFile`.
@@ -22,5 +23,10 @@ class ResourceImporterShaderFile(handle: GodotHandle) : ResourceImporter(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterShaderFile? =
             if (handle.address() == 0L) null else ResourceImporterShaderFile(GodotHandle(handle))
+
+        /** A new ResourceImporterShaderFile, GDScript's `ResourceImporterShaderFile.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterShaderFile =
+            RefCounted.owned(ResourceImporterShaderFile(GodotHandle(requireConstructed(ObjectCalls.constructObject("ResourceImporterShaderFile"), "ResourceImporterShaderFile"))))
     }
 }

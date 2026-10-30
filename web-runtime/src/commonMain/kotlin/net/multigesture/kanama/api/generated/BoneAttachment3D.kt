@@ -8,4 +8,9 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class BoneAttachment3D(godotObject: GodotHandle) : Node3D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  companion object {
+    /** A new BoneAttachment3D, GDScript's `BoneAttachment3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): BoneAttachment3D =
+      BoneAttachment3D(checkNotNull(ClassDB.instantiate("BoneAttachment3D")) { "Godot could not instantiate BoneAttachment3D" }.toWebId())
+  }
 }

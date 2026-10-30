@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Performs a 3D texture lookup within the visual shader graph.
@@ -55,6 +56,11 @@ class VisualShaderNodeTexture3D(handle: GodotHandle) : VisualShaderNodeSample3D(
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTexture3D? =
             if (handle.address() == 0L) null else VisualShaderNodeTexture3D(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTexture3D, GDScript's `VisualShaderNodeTexture3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTexture3D =
+            RefCounted.owned(VisualShaderNodeTexture3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTexture3D"), "VisualShaderNodeTexture3D"))))
     }
 
     private object Binds {

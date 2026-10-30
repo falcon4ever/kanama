@@ -1,8 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://c0fixturemain001"]
+[gd_scene load_steps=3 format=3 uid="uid://c0fixturemain001"]
 
 [ext_resource type="PackedScene" uid="uid://c0fixturesub0001" path="res://sub.tscn" id="1_sub"]
 
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fx"]
+
 [node name="Main" type="Node"]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_fx")
+}
 
 [node name="Sub" parent="." instance=ExtResource("1_sub")]
 

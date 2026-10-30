@@ -44,6 +44,12 @@ class TextureRect(godotObject: GodotHandle) : Control(godotObject) {
       val KEEP_ASPECT_COVERED: StretchMode get() = StretchMode(6L)
     }
   }
+
+  companion object {
+    /** A new TextureRect, GDScript's `TextureRect.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): TextureRect =
+      TextureRect(checkNotNull(ClassDB.instantiate("TextureRect")) { "Godot could not instantiate TextureRect" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

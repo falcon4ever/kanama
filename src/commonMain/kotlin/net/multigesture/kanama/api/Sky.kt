@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Defines a 3D environment's background by using a `Material`.
@@ -234,6 +235,11 @@ class Sky(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Sky? =
             if (handle.address() == 0L) null else Sky(GodotHandle(handle))
+
+        /** A new Sky, GDScript's `Sky.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Sky =
+            RefCounted.owned(Sky(GodotHandle(requireConstructed(ObjectCalls.constructObject("Sky"), "Sky"))))
     }
 
     private object Binds {

@@ -312,11 +312,20 @@ internal class IosScriptCodeEmitter(
    * kit carries, must not define the symbol the project's own build defines.
    */
   fun registrySource(): String {
+    // Each packaged script class is imported under an alias (`import <fq> as S1_Arena`), never its
+    // simple name, which can be a name this file also imports (`MemorySegment`) or a second
+    // script's in another package. See `SCRIPT_TYPE_ALIAS` for the desktop registrar.
     val imports =
       scripts
         .mapNotNull { script -> script.packageName?.let { "$it.${script.className}" } }
         .distinct()
         .sorted()
+    val aliases =
+      imports.withIndex().associate { (index, fq) ->
+        fq to "S${index + 1}_${fq.substringAfterLast('.')}"
+      }
+    fun IosScript.typeRef(): String =
+      packageName?.let { aliases.getValue("$it.$className") } ?: className
     val builder = StringBuilder()
     builder.appendLine(
       "@file:OptIn(net.multigesture.kanama.ios.InternalKanamaIosApi::class, " +
@@ -326,7 +335,7 @@ internal class IosScriptCodeEmitter(
     builder.appendLine("package net.multigesture.kanama.ios")
     builder.appendLine()
     builder.appendLine("import java.lang.foreign.MemorySegment")
-    imports.forEach { builder.appendLine("import $it") }
+    imports.forEach { builder.appendLine("import $it as ${aliases.getValue(it)}") }
     builder.appendLine()
     if (scripts.isNotEmpty()) {
       builder.appendLine("@kotlin.native.CName(\"$REGISTER_SYMBOL\")")
@@ -375,7 +384,7 @@ internal class IosScriptCodeEmitter(
       builder.appendLine("            ),")
       builder.appendLine("            factory = { ownerObject ->")
       builder.appendLine(
-        "                $bridgeName(${script.className}(net.multigesture.kanama.api.GodotHandle(MemorySegment.ofAddress(ownerObject))))"
+        "                $bridgeName(${script.typeRef()}(net.multigesture.kanama.api.GodotHandle(MemorySegment.ofAddress(ownerObject))))"
       )
       builder.appendLine("            },")
       builder.appendLine("        ),")
@@ -390,7 +399,7 @@ internal class IosScriptCodeEmitter(
       val bridgeName = "${script.className}IosBridge_${shortHash(script.resourcePath)}"
       builder.appendLine()
       builder.appendLine("private class $bridgeName(")
-      builder.appendLine("    private val script: ${script.className},")
+      builder.appendLine("    private val script: ${script.typeRef()},")
       builder.appendLine(") : KanamaIosScriptBridge {")
       builder.appendLine("    override val scriptInstance: Any get() = script")
       builder.appendLine()

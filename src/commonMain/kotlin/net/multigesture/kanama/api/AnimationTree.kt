@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -140,6 +141,11 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
 
         internal fun wrap(handle: RawSegment): AnimationTree? =
             if (handle.address() == 0L) null else AnimationTree(GodotHandle(handle))
+
+        /** A new AnimationTree, GDScript's `AnimationTree.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AnimationTree =
+            AnimationTree(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationTree"), "AnimationTree")))
     }
 
     private object Binds {

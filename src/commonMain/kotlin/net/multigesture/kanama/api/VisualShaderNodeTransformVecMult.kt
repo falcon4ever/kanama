@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Multiplies a `Transform3D` and a `Vector3` within the visual shader graph.
@@ -75,6 +76,11 @@ class VisualShaderNodeTransformVecMult(handle: GodotHandle) : VisualShaderNode(h
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformVecMult? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformVecMult(GodotHandle(handle))
+
+        /** A new VisualShaderNodeTransformVecMult, GDScript's `VisualShaderNodeTransformVecMult.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeTransformVecMult =
+            RefCounted.owned(VisualShaderNodeTransformVecMult(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeTransformVecMult"), "VisualShaderNodeTransformVecMult"))))
     }
 
     private object Binds {

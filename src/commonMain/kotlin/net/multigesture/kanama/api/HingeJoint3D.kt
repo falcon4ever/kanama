@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A physics joint that restricts the rotation of a 3D physics body around an axis relative to
@@ -148,6 +149,11 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
 
         internal fun wrap(handle: RawSegment): HingeJoint3D? =
             if (handle.address() == 0L) null else HingeJoint3D(GodotHandle(handle))
+
+        /** A new HingeJoint3D, GDScript's `HingeJoint3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): HingeJoint3D =
+            HingeJoint3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("HingeJoint3D"), "HingeJoint3D")))
     }
 
     private object Binds {

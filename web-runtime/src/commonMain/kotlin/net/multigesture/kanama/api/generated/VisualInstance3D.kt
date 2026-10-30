@@ -17,6 +17,12 @@ open class VisualInstance3D(godotObject: GodotHandle) : Node3D(godotObject) {
   var layers: Long
     get() = unsupportedWebGameplayFamily("VisualInstance3D.get_layer_mask")
     set(newValue) = setLayerMask(newValue)
+
+  companion object {
+    /** A new VisualInstance3D, GDScript's `VisualInstance3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): VisualInstance3D =
+      VisualInstance3D(checkNotNull(ClassDB.instantiate("VisualInstance3D")) { "Godot could not instantiate VisualInstance3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

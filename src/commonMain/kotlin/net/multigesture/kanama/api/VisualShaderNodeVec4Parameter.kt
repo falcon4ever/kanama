@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector4
 
 /**
@@ -81,6 +82,11 @@ class VisualShaderNodeVec4Parameter(handle: GodotHandle) : VisualShaderNodeParam
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVec4Parameter? =
             if (handle.address() == 0L) null else VisualShaderNodeVec4Parameter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVec4Parameter, GDScript's `VisualShaderNodeVec4Parameter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVec4Parameter =
+            RefCounted.owned(VisualShaderNodeVec4Parameter(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeVec4Parameter"), "VisualShaderNodeVec4Parameter"))))
     }
 
     private object Binds {

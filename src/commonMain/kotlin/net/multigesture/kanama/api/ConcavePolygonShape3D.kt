@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -85,6 +86,11 @@ class ConcavePolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ConcavePolygonShape3D? =
             if (handle.address() == 0L) null else ConcavePolygonShape3D(GodotHandle(handle))
+
+        /** A new ConcavePolygonShape3D, GDScript's `ConcavePolygonShape3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ConcavePolygonShape3D =
+            RefCounted.owned(ConcavePolygonShape3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("ConcavePolygonShape3D"), "ConcavePolygonShape3D"))))
     }
 
     private object Binds {

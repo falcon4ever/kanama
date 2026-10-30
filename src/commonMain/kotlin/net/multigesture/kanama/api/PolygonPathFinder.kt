@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 
@@ -87,6 +88,11 @@ class PolygonPathFinder(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PolygonPathFinder? =
             if (handle.address() == 0L) null else PolygonPathFinder(GodotHandle(handle))
+
+        /** A new PolygonPathFinder, GDScript's `PolygonPathFinder.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PolygonPathFinder =
+            RefCounted.owned(PolygonPathFinder(GodotHandle(requireConstructed(ObjectCalls.constructObject("PolygonPathFinder"), "PolygonPathFinder"))))
     }
 
     private object Binds {

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://constructor_error_tool_driver.gd" id="1"]
+[ext_resource type="Script" path="res://ToolConstructorErrorSmoke.kt" id="2"]
+
+[node name="ConstructorErrorToolSmoke" type="Node"]
+script = ExtResource("1")
+
+[node name="Pre" type="Node" parent="."]
+script = ExtResource("2")
+rounds = 7

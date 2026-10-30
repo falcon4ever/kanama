@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A simple interface to create a peer-to-peer mesh network composed of `WebRTCPeerConnection` that
@@ -139,6 +140,11 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WebRTCMultiplayerPeer? =
             if (handle.address() == 0L) null else WebRTCMultiplayerPeer(GodotHandle(handle))
+
+        /** A new WebRTCMultiplayerPeer, GDScript's `WebRTCMultiplayerPeer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): WebRTCMultiplayerPeer =
+            RefCounted.owned(WebRTCMultiplayerPeer(GodotHandle(requireConstructed(ObjectCalls.constructObject("WebRTCMultiplayerPeer"), "WebRTCMultiplayerPeer"))))
     }
 
     private object Binds {

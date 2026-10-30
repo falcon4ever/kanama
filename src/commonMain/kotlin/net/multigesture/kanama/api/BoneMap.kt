@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Describes a mapping of bone names for retargeting `Skeleton3D` into common names defined by a
@@ -108,6 +109,11 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): BoneMap? =
             if (handle.address() == 0L) null else BoneMap(GodotHandle(handle))
+
+        /** A new BoneMap, GDScript's `BoneMap.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): BoneMap =
+            RefCounted.owned(BoneMap(GodotHandle(requireConstructed(ObjectCalls.constructObject("BoneMap"), "BoneMap"))))
     }
 
     private object Binds {

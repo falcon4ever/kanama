@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that makes particles emitted in a box shape.
@@ -22,5 +23,10 @@ class VisualShaderNodeParticleBoxEmitter(handle: GodotHandle) : VisualShaderNode
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleBoxEmitter? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleBoxEmitter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeParticleBoxEmitter, GDScript's `VisualShaderNodeParticleBoxEmitter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeParticleBoxEmitter =
+            RefCounted.owned(VisualShaderNodeParticleBoxEmitter(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeParticleBoxEmitter"), "VisualShaderNodeParticleBoxEmitter"))))
     }
 }

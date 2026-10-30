@@ -23,4 +23,10 @@ class AnimationTree(godotObject: GodotHandle) : AnimationMixer(godotObject) {
       val MANUAL: AnimationProcessCallback get() = AnimationProcessCallback(2L)
     }
   }
+
+  companion object {
+    /** A new AnimationTree, GDScript's `AnimationTree.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): AnimationTree =
+      AnimationTree(checkNotNull(ClassDB.instantiate("AnimationTree")) { "Godot could not instantiate AnimationTree" }.toWebId())
+  }
 }

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Linearly interpolates between two values within the visual shader graph.
@@ -112,6 +113,11 @@ class VisualShaderNodeMix(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeMix? =
             if (handle.address() == 0L) null else VisualShaderNodeMix(GodotHandle(handle))
+
+        /** A new VisualShaderNodeMix, GDScript's `VisualShaderNodeMix.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeMix =
+            RefCounted.owned(VisualShaderNodeMix(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeMix"), "VisualShaderNodeMix"))))
     }
 
     private object Binds {

@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Imports an SVG file as an automatically scalable texture for use in UI elements and 2D
@@ -23,5 +24,10 @@ class ResourceImporterSVG(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterSVG? =
             if (handle.address() == 0L) null else ResourceImporterSVG(GodotHandle(handle))
+
+        /** A new ResourceImporterSVG, GDScript's `ResourceImporterSVG.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ResourceImporterSVG =
+            RefCounted.owned(ResourceImporterSVG(GodotHandle(requireConstructed(ObjectCalls.constructObject("ResourceImporterSVG"), "ResourceImporterSVG"))))
     }
 }

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A container that keeps child controls in its center.
@@ -43,6 +44,11 @@ class CenterContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): CenterContainer? =
             if (handle.address() == 0L) null else CenterContainer(GodotHandle(handle))
+
+        /** A new CenterContainer, GDScript's `CenterContainer.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CenterContainer =
+            CenterContainer(GodotHandle(requireConstructed(ObjectCalls.constructObject("CenterContainer"), "CenterContainer")))
     }
 
     private object Binds {

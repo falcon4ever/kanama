@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An internal editor class intended for keeping the data of unrecognized resources.
@@ -82,6 +83,11 @@ class MissingResource(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MissingResource? =
             if (handle.address() == 0L) null else MissingResource(GodotHandle(handle))
+
+        /** A new MissingResource, GDScript's `MissingResource.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MissingResource =
+            RefCounted.owned(MissingResource(GodotHandle(requireConstructed(ObjectCalls.constructObject("MissingResource"), "MissingResource"))))
     }
 
     private object Binds {

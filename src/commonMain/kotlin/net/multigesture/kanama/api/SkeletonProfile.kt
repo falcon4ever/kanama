@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 
@@ -450,6 +451,11 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonProfile? =
             if (handle.address() == 0L) null else SkeletonProfile(GodotHandle(handle))
+
+        /** A new SkeletonProfile, GDScript's `SkeletonProfile.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SkeletonProfile =
+            RefCounted.owned(SkeletonProfile(GodotHandle(requireConstructed(ObjectCalls.constructObject("SkeletonProfile"), "SkeletonProfile"))))
     }
 
     private object Binds {

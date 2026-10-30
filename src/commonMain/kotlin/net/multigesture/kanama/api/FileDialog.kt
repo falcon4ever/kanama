@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A dialog for selecting files or directories in the filesystem.
@@ -881,6 +882,11 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
 
         internal fun wrap(handle: RawSegment): FileDialog? =
             if (handle.address() == 0L) null else FileDialog(GodotHandle(handle))
+
+        /** A new FileDialog, GDScript's `FileDialog.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): FileDialog =
+            FileDialog(GodotHandle(requireConstructed(ObjectCalls.constructObject("FileDialog"), "FileDialog")))
     }
 
     private object Binds {

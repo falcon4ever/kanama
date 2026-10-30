@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -306,6 +307,11 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNode? =
             if (handle.address() == 0L) null else AnimationNode(GodotHandle(handle))
+
+        /** A new AnimationNode, GDScript's `AnimationNode.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNode =
+            RefCounted.owned(AnimationNode(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationNode"), "AnimationNode"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
 
@@ -214,6 +215,11 @@ class PhysicsPointQueryParameters2D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PhysicsPointQueryParameters2D? =
             if (handle.address() == 0L) null else PhysicsPointQueryParameters2D(GodotHandle(handle))
+
+        /** A new PhysicsPointQueryParameters2D, GDScript's `PhysicsPointQueryParameters2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PhysicsPointQueryParameters2D =
+            RefCounted.owned(PhysicsPointQueryParameters2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PhysicsPointQueryParameters2D"), "PhysicsPointQueryParameters2D"))))
     }
 
     private object Binds {

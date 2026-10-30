@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Generated from Godot docs: OggPacketSequencePlayback
@@ -20,5 +21,10 @@ class OggPacketSequencePlayback(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OggPacketSequencePlayback? =
             if (handle.address() == 0L) null else OggPacketSequencePlayback(GodotHandle(handle))
+
+        /** A new OggPacketSequencePlayback, GDScript's `OggPacketSequencePlayback.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OggPacketSequencePlayback =
+            RefCounted.owned(OggPacketSequencePlayback(GodotHandle(requireConstructed(ObjectCalls.constructObject("OggPacketSequencePlayback"), "OggPacketSequencePlayback"))))
     }
 }

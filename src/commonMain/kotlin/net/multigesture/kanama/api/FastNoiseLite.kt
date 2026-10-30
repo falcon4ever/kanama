@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -904,10 +905,10 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         internal fun wrapBorrowed(handle: RawSegment): FastNoiseLite? =
             if (handle.address() == 0L) null else FastNoiseLite(GodotHandle(handle))
 
-        // Instantiate a FastNoiseLite.
+        /** A new FastNoiseLite, GDScript's `FastNoiseLite.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): FastNoiseLite =
-            RefCounted.owned(FastNoiseLite(GodotHandle(ObjectCalls.constructObject("FastNoiseLite"))))
+            RefCounted.owned(FastNoiseLite(GodotHandle(requireConstructed(ObjectCalls.constructObject("FastNoiseLite"), "FastNoiseLite"))))
 
         // Downcast a Resource to FastNoiseLite (null if not).
         @JvmStatic

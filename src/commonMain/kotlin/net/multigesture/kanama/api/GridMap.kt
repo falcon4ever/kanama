@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.RID
@@ -721,6 +722,11 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): GridMap? =
             if (handle.address() == 0L) null else GridMap(GodotHandle(handle))
+
+        /** A new GridMap, GDScript's `GridMap.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GridMap =
+            GridMap(GodotHandle(requireConstructed(ObjectCalls.constructObject("GridMap"), "GridMap")))
     }
 
     private object Binds {

@@ -1260,7 +1260,7 @@
       );
     },
     bunnymarkMethodId(method) {
-      const spriteVariant = this.bunnymarkVariant === "BunnymarkV1Sprites";
+      const spriteVariant = this.bunnymarkVariant === "BunnymarkSprites";
       if (method === "add") return spriteVariant ? 1 : 2;
       if (method === "remove") return spriteVariant ? 2 : 3;
       if (method === "finish") return spriteVariant ? 3 : 4;

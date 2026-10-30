@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for audio equalizers (EQ). Gives you control over frequencies. Use it to create a
@@ -58,6 +59,11 @@ open class AudioEffectEQ(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectEQ? =
             if (handle.address() == 0L) null else AudioEffectEQ(GodotHandle(handle))
+
+        /** A new AudioEffectEQ, GDScript's `AudioEffectEQ.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectEQ =
+            RefCounted.owned(AudioEffectEQ(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectEQ"), "AudioEffectEQ"))))
     }
 
     private object Binds {

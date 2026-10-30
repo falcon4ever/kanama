@@ -46,8 +46,8 @@ class NullableObjectReturnTest {
   @Test
   fun theMethodHelperReturnsTheNullableType() {
     val source = ScriptCodeEmitter(model(nullable = true), "ObjProbeScriptRegistrar").emit()
-    assertTrue(source.contains("fun pick(instance: ObjProbe): $godotObject? ="), source)
-    assertFalse(source.contains("fun pick(instance: ObjProbe): $godotObject ="), source)
+    assertTrue(source.contains("fun pick(instance: ThisClass): $godotObject? ="), source)
+    assertFalse(source.contains("fun pick(instance: ThisClass): $godotObject ="), source)
   }
 
   @Test

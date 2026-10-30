@@ -134,6 +134,21 @@ internal data class WebDegradation(
 internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private val scripts = inputs.sortedWith(compareBy({ it.resourcePath }, { it.model.fqName }))
 
+  /**
+   * The name the registry imports a script class under (`import <fqName> as S1_Arena`): never the
+   * simple name, which can be a name the registry also imports (`GodotHandle`, `Vector2i`), or a
+   * second script's in another package. See `SCRIPT_TYPE_ALIAS` for the desktop registrar.
+   */
+  private val aliases =
+    java.util.IdentityHashMap<WebScriptInput, String>().apply {
+      scripts.forEachIndexed { index, input ->
+        put(input, "S${index + 1}_${input.model.simpleName}")
+      }
+    }
+
+  private val WebScriptInput.typeRef: String
+    get() = checkNotNull(aliases[this]) { "${model.fqName} is not one of this registry's scripts" }
+
   companion object {
     /**
      * Runtime bridge contract version. 18 (task 82) replaces the per-script `kanamaWebFrame`
@@ -1428,7 +1443,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("import net.multigesture.kanama.web.WebScriptDescriptor")
     appendLine("import net.multigesture.kanama.backend.GodotHandle")
     appendLine("import net.multigesture.kanama.types.Vector2i")
-    scripts.forEach { appendLine("import ${it.model.fqName}") }
+    scripts.forEach { appendLine("import ${it.model.fqName} as ${it.typeRef}") }
     appendLine()
     appendLine("object KanamaWebProjectRegistry {")
     appendLine("  const val PROTOCOL_VERSION: Int = $PROTOCOL_VERSION")
@@ -1441,7 +1456,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("  fun create(scriptId: Int, objectId: Int): KanamaWebScript =")
     appendLine("    when (scriptId) {")
     scripts.forEachIndexed { index, input ->
-      appendLine("      ${index + 1} -> ${input.model.simpleName}(WebObjectId(objectId))")
+      appendLine("      ${index + 1} -> ${input.typeRef}(WebObjectId(objectId))")
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
     appendLine("    }")
@@ -1508,8 +1523,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     scripts.forEachIndexed { index, input ->
       val ready = input.model.virtuals.firstOrNull { it.virtualName == "_ready" }
       val body =
-        if (ready == null) "Unit"
-        else "(script as ${input.model.simpleName}).${ready.kotlinMethodName}()"
+        if (ready == null) "Unit" else "(script as ${input.typeRef}).${ready.kotlinMethodName}()"
       appendLine("      ${index + 1} -> $body")
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
@@ -1525,7 +1539,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       val process = input.model.virtuals.firstOrNull { it.virtualName == "_process" }
       val body =
         if (process == null) "Unit"
-        else "(script as ${input.model.simpleName}).${process.kotlinMethodName}(delta)"
+        else "(script as ${input.typeRef}).${process.kotlinMethodName}(delta)"
       appendLine("      ${index + 1} -> $body")
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
@@ -1541,7 +1555,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       val physics = input.model.virtuals.firstOrNull { it.virtualName == "_physics_process" }
       val body =
         if (physics == null) "Unit"
-        else "(script as ${input.model.simpleName}).${physics.kotlinMethodName}(delta)"
+        else "(script as ${input.typeRef}).${physics.kotlinMethodName}(delta)"
       appendLine("      ${index + 1} -> $body")
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
@@ -1560,8 +1574,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       val method = input.model.methods.firstOrNull { methodArm(it) == WebMethodArm.DRAW_VIRTUAL }
       val body =
         when {
-          virtual != null -> "(script as ${input.model.simpleName}).${virtual.kotlinMethodName}()"
-          method != null -> "(script as ${input.model.simpleName}).${method.kotlinName}()"
+          virtual != null -> "(script as ${input.typeRef}).${virtual.kotlinMethodName}()"
+          method != null -> "(script as ${input.typeRef}).${method.kotlinName}()"
           else -> "Unit"
         }
       appendLine("      ${index + 1} -> $body")
@@ -1579,7 +1593,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       val enterTree = input.model.virtuals.firstOrNull { it.virtualName == "_enter_tree" }
       val body =
         if (enterTree == null) "Unit"
-        else "(script as ${input.model.simpleName}).${enterTree.kotlinMethodName}()"
+        else "(script as ${input.typeRef}).${enterTree.kotlinMethodName}()"
       appendLine("      ${index + 1} -> $body")
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
@@ -1595,7 +1609,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       val exitTree = input.model.virtuals.firstOrNull { it.virtualName == "_exit_tree" }
       val body =
         if (exitTree == null) "Unit"
-        else "(script as ${input.model.simpleName}).${exitTree.kotlinMethodName}()"
+        else "(script as ${input.typeRef}).${exitTree.kotlinMethodName}()"
       appendLine("      ${index + 1} -> $body")
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
@@ -1614,7 +1628,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       val body =
         if (virtual == null || argument?.type != TypeMapping.OBJECT || wrapper == null) "Unit"
         else
-          "(script as ${input.model.simpleName}).${virtual.kotlinMethodName}($wrapper(GodotHandle.fromBackendToken(eventHandle.toLong())))"
+          "(script as ${input.typeRef}).${virtual.kotlinMethodName}($wrapper(GodotHandle.fromBackendToken(eventHandle.toLong())))"
       appendLine("      ${index + 1} -> $body")
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
@@ -1633,7 +1647,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       val body =
         if (virtual == null || argument?.type != TypeMapping.OBJECT || wrapper == null) "Unit"
         else
-          "(script as ${input.model.simpleName}).${virtual.kotlinMethodName}($wrapper(GodotHandle.fromBackendToken(eventHandle.toLong())))"
+          "(script as ${input.typeRef}).${virtual.kotlinMethodName}($wrapper(GodotHandle.fromBackendToken(eventHandle.toLong())))"
       appendLine("      ${index + 1} -> $body")
     }
     appendLine("      else -> unknown(\"script\", scriptId)")
@@ -1650,7 +1664,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       input.model.methods.forEachIndexed { methodIndex, method ->
         if (method.args.isEmpty() && method.returnType == null) {
           appendLine(
-            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}()"
+            "        ${methodIndex + 1} -> (script as ${input.typeRef}).${method.kotlinName}()"
           )
         }
       }
@@ -1673,12 +1687,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       input.model.properties.forEachIndexed { propertyIndex, property ->
         if (property.type == TypeMapping.STRING) {
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName}"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName}"
           )
         }
         if (property.type == TypeMapping.NODE_PATH) {
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName}.path"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName}.path"
           )
         }
       }
@@ -1700,12 +1714,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       input.model.properties.forEachIndexed { propertyIndex, property ->
         if (property.type == TypeMapping.STRING && property.isMutable) {
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = value"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = value"
           )
         }
         if (property.type == TypeMapping.NODE_PATH && property.isMutable) {
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = net.multigesture.kanama.types.NodePath(value)"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = net.multigesture.kanama.types.NodePath(value)"
           )
         }
       }
@@ -1732,7 +1746,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             method.args.single().type == TypeMapping.INT
         ) {
           val call =
-            "(script as ${input.model.simpleName}).${method.kotlinName}(${webLongArg(method.args.single(), "value")})"
+            "(script as ${input.typeRef}).${method.kotlinName}(${webLongArg(method.args.single(), "value")})"
           appendLine("        ${methodIndex + 1} -> ${webLongValue(call, method.returnGodotEnum)}")
         }
       }
@@ -1758,7 +1772,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     scripts.forEachIndexed { scriptIndex, input ->
       appendLine("      ${scriptIndex + 1} -> when (methodId) {")
       input.model.methods.forEachIndexed { methodIndex, method ->
-        val target = "(script as ${input.model.simpleName}).${method.kotlinName}"
+        val target = "(script as ${input.typeRef}).${method.kotlinName}"
         when (methodArm(method)) {
           WebMethodArm.STRING_VOID -> appendLine("        ${methodIndex + 1} -> $target(value)")
           WebMethodArm.PACKED_ARGS -> {
@@ -1794,7 +1808,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             method.args.single().type == TypeMapping.INT
         ) {
           appendLine(
-            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}(${webLongArg(method.args.single(), "value")})"
+            "        ${methodIndex + 1} -> (script as ${input.typeRef}).${method.kotlinName}(${webLongArg(method.args.single(), "value")})"
           )
         }
       }
@@ -1821,7 +1835,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             method.args.single().type == TypeMapping.VECTOR2I
         ) {
           appendLine(
-            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}(Vector2i(x, y))"
+            "        ${methodIndex + 1} -> (script as ${input.typeRef}).${method.kotlinName}(Vector2i(x, y))"
           )
         }
       }
@@ -1846,7 +1860,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         val wrapper = arg?.objectWrapperFqName
         if (method.returnType == null && arg?.type == TypeMapping.OBJECT && wrapper != null) {
           appendLine(
-            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}($wrapper(WebObjectId(objectHandle)))"
+            "        ${methodIndex + 1} -> (script as ${input.typeRef}).${method.kotlinName}($wrapper(WebObjectId(objectHandle)))"
           )
         }
       }
@@ -1882,7 +1896,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             secondWrapper != null
         ) {
           appendLine(
-            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}($firstWrapper(GodotHandle.fromBackendToken(firstHandle.toLong())), $secondWrapper(GodotHandle.fromBackendToken(secondHandle.toLong())), ${webLongArg(third, "value")})"
+            "        ${methodIndex + 1} -> (script as ${input.typeRef}).${method.kotlinName}($firstWrapper(GodotHandle.fromBackendToken(firstHandle.toLong())), $secondWrapper(GodotHandle.fromBackendToken(secondHandle.toLong())), ${webLongArg(third, "value")})"
           )
         }
       }
@@ -1909,7 +1923,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         if (methodArm(method) == WebMethodArm.NUMERIC_VOID) {
           val arguments = numericArgKotlinExpressions(method.args).joinToString(", ")
           appendLine(
-            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}($arguments)"
+            "        ${methodIndex + 1} -> (script as ${input.typeRef}).${method.kotlinName}($arguments)"
           )
         }
       }
@@ -1935,7 +1949,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         if (methodArm(method) == WebMethodArm.PACKED_RETURN) {
           val access =
             webLongValue(
-              "(script as ${input.model.simpleName}).${method.kotlinName}()",
+              "(script as ${input.typeRef}).${method.kotlinName}()",
               method.returnGodotEnum,
             )
           val returnType = checkNotNull(method.returnType) { "PACKED_RETURN needs a return type" }
@@ -1966,7 +1980,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           val arguments = packedArgKotlinExpressions(method.args).joinToString(", ")
           val access =
             webLongValue(
-              "(script as ${input.model.simpleName}).${method.kotlinName}($arguments)",
+              "(script as ${input.typeRef}).${method.kotlinName}($arguments)",
               method.returnGodotEnum,
             )
           val returnType =
@@ -1996,13 +2010,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         if (property.type == TypeMapping.INT && property.isMutable) {
           val assigned = property.godotEnum?.wrap("value") ?: "value"
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = $assigned"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = $assigned"
           )
         }
         // The proxy pushes exported bools through the long channel (1/0).
         if (property.type == TypeMapping.BOOL && property.isMutable) {
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = value != 0L"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = value != 0L"
           )
         }
       }
@@ -2025,7 +2039,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       input.model.properties.forEachIndexed { propertyIndex, property ->
         if (property.type == TypeMapping.FLOAT && property.isMutable) {
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = value"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = value"
           )
         }
       }
@@ -2048,7 +2062,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       input.model.properties.forEachIndexed { propertyIndex, property ->
         if (property.type == TypeMapping.VECTOR2 && property.isMutable) {
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = net.multigesture.kanama.types.Vector2(x, y)"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = net.multigesture.kanama.types.Vector2(x, y)"
           )
         }
       }
@@ -2071,7 +2085,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       input.model.properties.forEachIndexed { propertyIndex, property ->
         if (property.type == TypeMapping.VECTOR2I && property.isMutable) {
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = Vector2i(x, y)"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = Vector2i(x, y)"
           )
         }
       }
@@ -2097,7 +2111,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     scripts.forEachIndexed { scriptIndex, input ->
       appendLine("      ${scriptIndex + 1} -> when (propertyId) {")
       input.model.properties.forEachIndexed { propertyIndex, property ->
-        val access = "(script as ${input.model.simpleName}).${property.kotlinName}"
+        val access = "(script as ${input.typeRef}).${property.kotlinName}"
         val expression =
           when {
             property.type == TypeMapping.STRING -> access
@@ -2147,7 +2161,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       input.model.properties.forEachIndexed { propertyIndex, property ->
         if (property.type == TypeMapping.VECTOR3 && property.isMutable) {
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = net.multigesture.kanama.types.Vector3(x, y, z)"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = net.multigesture.kanama.types.Vector3(x, y, z)"
           )
         }
       }
@@ -2173,7 +2187,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       input.model.properties.forEachIndexed { propertyIndex, property ->
         if (WebValueTypes.isWebValueType(property.type) && property.isMutable) {
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = ${WebValueTypes.kotlinUnpack(property.type, "packed")}"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = ${WebValueTypes.kotlinUnpack(property.type, "packed")}"
           )
         }
       }
@@ -2197,7 +2211,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       input.model.properties.forEachIndexed { propertyIndex, property ->
         if (property.type == TypeMapping.COLOR && property.isMutable) {
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = net.multigesture.kanama.types.Color(r, g, b, a)"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = net.multigesture.kanama.types.Color(r, g, b, a)"
           )
         }
       }
@@ -2227,7 +2241,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             else
               "$wrapper(checkNotNull(handle) { \"Property ${property.godotName} is not nullable\" })"
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = $wrapped"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = $wrapped"
           )
         } else if (
           property.type == TypeMapping.OBJECT && property.isMutable && customScript != null
@@ -2240,7 +2254,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             else
               "checkNotNull($resolved) { \"Property ${property.godotName} is not a hydrated $customScript\" }"
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = $wrapped"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = $wrapped"
           )
         }
       }
@@ -2265,7 +2279,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           property.type == TypeMapping.ARRAY && property.isMutable && property.arrayElementString
         ) {
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = values"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = values"
           )
         }
       }
@@ -2290,7 +2304,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         val wrapper = property.arrayElementWrapperFqName
         if (property.type == TypeMapping.ARRAY && property.isMutable && elementScript != null) {
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = values.map { requireNotNull(net.multigesture.kanama.web.webScriptInstance(it) as? $elementScript) { \"Array element is not a hydrated $elementScript\" } }"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = values.map { requireNotNull(net.multigesture.kanama.web.webScriptInstance(it) as? $elementScript) { \"Array element is not a hydrated $elementScript\" } }"
           )
         } else if (property.type == TypeMapping.ARRAY && property.isMutable && wrapper != null) {
           // Task 88 K6: 0 means the exported array held null at this index. A nullable
@@ -2307,7 +2321,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
                 "$wrapper(GodotHandle.fromBackendToken(it.toLong()))"
             }
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = values.map { $element }"
+            "        ${propertyIndex + 1} -> (script as ${input.typeRef}).${property.kotlinName} = values.map { $element }"
           )
         }
       }

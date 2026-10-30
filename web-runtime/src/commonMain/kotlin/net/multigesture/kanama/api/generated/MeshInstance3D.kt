@@ -35,6 +35,12 @@ class MeshInstance3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject)
 
   val mesh: Mesh?
     get() = getMesh()
+
+  companion object {
+    /** A new MeshInstance3D, GDScript's `MeshInstance3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): MeshInstance3D =
+      MeshInstance3D(checkNotNull(ClassDB.instantiate("MeshInstance3D")) { "Godot could not instantiate MeshInstance3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

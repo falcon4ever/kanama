@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A time-seeking animation node used in `AnimationTree`.
@@ -53,6 +54,11 @@ class AnimationNodeTimeSeek(handle: GodotHandle) : AnimationNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeTimeSeek? =
             if (handle.address() == 0L) null else AnimationNodeTimeSeek(GodotHandle(handle))
+
+        /** A new AnimationNodeTimeSeek, GDScript's `AnimationNodeTimeSeek.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeTimeSeek =
+            RefCounted.owned(AnimationNodeTimeSeek(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationNodeTimeSeek"), "AnimationNodeTimeSeek"))))
     }
 
     private object Binds {

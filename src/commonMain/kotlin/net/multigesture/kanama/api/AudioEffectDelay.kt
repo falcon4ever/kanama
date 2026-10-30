@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a delay audio effect to an audio bus. Emulates an echo by playing the input audio back
@@ -410,6 +411,11 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectDelay? =
             if (handle.address() == 0L) null else AudioEffectDelay(GodotHandle(handle))
+
+        /** A new AudioEffectDelay, GDScript's `AudioEffectDelay.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectDelay =
+            RefCounted.owned(AudioEffectDelay(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectDelay"), "AudioEffectDelay"))))
     }
 
     private object Binds {

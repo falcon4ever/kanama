@@ -192,7 +192,7 @@ fi
 check "hot-reload: dropped 1 lambda connection\\(s\\) of build 1 whose script objects are gone \\(KanamaSmokeAutoload\\.probe x1\\)"
 check "hot-reload: retired-loader-check collected=1 alive=0 alive_ids= swept=[0-9]+"
 check_absent "Leaked instance"
-check_absent "instances leaked at exit"
+check_absent "leaked at exit"
 check_absent "hot-reload: failed"
 check_absent "placeholder=true"
 check_absent "Cannot ptrcall nil constructor"

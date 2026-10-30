@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -33,6 +34,11 @@ class PlaceholderTexture2D(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderTexture2D? =
             if (handle.address() == 0L) null else PlaceholderTexture2D(GodotHandle(handle))
+
+        /** A new PlaceholderTexture2D, GDScript's `PlaceholderTexture2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PlaceholderTexture2D =
+            RefCounted.owned(PlaceholderTexture2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("PlaceholderTexture2D"), "PlaceholderTexture2D"))))
     }
 
     private object Binds {

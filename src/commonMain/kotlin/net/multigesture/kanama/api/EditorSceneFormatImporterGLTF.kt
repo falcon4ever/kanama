@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Generated from Godot docs: EditorSceneFormatImporterGLTF
@@ -20,5 +21,10 @@ class EditorSceneFormatImporterGLTF(handle: GodotHandle) : EditorSceneFormatImpo
 
         internal fun wrapBorrowed(handle: RawSegment): EditorSceneFormatImporterGLTF? =
             if (handle.address() == 0L) null else EditorSceneFormatImporterGLTF(GodotHandle(handle))
+
+        /** A new EditorSceneFormatImporterGLTF, GDScript's `EditorSceneFormatImporterGLTF.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorSceneFormatImporterGLTF =
+            RefCounted.owned(EditorSceneFormatImporterGLTF(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorSceneFormatImporterGLTF"), "EditorSceneFormatImporterGLTF"))))
     }
 }

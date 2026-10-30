@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Suggested bindings object for OpenXR.
@@ -157,6 +158,11 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRInteractionProfile? =
             if (handle.address() == 0L) null else OpenXRInteractionProfile(GodotHandle(handle))
+
+        /** A new OpenXRInteractionProfile, GDScript's `OpenXRInteractionProfile.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRInteractionProfile =
+            RefCounted.owned(OpenXRInteractionProfile(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRInteractionProfile"), "OpenXRInteractionProfile"))))
     }
 
     private object Binds {

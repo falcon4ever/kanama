@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents a glTF texture sampler
@@ -142,6 +143,11 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFTextureSampler? =
             if (handle.address() == 0L) null else GLTFTextureSampler(GodotHandle(handle))
+
+        /** A new GLTFTextureSampler, GDScript's `GLTFTextureSampler.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFTextureSampler =
+            RefCounted.owned(GLTFTextureSampler(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFTextureSampler"), "GLTFTextureSampler"))))
     }
 
     private object Binds {

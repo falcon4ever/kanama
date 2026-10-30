@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Returns the distance between two points. To be used within the visual shader graph.
@@ -22,5 +23,10 @@ class VisualShaderNodeVectorDistance(handle: GodotHandle) : VisualShaderNodeVect
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorDistance? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorDistance(GodotHandle(handle))
+
+        /** A new VisualShaderNodeVectorDistance, GDScript's `VisualShaderNodeVectorDistance.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeVectorDistance =
+            RefCounted.owned(VisualShaderNodeVectorDistance(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeVectorDistance"), "VisualShaderNodeVectorDistance"))))
     }
 }

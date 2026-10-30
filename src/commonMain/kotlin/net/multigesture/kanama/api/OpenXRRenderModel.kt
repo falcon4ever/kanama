@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 
 /**
@@ -66,6 +67,11 @@ class OpenXRRenderModel(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): OpenXRRenderModel? =
             if (handle.address() == 0L) null else OpenXRRenderModel(GodotHandle(handle))
+
+        /** A new OpenXRRenderModel, GDScript's `OpenXRRenderModel.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): OpenXRRenderModel =
+            OpenXRRenderModel(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRRenderModel"), "OpenXRRenderModel")))
     }
 
     private object Binds {

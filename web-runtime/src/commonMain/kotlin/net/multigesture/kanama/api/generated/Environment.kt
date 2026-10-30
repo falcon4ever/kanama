@@ -129,6 +129,12 @@ class Environment(godotObject: GodotHandle) : Resource(godotObject) {
       val SCALE_100_PERCENT: SDFGIYScale get() = SDFGIYScale(2L)
     }
   }
+
+  companion object {
+    /** A new Environment, GDScript's `Environment.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): Environment =
+      Environment(checkNotNull(ClassDB.instantiate("Environment")) { "Godot could not instantiate Environment" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Framebuffer pass attachment description (used by `RenderingDevice`).
@@ -173,6 +174,11 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDFramebufferPass? =
             if (handle.address() == 0L) null else RDFramebufferPass(GodotHandle(handle))
+
+        /** A new RDFramebufferPass, GDScript's `RDFramebufferPass.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDFramebufferPass =
+            RefCounted.owned(RDFramebufferPass(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDFramebufferPass"), "RDFramebufferPass"))))
     }
 
     private object Binds {

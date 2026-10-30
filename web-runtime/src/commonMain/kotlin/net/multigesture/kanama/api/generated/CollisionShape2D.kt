@@ -17,6 +17,12 @@ class CollisionShape2D(godotObject: GodotHandle) : Node2D(godotObject) {
   var disabled: Boolean
     get() = unsupportedWebGameplayFamily("CollisionShape2D.is_disabled")
     set(newValue) = setDisabled(newValue)
+
+  companion object {
+    /** A new CollisionShape2D, GDScript's `CollisionShape2D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): CollisionShape2D =
+      CollisionShape2D(checkNotNull(ClassDB.instantiate("CollisionShape2D")) { "Godot could not instantiate CollisionShape2D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

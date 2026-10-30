@@ -220,9 +220,11 @@ class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
       )
     var mask = 1L
     // The rows that still cross by design: the engine RNG ones (8: `GD.seed` + `GD.randf`; 53: seed +
-    // randi; 54: seed + randfRange + randiRange). Every other row must not reach the bridge's
-    // builtin-call channel at all (fix round 2: a silent crossing).
-    val engineCalls = mapOf(8 to 2L, 53 to 2L, 54 to 3L)
+    // randi; 54: seed + randfRange + randiRange) and the inverse hyperbolics (23: asinh, 24: acosh,
+    // 25: atanh; WEB_ENGINE_UTILITIES: kotlin.math's lose hundreds of ulps near zero and skip
+    // Godot's clamps). Every other row must not reach the bridge's builtin-call channel at all
+    // (fix round 2: a silent crossing).
+    val engineCalls = mapOf(8 to 2L, 23 to 1L, 24 to 1L, 25 to 1L, 53 to 2L, 54 to 3L)
     rows.forEachIndexed { index, (bound, case) ->
       val twin = WebExperimentalGenericCall.callImmediate(twin(), "gd_value", listOf(index.toLong())).asDouble()
       val callsBefore = twinLong("builtin_calls")

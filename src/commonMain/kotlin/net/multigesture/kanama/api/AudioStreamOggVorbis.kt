@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A class representing an Ogg Vorbis audio stream.
@@ -261,6 +262,11 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamOggVorbis? =
             if (handle.address() == 0L) null else AudioStreamOggVorbis(GodotHandle(handle))
+
+        /** A new AudioStreamOggVorbis, GDScript's `AudioStreamOggVorbis.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioStreamOggVorbis =
+            RefCounted.owned(AudioStreamOggVorbis(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamOggVorbis"), "AudioStreamOggVorbis"))))
     }
 
     private object Binds {

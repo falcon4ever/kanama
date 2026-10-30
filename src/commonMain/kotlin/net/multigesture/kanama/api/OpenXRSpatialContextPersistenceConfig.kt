@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 
 /**
@@ -58,6 +59,11 @@ class OpenXRSpatialContextPersistenceConfig(handle: GodotHandle) : OpenXRStructu
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialContextPersistenceConfig? =
             if (handle.address() == 0L) null else OpenXRSpatialContextPersistenceConfig(GodotHandle(handle))
+
+        /** A new OpenXRSpatialContextPersistenceConfig, GDScript's `OpenXRSpatialContextPersistenceConfig.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialContextPersistenceConfig =
+            RefCounted.owned(OpenXRSpatialContextPersistenceConfig(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialContextPersistenceConfig"), "OpenXRSpatialContextPersistenceConfig"))))
     }
 
     private object Binds {

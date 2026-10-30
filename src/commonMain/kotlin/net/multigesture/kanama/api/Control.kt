@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Rect2
@@ -3170,6 +3171,11 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
         internal fun wrap(handle: RawSegment): Control? =
             if (handle.address() == 0L) null else Control(GodotHandle(handle))
+
+        /** A new Control, GDScript's `Control.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Control =
+            Control(GodotHandle(requireConstructed(ObjectCalls.constructObject("Control"), "Control")))
     }
 
     private object Binds {

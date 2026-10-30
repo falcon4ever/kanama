@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base script that can be used to add extension functions to the editor.
@@ -59,6 +60,11 @@ class EditorScript(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorScript? =
             if (handle.address() == 0L) null else EditorScript(GodotHandle(handle))
+
+        /** A new EditorScript, GDScript's `EditorScript.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorScript =
+            RefCounted.owned(EditorScript(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorScript"), "EditorScript"))))
     }
 
     private object Binds {

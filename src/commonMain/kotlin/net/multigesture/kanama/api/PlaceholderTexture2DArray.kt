@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Placeholder class for a 2-dimensional texture array.
@@ -22,5 +23,10 @@ class PlaceholderTexture2DArray(handle: GodotHandle) : PlaceholderTextureLayered
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderTexture2DArray? =
             if (handle.address() == 0L) null else PlaceholderTexture2DArray(GodotHandle(handle))
+
+        /** A new PlaceholderTexture2DArray, GDScript's `PlaceholderTexture2DArray.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PlaceholderTexture2DArray =
+            RefCounted.owned(PlaceholderTexture2DArray(GodotHandle(requireConstructed(ObjectCalls.constructObject("PlaceholderTexture2DArray"), "PlaceholderTexture2DArray"))))
     }
 }

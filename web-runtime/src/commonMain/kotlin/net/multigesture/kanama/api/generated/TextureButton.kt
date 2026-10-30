@@ -19,4 +19,10 @@ class TextureButton(godotObject: GodotHandle) : BaseButton(godotObject) {
       val KEEP_ASPECT_COVERED: StretchMode get() = StretchMode(6L)
     }
   }
+
+  companion object {
+    /** A new TextureButton, GDScript's `TextureButton.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): TextureButton =
+      TextureButton(checkNotNull(ClassDB.instantiate("TextureButton")) { "Godot could not instantiate TextureButton" }.toWebId())
+  }
 }

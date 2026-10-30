@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An array of `Cubemap`s, stored together and with a single reference.
@@ -37,6 +38,11 @@ class CubemapArray(handle: GodotHandle) : ImageTextureLayered(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CubemapArray? =
             if (handle.address() == 0L) null else CubemapArray(GodotHandle(handle))
+
+        /** A new CubemapArray, GDScript's `CubemapArray.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CubemapArray =
+            RefCounted.owned(CubemapArray(GodotHandle(requireConstructed(ObjectCalls.constructObject("CubemapArray"), "CubemapArray"))))
     }
 
     private object Binds {

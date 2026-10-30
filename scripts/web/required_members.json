@@ -91,15 +91,15 @@
     "bunnymark": {
       "required": [
         {
-          "member": "BunnymarkV1SpritesKanama.add_bunny",
+          "member": "BunnymarkSpritesKanama.add_bunny",
           "reason": "The driver adds 256 bunnies through this member; the demo's population depends on it."
         },
         {
-          "member": "BunnymarkV1SpritesKanama.remove_bunny",
+          "member": "BunnymarkSpritesKanama.remove_bunny",
           "reason": "The driver removes a bunny to advance a handle generation for the stale-handle proof."
         },
         {
-          "member": "BunnymarkV1SpritesKanama.finish",
+          "member": "BunnymarkSpritesKanama.finish",
           "reason": "The driver's teardown entry: frees the bunnies and reports the final counts."
         }
       ],

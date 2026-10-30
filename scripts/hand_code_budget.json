@@ -67,8 +67,11 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/Mathf.kt": {
       "category": "sugar",
-      "lines": 316,
-      "reason": "Godot/C#-style math helpers written once in common: Godot's formula where it is plain arithmetic, GD otherwise (task 129 B)"
+      "lines": 343,
+      "raises": [
+        "316 -> 343: the Mathf transcendentals are Godot's math_funcs bodies in Kotlin (ease, the asin/acos clamps, C's pow special cases) instead of GD engine calls"
+      ],
+      "reason": "Godot/C#-style math helpers written once in common: Godot's formulas in Kotlin, GD only for the float-to-int conversions, posmod by zero and the inverse hyperbolics (task 129 B)"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/RefCounted.kt": {
       "category": "runtime-core",

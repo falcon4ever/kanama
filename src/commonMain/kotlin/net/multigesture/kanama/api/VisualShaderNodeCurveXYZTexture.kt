@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Performs a `CurveXYZTexture` lookup within the visual shader graph.
@@ -53,6 +54,11 @@ class VisualShaderNodeCurveXYZTexture(handle: GodotHandle) : VisualShaderNodeRes
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeCurveXYZTexture? =
             if (handle.address() == 0L) null else VisualShaderNodeCurveXYZTexture(GodotHandle(handle))
+
+        /** A new VisualShaderNodeCurveXYZTexture, GDScript's `VisualShaderNodeCurveXYZTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeCurveXYZTexture =
+            RefCounted.owned(VisualShaderNodeCurveXYZTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeCurveXYZTexture"), "VisualShaderNodeCurveXYZTexture"))))
     }
 
     private object Binds {

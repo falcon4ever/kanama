@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
@@ -1070,6 +1071,11 @@ class ItemList(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): ItemList? =
             if (handle.address() == 0L) null else ItemList(GodotHandle(handle))
+
+        /** A new ItemList, GDScript's `ItemList.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ItemList =
+            ItemList(GodotHandle(requireConstructed(ObjectCalls.constructObject("ItemList"), "ItemList")))
     }
 
     private object Binds {

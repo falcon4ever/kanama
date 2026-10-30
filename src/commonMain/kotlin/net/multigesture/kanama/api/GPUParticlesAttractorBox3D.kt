@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -44,6 +45,11 @@ class GPUParticlesAttractorBox3D(handle: GodotHandle) : GPUParticlesAttractor3D(
 
         internal fun wrap(handle: RawSegment): GPUParticlesAttractorBox3D? =
             if (handle.address() == 0L) null else GPUParticlesAttractorBox3D(GodotHandle(handle))
+
+        /** A new GPUParticlesAttractorBox3D, GDScript's `GPUParticlesAttractorBox3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): GPUParticlesAttractorBox3D =
+            GPUParticlesAttractorBox3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("GPUParticlesAttractorBox3D"), "GPUParticlesAttractorBox3D")))
     }
 
     private object Binds {

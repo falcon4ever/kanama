@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Default environment properties for the entire scene (post-processing effects, lighting and
@@ -96,6 +97,11 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): WorldEnvironment? =
             if (handle.address() == 0L) null else WorldEnvironment(GodotHandle(handle))
+
+        /** A new WorldEnvironment, GDScript's `WorldEnvironment.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): WorldEnvironment =
+            WorldEnvironment(GodotHandle(requireConstructed(ObjectCalls.constructObject("WorldEnvironment"), "WorldEnvironment")))
     }
 
     private object Binds {

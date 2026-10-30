@@ -45,6 +45,12 @@ class ShapeCast3D(godotObject: GodotHandle) : Node3D(godotObject) {
   var targetPosition: Vector3
     get() = getTargetPosition()
     set(newValue) = setTargetPosition(newValue)
+
+  companion object {
+    /** A new ShapeCast3D, GDScript's `ShapeCast3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): ShapeCast3D =
+      ShapeCast3D(checkNotNull(ClassDB.instantiate("ShapeCast3D")) { "Godot could not instantiate ShapeCast3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

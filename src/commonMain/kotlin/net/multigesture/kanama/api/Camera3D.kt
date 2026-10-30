@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.RID
@@ -748,10 +749,10 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
         internal fun wrap(handle: RawSegment): Camera3D? =
             if (handle.address() == 0L) null else Camera3D(GodotHandle(handle))
 
-        // Instantiate a Camera3D.
+        /** A new Camera3D, GDScript's `Camera3D.new()`. Add it to the tree, or `queueFree()` it. */
         @JvmStatic
         fun create(): Camera3D =
-            Camera3D(GodotHandle(ObjectCalls.constructObject("Camera3D")))
+            Camera3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("Camera3D"), "Camera3D")))
     }
 
     private object Binds {

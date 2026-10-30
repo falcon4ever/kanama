@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * The analog threshold binding modifier can modify a float input to a boolean input with specified
@@ -144,6 +145,11 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRAnalogThresholdModifier? =
             if (handle.address() == 0L) null else OpenXRAnalogThresholdModifier(GodotHandle(handle))
+
+        /** A new OpenXRAnalogThresholdModifier, GDScript's `OpenXRAnalogThresholdModifier.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRAnalogThresholdModifier =
+            RefCounted.owned(OpenXRAnalogThresholdModifier(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRAnalogThresholdModifier"), "OpenXRAnalogThresholdModifier"))))
     }
 
     private object Binds {

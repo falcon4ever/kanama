@@ -42,4 +42,10 @@ open class GeometryInstance3D(godotObject: GodotHandle) : VisualInstance3D(godot
       val DEPENDENCIES: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(2L)
     }
   }
+
+  companion object {
+    /** A new GeometryInstance3D, GDScript's `GeometryInstance3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): GeometryInstance3D =
+      GeometryInstance3D(checkNotNull(ClassDB.instantiate("GeometryInstance3D")) { "Godot could not instantiate GeometryInstance3D" }.toWebId())
+  }
 }

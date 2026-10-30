@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * AudioStream that lets the user play custom streams at any time from code, simultaneously using a
@@ -52,6 +53,11 @@ class AudioStreamPolyphonic(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamPolyphonic? =
             if (handle.address() == 0L) null else AudioStreamPolyphonic(GodotHandle(handle))
+
+        /** A new AudioStreamPolyphonic, GDScript's `AudioStreamPolyphonic.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioStreamPolyphonic =
+            RefCounted.owned(AudioStreamPolyphonic(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamPolyphonic"), "AudioStreamPolyphonic"))))
     }
 
     private object Binds {

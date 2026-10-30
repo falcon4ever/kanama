@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector3
 
@@ -899,6 +900,11 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): SpringBoneSimulator3D? =
             if (handle.address() == 0L) null else SpringBoneSimulator3D(GodotHandle(handle))
+
+        /** A new SpringBoneSimulator3D, GDScript's `SpringBoneSimulator3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SpringBoneSimulator3D =
+            SpringBoneSimulator3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SpringBoneSimulator3D"), "SpringBoneSimulator3D")))
     }
 
     private object Binds {

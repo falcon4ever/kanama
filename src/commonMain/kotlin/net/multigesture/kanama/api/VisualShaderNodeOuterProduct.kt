@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Calculates an outer product of two vectors within the visual shader graph.
@@ -22,5 +23,10 @@ class VisualShaderNodeOuterProduct(handle: GodotHandle) : VisualShaderNode(handl
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeOuterProduct? =
             if (handle.address() == 0L) null else VisualShaderNodeOuterProduct(GodotHandle(handle))
+
+        /** A new VisualShaderNodeOuterProduct, GDScript's `VisualShaderNodeOuterProduct.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeOuterProduct =
+            RefCounted.owned(VisualShaderNodeOuterProduct(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeOuterProduct"), "VisualShaderNodeOuterProduct"))))
     }
 }

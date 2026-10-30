@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A 3D ray shape used for physics collision that tries to separate itself from any collider.
@@ -84,6 +85,11 @@ class SeparationRayShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SeparationRayShape3D? =
             if (handle.address() == 0L) null else SeparationRayShape3D(GodotHandle(handle))
+
+        /** A new SeparationRayShape3D, GDScript's `SeparationRayShape3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SeparationRayShape3D =
+            RefCounted.owned(SeparationRayShape3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SeparationRayShape3D"), "SeparationRayShape3D"))))
     }
 
     private object Binds {

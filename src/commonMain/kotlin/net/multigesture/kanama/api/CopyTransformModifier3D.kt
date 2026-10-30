@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A `SkeletonModifier3D` that apply transform to the bone which copied from reference.
@@ -388,6 +389,11 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
 
         internal fun wrap(handle: RawSegment): CopyTransformModifier3D? =
             if (handle.address() == 0L) null else CopyTransformModifier3D(GodotHandle(handle))
+
+        /** A new CopyTransformModifier3D, GDScript's `CopyTransformModifier3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CopyTransformModifier3D =
+            CopyTransformModifier3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CopyTransformModifier3D"), "CopyTransformModifier3D")))
     }
 
     private object Binds {

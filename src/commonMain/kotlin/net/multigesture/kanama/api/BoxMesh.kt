@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -140,10 +141,10 @@ class BoxMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         internal fun wrapBorrowed(handle: RawSegment): BoxMesh? =
             if (handle.address() == 0L) null else BoxMesh(GodotHandle(handle))
 
-        // Instantiate a BoxMesh.
+        /** A new BoxMesh, GDScript's `BoxMesh.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): BoxMesh =
-            RefCounted.owned(BoxMesh(GodotHandle(ObjectCalls.constructObject("BoxMesh"))))
+            RefCounted.owned(BoxMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("BoxMesh"), "BoxMesh"))))
     }
 
     private object Binds {

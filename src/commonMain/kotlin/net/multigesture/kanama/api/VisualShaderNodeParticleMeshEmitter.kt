@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that makes particles emitted in a shape defined by a `Mesh`.
@@ -113,6 +114,11 @@ class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNod
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleMeshEmitter? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleMeshEmitter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeParticleMeshEmitter, GDScript's `VisualShaderNodeParticleMeshEmitter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeParticleMeshEmitter =
+            RefCounted.owned(VisualShaderNodeParticleMeshEmitter(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeParticleMeshEmitter"), "VisualShaderNodeParticleMeshEmitter"))))
     }
 
     private object Binds {

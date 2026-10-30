@@ -1154,7 +1154,6 @@ fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) = rotateObjectLocal(a
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun Node3D.orthonormalize() = orthonormalize()
 """,
     },
-    "Sprite2D": {"instantiable": True},
     "Resource": {"from_handle": True, "from_object": True},
     "Tween": {
         "custom": """
@@ -1248,7 +1247,6 @@ val SceneTree.root: Viewport
 """,
     },
     "AudioStreamPlayer": {
-        "instantiable": True,
         "custom": """
   /** Load-assign-release: the engine takes its reference before the temporary handle is dropped. */
   fun setStreamFromPath(path: String) {
@@ -1338,16 +1336,10 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
   }
 """,
     },
-    # Task 64 CameraMode family: the debug fly-camera constructs its own Camera3D from Kotlin
-    # (ClassDB.instantiate composition); the tree owns it once added, queue_free releases it.
-    "Camera3D": {"instantiable": True},
-    "InputEventKey": {
-        "instantiable": True,
-        "from_class_check": True,
-    },
+    "InputEventKey": {"from_class_check": True},
     # Task 128 C: constructed like InputEventKey, so a shared script registers a mouse-button input
     # action portably (`InputEventMouseButton.create()` + `buttonIndex`, opcode 333).
-    "InputEventMouseButton": {"instantiable": True, "from_class_check": True},
+    "InputEventMouseButton": {"from_class_check": True},
     "InputEventMouseMotion": {"from_class_check": True},
     # Task 64 parcel 8: MeshInstance3D.get_mesh hands back a browser handle; tps-demo's shared Part
     # reads it once and closes it (`mesh.use { }`): RefCounted's close().
@@ -1360,11 +1352,6 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
 """,
     },
     "ShaderMaterial": {"from_resource": True},
-    "LightmapGI": {"instantiable": True},
-    "ButtonGroup": {"instantiable": True},
-    "ConfigFile": {"instantiable": True},
-    "FastNoiseLite": {"instantiable": True},
-    "MeshLibrary": {"instantiable": True},
     "Light3D": {
         "custom": """
   /** Write-only on Web: light_energy is Light3D.set_param(PARAM_ENERGY, value). */
@@ -1892,13 +1879,30 @@ def emit_signals(api: Api, godot_name: str, generated: set[str]) -> list[str]:
     return lines
 
 
-def emit_companion(godot_name: str, class_policy: dict, constants: list[str]) -> list[str]:
-    """Companion: factories (`instantiable`, `from_*`), constants, and the policy's own text."""
+def generates_create(api: Api, godot_name: str) -> bool:
+    """Whether the class gets `create()`, GDScript's `X.new()`: native's rule (`generates_create` in
+    generate_api_wrapper.py). Every `is_instantiable` Node or RefCounted does; a plain `Object`
+    subclass does not (Kotlin has no `free()` for it), and neither do the two roots, whose native
+    wrappers are hand-written without one."""
+    if godot_name in ("Object", "RefCounted") or godot_name in api.singletons:
+        return False
+    if not api.classes.get(godot_name, {}).get("is_instantiable"):
+        return False
+    return bool({"Node", "RefCounted"} & set(api.chain(godot_name)))
+
+
+def emit_companion(api: Api, godot_name: str, class_policy: dict, constants: list[str]) -> list[str]:
+    """Companion: factories (`create()` per `generates_create`, `from_*`), constants, and the policy's own text."""
     name = kotlin_class_name(godot_name)
     lines: list[str] = []
-    if class_policy.get("instantiable"):
+    if generates_create(api, godot_name):
+        refcounted = "RefCounted" in api.chain(godot_name)
         lines += [
-            f"    /** Constructs a new {godot_name} engine-side; the wrapper owns the handle (close what you create). */",
+            (
+                f"    /** A new {godot_name}, GDScript's `{godot_name}.new()`. You own the reference: `close()` or `use {{ }}`. */"
+                if refcounted
+                else f"    /** A new {godot_name}, GDScript's `{godot_name}.new()`. Add it to the tree, or `queueFree()` it. */"
+            ),
             f"    fun create(): {name} =",
             f'      {name}(checkNotNull(ClassDB.instantiate("{godot_name}")) {{ "Godot could not instantiate {godot_name}" }}.toWebId())',
         ]
@@ -2164,7 +2168,7 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
         if class_policy.get("companion"):
             sections.append(class_policy["companion"].strip("\n").split("\n"))
     else:
-        sections.append(emit_companion(godot_name, class_policy, constants))
+        sections.append(emit_companion(api, godot_name, class_policy, constants))
     first = True
     for section in sections:
         if not section:

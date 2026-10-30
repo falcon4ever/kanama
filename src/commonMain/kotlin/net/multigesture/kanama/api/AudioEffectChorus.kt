@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a chorus audio effect to an audio bus. Gives the impression of multiple audio sources.
@@ -247,6 +248,11 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectChorus? =
             if (handle.address() == 0L) null else AudioEffectChorus(GodotHandle(handle))
+
+        /** A new AudioEffectChorus, GDScript's `AudioEffectChorus.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectChorus =
+            RefCounted.owned(AudioEffectChorus(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectChorus"), "AudioEffectChorus"))))
     }
 
     private object Binds {

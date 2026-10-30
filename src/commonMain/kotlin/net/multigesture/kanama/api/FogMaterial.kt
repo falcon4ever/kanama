@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -229,6 +230,11 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): FogMaterial? =
             if (handle.address() == 0L) null else FogMaterial(GodotHandle(handle))
+
+        /** A new FogMaterial, GDScript's `FogMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): FogMaterial =
+            RefCounted.owned(FogMaterial(GodotHandle(requireConstructed(ObjectCalls.constructObject("FogMaterial"), "FogMaterial"))))
     }
 
     private object Binds {

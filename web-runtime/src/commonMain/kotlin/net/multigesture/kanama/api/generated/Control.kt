@@ -240,6 +240,12 @@ open class Control(godotObject: GodotHandle) : CanvasItem(godotObject) {
       val RTL: TextDirection get() = TextDirection(2L)
     }
   }
+
+  companion object {
+    /** A new Control, GDScript's `Control.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): Control =
+      Control(checkNotNull(ClassDB.instantiate("Control")) { "Godot could not instantiate Control" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -319,6 +320,11 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Gradient? =
             if (handle.address() == 0L) null else Gradient(GodotHandle(handle))
+
+        /** A new Gradient, GDScript's `Gradient.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Gradient =
+            RefCounted.owned(Gradient(GodotHandle(requireConstructed(ObjectCalls.constructObject("Gradient"), "Gradient"))))
     }
 
     private object Binds {

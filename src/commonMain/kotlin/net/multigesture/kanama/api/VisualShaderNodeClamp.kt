@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Clamps a value within the visual shader graph.
@@ -106,6 +107,11 @@ class VisualShaderNodeClamp(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeClamp? =
             if (handle.address() == 0L) null else VisualShaderNodeClamp(GodotHandle(handle))
+
+        /** A new VisualShaderNodeClamp, GDScript's `VisualShaderNodeClamp.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeClamp =
+            RefCounted.owned(VisualShaderNodeClamp(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeClamp"), "VisualShaderNodeClamp"))))
     }
 
     private object Binds {

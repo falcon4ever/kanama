@@ -21,6 +21,7 @@ import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.InstanceBindings
 import net.multigesture.kanama.binding.runtime.ObjectRuntime
 import net.multigesture.kanama.binding.runtime.OwnedReleases
+import net.multigesture.kanama.binding.runtime.OwnershipSelfTest
 import net.multigesture.kanama.binding.runtime.ScriptErrors
 import net.multigesture.kanama.binding.runtime.ThreadDiagnostics
 import net.multigesture.kanama.ffi.GodotFFI
@@ -245,6 +246,8 @@ object KanamaBinding {
   @JvmStatic
   fun deinitializeCallback(userdata: MemorySegment, level: Int) {
     System.err.println("[kanama:kt] deinitialize: level=$level")
+    // Before anything is torn down: no self-test worker may still be calling into Godot.
+    runCatching { OwnershipSelfTest.shutdown() }
     // Task 132 D4: release what the GC can still collect before Godot's leak report runs -- at the
     // EDITOR level too (the editor's own objects go before the scene level's).
     if (level == INITIALIZATION_EDITOR) releaseCollectedOwners("editor")

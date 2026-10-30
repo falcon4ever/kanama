@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -482,6 +483,11 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): VehicleWheel3D? =
             if (handle.address() == 0L) null else VehicleWheel3D(GodotHandle(handle))
+
+        /** A new VehicleWheel3D, GDScript's `VehicleWheel3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VehicleWheel3D =
+            VehicleWheel3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("VehicleWheel3D"), "VehicleWheel3D")))
     }
 
     private object Binds {

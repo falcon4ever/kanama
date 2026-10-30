@@ -23,6 +23,12 @@ class SpriteFrames(godotObject: GodotHandle) : Resource(godotObject) {
       val PINGPONG: LoopMode get() = LoopMode(2L)
     }
   }
+
+  companion object {
+    /** A new SpriteFrames, GDScript's `SpriteFrames.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): SpriteFrames =
+      SpriteFrames(checkNotNull(ClassDB.instantiate("SpriteFrames")) { "Godot could not instantiate SpriteFrames" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

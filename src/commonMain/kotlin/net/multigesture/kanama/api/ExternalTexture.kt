@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -58,6 +59,11 @@ class ExternalTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ExternalTexture? =
             if (handle.address() == 0L) null else ExternalTexture(GodotHandle(handle))
+
+        /** A new ExternalTexture, GDScript's `ExternalTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ExternalTexture =
+            RefCounted.owned(ExternalTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("ExternalTexture"), "ExternalTexture"))))
     }
 
     private object Binds {

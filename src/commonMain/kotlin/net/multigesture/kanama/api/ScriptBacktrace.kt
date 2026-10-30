@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A captured backtrace of a specific script language.
@@ -235,6 +236,11 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ScriptBacktrace? =
             if (handle.address() == 0L) null else ScriptBacktrace(GodotHandle(handle))
+
+        /** A new ScriptBacktrace, GDScript's `ScriptBacktrace.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ScriptBacktrace =
+            RefCounted.owned(ScriptBacktrace(GodotHandle(requireConstructed(ObjectCalls.constructObject("ScriptBacktrace"), "ScriptBacktrace"))))
     }
 
     private object Binds {

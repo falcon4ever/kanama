@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents a straight ribbon-shaped `PrimitiveMesh` with variable width.
@@ -231,6 +232,11 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RibbonTrailMesh? =
             if (handle.address() == 0L) null else RibbonTrailMesh(GodotHandle(handle))
+
+        /** A new RibbonTrailMesh, GDScript's `RibbonTrailMesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RibbonTrailMesh =
+            RefCounted.owned(RibbonTrailMesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("RibbonTrailMesh"), "RibbonTrailMesh"))))
     }
 
     private object Binds {

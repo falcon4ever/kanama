@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Base class for extending `AnimationRootNode`s from GDScript, C#, or C++.
@@ -44,6 +45,11 @@ class AnimationNodeExtension(handle: GodotHandle) : AnimationNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeExtension? =
             if (handle.address() == 0L) null else AnimationNodeExtension(GodotHandle(handle))
+
+        /** A new AnimationNodeExtension, GDScript's `AnimationNodeExtension.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AnimationNodeExtension =
+            RefCounted.owned(AnimationNodeExtension(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimationNodeExtension"), "AnimationNodeExtension"))))
     }
 
     private object Binds {

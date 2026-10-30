@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Abstract base class for controls that represent a number within a range.
@@ -317,6 +318,11 @@ open class Range(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): Range? =
             if (handle.address() == 0L) null else Range(GodotHandle(handle))
+
+        /** A new Range, GDScript's `Range.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): Range =
+            Range(GodotHandle(requireConstructed(ObjectCalls.constructObject("Range"), "Range")))
     }
 
     private object Binds {

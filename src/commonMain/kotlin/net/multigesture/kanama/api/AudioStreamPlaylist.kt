@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * `AudioStream` that includes sub-streams and plays them back like a playlist.
@@ -569,6 +570,11 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaylist? =
             if (handle.address() == 0L) null else AudioStreamPlaylist(GodotHandle(handle))
+
+        /** A new AudioStreamPlaylist, GDScript's `AudioStreamPlaylist.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioStreamPlaylist =
+            RefCounted.owned(AudioStreamPlaylist(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioStreamPlaylist"), "AudioStreamPlaylist"))))
     }
 
     private object Binds {

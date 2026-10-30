@@ -1213,19 +1213,19 @@ elif [[ "$kanama_bunnymark_probe" -eq 1 ]]; then
   launch_sleep=10
   mkdir -p "$project_dir/kotlin-src" "$project_dir/images"
   cp "$bunnymark_demo_dir/images/godot_bunny.png" "$project_dir/images/godot_bunny.png"
-  cp "$bunnymark_demo_dir/kotlin-src/BunnymarkV1SpritesKanama.kt" "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
+  cp "$bunnymark_demo_dir/kotlin-src/BunnymarkSpritesKanama.kt" "$project_dir/kotlin-src/BunnymarkSpritesKanama.kt"
   # Replace the demo's own leading `package …` (the demo source declares
   # `package net.multigesture.kanama.demos.bunnymark`) with the iOS package the generated .tscn
   # and iOS registration expect — do NOT prepend, or two package declarations become a syntax
   # error. The optional group also handles a demo source that carries no package line.
   perl -0pi -e 's/\A(\s*package[^\n]*\n)?/package net.multigesture.kanama.iosbunnymark\n\n/' \
-    "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
+    "$project_dir/kotlin-src/BunnymarkSpritesKanama.kt"
   perl -0pi -e 's/(private var bunnyTexture: Texture2D\? = null\n)/$1    private var frame = 0\n/' \
-    "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
+    "$project_dir/kotlin-src/BunnymarkSpritesKanama.kt"
   perl -0pi -e 's/fun process\(delta: Double\) \{\n/fun process(delta: Double) {\n        frame += 1\n        if (frame == 3) {\n            println("[kanama][ios][kn] bunnymark process frame=3")\n        }\n/' \
-    "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
+    "$project_dir/kotlin-src/BunnymarkSpritesKanama.kt"
   perl -0pi -e 's/\n}\s*\z/\n\n    fun signalAck() {\n        println("[kanama][ios][kn] bunnymark signal ack")\n    }\n}\n/' \
-    "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
+    "$project_dir/kotlin-src/BunnymarkSpritesKanama.kt"
   cat >"$project_dir/main.gd" <<'EOF'
 extends Control
 
@@ -1237,7 +1237,7 @@ func _ready():
     call_deferred("_start_bunnymark")
 
 func _start_bunnymark():
-    var script = load("res://kotlin-src/BunnymarkV1SpritesKanama.kt")
+    var script = load("res://kotlin-src/BunnymarkSpritesKanama.kt")
     benchmark_node = Node2D.new()
     benchmark_node.set_script(script)
     benchmark_node.add_user_signal("benchmark_finished", [{"name": "output", "type": TYPE_INT}])
@@ -2684,8 +2684,18 @@ fi
 # binary and keeps only the properties the script instance reports; a project whose desktop
 # kanama-scripts.jar does not match its .kt scripts loses every scene-stored @Export value
 # silently (task 106). Compare each converted scene with its source before building the app.
-if ! "$godot_bin" --headless --path "$project_dir" --script "$ROOT_DIR/scripts/check_exported_scene_properties.gd" -- --require-converted; then
+# The check quits on its first frame, so Godot's exit-time leak report is the project's own shutdown:
+# a leak there (an autoload's playing stream, a Resource a script holds) fails the run too.
+scene_check_log="$work_dir/ios_scene_check.log"
+scene_check_status=0
+"$godot_bin" --headless --path "$project_dir" --script "$ROOT_DIR/scripts/check_exported_scene_properties.gd" -- --require-converted >"$scene_check_log" 2>&1 || scene_check_status=$?
+cat "$scene_check_log"
+if [[ "$scene_check_status" -ne 0 ]]; then
   echo "[ios_visual_smoke] exported scenes lost script properties (see [check_exported_scenes] lines above)" >&2
+  exit 1
+fi
+if grep -qE 'leaked at exit|still in use at exit' "$scene_check_log"; then
+  echo "[ios_visual_smoke] the exported-scene check leaked at exit (above; rerun it with --verbose to name the instances): $scene_check_log" >&2
   exit 1
 fi
 

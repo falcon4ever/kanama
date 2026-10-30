@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 
@@ -181,6 +182,11 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRPlaneTracker? =
             if (handle.address() == 0L) null else OpenXRPlaneTracker(GodotHandle(handle))
+
+        /** A new OpenXRPlaneTracker, GDScript's `OpenXRPlaneTracker.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRPlaneTracker =
+            RefCounted.owned(OpenXRPlaneTracker(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRPlaneTracker"), "OpenXRPlaneTracker"))))
     }
 
     private object Binds {

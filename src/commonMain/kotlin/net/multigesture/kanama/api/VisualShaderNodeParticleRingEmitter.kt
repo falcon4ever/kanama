@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A visual shader node that makes particles emitted in a ring shape.
@@ -22,5 +23,10 @@ class VisualShaderNodeParticleRingEmitter(handle: GodotHandle) : VisualShaderNod
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleRingEmitter? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleRingEmitter(GodotHandle(handle))
+
+        /** A new VisualShaderNodeParticleRingEmitter, GDScript's `VisualShaderNodeParticleRingEmitter.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeParticleRingEmitter =
+            RefCounted.owned(VisualShaderNodeParticleRingEmitter(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeParticleRingEmitter"), "VisualShaderNodeParticleRingEmitter"))))
     }
 }

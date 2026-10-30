@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Importer for Blender's `.blend` scene file format.
@@ -22,5 +23,10 @@ class EditorSceneFormatImporterBlend(handle: GodotHandle) : EditorSceneFormatImp
 
         internal fun wrapBorrowed(handle: RawSegment): EditorSceneFormatImporterBlend? =
             if (handle.address() == 0L) null else EditorSceneFormatImporterBlend(GodotHandle(handle))
+
+        /** A new EditorSceneFormatImporterBlend, GDScript's `EditorSceneFormatImporterBlend.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): EditorSceneFormatImporterBlend =
+            RefCounted.owned(EditorSceneFormatImporterBlend(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorSceneFormatImporterBlend"), "EditorSceneFormatImporterBlend"))))
     }
 }

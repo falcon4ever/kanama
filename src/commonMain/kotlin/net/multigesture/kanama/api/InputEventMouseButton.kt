@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents a mouse button being pressed or released.
@@ -137,10 +138,10 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
         internal fun wrapBorrowed(handle: RawSegment): InputEventMouseButton? =
             if (handle.address() == 0L) null else InputEventMouseButton(GodotHandle(handle))
 
-        // Instantiate an InputEventMouseButton.
+        /** A new InputEventMouseButton, GDScript's `InputEventMouseButton.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): InputEventMouseButton =
-            RefCounted.owned(InputEventMouseButton(GodotHandle(ObjectCalls.constructObject("InputEventMouseButton"))))
+            RefCounted.owned(InputEventMouseButton(GodotHandle(requireConstructed(ObjectCalls.constructObject("InputEventMouseButton"), "InputEventMouseButton"))))
 
         // Downcast a GodotObject to InputEventMouseButton (null if not).
         @JvmStatic

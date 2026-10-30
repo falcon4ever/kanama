@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A material for `CanvasItem`s.
@@ -287,6 +288,11 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CanvasItemMaterial? =
             if (handle.address() == 0L) null else CanvasItemMaterial(GodotHandle(handle))
+
+        /** A new CanvasItemMaterial, GDScript's `CanvasItemMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CanvasItemMaterial =
+            RefCounted.owned(CanvasItemMaterial(GodotHandle(requireConstructed(ObjectCalls.constructObject("CanvasItemMaterial"), "CanvasItemMaterial"))))
     }
 
     private object Binds {

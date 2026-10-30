@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
 
@@ -278,6 +279,11 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationRegion2D? =
             if (handle.address() == 0L) null else NavigationRegion2D(GodotHandle(handle))
+
+        /** A new NavigationRegion2D, GDScript's `NavigationRegion2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): NavigationRegion2D =
+            NavigationRegion2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("NavigationRegion2D"), "NavigationRegion2D")))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A 3D physics body that can't be moved by external forces. When moved manually, it affects other
@@ -48,6 +49,11 @@ class AnimatableBody3D(handle: GodotHandle) : StaticBody3D(handle) {
 
         internal fun wrap(handle: RawSegment): AnimatableBody3D? =
             if (handle.address() == 0L) null else AnimatableBody3D(GodotHandle(handle))
+
+        /** A new AnimatableBody3D, GDScript's `AnimatableBody3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): AnimatableBody3D =
+            AnimatableBody3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("AnimatableBody3D"), "AnimatableBody3D")))
     }
 
     private object Binds {

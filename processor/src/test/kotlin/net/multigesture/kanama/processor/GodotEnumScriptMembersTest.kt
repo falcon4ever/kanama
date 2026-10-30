@@ -290,8 +290,8 @@ class GodotEnumScriptMembersTest {
     has("callback: ($modeFq) -> Unit,")
     has("callback($modeFq((args.getOrNull(0) as? Long ?: 0L)))")
     // Typed helpers.
-    has("fun nextMode(instance: EnumFixture, mode: $modeFq): $modeFq =")
-    has("fun rpcApplyFlags(instance: EnumFixture, flags: $flagsFq)")
+    has("fun nextMode(instance: ThisClass, mode: $modeFq): $modeFq =")
+    has("fun rpcApplyFlags(instance: ThisClass, flags: $flagsFq)")
   }
 
   @Test
@@ -361,10 +361,10 @@ class GodotEnumScriptMembersTest {
     val registry = emitter.registrySource()
     fun has(source: String, fragment: String) =
       assertTrue(source.contains(fragment), "missing: $fragment")
-    has(registry, "1 -> (script as EnumFixture).mode = $modeFq(value)")
-    has(registry, "1 -> (script as EnumFixture).mode.value.toString()")
-    has(registry, "1 -> (script as EnumFixture).nextMode($modeFq(value)).value")
-    has(registry, "2 -> (script as EnumFixture).applyFlags($flagsFq(value))")
+    has(registry, "1 -> (script as S1_EnumFixture).mode = $modeFq(value)")
+    has(registry, "1 -> (script as S1_EnumFixture).mode.value.toString()")
+    has(registry, "1 -> (script as S1_EnumFixture).nextMode($modeFq(value)).value")
+    has(registry, "2 -> (script as S1_EnumFixture).applyFlags($flagsFq(value))")
 
     val proxy = emitter.proxySources().single { it.sourceResourcePath.isNotEmpty() }.source
     has(

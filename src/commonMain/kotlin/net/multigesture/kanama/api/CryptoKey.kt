@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A cryptographic key (RSA or elliptic-curve).
@@ -85,6 +86,11 @@ class CryptoKey(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CryptoKey? =
             if (handle.address() == 0L) null else CryptoKey(GodotHandle(handle))
+
+        /** A new CryptoKey, GDScript's `CryptoKey.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CryptoKey =
+            RefCounted.owned(CryptoKey(GodotHandle(requireConstructed(ObjectCalls.constructObject("CryptoKey"), "CryptoKey"))))
     }
 
     private object Binds {

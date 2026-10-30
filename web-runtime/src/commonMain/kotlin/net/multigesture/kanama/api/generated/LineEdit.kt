@@ -109,6 +109,12 @@ class LineEdit(godotObject: GodotHandle) : Control(godotObject) {
       val FIT_TO_LINE_EDIT: ExpandMode get() = ExpandMode(2L)
     }
   }
+
+  companion object {
+    /** A new LineEdit, GDScript's `LineEdit.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): LineEdit =
+      LineEdit(checkNotNull(ClassDB.instantiate("LineEdit")) { "Godot could not instantiate LineEdit" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

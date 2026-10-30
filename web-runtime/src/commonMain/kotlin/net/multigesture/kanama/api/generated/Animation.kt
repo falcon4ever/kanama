@@ -73,6 +73,12 @@ class Animation(godotObject: GodotHandle) : Resource(godotObject) {
       val EXACT: FindMode get() = FindMode(2L)
     }
   }
+
+  companion object {
+    /** A new Animation, GDScript's `Animation.new()`. You own the reference: `close()` or `use { }`. */
+    fun create(): Animation =
+      Animation(checkNotNull(ClassDB.instantiate("Animation")) { "Godot could not instantiate Animation" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -58,6 +59,11 @@ class ViewportTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ViewportTexture? =
             if (handle.address() == 0L) null else ViewportTexture(GodotHandle(handle))
+
+        /** A new ViewportTexture, GDScript's `ViewportTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): ViewportTexture =
+            RefCounted.owned(ViewportTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("ViewportTexture"), "ViewportTexture"))))
     }
 
     private object Binds {

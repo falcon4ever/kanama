@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
@@ -164,6 +165,11 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StyleBox? =
             if (handle.address() == 0L) null else StyleBox(GodotHandle(handle))
+
+        /** A new StyleBox, GDScript's `StyleBox.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): StyleBox =
+            RefCounted.owned(StyleBox(GodotHandle(requireConstructed(ObjectCalls.constructObject("StyleBox"), "StyleBox"))))
     }
 
     private object Binds {

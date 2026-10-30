@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A material that provides a special texture to a `Sky`, usually an HDR panorama.
@@ -111,6 +112,11 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PanoramaSkyMaterial? =
             if (handle.address() == 0L) null else PanoramaSkyMaterial(GodotHandle(handle))
+
+        /** A new PanoramaSkyMaterial, GDScript's `PanoramaSkyMaterial.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PanoramaSkyMaterial =
+            RefCounted.owned(PanoramaSkyMaterial(GodotHandle(requireConstructed(ObjectCalls.constructObject("PanoramaSkyMaterial"), "PanoramaSkyMaterial"))))
     }
 
     private object Binds {

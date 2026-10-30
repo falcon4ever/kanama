@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Godot editor's command palette.
@@ -42,6 +43,11 @@ class EditorCommandPalette(handle: GodotHandle) : ConfirmationDialog(handle) {
 
         internal fun wrap(handle: RawSegment): EditorCommandPalette? =
             if (handle.address() == 0L) null else EditorCommandPalette(GodotHandle(handle))
+
+        /** A new EditorCommandPalette, GDScript's `EditorCommandPalette.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): EditorCommandPalette =
+            EditorCommandPalette(GodotHandle(requireConstructed(ObjectCalls.constructObject("EditorCommandPalette"), "EditorCommandPalette")))
     }
 
     private object Binds {

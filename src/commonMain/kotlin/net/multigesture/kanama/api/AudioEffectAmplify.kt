@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Adds a volume manipulation audio effect to an audio bus.
@@ -88,6 +89,11 @@ class AudioEffectAmplify(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectAmplify? =
             if (handle.address() == 0L) null else AudioEffectAmplify(GodotHandle(handle))
+
+        /** A new AudioEffectAmplify, GDScript's `AudioEffectAmplify.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectAmplify =
+            RefCounted.owned(AudioEffectAmplify(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectAmplify"), "AudioEffectAmplify"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A physics joint that restricts the movement of a 3D physics body along an axis relative to
@@ -207,6 +208,11 @@ class SliderJoint3D(handle: GodotHandle) : Joint3D(handle) {
 
         internal fun wrap(handle: RawSegment): SliderJoint3D? =
             if (handle.address() == 0L) null else SliderJoint3D(GodotHandle(handle))
+
+        /** A new SliderJoint3D, GDScript's `SliderJoint3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SliderJoint3D =
+            SliderJoint3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SliderJoint3D"), "SliderJoint3D")))
     }
 
     private object Binds {

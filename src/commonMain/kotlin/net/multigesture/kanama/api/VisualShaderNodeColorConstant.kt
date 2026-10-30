@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 
 /**
@@ -52,6 +53,11 @@ class VisualShaderNodeColorConstant(handle: GodotHandle) : VisualShaderNodeConst
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeColorConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeColorConstant(GodotHandle(handle))
+
+        /** A new VisualShaderNodeColorConstant, GDScript's `VisualShaderNodeColorConstant.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeColorConstant =
+            RefCounted.owned(VisualShaderNodeColorConstant(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeColorConstant"), "VisualShaderNodeColorConstant"))))
     }
 
     private object Binds {

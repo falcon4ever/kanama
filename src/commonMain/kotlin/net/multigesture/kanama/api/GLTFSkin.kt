@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 
 /**
@@ -213,6 +214,11 @@ class GLTFSkin(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFSkin? =
             if (handle.address() == 0L) null else GLTFSkin(GodotHandle(handle))
+
+        /** A new GLTFSkin, GDScript's `GLTFSkin.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): GLTFSkin =
+            RefCounted.owned(GLTFSkin(GodotHandle(requireConstructed(ObjectCalls.constructObject("GLTFSkin"), "GLTFSkin"))))
     }
 
     private object Binds {

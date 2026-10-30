@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Interface to a WebRTC peer connection.
@@ -345,6 +346,11 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WebRTCPeerConnection? =
             if (handle.address() == 0L) null else WebRTCPeerConnection(GodotHandle(handle))
+
+        /** A new WebRTCPeerConnection, GDScript's `WebRTCPeerConnection.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): WebRTCPeerConnection =
+            RefCounted.owned(WebRTCPeerConnection(GodotHandle(requireConstructed(ObjectCalls.constructObject("WebRTCPeerConnection"), "WebRTCPeerConnection"))))
     }
 
     private object Binds {

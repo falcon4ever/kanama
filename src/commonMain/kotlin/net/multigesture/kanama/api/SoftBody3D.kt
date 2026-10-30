@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
@@ -518,6 +519,11 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): SoftBody3D? =
             if (handle.address() == 0L) null else SoftBody3D(GodotHandle(handle))
+
+        /** A new SoftBody3D, GDScript's `SoftBody3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SoftBody3D =
+            SoftBody3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SoftBody3D"), "SoftBody3D")))
     }
 
     private object Binds {

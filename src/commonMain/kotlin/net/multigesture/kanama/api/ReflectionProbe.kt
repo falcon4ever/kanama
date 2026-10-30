@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector3
 
@@ -506,6 +507,11 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): ReflectionProbe? =
             if (handle.address() == 0L) null else ReflectionProbe(GodotHandle(handle))
+
+        /** A new ReflectionProbe, GDScript's `ReflectionProbe.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ReflectionProbe =
+            ReflectionProbe(GodotHandle(requireConstructed(ObjectCalls.constructObject("ReflectionProbe"), "ReflectionProbe")))
     }
 
     private object Binds {

@@ -20,6 +20,12 @@ class WorldEnvironment(godotObject: GodotHandle) : Node(godotObject) {
 
   val environment: Environment
     get() = getEnvironment()
+
+  companion object {
+    /** A new WorldEnvironment, GDScript's `WorldEnvironment.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): WorldEnvironment =
+      WorldEnvironment(checkNotNull(ClassDB.instantiate("WorldEnvironment")) { "Godot could not instantiate WorldEnvironment" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

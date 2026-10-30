@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -70,6 +71,11 @@ class CSGBox3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
 
         internal fun wrap(handle: RawSegment): CSGBox3D? =
             if (handle.address() == 0L) null else CSGBox3D(GodotHandle(handle))
+
+        /** A new CSGBox3D, GDScript's `CSGBox3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): CSGBox3D =
+            CSGBox3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CSGBox3D"), "CSGBox3D")))
     }
 
     private object Binds {

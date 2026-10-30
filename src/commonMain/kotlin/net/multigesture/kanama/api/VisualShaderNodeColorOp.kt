@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A `Color` operator to be used within the visual shader graph.
@@ -125,6 +126,11 @@ class VisualShaderNodeColorOp(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeColorOp? =
             if (handle.address() == 0L) null else VisualShaderNodeColorOp(GodotHandle(handle))
+
+        /** A new VisualShaderNodeColorOp, GDScript's `VisualShaderNodeColorOp.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): VisualShaderNodeColorOp =
+            RefCounted.owned(VisualShaderNodeColorOp(GodotHandle(requireConstructed(ObjectCalls.constructObject("VisualShaderNodeColorOp"), "VisualShaderNodeColorOp"))))
     }
 
     private object Binds {

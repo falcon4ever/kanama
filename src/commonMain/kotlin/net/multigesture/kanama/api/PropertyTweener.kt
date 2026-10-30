@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.binding.runtime.requireGodotReturn
 
 /**
@@ -144,6 +145,11 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PropertyTweener? =
             if (handle.address() == 0L) null else PropertyTweener(GodotHandle(handle))
+
+        /** A new PropertyTweener, GDScript's `PropertyTweener.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PropertyTweener =
+            RefCounted.owned(PropertyTweener(GodotHandle(requireConstructed(ObjectCalls.constructObject("PropertyTweener"), "PropertyTweener"))))
     }
 
     private object Binds {

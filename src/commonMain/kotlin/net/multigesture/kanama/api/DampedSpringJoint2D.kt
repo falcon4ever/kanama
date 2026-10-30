@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A physics joint that connects two 2D physics bodies with a spring-like force.
@@ -125,6 +126,11 @@ class DampedSpringJoint2D(handle: GodotHandle) : Joint2D(handle) {
 
         internal fun wrap(handle: RawSegment): DampedSpringJoint2D? =
             if (handle.address() == 0L) null else DampedSpringJoint2D(GodotHandle(handle))
+
+        /** A new DampedSpringJoint2D, GDScript's `DampedSpringJoint2D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): DampedSpringJoint2D =
+            DampedSpringJoint2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("DampedSpringJoint2D"), "DampedSpringJoint2D")))
     }
 
     private object Binds {

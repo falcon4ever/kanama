@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A tracked controller.
@@ -22,5 +23,10 @@ class XRControllerTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRControllerTracker? =
             if (handle.address() == 0L) null else XRControllerTracker(GodotHandle(handle))
+
+        /** A new XRControllerTracker, GDScript's `XRControllerTracker.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): XRControllerTracker =
+            RefCounted.owned(XRControllerTracker(GodotHandle(requireConstructed(ObjectCalls.constructObject("XRControllerTracker"), "XRControllerTracker"))))
     }
 }

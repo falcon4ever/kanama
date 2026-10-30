@@ -110,6 +110,8 @@ class ApiClass:
     signals: tuple[dict[str, object], ...]
     constants: tuple[dict[str, object], ...]
     enums: tuple[dict[str, object], ...]
+    # extension_api.json's `is_instantiable`: GDScript's `X.new()` works, so the wrapper gets `create()`.
+    is_instantiable: bool = False
 
 
 @dataclass(frozen=True)
@@ -251,6 +253,7 @@ def load_api_classes(path: Path) -> dict[str, ApiClass]:
             signals=tuple(cls.get("signals") or ()),
             constants=tuple(cls.get("constants") or ()),
             enums=tuple(cls.get("enums") or ()),
+            is_instantiable=bool(cls.get("is_instantiable", False)),
         )
     return classes
 

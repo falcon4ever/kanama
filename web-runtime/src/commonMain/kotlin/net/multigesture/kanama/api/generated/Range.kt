@@ -33,6 +33,12 @@ open class Range(godotObject: GodotHandle) : Control(godotObject) {
     const val valueChanged: String = "value_changed"
     const val changed: String = "changed"
   }
+
+  companion object {
+    /** A new Range, GDScript's `Range.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): Range =
+      Range(checkNotNull(ClassDB.instantiate("Range")) { "Godot could not instantiate Range" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

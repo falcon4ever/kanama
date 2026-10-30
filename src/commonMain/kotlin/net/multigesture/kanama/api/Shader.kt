@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A shader implemented in the Godot shading language.
@@ -172,6 +173,11 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Shader? =
             if (handle.address() == 0L) null else Shader(GodotHandle(handle))
+
+        /** A new Shader, GDScript's `Shader.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Shader =
+            RefCounted.owned(Shader(GodotHandle(requireConstructed(ObjectCalls.constructObject("Shader"), "Shader"))))
     }
 
     private object Binds {

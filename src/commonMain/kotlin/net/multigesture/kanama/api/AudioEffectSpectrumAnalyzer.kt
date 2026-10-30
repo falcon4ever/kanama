@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Creates an `AudioEffectInstance` which performs frequency analysis and exposes results to be
@@ -141,6 +142,11 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectSpectrumAnalyzer? =
             if (handle.address() == 0L) null else AudioEffectSpectrumAnalyzer(GodotHandle(handle))
+
+        /** A new AudioEffectSpectrumAnalyzer, GDScript's `AudioEffectSpectrumAnalyzer.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): AudioEffectSpectrumAnalyzer =
+            RefCounted.owned(AudioEffectSpectrumAnalyzer(GodotHandle(requireConstructed(ObjectCalls.constructObject("AudioEffectSpectrumAnalyzer"), "AudioEffectSpectrumAnalyzer"))))
     }
 
     private object Binds {

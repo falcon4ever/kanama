@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A 2D circle shape used for physics collision.
@@ -51,6 +52,11 @@ class CircleShape2D(handle: GodotHandle) : Shape2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CircleShape2D? =
             if (handle.address() == 0L) null else CircleShape2D(GodotHandle(handle))
+
+        /** A new CircleShape2D, GDScript's `CircleShape2D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CircleShape2D =
+            RefCounted.owned(CircleShape2D(GodotHandle(requireConstructed(ObjectCalls.constructObject("CircleShape2D"), "CircleShape2D"))))
     }
 
     private object Binds {

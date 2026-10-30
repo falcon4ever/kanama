@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Object for storing OpenXR structure data.
@@ -73,6 +74,11 @@ open class OpenXRStructureBase(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRStructureBase? =
             if (handle.address() == 0L) null else OpenXRStructureBase(GodotHandle(handle))
+
+        /** A new OpenXRStructureBase, GDScript's `OpenXRStructureBase.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRStructureBase =
+            RefCounted.owned(OpenXRStructureBase(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRStructureBase"), "OpenXRStructureBase"))))
     }
 
     private object Binds {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A sphere shape collision that interacts with `SpringBoneSimulator3D`.
@@ -67,6 +68,11 @@ class SpringBoneCollisionSphere3D(handle: GodotHandle) : SpringBoneCollision3D(h
 
         internal fun wrap(handle: RawSegment): SpringBoneCollisionSphere3D? =
             if (handle.address() == 0L) null else SpringBoneCollisionSphere3D(GodotHandle(handle))
+
+        /** A new SpringBoneCollisionSphere3D, GDScript's `SpringBoneCollisionSphere3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): SpringBoneCollisionSphere3D =
+            SpringBoneCollisionSphere3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SpringBoneCollisionSphere3D"), "SpringBoneCollisionSphere3D")))
     }
 
     private object Binds {

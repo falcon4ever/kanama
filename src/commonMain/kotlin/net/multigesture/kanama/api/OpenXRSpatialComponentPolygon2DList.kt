@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
@@ -48,6 +49,11 @@ class OpenXRSpatialComponentPolygon2DList(handle: GodotHandle) : OpenXRSpatialCo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentPolygon2DList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPolygon2DList(GodotHandle(handle))
+
+        /** A new OpenXRSpatialComponentPolygon2DList, GDScript's `OpenXRSpatialComponentPolygon2DList.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): OpenXRSpatialComponentPolygon2DList =
+            RefCounted.owned(OpenXRSpatialComponentPolygon2DList(GodotHandle(requireConstructed(ObjectCalls.constructObject("OpenXRSpatialComponentPolygon2DList"), "OpenXRSpatialComponentPolygon2DList"))))
     }
 
     private object Binds {

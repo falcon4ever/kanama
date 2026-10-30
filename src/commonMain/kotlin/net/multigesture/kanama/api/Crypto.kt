@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Provides access to advanced cryptographic functionalities.
@@ -150,6 +151,11 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Crypto? =
             if (handle.address() == 0L) null else Crypto(GodotHandle(handle))
+
+        /** A new Crypto, GDScript's `Crypto.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Crypto =
+            RefCounted.owned(Crypto(GodotHandle(requireConstructed(ObjectCalls.constructObject("Crypto"), "Crypto"))))
     }
 
     private object Binds {

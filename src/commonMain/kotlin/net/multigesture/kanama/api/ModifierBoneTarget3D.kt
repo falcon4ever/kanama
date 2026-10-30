@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * А node that dynamically copies the 3D transform of a bone in its parent `Skeleton3D`.
@@ -67,6 +68,11 @@ class ModifierBoneTarget3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): ModifierBoneTarget3D? =
             if (handle.address() == 0L) null else ModifierBoneTarget3D(GodotHandle(handle))
+
+        /** A new ModifierBoneTarget3D, GDScript's `ModifierBoneTarget3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): ModifierBoneTarget3D =
+            ModifierBoneTarget3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("ModifierBoneTarget3D"), "ModifierBoneTarget3D")))
     }
 
     private object Binds {

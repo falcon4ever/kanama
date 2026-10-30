@@ -4,6 +4,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Creates packages that can be loaded into a running project.
@@ -92,6 +93,11 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PCKPacker? =
             if (handle.address() == 0L) null else PCKPacker(GodotHandle(handle))
+
+        /** A new PCKPacker, GDScript's `PCKPacker.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): PCKPacker =
+            RefCounted.owned(PCKPacker(GodotHandle(requireConstructed(ObjectCalls.constructObject("PCKPacker"), "PCKPacker"))))
     }
 
     private object Binds {

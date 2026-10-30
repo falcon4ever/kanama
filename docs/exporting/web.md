@@ -164,7 +164,7 @@ cd /path/to/kanama
 
 The property name capitalizes the key: `dodge` takes
 `-PkanamaWebDodgeProjectDir`. Bunnymark also takes
-`-PkanamaWebBunnymarkVariant=BunnymarkV1Sprites`, the variant that runs on the
+`-PkanamaWebBunnymarkVariant=BunnymarkSprites`, the variant that runs on the
 Web. A demo's export lands in `web-runtime/build/web-export/<demo>/`.
 `tpsdemo` is larger than itch.io's 500 MB limit, so `packageWebExport` refuses
 it; serve it from your own host.

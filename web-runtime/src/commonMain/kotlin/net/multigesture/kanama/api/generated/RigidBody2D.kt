@@ -80,6 +80,12 @@ class RigidBody2D(godotObject: GodotHandle) : PhysicsBody2D(godotObject) {
       val CAST_SHAPE: CCDMode get() = CCDMode(2L)
     }
   }
+
+  companion object {
+    /** A new RigidBody2D, GDScript's `RigidBody2D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): RigidBody2D =
+      RigidBody2D(checkNotNull(ClassDB.instantiate("RigidBody2D")) { "Godot could not instantiate RigidBody2D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

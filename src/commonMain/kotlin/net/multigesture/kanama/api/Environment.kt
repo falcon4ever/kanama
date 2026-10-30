@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector3
 
@@ -3511,6 +3512,11 @@ class Environment(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Environment? =
             if (handle.address() == 0L) null else Environment(GodotHandle(handle))
+
+        /** A new Environment, GDScript's `Environment.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Environment =
+            RefCounted.owned(Environment(GodotHandle(requireConstructed(ObjectCalls.constructObject("Environment"), "Environment"))))
     }
 
     private object Binds {

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Universal Plug and Play (UPnP) device.
@@ -320,6 +321,11 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): UPNPDevice? =
             if (handle.address() == 0L) null else UPNPDevice(GodotHandle(handle))
+
+        /** A new UPNPDevice, GDScript's `UPNPDevice.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): UPNPDevice =
+            RefCounted.owned(UPNPDevice(GodotHandle(requireConstructed(ObjectCalls.constructObject("UPNPDevice"), "UPNPDevice"))))
     }
 
     private object Binds {

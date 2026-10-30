@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
@@ -856,6 +857,11 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextParagraph? =
             if (handle.address() == 0L) null else TextParagraph(GodotHandle(handle))
+
+        /** A new TextParagraph, GDScript's `TextParagraph.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): TextParagraph =
+            RefCounted.owned(TextParagraph(GodotHandle(requireConstructed(ObjectCalls.constructObject("TextParagraph"), "TextParagraph"))))
     }
 
     private object Binds {

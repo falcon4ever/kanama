@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Represents a magnifying touch gesture.
@@ -53,6 +54,11 @@ class InputEventMagnifyGesture(handle: GodotHandle) : InputEventGesture(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventMagnifyGesture? =
             if (handle.address() == 0L) null else InputEventMagnifyGesture(GodotHandle(handle))
+
+        /** A new InputEventMagnifyGesture, GDScript's `InputEventMagnifyGesture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): InputEventMagnifyGesture =
+            RefCounted.owned(InputEventMagnifyGesture(GodotHandle(requireConstructed(ObjectCalls.constructObject("InputEventMagnifyGesture"), "InputEventMagnifyGesture"))))
     }
 
     private object Binds {

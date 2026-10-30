@@ -2867,7 +2867,20 @@ private fun signalAwaitReturnExpr(args: List<ArgModel>): String =
     else -> "args"
   }
 
-private fun StringBuilder.appendMethodHelpers(simpleName: String, methods: List<MethodModel>) {
+/**
+ * The name a generated desktop registrar gives the class it registers: `import <fqName> as
+ * ThisClass`. Importing the class under its own simple name put a name the game chose into a file
+ * that also imports runtime and JDK types, so a script called `Arena` (`java.lang.foreign.Arena`)
+ * or `Signals` (the runtime's `Signals`) did not compile. The alias is the only name in the file
+ * the class can be reached by; no import the registrar writes may be named like it.
+ */
+internal const val SCRIPT_TYPE_ALIAS = "ThisClass"
+
+private fun StringBuilder.appendMethodHelpers(
+  simpleName: String,
+  typeRef: String,
+  methods: List<MethodModel>,
+) {
   val regularMethods = methods.filter { it.kind == MethodKind.REGULAR }
   if (regularMethods.isEmpty()) return
 
@@ -2887,28 +2900,26 @@ private fun StringBuilder.appendMethodHelpers(simpleName: String, methods: List<
     val target = if ("target" in taken) "kanamaTarget" else "target"
 
     if (returnType == null) {
-      appendLine("    fun ${method.kotlinName}($instance: $simpleName$params) {")
+      appendLine("    fun ${method.kotlinName}($instance: $typeRef$params) {")
       appendLine("        $instance.${method.kotlinName}($directArgs)")
       appendLine("    }")
       appendLine()
       appendLine(
         "    fun ${method.kotlinName}($target: net.multigesture.kanama.api.GodotObject$params): Boolean {"
       )
-      appendLine(
-        "        val $instance = $target.kotlinScriptInstance<$simpleName>() ?: return false"
-      )
+      appendLine("        val $instance = $target.kotlinScriptInstance<$typeRef>() ?: return false")
       appendLine("        ${method.kotlinName}($instance$helperArgs)")
       appendLine("        return true")
       appendLine("    }")
     } else {
-      appendLine("    fun ${method.kotlinName}($instance: $simpleName$params): $returnType =")
+      appendLine("    fun ${method.kotlinName}($instance: $typeRef$params): $returnType =")
       appendLine("        $instance.${method.kotlinName}($directArgs)")
       appendLine()
       appendLine(
         "    fun ${method.kotlinName}($target: net.multigesture.kanama.api.GodotObject$params): ${method.nullableReturnKotlinType} ="
       )
       appendLine(
-        "        $target.kotlinScriptInstance<$simpleName>()?.let { ${method.kotlinName}(it$helperArgs) }"
+        "        $target.kotlinScriptInstance<$typeRef>()?.let { ${method.kotlinName}(it$helperArgs) }"
       )
     }
     appendLine()
@@ -2916,7 +2927,11 @@ private fun StringBuilder.appendMethodHelpers(simpleName: String, methods: List<
   appendLine("}")
 }
 
-private fun StringBuilder.appendRpcHelpers(simpleName: String, methods: List<MethodModel>) {
+private fun StringBuilder.appendRpcHelpers(
+  simpleName: String,
+  typeRef: String,
+  methods: List<MethodModel>,
+) {
   val rpcMethods = methods.filter { it.kind == MethodKind.REGULAR && it.rpc != null }
   if (rpcMethods.isEmpty()) return
 
@@ -2931,14 +2946,14 @@ private fun StringBuilder.appendRpcHelpers(simpleName: String, methods: List<Met
     val godotName = kotlinStringLiteral(method.godotName)
 
     appendLine(
-      "    fun rpc$helperSuffix(instance: $simpleName$params): net.multigesture.kanama.api.GodotError ="
+      "    fun rpc$helperSuffix(instance: $typeRef$params): net.multigesture.kanama.api.GodotError ="
     )
     appendLine(
       "        net.multigesture.kanama.api.Node(instance.godotObject).rpc(\"$godotName\"$rpcArgs)"
     )
     appendLine()
     appendLine(
-      "    fun rpcId$helperSuffix(instance: $simpleName, peerId: Long$params): net.multigesture.kanama.api.GodotError ="
+      "    fun rpcId$helperSuffix(instance: $typeRef, peerId: Long$params): net.multigesture.kanama.api.GodotError ="
     )
     appendLine(
       "        net.multigesture.kanama.api.Node(instance.godotObject).rpcId(peerId, \"$godotName\"$rpcArgs)"
@@ -2946,7 +2961,7 @@ private fun StringBuilder.appendRpcHelpers(simpleName: String, methods: List<Met
 
     if (method.rpc?.callLocal == true) {
       appendLine()
-      appendLine("    fun callLocal$helperSuffix(instance: $simpleName$params) {")
+      appendLine("    fun callLocal$helperSuffix(instance: $typeRef$params) {")
       appendLine(
         "        net.multigesture.kanama.api.Node(instance.godotObject).callLocalRpc(\"$godotName\"$rpcArgs)"
       )
@@ -3991,8 +4006,8 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
     propertyUpcalls()
     classClose()
     signalHelpers()
-    sb.appendMethodHelpers(model.simpleName, model.methods)
-    sb.appendRpcHelpers(model.simpleName, model.methods)
+    sb.appendMethodHelpers(model.simpleName, SCRIPT_TYPE_ALIAS, model.methods)
+    sb.appendRpcHelpers(model.simpleName, SCRIPT_TYPE_ALIAS, model.methods)
     nameConstants()
     return sb.toString()
   }
@@ -4012,7 +4027,7 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
         }
       val argsExpr = if (s.args.isEmpty()) "emptyList()" else "listOf($argList)"
       sb.appendLine(
-        "    fun $functionName(instance: ${model.simpleName}${if (kotlinParams.isNotEmpty()) ", $kotlinParams" else ""}) {"
+        "    fun $functionName(instance: $SCRIPT_TYPE_ALIAS${if (kotlinParams.isNotEmpty()) ", $kotlinParams" else ""}) {"
       )
       sb.appendLine(
         "        Signals.emit(instance.godotObject.segment, \"${kotlinStringLiteral(s.godotName)}\", $argsExpr)"
@@ -4020,14 +4035,14 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
       sb.appendLine("    }")
       sb.appendLine()
       sb.appendLine(
-        "    fun signal$helperSuffix(instance: ${model.simpleName}): net.multigesture.kanama.api.GodotSignal ="
+        "    fun signal$helperSuffix(instance: $SCRIPT_TYPE_ALIAS): net.multigesture.kanama.api.GodotSignal ="
       )
       sb.appendLine(
         "        net.multigesture.kanama.api.GodotObject(instance.godotObject).signal(\"${kotlinStringLiteral(s.godotName)}\")"
       )
       sb.appendLine()
       sb.appendLine("    fun connect$helperSuffix(")
-      sb.appendLine("        instance: ${model.simpleName},")
+      sb.appendLine("        instance: $SCRIPT_TYPE_ALIAS,")
       sb.appendLine("        target: net.multigesture.kanama.api.GodotObject,")
       sb.appendLine(
         "        flags: net.multigesture.kanama.api.GodotObject.ConnectFlags = net.multigesture.kanama.api.GodotObject.ConnectFlags(0L),"
@@ -4041,7 +4056,7 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
       sb.appendLine("        }")
       sb.appendLine()
       sb.appendLine("    suspend fun await$helperSuffix(")
-      sb.appendLine("        instance: ${model.simpleName},")
+      sb.appendLine("        instance: $SCRIPT_TYPE_ALIAS,")
       sb.appendLine("        target: net.multigesture.kanama.api.GodotObject,")
       sb.appendLine("    ): ${signalAwaitReturnType(s.args)} {")
       sb.appendLine(
@@ -4105,7 +4120,7 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
     sb.appendLine("import net.multigesture.kanama.binding.runtime.VariantType")
     sb.appendLine("import net.multigesture.kanama.ffi.GodotFFI")
     sb.appendLine("import net.multigesture.kanama.api.kotlinScriptInstance")
-    sb.appendLine("import ${model.fqName}")
+    sb.appendLine("import ${model.fqName} as $SCRIPT_TYPE_ALIAS")
     sb.appendLine("import java.lang.foreign.Arena")
     sb.appendLine("import java.lang.foreign.FunctionDescriptor")
     sb.appendLine("import java.lang.foreign.MemorySegment")
@@ -4327,7 +4342,7 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
     // `obj` comes back from a MethodHandle as a raw segment; build the handle right here,
     // at the @RegisterClass constructor call (task 104).
     sb.appendLine(
-      "        val kotlinInstance = ${model.simpleName}(net.multigesture.kanama.api.GodotHandle(obj))"
+      "        val kotlinInstance = $SCRIPT_TYPE_ALIAS(net.multigesture.kanama.api.GodotHandle(obj))"
     )
     sb.appendLine("        val handle = ObjectRegistry.register(kotlinInstance)")
     sb.appendLine(
@@ -4384,7 +4399,7 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
         "    fun ${v.callFunctionName}(instance: MemorySegment, args: MemorySegment, ret: MemorySegment) {"
       )
       sb.appendLine(
-        "        val kotlinInstance = ObjectRegistry.get(instance.address()) as? ${model.simpleName} ?: return"
+        "        val kotlinInstance = ObjectRegistry.get(instance.address()) as? $SCRIPT_TYPE_ALIAS ?: return"
       )
       if (v.args.isEmpty()) {
         sb.appendLine("        kotlinInstance.${v.kotlinMethodName}()")
@@ -4500,7 +4515,7 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
     sb.appendLine("        rError: MemorySegment,")
     sb.appendLine("    ) {")
     sb.appendLine(
-      "        val kotlinInstance = ObjectRegistry.get(instance.address()) as? ${model.simpleName} ?: return"
+      "        val kotlinInstance = ObjectRegistry.get(instance.address()) as? $SCRIPT_TYPE_ALIAS ?: return"
     )
     if (m.args.isEmpty() && m.returnType == null) {
       sb.appendLine("        ${invocationExpr(m, emptyList())}")
@@ -4564,7 +4579,7 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
     sb.appendLine("        rRet: MemorySegment,")
     sb.appendLine("    ) {")
     sb.appendLine(
-      "        val kotlinInstance = ObjectRegistry.get(instance.address()) as? ${model.simpleName} ?: return"
+      "        val kotlinInstance = ObjectRegistry.get(instance.address()) as? $SCRIPT_TYPE_ALIAS ?: return"
     )
     val argVars = mutableListOf<String>()
     if (m.args.isNotEmpty()) {
@@ -4611,8 +4626,8 @@ internal class ScriptCodeEmitter(
     objectClose()
     signalHelpers()
     sb.append(typedSignalAccessors(model.fqName, model.signals))
-    sb.appendMethodHelpers(model.simpleName, model.methods)
-    sb.appendRpcHelpers(model.simpleName, model.methods)
+    sb.appendMethodHelpers(model.simpleName, SCRIPT_TYPE_ALIAS, model.methods)
+    sb.appendRpcHelpers(model.simpleName, SCRIPT_TYPE_ALIAS, model.methods)
     nameConstants()
     return sb.toString()
   }
@@ -4632,7 +4647,7 @@ internal class ScriptCodeEmitter(
         }
       val argsExpr = if (s.args.isEmpty()) "emptyList()" else "listOf($argList)"
       sb.appendLine(
-        "    fun $functionName(instance: ${model.simpleName}${if (kotlinParams.isNotEmpty()) ", $kotlinParams" else ""}) {"
+        "    fun $functionName(instance: $SCRIPT_TYPE_ALIAS${if (kotlinParams.isNotEmpty()) ", $kotlinParams" else ""}) {"
       )
       sb.appendLine(
         "        Signals.emit(instance.godotObject.segment, \"${kotlinStringLiteral(s.godotName)}\", $argsExpr)"
@@ -4640,14 +4655,14 @@ internal class ScriptCodeEmitter(
       sb.appendLine("    }")
       sb.appendLine()
       sb.appendLine(
-        "    fun signal$helperSuffix(instance: ${model.simpleName}): net.multigesture.kanama.api.GodotSignal ="
+        "    fun signal$helperSuffix(instance: $SCRIPT_TYPE_ALIAS): net.multigesture.kanama.api.GodotSignal ="
       )
       sb.appendLine(
         "        net.multigesture.kanama.api.GodotObject(instance.godotObject).signal(\"${kotlinStringLiteral(s.godotName)}\")"
       )
       sb.appendLine()
       sb.appendLine("    fun connect$helperSuffix(")
-      sb.appendLine("        instance: ${model.simpleName},")
+      sb.appendLine("        instance: $SCRIPT_TYPE_ALIAS,")
       sb.appendLine("        target: net.multigesture.kanama.api.GodotObject,")
       sb.appendLine(
         "        flags: net.multigesture.kanama.api.GodotObject.ConnectFlags = net.multigesture.kanama.api.GodotObject.ConnectFlags(0L),"
@@ -4661,7 +4676,7 @@ internal class ScriptCodeEmitter(
       sb.appendLine("        }")
       sb.appendLine()
       sb.appendLine("    suspend fun await$helperSuffix(")
-      sb.appendLine("        instance: ${model.simpleName},")
+      sb.appendLine("        instance: $SCRIPT_TYPE_ALIAS,")
       sb.appendLine("        target: net.multigesture.kanama.api.GodotObject,")
       sb.appendLine("    ): ${signalAwaitReturnType(s.args)} {")
       sb.appendLine(
@@ -4744,7 +4759,7 @@ internal class ScriptCodeEmitter(
     sb.appendLine("import net.multigesture.kanama.binding.runtime.VariantConverters")
     sb.appendLine("import net.multigesture.kanama.binding.runtime.VariantType")
     sb.appendLine("import net.multigesture.kanama.api.kotlinScriptInstance")
-    sb.appendLine("import ${model.fqName}")
+    sb.appendLine("import ${model.fqName} as $SCRIPT_TYPE_ALIAS")
     sb.appendLine("import java.lang.foreign.Arena")
     sb.appendLine("import java.lang.foreign.MemorySegment")
     sb.appendLine("import java.lang.foreign.ValueLayout.ADDRESS")
@@ -5154,7 +5169,7 @@ internal class ScriptCodeEmitter(
     // Android source remap rewrites `.invoke(` to `invokeWithArguments(`, which would box a
     // value class. The GodotHandle is built exactly here, at the script constructor (task 104).
     sb.appendLine(
-      "        val kt = ${model.simpleName}(net.multigesture.kanama.api.GodotHandle(godotObject))"
+      "        val kt = $SCRIPT_TYPE_ALIAS(net.multigesture.kanama.api.GodotHandle(godotObject))"
     )
     sb.appendLine("        return KanamaScriptInstance(")
     sb.appendLine("            kotlinObject = kt,")
@@ -5351,7 +5366,7 @@ internal class ScriptCodeEmitter(
     sb.appendLine("        }")
     sb.appendLine("    }")
     sb.appendLine()
-    sb.appendLine("    internal fun cleanupKanamaOwnedProperties(kt: ${model.simpleName}) {")
+    sb.appendLine("    internal fun cleanupKanamaOwnedProperties(kt: $SCRIPT_TYPE_ALIAS) {")
     for (p in model.properties) {
       if (holdsCustomScripts(p)) continue
       sb.appendLine(

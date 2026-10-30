@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A class that stores an expression you can execute.
@@ -76,6 +77,11 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Expression? =
             if (handle.address() == 0L) null else Expression(GodotHandle(handle))
+
+        /** A new Expression, GDScript's `Expression.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Expression =
+            RefCounted.owned(Expression(GodotHandle(requireConstructed(ObjectCalls.constructObject("Expression"), "Expression"))))
     }
 
     private object Binds {

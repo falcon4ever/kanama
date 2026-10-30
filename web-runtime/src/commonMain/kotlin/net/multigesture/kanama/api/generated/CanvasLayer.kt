@@ -25,6 +25,12 @@ class CanvasLayer(godotObject: GodotHandle) : Node(godotObject) {
   object Signals {
     const val visibilityChanged: String = "visibility_changed"
   }
+
+  companion object {
+    /** A new CanvasLayer, GDScript's `CanvasLayer.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): CanvasLayer =
+      CanvasLayer(checkNotNull(ClassDB.instantiate("CanvasLayer")) { "Godot could not instantiate CanvasLayer" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

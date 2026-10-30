@@ -68,7 +68,7 @@ class LightmapGI(godotObject: GodotHandle) : VisualInstance3D(godotObject) {
   }
 
   companion object {
-    /** Constructs a new LightmapGI engine-side; the wrapper owns the handle (close what you create). */
+    /** A new LightmapGI, GDScript's `LightmapGI.new()`. Add it to the tree, or `queueFree()` it. */
     fun create(): LightmapGI =
       LightmapGI(checkNotNull(ClassDB.instantiate("LightmapGI")) { "Godot could not instantiate LightmapGI" }.toWebId())
   }

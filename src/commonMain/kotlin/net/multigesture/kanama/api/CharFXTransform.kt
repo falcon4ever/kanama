@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform2D
@@ -440,6 +441,11 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CharFXTransform? =
             if (handle.address() == 0L) null else CharFXTransform(GodotHandle(handle))
+
+        /** A new CharFXTransform, GDScript's `CharFXTransform.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): CharFXTransform =
+            RefCounted.owned(CharFXTransform(GodotHandle(requireConstructed(ObjectCalls.constructObject("CharFXTransform"), "CharFXTransform"))))
     }
 
     private object Binds {

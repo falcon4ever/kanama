@@ -902,13 +902,14 @@ handle; `getRid()` crosses once per object. `RayCast3D.addExceptionRid` and
 `SpringArm3D.addExcludedObject(rid)` take the RID too.
 
 **`GD` and `Mathf`.** Web compiles the same `GD` and `Mathf` and runs the math in Kotlin, with no
-bridge call: everything `Mathf` has, and `GD`'s arithmetic, rounding, interpolation and
+bridge call: everything `Mathf` has but its inverse hyperbolics, and `GD`'s arithmetic, rounding, interpolation and
 transcendental functions (`sin`, `pow`, `exp`, `ease`, `dbToLinear`, ...). The arithmetic ones
 return GDScript's double bit for bit; the transcendental ones can differ from the engine's in the
 last bit or two (Kotlin/Wasm computes `kotlin.math` with its own fdlibm port, not the engine's libm;
 `ease` is within 2^-52 absolute, since some of its branches subtract from 1). The rest of `GD` runs
 in the engine: printing and `pushError`, `str` and the `varTo*` / `bytesTo*` conversions, `typeOf`,
-`hash`, `weakref`, `instanceFromId`, and the random functions (`randf`, `randi`, `randfRange`,
+`hash`, `weakref`, `instanceFromId`, `asinh` / `acosh` / `atanh` (`kotlin.math`'s lose hundreds of
+ulps near zero), and the random functions (`randf`, `randi`, `randfRange`,
 `randiRange`, `randfn`, `seed`, `randomize`, `randFromSeed`). Each of those is one bridge crossing
 (about 10-30 µs), so draw thousands of random numbers per frame with care.
 

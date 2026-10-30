@@ -25,7 +25,9 @@ Usage:
     python3 scripts/gate_red_runs.py --markdown out.md   # also write the README-gates.md table rows
 
 `--strict` is implied when `CI` is true/1/yes. `--allow-skip NAME[,NAME]` names the cases a runner
-may skip on purpose (CI has no Godot docs checkout: `--allow-skip sync_kdoc`).
+may skip on purpose (CI has no Godot docs checkout: `--allow-skip sync_kdoc`). A case is SKIPPED when
+an environment variable it needs is unset (`requires_env`) or when its gate's baseline says it could
+not run the mutated row (`skip_when`, e.g. no Android export template): never a vacuous red run.
 
 Gates that need a device, a browser, a Godot binary or a long export are NOT all here: they carry
 their own `--self-test` or red-run recipe, documented in scripts/README-gates.md.
@@ -84,12 +86,18 @@ class Case:
     gate: str  # name shown in the table
     cmd: list[str]  # run from WORK
     mutations: list  # Edit | Create | Delete | Rename | Append
-    expect: str  # substring the red run must print (stdout + stderr)
+    # Substring the red run must print (stdout + stderr); a tuple names alternatives, any one of which will
+    # do (a crash ends in SIGABRT through Godot's macOS crash handler but SIGSEGV on Linux).
+    expect: str | tuple[str, ...]
     how: str  # one line for the table: what the mutation does
     env: dict[str, str] = field(default_factory=dict)
     timeout: int = 600
     pre: list[list[str]] = field(default_factory=list)  # commands run (must succeed) before the baseline
     requires_env: str = ""  # environment variables (comma-separated) that must each name an existing path, else the case is skipped
+    # A line the gate prints when it cannot run the row this case mutates (a missing export template, an editor
+    # with no Android SDK): found in the baseline output, the case is SKIPPED with that line as the reason, never
+    # a red run that stays green for want of a prerequisite (or, worse, a green row that proved nothing).
+    skip_when: str = ""
     slow: bool = False  # needs a Godot binary / Gradle and runs for minutes: only with --slow
 
 
@@ -732,6 +740,12 @@ case("check_wrapper_generator.py (iOS region body)", py("check_wrapper_generator
 case("check_wrapper_generator.py (keep-reachable sweep)", py("check_wrapper_generator.py"),
      [Edit("scripts/check_wrapper_generator.py", "reads_receiver = (receiver or owner) in refcounted and", "reads_receiver = False and")],
      "the sweep misses a known-bad shape", "the keep-reachable sweep stops seeing a RefCounted body that reads `segment` without its fence (expression body, header on several lines, no checkOpen(); task 138 item 6)")
+case("check_wrapper_generator.py (create for every instantiable class)", py("check_wrapper_generator.py"),
+     [Edit("scripts/generate_api_wrapper.py", '    return bool(family & {"Node", "RefCounted"})\n', '    return class_name in {"Sprite2D", "PackedScene"}\n')],
+     "single-tree drift-gate", "`create()` goes back to a hand-kept allowlist: GDScript's `Label.new()` / `Area2D.new()` have no Kotlin spelling again (the Bulletmark port's finding)")
+case("generate_web_wrappers.py --check (create for every instantiable class)", py("generate_web_wrappers.py", "--check"),
+     [Edit("scripts/generate_web_wrappers.py", '    return bool({"Node", "RefCounted"} & set(api.chain(godot_name)))\n', '    return godot_name == "Sprite2D"\n')],
+     "FAIL", "the Web `create()` goes back to a hand-kept allowlist (native's rule is every instantiable Node or RefCounted)")
 case("check_wrapper_generator.py (expect ObjectCalls)", py("check_wrapper_generator.py"),
      [Append(f"{COMMON}/binding/runtime/ObjectCalls.expect.kt", "\nval redRunHandEdit = 1\n")],
      "ObjectCalls.expect.kt", "the generated `expect object ObjectCalls` file is hand-edited (it is in the drift compare since task 119 finding 25)")
@@ -1027,6 +1041,40 @@ case("runtime_smoke.sh", ["bash", "scripts/runtime_smoke.sh", GODOT],
      "missing pattern", "the example script no longer logs its scene-delivered properties",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 JVM_OBJECT_CALLS = "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt"
+KANAMA_SCRIPT = "src/jvmMain/kotlin/binding/KanamaScript.kt"
+CTOR_PLACEHOLDER = ("              placeholder = true\n              placeholder()\n", "              return\n")
+case("runtime_smoke.sh (throwing script constructor)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit(KANAMA_SCRIPT, "      retPtr.set(ADDRESS, 0, MemorySegment.NULL)\n      val handle = instance.address()\n",
+           "      val handle = instance.address()\n"),
+      Edit(KANAMA_SCRIPT, *CTOR_PLACEHOLDER)],
+     ("[runtime_smoke] exit 134", "[runtime_smoke] exit 139"), "a script constructor that throws during set_script returns without writing _instance_create's return slot again: Godot uses the uninitialized slot as the instance and crashes with signal 11 right after the script error, so the smoke stops at the crash (the Bulletmark port's finding)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (throwing @Tool constructor)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit(KANAMA_SCRIPT, *CTOR_PLACEHOLDER)],
+     "missing pattern", "a @Tool script constructor that throws in the editor returns NULL instead of a placeholder: Godot drops the script from the node (get_script() reads through the instance) and saving the scene writes it without the script",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("runtime_smoke.sh (self-test workers at shutdown)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/jvmMain/kotlin/binding/runtime/OwnershipSelfTest.kt", "  fun shutdown() {\n    stopping = true\n",
+           "  fun shutdown() {\n    return\n    stopping = true\n")],
+     "self-test quick quit: shutdown did not stop the worker", "engine shutdown no longer stops the ownership self-test's worker: a run that quits while it makes Resources leaks thousands of ObjectDB instances at exit and can abort in realloc (the Android Platformer scene check); the leak is a race (most runs on macOS, none seen on Linux CI), so the smoke holds every run to shutdown's own `stopped N worker(s), 0 still running` line",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("OwnedReleasesTest (low frame rate drain)", ["./gradlew", "-p", ".", ":jvmTest", "--tests", "*OwnedReleasesTest*"],
+     [Edit("src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/OwnedReleases.kt",
+           "    drain(budget = null, sinceLastDrain = sinceLastDrain)\n", "    drain(budget = frameBudget, sinceLastDrain = sinceLastDrain)\n")],
+     "aLargeBacklogAtALowFrameRateDrainsInAFewFrames", "the per-frame drain goes back to a fixed 1 ms: at a few frames a second, with releases at a loaded phone's cost, 10,000 dropped wrappers take minutes to release (the Pixel 7 Bunnymark run: 1,361 of 10,000 in 30 s)",
+     slow=True)
+case("processor ScriptNameClashTest", ["./gradlew", "-p", ".", ":processor:test", "--tests", "*ScriptNameClashTest*"],
+     [Edit("processor/src/main/kotlin/net/multigesture/kanama/processor/KanamaProcessor.kt",
+           'VariantType")\n    sb.appendLine("import net.multigesture.kanama.api.kotlinScriptInstance")\n    sb.appendLine("import ${model.fqName} as $SCRIPT_TYPE_ALIAS")',
+           'VariantType")\n    sb.appendLine("import net.multigesture.kanama.api.kotlinScriptInstance")\n    sb.appendLine("import ${model.fqName}")')],
+     "ScriptNameClashTest", "the desktop registrar imports its script class by its simple name again: a script called Arena (java.lang.foreign.Arena) or Signals does not compile (the Bulletmark port's finding)",
+     slow=True)
+case("runtime_smoke.sh (Mathf libm bound)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/commonMain/kotlin/net/multigesture/kanama/api/Mathf.kt",
+           "    fun cos(value: Double): Double = kotlin.math.cos(value)\n",
+           "    fun cos(value: Double): Double = kotlin.math.cos(value) * (1.0 + 1e-12)\n")],
+     "missing pattern", "Mathf.cos drifts from Godot's libm by thousands of ulps: the pure-Kotlin transcendentals must stay within their MATHF_LIBM_BOUNDS bound of the engine's result (`mathfbound=`)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (progress read-back)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit(JVM_OBJECT_CALLS, "(BuiltinTypes.readArrayScalars(argArray).firstOrNull() as? Number)?.toDouble()",
            "(emptyList<Any?>().firstOrNull() as? Number)?.toDouble()"),
@@ -1144,6 +1192,14 @@ case("check_exported_scene_properties_selftest.sh (conversion off)", ["bash", "s
      [Edit("scripts/check_exported_scene_properties.gd", "\tif not bool(ProjectSettings.get_setting(CONVERT_SETTING, true)) and not _has_feature_override(CONVERT_SETTING):", "\tif false:")],
      "on a project that turns conversion off", "the scene check ignores editor/export/convert_text_resources_to_binary=false: --require-converted fails a project whose scenes ship as text with their values",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+case("check_exported_scene_properties_selftest.sh (exit leak)", ["bash", "scripts/check_exported_scene_properties_selftest.sh", GODOT],
+     [Edit("scripts/check_exported_scene_properties.gd", "\t_keep_autoloads_silent()\n\tquit(_run())", "\tquit(_run())")],
+     "the scene check leaked at exit", "the scene check lets an autoplaying autoload start its stream on the frame it quits: Godot leaks the playing stream at exit (Squash the Creeps, 4 instances)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("check_exported_scene_properties_selftest.sh (scriptless node)", ["bash", "scripts/check_exported_scene_properties_selftest.sh", GODOT],
+     [Edit("scripts/check_exported_scene_properties.gd", "\t\tif script == null:\n", "\t\tif false:\n")],
+     "the green run exited 1", "the scene check judges a node with no script: an AnimationPlayer's `libraries` (not in ClassDB's list) is reported as a lost script property",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("tool_smoke.sh (export guard check)",["bash", "scripts/tool_smoke.sh", GODOT],
      [Create("example_project/export_guard_red.tscn",
              '[gd_scene load_steps=2 format=3]\n\n[ext_resource type="Script" path="res://ExportGuardRed.kt" id="1"]\n\n[node name="Red" type="Node"]\nscript = ExtResource("1")\n'),
@@ -1166,6 +1222,81 @@ case("tool_smoke.sh (export guard one-click clean-up)", ["bash", "scripts/tool_s
       Edit("example_project/addons/kanama_tools/kanama_export_guard.gd", *GUARD_ONE_CLICK_NAME)],
      "[export_guard_discard] FAIL: discard_export deleted", "the guard takes any export into the temp folder for a one-click deploy: a user's /tmp/game.apk would be deleted after a failed check",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+# The editor build loop (scripts/check_editor_build_loop.gd), Set Up Kanama Project
+# (scripts/check_editor_project_setup.gd) and the deleted-jar install check, all driven by tool_smoke.sh. A plugin
+# mutation goes into both copies of the plugin.
+def plugin_edit(old: str, new: str) -> list:
+    return [Edit("templates/starter/addons/kanama_tools/plugin.gd", old, new),
+            Edit("example_project/addons/kanama_tools/plugin.gd", old, new)]
+
+
+case("tool_smoke.sh (status light)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     plugin_edit("    if last_build_failed:\n        return STATUS_FAILED\n", "    if false:\n        return STATUS_FAILED\n"),
+     "status light after a failing build: expected failed", "the status light forgets a failed build: it must turn red after a failing build, not yellow or green",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (build on save on by default)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     plugin_edit("        settings.set_setting(SETTING_BUILD_ON_SAVE, true)\n", "        settings.set_setting(SETTING_BUILD_ON_SAVE, false)\n"),
+     "build on save is off by default", "the plugin creates the Build On Save editor setting switched off: a fresh editor must build on save",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (build on save builds once)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     plugin_edit('    return parent_path == "res://" and (name == "build" or name == "android")',
+                 '    return parent_path == "res://" and name == "android"')
+     + plugin_edit("func _kt_scan_roots() -> Array:\n    var roots: Array = []\n",
+                   'func _kt_scan_roots() -> Array:\n    if true:\n        return ["res://"]\n    var roots: Array = []\n'),
+     "the watcher took the build's own output under build/ for a save", "the watcher scans the whole project, Gradle's build/ included, again: the .kt files KSP writes there make every build start another one",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (save during a build)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     plugin_edit("    if changed:\n        if is_build_on_save_enabled():", "    if changed and not _is_build_running:\n        if is_build_on_save_enabled():"),
+     "a save during a running build was followed by 0 builds, expected exactly 1", "build on save drops a save made while a build runs: the scripts stay stale with no build to follow",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (build timeout)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     plugin_edit("        if Time.get_ticks_msec() - _build_started_msec > limit_sec * 1000:", "        if false:"),
+     "status light after a build ran past the timeout: expected failed", "the build timeout never fires: a hung Gradle keeps the light yellow forever",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (build outside the editor)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     plugin_edit("    if not stamp.is_empty() and jar_time <= FileAccess.get_modified_time(stamp_path):", "    if not stamp.is_empty():"),
+     "status light after a build outside the editor installed a newer jar: expected current", "the build stamp wins over a newer jar again: after ./gradlew buildScripts in a terminal the light stays yellow",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (old build-on-save setting)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     plugin_edit("    if ProjectSettings.has_setting(OLD_SETTING_AUTO_BUILD_ON_SAVE):", "    if false:"),
+     "the plugin did not warn about the old kanama/tools/auto_build_on_save project setting", "the plugin stops saying that kanama/tools/auto_build_on_save is no longer read: a project that turned build on save off there gets builds with no word why",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (build ends with the editor)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     plugin_edit("        OS.kill(_build_pid)\n", "        pass\n"),
+     "still runs after the plugin left", "the plugin leaves its running build alone when it exits: a Gradle client would outlive the editor",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+SETUP_SH = "templates/store-addon/setup-kanama-project.sh"
+case("tool_smoke.sh (setup keeps existing files)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit(SETUP_SH, 'copy_file() {\n    src="$1"\n    dst="$2"\n    if [ -e "$dst" ] && [ "$force" -ne 1 ]; then',
+           'copy_file() {\n    src="$1"\n    dst="$2"\n    if false; then')],
+     "the setup overwrote the project's own gradlew.bat", "the setup script copies a template file over one the project already has: Set Up Kanama Project must never overwrite",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (setup merges settings.gradle.kts)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit(SETUP_SH, "    else\n        merge_settings=1\n", "    else\n        merge_settings=0\n")],
+     "the setup result does not list the merged settings.gradle.kts", "the setup keeps a settings.gradle.kts without the Kanama pluginManagement block: the template's build.gradle.kts cannot resolve the Kanama Gradle plugin, and Build Scripts fails",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("check_gradle_templates_configure.sh (own pluginManagement)", ["bash", "scripts/check_gradle_templates_configure.sh"],
+     [Edit(SETUP_SH, "Nothing was changed.\" >&2\n        exit 1\n", "Nothing was changed.\" >&2\n")],
+     "setup-kanama-project.sh went on over a settings.gradle.kts with its own pluginManagement block", "the setup goes on past a settings.gradle.kts with its own pluginManagement block: it adds a build that cannot resolve the Kanama Gradle plugin",
+     timeout=1800, slow=True)
+case("check_gradle_templates_configure.sh (Groovy settings)", ["bash", "scripts/check_gradle_templates_configure.sh"],
+     [Edit(SETUP_SH, 'run the setup again. Nothing was changed." >&2\n    exit 1\nfi\n', 'run the setup again. Nothing was changed." >&2\nfi\n')],
+     "setup-kanama-project.sh went on in a project with a Groovy settings.gradle", "the setup goes on beside a Groovy settings.gradle: it writes a second, Kotlin settings file next to it",
+     timeout=1800, slow=True)
+case("check_gradle_templates_configure.sh (settings import)", ["bash", "scripts/check_gradle_templates_configure.sh"],
+     [Edit(SETUP_SH, "if (text ~ /^(import[ \\t]|@file:)/) { after = i; continue }", "if (0) { after = i; continue }")],
+     "the Kanama pluginManagement block was not put after the settings file's import", "the setup puts the pluginManagement block above a settings file's imports again: Gradle rejects the file",
+     timeout=1800, slow=True)
+case("tool_smoke.sh (setup adds nothing twice)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit(SETUP_SH, 'if [ -e "$project_dir/build/.gdignore" ]; then', "if false; then")],
+     "the second setup run added", "the setup script writes build/.gdignore on every run: a second Set Up Kanama Project must add nothing",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (deleted scripts jar restored)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit("build.gradle.kts",
+           "            installedFile.isFile &&\n              java.nio.file.Files.mismatch(details.file.toPath(), installedFile.toPath()) == -1L",
+           "            true")],
+     "installAddonJar did not restore a deleted kanama-scripts.jar", "installAddonJar skips the scripts jar whatever is installed: a deleted kanama-scripts.jar must come back with the next Build Scripts",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("export_guard_selftest.sh",["bash", "scripts/export_guard_selftest.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", "    if not problems.is_empty():\n        messages.append", "    if false:\n        messages.append")],
      "the stale export exited 0", "the export guard stops finding problems: a stale-jar export must still exit non-zero with the message (its own green and red exports are inside the self-test)",
@@ -1174,7 +1305,7 @@ case("export_guard_selftest.sh (Android Min SDK)", ["bash", "scripts/export_guar
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd",
            '            messages.append("Export stopped: " + sdk_problem)', "            pass")],
      "the min_sdk export did not print the guard's Min SDK line", "the export guard's _export_begin drops its Android Min SDK check: a real headless Android Gradle export with Min SDK 26 must still stop with the line",
-     requires_env="KANAMA_GODOT_BIN", slow=True)
+     requires_env="KANAMA_GODOT_BIN", skip_when="[export_guard_selftest] SKIP min_sdk:", slow=True)
 case("check_jdk_lookup_parity.sh", ["bash", "scripts/check_jdk_lookup_parity.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/plugin.gd", '["all", "~/.jdks", "", ""]', '["all", "~/.jdkz", "", ""]')],
      "FAIL table_home_dot_jdks", "the editor plugin's JDK location table drifts from bootstrap.c's (a `~/.jdks` row renamed)",
@@ -1458,15 +1589,19 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
     skipped: list[str] = []
     for c in cases:
         print(f"== {c.gate}: {c.how}", flush=True)
+
+        def skip(reason: str) -> None:
+            print(f"SKIP: {c.gate}: {reason}", flush=True)
+            skipped.append(c.gate)
+            cell = reason.replace("|", "\\|")
+            rows.append(f"| `{c.gate}` | {c.how} | SKIPPED: {cell} | - |")
+            if strict and not any(a in c.gate for a in allowed_skips):
+                failures.append(f"{c.gate}: SKIPPED ({reason}) in a strict run; provide it, or pass --allow-skip")
+
         missing_env = [name for name in filter(None, c.requires_env.split(","))
                        if not Path(os.environ.get(name, "/nonexistent")).exists()]
         if missing_env:
-            needs = " and ".join(missing_env)
-            print(f"SKIP: {c.gate}: needs {needs} to name an existing path", flush=True)
-            skipped.append(c.gate)
-            rows.append(f"| `{c.gate}` | {c.how} | SKIPPED: needs {needs} | - |")
-            if strict and not any(a in c.gate for a in allowed_skips):
-                failures.append(f"{c.gate}: SKIPPED (needs {needs}) in a strict run; set it, or pass --allow-skip")
+            skip(f"needs {' and '.join(missing_env)} to name an existing path")
             continue
         for pre in c.pre:
             pre_rc, pre_out, _ = run(Case(c.gate, pre, [], "", "", env=c.env, timeout=c.timeout))
@@ -1477,6 +1612,9 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
             failures.append(f"{c.gate}: not green before the mutation (exit {rc}):\n{out[-800:]}")
             print(f"   baseline NOT green (exit {rc}); skipped", flush=True)
             continue
+        if c.skip_when and c.skip_when in out:
+            skip(next(line.strip() for line in out.splitlines() if c.skip_when in line))
+            continue
         try:
             with Mutator(c.mutations):
                 red_rc, red_out, red_secs = run(c)
@@ -1486,11 +1624,13 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
             rows.append(f"| `{c.gate}` | {c.how} | UNPROVEN | - |")
             continue
         green_rc, green_out, _ = run(c)
+        alternatives = (c.expect,) if isinstance(c.expect, str) else c.expect
+        matched = next((text for text in alternatives if text in red_out), None)
         ok = True
         if red_rc == 0:
             failures.append(f"{c.gate}: STAYED GREEN after the mutation ({c.how}); the gate does not catch it")
             ok = False
-        elif c.expect not in red_out:
+        elif matched is None:
             failures.append(
                 f"{c.gate}: failed (exit {red_rc}) but without the expected text {c.expect!r}:\n{red_out[-800:]}"
             )
@@ -1498,7 +1638,7 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
         if green_rc != 0:
             failures.append(f"{c.gate}: NOT green after the revert (exit {green_rc}):\n{green_out[-800:]}")
             ok = False
-        excerpt = red_excerpt(red_out, c.expect).replace("|", "\\|")
+        excerpt = red_excerpt(red_out, matched or alternatives[0]).replace("|", "\\|")
         print(f"   red   exit {red_rc} in {red_secs:.1f}s: {excerpt}", flush=True)
         print(f"   green after revert: exit {green_rc}", flush=True)
         rows.append(

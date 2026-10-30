@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * A 3D physics body that simulates the behavior of a car.
@@ -113,6 +114,11 @@ class VehicleBody3D(handle: GodotHandle) : RigidBody3D(handle) {
 
         internal fun wrap(handle: RawSegment): VehicleBody3D? =
             if (handle.address() == 0L) null else VehicleBody3D(GodotHandle(handle))
+
+        /** A new VehicleBody3D, GDScript's `VehicleBody3D.new()`. Add it to the tree, or `queueFree()` it. */
+        @JvmStatic
+        fun create(): VehicleBody3D =
+            VehicleBody3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("VehicleBody3D"), "VehicleBody3D")))
     }
 
     private object Binds {

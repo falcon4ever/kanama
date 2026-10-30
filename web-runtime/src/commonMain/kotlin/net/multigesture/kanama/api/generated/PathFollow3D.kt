@@ -27,6 +27,12 @@ class PathFollow3D(godotObject: GodotHandle) : Node3D(godotObject) {
       val ORIENTED: RotationMode get() = RotationMode(4L)
     }
   }
+
+  companion object {
+    /** A new PathFollow3D, GDScript's `PathFollow3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): PathFollow3D =
+      PathFollow3D(checkNotNull(ClassDB.instantiate("PathFollow3D")) { "Godot could not instantiate PathFollow3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

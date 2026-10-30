@@ -213,7 +213,7 @@ Referenced by the shared sources, but never with a generated MethodBind (`NON_BI
 
 | helper | used by | why it has no row of its own |
 |---|---|---|
-| `constructObject` | `ApiExerciseRunner`, `AudioStreamPlayer`, `BoxMesh`, `BoxShape3D`, … (21 files) | constructs the fresh instance of every A/B/F row; a row that constructs is its check |
+| `constructObject` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (846 files) | constructs the fresh instance of every A/B/F row; a row that constructs is its check |
 | `destroyObject` | `ApiExerciseRunner`, `RefCounted` | frees what a row constructed (a RefCounted's last release); part of every row's teardown |
 | `getMethodBind` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (841 files) | resolves the MethodBind every row's call passes; a wrong bind fails the row that uses it |
 | `getSingleton` | `AccessibilityServer`, `ApiExerciseRunner`, `AudioServer`, `CameraServer`, … (43 files) | resolves the singleton handle every D row calls |

@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -117,6 +118,11 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MeshTexture? =
             if (handle.address() == 0L) null else MeshTexture(GodotHandle(handle))
+
+        /** A new MeshTexture, GDScript's `MeshTexture.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): MeshTexture =
+            RefCounted.owned(MeshTexture(GodotHandle(requireConstructed(ObjectCalls.constructObject("MeshTexture"), "MeshTexture"))))
     }
 
     private object Binds {

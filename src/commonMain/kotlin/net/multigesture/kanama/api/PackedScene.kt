@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * An abstraction of a serialized scene.
@@ -113,10 +114,10 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
         internal fun wrapBorrowed(handle: RawSegment): PackedScene? =
             if (handle.address() == 0L) null else PackedScene(GodotHandle(handle))
 
-        // Instantiate a PackedScene.
+        /** A new PackedScene, GDScript's `PackedScene.new()`. You own the reference: `close()` or `use { }`. */
         @JvmStatic
         fun create(): PackedScene =
-            RefCounted.owned(PackedScene(GodotHandle(ObjectCalls.constructObject("PackedScene"))))
+            RefCounted.owned(PackedScene(GodotHandle(requireConstructed(ObjectCalls.constructObject("PackedScene"), "PackedScene"))))
     }
 
     private object Binds {

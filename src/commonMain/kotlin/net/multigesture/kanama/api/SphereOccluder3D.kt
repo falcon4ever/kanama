@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Spherical shape for use with occlusion culling in `OccluderInstance3D`.
@@ -51,6 +52,11 @@ class SphereOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SphereOccluder3D? =
             if (handle.address() == 0L) null else SphereOccluder3D(GodotHandle(handle))
+
+        /** A new SphereOccluder3D, GDScript's `SphereOccluder3D.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): SphereOccluder3D =
+            RefCounted.owned(SphereOccluder3D(GodotHandle(requireConstructed(ObjectCalls.constructObject("SphereOccluder3D"), "SphereOccluder3D"))))
     }
 
     private object Binds {

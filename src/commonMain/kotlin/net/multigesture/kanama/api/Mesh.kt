@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
@@ -679,6 +680,11 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Mesh? =
             if (handle.address() == 0L) null else Mesh(GodotHandle(handle))
+
+        /** A new Mesh, GDScript's `Mesh.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): Mesh =
+            RefCounted.owned(Mesh(GodotHandle(requireConstructed(ObjectCalls.constructObject("Mesh"), "Mesh"))))
 
         // Downcast a GodotObject to Mesh (null if not).
         @JvmStatic

@@ -55,6 +55,12 @@ class AnimatedSprite3D(godotObject: GodotHandle) : SpriteBase3D(godotObject) {
     const val animationLooped: String = "animation_looped"
     const val animationFinished: String = "animation_finished"
   }
+
+  companion object {
+    /** A new AnimatedSprite3D, GDScript's `AnimatedSprite3D.new()`. Add it to the tree, or `queueFree()` it. */
+    fun create(): AnimatedSprite3D =
+      AnimatedSprite3D(checkNotNull(ClassDB.instantiate("AnimatedSprite3D")) { "Godot could not instantiate AnimatedSprite3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

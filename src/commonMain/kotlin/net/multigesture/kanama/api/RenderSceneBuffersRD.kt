@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2i
 
@@ -365,6 +366,11 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RenderSceneBuffersRD? =
             if (handle.address() == 0L) null else RenderSceneBuffersRD(GodotHandle(handle))
+
+        /** A new RenderSceneBuffersRD, GDScript's `RenderSceneBuffersRD.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RenderSceneBuffersRD =
+            RefCounted.owned(RenderSceneBuffersRD(GodotHandle(requireConstructed(ObjectCalls.constructObject("RenderSceneBuffersRD"), "RenderSceneBuffersRD"))))
     }
 
     private object Binds {

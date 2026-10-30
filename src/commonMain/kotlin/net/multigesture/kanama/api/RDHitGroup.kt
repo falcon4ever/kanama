@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
  * Hit group (used by `RenderingDevice`).
@@ -115,6 +116,11 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDHitGroup? =
             if (handle.address() == 0L) null else RDHitGroup(GodotHandle(handle))
+
+        /** A new RDHitGroup, GDScript's `RDHitGroup.new()`. You own the reference: `close()` or `use { }`. */
+        @JvmStatic
+        fun create(): RDHitGroup =
+            RefCounted.owned(RDHitGroup(GodotHandle(requireConstructed(ObjectCalls.constructObject("RDHitGroup"), "RDHitGroup"))))
     }
 
     private object Binds {
