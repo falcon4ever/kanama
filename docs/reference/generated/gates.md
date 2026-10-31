@@ -134,6 +134,7 @@ Parsed from `.github/workflows/{ci,web,package}.yml`. Scripts are the repo gate 
 | `package.yml` | store-addon-windows (`store-addon-windows`) | tag `v*` + manual | `scripts/package_install_smoke.sh`, `scripts/store_addon_editor_smoke.sh` |
 | `package.yml` | android-export (${{ matrix.package }}) (`android-export`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |
 | `package.yml` | ios-export (${{ matrix.package }}${{ matrix.mode == '--ios-without-scripts' && ', no scripts' \|\| '' }}) (`ios-export`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |
+| `package.yml` | web-export (${{ matrix.package }}) (`web-export`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |
 | `package.yml` | publish-release (`publish-release`) | tag `v*` only | — |
 
 ## Local-only gates
