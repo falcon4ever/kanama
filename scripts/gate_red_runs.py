@@ -362,8 +362,8 @@ case("check_kotlin_pins.py (version catalog)", py("check_kotlin_pins.py"),
      [Create("gradle/libs.versions.toml", '[versions]\nkotlin = "2.0.0"\nksp = "2.3.12"\n\n[plugins]\nkotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.0.0" }\n')],
      "gradle/libs.versions.toml:2: kotlin 2.0.0", "a new version catalog pins an older Kotlin (a [versions] key and an inline plugin entry)")
 case("check_kotlin_pins.py (coroutines)", py("check_kotlin_pins.py"),
-     [Edit("web-runtime/build.gradle.kts", '"org.jetbrains.kotlinx:kotlinx-coroutines-core:', '"org.jetbrains.kotlinx:kotlinx-coroutines-core:0.')],
-     "web-runtime/build.gradle.kts:", "the Web runtime pins a kotlinx-coroutines the root build does not use")
+     [Edit("web-runtime/library/build.gradle.kts", '"org.jetbrains.kotlinx:kotlinx-coroutines-core:', '"org.jetbrains.kotlinx:kotlinx-coroutines-core:0.')],
+     "web-runtime/library/build.gradle.kts:", "the Web runtime pins a kotlinx-coroutines the root build does not use")
 case("check_kotlin_pins.py (Android coroutines literal)", py("check_kotlin_pins.py"),
      [Edit("android/godot-plugin/plugin/build.gradle.kts", '${providers.gradleProperty("kanamaAndroidCoroutinesVersion").get()}', "1.11.0")],
      "coroutines-android 1.11.0 but android/godot-plugin/gradle.properties pins", "the Android runtime compiles against the desktop coroutines again instead of the APK's (the property)")
