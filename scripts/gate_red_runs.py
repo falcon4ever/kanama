@@ -329,7 +329,7 @@ case("check_android_remap_sources.py (address space, NULL_SEGMENT)", py("check_a
              "package net.multigesture.kanama\nval zz = NULL_SEGMENT.reinterpret(Long.MAX_VALUE)\n")],
      "ZzRedRun.kt:2: whole-address-space segment", "Kanama's `NULL_SEGMENT` reinterpreted as the whole address space")
 case("check_doc_claims.py", py("check_doc_claims.py"),
-     [Edit("docs/contributing/platform-evidence.md", "the versions the corpus is driven on (protocol 39)", "the versions the corpus is driven on (protocol 21)")],
+     [Edit("docs/contributing/platform-evidence.md", "the versions the corpus is driven on (protocol ", "the versions the corpus is driven on (protocol 9")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
 case("check_doc_claims.py (iOS size, marked doc)", py("check_doc_claims.py"),
      [Edit("docs/contributing/backends/ios.md", "roughly 168 MB debug", "roughly 200 MB debug")],
@@ -624,8 +624,8 @@ case("check_property_coverage.py", py("check_property_coverage.py"),
      [Edit(f"{COMMON}/api/CanvasItem.kt", "    var visible: Boolean", "    var visibleRedRun: Boolean")],
      "silently dropped", "a generated wrapper property disappears")
 case("check_protocol_pins.py", py("check_protocol_pins.py"),
-     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 39", "KANAMA_WEB_PROTOCOL_VERSION = 38")],
-     "protocol version disagrees", "the bridge pins protocol 38 while the emitter says 39")
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = ", "KANAMA_WEB_PROTOCOL_VERSION = 9")],
+     "protocol version disagrees", "the bridge pins another protocol than the emitter (a 9 put before its number, so the case outlives a protocol bump)")
 case("check_protocol_pins.py (sentinel)", py("check_protocol_pins.py"),
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", 'scriptErrorResult: "\\u001fkanama-script-error\\u001f",', 'scriptErrorResult: "\\u001fkanama-script-errorX\\u001f",')],
      "script-error sentinel", "the bridge's script-error sentinel differs from the emitter's GDScript constant")
@@ -1338,18 +1338,29 @@ WEB_STAGE_STARTER = ["./gradlew", "--no-daemon", "-Pkotlin.compiler.execution.st
                      ":web-runtime:stageWebProject", f"-PkanamaWebProjectDir={WEB_STARTER}"]
 WEB_MAKE_STARTER = ["bash", "-c", f'rm -rf {WEB_STARTER} && ./gradlew -p . --no-daemon -q createStarterProject '
                                   f'"-PkanamaStarterProjectDir=$PWD/{WEB_STARTER}"']
-# exportWeb with neither -PkanamaWebProjectDir nor -PkanamaWebDemo (or a misspelled one) must fail before the Wasm
-# compile, naming both. Slow like every case here that starts Gradle: the fast set runs no Gradle at all.
+# exportWeb with neither -PkanamaWebProjectDir nor -PkanamaWebDemo, and with a project path that does not exist, must
+# fail before any compile of the build (the runtime klib's in :kanama-web and :kanama-common-api included), naming
+# what is wrong. Slow like every case here that starts Gradle: the fast set runs no Gradle at all.
 WEB_NO_PROJECT = ["bash", "-c",
+    'compiled() { printf "%s\\n" "$1" | grep -E "^> Task :[^ ]+:compile" | grep -v "^> Task :buildSrc:"; }; '
     'out="$(./gradlew -p . --no-daemon --console=plain :web-runtime:exportWeb 2>&1)"; status=$?; '
-    'if [ "$status" -ne 0 ] && printf "%s" "$out" | grep -q "Pass -PkanamaWebProjectDir=" '
-    '&& printf "%s" "$out" | grep -q "PkanamaWebDemo=<key>" '
-    '&& ! printf "%s" "$out" | grep -q "Task :web-runtime:compileKotlinWasmJs"; then '
-    'echo "exportWeb with no project failed before compiling, naming both properties"; exit 0; fi; '
-    'printf "%s\\n" "$out" | tail -n 20; echo "MISSING-PROJECT MESSAGE LOST"; exit 1']
+    'if [ "$status" -eq 0 ] || ! printf "%s" "$out" | grep -q "Pass -PkanamaWebProjectDir=" '
+    '|| ! printf "%s" "$out" | grep -q "PkanamaWebDemo=<key>"; then '
+    'printf "%s\\n" "$out" | tail -n 20; echo "MISSING-PROJECT MESSAGE LOST"; exit 1; fi; '
+    'if compiled "$out" | grep -q .; then compiled "$out"; echo "COMPILED BEFORE THE PROJECT CHECK (no project)"; exit 1; fi; '
+    'out="$(./gradlew -p . --no-daemon --console=plain :web-runtime:exportWeb -PkanamaWebProjectDir=build/no-such-project 2>&1)"; status=$?; '
+    'if [ "$status" -eq 0 ] || ! printf "%s" "$out" | grep -q "Web project not found:"; then '
+    'printf "%s\\n" "$out" | tail -n 20; echo "PROJECT-NOT-FOUND MESSAGE LOST"; exit 1; fi; '
+    'if compiled "$out" | grep -q .; then compiled "$out"; echo "COMPILED BEFORE THE PROJECT CHECK (wrong path)"; exit 1; fi; '
+    'echo "exportWeb with no project, and with a wrong project path, failed before any compile, naming what is wrong"']
 case("exportWeb (no project)", WEB_NO_PROJECT,
      [Edit("web-runtime/build.gradle.kts", '"(or -PkanamaWebDemo=<key> with its -PkanamaWeb<Key>ProjectDir)"', '"(see the docs)"')],
      "MISSING-PROJECT MESSAGE LOST", "exportWeb with no project stops naming both -PkanamaWebProjectDir and -PkanamaWebDemo",
+     timeout=1800, slow=True)
+case("exportWeb (runtime compiled before the check)", WEB_NO_PROJECT,
+     [Edit("web-runtime/build.gradle.kts", '    other.tasks.configureEach { if (name.startsWith("compile")) mustRunAfter(checkWebProject) }\n',
+           '    other.tasks.configureEach { }\n')],
+     "COMPILED BEFORE THE PROJECT CHECK (wrong path)", "the runtime klib's compile in :kanama-web is no longer ordered after the project check: a mistyped -PkanamaWebProjectDir compiles the whole runtime before saying so",
      timeout=1800, slow=True)
 case("stageWebProject (project not found)", WEB_STAGE_STARTER,
      [Rename(WEB_STARTER, f"{WEB_STARTER}-moved")],
@@ -1443,9 +1454,14 @@ case("package_install_smoke.sh --web (runtime not started)", WEB_KIT_SMOKE,
            '    appendLine("  println(KanamaWebProjectRegistry.protocolVersion)")')],
      "Kanama Web runtime not started", "the generated main() no longer calls startKanamaWeb: the exported page must stop with that line, not load with no backend and no scripts",
      timeout=5400, requires_env=WEB_KIT_ENV, slow=True)
+case("package_install_smoke.sh --web (bridge of another protocol)", WEB_KIT_SMOKE,
+     [Edit("gradle-plugin/src/main/kotlin/net/multigesture/kanama/gradle/ExportWeb.kt",
+           "    if (generatedProtocol != bridgeProtocol) {\n", "    if (false) {\n")],
+     "exportWeb accepted a bridge of another protocol", "exportWeb stops comparing the addon's bridge with the protocol the processor generated: an addon unzipped over another Kanama's exports a page that fails in the browser",
+     timeout=5400, requires_env=WEB_KIT_ENV, slow=True)
 case("verifyKanamaWebPackageProtocol (bridge protocol)", ["./gradlew", "-p", ".", "-q", "verifyKanamaWebPackageProtocol"],
-     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "  const KANAMA_WEB_PROTOCOL_VERSION = 39;", "  const KANAMA_WEB_PROTOCOL_VERSION = 38;")],
-     "speaks protocol 38, but the processor", "the bridge a package would ship states another Web protocol than the processor generates: packaging must stop before a kit carries it",
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "  const KANAMA_WEB_PROTOCOL_VERSION = ", "  const KANAMA_WEB_PROTOCOL_VERSION = 9")],
+     "speaks protocol 9", "the bridge a package would ship states another Web protocol than the processor generates: packaging must stop before a kit carries it",
      timeout=1200, slow=True)
 
 case("web/scaffold_selftest.sh", ["bash", "scripts/web/scaffold_selftest.sh"],
@@ -1487,6 +1503,9 @@ case("web/bridge_simtime_selftest.mjs", ["node", "scripts/web/bridge_simtime_sel
 case("web/bridge_simtime_selftest.mjs (physics)", ["node", "scripts/web/bridge_simtime_selftest.mjs"],
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "      if (handle === this.simPhysicsClockHandle) this.simPhysicsSeconds += delta;\n", "      this.simPhysicsSeconds += delta;\n")],
      "_physics_process", "the bridge adds the physics delta once per scripted handle again")
+case("web/bridge_bootstrap_selftest.mjs", ["node", "scripts/web/bridge_bootstrap_selftest.mjs"],
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "    if (protocolVersion !== KANAMA_WEB_PROTOCOL_VERSION) {\n", "    if (false) {\n")],
+     "protocol mismatch: the bridge started", "the bridge stops comparing the module's protocol with its own: a bridge and a module from two builds start and fail later, far from the cause")
 case("web/bridge_live_scripts_selftest.mjs", ["node", "scripts/web/bridge_live_scripts_selftest.mjs"],
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "      const firstReady = !this.liveScriptHandles.has(handle);\n",
            "      const firstReady = this.scriptNameByHandle[handle] === undefined;\n")],

@@ -809,6 +809,26 @@ if [[ "$web_export" -eq 1 ]]; then
     echo "[package_install_smoke] --web exports the starter script: it cannot follow --ios-without-scripts" >&2
     exit 2
   fi
+  # exportWeb needs no desktop build: Godot exports a staged copy without addons/kanama, its scenes attached to the
+  # generated GDScript proxies. So the desktop scripts jar goes, and a property the scene sets must still reach the
+  # Kotlin script on the page (the starter driver checks greet()'s answer, which reads that property).
+  rm -f "$project_dir/addons/kanama/kanama-scripts.jar" "$project_dir/addons/kanama/kanama-scripts.version"
+  web_greeting="Hello from the scene"
+  if ! python3 - "$project_dir/main.tscn" "$web_greeting" <<'PY'
+import sys
+from pathlib import Path
+
+scene = Path(sys.argv[1])
+text = scene.read_text()
+attach = 'script = ExtResource("1")\n'
+if text.count(attach) != 1:
+    sys.exit(f"{scene}: no single {attach.strip()} line to set the greeting after")
+scene.write_text(text.replace(attach, attach + f'greeting = "{sys.argv[2]}"\n'))
+PY
+  then
+    echo "[package_install_smoke] FAIL -- could not set the starter scene's greeting" >&2
+    exit 1
+  fi
   # The package's Web files are checked after exportWeb: a missing one must stop exportWeb itself, with its line.
   web_log="$work_dir/web.log"
   web_args=(--no-daemon -p "$project_dir" exportWeb "-PkanamaGodotExecutable=$godot_bin")
@@ -823,6 +843,10 @@ if [[ "$web_export" -eq 1 ]]; then
     exit 1
   fi
   echo "[package_install_smoke] web: exportWeb took $((SECONDS - web_started)) s"
+  if [[ -e "$project_dir/addons/kanama/kanama-scripts.jar" ]]; then
+    echo "[package_install_smoke] FAIL -- exportWeb built the desktop scripts jar: the Web export must not need the desktop build" >&2
+    exit 1
+  fi
   check_file "addons/kanama/web/kanama-web-bridge.js"
   check_file "addons/kanama/web/shell.html"
   check_file "addons/kanama/web/export_presets.cfg"
@@ -843,8 +867,8 @@ if [[ "$web_export" -eq 1 ]]; then
   web_result="$work_dir/web-smoke/starter.json"
   echo "[package_install_smoke] web: web_export_smoke.sh --engine chrome --demo starter"
   smoke_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  if ! run_bounded 900 bash "$smoke_root/web_export_smoke.sh" --engine chrome --export-dir "$web_export_dir" \
-    --demo starter --result "$web_result" --timeout 600 >"$work_dir/web-smoke.log" 2>&1; then
+  if ! KANAMA_WEB_STARTER_GREETING="$web_greeting" run_bounded 900 bash "$smoke_root/web_export_smoke.sh" --engine chrome \
+    --export-dir "$web_export_dir" --demo starter --result "$web_result" --timeout 600 >"$work_dir/web-smoke.log" 2>&1; then
     tail -n 60 "$work_dir/web-smoke.log" >&2
     # The page's own failure line, when it reported one (a protocol mismatch, a runtime that was not started).
     grep -ho 'Kanama Web [^"\]*' "$work_dir/web-smoke/"*.log "$web_result" 2>/dev/null | sort -u | head -n 5 >&2 || true  # justified: diagnostics after the verdict
@@ -861,11 +885,28 @@ if checks.get("greetReturnsString") is not True or checks.get("helloScriptReady"
     sys.exit(1)
 PY
   then
-    echo "[package_install_smoke] FAIL -- the exported starter did not say Hello from Kanama (result: $web_result)" >&2
+    echo "[package_install_smoke] FAIL -- the exported starter did not answer with the scene's greeting, \"$web_greeting, web\" (result: $web_result)" >&2
     exit 1
   fi
   web_bytes="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["totalBytes"])' "$web_export_dir/kanama-web/export-report.json")"
   echo "[package_install_smoke] web: exportWeb and the starter in Chrome from the package alone ($web_bytes bytes served): $web_export_dir"
+
+  # A bridge of another protocol than the processor's (an addon unzipped over another Kanama's) must stop exportWeb
+  # before Godot runs, with its line. The export above stays as it was: the check runs before build/web-export is touched.
+  web_bridge="$project_dir/addons/kanama/web/kanama-web-bridge.js"
+  cp "$web_bridge" "$work_dir/kanama-web-bridge.js.orig"
+  sed 's/const KANAMA_WEB_PROTOCOL_VERSION = /const KANAMA_WEB_PROTOCOL_VERSION = 9/' "$work_dir/kanama-web-bridge.js.orig" >"$web_bridge"
+  web_mismatch_log="$work_dir/web-mismatch.log"
+  echo "[package_install_smoke] web: ./gradlew exportWeb with a bridge of another protocol"
+  web_mismatch_status=0
+  run_bounded 1800 "$project_dir/gradlew" "${web_args[@]}" >"$web_mismatch_log" 2>&1 || web_mismatch_status=$?
+  cp "$work_dir/kanama-web-bridge.js.orig" "$web_bridge"
+  if [[ "$web_mismatch_status" -eq 0 ]] || ! grep -q "kanama-web-bridge.js speaks Kanama Web protocol 9" "$web_mismatch_log"; then
+    tail -n 40 "$web_mismatch_log" >&2
+    echo "[package_install_smoke] FAIL -- exportWeb accepted a bridge of another protocol than the processor's (log: $web_mismatch_log)" >&2
+    exit 1
+  fi
+  echo "[package_install_smoke] web: a bridge of another protocol stops exportWeb, naming it"
 fi
 
 echo "[package_install_smoke] PASS"

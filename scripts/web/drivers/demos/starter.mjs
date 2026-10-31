@@ -16,6 +16,9 @@ const trace = (msg) => {
 };
 
 const SCRIPT = "HelloScript";
+// The starter's greeting: HelloScript's default, or the one its scene sets (the package smoke sets one, to prove a
+// scene property reaches the Kotlin script through the export).
+const GREETING = process.env.KANAMA_WEB_STARTER_GREETING || "Hello from Kanama";
 // Frames of _process the run must see dispatch after _ready (about one second at 60 Hz).
 const MIN_PROCESS_DISPATCHES = 60;
 
@@ -137,7 +140,7 @@ export async function runStarter({ url, evaluate, navigate, deadline, exportDir 
     processDispatching: running.met,
     // The label write every frame reaches Godot as applied commands.
     commandsApplied: atPeak.appliedCommands > ready.appliedCommands,
-    greetReturnsString: greeting === "Hello from Kanama, web",
+    greetReturnsString: greeting === `${GREETING}, web`,
     fullTeardownToZero: settled.liveHandles === 0 && settled.helloLive === 0,
     noCallbackFaults: peakErrors === 0 && settled.scriptErrors === 0 && settled.failure === null,
   };

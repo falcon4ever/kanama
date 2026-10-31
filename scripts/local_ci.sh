@@ -834,6 +834,11 @@ if [[ $skip_web -eq 0 ]]; then
     stage "web bridge simulated-clock self-test"
     node "$ROOT_DIR/scripts/web/bridge_simtime_selftest.mjs"
 
+    # The bridge refuses a Kotlin/Wasm module it cannot run with one line saying what to do: no module, a
+    # runtime its main() did not start, a module of another protocol (task 135 item 5).
+    stage "web bridge start self-test"
+    node "$ROOT_DIR/scripts/web/bridge_bootstrap_selftest.mjs"
+
     # The bridge's live-script census counts a script once from its first _ready to its teardown,
     # also after request_ready and when a slot's handle value comes back (task 142 review).
     stage "web bridge live-script census self-test"
