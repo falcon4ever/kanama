@@ -3,6 +3,7 @@ import java.io.File
 import java.io.OutputStream
 import java.security.MessageDigest
 import java.util.zip.ZipFile
+import net.multigesture.kanama.buildlogic.KanamaWebExport
 
 plugins {
     kotlin("multiplatform")
@@ -62,75 +63,23 @@ val webDemoProjectDir: File? =
         ?.let { webDemoDirProperty(it, webDemoKey) }
 // Task 142: the export finds Godot and its Web template where Godot installs them, so the user
 // command needs only -PkanamaWebProjectDir. Each lookup that fails names the one property to pass.
-val webHostOs: String = System.getProperty("os.name").lowercase()
-
-fun webOnPath(vararg names: String): File? =
-    System.getenv("PATH").orEmpty().split(File.pathSeparator).filter { it.isNotBlank() }.firstNotNullOfOrNull { dir ->
-        names.map { File(dir, it) }.firstOrNull { it.isFile && it.canExecute() }
-    }
+// The lookups, the merge, the staging and the export's finish are the Kanama Gradle plugin's own
+// (gradle-plugin/src/shared, compiled into buildSrc too): a kit project's exportWeb and this one run
+// the same code.
 
 /** -PkanamaGodotExecutable, else KANAMA_GODOT_BIN, else the standard install (macOS) or `godot` on PATH. */
-fun webGodotExecutable(): String {
-    // A bare name (`godot`) is looked up on PATH by the export; a path must exist.
-    fun named(path: String, source: String): String {
-        if ((File.separatorChar in path || '/' in path) && !File(path).isFile) {
-            throw GradleException("Godot not found at $path ($source). Pass -PkanamaGodotExecutable=/absolute/path/to/godot")
-        }
-        return path
-    }
-    providers.gradleProperty("kanamaGodotExecutable").orNull?.let { return named(it, "-PkanamaGodotExecutable") }
-    providers.environmentVariable("KANAMA_GODOT_BIN").orNull?.takeIf { it.isNotBlank() }?.let {
-        return named(it, "KANAMA_GODOT_BIN")
-    }
-    val home = System.getProperty("user.home")
-    val found =
-        when {
-            "mac" in webHostOs ->
-                listOf("/Applications/Godot.app", "$home/Applications/Godot.app")
-                    .map { File(it, "Contents/MacOS/Godot") }
-                    .firstOrNull { it.isFile } ?: webOnPath("godot", "godot4")
-            "windows" in webHostOs -> webOnPath("godot.exe", "godot4.exe")
-            else -> webOnPath("godot", "godot4")
-        }
-    return found?.absolutePath
-        ?: throw GradleException(
-            "Godot was not found (looked for KANAMA_GODOT_BIN, the standard install and `godot` on PATH). " +
-                "Pass -PkanamaGodotExecutable=/absolute/path/to/godot"
-        )
-}
+fun webGodotExecutable(): String =
+    KanamaWebExport.findGodot(
+        providers.gradleProperty("kanamaGodotExecutable").orNull,
+        providers.environmentVariable("KANAMA_GODOT_BIN").orNull,
+    )
 
 /** -PkanamaWebTemplateRelease, else `web_nothreads_release.zip` in Godot's export templates folder. */
-fun webTemplateRelease(): File {
-    providers.gradleProperty("kanamaWebTemplateRelease").orNull?.let { path ->
-        return file(path).also {
-            if (!it.isFile) {
-                throw GradleException(
-                    "Godot Web release template not found: $it. " +
-                        "Pass -PkanamaWebTemplateRelease=/absolute/path/to/web_nothreads_release.zip"
-                )
-            }
-        }
-    }
-    val version = providers.gradleProperty("kanamaGodotVersion").get()
-    val home = System.getProperty("user.home")
-    val templates =
-        when {
-            "mac" in webHostOs -> File(home, "Library/Application Support/Godot/export_templates")
-            "windows" in webHostOs ->
-                File(System.getenv("APPDATA") ?: "$home/AppData/Roaming", "Godot/export_templates")
-            else ->
-                File(System.getenv("XDG_DATA_HOME")?.takeIf { it.isNotBlank() } ?: "$home/.local/share", "godot/export_templates")
-        }
-    val template = templates.resolve("$version/web_nothreads_release.zip")
-    if (!template.isFile) {
-        throw GradleException(
-            "Godot's Web export template is not installed at $template. Install the $version export " +
-                "templates from Editor > Manage Export Templates, or pass " +
-                "-PkanamaWebTemplateRelease=/absolute/path/to/web_nothreads_release.zip"
-        )
-    }
-    return template
-}
+fun webTemplateRelease(): File =
+    KanamaWebExport.findTemplateRelease(
+        providers.gradleProperty("kanamaWebTemplateRelease").orNull?.let(::file),
+        providers.gradleProperty("kanamaGodotVersion").get(),
+    )
 
 val explicitWebScriptSourceRoot: File? =
     providers.gradleProperty("kanamaWebExtraScriptSourceDir").orNull?.let(rootProject::file)
@@ -178,42 +127,12 @@ val mergeWebGameplayScripts: TaskProvider<Task>? =
             inputs.files(listOfNotNull(overrideDir, excludesFile))
             outputs.dir(mergedWebScriptRoot)
             doLast {
-                val overrideActive = overrideDir?.isDirectory == true
-                val excludes: List<String> =
-                    if (excludesFile?.isFile == true) {
-                        excludesFile
-                            .readLines()
-                            .map { it.trim() }
-                            .filter { it.isNotEmpty() && !it.startsWith("#") }
-                    } else emptyList()
-                excludes.forEach { entry ->
-                    check(sharedWebScriptSourceRoot.resolve(entry).isFile) {
-                        "kotlin-src-excludes.txt lists '$entry' but kotlin-src/$entry does not exist"
-                    }
-                    check(!overrideActive || !overrideDir!!.resolve(entry).isFile) {
-                        "kotlin-src-excludes.txt lists '$entry' but web/kotlin-src/$entry exists too -- " +
-                            "an excluded file cannot also be overridden"
-                    }
-                }
-                val out = mergedWebScriptRoot.get().asFile
-                out.deleteRecursively()
-                val target = out.resolve("kotlin-src")
-                copy {
-                    from(sharedWebScriptSourceRoot) {
-                        include("**/*.kt")
-                        excludes.forEach { exclude(it) }
-                    }
-                    into(target)
-                }
-                if (overrideActive) {
-                    copy {
-                        from(overrideDir) { include("**/*.kt") }
-                        into(target)
-                    }
-                }
-                check(target.isDirectory && target.listFiles()?.any { it.extension == "kt" } == true) {
-                    "merged web script root is empty -- no gameplay scripts would be compiled"
-                }
+                KanamaWebExport.mergeScripts(
+                    sharedWebScriptSourceRoot,
+                    overrideDir,
+                    excludesFile,
+                    mergedWebScriptRoot.get().asFile,
+                )
             }
         }
     } else null
@@ -2891,50 +2810,6 @@ val webProjectMissingMessage =
     "Pass -PkanamaWebProjectDir=/absolute/path/to/your-project " +
         "(or -PkanamaWebDemo=<key> with its -PkanamaWeb<Key>ProjectDir)"
 
-// Excluded from the staged copy: version control, editor and build caches, the Gradle project,
-// the Android build, the Kanama desktop add-on, the Kotlin sources (the proxies replace them),
-// the Web override folder, and the project's own export presets (the export uses Kanama's).
-val webProjectCopyExcludes =
-    listOf(
-        ".git/**", ".godot/**", ".gradle/**", ".kotlin/**", "build/**", ".idea/**", "*.iml",
-        "android/**", "web/**", "kotlin-src/**", "addons/kanama/**", "gradle/**",
-        "build.gradle.kts", "gradle.properties", "gradlew", "gradlew.bat", "settings.gradle.kts",
-        "export_presets.cfg",
-    )
-
-// Left out of the before/after checksum: folders a build, an IDE or the Godot editor may write
-// while the staging runs. Everything else in the project must be byte-identical afterwards.
-val webProjectChecksumExcludes = setOf(".git", ".godot", ".gradle", ".kotlin", "build", ".idea", "android/build")
-
-/** Why `run/main_scene` of [projectDir] does not name a scene file, or null when it does. */
-fun webMainSceneProblem(projectDir: File): String? {
-    val setting =
-        projectDir.resolve("project.godot").readLines().map { it.trim() }
-            .firstOrNull { it.startsWith("run/main_scene=") }
-            ?: return "$projectDir/project.godot has no main scene (run/main_scene). " +
-                "Set one in Project > Project Settings > Application > Run"
-    val scene = setting.substringAfter('=').trim().removeSurrounding("\"")
-    if (scene.startsWith("res://")) {
-        return if (projectDir.resolve(scene.removePrefix("res://")).isFile) null
-        else "The main scene $scene of $projectDir does not exist"
-    }
-    if (scene.startsWith("uid://")) {
-        val skip = setOf(".git", ".godot", ".gradle", ".kotlin", "build", "addons")
-        val scenes =
-            projectDir.walkTopDown().onEnter { it == projectDir || it.name !in skip }
-                .filter { it.isFile && (it.extension == "tscn" || it.extension == "scn") }.toList()
-        val found =
-            scenes.any { file ->
-                file.extension == "tscn" &&
-                    file.bufferedReader().use { it.readLine() }.orEmpty().contains("uid=\"$scene\"")
-            }
-        // A binary .scn keeps its uid inside; with one present the uid cannot be ruled out here.
-        return if (found || scenes.any { it.extension == "scn" }) null
-        else "The main scene $scene of $projectDir matches no scene file"
-    }
-    return "The main scene \"$scene\" of $projectDir is not a res:// or uid:// path"
-}
-
 /** The checks the Web export makes on -PkanamaWebProjectDir, each failure on one line. */
 fun checkWebUserProject(): File {
     val projectDir = webUserProjectDir ?: throw GradleException(webProjectMissingMessage)
@@ -2953,7 +2828,7 @@ fun checkWebUserProject(): File {
             "$projectDir has no kotlin-src/ (the Web export compiles the project's Kotlin scripts from there)"
         )
     }
-    webMainSceneProblem(projectDir)?.let { throw GradleException(it) }
+    KanamaWebExport.mainSceneProblem(projectDir)?.let { throw GradleException(it) }
     return projectDir
 }
 
@@ -3002,167 +2877,25 @@ tasks.register("stageWebProject") {
 
     doLast {
         val sourceProject = checkWebUserProject()
-
-        fun sourceChecksum(): String {
-            val digest = MessageDigest.getInstance("SHA-256")
-            sourceProject
-                .walkTopDown()
-                .onEnter { dir ->
-                    val path = dir.relativeTo(sourceProject).invariantSeparatorsPath
-                    path.isEmpty() || path !in webProjectChecksumExcludes
-                }
-                .filter { it.isFile }
-                .map { file -> file.relativeTo(sourceProject).invariantSeparatorsPath to file }
-                .sortedBy { it.first }
-                .forEach { (path, file) ->
-                    digest.update(path.toByteArray(Charsets.UTF_8))
-                    digest.update(0)
-                    digest.update(file.readBytes())
-                    digest.update(0)
-                }
-            return digest.digest().joinToString("") { "%02x".format(it) }
-        }
-
-        val checksumBefore = sourceChecksum()
         val stagingDir = webProjectStaging.get().asFile
-        delete(stagingDir)
-        copy {
-            from(sourceProject) { webProjectCopyExcludes.forEach { exclude(it) } }
-            into(stagingDir)
-        }
-        copy {
-            from(webSpikeSourceProject.file("export_presets.cfg"))
-            into(stagingDir)
-        }
-        copy {
-            from(webProxyResources)
-            include("*.gd")
-            into(stagingDir.resolve("kanama-web/generated"))
-        }
-        copy {
-            from(webProxyResources)
-            include("KanamaWebProxyManifest.generated.tsv")
-            include("KanamaWebProtocol.generated.json")
-            into(stagingDir.resolve("kanama-web"))
-        }
-        copy {
-            from(webSpikeAssets)
-            into(stagingDir.resolve("kanama-web"))
-        }
-        copy {
-            from(webGameplayCoverage)
-            into(stagingDir.resolve("kanama-web"))
-        }
-
-        // The expected sources are the project's own: every script KSP found in the merged kotlin-src
-        // (the protocol descriptor lists each @ScriptClass it read, however it is spelled) must have
-        // a proxy row, and every row a script. A script without one means the emitter dropped it; a
-        // row or script whose source is gone is stale KSP output.
-        val manifest = webProxyResources.get().file("KanamaWebProxyManifest.generated.tsv").asFile
-        check(manifest.isFile) { "Missing generated Web proxy manifest: $manifest" }
-        val mappings =
-            manifest
-                .readLines()
-                .filter { it.isNotBlank() && !it.startsWith("#") }
-                .map { line ->
-                    val columns = line.split('\t')
-                    check(columns.size == 3) { "Invalid Web proxy manifest row: $line" }
-                    columns[0] to columns[1]
-                }
-                .filter { (sourcePath, _) -> sourcePath.startsWith("res://kotlin-src/") }
-                .toMap()
-        val mergedSources = mergedWebScriptRoot.get().asFile.resolve("kotlin-src")
-        val protocol = webProxyResources.get().file("KanamaWebProtocol.generated.json").asFile
-        check(protocol.isFile) { "Missing generated Web protocol descriptor: $protocol" }
-        @Suppress("UNCHECKED_CAST")
-        val protocolScripts =
-            ((groovy.json.JsonSlurper().parse(protocol) as? Map<String, Any?>)?.get("scripts") as? List<Map<String, Any?>>)
-                ?: throw GradleException(
-                    "$protocol lists no scripts: the KSP output is stale or missing. Run the same " +
-                        "command again with --rerun-tasks added"
+        val result =
+            KanamaWebExport.stageProject(
+                KanamaWebExport.StageInputs(
+                    projectDir = sourceProject,
+                    stagingDir = stagingDir,
+                    preset = webSpikeSourceProject.file("export_presets.cfg").asFile,
+                    assets = webSpikeAssets.asFile.listFiles().orEmpty().filter { it.isFile }.sortedBy { it.name },
+                    proxies = webProxyResources.get().asFile,
+                    mergedSources = mergedWebScriptRoot.get().asFile.resolve("kotlin-src"),
+                    extraFiles = listOf(webGameplayCoverage.get().asFile),
                 )
-        val compiled =
-            protocolScripts
-                .map { it["resourcePath"].toString() }
-                .filter { it.startsWith("res://kotlin-src/") }
-                .toSet()
-        check(compiled.isNotEmpty()) { "$sourceProject/kotlin-src has no @ScriptClass script to export" }
-        val missingSources = compiled.filter { !mergedSources.resolve(it.removePrefix("res://kotlin-src/")).isFile }
-        check(missingSources.isEmpty()) {
-            "Stale Web proxies: the generated protocol lists ${missingSources.sorted()}, which kotlin-src no longer has"
-        }
-        check(compiled == mappings.keys) {
-            "The Web proxies do not match the project's scripts: no proxy for " +
-                "${(compiled - mappings.keys).sorted()}, no script for ${(mappings.keys - compiled).sorted()}"
-        }
-
-        val used = mutableSetOf<String>()
-        fileTree(stagingDir) {
-                include("project.godot")
-                include("**/*.tscn")
-                include("**/*.tres")
-            }
-            .files
-            .forEach { stagedFile ->
-                val original = stagedFile.readText()
-                var rewritten =
-                    mappings.entries.fold(original) { text, (sourcePath, proxyPath) ->
-                        if (text.contains(sourcePath)) used += sourcePath
-                        text.replace(sourcePath, proxyPath)
-                    }
-                rewritten =
-                    rewritten.replace(
-                        Regex(
-                            "(\\[ext_resource type=\"Script\") uid=\"uid://[^\"]*\" " +
-                                "(path=\"res://kanama-web/generated/)"
-                        ),
-                        "$1 $2",
-                    )
-                if (rewritten != original) stagedFile.writeText(rewritten)
-                check(!rewritten.contains("res://kotlin-src/")) {
-                    "Unmapped Kotlin attachment remains in staged file: $stagedFile"
-                }
-            }
-        (mappings.keys - used).takeIf { it.isNotEmpty() }?.let { unattached ->
-            // Not an error: a @GlobalClass script, or one a scene loads by path, has no attachment.
-            logger.lifecycle("[kanama:web] stageWebProject: no scene attaches ${unattached.sorted()}")
-        }
-
-        // The Web export runs the Compatibility renderer: pin it in the staged copy, whatever the
-        // project uses (Forward+, Mobile, or no [rendering] section at all).
-        val stagedProject = stagingDir.resolve("project.godot")
-        var projectText = stagedProject.readText()
-        projectText =
-            projectText.replace(Regex("(config/features=PackedStringArray\\([^)]*)\"(Forward Plus|Mobile)\"")) {
-                "${it.groupValues[1]}\"GL Compatibility\""
-            }
-        projectText =
-            projectText.replace(
-                Regex("(?m)^renderer/rendering_method=\"(forward_plus|mobile)\"$"),
-                "renderer/rendering_method=\"gl_compatibility\"",
             )
-        if (!Regex("(?m)^renderer/rendering_method=").containsMatchIn(projectText)) {
-            val section = Regex("(?m)^\\[rendering\\][ \\t]*$")
-            projectText =
-                if (section.containsMatchIn(projectText)) {
-                    projectText.replaceFirst(section, "[rendering]\n\nrenderer/rendering_method=\"gl_compatibility\"")
-                } else {
-                    projectText.trimEnd() + "\n\n[rendering]\n\nrenderer/rendering_method=\"gl_compatibility\"\n"
-                }
+        if (result.unattached.isNotEmpty()) {
+            // Not an error: a @GlobalClass script, or one a scene loads by path, has no attachment.
+            logger.lifecycle("[kanama:web] stageWebProject: no scene attaches ${result.unattached}")
         }
-        check(projectText.contains("renderer/rendering_method=\"gl_compatibility\"")) {
-            "Could not pin the Compatibility renderer in the staged $stagedProject"
-        }
-        stagedProject.writeText(projectText)
-
-        val checksumAfter = sourceChecksum()
-        check(checksumAfter == checksumBefore) {
-            "$sourceProject changed during staging: before=$checksumBefore after=$checksumAfter"
-        }
-        val evidence = stagingDir.resolve("kanama-web/SourceChecksum.generated.txt")
-        evidence.writeText("sha256=$checksumAfter\nstatus=unchanged\n")
         logger.lifecycle(
-            "[kanama:web] stageWebProject staged ${compiled.size} script(s) from $sourceProject at $stagingDir"
+            "[kanama:web] stageWebProject staged ${result.scriptCount} script(s) from $sourceProject at $stagingDir"
         )
     }
 }
@@ -3170,17 +2903,11 @@ tasks.register("stageWebProject") {
 val webDemo: Provider<String> = providers.provider { webDemoKey }
 
 // The single renderer/thread contract for the Kotlin/Wasm preview backend.
-val webRendererName = "gl_compatibility"
-val webThreadsSupported = false
+val webRendererName = KanamaWebExport.RENDERER
+val webThreadsSupported = KanamaWebExport.THREADS_SUPPORTED
 
-fun readProtocolVersion(): Int {
-    val protocolFile =
-        webProxyResources.get().file("KanamaWebProtocol.generated.json").asFile
-    check(protocolFile.isFile) { "Missing generated Web protocol descriptor: $protocolFile" }
-    val match = Regex("\"protocolVersion\"\\s*:\\s*(\\d+)").find(protocolFile.readText())
-    return match?.groupValues?.get(1)?.toInt()
-        ?: error("Could not read protocolVersion from $protocolFile")
-}
+fun readProtocolVersion(): Int =
+    KanamaWebExport.protocolVersion(webProxyResources.get().file("KanamaWebProtocol.generated.json").asFile)
 
 tasks.register("buildWebScripts") {
     group = "kanama-web"
@@ -3264,11 +2991,7 @@ fun unsupportedWebDemoMessage(demo: String): String =
  * the project's canonical path (so `/tmp/x` and `/private/tmp/x` are one project; the report is
  * served, so the path itself must not be in it).
  */
-fun webProjectId(): String =
-    MessageDigest.getInstance("SHA-256")
-        .digest((webUserProjectDir?.canonicalPath ?: "").toByteArray(Charsets.UTF_8))
-        .joinToString("") { "%02x".format(it) }
-        .substring(0, 16)
+fun webProjectId(): String = KanamaWebExport.projectId(webUserProjectDir ?: File(""))
 
 /** The name a package carries: the demo key, or the project's folder name for `project`. */
 fun webPackageName(demo: String): String =
@@ -3355,153 +3078,38 @@ tasks.register<Exec>("exportWeb") {
         }
 
         val stagingDir = stagingDirFor(demo)
-        val stagedPreset = stagingDir.resolve("export_presets.cfg")
-        check(stagedPreset.isFile) { "Staged project has no export_presets.cfg: $stagedPreset" }
-        stagedPreset.writeText(
-            stagedPreset
-                .readText()
-                .replace(
-                    "custom_template/release=\"\"",
-                    "custom_template/release=\"${webTemplateFile.absolutePath}\"",
-                )
-                .replace(
-                    "custom_template/debug=\"\"",
-                    "custom_template/debug=\"${webTemplateDebugFile?.absolutePath.orEmpty()}\"",
-                )
-        )
-
+        KanamaWebExport.setPresetTemplates(stagingDir, webTemplateFile, webTemplateDebugFile)
         val exportDir = webExportRoot.get().dir(demo).asFile
         delete(exportDir)
         exportDir.mkdirs()
         commandLine(
-            godotExecutable,
-            "--headless",
-            "--path",
-            stagingDir.absolutePath,
-            if (webTemplateDebugFile != null) "--export-debug" else "--export-release",
-            "Web",
-            exportDir.resolve("index.html").absolutePath,
+            KanamaWebExport.godotExportCommand(
+                godotExecutable,
+                stagingDir,
+                exportDir,
+                debug = webTemplateDebugFile != null,
+            )
         )
     }
 
     doLast {
         val demo = webDemo.get()
         val exportDir = webExportRoot.get().dir(demo).asFile
-
-        // Install the Kotlin/Wasm runtime, versioned bridge into the export.
-        copy {
-            from(webDistribution) {
-                include("*.js", "*.wasm")
-            }
-            into(exportDir)
-        }
-        copy {
-            from(webSpikeAssets.file("kanama-web-bridge.js"))
-            into(exportDir)
-        }
-        // Task 81 (census-as-gate): the export carries the protocol manifest that describes
-        // it, so the smoke harness can resolve the bridge's exercised "method#<id>" census
-        // keys to member names (envelope.mjs) and result_schema.py can gate on the per-demo
-        // required-member lists. Same source readProtocolVersion() reads -- the live KSP
-        // output this very build generated, never a staged copy.
-        copy {
-            from(webProxyResources)
-            include("KanamaWebProtocol.generated.json")
-            into(exportDir.resolve("kanama-web"))
-        }
-
-        val indexHtml = exportDir.resolve("index.html")
-        check(indexHtml.isFile) { "Godot Web export did not produce index.html for $demo" }
-        val spikeLoader = exportDir.resolve("kanama-web-spike.js")
-        val bridge = exportDir.resolve("kanama-web-bridge.js")
-        check(spikeLoader.isFile) { "Kotlin/Wasm loader missing from $demo export" }
-        check(bridge.isFile) { "Versioned JS bridge missing from $demo export" }
-
-        // Cache-busting: the Kotlin gameplay wasm is already content-hashed by
-        // webpack (its filename is its hash), and kanama-web-spike.js references
-        // it by that name. Only the two fixed-name entry scripts can go stale, so
-        // stamp them with a content-derived build id the browser treats as a new
-        // resource. This is safe: they are <script src> tags, not module imports.
-        val buildId =
-            MessageDigest.getInstance("SHA-256").let { digest ->
-                digest.update(spikeLoader.readBytes())
-                digest.update(bridge.readBytes())
-                digest.digest().joinToString("") { "%02x".format(it) }.substring(0, 16)
-            }
-        val originalIndex = indexHtml.readText()
-        check(originalIndex.contains("src=\"kanama-web-spike.js\"")) {
-            "Exported shell is missing the kanama-web-spike.js script tag"
-        }
-        check(originalIndex.contains("src=\"kanama-web-bridge.js\"")) {
-            "Exported shell is missing the kanama-web-bridge.js script tag"
-        }
-        indexHtml.writeText(
-            originalIndex
-                .replace(
-                    "src=\"kanama-web-spike.js\"",
-                    "src=\"kanama-web-spike.js?v=$buildId\"",
+        val result =
+            KanamaWebExport.finishExport(
+                KanamaWebExport.FinishInputs(
+                    exportDir = exportDir,
+                    distribution = webDistribution.get().asFile,
+                    bridge = webSpikeAssets.file("kanama-web-bridge.js").asFile,
+                    protocolJson = webProxyResources.get().file("KanamaWebProtocol.generated.json").asFile,
+                    stagingDir = stagingDirFor(demo),
+                    demo = demo,
+                    projectId = if (demo == "project") webProjectId() else null,
                 )
-                .replace(
-                    "src=\"kanama-web-bridge.js\"",
-                    "src=\"kanama-web-bridge.js?v=$buildId\"",
-                )
-        )
-
-        // Self-contained check: no workstation-absolute path may leak into the
-        // served HTML, and the payload must not reference the staging tree.
-        val servedIndex = indexHtml.readText()
-        val stagingPath = stagingDirFor(demo).absolutePath
-        check(!servedIndex.contains(stagingPath)) {
-            "Exported index.html leaks the staging path $stagingPath"
-        }
-        check(!servedIndex.contains(System.getProperty("user.home"))) {
-            "Exported index.html leaks a workstation-absolute path"
-        }
-
-        val wasmFiles = exportDir.listFiles { file -> file.extension == "wasm" }?.toList().orEmpty()
-        check(wasmFiles.isNotEmpty()) { "Web export has no wasm payload for $demo" }
-        check(fileTree(exportDir) { include("**/*.map") }.files.isEmpty()) {
-            "Web export must not ship source maps for $demo"
-        }
-
-        // Release payload report: every served file and its size, for budget
-        // tracking and the export-smoke harness to cross-check.
-        val protocolVersion = readProtocolVersion()
-        val servedFiles =
-            exportDir
-                .walkTopDown()
-                .filter { it.isFile }
-                .map { it.relativeTo(exportDir).invariantSeparatorsPath to it.length() }
-                .sortedBy { it.first }
-                .toList()
-        val totalBytes = servedFiles.sumOf { it.second }
-        val reportDir = exportDir.resolve("kanama-web")
-        reportDir.mkdirs()
-        val report = reportDir.resolve("export-report.json")
-        report.writeText(
-            buildString {
-                append("{\n")
-                append("  \"demo\": \"$demo\",\n")
-                if (demo == "project") append("  \"project\": \"${webProjectId()}\",\n")
-                append("  \"protocolVersion\": $protocolVersion,\n")
-                append("  \"buildId\": \"$buildId\",\n")
-                append("  \"renderer\": \"$webRendererName\",\n")
-                append("  \"threadsSupported\": $webThreadsSupported,\n")
-                append("  \"sourceMaps\": false,\n")
-                append("  \"totalBytes\": $totalBytes,\n")
-                append("  \"files\": [\n")
-                append(
-                    servedFiles.joinToString(",\n") { (path, size) ->
-                        "    {\"name\": \"$path\", \"bytes\": $size}"
-                    }
-                )
-                append("\n  ]\n")
-                append("}\n")
-            }
-        )
+            )
         logger.lifecycle(
-            "[kanama:web] exportWeb produced $demo export ($totalBytes bytes, protocol " +
-                "$protocolVersion, buildId $buildId) at $exportDir"
+            "[kanama:web] exportWeb produced $demo export (${result.totalBytes} bytes, protocol " +
+                "${result.protocolVersion}, buildId ${result.buildId}) at $exportDir"
         )
     }
 }
