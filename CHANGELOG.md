@@ -59,11 +59,12 @@ Kotlin has no `free()` for them. Ports no longer need a local `ClassDB.instantia
 
 ### Fixed — an Android export after a Godot upgrade no longer stops at the old build template
 
-Godot 4.8 refuses an Android export when `res://android/build` was installed by another Godot version
-("Unable to set up Android build directory"). The repository's Android scripts now delete a build template
-from another Godot version and install the current one. In your own project, delete `res://android/build`
-once after the upgrade, or turn on **Editor Settings > Export > Android > Build > Automatically Delete Build
-Directory**. [Troubleshooting](docs/getting-started/troubleshooting.md) has the row.
+Godot refuses an Android export when `res://android/build` was installed by another Godot version (4.7
+says "Android build version mismatch", 4.8 says "Unable to set up Android build directory"). The repository's
+Android scripts now delete a build template from another Godot version and install the current one, and stop
+with one line when `GODOT_BIN` is not the pinned editor. In your own project on 4.7, delete
+`res://android/build` and run **Project > Install Android Build Template**; on 4.8, delete it or turn on
+**Editor Settings > Export > Android > Build > Automatically Delete Build Directory**. [Troubleshooting](docs/getting-started/troubleshooting.md) has the row.
 
 ### Fixed — the exported-scene check no longer leaks a project's music at exit
 

@@ -91,9 +91,10 @@ android_godot_version() {
   printf '%s\n' "$godot_version"
 }
 
-# Task 139 P14 (U18): since Godot 4.8 an Android export refuses a res://android/build whose
-# android/.build_version is not the running editor's version ("Unable to set up Android build directory"),
-# unless the editor setting export/android/build/automatically_delete_build_directory is on (default off).
+# Task 139 P14 (U18): Godot refuses an Android export when res://android/.build_version is not the running
+# editor's version: 4.7.2 already does ("Android build version mismatch: ..." or "...no version info for it
+# exists"); 4.8 changed the message ("Unable to set up Android build directory"), reinstalls a missing
+# directory itself, and adds the opt-in editor setting export/android/build/automatically_delete_build_directory.
 # A demo exported under an older Godot therefore fails its first export after every bump. Delete the stale
 # template (and its version file) here; ensure_android_build_template then installs a fresh one.
 drop_stale_android_build_template() {
@@ -109,6 +110,17 @@ drop_stale_android_build_template() {
 
 # Installs the Godot Android build template and sets BUILD_GRADLE to the generated build.gradle.
 ensure_android_build_template() {
+  # The template must match the editor that exports, which is not necessarily the pin: a mono build, or a
+  # patch binary tried before the pin edit, would delete and reinstall the pin's template on every run.
+  local pin editor_version
+  pin="$(android_godot_version)"
+  editor_version="$(timeout 30 "$GODOT_BIN" --version 2>/dev/null | head -n 1 | tr -d '[:space:]' || true)"
+  # "4.7.2.stable.official.ed1daf0bf" matches the pin "4.7.2.stable"; "4.7.2.stable.mono.official..." does not.
+  if [[ "$editor_version" != "$pin" && ( "$editor_version" != "$pin."* || "$editor_version" == "$pin.mono"* ) ]] ||
+    [[ "$pin" != *mono* && "$editor_version" == *.mono.* ]]; then
+    echo "$ANDROID_TAG GODOT_BIN is Godot '${editor_version:-unknown}' but kanamaGodotVersion pins '$pin': use the pinned editor or update kanamaGodotVersion" >&2
+    exit 1
+  fi
   drop_stale_android_build_template
   echo "$ANDROID_TAG install android build template"
   # In 4.7.2 this installs nothing on its own (task 116), so its exit status is not the verdict: the

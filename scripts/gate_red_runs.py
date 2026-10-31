@@ -330,7 +330,10 @@ case("check_android_remap_sources.py (address space, NULL_SEGMENT)", py("check_a
      "ZzRedRun.kt:2: whole-address-space segment", "Kanama's `NULL_SEGMENT` reinterpreted as the whole address space")
 case("android_build_template_selftest.sh", ["bash", "scripts/android_build_template_selftest.sh"],
      [Edit("scripts/android_common.sh", '[[ "$have" != "$want" ]]', '[[ -z "$have" && "$have" != "$want" ]]')],
-     "FAIL: a template for Godot 4.6.stable", "the version check keeps a template whose .build_version differs from the pinned Godot (Godot 4.8 then refuses the export)")
+     "FAIL: a template for Godot 4.6.stable", "the version check keeps a template whose .build_version differs from the pinned Godot (Godot then refuses the export)")
+case("android_build_template_selftest.sh (call site)", ["bash", "scripts/android_build_template_selftest.sh"],
+     [Edit("scripts/android_common.sh", "  drop_stale_android_build_template\n  echo", "  echo")],
+     "by ensure_android_build_template", "ensure_android_build_template no longer deletes a template from another Godot version")
 case("check_doc_claims.py", py("check_doc_claims.py"),
      [Edit("docs/contributing/platform-evidence.md", "the versions the corpus is driven on (protocol 39)", "the versions the corpus is driven on (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
