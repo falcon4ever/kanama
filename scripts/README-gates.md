@@ -256,13 +256,14 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/package_install_smoke.sh:236` | `if command -v xattr >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/package_install_smoke.sh:238` | `xattr -dr com.apple.quarantine "$project_dir" 2>/dev/null \|\| true` | justified: clearing quarantine is best effort; a quarantined binary that cannot load fails the Godot launch below. |
 | `scripts/package_install_smoke.sh:480` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/package_install_smoke.sh:498` | `pkill -TERM -P "$pid" 2>/dev/null \|\| true` | justified: the command may have exited between the sleep and the kill. |
-| `scripts/package_install_smoke.sh:500` | `kill -TERM "$pid" 2>/dev/null \|\| true` | justified: as above. |
-| `scripts/package_install_smoke.sh:505` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
-| `scripts/package_install_smoke.sh:507` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
-| `scripts/package_install_smoke.sh:509` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
-| `scripts/package_install_smoke.sh:790` | `register="$(grep -E ' _kanama_ios_project_scripts_register$' "$symbols" \|\| true)"` | justified: no match is reported as `none` on the next lines |
-| `scripts/package_install_smoke.sh:849` | `grep -ho 'Kanama Web [^"\]*' "$work_dir/web-smoke/"*.log "$web_result" 2>/dev/null \| sort -u \| head -n 5 >&2 \|` | justified: diagnostics after the verdict |
+| `scripts/package_install_smoke.sh:496` | `sleep "$limit" \|\| exit 0` | justified: a sleep stopped because the command finished is no timeout. |
+| `scripts/package_install_smoke.sh:499` | `pkill -TERM -P "$pid" 2>/dev/null \|\| true` | justified: the command may have exited between the sleep and the kill. |
+| `scripts/package_install_smoke.sh:501` | `kill -TERM "$pid" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/package_install_smoke.sh:506` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
+| `scripts/package_install_smoke.sh:508` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/package_install_smoke.sh:510` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
+| `scripts/package_install_smoke.sh:791` | `register="$(grep -E ' _kanama_ios_project_scripts_register$' "$symbols" \|\| true)"` | justified: no match is reported as `none` on the next lines |
+| `scripts/package_install_smoke.sh:850` | `grep -ho 'Kanama Web [^"\]*' "$work_dir/web-smoke/"*.log "$web_result" 2>/dev/null \| sort -u \| head -n 5 >&2 \|` | justified: diagnostics after the verdict |
 | `scripts/record_gate_evidence.py:40` | `except (OSError, subprocess.CalledProcessError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/runtime_smoke.sh:30` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/runtime_smoke.sh:40` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar -PkanamaApiExercise=true >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
@@ -280,13 +281,14 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/runtime_smoke.sh:940` | `cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null \| head -n 40 >&2 \|\| true` | justified: diagnostics only; the leg fails just below |
 | `scripts/scene_connection_lint.py:103` | `except OSError:` | justified: an unreadable script registers no methods, so every connection to it is reported missing |
 | `scripts/store_addon_editor_smoke.sh:42` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/store_addon_editor_smoke.sh:59` | `pkill -TERM -P "$pid" 2>/dev/null \|\| true` | justified: the command may have exited between the sleep and the kill. |
-| `scripts/store_addon_editor_smoke.sh:61` | `kill -TERM "$pid" 2>/dev/null \|\| true` | justified: as above. |
-| `scripts/store_addon_editor_smoke.sh:66` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
-| `scripts/store_addon_editor_smoke.sh:68` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
-| `scripts/store_addon_editor_smoke.sh:70` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
-| `scripts/store_addon_editor_smoke.sh:84` | `grep -E "project_setup\|kanama:tools\|kanama\]\|SCRIPT ERROR\|ERROR:\|at: " "$log" >&2 \|\| true` | justified: the tail below |
-| `scripts/store_addon_editor_smoke.sh:90` | `grep -E "\[kanama:tools\] (Running\|Build JDK\|Set Up)" "$log" \|\| true` | justified: context lines for the log only |
+| `scripts/store_addon_editor_smoke.sh:57` | `sleep "$limit" \|\| exit 0` | justified: a sleep stopped because the command finished is no timeout. |
+| `scripts/store_addon_editor_smoke.sh:60` | `pkill -TERM -P "$pid" 2>/dev/null \|\| true` | justified: the command may have exited between the sleep and the kill. |
+| `scripts/store_addon_editor_smoke.sh:62` | `kill -TERM "$pid" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/store_addon_editor_smoke.sh:67` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
+| `scripts/store_addon_editor_smoke.sh:69` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/store_addon_editor_smoke.sh:71` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
+| `scripts/store_addon_editor_smoke.sh:85` | `grep -E "project_setup\|kanama:tools\|kanama\]\|SCRIPT ERROR\|ERROR:\|at: " "$log" >&2 \|\| true` | justified: the tail below |
+| `scripts/store_addon_editor_smoke.sh:91` | `grep -E "\[kanama:tools\] (Running\|Build JDK\|Set Up)" "$log" \|\| true` | justified: context lines for the log only |
 | `scripts/tool_smoke.sh:29` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:37` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/tool_smoke.sh:145` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |

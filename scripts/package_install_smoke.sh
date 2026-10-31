@@ -492,7 +492,8 @@ run_bounded() {
   "$@" &
   pid=$!
   (
-    sleep "$limit"
+    # justified: a sleep stopped because the command finished is no timeout.
+    sleep "$limit" || exit 0
     echo "[package_install_smoke] timed out after ${limit}s: $*" >&2
     # justified: the command may have exited between the sleep and the kill.
     pkill -TERM -P "$pid" 2>/dev/null || true

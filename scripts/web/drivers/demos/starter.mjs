@@ -88,7 +88,20 @@ export async function runStarter({ url, evaluate, navigate, deadline, exportDir 
     60_000,
     (snap) => snap.protocol > 0 && snap.helloReady >= 1 && snap.helloHandle > 0,
   );
-  if (!started.met) throw new Error(`Kotlin/Wasm ${SCRIPT} did not become ready`);
+  if (!started.met) {
+    // The page's own failure line (failKanamaWeb writes it under the canvas): a protocol mismatch, a
+    // module whose main() did not start the runtime, a bundle that did not load.
+    let pageFailure = null;
+    try {
+      pageFailure = await evaluate(
+        `document.body.dataset.status === "fail" ? (document.querySelector("#kanama-results")?.textContent ?? "") : null`,
+      );
+    } catch {
+      // the page is mid-navigation or gone; the error below still says what did not happen
+    }
+    const reason = pageFailure ? `: the page failed with ${String(pageFailure).split("\n")[0]}` : "";
+    throw new Error(`Kotlin/Wasm ${SCRIPT} did not become ready${reason}`);
+  }
   const ready = started.snap;
   const startupDurationMs = Date.now() - startupStart;
   trace(`ready: handle=${ready.helloHandle} protocol=${ready.protocol}`);
