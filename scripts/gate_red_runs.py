@@ -712,8 +712,8 @@ case("check_unapplied_annotations.py", py("check_unapplied_annotations.py"),
      "imports @OnReady but never applies it", "a lifecycle annotation is imported and never applied")
 case("check_web_callback_flush.py", py("check_web_callback_flush.py"),
      [Edit("web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/Main.kt",
-           "    userScript { KanamaWebProjectRegistry.enterTree(record.scriptId, record.script) }\n    commands.flush()",
-           "    userScript { KanamaWebProjectRegistry.enterTree(record.scriptId, record.script) }")],
+           "    userScript { projectScripts.enterTree(record.scriptId, record.script) }\n    commands.flush()",
+           "    userScript { projectScripts.enterTree(record.scriptId, record.script) }")],
      "without flushing the command buffer", "a Web callback boundary stops flushing the command buffer")
 case("check_web_callback_flush.py (constructor)", py("check_web_callback_flush.py"),
      [Edit("web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/Main.kt",

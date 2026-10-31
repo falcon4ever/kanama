@@ -9,20 +9,17 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
-// Task 129 E: the shared api sources Web compiles (see the commonMain source set below). The
-// directory is the native wrapper tree's; everything else in it is excluded from the Web build and
-// from ktfmt (the wrapper tree is drift-gated, not formatted: see the root build's ktfmt note).
-val sharedApiDir: File = rootProject.file("src/commonMain/kotlin/net/multigesture/kanama/api")
-val sharedApiFiles = setOf("GD.kt", "Mathf.kt", "GodotCallable.kt")
-
+// The runtime's own sources compile in :kanama-web (web-runtime/library), which this executable
+// links like a kit project does (task 135 item 5); its ktfmt runs there. Here: the fixtures' and the
+// project's scripts, and the registry and main() KSP generates for them.
 tasks.withType<com.ncorti.ktfmt.gradle.tasks.KtfmtBaseTask>().configureEach {
-    exclude { element -> element.file.parentFile == sharedApiDir }
     // Task 125 P5: the generated Web API exercise is drift-gated (generate_web_exercise.py --check).
     exclude("**/ApiExerciseProbe.kt")
 }
 
-val webScriptSourceRoot =
-    layout.projectDirectory.dir("src/commonMain/kotlin/net/multigesture/kanama/web")
+// The spike benchmark's own scripts (WebSpikeScript, WebSpikeState): compiled for the spike only
+// (no demo or project selected), never into the runtime klib.
+val webScriptSourceRoot = layout.projectDirectory.dir("src/webSpikeGodot/kotlin")
 
 // The Web gameplay script root. An explicit -PkanamaWebExtraScriptSourceDir wins;
 // otherwise it is derived from the selected demo's checkout as <projectDir>/web,
@@ -232,49 +229,24 @@ kotlin {
             // The unit tests run on Node (below); a browser test run would need Karma + Chrome.
             testTask { enabled = false }
         }
-        // Task 134 A2: the value types' unit test (src/wasmJsTest) runs on Node, not in a browser.
-        nodejs()
         binaries.executable()
     }
 
     sourceSets {
         val commonMain by getting {
-            // Phase 0 keeps the existing JVM annotations module untouched while proving that the
-            // same source declarations compile for Wasm. A post-GO common API migration can turn
-            // :annotations into a real KMP dependency without coupling that refactor to the spike.
-            kotlin.srcDir(rootProject.file("annotations/src/main/kotlin"))
-            // Task 134 A2: the value types' storage, printing and real_t formulas are ONE source with
-            // the native types (src/commonMain/.../types/shared); WebReal.kt supplies the float32
-            // `GodotRealStorage`, `narrowReal` and `widenReal` the native side generates.
-            kotlin.srcDir(rootProject.file("src/commonMain/kotlin/net/multigesture/kanama/types"))
-            // Task 134 D2: Godot's String / PackedByteArray methods on Kotlin's String and ByteArray,
-            // the same generated source as native; their engine calls cross through WebBuiltinRemote.
-            kotlin.srcDir(rootProject.file("src/commonMain/kotlin/net/multigesture/kanama/builtins"))
-            // Task 131 item 14: the script-error report (its fields and the game-frame rule) is ONE
-            // source with desktop, Android and iOS; Web supplies only its frames and its way out.
-            kotlin.srcDir(rootProject.file("src/commonMain/kotlin/net/multigesture/kanama/scripterrors"))
-            // Task 129 E: GD (generated from extension_api.json's utility functions), Mathf and
-            // GodotCallable are ONE source with desktop and iOS. The shared api directory is added
-            // and every other file in it excluded; GD's engine calls cross through
-            // WebBuiltinRemote (the builtin opcode's utility form).
-            kotlin.srcDir(sharedApiDir)
-            kotlin.exclude { element ->
-                !element.isDirectory &&
-                    element.file.parentFile == sharedApiDir &&
-                    element.name !in sharedApiFiles
-            }
+            kotlin.setSrcDirs(emptyList<Any>())
             dependencies {
                 implementation(kotlin("stdlib"))
-                implementation(project(":kanama-common-api"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+                implementation(project(":kanama-web"))
             }
         }
         val wasmJsTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
+            // The runtime's unit tests run in :kanama-web (`:kanama-web:wasmJsNodeTest`).
+            kotlin.setSrcDirs(emptyList<Any>())
         }
         val wasmJsMain by getting {
+            kotlin.setSrcDirs(emptyList<Any>())
+            if (webDemoKey.isEmpty()) kotlin.srcDir(webScriptSourceRoot)
             if (mergeWebGameplayScripts != null) {
                 // A plain directory srcDir (not a files().builtBy() wrapper): KSP
                 // snapshots source-set dirs by content, and the wrapper form was
@@ -293,12 +265,25 @@ dependencies {
     add("kspWasmJs", project(":processor"))
 }
 
+// The web3d fixture's probes (ApiExerciseProbe and its Main.kt) are Kanama test code: they reach the
+// runtime's internals (wrapper handles, ClassDB.instantiate, ...), so for that fixture alone the
+// runtime klib is a friend module. Every other project, a demo's or a user's, links the runtime as
+// a kit project does, through its public declarations only.
+if (webDemoKey == "web3d") {
+    val runtimeKlib = project(":kanama-web").layout.buildDirectory.dir("classes/kotlin/wasmJs/main")
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
+        if (name == "compileKotlinWasmJs") {
+            compilerOptions.freeCompilerArgs.add(runtimeKlib.map { "-Xfriend-modules=${it.asFile.absolutePath}" })
+        }
+    }
+}
+
 ksp {
     val gameplayScriptRoot =
         if (mergeWebGameplayScripts != null) mergedWebScriptRoot.get().asFile
         else extraWebScriptSourceRoot
     val scriptRoots =
-        listOfNotNull(webScriptSourceRoot.asFile, gameplayScriptRoot)
+        listOfNotNull(webScriptSourceRoot.asFile.takeIf { webDemoKey.isEmpty() }, gameplayScriptRoot)
             .joinToString(System.getProperty("path.separator")) { it.absolutePath }
     arg("kanamaScriptRoots", scriptRoots)
     arg("kanamaRuntimeTarget", "web")

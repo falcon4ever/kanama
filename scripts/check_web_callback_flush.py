@@ -33,15 +33,15 @@ DEFAULT_MAIN = Path("web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/w
 # A boundary "runs user Kotlin" if its body invokes one of these dispatch entry points.
 # Property accessors are deliberately NOT in this set -- see EXEMPT_PREFIXES below.
 USER_DISPATCH_CALLS = (
-    "KanamaWebProjectRegistry.call",
-    "KanamaWebProjectRegistry.ready",
-    "KanamaWebProjectRegistry.enterTree",
-    "KanamaWebProjectRegistry.exitTree",
-    "KanamaWebProjectRegistry.process",
-    "KanamaWebProjectRegistry.physicsProcess",
-    "KanamaWebProjectRegistry.input",
-    "KanamaWebProjectRegistry.unhandledInput",
-    "KanamaWebProjectRegistry.draw",
+    "projectScripts.call",
+    "projectScripts.ready",
+    "projectScripts.enterTree",
+    "projectScripts.exitTree",
+    "projectScripts.process",
+    "projectScripts.physicsProcess",
+    "projectScripts.input",
+    "projectScripts.unhandledInput",
+    "projectScripts.draw",
     "WebSignalCallbackRegistry.dispatch",
 )
 

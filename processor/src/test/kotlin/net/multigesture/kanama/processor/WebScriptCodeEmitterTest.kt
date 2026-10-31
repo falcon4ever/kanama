@@ -1591,7 +1591,7 @@ class WebScriptCodeEmitterTest {
     // An integer return stays an integer; only decimals go through the NaN/INF encoder.
     assertEquals("x.toString()", WebScriptCodeEmitter.packedReturnExpression("x", TypeMapping.INT))
     assertEquals(
-      "net.multigesture.kanama.web.WebPackedFloats.encode(x)",
+      "net.multigesture.kanama.web.KanamaWebGenerated.encodeFloat(x)",
       WebScriptCodeEmitter.packedReturnExpression("x", TypeMapping.FLOAT),
     )
 
@@ -1605,13 +1605,13 @@ class WebScriptCodeEmitterTest {
     )
     assertTrue(
       registry.contains(
-        "5 -> (script as S1_Enemy).aimTarget().let { \"\${net.multigesture.kanama.web.WebPackedFloats.encode(it.x)},\${net.multigesture.kanama.web.WebPackedFloats.encode(it.y)},\${net.multigesture.kanama.web.WebPackedFloats.encode(it.z)}\" }"
+        "5 -> (script as S1_Enemy).aimTarget().let { \"\${net.multigesture.kanama.web.KanamaWebGenerated.encodeFloat(it.x)},\${net.multigesture.kanama.web.KanamaWebGenerated.encodeFloat(it.y)},\${net.multigesture.kanama.web.KanamaWebGenerated.encodeFloat(it.z)}\" }"
       ),
       registry,
     )
     assertTrue(
       registry.contains(
-        "6 -> net.multigesture.kanama.web.WebPackedFloats.encode((script as S1_Enemy).currentHealth())"
+        "6 -> net.multigesture.kanama.web.KanamaWebGenerated.encodeFloat((script as S1_Enemy).currentHealth())"
       ),
       registry,
     )
@@ -1916,7 +1916,7 @@ class WebScriptCodeEmitterTest {
       WebScriptCodeEmitter.packedArgGdExpressions(mixed.args),
     )
     assertEquals(
-      "net.multigesture.kanama.web.WebPackedFloats.decode(packedArgs[1])",
+      "net.multigesture.kanama.web.KanamaWebGenerated.decodeFloat(packedArgs[1])",
       WebScriptCodeEmitter.packedArgKotlinExpressions(mixed.args)[1],
     )
     assertEquals(
@@ -1971,9 +1971,9 @@ class WebScriptCodeEmitterTest {
     )
     assertTrue(
       registry.contains(
-        "(script as S1_Enemy).scaleBy((net.multigesture.kanama.web.WebPackedValues.decode(packedArgs[0], " +
+        "(script as S1_Enemy).scaleBy((net.multigesture.kanama.web.KanamaWebGenerated.decodeValue(packedArgs[0], " +
           "net.multigesture.kanama.types.Vector3::class) as net.multigesture.kanama.types.Vector3), " +
-          "net.multigesture.kanama.web.WebPackedFloats.decode(packedArgs[1]))"
+          "net.multigesture.kanama.web.KanamaWebGenerated.decodeFloat(packedArgs[1]))"
       ),
       registry,
     )
