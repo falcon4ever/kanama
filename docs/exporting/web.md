@@ -28,9 +28,11 @@ run natively, and Godot's Web export runs them in the page next to your game.
     | Linux | `~/.local/share/godot/export_templates/4.7.2.stable/` |
     | Windows | `%APPDATA%\Godot\export_templates\4.7.2.stable\` |
 
-- A network connection for the first export. It downloads Node.js, Yarn and
-  Binaryen, the tools the Web build runs, about 70 MB, into Gradle's folder in
-  your home folder (`~/.gradle`).
+- A network connection for the first export. It downloads the tools the Web
+  build runs, about 90 MB in all: Node.js, Yarn and Binaryen into Gradle's
+  folder in your home folder (`~/.gradle`), and webpack with the npm packages
+  it uses into `~/.kotlin/kotlin-npm-tooling`. Unpacked, they take about
+  400 MB.
 - 8 GB of memory or more. Compiling your scripts with the Kanama Web runtime
   can use up to 3 GB.
 - Chrome 130 or Firefox 141, or newer, to run the export.
@@ -44,9 +46,9 @@ cd /path/to/your-project
 ./gradlew exportWeb
 ```
 
-It builds your scripts for desktop first, as **Build Scripts** does, because
-the editor loads them during the export. Then it compiles the scripts in
-`kotlin-src/` to WebAssembly with the Kanama Web runtime from `addons/kanama/maven`. It exports a copy of the project
+It compiles the scripts in `kotlin-src/` to WebAssembly with the Kanama Web
+runtime from `addons/kanama/maven`; it does not need your desktop build, so a
+script that only fails to compile for desktop does not stop it. It exports a copy of the project
 with Godot, with each Kotlin script replaced by a small GDScript file that
 calls into WebAssembly, and puts the two together. The export lands in
 `build/web-export/`. Your project folder is not changed: the copy Godot

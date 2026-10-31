@@ -1,9 +1,10 @@
 # Web Internals
 
 This page records the current Web implementation path. Web is **Experimental
-(Kotlin/Wasm preview)** on the Godot 4.7 stable baseline — not a Supported target,
-with a source-checkout export workflow (no packaged addon) and a user-facing
-[export guide](../../exporting/web.md). The API/build flow is less settled than
+(Kotlin/Wasm preview)** on the Godot 4.7 stable baseline — not a Supported target.
+A project exports from a release kit or the store addon (`./gradlew exportWeb`,
+the Kanama Gradle plugin) or from a source checkout; the user-facing
+[export guide](../../exporting/web.md) has both. The API/build flow is less settled than
 desktop, Android, or iOS.
 
 ## Web Compared with the Other Backends
@@ -1065,10 +1066,16 @@ bridge's `KANAMA_WEB_PROTOCOL_VERSION` is not the processor's
 (`verifyKanamaWebPackageProtocol`). The Kanama Gradle plugin's `exportWeb` is
 `:web-runtime:exportWeb -PkanamaWebProjectDir` without the checkout:
 
-1. It depends on the project's `buildScripts`, so the editor's export guard
-   sees current scripts, and checks that the addon has the two klibs and the
-   files of `addons/kanama/web/`, naming the zip to unzip again when not.
-2. It merges `kotlin-src` with `web/kotlin-src` and writes a plugin-owned build
+1. It checks that the addon has the two klibs and the files of
+   `addons/kanama/web/`, naming the zip to unzip again when not. It does not
+   depend on `buildScripts`: Godot exports the staged copy, which has no
+   `addons/kanama/` (so no desktop scripts jar is loaded) and no `kotlin-src/`,
+   and whose scenes attach the generated proxies, which declare the exported
+   properties (see Export Staging). The package smoke exports with no scripts
+   jar and a scene-set property to prove it.
+2. It merges `kotlin-src` (or the folder inside the project that
+   `-PkanamaProjectScriptsDir` names, as for `buildAndroidScripts` and
+   `buildIosScripts`) with `web/kotlin-src` and writes a plugin-owned build
    to `build/kanama/web/` (resources under
    `gradle-plugin/src/main/resources/.../web/`): one `wasmJs` executable with
    the merged root as its source, KSP with `kanamaRuntimeTarget=web` and
@@ -1077,7 +1084,13 @@ bridge's `KANAMA_WEB_PROTOCOL_VERSION` is not the processor's
    `kanama-web-spike.js`. Its settings declare four Maven repositories
    (the addon, exclusive for `net.multigesture`; Google; Central; JitPack),
    never `mavenLocal()`, plus the Node.js, Yarn and Binaryen download sites,
-   each exclusive to its tool.
+   each exclusive to its tool. The first build downloads about 90 MB: Node.js
+   (57 MB), Binaryen (7 MB) and Yarn (1 MB) into `$GRADLE_USER_HOME/nodejs`,
+   `binaryen` and `yarn`, and the Kotlin Gradle plugin's npm tooling (webpack
+   and the rest, 488 packages, 21 MB of tarballs from the npm registry) into
+   `~/.kotlin/kotlin-npm-tooling`, which a fresh Gradle home does not reset
+   (Kotlin 2.4.21 on macOS arm64, measured 2026-10-31). The first-build line
+   is printed when either folder is missing.
 3. It runs that build's `wasmJsBrowserDistribution` with the project's
    `gradlew`, compiling in-process in a daemon with a 3 GB heap
    (`-PkanamaWebHeap` for a larger project), and checks that the generated

@@ -528,9 +528,10 @@ automated iOS gate exists, so mobile WebKit stays outside the validated claim.
 
 ### Web Gaps
 
-- No packaged export workflow: a project is exported from a Kanama source
-  checkout (`-PkanamaWebProjectDir`), and there is no runtime-only addon
-  (gameplay is AOT-compiled into the Wasm payload).
+- No editor-side runtime: a project's Kotlin is compiled ahead of time into the
+  Wasm payload at export (`./gradlew exportWeb` in a kit or store-addon project,
+  or `-PkanamaWebProjectDir` from a source checkout), so a change needs a new
+  export.
 - Godot **Compatibility renderer, single-thread** only.
 - No Web editor, no hot reload, no threads, no Kotlin/JS path.
 - Safari has **no headless mode**, so the Safari gate is a local GUI gate rather

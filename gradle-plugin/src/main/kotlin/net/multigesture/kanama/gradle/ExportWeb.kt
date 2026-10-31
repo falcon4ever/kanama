@@ -16,11 +16,11 @@ import org.gradle.process.ExecOperations
  * `./gradlew exportWeb`: what `:web-runtime:exportWeb -PkanamaWebProjectDir` does in a Kanama
  * checkout, from the addon alone.
  * 1. `kotlin-src` (or the folder `-PkanamaProjectScriptsDir` names, as for Android and iOS; with
- *    `web/kotlin-src` over it, the checkout's merge) is compiled for Kotlin/Wasm
- *    by the inner build (`build/kanama/web`, rewritten on every run, run with the project's own
- *    `gradlew`): KSP generates the script registry, its `main()` and the GDScript proxies, and the
- *    scripts link against the prebuilt runtime klib `kanama-web` from `addons/kanama/maven` into
- *    the webpack bundle.
+ *    `web/kotlin-src` over it, the checkout's merge) is compiled for Kotlin/Wasm by the inner build
+ *    (`build/kanama/web`, rewritten on every run, run with the project's own `gradlew`): KSP
+ *    generates the script registry, its `main()` and the GDScript proxies, and the scripts link
+ *    against the prebuilt runtime klib `kanama-web` from `addons/kanama/maven` into the webpack
+ *    bundle.
  * 2. A copy of the project is staged under `build/kanama/web/godot-project` with the proxies
  *    attached and Kanama's Web preset (`addons/kanama/web`); the project itself is not changed.
  * 3. Godot exports the staged copy headless with its `web_nothreads_release.zip` template, and the
@@ -216,18 +216,21 @@ abstract class ExportWeb : DefaultTask() {
   }
 
   /**
-   * The first Web build downloads Node.js, Yarn and the npm packages webpack needs; the Kotlin/Wasm
-   * link of Kanama's runtime takes memory. Both are said before the build starts, so a long first
-   * build is not mistaken for a hang.
+   * The first Web build downloads Node.js, Yarn and Binaryen into the Gradle home, and webpack with
+   * the npm packages it runs into `~/.kotlin/kotlin-npm-tooling` (the Kotlin Gradle plugin's own
+   * folder, whatever the Gradle home); the Kotlin/Wasm link of Kanama's runtime takes memory. Both
+   * are said before the build starts, so a long first build is not mistaken for a hang.
    */
   private fun stateFirstBuildCosts() {
     val gradleHome =
       System.getenv("GRADLE_USER_HOME")?.takeIf { it.isNotBlank() }?.let(::File)
         ?: File(System.getProperty("user.home"), ".gradle")
-    if (!gradleHome.resolve("nodejs").isDirectory) {
+    val npmTooling = File(System.getProperty("user.home"), ".kotlin/kotlin-npm-tooling")
+    if (!gradleHome.resolve("nodejs").isDirectory || !npmTooling.isDirectory) {
       logger.lifecycle(
-        "[kanama] First Web build with this Gradle: it downloads Node.js, Yarn and Binaryen " +
-          "(about $FIRST_DOWNLOAD_MB MB, into $gradleHome) and needs a network connection."
+        "[kanama] First Web build on this computer: it downloads Node.js, Yarn and Binaryen " +
+          "into $gradleHome, and webpack and the npm packages it runs into $npmTooling (about " +
+          "$FIRST_DOWNLOAD_MB MB in all), and needs a network connection."
       )
     }
     val memoryGb =
@@ -245,7 +248,8 @@ abstract class ExportWeb : DefaultTask() {
   private fun writeInnerBuild(inner: File, project: File, merged: File, heapSize: String) {
     val values =
       mapOf(
-        "KANAMA_MAVEN" to kotlinString(project.resolve("addons/kanama/maven").absoluteFile.toURI().toString()),
+        "KANAMA_MAVEN" to
+          kotlinString(project.resolve("addons/kanama/maven").absoluteFile.toURI().toString()),
         "INNER_PROJECT" to INNER_PROJECT,
         "KANAMA" to KanamaVersions.KANAMA,
         "KOTLIN" to KanamaVersions.KOTLIN,
@@ -288,7 +292,9 @@ abstract class ExportWeb : DefaultTask() {
     // Measured on an M1 Max (Kotlin 2.4.21, the starter): the inner daemon peaks near 1.3 GB.
     const val INNER_HEAP = "3g"
     const val RECOMMENDED_MEMORY_GB = 8
-    // Node.js 54 MB, Binaryen 7 MB, Yarn 1 MB (Kotlin 2.4.21's packages, measured).
-    const val FIRST_DOWNLOAD_MB = 70
+    // Measured from a fresh Gradle home (Kotlin 2.4.21, macOS arm64): Node.js 26.2.0 57 MB,
+    // Binaryen 130 7 MB, Yarn 1.22.22 1 MB, and the npm tooling's 488 packages (webpack and the
+    // rest) 21 MB as tarballs, 125 MB unpacked in ~/.kotlin/kotlin-npm-tooling.
+    const val FIRST_DOWNLOAD_MB = 90
   }
 }
