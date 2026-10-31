@@ -938,6 +938,10 @@ Web sources too.
 
 ## iOS
 
+- **iOS exports from the macOS release kit or the store addon.** Run
+  `./gradlew buildIosScripts` in the project on a Mac, then export from Godot;
+  a source checkout is no longer needed. See [Export for iOS](../exporting/ios.md).
+  The runtime-only `kanama-mobile-addon-ios` zip is gone.
 - **Exports require iOS 15.0**, Godot 4.7.2's default `application/min_ios_version`
   (Xcode 27 refuses a lower deployment target). Set it in your export preset.
 - **A `Map` with non-String keys no longer converts to a generic Godot `Dictionary` on iOS.** A

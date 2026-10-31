@@ -106,5 +106,6 @@ jobs:
         run: |
           godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
           chmod +x "$godot_bin"
-          # sync_kdoc needs a Godot docs checkout, which this runner does not have: skipped by name.
-          KANAMA_GODOT_BIN="$godot_bin" python3 scripts/gate_red_runs.py --slow --strict --allow-skip sync_kdoc --shard ${{ matrix.shard }}/4
+          # sync_kdoc needs a Godot docs checkout and the iOS kit smokes a Mac with Xcode, which this runner does not
+          # have: skipped by name.
+          KANAMA_GODOT_BIN="$godot_bin" python3 scripts/gate_red_runs.py --slow --strict --allow-skip "sync_kdoc,smoke.sh --ios" --shard ${{ matrix.shard }}/4

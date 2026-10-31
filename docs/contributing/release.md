@@ -67,7 +67,9 @@ The smoke unzips the kit, runs `./gradlew buildScripts`, confirms
 `kanama-scripts.jar` and its version stamp, and, when a binary is provided,
 launches Godot and checks that a pack export holds nothing from `build/`.
 Add `--android` to also run `buildAndroidScripts` and a headless Android
-export from the kit alone, and check the APK (no device).
+export from the kit alone, and check the APK (no device). On a Mac, add
+`--ios` to run `buildIosScripts`, a headless iOS export of an Xcode project,
+and an unsigned `xcodebuild` of it for the device SDK (no device either).
 
 Packaging builds the Android runtime AAR with the nested Android build, so it
 needs the Android SDK (`ANDROID_HOME`) with the NDK 29.0.14206865 and CMake
@@ -78,6 +80,15 @@ holds a `kanama-android` Maven tree of the same Kanama version
 `addons/kanama/maven` of a kit built elsewhere, or the `kanama-android-maven`
 artifact of a package workflow run. The package workflow builds the AAR once
 and passes it to every kit job this way.
+
+The macOS kit also carries the iOS runtime: the `iosArm64` klib of the runtime
+(`kanama-iosarm64`, with its cinterop klib) and a zip of the C shim and its
+headers (`kanama-ios-shim`), published by `publishKanamaIosPackage`. Kotlin/Native
+builds them on a Mac only, so the Linux and Windows kits carry neither. A
+store addon built off a Mac takes them from `-PkanamaIosPackageDir=<dir>`, a
+directory with both Maven trees (`<dir>/net/multigesture/kanama/kanama-iosarm64/<version>/`
+and `.../kanama-ios-shim/<version>/`), such as the `kanama-ios-maven` artifact
+of a package workflow run.
 
 ### Store Addon
 
@@ -121,39 +132,14 @@ scripts/package_install_smoke.sh \
 For a local host-only `packageStoreAddon` build, omit
 `--require-all-store-platforms`.
 
-## Mobile Addon Packages
+## Mobile Exports
 
-Android needs no separate zip: kits and the store addon carry the runtime
-AAR, and the Kanama Gradle plugin compiles a project's scripts against it
-(`buildAndroidScripts`; see [Android](backends/android.md#the-kit-path)). The
-iOS zip carries a prebuilt runtime only: compiling a project's Kotlin scripts
-for iOS still needs a Kanama source checkout (`installIosAddon`).
-
-### iOS
-
-```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-./gradlew packageMobileAddonIos \
-  -PkanamaXcodeDeveloperDir=/Applications/Xcode.app/Contents/Developer
-```
-
-This writes `build/distributions/kanama-mobile-addon-ios-v<version>.zip`
-containing both device `arm64` xcframeworks (debug + release — the static libraries are large,
-roughly 168 MB debug / 110 MB release before zip; measured in [Requirements and Platform Status](../reference/version-support.md#ios-library-size)), <!-- kanama-claim: ios-static-size -->
-a `.gdextension` entries fragment to merge, and an install README.
-
-**Honest caveat:** the packaged addon delivers the *runtime* only. Compiling a
-project's Kotlin scripts for iOS still requires a Kanama source checkout
-(`installIosAddon` runs the Kotlin/Native + KSP build). Use the zip to update
-the prebuilt runtime or for script-less evaluation; the source-checkout flow
-in [Export for iOS](../exporting/ios.md) remains the full workflow.
-
-Validate a packaged zip without a device:
-
-```sh
-scripts/package_install_smoke.sh --ios-addon \
-  build/distributions/kanama-mobile-addon-ios-v<version>.zip
-```
+Neither mobile platform has a separate zip. Kits and the store addon carry the
+Android runtime AAR, and the macOS kit and the store addon carry the iOS
+runtime klib and shim; the Kanama Gradle plugin compiles a project's scripts
+against them (`buildAndroidScripts`, `buildIosScripts`; see
+[Android](backends/android.md#the-kit-path) and
+[iOS](backends/ios.md#the-kit-path)).
 
 ## Package Workflow
 
@@ -167,9 +153,7 @@ dispatch and `v*` tags. It does not run on pull requests. Its jobs:
   so cross-target export is proven on every tag.
 - `store-addon` assembles and smokes the all-platform store addon.
 - `publish-release`, on a tag only, creates the GitHub release if it does not
-  exist and uploads the desktop kits and the store addon. The mobile addon
-  zips are not part of the workflow; they are built locally with the tasks
-  above.
+  exist and uploads the desktop kits and the store addon.
 
 Matrix targets:
 
@@ -185,6 +169,11 @@ and the store addon. `android-export` then unzips the Linux kit and the store
 addon into fresh projects and runs
 `package_install_smoke.sh --android` on each: `buildAndroidScripts` and a
 headless Godot export with a fresh `GRADLE_USER_HOME`, then the APK checks.
+The macOS kit job also uploads the iOS runtime trees (`kanama-ios-maven`) for
+the store addon, and `ios-export` runs `package_install_smoke.sh --ios` on
+`macos-15` for the macOS kit and the store addon: `buildIosScripts`, a headless
+export of an Xcode project, and `xcodebuild` for the device SDK without
+signing, with the newest Xcode on the runner.
 
 The release job grants `contents: write` only when publishing assets for a tag.
 All other package jobs use read-only repository permissions.

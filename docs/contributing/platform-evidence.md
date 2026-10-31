@@ -411,9 +411,11 @@ device (the audited type set and KSP registration path cover the whole
 corpus).
 
 Tracked as non-blocking: the TPS demo's mobile touch and multiplayer UI
-polish, and an intermittent Audio autoload follow-up in the FPS demo. The
-packaged `.xcframework` addon is runtime-only (compiling project scripts needs
-the Kanama checkout), and there is no mobile hot reload.
+polish, and an intermittent Audio autoload follow-up in the FPS demo. There is
+no mobile hot reload. A project made from the macOS kit or
+the store addon builds its iOS libraries itself (`buildIosScripts`);
+`package.yml` exports and builds one with Xcode from both packages, without a
+device.
 
 ### iOS Library Size
 

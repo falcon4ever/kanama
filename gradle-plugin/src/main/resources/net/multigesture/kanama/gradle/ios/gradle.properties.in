@@ -1,0 +1,7 @@
+# Written by the Kanama Gradle plugin (buildIosScripts) on every run. Do not edit.
+# Kotlin/Native compiles and links inside this build's Gradle daemon. The release link of Kanama's
+# Godot API needs a large heap (@HEAP_NOTE@); buildIosScripts also passes the heap on the command
+# line, where it wins over ~/.gradle/gradle.properties (-PkanamaIosHeap changes it). The daemon
+# stops 10 minutes after the last build instead of holding that memory for hours.
+org.gradle.jvmargs=@JVM_ARGS@
+org.gradle.daemon.idletimeout=600000

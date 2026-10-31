@@ -229,7 +229,7 @@ Desktop kits are complete starter projects for one platform. Store add-ons are
 install-safe `addons/` zips for existing projects. Validate them without a
 sibling Kanama checkout with `scripts/package_install_smoke.sh --desktop-kit` /
 `--store-addon` (the full commands are in `docs/contributing/gates.md`, "Local
-Validation"); the package shapes, the mobile addon zips, the package workflow and
+Validation"); the package shapes, the mobile runtimes they carry, the package workflow and
 the release cut are in `docs/contributing/release.md`.
 
 ### Port Existing GDScript

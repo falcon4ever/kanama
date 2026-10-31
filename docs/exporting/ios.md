@@ -11,40 +11,56 @@ an Xcode project, and you build and run it on an iPhone or iPad from Xcode.
   `sudo xcode-select -s /Applications/Xcode.app`, or put
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer` in front of the
   commands on this page.
-- Your project runs in the editor, built from a checkout of the Kanama
-  repository. The iOS build compiles your scripts from that checkout; see
-  [Install from a Source Checkout](../getting-started/source-checkout.md).
+- A Kanama project that runs in the editor, made from the macOS
+  [release kit](../getting-started/release-kit.md) or set up with the
+  [store addon](../getting-started/store-addon.md). The addon carries the
+  Kanama iOS runtime, so you need nothing else from Kanama.
+- 16 GB of memory or more. Linking the release library uses up to about
+  11 GB.
 - Godot's iOS export templates for 4.7.2, installed from **Editor > Manage
   Export Templates**.
 - An Apple Developer account, signed in under **Xcode > Settings > Accounts**.
 - An iPhone or iPad with iOS 15 or newer, Developer Mode on, connected and
   trusted.
 
-## Installing Kanama into the Project
+## Building Your Scripts for iOS
 
-Run this from the Kanama checkout:
+Run this in your project:
 
 ```sh
-cd /path/to/kanama
-./gradlew installIosAddon \
-  -PkanamaIosProjectDir=/path/to/your-project \
-  -PkanamaIosProjectScriptsDir=/path/to/your-project/kotlin-src
+cd /path/to/your-project
+./gradlew buildIosScripts
 ```
 
-It compiles the scripts in `kotlin-src/` twice: to native code for iOS, and
-into the desktop `kanama-scripts.jar` that the editor needs during the export.
-It writes the iOS libraries to `addons/kanama/bin/ios/` as two `.xcframework`
-bundles, Apple's format for a prebuilt library, one debug and one release. It
-adds their entries to `addons/kanama/kanama.gdextension` and keeps the desktop
-and Android entries already there.
+It builds your scripts for desktop first, as **Build Scripts** does, because
+the editor loads them during the export. Then it compiles the scripts in
+`kotlin-src/` to native code for iOS and links them with the Kanama runtime
+into two libraries, one debug and one release. It writes them to
+`addons/kanama/bin/ios/` as `.xcframework` bundles, Apple's format for a
+prebuilt library, and adds their entries to `addons/kanama/kanama.gdextension`,
+keeping the desktop and Android entries already there. It also turns on the
+ETC2/ASTC texture import in `project.godot`, which Godot's iOS export needs. If
+the project is open in Godot when that happens, choose **Project > Reload
+Current Project**: until you do, the editor keeps its old settings and would
+write them back over the change.
+
+The first run on a Mac downloads the Kotlin/Native compiler and its iOS
+tools, about 1 GB, into `~/.konan`, so it needs a network connection. Expect
+the first run to take around ten minutes and later runs a few: most of that
+is the release library, whose link uses up to about 11 GB of memory.
+
+It uses the Xcode that `DEVELOPER_DIR` names, or else the one
+`xcode-select -p` prints. If Xcode is not in `/Applications` and neither names it, add
+`-PkanamaXcodeDeveloperDir=/path/to/Xcode.app/Contents/Developer`.
 
 Run it again after every change to your scripts, before you export. When the
 export begins, the Kanama Tools editor plugin checks that every Kotlin script
 the exported scenes use loads in the editor; see
 [Export Guard](../getting-started/editor-workflow.md#export-guard).
 
-If Xcode is not in `/Applications`, add
-`-PkanamaXcodeDeveloperDir=/path/to/Xcode.app/Contents/Developer`.
+The two libraries are large; [Requirements and Platform
+Status](../reference/version-support.md#ios-library-size) gives their size.
+Keep `addons/kanama/bin/ios/` out of version control, or use Git LFS.
 
 ### Unsupported Types on iOS
 
@@ -52,7 +68,7 @@ The iOS build checks every export and script function ahead of time. If iOS
 cannot carry a type, such as an `RID` export, the build stops with an error
 that names the member and its type. Change that type. To build anyway and
 leave those members out on iOS, add `-PkanamaIosAllowSkips=true` to the
-`installIosAddon` command; each skipped member then prints a warning. The
+`buildIosScripts` command; each skipped member then prints a warning. The
 types iOS does not carry are in [Limitations](../reference/limitations.md#ios).
 
 ## Setting Up the Export Preset
@@ -67,6 +83,9 @@ In **Project > Export**, add an **iOS** preset and set:
   project for you to build, instead of an `.ipa`. Script errors name the file
   and line only in a debug build made this way.
 - **Architectures > arm64**: on.
+
+Godot's iOS export also needs an app icon: set **Project Settings >
+Application > Config > Icon**. A project made from the release kit has one.
 
 Save the preset before you use the command line below.
 
@@ -87,11 +106,11 @@ scenes converted while an older `kanama-scripts.jar` was installed, which
 would lose their script property values.
 
 To check that the exported scenes kept their script property values, run
-Kanama's checker in the project:
+the checker the addon carries:
 
 ```sh
 godot --headless --path /path/to/your-project \
-  --script /path/to/kanama/scripts/check_exported_scene_properties.gd \
+  --script res://addons/kanama/checks/check_exported_scene_properties.gd \
   -- --require-converted
 ```
 
@@ -150,18 +169,47 @@ Game audio plays in Ring mode, is muted by the Silent switch, and mixes with
 audio from other apps. A game that needs background or media playback sets
 its own audio session category in native iOS code after startup.
 
+## From a Source Checkout
+
+A project you build from a checkout of the Kanama repository, as
+[Install from a Source Checkout](../getting-started/source-checkout.md) sets
+up, gets its iOS libraries from the checkout instead. Run this from the
+checkout:
+
+```sh
+cd /path/to/kanama
+./gradlew installIosAddon \
+  -PkanamaIosProjectDir=/path/to/your-project \
+  -PkanamaIosProjectScriptsDir=/path/to/your-project/kotlin-src
+```
+
+It compiles the scripts in `kotlin-src/` twice, to native code for iOS and
+into the desktop `kanama-scripts.jar` the editor needs during the export, and
+installs the same two libraries and descriptor entries as `buildIosScripts`.
+Run it again after every change to your scripts. It takes
+`-PkanamaXcodeDeveloperDir` and `-PkanamaIosAllowSkips=true` as above, and
+the scene checker is in the checkout's `scripts/` folder.
+
 ## Troubleshooting
 
 | Problem | Fix |
 | --- | --- |
+| `buildIosScripts` stops with `Xcode not found`. | Install Xcode, then run `sudo xcode-select -s /Applications/Xcode.app`, or set `DEVELOPER_DIR` to its `Contents/Developer` folder. The Command Line Tools alone cannot build for iOS. |
+| `buildIosScripts` stops with `addons/kanama/maven has no Kanama iOS runtime`. | The project's addon came from a Linux or Windows kit, or the unzip was incomplete. Unzip the macOS kit or the store addon of the same Kanama version into the project again. |
+| `buildIosScripts` fails with `Java heap space` or `OutOfMemoryError`. | The project needs more than the 6 GB heap the iOS build gives Kotlin/Native. Run `./gradlew buildIosScripts -PkanamaIosHeap=10g`; the Mac needs that much free memory plus about 5 GB more for the link. |
 | Godot cannot export for iOS. | Install the iOS export templates for Godot 4.7.2. |
+| The export fails with `Cannot export project with preset "iOS" due to configuration errors`. | Godot's iOS export needs the ETC2/ASTC texture import. Run `./gradlew buildIosScripts`, which turns it on, then choose **Project > Reload Current Project** in Godot and export again. |
+| The export fails with `Export Icons: Invalid icon`. | Set an app icon in **Project Settings > Application > Config > Icon**. |
 | Xcode reports no signing team. | Set the team in the preset, or under **Signing & Capabilities** in Xcode. |
 | Xcode cannot create a provisioning profile. | Sign in to your Apple Developer account in Xcode and allow provisioning updates, or create the profile in the Apple Developer portal. |
 | The iPhone is not a valid run destination. | Connect and trust it, turn on Developer Mode, and check that `xcrun devicectl list devices` lists it. |
-| Scenes load without their script property values, such as a `PackedScene` export that is `null` in `_ready`. | The export log shows `[kanama:kt] WARNING: no Kotlin class bound for res://...`. Run `installIosAddon` with `-PkanamaIosProjectScriptsDir`, delete `.godot/exported`, and export again. |
-| The export stops with `Kanama: Export stopped:`. | A scene uses a Kotlin script that the editor cannot load. Run `installIosAddon` with `-PkanamaIosProjectScriptsDir` and export again. See [Export Guard](../getting-started/editor-workflow.md#export-guard). |
-| Godot warns about a missing iOS GDExtension library. | Run `installIosAddon` again, and check that `addons/kanama/kanama.gdextension` has `ios.debug.arm64` and `ios.release.arm64` entries. |
+| Scenes load without their script property values, such as a `PackedScene` export that is `null` in `_ready`. | The export log shows `[kanama:kt] WARNING: no Kotlin class bound for res://...`. Run `buildIosScripts` again, delete `.godot/exported`, and export again. |
+| The export stops with `Kanama: Export stopped:`. | A scene uses a Kotlin script that the editor cannot load. Run `buildIosScripts` and export again. See [Export Guard](../getting-started/editor-workflow.md#export-guard). |
+| Godot warns about a missing iOS GDExtension library. | Run `buildIosScripts` again, and check that `addons/kanama/kanama.gdextension` has `ios.debug.arm64` and `ios.release.arm64` entries. |
 | The log shows a `FAULT` line. | See [FAULT Lines in the Log](#fault-lines-in-the-log). |
+
+In a project built from a checkout, run `installIosAddon` wherever this table
+says `buildIosScripts`.
 
 ### FAULT Lines in the Log
 
@@ -175,20 +223,15 @@ returned an empty value instead:
 It is never normal in a shipped game. Read the first `FAULT` line in the log;
 later ones often follow from it. A `bind-lookup-failed` or `api-unresolved`
 line almost always means the iOS libraries were built for another Godot
-version: run `installIosAddon` again and export again. For any other reason,
+version: run `buildIosScripts` again and export again. For any other reason,
 report the line with the log. What each reason means is in
 [iOS Backend Architecture](../contributing/backends/ios.md#fault-reasons).
 
 ## On Other Platforms
 
-The iOS simulator can build and start a Kanama game, but it says nothing
-about frame rate or feel. Use a real device for that.
-
-A Kanama release also carries a prebuilt iOS addon,
-`kanama-mobile-addon-ios-v<version>.zip`, with the iOS runtime only. It cannot
-compile your scripts, so a game still uses `installIosAddon` from a checkout.
-The zip holds both device `arm64` xcframeworks, debug and release. They are large:
-roughly 168 MB debug / 110 MB release before zip. <!-- kanama-claim: ios-static-size -->
+The libraries Kanama builds are for devices only. A project built from a
+source checkout can also run in the iOS simulator, but the simulator says
+nothing about frame rate or feel. Use a real device for that.
 
 What does not work on iOS is listed in
 [Limitations](../reference/limitations.md#ios).

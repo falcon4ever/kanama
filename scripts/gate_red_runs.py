@@ -332,11 +332,8 @@ case("check_doc_claims.py", py("check_doc_claims.py"),
      [Edit("docs/contributing/platform-evidence.md", "the versions the corpus is driven on (protocol 39)", "the versions the corpus is driven on (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
 case("check_doc_claims.py (iOS size, marked doc)", py("check_doc_claims.py"),
-     [Edit("docs/exporting/ios.md", "roughly 168 MB debug", "roughly 200 MB debug")],
-     "claims 200 MB debug / 110 MB release, but", "the iOS export guide states an iOS static library size the measurement in version-support.md does not")
-case("check_doc_claims.py (iOS size, add-on README)", py("check_doc_claims.py"),
-     [Edit("build.gradle.kts", "roughly 168 MB debug / 110 MB release", "roughly 168 MB debug / 88 MB release")],
-     "build.gradle.kts", "the packaged iOS add-on README states a stale release size (it carries no marker; its size line is always checked)")
+     [Edit("docs/contributing/backends/ios.md", "roughly 168 MB debug", "roughly 200 MB debug")],
+     "claims 200 MB debug / 110 MB release, but", "the iOS backend page states an iOS static library size the measurement in version-support.md does not")
 case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
      [Create(f"{COMMON}/api/ZzRedRun.expect.kt", "package net.multigesture.kanama.api\n\nexpect fun redRun(a: Int = 1)\n")],
      "default argument(s) on an `expect` declaration", "an `expect fun` declares a default argument")
@@ -1167,7 +1164,7 @@ case("runtime_smoke.sh (API exercise setting)", ["bash", "scripts/runtime_smoke.
 # The publish guard: a flagged build must not publish, package or install. The command passes when Gradle refuses
 # a flagged `publishKanamaToMavenLocal --dry-run`; with the guard's publish clause gone, the dry run succeeds.
 API_EXERCISE_GUARD = ["bash", "-c",
-    'out="$(./gradlew -p . publishKanamaToMavenLocal packageMobileAddonIos -PkanamaApiExercise=true --dry-run 2>&1)"; '
+    'out="$(./gradlew -p . publishKanamaToMavenLocal packageDesktopKit -PkanamaApiExercise=true --dry-run 2>&1)"; '
     'if printf "%s" "$out" | grep -q "refusing to publish, package or install"; then echo "guard refused the flagged build"; exit 0; fi; '
     'printf "%s\\n" "$out" | tail -n 20; echo "API EXERCISE GUARD MISSING: a flagged build was allowed to publish"; exit 1']
 case("build.gradle.kts API exercise publish guard", API_EXERCISE_GUARD,
@@ -1392,6 +1389,38 @@ case("package_install_smoke.sh (build/.gdignore)", KIT_SMOKE,
      [Edit("templates/consumer-gradle/kanama-project.gradle.kts", '.configureEach { dependsOn(ignoreBuildDirInGodot) }', '.configureEach { }')],
      "the export carries", "the kit build stops writing build/.gdignore: a pack export then carries KSP's generated .kt registrars from build/",
      timeout=3600, requires_env="KANAMA_GODOT_BIN,ANDROID_HOME", slow=True)
+# iOS from the macOS kit alone (task 135 item 5): buildIosScripts, a headless export and an unsigned xcodebuild. The
+# seam between the prebuilt runtime klib and the project's own build is checked by buildIosScripts before Xcode sees it.
+IOS_KIT_SMOKE = ["bash", "-c", './gradlew -p . -q packageDesktopKit && '
+                 f'scripts/package_install_smoke.sh --desktop-kit --ios build/distributions/kanama-desktop-kit-*macos*.zip "{GODOT}"']
+# A Mac with Xcode (DEVELOPER_DIR names it): the Linux nightly skips these by name (--allow-skip "smoke.sh --ios").
+IOS_KIT_ENV = "KANAMA_GODOT_BIN,ANDROID_HOME,DEVELOPER_DIR"
+IOS_PLUGIN_BUILD = "gradle-plugin/src/main/resources/net/multigesture/kanama/gradle/ios/build.gradle.kts.in"
+case("package_install_smoke.sh --ios (runtime klib not exported)", IOS_KIT_SMOKE,
+     [Edit(IOS_PLUGIN_BUILD, '            export("net.multigesture.kanama:kanama-iosarm64:@KANAMA@")\n', "")],
+     "the runtime klib was not exported into it", "the iOS inner build stops exporting the runtime klib: Kotlin/Native drops its @CName entries and the shim's calls would fail Xcode's link",
+     timeout=5400, requires_env=IOS_KIT_ENV, slow=True)
+case("package_install_smoke.sh --ios (shim and runtime from different Kanamas)", IOS_KIT_SMOKE,
+     [Edit("ios/bootstrap/kanama_ios_shim.c", "    g_kanama_ios_initialized = 1;\n    return 1;\n}",
+           "    g_kanama_ios_initialized = 1;\n    kanama_ios_runtime_red_run();\n    return 1;\n}"),
+      Edit("ios/bootstrap/kanama_ios_shim.c", "extern void kanama_ios_runtime_initialize(int32_t level);\n",
+           "extern void kanama_ios_runtime_initialize(int32_t level);\nextern void kanama_ios_runtime_red_run(void);\n")],
+     "lacks 1 Kanama entry the shim calls (kanama_ios_runtime_red_run)", "the kit's shim calls a runtime entry its runtime klib does not define (a shim and a klib of different versions)",
+     timeout=5400, requires_env=IOS_KIT_ENV, slow=True)
+IOS_KIT_SMOKE_NO_SCRIPTS = ["bash", "-c", './gradlew -p . -q packageDesktopKit && '
+                            'scripts/package_install_smoke.sh --desktop-kit --ios-without-scripts '
+                            f'build/distributions/kanama-desktop-kit-*macos*.zip "{GODOT}"']
+case("package_install_smoke.sh --ios-without-scripts (no default registry)", IOS_KIT_SMOKE_NO_SCRIPTS,
+     [Edit("ios/bootstrap/kanama_ios_shim.c",
+           '__attribute__((weak, visibility("default"))) void kanama_ios_project_scripts_register(void) {\n'
+           '    fprintf(stderr, "[kanama][ios][c] this build has no project scripts\\n");\n}\n',
+           "extern void kanama_ios_project_scripts_register(void) __attribute__((weak_import));\n")],
+     "_kanama_ios_project_scripts_register", "the shim only references the script registry weakly again, with no default: Xcode's link of a project without scripts fails on the undefined symbol",
+     timeout=5400, requires_env=IOS_KIT_ENV, slow=True)
+case("package_install_smoke.sh --ios (kit without the iOS runtime)", IOS_KIT_SMOKE,
+     [Edit("build.gradle.kts", 'if (packagePlatformClassifier.get().startsWith("macos")) dependsOn("publishKanamaIosPackage")', "")],
+     "addons/kanama/maven has no Kanama iOS runtime (kanama-iosarm64", "the macOS kit stops carrying the iOS runtime: buildIosScripts must say which zip to unzip again",
+     timeout=5400, requires_env=IOS_KIT_ENV, slow=True)
 
 case("web/scaffold_selftest.sh", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_budgets.py" "$RESULT"; then', 'if false; then')],

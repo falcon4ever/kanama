@@ -28,8 +28,7 @@ docstring on first CI contact -- the claim auditor auditing the claim auditor's
 documentation, and behaving exactly as designed.)
 
 Kinds: `protocol` (the Web bridge protocol, from WebScriptCodeEmitter) and `ios-static-size` (the iOS static
-library sizes measured in version-support.md's "iOS Library Size" section; the packaged iOS add-on README's size line in
-build.gradle.kts is checked without a marker).
+library sizes measured in version-support.md's "iOS Library Size" section).
 
 Adding a claim kind: give it an extractor here and mark the doc line. The check fails
 if a marked line's stated value disagrees with the source, and it fails just as loudly
@@ -64,12 +63,10 @@ def _current_protocol(root: Path) -> int:
 
 
 # The iOS static library sizes are measured once, in version-support.md (the command is in platform-evidence.md); every
-# other statement of them repeats those numbers, rounded to whole MB: marked doc lines, and the size line of the
-# packaged iOS add-on README that build.gradle.kts writes (a shipped file cannot carry the marker).
+# marked doc line that states them repeats those numbers, rounded to whole MB.
 IOS_SIZE_SOURCE = Path("docs/reference/version-support.md")
 IOS_SIZE_SOURCE_RE = re.compile(r"~(\d+(?:\.\d+)?) MB debug / ~(\d+(?:\.\d+)?) MB release static `\.a`, measured")
 IOS_SIZE_RE = re.compile(r"(\d+(?:\.\d+)?) MB debug / ~?(\d+(?:\.\d+)?) MB release")
-IOS_SIZE_UNMARKED_FILES = (Path("build.gradle.kts"),)
 
 
 def _ios_sizes(root: Path) -> tuple[int, int]:
@@ -117,14 +114,6 @@ def main() -> int:
     ios_sizes = _ios_sizes(root)
     checked = 0
     failures: list[str] = []
-
-    for rel in IOS_SIZE_UNMARKED_FILES:
-        size_lines = [(n, l) for n, l in enumerate((root / rel).read_text().splitlines(), start=1) if "MB debug" in l]
-        if not size_lines:
-            failures.append(f"{rel}: no iOS size line ('MB debug') found; the README text moved and this check would silently pass")
-        for number, line in size_lines:
-            checked += 1
-            _check_ios_size(f"{rel}:{number}", line, ios_sizes, failures)
 
     for path in docs:
         for number, line in enumerate(path.read_text().splitlines(), start=1):

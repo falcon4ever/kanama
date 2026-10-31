@@ -1,0 +1,5 @@
+// Written by the Kanama Gradle plugin (buildIosScripts) on every run. Do not edit.
+//
+// A source of this build's own, so a project with no Kotlin script still links its iOS libraries:
+// with kotlin-src empty, Kotlin/Native would skip the compile and both links as having no source.
+package net.multigesture.kanama.ios.kit

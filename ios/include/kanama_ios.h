@@ -30,6 +30,14 @@ extern "C" {
  */
 int32_t kanama_ios_fault_count(void);
 
+/*
+ * Registers the project's @ScriptClass scripts with the Kotlin runtime, by calling the
+ * `kanama_ios_project_scripts_register` function Kanama's processor generates for them. A build
+ * with no scripts has none, and the shim's weak default of it only logs that. The runtime calls
+ * it once, before it first looks a script up.
+ */
+void kanama_ios_load_project_scripts(void);
+
 const char *kanama_ios_last_fault(void);
 
 /*

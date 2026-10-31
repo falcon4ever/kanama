@@ -37,7 +37,7 @@ gradlePlugin {
       id = "net.multigesture.kanama"
       implementationClass = "net.multigesture.kanama.gradle.KanamaPlugin"
       displayName = "Kanama"
-      description = "Builds a Kanama project's Kotlin scripts for Android export."
+      description = "Builds a Kanama project's Kotlin scripts for Android and iOS export."
     }
   }
 }
@@ -105,6 +105,7 @@ val generateKanamaVersions by
           "ANDROID_COROUTINES" to pin("android.properties", """^kanamaAndroidCoroutinesVersion=(\S+)"""),
           "ANDROID_COMPILE_SDK" to pin("android scripts", """^\s*compileSdk = (\d+)"""),
           "ANDROID_MIN_SDK" to pin("android scripts", """^\s*minSdk = (\d+)"""),
+          "IOS_MIN_VERSION" to pin("build.gradle.kts", """gradleProperty\("kanamaIosMinVersion"\)\.orElse\("([^"]+)"\)"""),
         )
       val file = out.get().file("net/multigesture/kanama/gradle/KanamaVersions.kt").asFile
       file.parentFile.mkdirs()

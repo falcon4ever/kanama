@@ -47,6 +47,7 @@ import net.multigesture.kanama.binding.runtime.VariantTypeNames
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_string_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_set_first_node_in_group_text
+import net.multigesture.kanama.ios.cinterop.kanama_ios_load_project_scripts
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
@@ -74,132 +75,6 @@ import net.multigesture.kanama.types.basisFromRows
  * the probe in every build and the self-test files are compiled only on request (task 138 item 24).
  */
 internal class ScopeProbeScript(handle: GodotHandle) : KanamaScript<Node>(handle, ::Node)
-
-internal data class KanamaIosScriptMethod(val name: String, val argumentCount: Int = 0)
-
-internal data class KanamaIosScriptProperty(
-  val name: String,
-  // Godot Variant::Type, so the script instance can advertise this @Export to the
-  // engine (get_property_list) — required for scene-stored values to be applied. Default 0
-  // (NIL) keeps older generated registrars compiling.
-  val variantType: Int = 0,
-  val hint: Int = 0,
-  val hintString: String = "",
-  val usage: Int = 6,
-  // PropertyInfo.class_name when the generator knows it (task 128 B: a Godot-enum property names
-  // its enum, `Node.ProcessMode`). Empty falls back to the object-property rule below.
-  val className: String = "",
-  // The @Export's default (task 138 item 8): its initializer literal, in the form getProperty
-  // returns, when the generator could read one (desktop's registrar has the same literal);
-  // [KanamaIosNoProperty] when not. Script._get_property_default_value answers it.
-  val defaultValue: Any? = KanamaIosNoProperty,
-)
-
-internal data class KanamaIosScriptSignal(val name: String)
-
-internal data class KanamaIosRpcConfig(
-  val methodName: String,
-  val mode: Int,
-  val callLocal: Boolean,
-  val transferMode: Int,
-  val channel: Int,
-)
-
-internal data class KanamaIosScriptDescriptor(
-  val path: String,
-  val baseType: String,
-  val methods: List<KanamaIosScriptMethod>,
-  val properties: List<KanamaIosScriptProperty>,
-  val signals: List<KanamaIosScriptSignal>,
-  val rpcConfigs: List<KanamaIosRpcConfig> = emptyList(),
-  val factory: (Long) -> KanamaIosScriptBridge?,
-)
-
-/**
- * Sentinel returned by [KanamaIosScriptBridge.callVReturning] when the method is not a
- * value-returning one handled by this bridge (so the void [KanamaIosScriptBridge.callV] path runs).
- */
-object KanamaIosNoReturn
-
-/**
- * Sentinel for a property index the generated bridge does not expose through ScriptInstance.get.
- */
-object KanamaIosNoProperty
-
-/**
- * A typed `Map<K, V>` @Export read back by the generated bridge's getProperty: its [entries] keep
- * their int, enum (already ordinals) and value-type keys, so they leave as the any-key Dictionary
- * (KANAMA_IOS_PT_DICTIONARY_ANY) instead of the generic String-keyed one — the iOS twin of
- * desktop's `BuiltinTypes.initVariantDictionaryAny`.
- */
-class KanamaIosTypedDictionary(val entries: Map<*, *>)
-
-internal interface KanamaIosScriptBridge {
-  // Generic per-signature inbound dispatch (Phase 3.3): [args] are the already-decoded Kotlin
-  // values (one per method param, in order); the generated branch casts/wraps each to its
-  // declared type and invokes the script method.
-  fun callV(methodName: String, args: List<Any?>): Boolean = false
-
-  // Phase 5.3b: value-returning methods/virtuals. Returns the typed result (Bool/Long/Double/
-  // Vector2/Vector2i) for the engine return slot, or [KanamaIosNoReturn] if this method has no
-  // marshalled return (the void [callV] path then handles it).
-  fun callVReturning(methodName: String, args: List<Any?>): Any? = KanamaIosNoReturn
-
-  fun setProperty(propertyIndex: Int, value: Long): Boolean = false
-
-  fun getProperty(propertyIndex: Int): Any? = KanamaIosNoProperty
-
-  fun setPropertyString(propertyIndex: Int, value: String): Boolean = false
-
-  fun setPropertyObjectArray(propertyIndex: Int, values: LongArray): Boolean = false
-
-  // Integer Array @Export delivery. Kept separate from object arrays so malformed
-  // scene data can never turn an integer cell into a bogus object handle. The generated
-  // List<Enum> bridge converts these ordinals to enum entries with desktop-identical clamping.
-  fun setPropertyIntArray(propertyIndex: Int, values: LongArray): Boolean = false
-
-  // `List<String>` (Godot PackedStringArray) @Export delivery. The C side extracts the
-  // packed array's elements to utf8 C strings and hands them here; the generated
-  // setPropertyStringArray branch assigns the list to the field. See the C
-  // PACKED_STRING_ARRAY set-property dispatch case + the emitter's string-list block.
-  fun setPropertyStringArray(propertyIndex: Int, values: List<String>): Boolean = false
-
-  // Value-type @Export delivery (NodePath/Vector2/Vector3/Color). [value] is the
-  // already-decoded Kotlin value; the generated branch casts it to the field's type. See
-  // the C set-property value path + setScriptInstancePropertyValue's tag decode.
-  fun setPropertyValue(propertyIndex: Int, value: Any): Boolean = false
-
-  // Map @Export delivery (a typed `Map<K, V>` or `Map<String, Any?>`): [entries] is the Dictionary
-  // with its keys and values decoded as they are (desktop: readVariantDictionaryAny); the generated
-  // branch converts them to the field's key and value types and drops what does not fit.
-  fun setPropertyDictionary(propertyIndex: Int, entries: Map<Any?, Any?>): Boolean = false
-
-  // For a Map property whose values are Resources: the values the field holds after the set (the
-  // converted Map, so an entry dropped for its key or class is not kept), on which the runtime
-  // takes one reference each ([KanamaIosRuntime.retainScriptInstancePropertyObjects]), as desktop's
-  // retained Dictionary read does; null for any other property.
-  fun dictionaryRetainedValues(propertyIndex: Int): Collection<Any?>? = null
-
-  val scriptInstance: Any?
-    get() = null
-}
-
-internal object KanamaIosProjectRegistry {
-  private val descriptors = linkedMapOf<String, KanamaIosScriptDescriptor>()
-
-  fun register(descriptor: KanamaIosScriptDescriptor) {
-    descriptors[descriptor.path] = descriptor
-  }
-
-  fun descriptor(path: String): KanamaIosScriptDescriptor? = descriptors[path]
-}
-
-// Registers every @ScriptClass found in the project's iOS scripts. The body is generated by the
-// shared KSP processor (:processor) into each native leaf source set as the `actual` — see
-// IosScriptCodeEmitter. KanamaIosRuntime (shared iosMain) calls it through this `expect` because
-// it cannot reference the per-target generated declaration directly. The processor always emits
-// an actual (empty when the project has no @ScriptClass), so the expect is always satisfied.
-internal expect fun registerKanamaIosProjectScripts()
 
 internal object KanamaIosRuntime {
   private const val PROBE_GROUP = "kanama_ios_probe"
@@ -230,7 +105,7 @@ internal object KanamaIosRuntime {
   private var probeLabelUpdated = false
   // Set once the probe label has had PROBE_LABEL_GIVE_UP_FRAME frames to appear and did not.
   private var probeLabelGivenUp = false
-  private var projectRegistryLoaded = false
+  private var projectScriptsLoaded = false
   private var nextHandle = 1L
   private var labelSetTextBind = 0L
   private val scriptResources = linkedMapOf<Long, IosScriptResource>()
@@ -760,8 +635,7 @@ internal object KanamaIosRuntime {
     log("freed script instance handle=$handle")
   }
 
-  @PublishedApi
-  internal fun scriptInstanceForOwner(ownerObject: Long): Any? {
+  fun scriptInstanceForOwner(ownerObject: Long): Any? {
     val instanceHandle = ownerObjectToInstance[ownerObject] ?: return null
     val instance = scriptInstances[instanceHandle] ?: return null
     return instance.bridge.scriptInstance
@@ -781,18 +655,18 @@ internal object KanamaIosRuntime {
   }
 
   private fun descriptorForPath(path: String): KanamaIosScriptDescriptor? {
-    ensureProjectRegistryLoaded()
+    loadProjectScripts()
     return KanamaIosProjectRegistry.descriptor(path)
       ?: builtInProbeDescriptor(path)
       ?: dictionaryProbeDescriptor(path)
   }
 
-  private fun ensureProjectRegistryLoaded() {
-    if (projectRegistryLoaded) {
-      return
-    }
-    registerKanamaIosProjectScripts()
-    projectRegistryLoaded = true
+  /** Once, through the shim: it calls the generated registry function if the build has one. */
+  @OptIn(ExperimentalForeignApi::class)
+  private fun loadProjectScripts() {
+    if (projectScriptsLoaded) return
+    projectScriptsLoaded = true
+    kanama_ios_load_project_scripts()
   }
 
   private fun builtInProbeDescriptor(path: String): KanamaIosScriptDescriptor? {
@@ -3076,10 +2950,6 @@ fun kanamaIosRuntimeScriptInstanceRetainPropertyObjects(
 fun kanamaIosRuntimeScriptInstanceFree(instanceHandle: Long) {
   KanamaIosRuntime.freeScriptInstance(instanceHandle)
 }
-
-@PublishedApi
-internal fun iosScriptInstanceForOwner(ownerObject: Long): Any? =
-  KanamaIosRuntime.scriptInstanceForOwner(ownerObject)
 
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_refcount_incremented")

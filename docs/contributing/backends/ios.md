@@ -80,6 +80,85 @@ ios.debug.arm64 = "res://addons/kanama/bin/ios/kanama_ios.debug.xcframework"
 ios.release.arm64 = "res://addons/kanama/bin/ios/kanama_ios.release.xcframework"
 ```
 
+## The Kit Path
+
+A project made from the macOS kit or the store addon has no checkout to build
+from. Its `build.gradle.kts` applies the Kanama Gradle plugin
+(`net.multigesture.kanama`, `gradle-plugin/`), and its `addons/kanama/maven`
+carries, beside the plugin and the processor, the runtime's `iosArm64` klib
+(`kanama-iosarm64`, with the `kanama_ios` cinterop klib) and
+`kanama-ios-shim`, a zip of `ios/bootstrap/*.c`, `ios/include/` and
+`gdextension/gdextension_interface.h`. Both are published by
+`publishKanamaIosPackage` from the same packaging run as everything else in
+that repository, so they share its version. The plugin's `buildIosScripts` is
+`installIosAddon` without the checkout:
+
+1. It depends on the project's `buildScripts`, so the desktop
+   `kanama-scripts.jar` the editor needs during the export is current.
+2. It finds Xcode (`-PkanamaXcodeDeveloperDir`, `DEVELOPER_DIR`,
+   `xcode-select -p`, then `/Applications/Xcode.app`; never the Command Line
+   Tools) and writes a plugin-owned Gradle build to `build/kanama/ios/` (the
+   resources under `gradle-plugin/src/main/resources/.../ios/`, rewritten on
+   every run): one `iosArm64` target with `kotlin-src` as its source root
+   (plus one empty file of its own, so a project without scripts still links),
+   KSP from the kit's processor with the checkout's options, the klib as an
+   `api` dependency, and a static library that `export()`s it. Kotlin/Native
+   keeps a dependency klib's `@CName` functions, the `kanama_ios_runtime_*`
+   entries the shim calls, only in a binary that exports that klib. Its
+   settings allow `addons/kanama/maven` alone to serve `net.multigesture`
+   artifacts, and no `mavenLocal()`.
+3. It runs that build with the project's `gradlew` (`linkDebugStaticIosArm64`
+   and `linkReleaseStaticIosArm64`), compiles the shim and the source-line
+   lookup with `xcrun clang` for each, generates the debug source-line table
+   (`IosSourceLines`), and combines and wraps each library into a device
+   xcframework with `libtool` and `xcodebuild -create-xcframework`, as the
+   checkout's `combineIos*Lib` and `createIosDevice*Xcframework` tasks do.
+4. Before it installs anything, it checks with `nm` that each library defines
+   every `kanama_ios_*` symbol the compiled shim references, and the generated
+   register function when the project has scripts. A library without the
+   exported runtime, or a shim and klib of different Kanama versions, stops
+   there with one line instead of at Xcode's link.
+5. It installs the two xcframeworks under `addons/kanama/bin/ios/` and the iOS
+   descriptor lines (`KanamaIosAddonFiles`, `gradle-plugin/src/shared`, which
+   the root `buildSrc` compiles too, so `installIosAddon` writes the same
+   lines), and turns on `rendering/textures/vram_compression/import_etc2_astc`
+   in `project.godot`, which Godot's iOS export requires as its Android export
+   does.
+
+The seam that makes the separate compile possible: the generated registry is
+a `@CName("kanama_ios_project_scripts_register")` function
+(`IosScriptCodeEmitter.registrySource`), not an `actual` of a runtime
+`expect`, which cannot cross a module. The runtime calls it once, before its
+first script lookup, through the shim's `kanama_ios_load_project_scripts`. A
+build without scripts, such as the klib the kit carries, defines no register
+function, so the shim carries a weak default of it that only logs. The linker
+keeps the strong Kotlin definition because it sits in the same object as every
+`kanama_ios_runtime_*` entry the shim calls (`buildIosScripts` checks that); a
+`weak_import` reference instead would leave the symbol undefined at Xcode's
+link of a build without scripts. The runtime declarations that
+generated code names live in `src/iosMain/.../ios/KanamaIosScriptSeam.kt`,
+public behind the ERROR-level `@InternalKanamaIosApi` opt-in (the generated
+file opts in; the runtime's own iOS source sets opt in module-wide), and
+`api-snapshots/ios-seam.txt` records them. Publishing the klib from a build
+that compiles a project's scripts or the self-tests into it fails.
+
+The inner build's daemon heap is 6 GB (`BuildIosScripts.INNER_HEAP_GB`,
+`-PkanamaIosHeap` for a larger project), passed as `-Dorg.gradle.jvmargs` on
+the inner `gradlew` command line so an `org.gradle.jvmargs` in the user's
+`~/.gradle/gradle.properties` cannot shrink it. Once its links are up to date
+and the shim zip is unchanged, `buildIosScripts` reuses the xcframeworks it
+made, and copies them only when the installed ones came from other inputs.
+Measured on an M1 Max, the release link runs out of a 2 GB heap and links in
+3 GB, and its process peaks at 9 to 11 GB with LLVM's native memory, which is
+why the user page asks for a 16 GB Mac. The checkout's own libraries measure
+roughly 168 MB debug / 110 MB release; a kit project's debug library is about 195 MB. <!-- kanama-claim: ios-static-size -->
+
+`scripts/package_install_smoke.sh --ios` runs the documented commands from an
+unzipped macOS kit or store addon with a fresh `GRADLE_USER_HOME`: then a
+headless Godot export of an Xcode project and `xcodebuild -sdk iphoneos
+CODE_SIGNING_ALLOWED=NO`, and it checks that the app defines the shim's entry,
+the runtime's and the register function. `package.yml` runs it on macOS.
+
 ## Export-Time Script Binding
 
 `-PkanamaIosProjectScriptsDir` registers the scripts for **both** targets: the
@@ -658,8 +737,9 @@ frame is only `kfun:<symbol> + <offset>` (task 131 item 13; before it the self-t
 
 The offset of a return address inside its function is fixed when the static library is built --
 linking moves a function, never its body -- so the debug device build maps it ahead of time.
-`generateIosDeviceDebugSourceLines` (`build.gradle.kts`; the logic and its tests are
-`buildSrc/.../IosSourceLines.kt`) reads the debug runtime library's own object (`nm` for the
+`generateIosDeviceDebugSourceLines` (`build.gradle.kts`; the logic is
+`gradle-plugin/src/shared/.../IosSourceLines.kt`, which the kit's `buildIosScripts` runs too, and its
+tests are in `buildSrc`) reads the debug runtime library's own object (`nm` for the
 function starts, `dwarfdump --debug-line` for the rows, `atos -i` for rows inside inlined code) and
 writes a table of the functions with code from the project's script dirs and from the self-test
 probe `KanamaIosScriptErrorProbe.kt`: symbol and size, then rows of (offset from the function's

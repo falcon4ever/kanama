@@ -282,13 +282,14 @@ paragraph on [API Conventions](../reference/wrapper-conventions.md).
 `scripts/check_public_signature_changes.py` (a `local_ci.sh` stage) enforces
 the policy: it compares the public surface with checked-in snapshots in the
 repository's `api-snapshots/` directory, one line per declaration, one file per
-surface (every source directory is read recursively):
+surface (every source directory is read recursively; a source can also be one file):
 
 | Snapshot | Sources | What |
 |---|---|---|
 | `common.txt` | `src/commonMain/.../api` | the shared native tree: generated classes, `GlobalEnums.kt`, the hand roots `GodotObject`, `RefCounted`, `GodotCallable`, `GodotHandle`, the `expect` declarations |
 | `types.txt` | `src/commonMain/.../types` | the builtin value types (`Vector3`, `Color`, `Basis`, ...) |
 | `jvm.txt`, `ios.txt` | `src/jvmMain/.../api`, `src/iosMain/.../api` | what each native platform declares on its own: the per-platform classes, the `<Class>.jvm.kt` / `<Class>.ios.kt` companions, the `actual`s, and on desktop the name constants (`GD` and `Mathf` are common) |
+| `ios-seam.txt` | `src/iosMain/.../ios/KanamaIosScriptSeam.kt` | the runtime declarations the generated iOS script registry calls. They are public behind the `@InternalKanamaIosApi` opt-in only because a kit project compiles that registry in its own build against the prebuilt runtime klib (see [iOS Backend Architecture](backends/ios.md#the-kit-path)); game code never names them, so a removed or changed line there needs only `--write`, no CHANGELOG marker (the surface is `internal`) |
 | `web.txt` | `web-runtime/.../api` | the Web wrappers, generated and hand-written |
 | `web-types.txt` | `web-runtime/.../types` | the Web value types |
 | `annotations.txt` | `annotations/.../annotations` | the script annotations and their parameters (`@ScriptClass`, `@Export`, `@Rpc`, ...) |

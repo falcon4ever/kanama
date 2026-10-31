@@ -44,7 +44,6 @@ script. Most games use `@ScriptClass` only, as in
 
 | What does not work | Why | What to do instead |
 |---|---|---|
-| Exporting needs a checkout of the Kanama repository; a project made from the release kit or the store addon cannot export to iOS on its own. | The iOS build compiles your scripts to native code from the checkout. The prebuilt iOS addon in a release carries the runtime only. | Install Kanama from a [source checkout](../getting-started/source-checkout.md) and run `installIosAddon` from it, as [Export for iOS](../exporting/ios.md) shows. |
 | Hot reload and the IntelliJ debugger do not work on an iPhone or iPad. | iOS runs your scripts as native code, with no Java runtime to reload or attach to. | Iterate and debug on desktop, then export. |
 | A Godot call that cannot reach the engine returns an empty value and logs a `FAULT` line, instead of throwing. | On iOS, Kanama's native layer reports a failed call in the log and goes on, so one failure does not stop the game. | Treat every `FAULT` line as a bug; [FAULT Lines in the Log](../exporting/ios.md#fault-lines-in-the-log) says what to do. |
 | An `Any?` parameter of an `@OverrideVirtual` function, an engine method you override, fails the call with a script error naming the type when Godot passes it an `Array`, `Dictionary` or packed array. | iOS does not convert those Godot values to Kotlin when they arrive as `Any?`. | Keep container values in exported `List` or `Map` properties, which iOS carries. |

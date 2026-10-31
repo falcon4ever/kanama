@@ -169,7 +169,8 @@ Android, iOS and Web each have an internals page under `docs/contributing/backen
 ([Android](docs/contributing/backends/android.md), [iOS](docs/contributing/backends/ios.md),
 [Web](docs/contributing/backends/web.md)); the support status of each platform is on
 [Requirements and Platform Status](docs/reference/version-support.md). Android 13 (API 33) is the
-minimum for every Android build, and the packaged mobile addons are runtime-only. Never widen a
+minimum for every Android build, and the mobile runtimes ship inside the kits and the store addon (the iOS
+one in the macOS kit and the store addon only). Never widen a
 support claim past what the matching device or browser runs validated
 ([Release Process](docs/contributing/release.md#support-levels)).
 

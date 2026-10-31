@@ -354,6 +354,9 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
     // what lets its metadata compilation be disabled by name below.
     val iosMain by creating {
       dependsOn(commonMain)
+      // The runtime is the module that declares the seam its generated script registry calls
+      // (InternalKanamaIosApi): it and, in a checkout, the scripts compiled into it use it freely.
+      languageSettings.optIn("net.multigesture.kanama.ios.InternalKanamaIosApi")
       if (!kanamaIosSelfTest.get()) kotlin.exclude(iosSelfTestSources)
       // The API exercise rows ride with the iOS self-tests (ApiExerciseSelfTest.kt runs them).
       if (kanamaIosSelfTest.get() && !kanamaApiExercise.get()) kotlin.srcDir(apiExerciseDir)
@@ -362,6 +365,7 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
     for (name in listOf("iosArm64Main", "iosSimulatorArm64Main")) {
       named(name) {
         dependsOn(iosMain)
+        languageSettings.optIn("net.multigesture.kanama.ios.InternalKanamaIosApi")
         iosScriptDirs(configuredIosScriptDirs.orNull).forEach { kotlin.srcDir(file(it)) }
       }
     }
@@ -413,20 +417,21 @@ tasks
   }
   .configureEach { dependsOn(generateKanamaReal) }
 
-// WHAT KANAMA PUBLISHES: one Maven module, `net.multigesture.kanama:kanama`, carrying the JVM
-// variant -- the same coordinate and the same single module this project published before it became
-// multiplatform.
+// WHAT KANAMA PUBLISHES: `net.multigesture.kanama:kanama`, the JVM variant -- the same coordinate and
+// the same single module this project published before it became multiplatform -- and, into the
+// package repository of a macOS kit and the store addon only, the iOS device klib
+// `kanama-iosarm64` (task 135 item 5: a kit project's `buildIosScripts` compiles its scripts against
+// it).
 //
-// The JVM target's publication takes that artifactId and the KMP ROOT publication is disabled,
-// because the root module's Gradle metadata is a map of every target: it would advertise
-// `iosArm64`/`iosSimulatorArm64` variants with `available-at` pointers to `kanama-iosarm64` and
-// `kanama-iossimulatorarm64` modules, and those must not exist -- the iOS deliverable is a static
-// xcframework built by the `ios` tasks below, never a Maven artifact, and publishing klibs would
-// mean compiling Kotlin/Native on every `publishToMavenLocal`. A consumer resolving `kanama` for a
-// JVM project therefore gets the jar directly, with no indirection that can dangle; a consumer
-// asking for an iOS variant gets Gradle's ordinary "no matching variant" instead of a 404 on a
-// module Kanama never writes. (KGP has no per-target publication switch in 2.4.21:
-// `KotlinTarget.publishable` is a read-only `val`.)
+// The JVM target's publication takes the `kanama` artifactId and the KMP ROOT publication is
+// disabled, because the root module's Gradle metadata is a map of every target: it would advertise
+// `iosArm64`/`iosSimulatorArm64` variants with `available-at` pointers to per-target modules. A
+// consumer resolving `kanama` for a JVM project therefore gets the jar directly, with no indirection
+// that can dangle. Every iOS publication but `kanama-iosarm64` into the package repository stays
+// disabled: nothing publishes klibs to Maven local, so `publishToMavenLocal` never compiles
+// Kotlin/Native, and the simulator klib is not shipped. A kit project names `kanama-iosarm64`
+// directly. (KGP has no per-target publication switch in 2.4.21: `KotlinTarget.publishable` is a
+// read-only `val`.)
 configure<PublishingExtension> {
   publications.withType<MavenPublication>().configureEach {
     if (name == "jvm") {
@@ -436,11 +441,32 @@ configure<PublishingExtension> {
   addKanamaPackageRepository()
 }
 
+val kanamaIosKlibPublishTask = "publishIosArm64PublicationToKanamaPackageRepository"
 tasks
   .matching {
-    it.name.startsWith("publishIos") || it.name.contains("KotlinMultiplatformPublication")
+    (it.name.startsWith("publishIos") && it.name != kanamaIosKlibPublishTask) ||
+      it.name.contains("KotlinMultiplatformPublication")
   }
   .configureEach { enabled = false }
+
+// The klib a kit carries is the runtime alone: a build that compiles a project's scripts or the
+// self-tests into it must not publish it (the scripts' registry would then be defined twice, once in
+// the klib and once in the kit project's own build).
+tasks
+  .matching { it.name == kanamaIosKlibPublishTask }
+  .configureEach {
+    val scriptDirs = iosScriptDirs(configuredIosScriptDirs.orNull)
+    val selfTest = kanamaIosSelfTest.get()
+    doFirst {
+      if (scriptDirs.isNotEmpty() || selfTest) {
+        throw GradleException(
+          "The kanama-iosarm64 klib is published without a project: drop " +
+            (if (selfTest) "-PkanamaIosSelfTest=true" else "the kanama*ProjectScriptsDir(s) property") +
+            " from this build."
+        )
+      }
+    }
+  }
 
 dependencies {
   add("kspJvm", project(":processor"))
@@ -668,31 +694,9 @@ val buildNativeBootstrap by
 fun File.enableAndroidKanamaGdextensionMetadata() =
   net.multigesture.kanama.gradle.KanamaAndroidPluginFiles.enableAndroidGdextensionMetadata(this)
 
-fun File.enableIosKanamaGdextensionMetadata() {
-  val requiredLibraryLines =
-    listOf(
-      "ios.debug.arm64 = \"res://addons/kanama/bin/ios/kanama_ios.debug.xcframework\"",
-      "ios.release.arm64 = \"res://addons/kanama/bin/ios/kanama_ios.release.xcframework\"",
-    )
-  val lines = readLines().toMutableList()
-  val missingLibraryLines = requiredLibraryLines.filter { it !in lines }
-  if (missingLibraryLines.isNotEmpty()) {
-    val librariesIndex =
-      lines.indexOf("[libraries]").takeIf { it >= 0 }
-        ?: run {
-          if (lines.lastOrNull()?.isNotBlank() == true) {
-            lines.add("")
-          }
-          lines.add("[libraries]")
-          lines.lastIndex
-        }
-    val insertIndex =
-      lines.withIndex().drop(librariesIndex + 1).firstOrNull { it.value.startsWith("[") }?.index
-        ?: lines.size
-    lines.addAll(insertIndex, missingLibraryLines)
-  }
-  writeText(lines.joinToString(System.lineSeparator()) + System.lineSeparator())
-}
+// The iOS descriptor lines: one copy, shared with the Kanama Gradle plugin.
+fun File.enableIosKanamaGdextensionMetadata() =
+  net.multigesture.kanama.gradle.KanamaIosAddonFiles.enableIosGdextensionMetadata(this)
 
 tasks.named<Jar>("jvmJar") {
   archiveFileName.set("kanama.jar")
@@ -1027,9 +1031,11 @@ val generateKanamaVersionFile by
 // Each adds its own README.md: the kit's speaks of downloaded zips, the starter's of the checkout.
 val kanamaGradleProjectSpec = copySpec {
   from(layout.projectDirectory.dir("templates/release-kit")) {
-    exclude("README.md")
+    exclude("README.md", "icon.png")
     filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
   }
+  // The app icon (iOS exports stop without one), copied as is: the version filter is for text.
+  from(layout.projectDirectory.file("templates/release-kit/icon.png"))
   from(layout.projectDirectory.file("templates/starter/HelloScript.kt")) { into("kotlin-src") }
   from(layout.projectDirectory.dir("templates/starter/addons/kanama_tools")) {
     into("addons/kanama_tools")
@@ -1056,6 +1062,8 @@ tasks.register<Zip>("packageDesktopKit") {
     generatePackageExtensionList,
     verifyNativeBootstrapArtifact,
   )
+  // The macOS kit carries the iOS runtime too: iOS is exported from a Mac.
+  if (packagePlatformClassifier.get().startsWith("macos")) dependsOn("publishKanamaIosPackage")
   archiveFileName.set(
     packagePlatformClassifier.map { "kanama-desktop-kit-v${project.version}-$it.zip" }
   )
@@ -1091,6 +1099,14 @@ tasks.register<Zip>("packageStoreAddon") {
     publishKanamaAndroidPackage,
     generatePackageGdextensionDescriptor,
   )
+  // The iOS runtime: built here on a Mac, or taken from -PkanamaIosPackageDir (package.yml builds the
+  // store addon on Linux from the macOS kit job's trees).
+  if (
+    System.getProperty("os.name").lowercase().contains("mac") ||
+      providers.gradleProperty("kanamaIosPackageDir").isPresent
+  ) {
+    dependsOn("publishKanamaIosPackage")
+  }
   val nativeArtifactsDir =
     providers.gradleProperty("kanamaStoreNativeArtifactsDir").map { file(it) }
   if (nativeArtifactsDir.isPresent) {
@@ -1147,7 +1163,7 @@ tasks.register<Zip>("packageStoreAddon") {
   }
   from(layout.projectDirectory.dir("templates/release-kit")) {
     into("addons/kanama/templates/release-kit")
-    exclude("project.godot", "main.tscn")
+    exclude("project.godot", "main.tscn", "icon.png")
     filter { line: String -> line.replace("@KANAMA_VERSION@", project.version.toString()) }
   }
   from(layout.projectDirectory.file("templates/starter/HelloScript.kt")) {
@@ -1965,7 +1981,8 @@ fun registerCombineIosLibTask(
 // build maps those to Kotlin lines ahead of time from the debug runtime library's DWARF, for the
 // game's own functions (its script dirs) and the self-test probe; the table is static data in the
 // addon library (ios/bootstrap/kanama_ios_source_lines.c). The generator is
-// buildSrc/.../IosSourceLines.kt, with its tests. Release builds compile the lookup without a
+// gradle-plugin/src/shared/.../IosSourceLines.kt (one copy, shared with the Kanama Gradle plugin's
+// buildIosScripts), with its tests in buildSrc. Release builds compile the lookup without a
 // table.
 val iosSourceLinesSource = layout.projectDirectory.file("ios/bootstrap/kanama_ios_source_lines.c")
 /** The source-line table of a debug [target] library, in `source-lines/<sdk>/debug`. */
@@ -2524,77 +2541,75 @@ tasks.register("installAndroidPluginAar") {
   }
 }
 
-// --- Packaged mobile add-on, iOS (task 25 B3; design + exit criteria in the
-// release-support decision record §7, task 15 in the task repo). Maintainer-built on macOS
-// (needs Xcode), so it does not join packageDistributions or the CI package
-// workflow. Validate with scripts/package_install_smoke.sh --ios-addon.
+// --- The iOS runtime in the package repository (task 135 item 5). The macOS kit and the store addon
+// carry net.multigesture.kanama:kanama-iosarm64 (the device klib, with its cinterop klib) and
+// net.multigesture.kanama:kanama-ios-shim (a zip of the C shim and the headers the iOS library is
+// linked with). A kit project's `buildIosScripts` (the Kanama Gradle plugin) compiles the project's
+// scripts against the klib, compiles the shim and builds the two device xcframeworks, so an iOS export
+// needs no Kanama checkout. Kotlin/Native builds iOS code on a Mac only, so the Linux and Windows kits
+// carry neither; -PkanamaIosPackageDir=<dir> takes both Maven trees from another build instead
+// (package.yml builds them in the macOS kit job and hands them to the store addon job).
+val kanamaIosPackageDir = providers.gradleProperty("kanamaIosPackageDir")
+val kanamaIosPackagePaths =
+  listOf("net/multigesture/kanama/kanama-iosarm64", "net/multigesture/kanama/kanama-ios-shim")
 
-val mobileAddonIosExtrasDir = layout.buildDirectory.dir("generated/mobile-addon/ios")
-val prepareMobileAddonIosExtras by
-  tasks.registering {
-    outputs.dir(mobileAddonIosExtrasDir)
-    doLast {
-      val dir = mobileAddonIosExtrasDir.get().asFile
-      dir.mkdirs()
-      dir
-        .resolve("kanama.gdextension-ios-entries.txt")
-        .writeText(
-          """
-            |# Merge into [libraries] of addons/kanama/kanama.gdextension
-            |# (README step 3). Do not replace the whole descriptor.
-            |ios.debug.arm64 = "res://addons/kanama/bin/ios/kanama_ios.debug.xcframework"
-            |ios.release.arm64 = "res://addons/kanama/bin/ios/kanama_ios.release.xcframework"
-            |"""
-            .trimMargin()
-        )
-      dir
-        .resolve("README.md")
-        .writeText(
-          """
-            |# Kanama iOS add-on (experimental, prebuilt runtime)
-            |
-            |Prebuilt Kanama iOS runtime xcframeworks (device arm64 slices,
-            |debug + release; the static libraries are large —
-            |roughly 168 MB debug / 110 MB release before zip) for an existing
-            |Kanama Godot project.
-            |
-            |**Honest caveat:** this delivers the *runtime* only. Compiling your
-            |project's Kotlin scripts for iOS still requires a Kanama source
-            |checkout today (`installIosAddon` runs the Kotlin/Native + KSP
-            |build). Use this artifact to update the prebuilt runtime or for
-            |script-less evaluation; see docs/exporting/ios.md.
-            |
-            |1. Unzip at your Godot project root (adds addons/kanama/bin/ios/*).
-            |2. The project must already carry the desktop Kanama addon with
-            |   matching version ${project.version}.
-            |3. Merge kanama.gdextension-ios-entries.txt into
-            |   addons/kanama/kanama.gdextension.
-            |4. Export with the Godot ${godotVersion.get()} iOS templates.
-            |"""
-            .trimMargin()
-        )
+val kanamaIosShimZip by
+  tasks.registering(Zip::class) {
+    group = "publishing"
+    description = "Zip the Kanama iOS C shim and its headers for the package repository."
+    archiveFileName.set("kanama-ios-shim-${project.version}.zip")
+    destinationDirectory.set(layout.buildDirectory.dir("ios-shim"))
+    isPreserveFileTimestamps = false
+    isReproducibleFileOrder = true
+    from(iosShimSource) { into("bootstrap") }
+    from(iosSourceLinesSource) { into("bootstrap") }
+    from(iosHeaderDir) { into("include") }
+    from(layout.projectDirectory.file("gdextension/gdextension_interface.h")) {
+      into("gdextension")
+    }
+    from(layout.projectDirectory.file("LICENSE"))
+  }
+
+configure<PublishingExtension> {
+  publications {
+    create<MavenPublication>("kanamaIosShim") {
+      artifactId = "kanama-ios-shim"
+      artifact(kanamaIosShimZip)
     }
   }
-
-tasks.register<Zip>("packageMobileAddonIos") {
-  group = "distribution"
-  description =
-    "Zip the experimental iOS device xcframeworks (debug+release) + install notes; maintainer-built on macOS, see release-support-decision §7 B3."
-  dependsOn(tasks.named("assembleIosDeviceKanamaXcframework"), prepareMobileAddonIosExtras)
-  archiveFileName.set("kanama-mobile-addon-ios-v${project.version}.zip")
-  destinationDirectory.set(layout.buildDirectory.dir("distributions"))
-  isPreserveFileTimestamps = false
-  isReproducibleFileOrder = true
-  from(iosBuildDir.map { it.dir("xcframework-device/debug/kanama_ios.debug.xcframework") }) {
-    into("addons/kanama/bin/ios/kanama_ios.debug.xcframework")
-  }
-  from(iosBuildDir.map { it.dir("xcframework-device/release/kanama_ios.release.xcframework") }) {
-    into("addons/kanama/bin/ios/kanama_ios.release.xcframework")
-  }
-  from(mobileAddonIosExtrasDir.map { it.file("kanama.gdextension-ios-entries.txt") })
-  from(mobileAddonIosExtrasDir.map { it.file("README.md") })
-  from(layout.projectDirectory.file("LICENSE"))
 }
+
+val publishKanamaIosPackage by
+  tasks.registering {
+    group = "publishing"
+    description =
+      "Put the Kanama iOS runtime (kanama-iosarm64 and kanama-ios-shim) into the package-local Maven repository."
+    mustRunAfter(cleanKanamaPackageMavenRepository)
+    if (!kanamaIosPackageDir.isPresent) {
+      dependsOn(kanamaIosKlibPublishTask, "publishKanamaIosShimPublicationToKanamaPackageRepository")
+    }
+    val repository = packageMavenRepositoryDir
+    val version = project.version.toString()
+    val sourceDir = kanamaIosPackageDir.map { file(it) }
+    doLast {
+      for (path in kanamaIosPackagePaths) {
+        val target = repository.get().asFile.resolve(path)
+        if (sourceDir.isPresent) {
+          val source = sourceDir.get().resolve(path)
+          if (!source.resolve(version).isDirectory) {
+            throw GradleException("-PkanamaIosPackageDir=${sourceDir.get()} has no $path/$version")
+          }
+          copy {
+            from(source)
+            into(target)
+          }
+        }
+        val name = path.substringAfterLast('/')
+        val main = target.resolve("$version/$name-$version.${if (name.endsWith("shim")) "zip" else "klib"}")
+        if (!main.isFile) throw GradleException("$name was not published: ${main.absolutePath}")
+      }
+    }
+  }
 
 // --- The Android runtime AAR in the package repository (task 135 item 5). Kits and the store addon
 // carry it as net.multigesture.kanama:kanama-android in addons/kanama/maven; a kit project's
