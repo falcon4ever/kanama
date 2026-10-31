@@ -432,7 +432,8 @@ abstract class BuildIosScripts : DefaultTask() {
     val scriptRoot = if (scriptsPath.startsWith(projectPath)) projectPath else scriptsPath
     val values =
       mapOf(
-        "KANAMA_MAVEN" to kotlinString(project.resolve("addons/kanama/maven").absoluteFile.toURI().toString()),
+        "KANAMA_MAVEN" to
+          kotlinString(project.resolve("addons/kanama/maven").absoluteFile.toURI().toString()),
         "INNER_PROJECT" to INNER_PROJECT,
         "KANAMA" to KanamaVersions.KANAMA,
         "KOTLIN" to KanamaVersions.KOTLIN,

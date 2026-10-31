@@ -382,7 +382,8 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       ?.let { File(projectDir, it.removePrefix("res://")) }
       ?.takeIf { it.isFile }
 
-  private fun scriptResourcePath(file: KSFile): String = scriptResourcePath(file.filePath, scriptRoots)
+  private fun scriptResourcePath(file: KSFile): String =
+    scriptResourcePath(file.filePath, scriptRoots)
 
   private fun buildScriptClassTypeMap(
     scriptSymbols: List<KSClassDeclaration>
@@ -2544,11 +2545,13 @@ internal fun scriptResourcePath(filePath: String, scriptRoots: List<String>): St
   val root = scriptRootOf(filePath, scriptRoots)
   if (root != null) {
     val rel = norm.removePrefix("$root/")
-    return if (root.substringAfterLast('/') == "kotlin-src") "res://kotlin-src/$rel" else "res://$rel"
+    return if (root.substringAfterLast('/') == "kotlin-src") "res://kotlin-src/$rel"
+    else "res://$rel"
   }
   // Fallback when roots are not provided: anchor at a kotlin-src segment if present.
   val idx = norm.indexOf("/kotlin-src/")
-  return if (idx >= 0) "res://" + norm.substring(idx + 1) else "res://" + norm.substringAfterLast('/')
+  return if (idx >= 0) "res://" + norm.substring(idx + 1)
+  else "res://" + norm.substringAfterLast('/')
 }
 
 /**
@@ -2557,7 +2560,11 @@ internal fun scriptResourcePath(filePath: String, scriptRoots: List<String>): St
  * compiles a merged copy of kotlin-src under the project's `build/`, whose path in the project is
  * not the script's `res://` path.
  */
-internal fun projectResourcePath(filePath: String, projectDir: File, scriptRoots: List<String>): String {
+internal fun projectResourcePath(
+  filePath: String,
+  projectDir: File,
+  scriptRoots: List<String>,
+): String {
   if (scriptRootOf(filePath, scriptRoots) != null) return scriptResourcePath(filePath, scriptRoots)
   val canonical = runCatching { File(filePath).canonicalFile }.getOrNull()
   val root = projectDir.path + File.separator

@@ -11,7 +11,8 @@ import kotlin.test.assertEquals
  * Kotlin-script autoload would be typed Node on the Web only.
  */
 class ProjectResourcePathTest {
-  private val project = File(System.getProperty("java.io.tmpdir"), "kanama-res-path-test").canonicalFile
+  private val project =
+    File(System.getProperty("java.io.tmpdir"), "kanama-res-path-test").canonicalFile
 
   private fun path(vararg parts: String) =
     parts.fold(project) { dir, part -> dir.resolve(part) }.path

@@ -253,9 +253,9 @@ object KanamaWebExport {
   const val DEFAULT_SCRIPTS_PATH = "kotlin-src"
 
   /**
-   * [scripts]' path in [projectDir] (`/`-separated), the folder the Web export compiles and
-   * leaves out of the staged copy; it must be a folder inside the project, since a scene attaches
-   * a script by its `res://` path.
+   * [scripts]' path in [projectDir] (`/`-separated), the folder the Web export compiles and leaves
+   * out of the staged copy; it must be a folder inside the project, since a scene attaches a script
+   * by its `res://` path.
    */
   fun scriptsPathIn(projectDir: File, scripts: File): String {
     val project = projectDir.canonicalFile
@@ -342,7 +342,8 @@ object KanamaWebExport {
   fun stageProject(inputs: StageInputs): StageResult {
     val project = inputs.projectDir
     val staging = inputs.stagingDir
-    // Every Kotlin attachment of the project: `res://kotlin-src/...kt`, or its own scripts folder's.
+    // Every Kotlin attachment of the project: `res://kotlin-src/...kt`, or its own scripts
+    // folder's.
     val scripts = "res://${inputs.scriptsPath}/"
     val checksumBefore = projectChecksum(project)
     staging.deleteRecursively()
@@ -353,7 +354,8 @@ object KanamaWebExport {
         path.isEmpty() || !stagedExcluded(path, inputs.scriptsPath)
       }
       .filter {
-        it.isFile && !stagedExcluded(it.relativeTo(project).invariantSeparatorsPath, inputs.scriptsPath)
+        it.isFile &&
+          !stagedExcluded(it.relativeTo(project).invariantSeparatorsPath, inputs.scriptsPath)
       }
       .forEach { it.copyTo(staging.resolve(it.relativeTo(project).path), overwrite = true) }
     inputs.preset.copyTo(staging.resolve(PRESET), overwrite = true)
@@ -390,7 +392,8 @@ object KanamaWebExport {
         .map { it.groupValues[1] }
         .filter { it.startsWith(scripts) }
         .toSet()
-    if (compiled.isEmpty()) fail("$project/${inputs.scriptsPath} has no @ScriptClass script to export")
+    if (compiled.isEmpty())
+      fail("$project/${inputs.scriptsPath} has no @ScriptClass script to export")
     val missingSources =
       compiled.filter { !inputs.mergedSources.resolve(it.removePrefix(scripts)).isFile }
     if (missingSources.isNotEmpty()) {

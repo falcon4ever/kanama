@@ -133,7 +133,8 @@ abstract class BuildAndroidScripts : DefaultTask() {
   private fun writeInnerBuild(inner: File, project: File) {
     val values =
       mapOf(
-        "KANAMA_MAVEN" to kotlinString(project.resolve("addons/kanama/maven").absoluteFile.toURI().toString()),
+        "KANAMA_MAVEN" to
+          kotlinString(project.resolve("addons/kanama/maven").absoluteFile.toURI().toString()),
         "INNER_PROJECT" to INNER_PROJECT,
         "KANAMA" to KanamaVersions.KANAMA,
         "ANDROID_GRADLE_PLUGIN" to KanamaVersions.ANDROID_GRADLE_PLUGIN,
