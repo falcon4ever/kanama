@@ -2853,6 +2853,11 @@ tasks.configureEach {
         if (webDemoKey == "project") dependsOn(checkWebProject) else mustRunAfter(checkWebProject)
     }
 }
+// The runtime klib this executable links compiles in other projects (:kanama-web, :kanama-common-api,
+// the processor KSP runs): every compile in the build waits for the check too, when both are asked for.
+rootProject.allprojects.filter { it != project }.forEach { other ->
+    other.tasks.configureEach { if (name.startsWith("compile")) mustRunAfter(checkWebProject) }
+}
 
 tasks.register("stageWebProject") {
     group = "kanama-web"
