@@ -3839,6 +3839,12 @@
   globalThis.bootstrapKanamaWeb = async (apiPromise) => {
     const api = await apiPromise;
     // One line each, naming what to do: the page shows it, and the smokes read it.
+    if (!api) {
+      throw new Error(
+        "Kanama Web: the Kotlin/Wasm module did not load (kanama-web-spike.js defines no web-runtime). " +
+          "Export again with exportWeb.",
+      );
+    }
     const startProblem = api.kanamaWebStartProblem?.();
     if (startProblem) throw new Error(startProblem);
     const protocolVersion = api.kanamaWebProtocolVersion();

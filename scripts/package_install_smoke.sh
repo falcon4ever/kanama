@@ -854,7 +854,7 @@ if [[ "$web_export" -eq 1 ]]; then
 import json
 import sys
 
-checks = json.load(open(sys.argv[1])).get("checks", {})
+checks = json.load(open(sys.argv[1])).get("assertions", {}).get("checks", {})
 if checks.get("greetReturnsString") is not True or checks.get("helloScriptReady") is not True:
     print(f"[package_install_smoke] the starter's checks: {checks}", file=sys.stderr)
     sys.exit(1)

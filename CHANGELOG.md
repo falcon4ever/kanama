@@ -169,8 +169,8 @@ A project made from a release kit or the store addon now exports for the Web wit
 runtime as klibs in `addons/kanama/maven` (`kanama-web` and the `wasmJs` klib of `kanama-common-api`)
 and the bridge, page shell and Web preset in `addons/kanama/web/`. The task compiles `kotlin-src` against
 the runtime in its own build under `build/kanama/web` and exports a staged copy of the project with Godot,
-which it finds as the checkout's `exportWeb` does. The first export downloads Node.js, Yarn and webpack's
-packages, so it needs a network connection (`-PkanamaWebHeap=6g` gives a large project's compile more
+which it finds as the checkout's `exportWeb` does. The first export downloads Node.js, Yarn and Binaryen
+(about 70 MB), so it needs a network connection (`-PkanamaWebHeap=6g` gives a large project's compile more
 heap). The Kanama Tools **Platforms** menu runs `exportWeb` and `buildIosScripts` in a kit project. In
 a checkout, the Web runtime now compiles as its own module (`:kanama-web`) that `:web-runtime` links like
 a kit project does; the generated Web registry implements the runtime's `KanamaWebProjectScripts`, and

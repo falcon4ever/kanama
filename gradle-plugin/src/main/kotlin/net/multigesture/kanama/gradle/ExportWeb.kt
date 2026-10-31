@@ -214,19 +214,23 @@ abstract class ExportWeb : DefaultTask() {
    * build is not mistaken for a hang.
    */
   private fun stateFirstBuildCosts() {
-    logger.lifecycle(
-      "[kanama] The first Web build downloads Node.js, Yarn and webpack's packages (about " +
-        "$FIRST_DOWNLOAD_MB MB, into Gradle's cache and build/kanama/web) and needs a network " +
-        "connection. The Kotlin/Wasm link uses up to about $LINK_MEMORY_GB GB of memory."
-    )
+    val gradleHome =
+      System.getenv("GRADLE_USER_HOME")?.takeIf { it.isNotBlank() }?.let(::File)
+        ?: File(System.getProperty("user.home"), ".gradle")
+    if (!gradleHome.resolve("nodejs").isDirectory) {
+      logger.lifecycle(
+        "[kanama] First Web build with this Gradle: it downloads Node.js, Yarn and Binaryen " +
+          "(about $FIRST_DOWNLOAD_MB MB, into $gradleHome) and needs a network connection."
+      )
+    }
     val memoryGb =
       (ManagementFactory.getOperatingSystemMXBean() as? com.sun.management.OperatingSystemMXBean)
         ?.totalMemorySize
         ?.div(1L shl 30)
     if (memoryGb != null && memoryGb < RECOMMENDED_MEMORY_GB) {
       logger.warn(
-        "[kanama] This computer has $memoryGb GB of memory; $RECOMMENDED_MEMORY_GB GB or more is " +
-          "recommended for the Web build."
+        "[kanama] This computer has $memoryGb GB of memory; the Web build's compiler can use up " +
+          "to $INNER_HEAP of it, and $RECOMMENDED_MEMORY_GB GB or more is recommended."
       )
     }
   }
@@ -266,7 +270,8 @@ abstract class ExportWeb : DefaultTask() {
 
   internal companion object {
     const val WEB_DIR = "addons/kanama/web"
-    const val INNER_PROJECT = "kanama-web-scripts"
+    // The bundle's global name, which the Kanama Web shell starts (globalThis["web-runtime"]).
+    const val INNER_PROJECT = "web-runtime"
     const val PROXIES =
       "build/generated/ksp/wasmJs/wasmJsMain/resources/net/multigesture/kanama/web/generated/proxies"
     const val DISTRIBUTION = "build/dist/wasmJs/productionExecutable"
@@ -277,9 +282,10 @@ abstract class ExportWeb : DefaultTask() {
         "gradle.properties.in" to "gradle.properties",
       )
     // The inner build's Gradle heap, in which the Kotlin/Wasm compile and link run (in-process).
+    // Measured on an M1 Max (Kotlin 2.4.21, the starter): the inner daemon peaks near 1.3 GB.
     const val INNER_HEAP = "3g"
-    const val LINK_MEMORY_GB = 4
     const val RECOMMENDED_MEMORY_GB = 8
-    const val FIRST_DOWNLOAD_MB = 100
+    // Node.js 54 MB, Binaryen 7 MB, Yarn 1 MB (Kotlin 2.4.21's packages, measured).
+    const val FIRST_DOWNLOAD_MB = 70
   }
 }

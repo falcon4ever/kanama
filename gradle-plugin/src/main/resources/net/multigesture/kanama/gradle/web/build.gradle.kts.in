@@ -4,16 +4,15 @@
 // Kotlin/Wasm with the script registry, the GDScript proxies and the main() KSP generates from it,
 // linked against the prebuilt Kanama Web runtime klib from addons/kanama/maven into the webpack
 // bundle the exported page loads.
+@file:OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+
 plugins {
     kotlin("multiplatform") version "@KOTLIN@"
     id("com.google.devtools.ksp") version "@KSP@"
 }
 
 kotlin {
-    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs {
-        // The Kanama Web shell starts the bundle by this name (globalThis["web-runtime"]).
-        outputModuleName.set("web-runtime")
         browser {
             commonWebpackConfig {
                 // The name the Kanama Web shell loads.

@@ -59,4 +59,6 @@ dependencyResolutionManagement {
     }
 }
 
+// The module's name is the bundle's: the Kanama Web shell starts it as globalThis["web-runtime"], as in
+// a checkout's export.
 rootProject.name = "@INNER_PROJECT@"
