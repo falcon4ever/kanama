@@ -128,9 +128,17 @@ object KanamaWebExport {
    * project's `kotlin-src`) with [overrides] (`web/kotlin-src`, when present) copied over it, so a
    * file present in both resolves to the Web copy. [excludesFile] (`web/kotlin-src-excludes.txt`)
    * lists `kotlin-src`-relative paths that stay desktop-only, one per line. The result is
-   * `[out]/kotlin-src`, so the processor derives the same `res://kotlin-src/...` paths.
+   * `[out]/[scriptsPath]` ([scriptsPath] is the scripts folder's path in the project, `kotlin-src`
+   * unless `kanamaProjectScriptsDir` names another), so the processor derives the scripts' own
+   * `res://kotlin-src/...` paths.
    */
-  fun mergeScripts(shared: File, overrides: File?, excludesFile: File?, out: File) {
+  fun mergeScripts(
+    shared: File,
+    overrides: File?,
+    excludesFile: File?,
+    out: File,
+    scriptsPath: String = DEFAULT_SCRIPTS_PATH,
+  ) {
     val overrideActive = overrides?.isDirectory == true
     val excludes =
       if (excludesFile?.isFile == true) {
@@ -142,7 +150,7 @@ object KanamaWebExport {
       } else emptyList()
     for (entry in excludes) {
       if (!shared.resolve(entry).isFile) {
-        fail("kotlin-src-excludes.txt lists '$entry' but kotlin-src/$entry does not exist")
+        fail("kotlin-src-excludes.txt lists '$entry' but $scriptsPath/$entry does not exist")
       }
       if (overrideActive && overrides!!.resolve(entry).isFile) {
         fail(
@@ -152,7 +160,7 @@ object KanamaWebExport {
       }
     }
     out.deleteRecursively()
-    val target = out.resolve("kotlin-src")
+    val target = out.resolve(scriptsPath)
     copyKotlinSources(shared, target) { it !in excludes }
     if (overrideActive) copyKotlinSources(overrides!!, target) { true }
     if (target.walkTopDown().none { it.isFile && it.extension == "kt" }) {
@@ -231,12 +239,36 @@ object KanamaWebExport {
       "export_presets.cfg",
     )
 
-  private fun stagedExcluded(path: String): Boolean {
+  private fun stagedExcluded(path: String, scriptsPath: String): Boolean {
     val top = path.substringBefore('/')
     return top in stageExcludedTopLevel ||
       ('/' !in path && path.endsWith(".iml")) ||
       path == "addons/kanama" ||
-      path.startsWith("addons/kanama/")
+      path.startsWith("addons/kanama/") ||
+      path == scriptsPath ||
+      path.startsWith("$scriptsPath/")
+  }
+
+  /** The scripts folder's path in a project, unless `kanamaProjectScriptsDir` names another. */
+  const val DEFAULT_SCRIPTS_PATH = "kotlin-src"
+
+  /**
+   * [scripts]' path in [projectDir] (`/`-separated), the folder the Web export compiles and
+   * leaves out of the staged copy; it must be a folder inside the project, since a scene attaches
+   * a script by its `res://` path.
+   */
+  fun scriptsPathIn(projectDir: File, scripts: File): String {
+    val project = projectDir.canonicalFile
+    val folder = scripts.canonicalFile
+    val path = folder.relativeToOrNull(project)?.invariantSeparatorsPath
+    if (path == null || path.isEmpty() || path.startsWith("..")) {
+      fail(
+        "The Web export compiles the scripts of a folder inside the project, and $folder is " +
+          (if (path?.isEmpty() == true) "the project itself" else "not in $project") +
+          ": set kanamaProjectScriptsDir to that folder (kotlin-src by default)"
+      )
+    }
+    return path
   }
 
   /**
@@ -291,6 +323,8 @@ object KanamaWebExport {
     val proxies: File,
     /** The merged `kotlin-src` the Kotlin/Wasm build compiled ([mergeScripts]). */
     val mergedSources: File,
+    /** The scripts folder's path in the project ([scriptsPathIn]); left out of the staged copy. */
+    val scriptsPath: String = DEFAULT_SCRIPTS_PATH,
     /** More files for the staged `kanama-web/` (the checkout's coverage report). */
     val extraFiles: List<File> = emptyList(),
   )
@@ -308,15 +342,19 @@ object KanamaWebExport {
   fun stageProject(inputs: StageInputs): StageResult {
     val project = inputs.projectDir
     val staging = inputs.stagingDir
+    // Every Kotlin attachment of the project: `res://kotlin-src/...kt`, or its own scripts folder's.
+    val scripts = "res://${inputs.scriptsPath}/"
     val checksumBefore = projectChecksum(project)
     staging.deleteRecursively()
     project
       .walkTopDown()
       .onEnter { dir ->
         val path = dir.relativeTo(project).invariantSeparatorsPath
-        path.isEmpty() || !stagedExcluded(path)
+        path.isEmpty() || !stagedExcluded(path, inputs.scriptsPath)
       }
-      .filter { it.isFile && !stagedExcluded(it.relativeTo(project).invariantSeparatorsPath) }
+      .filter {
+        it.isFile && !stagedExcluded(it.relativeTo(project).invariantSeparatorsPath, inputs.scriptsPath)
+      }
       .forEach { it.copyTo(staging.resolve(it.relativeTo(project).path), overwrite = true) }
     inputs.preset.copyTo(staging.resolve(PRESET), overwrite = true)
     val kanamaWeb = staging.resolve("kanama-web")
@@ -343,22 +381,22 @@ object KanamaWebExport {
           if (columns.size != 3) fail("Invalid Web proxy manifest row: $line")
           columns[0] to columns[1]
         }
-        .filter { (sourcePath, _) -> sourcePath.startsWith("res://kotlin-src/") }
+        .filter { (sourcePath, _) -> sourcePath.startsWith(scripts) }
         .toMap()
     val protocol = inputs.proxies.resolve(PROTOCOL_JSON)
     val compiled =
       Regex("\"resourcePath\"\\s*:\\s*\"([^\"]*)\"")
         .findAll(protocol.readText())
         .map { it.groupValues[1] }
-        .filter { it.startsWith("res://kotlin-src/") }
+        .filter { it.startsWith(scripts) }
         .toSet()
-    if (compiled.isEmpty()) fail("$project/kotlin-src has no @ScriptClass script to export")
+    if (compiled.isEmpty()) fail("$project/${inputs.scriptsPath} has no @ScriptClass script to export")
     val missingSources =
-      compiled.filter { !inputs.mergedSources.resolve(it.removePrefix("res://kotlin-src/")).isFile }
+      compiled.filter { !inputs.mergedSources.resolve(it.removePrefix(scripts)).isFile }
     if (missingSources.isNotEmpty()) {
       fail(
         "Stale Web proxies: the generated protocol lists ${missingSources.sorted()}, which " +
-          "kotlin-src no longer has. Run the same command again with --rerun-tasks added"
+          "${inputs.scriptsPath} no longer has. Run the same command again with --rerun-tasks added"
       )
     }
     if (compiled != mappings.keys) {
@@ -390,7 +428,7 @@ object KanamaWebExport {
           }
         rewritten = rewritten.replace(attachmentUid, "$1 $2")
         if (rewritten != original) staged.writeText(rewritten)
-        if (rewritten.contains("res://kotlin-src/")) {
+        if (rewritten.contains(scripts)) {
           fail("Unmapped Kotlin attachment remains in staged file: $staged")
         }
       }

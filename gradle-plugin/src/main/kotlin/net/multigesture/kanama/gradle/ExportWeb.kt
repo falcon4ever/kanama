@@ -15,7 +15,8 @@ import org.gradle.process.ExecOperations
 /**
  * `./gradlew exportWeb`: what `:web-runtime:exportWeb -PkanamaWebProjectDir` does in a Kanama
  * checkout, from the addon alone.
- * 1. `kotlin-src` (with `web/kotlin-src` over it, the checkout's merge) is compiled for Kotlin/Wasm
+ * 1. `kotlin-src` (or the folder `-PkanamaProjectScriptsDir` names, as for Android and iOS; with
+ *    `web/kotlin-src` over it, the checkout's merge) is compiled for Kotlin/Wasm
  *    by the inner build (`build/kanama/web`, rewritten on every run, run with the project's own
  *    `gradlew`): KSP generates the script registry, its `main()` and the GDScript proxies, and the
  *    scripts link against the prebuilt runtime klib `kanama-web` from `addons/kanama/maven` into
@@ -29,6 +30,8 @@ import org.gradle.process.ExecOperations
  */
 abstract class ExportWeb : DefaultTask() {
   @get:Internal abstract val projectDirectory: DirectoryProperty
+  /** `kotlin-src`, or the folder `-PkanamaProjectScriptsDir` names: it must be in the project. */
+  @get:Internal abstract val scriptsDirectory: DirectoryProperty
   @get:Internal abstract val innerBuildDirectory: DirectoryProperty
   @get:Internal abstract val exportDirectory: DirectoryProperty
   /** `-PkanamaGodotExecutable`, when set. */
@@ -77,12 +80,14 @@ abstract class ExportWeb : DefaultTask() {
           "checkout instead."
       )
     }
-    val scripts = project.resolve("kotlin-src")
+    val scripts = scriptsDirectory.get().asFile
     if (!scripts.isDirectory) {
       throw GradleException(
-        "No kotlin-src/ folder in $project: the Web export compiles the project's Kotlin scripts from there."
+        "No ${scripts.relativeTo(project).invariantSeparatorsPath}/ folder in $project: the Web " +
+          "export compiles the project's Kotlin scripts from there."
       )
     }
+    val scriptsPath = web { KanamaWebExport.scriptsPathIn(project, scripts) }
     web { KanamaWebExport.mainSceneProblem(project) }?.let { throw GradleException(it) }
     val godot = web {
       KanamaWebExport.findGodot(godotExecutable.orNull, System.getenv("KANAMA_GODOT_BIN"))
@@ -106,6 +111,7 @@ abstract class ExportWeb : DefaultTask() {
         project.resolve("web/kotlin-src"),
         project.resolve("web/kotlin-src-excludes.txt"),
         merged,
+        scriptsPath,
       )
     }
     writeInnerBuild(inner, project, merged, heapSize)
@@ -161,7 +167,8 @@ abstract class ExportWeb : DefaultTask() {
           preset = web.resolve(KanamaWebExport.PRESET),
           assets = listOf(bridge, web.resolve(KanamaWebExport.SHELL)),
           proxies = proxies,
-          mergedSources = merged.resolve("kotlin-src"),
+          mergedSources = merged.resolve(scriptsPath),
+          scriptsPath = scriptsPath,
         )
       )
     }
@@ -238,7 +245,7 @@ abstract class ExportWeb : DefaultTask() {
   private fun writeInnerBuild(inner: File, project: File, merged: File, heapSize: String) {
     val values =
       mapOf(
-        "KANAMA_MAVEN" to project.resolve("addons/kanama/maven").absoluteFile.toURI().toString(),
+        "KANAMA_MAVEN" to kotlinString(project.resolve("addons/kanama/maven").absoluteFile.toURI().toString()),
         "INNER_PROJECT" to INNER_PROJECT,
         "KANAMA" to KanamaVersions.KANAMA,
         "KOTLIN" to KanamaVersions.KOTLIN,
@@ -258,10 +265,6 @@ abstract class ExportWeb : DefaultTask() {
       if (!file.isFile || file.readText() != written) file.writeText(written)
     }
   }
-
-  /** [text] as the inside of a Kotlin string literal of the inner build script. */
-  private fun kotlinString(text: String): String =
-    text.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$")
 
   private fun innerJvmArgs(heapSize: String) =
     "-Xmx$heapSize -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8"

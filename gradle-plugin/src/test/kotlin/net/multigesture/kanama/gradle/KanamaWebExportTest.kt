@@ -166,6 +166,56 @@ class KanamaWebExportTest {
   }
 
   @Test
+  fun `another scripts folder is merged, left out and attached by its own res path`() {
+    val (root, fixture) = stageFixture()
+    val project = fixture.projectDir
+    project.resolve("kotlin-src").deleteRecursively()
+    project.write("game/scripts/Hello.kt", "class Hello")
+    project.write(
+      "main.tscn",
+      "[ext_resource type=\"Script\" path=\"res://game/scripts/Hello.kt\" id=\"1\"]\n",
+    )
+    val scriptsPath = KanamaWebExport.scriptsPathIn(project, project.resolve("game/scripts"))
+    assertEquals("game/scripts", scriptsPath)
+    val out = root.resolve("merged-game")
+    KanamaWebExport.mergeScripts(project.resolve("game/scripts"), null, null, out, scriptsPath)
+    assertTrue(out.resolve("game/scripts/Hello.kt").isFile)
+    for (file in listOf(KanamaWebExport.PROXY_MANIFEST, KanamaWebExport.PROTOCOL_JSON)) {
+      val generated = fixture.proxies.resolve(file)
+      generated.writeText(generated.readText().replace("res://kotlin-src/", "res://game/scripts/"))
+    }
+    val inputs =
+      KanamaWebExport.StageInputs(
+        projectDir = project,
+        stagingDir = fixture.stagingDir,
+        preset = fixture.preset,
+        assets = fixture.assets,
+        proxies = fixture.proxies,
+        mergedSources = out.resolve(scriptsPath),
+        scriptsPath = scriptsPath,
+      )
+    assertEquals(1, KanamaWebExport.stageProject(inputs).scriptCount)
+    assertFalse(inputs.stagingDir.resolve("game/scripts/Hello.kt").exists())
+    assertEquals(
+      "[ext_resource type=\"Script\" path=\"res://kanama-web/generated/Hello.gd\" id=\"1\"]\n",
+      inputs.stagingDir.resolve("main.tscn").readText(),
+    )
+  }
+
+  @Test
+  fun `a scripts folder outside the project, or the project itself, fails`() {
+    val root = tempDir()
+    val project = root.resolve("project").apply { mkdirs() }
+    for (folder in listOf(root.resolve("elsewhere"), project)) {
+      val error =
+        assertFailsWith<KanamaWebExport.KanamaWebExportException> {
+          KanamaWebExport.scriptsPathIn(project, folder)
+        }
+      assertTrue("kanamaProjectScriptsDir" in error.message.orEmpty(), error.message)
+    }
+  }
+
+  @Test
   fun `the protocol of the bridge and of the generated descriptor are read`() {
     val (_, inputs) = stageFixture()
     assertEquals(39, KanamaWebExport.bridgeProtocolVersion(inputs.assets.first()))

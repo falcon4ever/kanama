@@ -59,10 +59,15 @@ class KanamaPlugin : Plugin<Project> {
       task.group = "kanama"
       task.description =
         "Compile kotlin-src for the Web and export the project with Godot into build/web-export."
-      // The editor's export guard and the scenes' script properties read the desktop scripts jar
-      // during Godot's export, as for every other platform.
-      task.dependsOn("buildScripts")
+      // No buildScripts: Godot exports a staged copy without addons/kanama and kotlin-src, its scenes
+      // attached to the generated GDScript proxies, so nothing in that export loads the desktop
+      // scripts jar (the export guard finds no .kt script, and the proxies declare the properties).
       task.projectDirectory.set(project.layout.projectDirectory)
+      task.scriptsDirectory.set(
+        project.layout.projectDirectory.dir(
+          project.providers.gradleProperty("kanamaProjectScriptsDir").orElse("kotlin-src")
+        )
+      )
       task.innerBuildDirectory.set(project.layout.buildDirectory.dir("kanama/web"))
       task.exportDirectory.set(project.layout.buildDirectory.dir("web-export"))
       task.godotExecutable.set(
