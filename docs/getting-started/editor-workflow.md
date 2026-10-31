@@ -91,8 +91,14 @@ and the light turns red.
 ### Platform Builds
 
 **Platforms** builds your scripts for another platform's export. In a project
-made from a release kit or the store addon, it has **Android**, which runs
-`./gradlew buildAndroidScripts`; see [Export for Android](../exporting/android.md).
+made from a release kit or the store addon, it runs the project's own tasks:
+
+- **Android** runs `./gradlew buildAndroidScripts`; see
+  [Export for Android](../exporting/android.md).
+- **iOS**, on macOS, runs `./gradlew buildIosScripts`; see
+  [Export for iOS](../exporting/ios.md).
+- **Web** runs `./gradlew exportWeb`, which also exports the game into
+  `build/web-export/`; see [Export for the Web](../exporting/web.md).
 
 In a project set up from a Kanama checkout, it runs the commands the export
 pages give, in that checkout:

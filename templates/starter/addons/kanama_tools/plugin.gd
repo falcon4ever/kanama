@@ -88,7 +88,7 @@ const PLATFORM_BUILDS := [
     {
         "id": "ios",
         "label": "iOS",
-        "project_task": "",
+        "project_task": "buildIosScripts",
         "checkout_tasks": [
             ["installIosAddon", "-PkanamaIosProjectDir={project}", "-PkanamaIosProjectScriptsDir={scripts}"],
         ],
@@ -98,7 +98,7 @@ const PLATFORM_BUILDS := [
     {
         "id": "web",
         "label": "Web",
-        "project_task": "",
+        "project_task": "exportWeb",
         "checkout_tasks": [
             [":web-runtime:exportWeb", "-PkanamaWebProjectDir={project}"],
         ],

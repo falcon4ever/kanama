@@ -3838,10 +3838,15 @@
 
   globalThis.bootstrapKanamaWeb = async (apiPromise) => {
     const api = await apiPromise;
+    // One line each, naming what to do: the page shows it, and the smokes read it.
+    const startProblem = api.kanamaWebStartProblem?.();
+    if (startProblem) throw new Error(startProblem);
     const protocolVersion = api.kanamaWebProtocolVersion();
     if (protocolVersion !== KANAMA_WEB_PROTOCOL_VERSION) {
       throw new Error(
-        `Kanama Web protocol mismatch: expected ${KANAMA_WEB_PROTOCOL_VERSION}, received ${protocolVersion}`,
+        `Kanama Web protocol mismatch: expected ${KANAMA_WEB_PROTOCOL_VERSION}, received ${protocolVersion}. ` +
+          "kanama-web-bridge.js and the Kotlin/Wasm module come from different builds: export again, " +
+          "and reload the page without the cache.",
       );
     }
     bridge.api = api;

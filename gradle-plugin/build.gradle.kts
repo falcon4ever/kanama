@@ -37,7 +37,7 @@ gradlePlugin {
       id = "net.multigesture.kanama"
       implementationClass = "net.multigesture.kanama.gradle.KanamaPlugin"
       displayName = "Kanama"
-      description = "Builds a Kanama project's Kotlin scripts for Android and iOS export."
+      description = "Builds a Kanama project's Kotlin scripts for Android, iOS and Web export."
     }
   }
 }

@@ -59,8 +59,16 @@ object KanamaWebExport {
       }
       return path
     }
-    property?.takeIf { it.isNotBlank() }?.let { return named(it, "-PkanamaGodotExecutable") }
-    environment?.takeIf { it.isNotBlank() }?.let { return named(it, "KANAMA_GODOT_BIN") }
+    property
+      ?.takeIf { it.isNotBlank() }
+      ?.let {
+        return named(it, "-PkanamaGodotExecutable")
+      }
+    environment
+      ?.takeIf { it.isNotBlank() }
+      ?.let {
+        return named(it, "KANAMA_GODOT_BIN")
+      }
     val home = System.getProperty("user.home")
     val found =
       when {
@@ -200,14 +208,27 @@ object KanamaWebExport {
 
   /**
    * Left out of the staged copy: version control, editor and build caches, the Gradle project, the
-   * Android build, the Kanama desktop add-on, the Kotlin sources (the proxies replace them), the Web
-   * override folder, and the project's own export presets (the export uses Kanama's).
+   * Android build, the Kanama desktop add-on, the Kotlin sources (the proxies replace them), the
+   * Web override folder, and the project's own export presets (the export uses Kanama's).
    */
   private val stageExcludedTopLevel =
     setOf(
-      ".git", ".godot", ".gradle", ".kotlin", "build", ".idea", "android", "web", "kotlin-src",
-      "gradle", "build.gradle.kts", "gradle.properties", "gradlew", "gradlew.bat",
-      "settings.gradle.kts", "export_presets.cfg",
+      ".git",
+      ".godot",
+      ".gradle",
+      ".kotlin",
+      "build",
+      ".idea",
+      "android",
+      "web",
+      "kotlin-src",
+      "gradle",
+      "build.gradle.kts",
+      "gradle.properties",
+      "gradlew",
+      "gradlew.bat",
+      "settings.gradle.kts",
+      "export_presets.cfg",
     )
 
   private fun stagedExcluded(path: String): Boolean {
@@ -224,7 +245,16 @@ object KanamaWebExport {
    * of them staged. Everything else in the project must be byte-identical afterwards.
    */
   private val checksumExcludes =
-    setOf(".git", ".godot", ".gradle", ".kotlin", "build", ".idea", "android/build", "addons/kanama")
+    setOf(
+      ".git",
+      ".godot",
+      ".gradle",
+      ".kotlin",
+      "build",
+      ".idea",
+      "android/build",
+      "addons/kanama",
+    )
 
   /** The SHA-256 of [projectDir]'s files (paths and contents), leaving out [checksumExcludes]. */
   fun projectChecksum(projectDir: File): String {
@@ -384,7 +414,10 @@ object KanamaWebExport {
       val section = Regex("(?m)^\\[rendering\\][ \\t]*$")
       projectText =
         if (section.containsMatchIn(projectText)) {
-          projectText.replaceFirst(section, "[rendering]\n\nrenderer/rendering_method=\"$RENDERER\"")
+          projectText.replaceFirst(
+            section,
+            "[rendering]\n\nrenderer/rendering_method=\"$RENDERER\"",
+          )
         } else {
           projectText.trimEnd() + "\n\n[rendering]\n\nrenderer/rendering_method=\"$RENDERER\"\n"
         }
@@ -411,7 +444,10 @@ object KanamaWebExport {
     preset.writeText(
       preset
         .readText()
-        .replace("custom_template/release=\"\"", "custom_template/release=\"${release.absolutePath}\"")
+        .replace(
+          "custom_template/release=\"\"",
+          "custom_template/release=\"${release.absolutePath}\"",
+        )
         .replace(
           "custom_template/debug=\"\"",
           "custom_template/debug=\"${debug?.absolutePath.orEmpty()}\"",
@@ -471,9 +507,9 @@ object KanamaWebExport {
   class FinishResult(val totalBytes: Long, val protocolVersion: Int, val buildId: String)
 
   /**
-   * Completes Godot's export in [FinishInputs.exportDir]: the Kotlin/Wasm bundle, the bridge and the
-   * protocol descriptor go in beside `index.html`, the two fixed-name scripts are cache-busted, and
-   * `kanama-web/export-report.json` lists every served file. Fails when the served page leaks a
+   * Completes Godot's export in [FinishInputs.exportDir]: the Kotlin/Wasm bundle, the bridge and
+   * the protocol descriptor go in beside `index.html`, the two fixed-name scripts are cache-busted,
+   * and `kanama-web/export-report.json` lists every served file. Fails when the served page leaks a
    * local path or ships a source map.
    */
   fun finishExport(inputs: FinishInputs): FinishResult {
@@ -518,7 +554,8 @@ object KanamaWebExport {
 
     // Self-contained: no workstation-absolute path in the served HTML.
     val stagingPath = inputs.stagingDir.absolutePath
-    if (servedIndex.contains(stagingPath)) fail("Exported index.html leaks the staging path $stagingPath")
+    if (servedIndex.contains(stagingPath))
+      fail("Exported index.html leaks the staging path $stagingPath")
     if (servedIndex.contains(System.getProperty("user.home"))) {
       fail("Exported index.html leaks a workstation-absolute path")
     }

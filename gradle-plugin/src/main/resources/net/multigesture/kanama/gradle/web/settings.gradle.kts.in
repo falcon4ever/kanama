@@ -1,0 +1,62 @@
+// Written by the Kanama Gradle plugin (exportWeb) on every run. Do not edit.
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+// Four Maven repositories: the project's addon, Google, Maven Central and JitPack. The addon is the
+// only place a Kanama artifact can come from (no mavenLocal(), and no other repository may serve
+// net.multigesture artifacts). Kotlin/Wasm's tools (Node.js, Yarn, Binaryen) are downloads, not
+// Maven artifacts: each comes from its own site, and only that tool from it.
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        exclusiveContent {
+            forRepository { maven { name = "kanamaAddon"; url = uri("@KANAMA_MAVEN@") } }
+            filter { includeGroupByRegex("net\\.multigesture(\\..*)?") }
+        }
+        google()
+        mavenCentral()
+        maven { name = "jitpack"; url = uri("https://jitpack.io") }
+        exclusiveContent {
+            forRepository {
+                ivy {
+                    name = "Node.js"
+                    url = uri("https://nodejs.org/dist")
+                    patternLayout { artifact("v[revision]/[artifact](-v[revision]-[classifier]).[ext]") }
+                    metadataSources { artifact() }
+                    content { includeModule("org.nodejs", "node") }
+                }
+            }
+            filter { includeGroup("org.nodejs") }
+        }
+        exclusiveContent {
+            forRepository {
+                ivy {
+                    name = "Yarn"
+                    url = uri("https://github.com/yarnpkg/yarn/releases/download")
+                    patternLayout { artifact("v[revision]/[artifact](-v[revision]).[ext]") }
+                    metadataSources { artifact() }
+                    content { includeModule("com.yarnpkg", "yarn") }
+                }
+            }
+            filter { includeGroup("com.yarnpkg") }
+        }
+        exclusiveContent {
+            forRepository {
+                ivy {
+                    name = "Binaryen"
+                    url = uri("https://github.com/WebAssembly/binaryen/releases/download")
+                    patternLayout { artifact("version_[revision]/[module]-version_[revision]-[classifier].[ext]") }
+                    metadataSources { artifact() }
+                    content { includeModule("com.github.webassembly", "binaryen") }
+                }
+            }
+            filter { includeGroup("com.github.webassembly") }
+        }
+    }
+}
+
+rootProject.name = "@INNER_PROJECT@"

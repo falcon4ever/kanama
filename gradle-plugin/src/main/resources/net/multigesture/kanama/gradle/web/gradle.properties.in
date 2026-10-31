@@ -1,0 +1,7 @@
+# Written by the Kanama Gradle plugin (exportWeb) on every run. Do not edit.
+# The Kotlin/Wasm compile of the project's scripts with the Kanama Web runtime runs inside this
+# build's Gradle daemon (in-process: no separate Kotlin daemon is left running), which stops 10
+# minutes after the last build instead of holding the memory for hours.
+org.gradle.jvmargs=@JVM_ARGS@
+org.gradle.daemon.idletimeout=600000
+kotlin.compiler.execution.strategy=in-process

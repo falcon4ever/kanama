@@ -1,0 +1,57 @@
+// Written by the Kanama Gradle plugin (exportWeb) on every run. Do not edit.
+//
+// The project's Kotlin scripts for the Web: kotlin-src (merged with web/kotlin-src) compiled for
+// Kotlin/Wasm with the script registry, the GDScript proxies and the main() KSP generates from it,
+// linked against the prebuilt Kanama Web runtime klib from addons/kanama/maven into the webpack
+// bundle the exported page loads.
+plugins {
+    kotlin("multiplatform") version "@KOTLIN@"
+    id("com.google.devtools.ksp") version "@KSP@"
+}
+
+kotlin {
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+    wasmJs {
+        // The Kanama Web shell starts the bundle by this name (globalThis["web-runtime"]).
+        outputModuleName.set("web-runtime")
+        browser {
+            commonWebpackConfig {
+                // The name the Kanama Web shell loads.
+                outputFileName = "kanama-web-spike.js"
+                sourceMaps = false
+            }
+            testTask { enabled = false }
+        }
+        binaries.executable()
+    }
+    sourceSets.named("wasmJsMain") {
+        kotlin.srcDir("@SCRIPT_ROOT@")
+        dependencies { implementation("net.multigesture.kanama:kanama-web:@KANAMA@") }
+    }
+}
+
+dependencies { add("kspWasmJs", "net.multigesture.kanama:processor:@KANAMA@") }
+
+ksp {
+    // The merged sources keep the kotlin-src/ prefix: each script's res:// path is its path in the
+    // Godot project.
+    arg("kanamaScriptRoots", "@SCRIPT_ROOT@")
+    arg("kanamaRuntimeTarget", "web")
+    arg("kanamaGodotProjectDir", "@PROJECT_DIR@")
+}
+
+// Kotlin/Wasm's tools come from the repositories settings.gradle.kts declares, not from ones the
+// Kotlin plugin would add to this project (the settings forbid project repositories).
+plugins.withType<org.jetbrains.kotlin.gradle.targets.wasm.nodejs.WasmNodeJsRootPlugin> {
+    the<org.jetbrains.kotlin.gradle.targets.wasm.nodejs.WasmNodeJsEnvSpec>().downloadBaseUrl.set(null as String?)
+}
+plugins.withType<org.jetbrains.kotlin.gradle.targets.wasm.yarn.WasmYarnPlugin> {
+    the<org.jetbrains.kotlin.gradle.targets.wasm.yarn.WasmYarnRootEnvSpec>().downloadBaseUrl.set(null as String?)
+}
+plugins.withType<org.jetbrains.kotlin.gradle.targets.wasm.binaryen.BinaryenPlugin> {
+    the<org.jetbrains.kotlin.gradle.targets.wasm.binaryen.BinaryenEnvSpec>().downloadBaseUrl.set(null as String?)
+}
+
+// KSP also reads project.godot and the autoloads' scenes, which are not Kotlin sources: it runs
+// every time. When its output is unchanged, the compile and the link stay up to date.
+tasks.matching { it.name == "kspKotlinWasmJs" }.configureEach { outputs.upToDateWhen { false } }

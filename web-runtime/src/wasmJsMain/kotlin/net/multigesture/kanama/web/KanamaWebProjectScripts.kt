@@ -173,6 +173,9 @@ private var startedProjectScripts: KanamaWebProjectScripts? = null
 internal val projectScripts: KanamaWebProjectScripts
   get() = startedProjectScripts ?: throw IllegalStateException(NOT_STARTED)
 
+/** Why the runtime cannot serve the bridge yet ([NOT_STARTED]), or null once it was started. */
+internal fun startProblem(): String? = if (startedProjectScripts == null) NOT_STARTED else null
+
 internal const val NOT_STARTED =
   "Kanama Web runtime not started: the module's main() must call " +
     "net.multigesture.kanama.web.startKanamaWeb(KanamaWebProjectRegistry). The generated " +

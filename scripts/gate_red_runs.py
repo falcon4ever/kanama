@@ -1422,6 +1422,32 @@ case("package_install_smoke.sh --ios (kit without the iOS runtime)", IOS_KIT_SMO
      "addons/kanama/maven has no Kanama iOS runtime (kanama-iosarm64", "the macOS kit stops carrying the iOS runtime: buildIosScripts must say which zip to unzip again",
      timeout=5400, requires_env=IOS_KIT_ENV, slow=True)
 
+# The Web export from the desktop kit alone (task 135 item 5): exportWeb links the scripts against the packaged runtime
+# klib and exports with Godot, then the starter plays in headless Chrome (Node.js and Chrome; the Web template where Godot
+# installs it, as the nightly sets it up).
+WEB_KIT_SMOKE = ["bash", "-c", './gradlew -p . -q packageDesktopKit && '
+                 f'scripts/package_install_smoke.sh --desktop-kit --web build/distributions/kanama-desktop-kit-*.zip "{GODOT}"']
+WEB_KIT_ENV = "KANAMA_GODOT_BIN,ANDROID_HOME"
+case("package_install_smoke.sh --web (non-literal export default)", WEB_KIT_SMOKE,
+     [Edit("templates/starter/HelloScript.kt", "    var spinSpeed: Double = 0.6\n", "    var spinSpeed: Double = listOf(0.6).first()\n")],
+     "is neither a literal nor a constant expression", "the starter's exported default is a call, not a literal: the kit's Web build must stop on it and name the property (desktop still runs it)",
+     timeout=5400, requires_env=WEB_KIT_ENV, slow=True)
+case("package_install_smoke.sh --web (kit without the Web runtime)", WEB_KIT_SMOKE,
+     [Edit("build.gradle.kts", "    publishKanamaWebPackage,\n    verifyKanamaWebPackageProtocol,\n    generatePackageGdextensionDescriptor,\n    generatePackageExtensionList,",
+           "    verifyKanamaWebPackageProtocol,\n    generatePackageGdextensionDescriptor,\n    generatePackageExtensionList,")],
+     "The Kanama addon has no Web runtime (missing addons/kanama/maven/net/multigesture/kanama/kanama-web-wasm-js", "the kit stops carrying the Web runtime klib (a truncated unzip): exportWeb must say which zip to unzip again",
+     timeout=5400, requires_env=WEB_KIT_ENV, slow=True)
+case("package_install_smoke.sh --web (runtime not started)", WEB_KIT_SMOKE,
+     [Edit("processor/src/main/kotlin/net/multigesture/kanama/processor/WebScriptCodeEmitter.kt",
+           '    appendLine("  $WEB_START_FUNCTION(KanamaWebProjectRegistry)")',
+           '    appendLine("  println(KanamaWebProjectRegistry.protocolVersion)")')],
+     "Kanama Web runtime not started", "the generated main() no longer calls startKanamaWeb: the exported page must stop with that line, not load with no backend and no scripts",
+     timeout=5400, requires_env=WEB_KIT_ENV, slow=True)
+case("verifyKanamaWebPackageProtocol (bridge protocol)", ["./gradlew", "-p", ".", "-q", "verifyKanamaWebPackageProtocol"],
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "  const KANAMA_WEB_PROTOCOL_VERSION = 39;", "  const KANAMA_WEB_PROTOCOL_VERSION = 38;")],
+     "speaks protocol 38, but the processor", "the bridge a package would ship states another Web protocol than the processor generates: packaging must stop before a kit carries it",
+     timeout=1200, slow=True)
+
 case("web/scaffold_selftest.sh", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_budgets.py" "$RESULT"; then', 'if false; then')],
      "over-budget expected exit 1", "web_export_smoke.sh stops running the budget gate (the self-test's own `over-budget` case must catch that)")

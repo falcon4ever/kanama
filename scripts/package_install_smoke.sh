@@ -11,7 +11,8 @@ builds the starter Kotlin script without a sibling Kanama source checkout, and
 optionally launches Godot: the starter must run, and a pack export must hold
 nothing from the Gradle build directory. With --android it also exports the
 project for Android from the package alone and checks the APK; with --ios
-(on a Mac) it exports an Xcode project and builds it for the device SDK.
+(on a Mac) it exports an Xcode project and builds it for the device SDK; with
+--web it exports the project for the Web and plays it in headless Chrome.
 
 Options:
   --desktop-kit                  Require a desktop-kit zip.
@@ -35,6 +36,19 @@ Options:
   --ios-without-scripts          --ios for a project with no Kotlin script: the
                                  starter script leaves kotlin-src/ and its scene
                                  before buildIosScripts.
+  --web                          After the desktop checks (and --android, --ios),
+                                 run the documented Web command (exportWeb, which
+                                 compiles the scripts against the packaged Web
+                                 runtime and runs Godot's headless Web export),
+                                 then serve build/web-export and play it in
+                                 headless Chrome with web_export_smoke.sh's
+                                 `starter` driver: the script becomes ready, runs
+                                 its _process and greet() returns "Hello from
+                                 Kanama, web". Needs the Godot binary, Godot's Web
+                                 export templates, Node.js and Chrome.
+  --web-template ZIP             The web_nothreads_release.zip exportWeb passes as
+                                 -PkanamaWebTemplateRelease (default: Godot's
+                                 export templates folder).
   --require-all-store-platforms  Require all store-addon desktop native libs
                                  and the iOS runtime.
   --setup-ps1                    Set a store addon up with setup-kanama-project.ps1
@@ -57,6 +71,8 @@ setup_ps1=0
 android_export=0
 ios_export=0
 ios_without_scripts=0
+web_export=0
+web_template=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -80,6 +96,14 @@ while [[ $# -gt 0 ]]; do
       ios_export=1
       ios_without_scripts=1
       shift
+      ;;
+    --web)
+      web_export=1
+      shift
+      ;;
+    --web-template)
+      web_template="${2:-}"
+      shift 2
       ;;
     --setup-ps1)
       setup_ps1=1
@@ -142,6 +166,18 @@ if [[ "$android_export" -eq 1 && -z "$godot_bin" ]]; then
 fi
 if [[ "$ios_export" -eq 1 && -z "$godot_bin" ]]; then
   echo "[package_install_smoke] --ios needs the Godot binary: the Xcode project is a real Godot export" >&2
+  exit 2
+fi
+if [[ "$web_export" -eq 1 && -z "$godot_bin" ]]; then
+  echo "[package_install_smoke] --web needs the Godot binary: the Web export is a real Godot export" >&2
+  exit 2
+fi
+if [[ "$web_export" -eq 1 ]] && ! command -v node >/dev/null 2>&1; then
+  echo "[package_install_smoke] --web needs Node.js on PATH: the browser driver runs on it" >&2
+  exit 2
+fi
+if [[ -n "$web_template" && ! -f "$web_template" ]]; then
+  echo "[package_install_smoke] --web-template does not exist: $web_template" >&2
   exit 2
 fi
 if [[ "$ios_export" -eq 1 && "$(uname -s)" != "Darwin" ]]; then
@@ -571,7 +607,7 @@ if ! check_export_contents "$pack" ""; then
   exit 1
 fi
 
-if [[ "$android_export" -eq 0 && "$ios_export" -eq 0 ]]; then
+if [[ "$android_export" -eq 0 && "$ios_export" -eq 0 && "$web_export" -eq 0 ]]; then
   echo "[package_install_smoke] PASS"
   exit 0
 fi
@@ -763,6 +799,72 @@ PY
     fi
     echo "[package_install_smoke] ios: $variant export and $configuration build: $app_binary"
   done
+fi
+
+# --- Web from the package alone (task 135 item 5): the command Export for the Web documents, then the exported page
+# played in headless Chrome by the browser smoke's `starter` driver.
+if [[ "$web_export" -eq 1 ]]; then
+  if [[ "$ios_without_scripts" -eq 1 ]]; then
+    echo "[package_install_smoke] --web exports the starter script: it cannot follow --ios-without-scripts" >&2
+    exit 2
+  fi
+  # The package's Web files are checked after exportWeb: a missing one must stop exportWeb itself, with its line.
+  web_log="$work_dir/web.log"
+  web_args=(--no-daemon -p "$project_dir" exportWeb "-PkanamaGodotExecutable=$godot_bin")
+  if [[ -n "$web_template" ]]; then
+    web_args+=("-PkanamaWebTemplateRelease=$web_template")
+  fi
+  echo "[package_install_smoke] web: ./gradlew exportWeb"
+  web_started=$SECONDS
+  if ! run_bounded 3600 "$project_dir/gradlew" "${web_args[@]}" >"$web_log" 2>&1; then
+    tail -n 80 "$web_log" >&2
+    echo "[package_install_smoke] FAIL -- exportWeb failed (log: $web_log)" >&2
+    exit 1
+  fi
+  echo "[package_install_smoke] web: exportWeb took $((SECONDS - web_started)) s"
+  check_file "addons/kanama/web/kanama-web-bridge.js"
+  check_file "addons/kanama/web/shell.html"
+  check_file "addons/kanama/web/export_presets.cfg"
+  check_file "addons/kanama/web/serve_export.py"
+  check_file "addons/kanama/web/.gdignore"
+  web_version="$(tr -d '[:space:]' <"$project_dir/addons/kanama/kanama.version")"
+  check_file "addons/kanama/maven/net/multigesture/kanama/kanama-web-wasm-js/$web_version/kanama-web-wasm-js-$web_version.klib"
+  web_export_dir="$project_dir/build/web-export"
+  for file in index.html kanama-web-spike.js kanama-web-bridge.js kanama-web/export-report.json \
+    kanama-web/KanamaWebProtocol.generated.json; do
+    check_file "build/web-export/$file"
+  done
+  # The project itself is not staged into: the export copies it, and Godot imports only the copy.
+  if [[ -d "$project_dir/kanama-web" ]]; then
+    echo "[package_install_smoke] FAIL -- exportWeb wrote kanama-web/ into the project instead of its staged copy" >&2
+    exit 1
+  fi
+  web_result="$work_dir/web-smoke/starter.json"
+  echo "[package_install_smoke] web: web_export_smoke.sh --engine chrome --demo starter"
+  smoke_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  if ! run_bounded 900 bash "$smoke_root/web_export_smoke.sh" --engine chrome --export-dir "$web_export_dir" \
+    --demo starter --result "$web_result" --timeout 600 >"$work_dir/web-smoke.log" 2>&1; then
+    tail -n 60 "$work_dir/web-smoke.log" >&2
+    # The page's own failure line, when it reported one (a protocol mismatch, a runtime that was not started).
+    grep -ho 'Kanama Web [^"\]*' "$work_dir/web-smoke/"*.log "$web_result" 2>/dev/null | sort -u | head -n 5 >&2 || true  # justified: diagnostics after the verdict
+    echo "[package_install_smoke] FAIL -- the Web export did not run the starter in Chrome (log: $work_dir/web-smoke.log)" >&2
+    exit 1
+  fi
+  if ! python3 - "$web_result" <<'PY'
+import json
+import sys
+
+checks = json.load(open(sys.argv[1])).get("checks", {})
+if checks.get("greetReturnsString") is not True or checks.get("helloScriptReady") is not True:
+    print(f"[package_install_smoke] the starter's checks: {checks}", file=sys.stderr)
+    sys.exit(1)
+PY
+  then
+    echo "[package_install_smoke] FAIL -- the exported starter did not say Hello from Kanama (result: $web_result)" >&2
+    exit 1
+  fi
+  web_bytes="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["totalBytes"])' "$web_export_dir/kanama-web/export-report.json")"
+  echo "[package_install_smoke] web: exportWeb and the starter in Chrome from the package alone ($web_bytes bytes served): $web_export_dir"
 fi
 
 echo "[package_install_smoke] PASS"

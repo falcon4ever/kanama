@@ -49,7 +49,11 @@ The zip is rooted at the Godot project directory and contains:
   with the `kanama-scripts.version` stamp `buildScripts` writes),
 - `addons/kanama/maven` with the Kanama runtime, annotations and processor,
   the Kanama Gradle plugin (`net.multigesture.kanama`, which adds
-  `buildAndroidScripts`) and the Android runtime AAR (`kanama-android`),
+  `buildAndroidScripts`, `buildIosScripts` and `exportWeb`), the Android
+  runtime AAR (`kanama-android`) and the Web runtime klibs (`kanama-web` and
+  the `wasmJs` klib of `kanama-common-api`),
+- `addons/kanama/web` with the Web bridge, page shell, export preset and
+  `serve_export.py`,
 - `addons/kanama/bin/<platform>/` with the native bootstrap,
 - `addons/kanama/kanama.gdextension`,
 - `addons/kanama_tools`, and
@@ -69,7 +73,11 @@ launches Godot and checks that a pack export holds nothing from `build/`.
 Add `--android` to also run `buildAndroidScripts` and a headless Android
 export from the kit alone, and check the APK (no device). On a Mac, add
 `--ios` to run `buildIosScripts`, a headless iOS export of an Xcode project,
-and an unsigned `xcodebuild` of it for the device SDK (no device either).
+and an unsigned `xcodebuild` of it for the device SDK (no device either). Add
+`--web` to run `exportWeb` and play the export in headless Chrome with the
+browser smoke's `starter` driver; it needs Node.js and Chrome, and takes
+`--web-template <zip>` when the Web template is not in Godot's templates
+folder.
 
 Packaging builds the Android runtime AAR with the nested Android build, so it
 needs the Android SDK (`ANDROID_HOME`) with the NDK 29.0.14206865 and CMake
@@ -100,7 +108,9 @@ files at the project root. It contains:
 - all available desktop native bootstrap binaries under
   `addons/kanama/bin/<platform>/`,
 - the local Maven repo under `addons/kanama/maven`, with the Kanama Gradle
-  plugin and the Android runtime AAR as in the kit, and `kanama.version`,
+  plugin, the Android runtime AAR and the Web runtime klibs as in the kit, and
+  `kanama.version`,
+- the Web export's files under `addons/kanama/web`, as in the kit,
 - release-kit Gradle and wrapper templates under
   `addons/kanama/templates/release-kit`.
 
@@ -132,14 +142,16 @@ scripts/package_install_smoke.sh \
 For a local host-only `packageStoreAddon` build, omit
 `--require-all-store-platforms`.
 
-## Mobile Exports
+## Mobile and Web Exports
 
-Neither mobile platform has a separate zip. Kits and the store addon carry the
-Android runtime AAR, and the macOS kit and the store addon carry the iOS
-runtime klib and shim; the Kanama Gradle plugin compiles a project's scripts
-against them (`buildAndroidScripts`, `buildIosScripts`; see
-[Android](backends/android.md#the-kit-path) and
-[iOS](backends/ios.md#the-kit-path)).
+No export platform has a separate zip. Kits and the store addon carry the
+Android runtime AAR and the Web runtime klibs, and the macOS kit and the store
+addon carry the iOS runtime klib and shim; the Kanama Gradle plugin compiles a
+project's scripts against them (`buildAndroidScripts`, `buildIosScripts`,
+`exportWeb`; see [Android](backends/android.md#the-kit-path),
+[iOS](backends/ios.md#the-kit-path) and [Web](backends/web.md#the-kit-path)).
+Packaging checks that the bridge in `addons/kanama/web` speaks the Web protocol
+the processor generates (`verifyKanamaWebPackageProtocol`).
 
 ## Package Workflow
 
@@ -174,6 +186,10 @@ the store addon, and `ios-export` runs `package_install_smoke.sh --ios` on
 `macos-15` for the macOS kit and the store addon: `buildIosScripts`, a headless
 export of an Xcode project, and `xcodebuild` for the device SDK without
 signing, with the newest Xcode on the runner.
+`web-export` unzips the Linux kit and the store addon into fresh projects and
+runs `package_install_smoke.sh --web` on each, on `ubuntu-24.04`: `exportWeb`
+with a fresh `GRADLE_USER_HOME` and the Web template where Godot installs it,
+then the export played in headless Chrome.
 
 The release job grants `contents: write` only when publishing assets for a tag.
 All other package jobs use read-only repository permissions.

@@ -54,6 +54,25 @@ class KanamaPlugin : Plugin<Project> {
       )
       task.heap.set(project.providers.gradleProperty("kanamaIosHeap"))
     }
+
+    project.tasks.register("exportWeb", ExportWeb::class.java) { task ->
+      task.group = "kanama"
+      task.description =
+        "Compile kotlin-src for the Web and export the project with Godot into build/web-export."
+      // The editor's export guard and the scenes' script properties read the desktop scripts jar
+      // during Godot's export, as for every other platform.
+      task.dependsOn("buildScripts")
+      task.projectDirectory.set(project.layout.projectDirectory)
+      task.innerBuildDirectory.set(project.layout.buildDirectory.dir("kanama/web"))
+      task.exportDirectory.set(project.layout.buildDirectory.dir("web-export"))
+      task.godotExecutable.set(
+        project.providers
+          .gradleProperty("kanamaGodotExecutable")
+          .orElse(project.providers.gradleProperty("kanama.godot.executable"))
+      )
+      task.templateRelease.set(project.providers.gradleProperty("kanamaWebTemplateRelease"))
+      task.heap.set(project.providers.gradleProperty("kanamaWebHeap"))
+    }
   }
 
   companion object {

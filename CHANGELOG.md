@@ -161,6 +161,22 @@ The runtime-only `kanama-mobile-addon-ios` zip (`packageMobileAddonIos`) is gone
 `buildAndroidScripts`, it turns on the ETC2/ASTC texture import Godot's iOS export needs. Fixed with it:
 the kit's project has an app icon, without which Godot's iOS export stops.
 
+### Added — Web export from the release kit and the store addon
+
+A project made from a release kit or the store addon now exports for the Web without a Kanama checkout:
+`./gradlew exportWeb` in the project, and the export lands in `build/web-export/`; serve it with
+`python3 addons/kanama/web/serve_export.py build/web-export`. Kits and the store addon carry the Web
+runtime as klibs in `addons/kanama/maven` (`kanama-web` and the `wasmJs` klib of `kanama-common-api`)
+and the bridge, page shell and Web preset in `addons/kanama/web/`. The task compiles `kotlin-src` against
+the runtime in its own build under `build/kanama/web` and exports a staged copy of the project with Godot,
+which it finds as the checkout's `exportWeb` does. The first export downloads Node.js, Yarn and webpack's
+packages, so it needs a network connection (`-PkanamaWebHeap=6g` gives a large project's compile more
+heap). The Kanama Tools **Platforms** menu runs `exportWeb` and `buildIosScripts` in a kit project. In
+a checkout, the Web runtime now compiles as its own module (`:kanama-web`) that `:web-runtime` links like
+a kit project does; the generated Web registry implements the runtime's `KanamaWebProjectScripts`, and
+its generated `main()` starts the runtime. A page whose module did not start the runtime, or whose bridge
+and module come from different builds, now stops with one line saying what to do.
+
 ### Changed — Android 13 is now the minimum — BREAKING
 
 Android 13 (API 33) is now the minimum; set **Min SDK** to `33` in your Android export preset

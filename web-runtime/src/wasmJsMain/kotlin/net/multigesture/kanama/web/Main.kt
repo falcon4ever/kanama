@@ -175,6 +175,12 @@ private fun describeCauseChain(error: Throwable, limit: Int = 5): String = build
 
 @JsExport fun kanamaWebProtocolVersion(): Int = projectScripts.protocolVersion
 
+/**
+ * The line the bridge shows when the module's `main()` did not start the runtime, or null. Asked
+ * first: an exception thrown into JavaScript does not keep its message in every browser.
+ */
+@JsExport fun kanamaWebStartProblem(): String? = startProblem()
+
 @JsExport fun kanamaWebRoundTrip(value: Int): Int = value
 
 @JsExport fun kanamaWebPendingCoroutineCount(): Int = WebFrameCoroutineDispatcher.pendingCount
