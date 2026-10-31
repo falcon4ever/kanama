@@ -8,6 +8,8 @@
 #   set_gradle_property <file> <key> <value>   (uses sed_inplace from scripts/portable.sh: source that first)
 #   build_demo_scripts                                 the demo's scripts, against THIS checkout
 #   install_desktop_addon                              the export-time editor's addon (task 116)
+#   android_godot_version                              the pinned Godot version (VERSION_FULL_CONFIG form)
+#   drop_stale_android_build_template                  deletes android/build when it is from another Godot version
 #   ensure_android_build_template                      sets BUILD_GRADLE (and installs the template)
 
 check_log() {
@@ -75,8 +77,39 @@ install_desktop_addon() {
   "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAddonJar "${addon_args[@]}"
 }
 
+# The Godot version the templates directory and android/.build_version must equal (Godot's
+# VERSION_FULL_CONFIG: "4.7.2.stable", "4.8.stable", "4.7.2.stable.mono"). `godot --version` cannot be cut
+# into that reliably (an X.Y.0 release prints no patch, a mono build adds a segment), so read the pin the
+# repo already owns, as ios_template_preflight.sh does.
+android_godot_version() {
+  local godot_version
+  godot_version="$(sed -n 's/^kanamaGodotVersion=//p' "$ROOT_DIR/gradle.properties" | tr -d '[:space:]')"
+  if [[ -z "$godot_version" ]]; then
+    echo "$ANDROID_TAG kanamaGodotVersion missing from $ROOT_DIR/gradle.properties" >&2
+    exit 1
+  fi
+  printf '%s\n' "$godot_version"
+}
+
+# Task 139 P14 (U18): since Godot 4.8 an Android export refuses a res://android/build whose
+# android/.build_version is not the running editor's version ("Unable to set up Android build directory"),
+# unless the editor setting export/android/build/automatically_delete_build_directory is on (default off).
+# A demo exported under an older Godot therefore fails its first export after every bump. Delete the stale
+# template (and its version file) here; ensure_android_build_template then installs a fresh one.
+drop_stale_android_build_template() {
+  local want have version_file="$DEMO_DIR/android/.build_version"
+  want="$(android_godot_version)"
+  have=""
+  [[ -f "$version_file" ]] && have="$(tr -d '[:space:]' <"$version_file")"
+  if [[ -d "$DEMO_DIR/android/build" || -f "$version_file" ]] && [[ "$have" != "$want" ]]; then
+    echo "$ANDROID_TAG android build template is for Godot '${have:-unknown}', this checkout pins '$want': deleting android/build and reinstalling"
+    rm -rf "$DEMO_DIR/android/build" "$version_file"
+  fi
+}
+
 # Installs the Godot Android build template and sets BUILD_GRADLE to the generated build.gradle.
 ensure_android_build_template() {
+  drop_stale_android_build_template
   echo "$ANDROID_TAG install android build template"
   # In 4.7.2 this installs nothing on its own (task 116), so its exit status is not the verdict: the
   # build.gradle check below is, and installs the template by hand when this left it missing. Keep the
@@ -97,16 +130,8 @@ ensure_android_build_template() {
     # android/.build_version, create android/build/.gdignore, unzip android_source.zip from the export
     # templates of this exact editor version. The build.gradle patch the callers apply needs the
     # template BEFORE the export, so the combined form is not an option here.
-    # The templates directory and android/.build_version must equal Godot's VERSION_FULL_CONFIG
-    # ("4.7.2.stable", "4.8.stable", "4.7.2.stable.mono"); `godot --version` cannot be cut into that
-    # reliably (an X.Y.0 release prints no patch, a mono build adds a segment), so read the pin the
-    # repo already owns, as ios_template_preflight.sh does.
     local godot_version templates_root android_source
-    godot_version="$(sed -n 's/^kanamaGodotVersion=//p' "$ROOT_DIR/gradle.properties" | tr -d '[:space:]')"
-    if [[ -z "$godot_version" ]]; then
-      echo "$ANDROID_TAG kanamaGodotVersion missing from $ROOT_DIR/gradle.properties" >&2
-      exit 1
-    fi
+    godot_version="$(android_godot_version)"
     templates_root="${KANAMA_GODOT_TEMPLATES_DIR:-}"
     if [[ -z "$templates_root" ]]; then
       if [[ -d "$HOME/Library/Application Support/Godot/export_templates" ]]; then

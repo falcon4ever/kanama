@@ -57,6 +57,14 @@ classes Web wraps. A new node is yours to add to the tree or `queueFree()`; a ne
 reference of your own, as before. Plain `Object` classes (`UndoRedo`, `JSONRPC`) get none, since
 Kotlin has no `free()` for them. Ports no longer need a local `ClassDB.instantiate` helper.
 
+### Fixed — an Android export after a Godot upgrade no longer stops at the old build template
+
+Godot 4.8 refuses an Android export when `res://android/build` was installed by another Godot version
+("Unable to set up Android build directory"). The repository's Android scripts now delete a build template
+from another Godot version and install the current one. In your own project, delete `res://android/build`
+once after the upgrade, or turn on **Editor Settings > Export > Android > Build > Automatically Delete Build
+Directory**. [Troubleshooting](docs/getting-started/troubleshooting.md) has the row.
+
 ### Fixed — the exported-scene check no longer leaks a project's music at exit
 
 `check_exported_scene_properties.gd` quits on its first frame. A project with an autoplaying audio

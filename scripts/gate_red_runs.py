@@ -328,6 +328,9 @@ case("check_android_remap_sources.py (address space, NULL_SEGMENT)", py("check_a
      [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt",
              "package net.multigesture.kanama\nval zz = NULL_SEGMENT.reinterpret(Long.MAX_VALUE)\n")],
      "ZzRedRun.kt:2: whole-address-space segment", "Kanama's `NULL_SEGMENT` reinterpreted as the whole address space")
+case("android_build_template_selftest.sh", ["bash", "scripts/android_build_template_selftest.sh"],
+     [Edit("scripts/android_common.sh", '[[ "$have" != "$want" ]]', '[[ -z "$have" && "$have" != "$want" ]]')],
+     "FAIL: a template for Godot 4.6.stable", "the version check keeps a template whose .build_version differs from the pinned Godot (Godot 4.8 then refuses the export)")
 case("check_doc_claims.py", py("check_doc_claims.py"),
      [Edit("docs/contributing/platform-evidence.md", "the versions the corpus is driven on (protocol 39)", "the versions the corpus is driven on (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")

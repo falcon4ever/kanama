@@ -152,6 +152,7 @@ version 3.22.1.
 | Problem | Fix |
 | --- | --- |
 | `buildAndroidScripts` fails and names a line that calls `.invoke(` on a Kotlin function value, such as `callback?.invoke()`. | The Android build cannot compile that call. Write `callback()` or `callback?.let { it() }` instead. |
+| The export stops with `Unable to set up Android build directory. Please fix by manually deleting the "res://android/build" directory`. | The build template in `res://android/build` is from another Godot version (Godot 4.8 and newer refuse it). Delete the `res://android/build` folder and export again, or turn on **Editor Settings > Export > Android > Build > Automatically Delete Build Directory**. |
 | `buildAndroidScripts` stops with `Android SDK not found`. | Set `ANDROID_HOME` to your Android SDK folder, or set **Editor Settings > Export > Android > Android SDK Path** in Godot. |
 | `buildAndroidScripts` stops with `addons/kanama/maven has no Kanama Android runtime`. | The addon is incomplete. Unzip the kit or the store addon into the project again. A project built from a source checkout uses the commands in [From a Source Checkout](#from-a-source-checkout) instead. |
 | Gradle stops with `Task 'buildAndroidScripts' not found`. | The project's Gradle files are older than its addon. Merge the template's `pluginManagement { }` block into your `settings.gradle.kts` and its `plugins { }` block into your `build.gradle.kts`, as [Add Kanama to an Existing Project](../getting-started/store-addon.md#projects-that-already-have-a-gradle-build) shows. |
