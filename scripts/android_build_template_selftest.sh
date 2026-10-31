@@ -7,6 +7,8 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ANDROID_TAG="[android-template-selftest]"
+# shellcheck source=scripts/portable.sh
+source "$ROOT_DIR/scripts/portable.sh"
 # shellcheck source=scripts/android_common.sh
 source "$ROOT_DIR/scripts/android_common.sh"
 

@@ -5,7 +5,8 @@
 # messages) first, and DEMO_DIR, ROOT_DIR, GODOT_BIN, APK_PATH, LOG_FILE where a function needs them.
 #
 #   check_log <pattern> / check_log_absent <pattern>   the logcat verdicts (LOG_FILE)
-#   set_gradle_property <file> <key> <value>   (uses sed_inplace from scripts/portable.sh: source that first)
+#   set_gradle_property <file> <key> <value>   (uses sed_inplace from scripts/portable.sh: source that first;
+#                                              ensure_android_build_template uses its run_with_timeout)
 #   build_demo_scripts                                 the demo's scripts, against THIS checkout
 #   install_desktop_addon                              the export-time editor's addon (task 116)
 #   android_godot_version                              the pinned Godot version (VERSION_FULL_CONFIG form)
@@ -114,7 +115,8 @@ ensure_android_build_template() {
   # patch binary tried before the pin edit, would delete and reinstall the pin's template on every run.
   local pin editor_version
   pin="$(android_godot_version)"
-  editor_version="$(timeout 30 "$GODOT_BIN" --version 2>/dev/null | head -n 1 | tr -d '[:space:]' || true)"
+  # justified: an editor that hangs or prints nothing leaves editor_version empty, which fails the pin check below
+  editor_version="$(run_with_timeout 30 "$GODOT_BIN" --version 2>/dev/null | head -n 1 | tr -d '[:space:]' || true)"
   # "4.7.2.stable.official.ed1daf0bf" matches the pin "4.7.2.stable"; "4.7.2.stable.mono.official..." does not.
   if [[ "$editor_version" != "$pin" && ( "$editor_version" != "$pin."* || "$editor_version" == "$pin.mono"* ) ]] ||
     [[ "$pin" != *mono* && "$editor_version" == *.mono.* ]]; then
