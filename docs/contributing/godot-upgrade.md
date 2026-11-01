@@ -120,6 +120,12 @@ These steps need a person or a device, so the script prints them and stops:
 
 - Run local CI against the new binary:
   `scripts/local_ci.sh /absolute/path/to/new_godot_binary`.
+- **Delete stale Android build templates.** Since Godot 4.8 an Android export refuses a
+  `res://android/build` installed by another Godot version ("Unable to set up Android
+  build directory"). `android_smoke.sh` and `android_export_minified.sh` delete a template whose
+  `android/.build_version` is not the pin and reinstall it. For a demo exported by hand, delete
+  `res://android/build`, or turn on **Editor Settings > Export > Android > Build > Automatically
+  Delete Build Directory**.
 - **Run the API exercise before any device gate.** The page
   (`docs/reference/generated/api-exercise.md`) is already regenerated; review its
   diff, since every new class gets rows that have never run. Then run the rows
