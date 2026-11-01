@@ -239,23 +239,29 @@ object KanamaWebExport {
       "export_presets.cfg",
     )
 
+  /**
+   * Whether [path] stays out of the staged copy. `kotlin-src` goes whole (above); another scripts
+   * folder ([scriptsPath], `kanamaProjectScriptsDir`) may hold scenes and assets too, so only its
+   * Kotlin sources and their `.uid` sidecars go, and everything else in it is staged.
+   */
   private fun stagedExcluded(path: String, scriptsPath: String): Boolean {
     val top = path.substringBefore('/')
     return top in stageExcludedTopLevel ||
       ('/' !in path && path.endsWith(".iml")) ||
       path == "addons/kanama" ||
       path.startsWith("addons/kanama/") ||
-      path == scriptsPath ||
-      path.startsWith("$scriptsPath/")
+      (path.startsWith("$scriptsPath/") && isKotlinSource(path))
   }
+
+  private fun isKotlinSource(path: String) = path.endsWith(".kt") || path.endsWith(".kt.uid")
 
   /** The scripts folder's path in a project, unless `kanamaProjectScriptsDir` names another. */
   const val DEFAULT_SCRIPTS_PATH = "kotlin-src"
 
   /**
-   * [scripts]' path in [projectDir] (`/`-separated), the folder the Web export compiles and leaves
-   * out of the staged copy; it must be a folder inside the project, since a scene attaches a script
-   * by its `res://` path.
+   * [scripts]' path in [projectDir] (`/`-separated), the folder the Web export compiles, whose
+   * Kotlin sources the staged copy leaves out; it must be a folder inside the project, since a
+   * scene attaches a script by its `res://` path.
    */
   fun scriptsPathIn(projectDir: File, scripts: File): String {
     val project = projectDir.canonicalFile
@@ -345,6 +351,11 @@ object KanamaWebExport {
     // Every Kotlin attachment of the project: `res://kotlin-src/...kt`, or its own scripts
     // folder's.
     val scripts = "res://${inputs.scriptsPath}/"
+    // What a staged scene must no longer name: anything in `kotlin-src`, which is not staged, or a
+    // Kotlin source in another scripts folder, whose scenes and assets are.
+    val leftover =
+      if (inputs.scriptsPath == DEFAULT_SCRIPTS_PATH) Regex(Regex.escape(scripts))
+      else Regex(Regex.escape(scripts) + "[^\"]*\\.kt(?=\")")
     val checksumBefore = projectChecksum(project)
     staging.deleteRecursively()
     project
@@ -431,7 +442,7 @@ object KanamaWebExport {
           }
         rewritten = rewritten.replace(attachmentUid, "$1 $2")
         if (rewritten != original) staged.writeText(rewritten)
-        if (rewritten.contains(scripts)) {
+        if (leftover.containsMatchIn(rewritten)) {
           fail("Unmapped Kotlin attachment remains in staged file: $staged")
         }
       }

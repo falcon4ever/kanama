@@ -81,13 +81,15 @@ abstract class ExportWeb : DefaultTask() {
       )
     }
     val scripts = scriptsDirectory.get().asFile
+    // Where the folder is comes first: one outside the project (on Windows, maybe on another
+    // drive) gets scriptsPathIn's line, not a path error.
+    val scriptsPath = web { KanamaWebExport.scriptsPathIn(project, scripts) }
     if (!scripts.isDirectory) {
       throw GradleException(
-        "No ${scripts.relativeTo(project).invariantSeparatorsPath}/ folder in $project: the Web " +
-          "export compiles the project's Kotlin scripts from there."
+        "No $scriptsPath/ folder in $project: the Web export compiles the project's Kotlin " +
+          "scripts from there."
       )
     }
-    val scriptsPath = web { KanamaWebExport.scriptsPathIn(project, scripts) }
     web { KanamaWebExport.mainSceneProblem(project) }?.let { throw GradleException(it) }
     val godot = web {
       KanamaWebExport.findGodot(godotExecutable.orNull, System.getenv("KANAMA_GODOT_BIN"))

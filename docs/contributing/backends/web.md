@@ -1013,7 +1013,9 @@ only.
 
 The `exportWeb` task stages a copy of the project without `addons/kanama/`
 and `kotlin-src/` and points every scene at the generated Web proxies, so no staged
-scene attaches a `.kt` script. The Kanama Tools plugin stays enabled in that copy;
+scene attaches a `.kt` script. A scripts folder other than `kotlin-src/`
+(`-PkanamaProjectScriptsDir`, kit projects only) may hold scenes and assets
+too: only its `.kt` files and their `.uid` sidecars stay out of the copy. The Kanama Tools plugin stays enabled in that copy;
 its export check (see the Android guide's
 [Export Guard](../../getting-started/editor-workflow.md#export-guard)) finds no `.kt` script to check and stays
 silent. A plain Godot Web export of the project itself is checked like the other

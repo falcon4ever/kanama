@@ -80,6 +80,7 @@ class KanamaWebExportTest {
       "[ext_resource type=\"Script\" uid=\"uid://abc\" path=\"res://kotlin-src/Hello.kt\" id=\"1\"]\n",
     )
     project.write("kotlin-src/Hello.kt", "class Hello")
+    project.write("kotlin-src/notes.txt", "kotlin-src goes whole")
     project.write("art/sprite.png", "png")
     project.write("game.iml", "iml")
     project.write("export_presets.cfg", "the user's own")
@@ -134,6 +135,7 @@ class KanamaWebExportTest {
     for (absent in
       listOf(
         "kotlin-src/Hello.kt",
+        "kotlin-src/notes.txt",
         "web/kotlin-src/Hello.kt",
         "game.iml",
         "build.gradle.kts",
@@ -200,6 +202,71 @@ class KanamaWebExportTest {
       "[ext_resource type=\"Script\" path=\"res://kanama-web/generated/Hello.gd\" id=\"1\"]\n",
       inputs.stagingDir.resolve("main.tscn").readText(),
     )
+  }
+
+  /** A scripts folder that holds the main scene and an asset beside its Kotlin script. */
+  private fun mixedFolderFixture(): KanamaWebExport.StageInputs {
+    val (root, fixture) = stageFixture()
+    val project = fixture.projectDir
+    project.resolve("kotlin-src").deleteRecursively()
+    project.resolve("main.tscn").delete()
+    project.write("game/Hello.kt", "class Hello")
+    project.write("game/Hello.kt.uid", "uid://hello")
+    project.write("game/art/ship.png", "png")
+    project.write(
+      "game/main.tscn",
+      "[ext_resource type=\"Script\" path=\"res://game/Hello.kt\" id=\"1\"]\n" +
+        "[ext_resource type=\"Texture2D\" path=\"res://game/art/ship.png\" id=\"2\"]\n",
+    )
+    val projectGodot = project.resolve("project.godot")
+    projectGodot.writeText(
+      projectGodot.readText().replace("res://main.tscn", "res://game/main.tscn")
+    )
+    val out = root.resolve("merged-mixed")
+    KanamaWebExport.mergeScripts(project.resolve("game"), null, null, out, "game")
+    for (file in listOf(KanamaWebExport.PROXY_MANIFEST, KanamaWebExport.PROTOCOL_JSON)) {
+      val generated = fixture.proxies.resolve(file)
+      generated.writeText(generated.readText().replace("res://kotlin-src/", "res://game/"))
+    }
+    return KanamaWebExport.StageInputs(
+      projectDir = project,
+      stagingDir = fixture.stagingDir,
+      preset = fixture.preset,
+      assets = fixture.assets,
+      proxies = fixture.proxies,
+      mergedSources = out.resolve("game"),
+      scriptsPath = "game",
+    )
+  }
+
+  @Test
+  fun `a scripts folder with scenes and assets keeps them and leaves out only its Kotlin`() {
+    val inputs = mixedFolderFixture()
+    assertEquals(1, KanamaWebExport.stageProject(inputs).scriptCount)
+    val staging = inputs.stagingDir
+    assertTrue(staging.resolve("game/art/ship.png").isFile)
+    assertFalse(staging.resolve("game/Hello.kt").exists())
+    assertFalse(staging.resolve("game/Hello.kt.uid").exists())
+    assertEquals(
+      "[ext_resource type=\"Script\" path=\"res://kanama-web/generated/Hello.gd\" id=\"1\"]\n" +
+        "[ext_resource type=\"Texture2D\" path=\"res://game/art/ship.png\" id=\"2\"]\n",
+      staging.resolve("game/main.tscn").readText(),
+    )
+    assertTrue("res://game/main.tscn" in staging.resolve("project.godot").readText())
+  }
+
+  @Test
+  fun `a Kotlin script of the scripts folder that has no proxy still fails the staging`() {
+    val inputs = mixedFolderFixture()
+    inputs.projectDir.write(
+      "game/other.tscn",
+      "[ext_resource type=\"Script\" path=\"res://game/Desktop.kt\" id=\"1\"]\n",
+    )
+    val error =
+      assertFailsWith<KanamaWebExport.KanamaWebExportException> {
+        KanamaWebExport.stageProject(inputs)
+      }
+    assertTrue("Unmapped Kotlin attachment" in error.message.orEmpty(), error.message)
   }
 
   @Test
