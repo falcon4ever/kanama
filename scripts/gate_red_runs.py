@@ -664,16 +664,14 @@ case("check_protocol_pins.py (freed-check opcode)", py("check_protocol_pins.py")
 case("check_pt_tag_tables.py", py("check_pt_tag_tables.py"),
      [Edit("scripts/generate_api_wrapper.py", '    "PT_VOID": 0,', '    "PT_VOID": 99,')],
      "value-mismatch VOID", "one copy of the iOS ptrcall tag table is renumbered")
-# These two mutate `MainThread`, Kanama's own object: no Godot release changes it, so no release's `Source break`
-# line names it. (`Node` was the first choice, and a real 4.8 line naming `Node.replaceBy` still announced the
-# mutation away: task 139 U17.) A hand-written owner keeps them red whatever the bump announces.
-case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
-     [Edit(f"{JVM}/net/multigesture/kanama/api/MainThread.kt", "    actual fun post(action: () -> Unit) {", "    actual fun post(action: () -> Unit, extra: Int) {")],
-     "unannounced source break", "a public signature of Kanama's own `MainThread` changes without a CHANGELOG `Source break` line")
+# The unannounced-break cases do not mutate `Node` (task 139 U17): a real 4.8 `Source break` line naming
+# `Node.replaceBy`, or plain `Node`, announced the mutation away and the red step went green. The qualified-owner
+# case mutates `OwnedScriptResource`, Kanama's own desktop-only class (no Godot release changes it, so no
+# release's line names it); the plain case below it mutates `Label`, the Godot-owned class a bump touches least.
 case("check_public_signature_changes.py (qualified owner)", py("check_public_signature_changes.py"),
-     [Edit("CHANGELOG.md", "\n## Unreleased\n", "\n## Unreleased\n\n- **Source break:** red run: `MainThread.postNextFrame` changed.\n"),
-      Edit(f"{JVM}/net/multigesture/kanama/api/MainThread.kt", "    actual fun post(action: () -> Unit) {", "    actual fun post(action: () -> Unit, extra: Int) {")],
-     "unannounced source break", "a marker naming `MainThread.postNextFrame` announces that member only, not a MainThread.post change")
+     [Edit("CHANGELOG.md", "\n## Unreleased\n", "\n## Unreleased\n\n- **Source break:** red run: `OwnedScriptResource.instance` changed.\n"),
+      Edit(f"{JVM}/net/multigesture/kanama/api/ScriptResources.kt", "    val resource: Resource,", "    val resourceRedRun: Resource,")],
+     "unannounced source break", "a marker naming `OwnedScriptResource.instance` announces that member only, not an OwnedScriptResource.resource change")
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit(f"{COMMON}/api/Label.kt", "    fun setText(text: String) {", "    fun setText(text: String, extra: Int) {")],
      "unannounced source break", "a public signature changes without a CHANGELOG `Source break` line")
