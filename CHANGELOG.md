@@ -5215,6 +5215,11 @@ they are why the defects above went unseen:
   `Array[CustomResource]` also match. Runtime smoke now pins the reported
   shape: typed member + typed local assignment, `is` check, load identity, and
   a property round-trip.
+- **iOS from a source checkout: scripts outside a `kotlin-src` folder are found by their `res://` path.**
+  `installIosAddon` registered a script in a folder named anything but `kotlin-src` (say `game/kotlin`)
+  as `res://X.kt`, so a scene that attached `res://game/kotlin/X.kt` found no script on the phone. With
+  `-PkanamaIosProjectDir` given, a scripts folder inside the project now registers its path in the
+  project, as `buildIosScripts` already did. A `kotlin-src` project is unchanged.
 
 ### Changed
 

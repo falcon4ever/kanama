@@ -186,6 +186,10 @@ cd /path/to/kanama
 It compiles the scripts in `kotlin-src/` twice, to native code for iOS and
 into the desktop `kanama-scripts.jar` the editor needs during the export, and
 installs the same two libraries and descriptor entries as `buildIosScripts`.
+The scripts folder can have any name inside the project (`game/kotlin`, say):
+a script is registered under its path in the project, so the scene attaches
+`res://game/kotlin/Player.kt`. Pass the project in `-PkanamaIosProjectDir` for
+that.
 Run it again after every change to your scripts. It takes
 `-PkanamaXcodeDeveloperDir` and `-PkanamaIosAllowSkips=true` as above, and
 the scene checker is in the checkout's `scripts/` folder.
