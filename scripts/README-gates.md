@@ -96,6 +96,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/android_apk_id.sh:23` | `tool="$(ls -d "$sdk"/cmdline-tools/*/bin/apkanalyzer 2>/dev/null \| sort -V \| tail -n 1)"` | justified: a missing cmdline-tools dir just leaves $tool empty, which returns 3 (the gate_skip path). |
 | `scripts/android_apk_id.sh:56` | `pid="$("$adb" shell pidof -s "$package" 2>/dev/null \| tr -d '\r' \|\| true)"` | justified: a failing or missing pidof prints nothing, and the `ps -A` fallback below is the second opinion. |
 | `scripts/android_apk_id.sh:59` | `pid="$("$adb" shell ps -A 2>/dev/null \| tr -d '\r' \| awk -v p="$package" '$NF == p { print $2; exit }' \|\| true` | justified: an adb error leaves $pid empty; the caller retries until its deadline and then fails. |
+| `scripts/android_build_template_selftest.sh:45` | `FAKE_GODOT_VERSION="$pin" ensure_android_build_template >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/android_common.sh:119` | `editor_version="$(run_with_timeout 30 "$GODOT_BIN" --version 2>/dev/null \| head -n 1 \| tr -d '[:space:]' \|\| tr` | justified: an editor that hangs or prints nothing leaves editor_version empty, which fails the pin check below |
 | `scripts/android_export_minified.sh:118` | `"$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: cleanup after the verdict; the app may already have exited. |
 | `scripts/android_export_minified.sh:250` | `"$ADB_BIN" start-server >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/android_export_minified.sh:261` | `"$ADB_BIN" uninstall "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: the package may simply not be installed; the plain install on the next line is the check. |
@@ -172,8 +174,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:213` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:255` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:257` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1566` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:1647` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1591` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1672` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:682` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:725` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -263,7 +265,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/package_install_smoke.sh:508` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
 | `scripts/package_install_smoke.sh:510` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
 | `scripts/package_install_smoke.sh:791` | `register="$(grep -E ' _kanama_ios_project_scripts_register$' "$symbols" \|\| true)"` | justified: no match is reported as `none` on the next lines |
-| `scripts/package_install_smoke.sh:850` | `grep -ho 'Kanama Web [^"\]*' "$work_dir/web-smoke/"*.log "$web_result" 2>/dev/null \| sort -u \| head -n 5 >&2 \|` | justified: diagnostics after the verdict |
+| `scripts/package_install_smoke.sh:874` | `grep -ho 'Kanama Web [^"\]*' "$work_dir/web-smoke/"*.log "$web_result" 2>/dev/null \| sort -u \| head -n 5 >&2 \|` | justified: diagnostics after the verdict |
 | `scripts/record_gate_evidence.py:40` | `except (OSError, subprocess.CalledProcessError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/runtime_smoke.sh:30` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/runtime_smoke.sh:40` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar -PkanamaApiExercise=true >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
