@@ -139,17 +139,21 @@ val configuredIosProjectDir =
  * same rule as the kit's `buildIosScripts`). Without a project dir the dirs are the roots.
  */
 fun iosScriptRoots(scriptDirs: List<String>, projectDir: String?): List<File> {
-  val project = projectDir?.let { file(it).canonicalFile }
+  val project =
+    projectDir?.let { file(it).absoluteFile } ?: return scriptDirs.map { file(it).absoluteFile }
+  val projectCanonical = project.canonicalFile
   return scriptDirs.map { dir ->
     val scripts = file(dir).absoluteFile
+    // The usual case: both spelled the same way, the form KSP reports its files in. A symlink
+    // inside the project then changes nothing.
+    if (scripts.startsWith(project)) return@map project
     val canonical = scripts.canonicalFile
-    if (project == null || !canonical.startsWith(project)) return@map scripts
-    // Walk up from the dir as given (the form KSP reports its files in, a symlink like /tmp kept)
-    // by the folders between the project and the scripts dir.
+    if (!canonical.startsWith(projectCanonical)) return@map scripts
+    if (canonical == projectCanonical) return@map scripts
+    // Spelled differently (a symlink such as /tmp on one side only): walk up from the dir as given
+    // by the folders between the project and the scripts dir, so the root keeps KSP's form.
     var root = scripts
-    repeat(if (canonical == project) 0 else canonical.relativeTo(project).toPath().nameCount) {
-      root = root.parentFile
-    }
+    repeat(canonical.relativeTo(projectCanonical).toPath().nameCount) { root = root.parentFile }
     root
   }
 }

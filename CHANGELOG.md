@@ -57,6 +57,13 @@ classes Web wraps. A new node is yours to add to the tree or `queueFree()`; a ne
 reference of your own, as before. Plain `Object` classes (`UndoRedo`, `JSONRPC`) get none, since
 Kotlin has no `free()` for them. Ports no longer need a local `ClassDB.instantiate` helper.
 
+### Fixed — iOS from a source checkout finds scripts outside `kotlin-src`
+
+`installIosAddon` registered a script in a scripts folder named anything but `kotlin-src` (say `game/kotlin`)
+as `res://X.kt`, so a scene that attached `res://game/kotlin/X.kt` found no script on the phone. A scripts
+folder inside the project now registers each script under its path in the project, as `buildIosScripts` in
+the kit already did. A project with its scripts in `kotlin-src/` at the top is unchanged.
+
 ### Fixed — an Android export after a Godot upgrade no longer stops at the old build template
 
 Godot refuses an Android export when `res://android/build` was installed by another Godot version (4.7
@@ -5215,11 +5222,6 @@ they are why the defects above went unseen:
   `Array[CustomResource]` also match. Runtime smoke now pins the reported
   shape: typed member + typed local assignment, `is` check, load identity, and
   a property round-trip.
-- **iOS from a source checkout: scripts outside a `kotlin-src` folder are found by their `res://` path.**
-  `installIosAddon` registered a script in a folder named anything but `kotlin-src` (say `game/kotlin`)
-  as `res://X.kt`, so a scene that attached `res://game/kotlin/X.kt` found no script on the phone. With
-  `-PkanamaIosProjectDir` given, a scripts folder inside the project now registers its path in the
-  project, as `buildIosScripts` already did. A `kotlin-src` project is unchanged.
 
 ### Changed
 

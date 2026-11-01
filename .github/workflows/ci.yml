@@ -282,11 +282,20 @@ jobs:
         # The in-repo script fixtures (src/iosScriptFixtures/kotlin-src: the task 128 B Godot-enum
         # script members, enum-typed virtuals, the required `_get_space_state` return) compile into
         # the same build, so the iOS KSP emitter's output is compiled on every mobile PR. This job
-        # uploads nothing, so the fixtures never ship.
+        # uploads nothing, so the fixtures never ship. The fixtures folder is passed as the project,
+        # and a second scripts folder (game/kotlin) checks that a script registers under its path in
+        # the project, whatever its folder is called.
         run: |
-          fixtures="-PkanamaIosProjectScriptsDir=src/iosScriptFixtures/kotlin-src"
+          dir=src/iosScriptFixtures
+          fixtures=("-PkanamaIosProjectDir=$dir" "-PkanamaIosProjectScriptsDirs=$dir/kotlin-src,$dir/game/kotlin")
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            ./gradlew createIosDeviceDebugXcframework "$fixtures"
+            ./gradlew createIosDeviceDebugXcframework "${fixtures[@]}"
           else
-            ./gradlew assembleIosDeviceKanamaXcframework "$fixtures"
+            ./gradlew assembleIosDeviceKanamaXcframework "${fixtures[@]}"
           fi
+          for path in res://kotlin-src/GateFixtureScript.kt res://game/kotlin/NestedRootFixture.kt; do
+            if ! grep -rqF "\"$path\"" build/generated/ksp/iosArm64; then
+              echo "::error::the iOS script registry does not register $path"
+              exit 1
+            fi
+          done
