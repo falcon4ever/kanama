@@ -12,7 +12,7 @@ import net.multigesture.kanama.generated.GodotEnumFixtureScriptSignals
 
 // Task 128 B compile fixture: every Godot-enum script-member shape the iOS emitter marshals (scalar
 // enum + bitfield properties, an enum list, registered-function enum arg/return, @Signal and @Rpc enum
-// args). Compiled by the CI iOS job (`-PkanamaIosProjectScriptsDir=src/iosScriptFixtures/kotlin-src`);
+// args). Compiled by the CI iOS job (`-PkanamaIosProjectScriptsDirs=src/iosScriptFixtures/kotlin-src,…`);
 // the desktop twin runs in the example project (GodotEnumExportSmoke).
 @ScriptClass(attachTo = "Node")
 class GodotEnumFixtureScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {

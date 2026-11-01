@@ -127,6 +127,37 @@ val configuredIosScriptDirs =
     .orElse(providers.gradleProperty("kanamaProjectScriptsDirs"))
     .orElse(providers.gradleProperty("kanamaProjectScriptsDir"))
 
+// The Godot project the scripts belong to (the one `installIosAddon` installs into), when the
+// caller names it.
+val configuredIosProjectDir =
+  providers.gradleProperty("kanamaIosProjectDir").orElse(providers.gradleProperty("kanamaProjectDir"))
+
+/**
+ * The script roots the processor derives each `res://` path from. A script's `res://` path is its
+ * path in the Godot project, wherever the scripts folder is (`game/kotlin`, not only `kotlin-src`):
+ * a scripts dir inside [projectDir] takes the project as its root, one outside keeps itself (the
+ * same rule as the kit's `buildIosScripts`). Without a project dir the dirs are the roots.
+ */
+fun iosScriptRoots(scriptDirs: List<String>, projectDir: String?): List<File> {
+  val project =
+    projectDir?.let { file(it).absoluteFile } ?: return scriptDirs.map { file(it).absoluteFile }
+  val projectCanonical = project.canonicalFile
+  return scriptDirs.map { dir ->
+    val scripts = file(dir).absoluteFile
+    // The usual case: both spelled the same way, the form KSP reports its files in. A symlink
+    // inside the project then changes nothing.
+    if (scripts.startsWith(project)) return@map project
+    val canonical = scripts.canonicalFile
+    if (!canonical.startsWith(projectCanonical)) return@map scripts
+    if (canonical == projectCanonical) return@map scripts
+    // Spelled differently (a symlink such as /tmp on one side only): walk up from the dir as given
+    // by the folders between the project and the scripts dir, so the root keeps KSP's form.
+    var root = scripts
+    repeat(canonical.relativeTo(projectCanonical).toPath().nameCount) { root = root.parentFile }
+    root
+  }
+}
+
 // Task 138 item 24: the iOS runtime self-tests (the C ptrcall matrix and the Kotlin OBJECTCALLS
 // rows, scene init + frame 1) are a Kanama test hook, not part of a user's game. They are compiled
 // only into a build made with -PkanamaIosSelfTest=true, which Kanama's device runners pass
@@ -480,9 +511,10 @@ configure<com.google.devtools.ksp.gradle.KspExtension> {
   // JVM target of this module has no script sources, so the arguments are harmless there.
   arg(
     "kanamaScriptRoots",
-    iosScriptDirs(configuredIosScriptDirs.orNull).map { file(it).absolutePath }.joinToString(
-      File.pathSeparator
-    ),
+    iosScriptRoots(iosScriptDirs(configuredIosScriptDirs.orNull), configuredIosProjectDir.orNull)
+      .map { it.absolutePath }
+      .distinct()
+      .joinToString(File.pathSeparator),
   )
   arg("kanamaIosRegistryAsResource", "false")
   // Task 131 item 9 / N7: an iOS skip (a @Export iOS cannot deliver, a method or virtual it cannot
