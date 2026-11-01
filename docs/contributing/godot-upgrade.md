@@ -122,9 +122,13 @@ These steps need a person or a device, so the script prints them and stops:
 
 - Run local CI against the new binary:
   `scripts/local_ci.sh /absolute/path/to/new_godot_binary`.
-- Run the red runs: `python3 scripts/gate_red_runs.py --strict`. No case names the pin, an empty
-  table or a Godot class's signature, so a bump needs no edit to `gate_red_runs.py`; a case that
-  fails on a new pin is a defect of that case, fixed the same way (read the value, insert a row).
+- Run the red runs: `python3 scripts/gate_red_runs.py --strict`. The cases that depend on what a
+  bump moves read it from the tree (the pin, the release kit's `config/features`, the iOS size
+  claim) and insert a row into a table like `PENDING_HELPER_SKIPS` instead of replacing an empty
+  one, so a bump needs no edit to `gate_red_runs.py`. A few cases still mutate a Godot-generated
+  wrapper by its literal signature (`Node.setProcessMode`, `Label.setText`, the `Node.getParent` hash); if a new Godot
+  changes one, that case stops with "cannot apply the mutation" and names the file: update the
+  case, the same way (read the value, or pick a member Godot did not touch).
 - **Delete stale Android build templates.** Since Godot 4.8 an Android export refuses a
   `res://android/build` installed by another Godot version ("Unable to set up Android
   build directory"). `android_smoke.sh` and `android_export_minified.sh` delete a template whose

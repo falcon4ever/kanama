@@ -606,6 +606,7 @@ step "step 6: the kit's Godot version, the other generated outputs, then the KDo
 # The release kit's project.godot names the Godot minor it was made for (`config/features`);
 # check_kit_version_pins.py holds it to the pin (task 139 U12). The other `config/features` lines
 # (example_project, web3dSmoke, the fixtures) are not gated and stay as they are.
+# Only the first element changes: an editor re-save appends the renderer (`("4.8", "Forward Plus")`).
 sync_kit_godot_feature() {
   python3 - "$ROOT_DIR/templates/release-kit/project.godot" "$PIN" <<'EOF'
 import re, sys
@@ -614,7 +615,7 @@ path, pin = sys.argv[1], sys.argv[2]
 minor = ".".join(pin.split(".")[:2])
 with open(path, encoding="utf-8") as handle:
     text = handle.read()
-new, count = re.subn(r'^(config/features=PackedStringArray\(")[0-9.]+("\))', r"\g<1>" + minor + r"\g<2>", text, count=1, flags=re.MULTILINE)
+new, count = re.subn(r'^(config/features=PackedStringArray\(")[0-9.]+(")', r"\g<1>" + minor + r"\g<2>", text, count=1, flags=re.MULTILINE)
 if count != 1:
     raise SystemExit(f"no config/features=PackedStringArray(\"x.y\") line in {path}")
 if new == text:
@@ -765,16 +766,19 @@ cat <<EOF
   2. Run local CI against the new binary: scripts/local_ci.sh $GODOT_BIN
      The runtime smoke re-records nothing: when Godot adds a builtin member, re-record the Web parity
      hashes from its log (generate_builtin_ops.py --record-parity <log>).
-  3. Run the API exercise rows headless and review the new classes' rows (runbook).
-  4. Re-run the platform smoke/device gates per the release-gate matrix (§6) in
+  3. Run the red runs: python3 scripts/gate_red_runs.py --strict
+     A case that cannot apply its mutation names the file it needs updated (runbook, "After the Script").
+  4. Run the API exercise rows headless and review the new classes' rows (runbook).
+  5. Re-run the platform smoke/device gates per the release-gate matrix (§6) in
      the internal task repo, and record them in evidence/gates.json. This script does NOT change
      support claims; support wording moves only after the matching gate passes.
-  5. Refresh release-facing wording by hand: CHANGELOG.md, README.md, docs
-     version badges/wording, templates, companion demo defaults. Review the
+  6. Refresh release-facing wording by hand: CHANGELOG.md, README.md, docs
+     version badges/wording, templates (the release kit's Godot version is already moved, step 6),
+     companion demo defaults. Review the
      .gdextension compatibility_minimum invariant before touching it
      (see AGENTS.md "Looks Wrong But Isn't").
-  6. Bump the KDoc docs-pin commit hash in docs/contributing/wrapper-maintenance.md.
-  7. Before tagging: scripts/fresh_clone_smoke.sh $GODOT_BIN
+  7. Bump the KDoc docs-pin commit hash in docs/contributing/wrapper-maintenance.md.
+  8. Before tagging: scripts/fresh_clone_smoke.sh $GODOT_BIN
 EOF
 if [[ ${#HUMAN_ITEMS[@]} -gt 0 ]]; then
   exit 3

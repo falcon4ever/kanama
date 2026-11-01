@@ -273,6 +273,19 @@ templates, and `--reset` and `--baseline-ref` re-run a bump that stopped half-wa
 Exit status 3 means only human decisions are left. `./gradlew ktfmtFormat` now always runs; it could skip a file that a regen had
 rewritten. See the [Godot Upgrade Runbook](docs/contributing/godot-upgrade.md).
 
+### Changed — tooling: a Godot bump needs no hand edit for the kit pin or the red runs
+
+Contributors: `scripts/upgrade_godot.sh` moves the release kit's `config/features` to the new pin's
+major.minor (step 6) and runs `check_kit_version_pins.py` in step 9, so the first `local_ci.sh` no
+longer stops on the kit's version. The summary line for the gate-evidence ledger says to re-run
+`generate_gates_index.py` once the entries are decided, and the list it prints at the end now
+includes the red runs. `local_ci.sh` names its KDoc stage after the pin instead of `4.7-stable`.
+In `gate_red_runs.py` the kit-pin and iOS size-claim cases read the current values from the tree
+(when the case runs, so one stale case fails alone), the pending-skip and known-finding cases insert
+a row instead of replacing an empty `{}`, and the signature cases no longer depend on a name a
+release announces: a `Source break` line naming `Node` announced the old mutation away. See the
+[Godot Upgrade Runbook](docs/contributing/godot-upgrade.md).
+
 ### Changed — tooling: a `KANAMA-BLOCKED` marker can name a GitHub issue
 
 Contributors: `scripts/audit_stale_blockers.py` accepts `issue:<n>` tokens. The marker holds while GitHub issue #<n> is open
@@ -5243,18 +5256,6 @@ they are why the defects above went unseen:
   `scripts/check_native_call_surface.py` (a `local_ci.sh` stage) fails the build
   if a source change adds a call shape that is not prewarmed. No ABI change.
   This is a hardening change with no known user-visible symptom.
-
-### Changed — tooling: a Godot bump needs no hand edit for the kit's version, the gates index or the red-run cases
-
-Contributors: `scripts/upgrade_godot.sh` moves the release kit's `config/features` to the new pin's
-major.minor (step 6) and runs `check_kit_version_pins.py` in step 9, so the first `local_ci.sh` no
-longer stops on the kit's version. The summary line for the gate-evidence ledger now says to re-run
-`generate_gates_index.py` after the entries are decided. `local_ci.sh` names its KDoc stage after the
-pin instead of `4.7-stable`. In `gate_red_runs.py` the kit-pin case reads the current pin and
-`config/features`, the pending-skip and known-finding cases insert a row instead of replacing an empty
-`{}`, the signature cases no longer mutate `Node` (a `Source break` line naming it announced the
-old mutation away; the qualified-owner case mutates `OwnedScriptResource`), and the iOS size-claim case reads the numbers from the page. See the
-[Godot Upgrade Runbook](docs/contributing/godot-upgrade.md).
 
 ## 0.4.0 - 2026-07-24
 

@@ -44,6 +44,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -86,10 +87,10 @@ class Append:
 class Case:
     gate: str  # name shown in the table
     cmd: list[str]  # run from WORK
-    mutations: list  # Edit | Create | Delete | Rename | Append
+    mutations: list | Callable[[], list]  # Edit | Create | Delete | Rename | Append; a callable is called when the case runs (see `current`)
     # Substring the red run must print (stdout + stderr); a tuple names alternatives, any one of which will
     # do (a crash ends in SIGABRT through Godot's macOS crash handler but SIGSEGV on Linux).
-    expect: str | tuple[str, ...]
+    expect: str | tuple[str, ...] | Callable[[], str | tuple[str, ...]]  # a callable is called when the case runs, before the mutation
     how: str  # one line for the table: what the mutation does
     env: dict[str, str] = field(default_factory=dict)
     timeout: int = 600
@@ -280,21 +281,51 @@ def py(name, *args):
     return script(name, *args)
 
 
-def current(path: str, pattern: str, what: str) -> str:
-    """The first group of [pattern] in [path] of the dev checkout, as the gate under test reads it. A case
-    built from the pin or from a table a bump rewrites must not name today's value (task 139 U15): the next
-    bump would leave the mutation unappliable. A value that is gone stops the harness naming what it could not read."""
-    match = re.search(pattern, (SRC / path).read_text(encoding="utf-8"), re.MULTILINE)
+def current(path: str, pattern: str, what: str) -> re.Match:
+    """The match of [pattern] in [path] of the throwaway checkout, as the gate under test reads it. A case built
+    from the pin or from a table a bump rewrites must not name today's value (task 139 U15): the next bump
+    would leave the mutation unappliable. It is read when the CASE runs (a case's mutations and expected text
+    may be callables), so a value that is gone fails that one case, never the harness (task 139 review: #388
+    made a stale case fail alone, and `--list` and `--only` must keep loading)."""
+    match = re.search(pattern, (WORK / path).read_text(encoding="utf-8"), re.MULTILINE)
     if not match:
-        raise SystemExit(f"gate_red_runs.py: cannot read {what} from {path} (/{pattern}/); update the case that needs it")
-    return match.group(1)
+        raise UnappliableMutation(f"cannot read {what} from {path} (/{pattern}/); update the case that needs it")
+    return match
 
 
-# What a Godot bump moves, read where the gates read it (never written into a case as a literal).
-GODOT_PIN = current("gradle.properties", r"^kanamaGodotVersion=(\S+)", "kanamaGodotVersion")
-KIT_FEATURES = current("templates/release-kit/project.godot", r'^config/features=PackedStringArray\("([0-9.]+)"', "the kit's config/features")
-IOS_SIZE_DEBUG = int(current("docs/contributing/backends/ios.md", r"roughly (\d+) MB debug / \d+ MB release", "the iOS size claim"))
-IOS_SIZE_RELEASE = int(current("docs/contributing/backends/ios.md", r"roughly \d+ MB debug / (\d+) MB release", "the iOS size claim"))
+# The kit's `config/features` (its first element, as check_kit_version_pins.py reads it: an editor re-save
+# appends the renderer feature) and the Godot pin.
+KIT_FEATURES_RE = r'^config/features=PackedStringArray\("([0-9.]+)"'
+
+
+def kit_godot_mutation() -> list:
+    features = current("templates/release-kit/project.godot", KIT_FEATURES_RE, "the kit's config/features").group(1)
+    return [Edit("templates/release-kit/project.godot", f'config/features=PackedStringArray("{features}"', f'config/features=PackedStringArray("0.{features}"')]
+
+
+def kit_godot_expect() -> str:
+    features = current("templates/release-kit/project.godot", KIT_FEATURES_RE, "the kit's config/features").group(1)
+    pin = current("gradle.properties", r"^kanamaGodotVersion=(\S+)", "kanamaGodotVersion").group(1)
+    return f"config/features 0.{features}, but kanamaGodotVersion is {pin}"
+
+
+# The marked iOS size claim, found with the checker's own pattern (it allows `~110 MB` and decimals).
+def _ios_claim() -> tuple[str, int, int]:
+    from check_doc_claims import IOS_SIZE_RE  # scripts/ is the harness's own directory
+
+    match = current("docs/contributing/backends/ios.md", IOS_SIZE_RE.pattern, "the iOS size claim")
+    return match.group(0), round(float(match.group(1))), round(float(match.group(2)))
+
+
+def ios_size_mutation() -> list:
+    claim, debug, release = _ios_claim()
+    return [Edit("docs/contributing/backends/ios.md", claim, f"{debug + 40} MB debug / {release} MB release")]
+
+
+def ios_size_expect() -> str:
+    _, debug, release = _ios_claim()
+    return f"claims {debug + 40} MB debug / {release} MB release, but"
+
 
 # A row for a table a bump may already have rows in: the mutation inserts after the opening brace, so it
 # applies to an empty `{}` and to a table with real rows alike (task 139 U16). `{(` + row + `,` is valid for both.
@@ -361,8 +392,8 @@ case("check_doc_claims.py", py("check_doc_claims.py"),
      [Edit("docs/contributing/platform-evidence.md", "the versions the corpus is driven on (protocol ", "the versions the corpus is driven on (protocol 9")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
 case("check_doc_claims.py (iOS size, marked doc)", py("check_doc_claims.py"),
-     [Edit("docs/contributing/backends/ios.md", f"roughly {IOS_SIZE_DEBUG} MB debug", f"roughly {IOS_SIZE_DEBUG + 40} MB debug")],
-     f"claims {IOS_SIZE_DEBUG + 40} MB debug / {IOS_SIZE_RELEASE} MB release, but", "the iOS backend page states an iOS static library size the measurement in version-support.md does not")
+     ios_size_mutation,
+     ios_size_expect, "the iOS backend page states an iOS static library size the measurement in version-support.md does not")
 case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
      [Create(f"{COMMON}/api/ZzRedRun.expect.kt", "package net.multigesture.kanama.api\n\nexpect fun redRun(a: Int = 1)\n")],
      "default argument(s) on an `expect` declaration", "an `expect fun` declares a default argument")
@@ -416,8 +447,8 @@ case("check_kit_version_pins.py (Min SDK)", py("check_kit_version_pins.py"),
      [Edit("scripts/package_install_smoke.sh", 'gradle_build/min_sdk="33"', 'gradle_build/min_sdk="26"')],
      "the smoke's preset has Min SDK 26, but the scripts AAR is built for 33", "the package smoke exports with a lower Min SDK than the plugin's inner build targets")
 case("check_kit_version_pins.py (Godot)", py("check_kit_version_pins.py"),
-     [Edit("templates/release-kit/project.godot", f'config/features=PackedStringArray("{KIT_FEATURES}")', f'config/features=PackedStringArray("0.{KIT_FEATURES}")')],
-     f"config/features 0.{KIT_FEATURES}, but kanamaGodotVersion is {GODOT_PIN}", "the kit's project.godot names another Godot than the pin (the mutation and the expected text read the current pin and `config/features`)")
+     kit_godot_mutation,
+     kit_godot_expect, "the kit's project.godot names another Godot than the pin (the mutation and the expected text read the current pin and `config/features`)")
 case("check_kit_version_pins.py (plugin.cfg)", py("check_kit_version_pins.py"),
      [Edit("templates/starter/addons/kanama_tools/plugin.cfg", 'version="@KANAMA_VERSION@"', 'version="0.1"')],
      "the version must be version=\"@KANAMA_VERSION@\"", "the editor plugin's plugin.cfg states a literal version again (it was a stale 0.1)")
@@ -666,15 +697,19 @@ case("check_pt_tag_tables.py", py("check_pt_tag_tables.py"),
      "value-mismatch VOID", "one copy of the iOS ptrcall tag table is renumbered")
 # The unannounced-break cases do not mutate `Node` (task 139 U17): a real 4.8 `Source break` line naming
 # `Node.replaceBy`, or plain `Node`, announced the mutation away and the red step went green. The qualified-owner
-# case mutates `OwnedScriptResource`, Kanama's own desktop-only class (no Godot release changes it, so no
-# release's line names it); the plain case below it mutates `Label`, the Godot-owned class a bump touches least.
+# case mutates `OwnedScriptResource`, one of Kanama's own classes (no Godot release changes it, so no release's
+# line names it; it is in the jvm and ios snapshots, not the common one, which is what keeps a move to common
+# out of it). The `Label` case renames the `## Unreleased` heading instead: the gate reads the markers of that
+# exact heading and a missing section has none, so no real `Source break` line, whatever it names, can announce
+# the Godot-owned mutation.
 case("check_public_signature_changes.py (qualified owner)", py("check_public_signature_changes.py"),
      [Edit("CHANGELOG.md", "\n## Unreleased\n", "\n## Unreleased\n\n- **Source break:** red run: `OwnedScriptResource.instance` changed.\n"),
       Edit(f"{JVM}/net/multigesture/kanama/api/ScriptResources.kt", "    val resource: Resource,", "    val resourceRedRun: Resource,")],
      "unannounced source break", "a marker naming `OwnedScriptResource.instance` announces that member only, not an OwnedScriptResource.resource change")
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
-     [Edit(f"{COMMON}/api/Label.kt", "    fun setText(text: String) {", "    fun setText(text: String, extra: Int) {")],
-     "unannounced source break", "a public signature changes without a CHANGELOG `Source break` line")
+     [Edit("CHANGELOG.md", "\n## Unreleased\n", "\n## Unreleased (red run: no markers)\n"),
+      Edit(f"{COMMON}/api/Label.kt", "    fun setText(text: String) {", "    fun setText(text: String, extra: Int) {")],
+     "unannounced source break", "a public signature changes while `## Unreleased` carries no `Source break` line (the heading is renamed, so no real line can announce the mutation)")
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit(f"{JVM}/net/multigesture/kanama/api/ScriptResources.kt", "    val resource: Resource,", "    val resourceRedRun: Resource,")],
      "unannounced source break", "a desktop-only declaration disappears and is not in the common tree (not a move to common, task 129 C)")
@@ -1691,7 +1726,10 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
             skip(next(line.strip() for line in out.splitlines() if c.skip_when in line))
             continue
         try:
-            with Mutator(c.mutations):
+            # Resolved before anything is mutated: a callable reads the values it needs from the clean tree.
+            mutations = c.mutations() if callable(c.mutations) else c.mutations
+            expect = c.expect() if callable(c.expect) else c.expect
+            with Mutator(mutations):
                 red_rc, red_out, red_secs = run(c)
         except UnappliableMutation as error:
             failures.append(f"{c.gate}: {error}")
@@ -1699,7 +1737,7 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
             rows.append(f"| `{c.gate}` | {c.how} | UNPROVEN | - |")
             continue
         green_rc, green_out, _ = run(c)
-        alternatives = (c.expect,) if isinstance(c.expect, str) else c.expect
+        alternatives = (expect,) if isinstance(expect, str) else expect
         matched = next((text for text in alternatives if text in red_out), None)
         ok = True
         if red_rc == 0:
@@ -1707,7 +1745,7 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
             ok = False
         elif matched is None:
             failures.append(
-                f"{c.gate}: failed (exit {red_rc}) but without the expected text {c.expect!r}:\n{red_out[-800:]}"
+                f"{c.gate}: failed (exit {red_rc}) but without the expected text {expect!r}:\n{red_out[-800:]}"
             )
             ok = False
         if green_rc != 0:
