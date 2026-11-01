@@ -72,10 +72,10 @@ releases follow the same runbook; the diff is just smaller.
    | 3. classify | diffs the new API against `HEAD`: no-op, metadata-only, or an API change with the added and removed classes and the removed methods, properties, signals, constants and enums |
    | 4. constants | `generate_name_constants.py` |
    | 5. tree | `generate_api_wrapper.py --write-tree`: re-renders every wrapper on every platform, **adopts every class the new API adds**, keeps the desktop `ObjectCalls` `actual` set in step with the expect, and repeats until a pass writes nothing |
-   | 6. outputs | the builtin operators and methods, the engine-method table, the Web backend, wrappers and exercise, the API exercise, the generator, coverage, enum-migration and iOS-handwritten pages, then the KDoc sync |
+   | 6. outputs | the release kit's `config/features` (`templates/release-kit/project.godot`, moved to the pin's major.minor), the builtin operators and methods, the engine-method table, the Web backend, wrappers and exercise, the API exercise, the generator, coverage, enum-migration and iOS-handwritten pages, then the KDoc sync |
    | 7. format | `./gradlew ktfmtFormat` (the regen leaves the iOS `ObjectCalls` region, the expect and toggled desktop members unformatted) |
    | 8. gates index | `docs/reference/generated/gates.md`, last because it reads the gate list |
-   | 9. gates | every drift gate, `ktfmtCheck`, and the API validation, run to the end |
+   | 9. gates | every drift gate, `ktfmtCheck`, the version pins (including the release kit's, `check_kit_version_pins.py`), and the API validation, run to the end |
 
    API validation runs in step 9, after the re-adopt. Before step 5 the
    committed wrappers still call the methods the new Godot removed, so a
@@ -102,7 +102,9 @@ releases follow the same runbook; the diff is just smaller.
      failure.
    - *Gate evidence.* A pin move makes every entry of `evidence/gates.json`
      stale. Re-run each gate on the new pin, or accept it stale with a reason and
-     an expiry date.
+     an expiry date. Then re-run
+     `python3 scripts/generate_gates_index.py --markdown docs/reference/generated/gates.md`:
+     the index page shows the ledger, so it is stale again once you edit it.
 
    The summary also lists the classes this Godot added, all adopted by step 5,
    with the editor-only ones (`api_type` editor) marked; step 5's own output
@@ -120,6 +122,9 @@ These steps need a person or a device, so the script prints them and stops:
 
 - Run local CI against the new binary:
   `scripts/local_ci.sh /absolute/path/to/new_godot_binary`.
+- Run the red runs: `python3 scripts/gate_red_runs.py --strict`. No case names the pin, an empty
+  table or a Godot class's signature, so a bump needs no edit to `gate_red_runs.py`; a case that
+  fails on a new pin is a defect of that case, fixed the same way (read the value, insert a row).
 - **Delete stale Android build templates.** Since Godot 4.8 an Android export refuses a
   `res://android/build` installed by another Godot version ("Unable to set up Android
   build directory"). `android_smoke.sh` and `android_export_minified.sh` delete a template whose
@@ -147,7 +152,8 @@ These steps need a person or a device, so the script prints them and stops:
 - Re-import the demos with the new editor, commit the `.import` churn in the demos
   repo, and move `DEMOS_REF` in `.github/workflows/web.yml`.
 - Refresh release-facing wording by hand: `CHANGELOG.md`, `README.md`, docs
-  badges and version wording, templates, and companion demo defaults. The
+  badges and version wording, templates (the release kit's Godot version is already
+  moved, step 6), and companion demo defaults. The
   `.gdextension` `compatibility_minimum` is an invariant with its own rationale
   (see `AGENTS.md` "Looks Wrong But Isn't"); review it deliberately before
   touching it.

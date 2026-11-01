@@ -289,7 +289,9 @@ stage "gates index docs check"
 # gate ledger (task 99); regenerate with the same command minus --check.
 python3 "$ROOT_DIR/scripts/generate_gates_index.py" --markdown "$ROOT_DIR/docs/reference/generated/gates.md" --check
 
-stage "wrapper KDoc staleness check (4.7-stable)"
+# The stage name carries the pin, so it does not go stale at a bump (the index page shows `<pin>`).
+godot_pin="$(sed -nE 's/^kanamaGodotVersion=(.+)$/\1/p' "$ROOT_DIR/gradle.properties" | tr -d '[:space:]')"
+stage "wrapper KDoc staleness check ($godot_pin)"
 # Guarded: KDoc is synced from Godot's doc/classes (see docs/contributing/wrapper-maintenance.md
 # "Docs version pin"). Runners without a Godot source checkout skip this instead of failing.
 kdoc_docs="${GODOT_DOCS:-}"

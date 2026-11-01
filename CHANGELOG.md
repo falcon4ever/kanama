@@ -5244,6 +5244,18 @@ they are why the defects above went unseen:
   if a source change adds a call shape that is not prewarmed. No ABI change.
   This is a hardening change with no known user-visible symptom.
 
+### Changed — tooling: a Godot bump needs no hand edit for the kit's version, the gates index or the red-run cases
+
+Contributors: `scripts/upgrade_godot.sh` moves the release kit's `config/features` to the new pin's
+major.minor (step 6) and runs `check_kit_version_pins.py` in step 9, so the first `local_ci.sh` no
+longer stops on the kit's version. The summary line for the gate-evidence ledger now says to re-run
+`generate_gates_index.py` after the entries are decided. `local_ci.sh` names its KDoc stage after the
+pin instead of `4.7-stable`. In `gate_red_runs.py` the kit-pin case reads the current pin and
+`config/features`, the pending-skip and known-finding cases insert a row instead of replacing an empty
+`{}`, the two signature cases mutate `MainThread` (a `Source break` line naming `Node` announced the
+old mutation away), and the iOS size-claim case reads the numbers from the page. See the
+[Godot Upgrade Runbook](docs/contributing/godot-upgrade.md).
+
 ## 0.4.0 - 2026-07-24
 
 ### Added
