@@ -720,11 +720,93 @@ jobs:
           scripts/package_install_smoke.sh --${{ matrix.package }} ${{ matrix.mode }} packages/kanama-*.zip \
             "$HOME/godot/Godot.app/Contents/MacOS/Godot"
 
+  # Web export from the packages alone (task 135 item 5): the Linux kit and the store addon, each unzipped into a fresh
+  # project with a fresh GRADLE_USER_HOME, run exportWeb (the scripts linked against the packaged Web runtime klib, and
+  # Godot's headless Web export with the template from Godot's own templates folder), then the export plays in headless
+  # Chrome with the browser smoke's starter driver.
+  web-export:
+    name: web-export (${{ matrix.package }})
+    runs-on: ubuntu-24.04
+    needs: [desktop-kit, store-addon]
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [desktop-kit, store-addon]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Report browser and Node versions
+        shell: bash
+        run: |
+          google-chrome --version
+          node --version
+
+      - name: Cache Godot and the Web export template
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-web-${{ env.GODOT_VERSION }}-linux-x86_64
+
+      - name: Download Godot and the Web export template
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p "$HOME/godot"
+          godot_zip="$(mktemp)"
+          curl -fL -o "$godot_zip" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q "$godot_zip" -d "$HOME/godot"
+          rm -f "$godot_zip"
+          tpz="$(mktemp)"
+          curl -fL -o "$tpz" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q -j "$tpz" "templates/web_nothreads_release.zip" -d "$HOME/godot"
+          rm -f "$tpz"
+
+      # Where Editor > Manage Export Templates puts it: exportWeb finds it there with no property.
+      - name: Install the Web export template
+        shell: bash
+        run: |
+          templates="$HOME/.local/share/godot/export_templates/${GODOT_VERSION/-/.}"
+          mkdir -p "$templates"
+          cp "$HOME/godot/web_nothreads_release.zip" "$templates/"
+
+      - name: Download the Linux desktop kit
+        if: matrix.package == 'desktop-kit'
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-desktop-kit-linux-x64
+          path: packages
+
+      - name: Download the store addon
+        if: matrix.package == 'store-addon'
+        uses: actions/download-artifact@v7
+        with:
+          name: kanama-store-addon
+          path: packages
+
+      - name: Export for the Web from the ${{ matrix.package }}
+        shell: bash
+        run: |
+          godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
+          chmod +x "$godot_bin"
+          scripts/package_install_smoke.sh --${{ matrix.package }} --web packages/kanama-*.zip "$godot_bin"
+
   publish-release:
     name: publish-release
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-24.04
-    needs: [store-addon, android-export, ios-export]
+    needs: [store-addon, android-export, ios-export, web-export]
     permissions:
       contents: write
 

@@ -1,9 +1,10 @@
 # Web Internals
 
 This page records the current Web implementation path. Web is **Experimental
-(Kotlin/Wasm preview)** on the Godot 4.7 stable baseline — not a Supported target,
-with a source-checkout export workflow (no packaged addon) and a user-facing
-[export guide](../../exporting/web.md). The API/build flow is less settled than
+(Kotlin/Wasm preview)** on the Godot 4.7 stable baseline — not a Supported target.
+A project exports from a release kit or the store addon (`./gradlew exportWeb`,
+the Kanama Gradle plugin) or from a source checkout; the user-facing
+[export guide](../../exporting/web.md) has both. The API/build flow is less settled than
 desktop, Android, or iOS.
 
 ## Web Compared with the Other Backends
@@ -56,7 +57,15 @@ teardown to baseline, and fails on stale-handle use.
 ### Kotlin/Wasm Backend
 
 Gameplay and the Kanama Web runtime live in `web-runtime/` and compile to the
-`wasmJs` target. The Web API wrappers are in `src/commonMain/.../api/`: the
+`wasmJs` target. The runtime's sources (`web-runtime/src/commonMain`,
+`wasmJsMain`, and their unit tests in `wasmJsTest`) compile in the library
+module `:kanama-web` (`web-runtime/library/`), which has no KSP run and no
+script of its own (`checkNoScriptClassInRuntime`). `:web-runtime` is the
+executable: it links that library with a project's scripts and the registry
+and `main()` KSP generates for them, exactly as a kit project does (see
+[The Kit Path](#the-kit-path)). The spike benchmark's own scripts live in
+`src/webSpikeGodot/kotlin/` and compile only when no demo or project is
+selected. The Web API wrappers are in `src/commonMain/.../api/`: the
 Godot classes are generated into `api/generated/<Class>.kt` (see "Generated
 wrapper tree" below) and the hand-shaped remainder sits beside them by concern
 (`WebGodotApi.kt` base + coverage markers, `WebSignals.kt`, `WebCoroutines.kt`,
@@ -1004,7 +1013,9 @@ only.
 
 The `exportWeb` task stages a copy of the project without `addons/kanama/`
 and `kotlin-src/` and points every scene at the generated Web proxies, so no staged
-scene attaches a `.kt` script. The Kanama Tools plugin stays enabled in that copy;
+scene attaches a `.kt` script. A scripts folder other than `kotlin-src/`
+(`-PkanamaProjectScriptsDir`, kit projects only) may hold scenes and assets
+too: only its `.kt` files and their `.uid` sidecars stay out of the copy. The Kanama Tools plugin stays enabled in that copy;
 its export check (see the Android guide's
 [Export Guard](../../getting-started/editor-workflow.md#export-guard)) finds no `.kt` script to check and stays
 silent. A plain Godot Web export of the project itself is checked like the other
@@ -1044,6 +1055,71 @@ with the list of supported keys. The export also writes
 `kanama-web/export-report.json` listing every served file, its size, the total
 payload, the renderer, the thread setting, and the source-map policy; no
 workstation-absolute paths leak into the served HTML.
+
+### The Kit Path
+
+A project made from a release kit or the store addon has no checkout to build
+from. Its `addons/kanama/maven` carries the runtime klib
+`net.multigesture.kanama:kanama-web` (`kanama-web-wasm-js`) and the `wasmJs`
+klib of `kanama-common-api`, published by `publishKanamaWebPackage` in the same
+packaging run as the processor; `addons/kanama/web/` carries the bridge, the
+shell, Kanama's Web preset and `serve_export.py`. Packaging fails when that
+bridge's `KANAMA_WEB_PROTOCOL_VERSION` is not the processor's
+(`verifyKanamaWebPackageProtocol`). The Kanama Gradle plugin's `exportWeb` is
+`:web-runtime:exportWeb -PkanamaWebProjectDir` without the checkout:
+
+1. It checks that the addon has the two klibs and the files of
+   `addons/kanama/web/`, naming the zip to unzip again when not. It does not
+   depend on `buildScripts`: Godot exports the staged copy, which has no
+   `addons/kanama/` (so no desktop scripts jar is loaded) and no `kotlin-src/`,
+   and whose scenes attach the generated proxies, which declare the exported
+   properties (see Export Staging). The package smoke exports with no scripts
+   jar and a scene-set property to prove it.
+2. It merges `kotlin-src` (or the folder inside the project that
+   `-PkanamaProjectScriptsDir` names, as for `buildAndroidScripts` and
+   `buildIosScripts`) with `web/kotlin-src` and writes a plugin-owned build
+   to `build/kanama/web/` (resources under
+   `gradle-plugin/src/main/resources/.../web/`): one `wasmJs` executable with
+   the merged root as its source, KSP with `kanamaRuntimeTarget=web` and
+   `kanamaGodotProjectDir`, `kanama-web` as its dependency, the module named
+   `web-runtime` as the shell expects, and webpack's output named
+   `kanama-web-spike.js`. Its settings declare four Maven repositories
+   (the addon, exclusive for `net.multigesture`; Google; Central; JitPack),
+   never `mavenLocal()`, plus the Node.js, Yarn and Binaryen download sites,
+   each exclusive to its tool. The first build downloads about 90 MB: Node.js
+   (57 MB), Binaryen (7 MB) and Yarn (1 MB) into `$GRADLE_USER_HOME/nodejs`,
+   `binaryen` and `yarn`, and the Kotlin Gradle plugin's npm tooling (webpack
+   and the rest, 488 packages, 21 MB of tarballs from the npm registry) into
+   `~/.kotlin/kotlin-npm-tooling`, which a fresh Gradle home does not reset
+   (Kotlin 2.4.21 on macOS arm64, measured 2026-10-31). The first-build line
+   is printed when either folder is missing.
+3. It runs that build's `wasmJsBrowserDistribution` with the project's
+   `gradlew`, compiling in-process in a daemon with a 3 GB heap
+   (`-PkanamaWebHeap` for a larger project), and checks that the generated
+   protocol is the shipped bridge's.
+4. It stages, exports and finishes as the checkout does, into
+   `build/kanama/web/godot-project/` and `build/web-export/`.
+
+The merge, the staging and the finish are one implementation,
+`KanamaWebExport` in `gradle-plugin/src/shared/`, which the root `buildSrc`
+compiles too; `:web-runtime`'s `mergeWebGameplayScripts`, `stageWebProject`
+and `exportWeb` call it.
+
+The seam that makes the separate compile possible: the generated
+`KanamaWebProjectRegistry` implements the runtime's `KanamaWebProjectScripts`,
+the only way `Main.kt` reaches the project's scripts, and the generated
+`main()` passes it to `startKanamaWeb`, which also installs the script-error
+report and the Godot backend. A dependency klib's own `main()` never runs, so
+the runtime has none; a module whose `main()` did not start it fails at the
+bridge's first call with `Kanama Web runtime not started`
+(`kanamaWebStartProblem`). Generated code reaches the runtime's float and value
+text forms and a script by its handle through `KanamaWebGenerated`, and builds
+Godot wrappers with their public `(WebObjectId)` constructor. All three
+declarations are public behind the `InternalKanamaBackendApi` opt-in, which the
+generated file declares; `WebRegistrySeamTest` holds the emitter to them. The
+demo corpus compiles against the runtime as a separate module the same way;
+only the `web3d` fixture's probes, which reach runtime internals, link it as a
+friend module (`-Xfriend-modules`).
 
 ### Payload and Source Maps
 

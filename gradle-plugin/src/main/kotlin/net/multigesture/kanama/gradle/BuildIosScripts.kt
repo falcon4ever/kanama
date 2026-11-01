@@ -432,7 +432,8 @@ abstract class BuildIosScripts : DefaultTask() {
     val scriptRoot = if (scriptsPath.startsWith(projectPath)) projectPath else scriptsPath
     val values =
       mapOf(
-        "KANAMA_MAVEN" to project.resolve("addons/kanama/maven").absoluteFile.toURI().toString(),
+        "KANAMA_MAVEN" to
+          kotlinString(project.resolve("addons/kanama/maven").absoluteFile.toURI().toString()),
         "INNER_PROJECT" to INNER_PROJECT,
         "KANAMA" to KanamaVersions.KANAMA,
         "KOTLIN" to KanamaVersions.KOTLIN,
@@ -455,10 +456,6 @@ abstract class BuildIosScripts : DefaultTask() {
       if (!file.isFile || file.readText() != written) file.writeText(written)
     }
   }
-
-  /** [text] as the inside of a Kotlin string literal of the inner build script. */
-  private fun kotlinString(text: String): String =
-    text.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$")
 
   private fun innerJvmArgs(heapSize: String) =
     "-Xmx$heapSize -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8"

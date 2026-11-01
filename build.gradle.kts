@@ -1058,6 +1058,8 @@ tasks.register<Zip>("packageDesktopKit") {
     tasks.named("jvmJar"),
     publishKanamaPackageMavenRepository,
     publishKanamaAndroidPackage,
+    publishKanamaWebPackage,
+    verifyKanamaWebPackageProtocol,
     generatePackageGdextensionDescriptor,
     generatePackageExtensionList,
     verifyNativeBootstrapArtifact,
@@ -1081,6 +1083,7 @@ tasks.register<Zip>("packageDesktopKit") {
   from(layout.buildDirectory.file("libs/kanama.jar")) { into("addons/kanama") }
   from(packageMavenRepositoryDir) { into("addons/kanama/maven") }
   from(packageMavenGdignore) { into("addons/kanama/maven") }
+  into("addons/kanama/web") { with(kanamaWebAssetsSpec) }
   into("addons/kanama") { with(kanamaChecksSpec) }
   from(nativeBootstrapArtifact) { into("addons/kanama/bin/${packagePlatformClassifier.get()}") }
   from(packageExtensionListFile) {
@@ -1097,6 +1100,8 @@ tasks.register<Zip>("packageStoreAddon") {
     tasks.named("jvmJar"),
     publishKanamaPackageMavenRepository,
     publishKanamaAndroidPackage,
+    publishKanamaWebPackage,
+    verifyKanamaWebPackageProtocol,
     generatePackageGdextensionDescriptor,
   )
   // The iOS runtime: built here on a Mac, or taken from -PkanamaIosPackageDir (package.yml builds the
@@ -1151,6 +1156,7 @@ tasks.register<Zip>("packageStoreAddon") {
   // The template's kotlin-src/HelloScript.kt is the setup script's input, not a resource: Godot
   // would register it as a second HelloScript class and export it.
   from(packageMavenGdignore) { into("addons/kanama/templates") }
+  into("addons/kanama/web") { with(kanamaWebAssetsSpec) }
   into("addons/kanama") { with(kanamaChecksSpec) }
   from(layout.projectDirectory.file("LICENSE")) { into("addons/kanama") }
   from(layout.projectDirectory.file("templates/store-addon/README.md")) { into("addons/kanama") }
@@ -2607,6 +2613,79 @@ val publishKanamaIosPackage by
         val name = path.substringAfterLast('/')
         val main = target.resolve("$version/$name-$version.${if (name.endsWith("shim")) "zip" else "klib"}")
         if (!main.isFile) throw GradleException("$name was not published: ${main.absolutePath}")
+      }
+    }
+  }
+
+// --- The Web runtime in the package repository (task 135 item 5). Every kit and the store addon carry
+// net.multigesture.kanama:kanama-web (the Kotlin/Wasm runtime klib, :kanama-web) and the wasmJs klib of
+// kanama-common-api in addons/kanama/maven, and the Web export's own files (the bridge, the HTML shell
+// and Kanama's Web preset) in addons/kanama/web. A kit project's `exportWeb` (the Kanama Gradle plugin)
+// links the project's scripts against the klib and exports with those files, so a Web export needs no
+// Kanama checkout. Kotlin/Wasm builds on every host, so every package builds them.
+val kanamaWebPackagePaths =
+  listOf(
+    "net/multigesture/kanama/kanama-web-wasm-js" to "kanama-web-wasm-js",
+    "net/multigesture/kanama/kanama-common-api-wasm-js" to "kanama-common-api-wasm-js",
+  )
+
+val publishKanamaWebPackage by
+  tasks.registering {
+    group = "publishing"
+    description =
+      "Put the Kanama Web runtime (kanama-web and kanama-common-api for wasmJs) into the package-local Maven repository."
+    mustRunAfter(cleanKanamaPackageMavenRepository)
+    dependsOn(
+      ":kanama-web:publishAllPublicationsToKanamaPackageRepository",
+      ":kanama-common-api:publishWasmJsPublicationToKanamaPackageRepository",
+    )
+    val repository = packageMavenRepositoryDir
+    val version = project.version.toString()
+    doLast {
+      for ((path, name) in kanamaWebPackagePaths) {
+        val klib = repository.get().asFile.resolve("$path/$version/$name-$version.klib")
+        if (!klib.isFile) throw GradleException("$name was not published: ${klib.absolutePath}")
+      }
+    }
+  }
+
+// The Web export's own files, as addons/kanama/web carries them, with a .gdignore: Godot neither
+// imports them nor ships them in a desktop or mobile export. serve_export.py serves an export the
+// way Export for the Web says (the checkout's copy, scripts/web).
+val kanamaWebBridge = layout.projectDirectory.file("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js")
+val kanamaWebAssetsSpec = copySpec {
+  from(kanamaWebBridge)
+  from(layout.projectDirectory.file("web-runtime/src/webSpikeGodot/assets/shell.html"))
+  from(layout.projectDirectory.file("web-runtime/src/webSpikeGodot/project/export_presets.cfg"))
+  from(layout.projectDirectory.file("scripts/web/serve_export.py")) { filePermissions { unix("rwxr-xr-x") } }
+  from(packageMavenGdignore)
+}
+
+// Design 135-5 §6: the bridge a package ships speaks the protocol its processor generates. The bridge
+// refuses a mismatched Kotlin/Wasm module at load, but in a package the two would only meet in a
+// user's export: the packaging stops here instead.
+val kanamaWebProcessorEmitter =
+  layout.projectDirectory.file("processor/src/main/kotlin/net/multigesture/kanama/processor/WebScriptCodeEmitter.kt")
+val verifyKanamaWebPackageProtocol by
+  tasks.registering {
+    group = "verification"
+    description = "Fails when the packaged Web bridge does not speak the processor's Web protocol."
+    val bridge = kanamaWebBridge
+    val emitter = kanamaWebProcessorEmitter
+    inputs.file(bridge)
+    inputs.file(emitter)
+    doLast {
+      val processor =
+        Regex("(?m)^\\s*const val PROTOCOL_VERSION = (\\d+)$").find(emitter.asFile.readText())
+          ?.groupValues?.get(1)?.toInt()
+          ?: throw GradleException("No PROTOCOL_VERSION in ${emitter.asFile}")
+      val shipped = net.multigesture.kanama.buildlogic.KanamaWebExport.bridgeProtocolVersion(bridge.asFile)
+      if (shipped != processor) {
+        throw GradleException(
+          "The Web bridge ${bridge.asFile.relativeTo(rootDir)} speaks protocol $shipped, but the " +
+            "processor (${emitter.asFile.relativeTo(rootDir)}) generates protocol $processor: " +
+            "raise the bridge's KANAMA_WEB_PROTOCOL_VERSION with the change that raised the processor's"
+        )
       }
     }
   }

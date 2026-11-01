@@ -179,7 +179,7 @@ class ColorScriptTypeTest {
       )
     )
     assertTrue(
-      registry.contains("net.multigesture.kanama.web.WebPackedFloats.encode(it.a)}"),
+      registry.contains("net.multigesture.kanama.web.KanamaWebGenerated.encodeFloat(it.a)}"),
       "pull packs four channels, NaN/INF spelled for GDScript",
     )
     assertEquals(

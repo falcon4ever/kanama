@@ -16,6 +16,9 @@ const trace = (msg) => {
 };
 
 const SCRIPT = "HelloScript";
+// The starter's greeting: HelloScript's default, or the one its scene sets (the package smoke sets one, to prove a
+// scene property reaches the Kotlin script through the export).
+const GREETING = process.env.KANAMA_WEB_STARTER_GREETING || "Hello from Kanama";
 // Frames of _process the run must see dispatch after _ready (about one second at 60 Hz).
 const MIN_PROCESS_DISPATCHES = 60;
 
@@ -88,7 +91,20 @@ export async function runStarter({ url, evaluate, navigate, deadline, exportDir 
     60_000,
     (snap) => snap.protocol > 0 && snap.helloReady >= 1 && snap.helloHandle > 0,
   );
-  if (!started.met) throw new Error(`Kotlin/Wasm ${SCRIPT} did not become ready`);
+  if (!started.met) {
+    // The page's own failure line (failKanamaWeb writes it under the canvas): a protocol mismatch, a
+    // module whose main() did not start the runtime, a bundle that did not load.
+    let pageFailure = null;
+    try {
+      pageFailure = await evaluate(
+        `document.body.dataset.status === "fail" ? (document.querySelector("#kanama-results")?.textContent ?? "") : null`,
+      );
+    } catch {
+      // the page is mid-navigation or gone; the error below still says what did not happen
+    }
+    const reason = pageFailure ? `: the page failed with ${String(pageFailure).split("\n")[0]}` : "";
+    throw new Error(`Kotlin/Wasm ${SCRIPT} did not become ready${reason}`);
+  }
   const ready = started.snap;
   const startupDurationMs = Date.now() - startupStart;
   trace(`ready: handle=${ready.helloHandle} protocol=${ready.protocol}`);
@@ -124,7 +140,7 @@ export async function runStarter({ url, evaluate, navigate, deadline, exportDir 
     processDispatching: running.met,
     // The label write every frame reaches Godot as applied commands.
     commandsApplied: atPeak.appliedCommands > ready.appliedCommands,
-    greetReturnsString: greeting === "Hello from Kanama, web",
+    greetReturnsString: greeting === `${GREETING}, web`,
     fullTeardownToZero: settled.liveHandles === 0 && settled.helloLive === 0,
     noCallbackFaults: peakErrors === 0 && settled.scriptErrors === 0 && settled.failure === null,
   };

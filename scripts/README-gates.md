@@ -174,8 +174,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:213` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:255` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:257` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1546` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:1627` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1591` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1672` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:682` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:725` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -252,17 +252,20 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/measure_edit_loop.py:111` | `except ProcessLookupError:` | justified: cleanup after the verdict; the process already exited |
 | `scripts/measure_edit_loop.py:115` | `except subprocess.TimeoutExpired:` | justified: escalated to SIGKILL on the next line |
 | `scripts/measure_edit_loop.py:118` | `except ProcessLookupError:` | justified: cleanup after the verdict; it exited meanwhile |
-| `scripts/package_install_smoke.sh:176` | `pkill -f "$GRADLE_USER_HOME/" 2>/dev/null \|\| true` | justified: no daemon left is the normal case, and pkill then exits 1. |
-| `scripts/package_install_smoke.sh:179` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
-| `scripts/package_install_smoke.sh:200` | `if command -v xattr >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/package_install_smoke.sh:202` | `xattr -dr com.apple.quarantine "$project_dir" 2>/dev/null \|\| true` | justified: clearing quarantine is best effort; a quarantined binary that cannot load fails the Godot launch below. |
-| `scripts/package_install_smoke.sh:444` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/package_install_smoke.sh:462` | `pkill -TERM -P "$pid" 2>/dev/null \|\| true` | justified: the command may have exited between the sleep and the kill. |
-| `scripts/package_install_smoke.sh:464` | `kill -TERM "$pid" 2>/dev/null \|\| true` | justified: as above. |
-| `scripts/package_install_smoke.sh:469` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
-| `scripts/package_install_smoke.sh:471` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
-| `scripts/package_install_smoke.sh:473` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
-| `scripts/package_install_smoke.sh:754` | `register="$(grep -E ' _kanama_ios_project_scripts_register$' "$symbols" \|\| true)"` | justified: no match is reported as `none` on the next lines |
+| `scripts/package_install_smoke.sh:175` | `if [[ "$web_export" -eq 1 ]] && ! command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/package_install_smoke.sh:212` | `pkill -f "$GRADLE_USER_HOME/" 2>/dev/null \|\| true` | justified: no daemon left is the normal case, and pkill then exits 1. |
+| `scripts/package_install_smoke.sh:215` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
+| `scripts/package_install_smoke.sh:236` | `if command -v xattr >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/package_install_smoke.sh:238` | `xattr -dr com.apple.quarantine "$project_dir" 2>/dev/null \|\| true` | justified: clearing quarantine is best effort; a quarantined binary that cannot load fails the Godot launch below. |
+| `scripts/package_install_smoke.sh:480` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/package_install_smoke.sh:496` | `sleep "$limit" \|\| exit 0` | justified: a sleep stopped because the command finished is no timeout. |
+| `scripts/package_install_smoke.sh:499` | `pkill -TERM -P "$pid" 2>/dev/null \|\| true` | justified: the command may have exited between the sleep and the kill. |
+| `scripts/package_install_smoke.sh:501` | `kill -TERM "$pid" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/package_install_smoke.sh:506` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
+| `scripts/package_install_smoke.sh:508` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/package_install_smoke.sh:510` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
+| `scripts/package_install_smoke.sh:791` | `register="$(grep -E ' _kanama_ios_project_scripts_register$' "$symbols" \|\| true)"` | justified: no match is reported as `none` on the next lines |
+| `scripts/package_install_smoke.sh:874` | `grep -ho 'Kanama Web [^"\]*' "$work_dir/web-smoke/"*.log "$web_result" 2>/dev/null \| sort -u \| head -n 5 >&2 \|` | justified: diagnostics after the verdict |
 | `scripts/record_gate_evidence.py:40` | `except (OSError, subprocess.CalledProcessError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/runtime_smoke.sh:30` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/runtime_smoke.sh:40` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar -PkanamaApiExercise=true >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
@@ -280,13 +283,14 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/runtime_smoke.sh:940` | `cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null \| head -n 40 >&2 \|\| true` | justified: diagnostics only; the leg fails just below |
 | `scripts/scene_connection_lint.py:103` | `except OSError:` | justified: an unreadable script registers no methods, so every connection to it is reported missing |
 | `scripts/store_addon_editor_smoke.sh:42` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/store_addon_editor_smoke.sh:59` | `pkill -TERM -P "$pid" 2>/dev/null \|\| true` | justified: the command may have exited between the sleep and the kill. |
-| `scripts/store_addon_editor_smoke.sh:61` | `kill -TERM "$pid" 2>/dev/null \|\| true` | justified: as above. |
-| `scripts/store_addon_editor_smoke.sh:66` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
-| `scripts/store_addon_editor_smoke.sh:68` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
-| `scripts/store_addon_editor_smoke.sh:70` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
-| `scripts/store_addon_editor_smoke.sh:84` | `grep -E "project_setup\|kanama:tools\|kanama\]\|SCRIPT ERROR\|ERROR:\|at: " "$log" >&2 \|\| true` | justified: the tail below |
-| `scripts/store_addon_editor_smoke.sh:90` | `grep -E "\[kanama:tools\] (Running\|Build JDK\|Set Up)" "$log" \|\| true` | justified: context lines for the log only |
+| `scripts/store_addon_editor_smoke.sh:57` | `sleep "$limit" \|\| exit 0` | justified: a sleep stopped because the command finished is no timeout. |
+| `scripts/store_addon_editor_smoke.sh:60` | `pkill -TERM -P "$pid" 2>/dev/null \|\| true` | justified: the command may have exited between the sleep and the kill. |
+| `scripts/store_addon_editor_smoke.sh:62` | `kill -TERM "$pid" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/store_addon_editor_smoke.sh:67` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
+| `scripts/store_addon_editor_smoke.sh:69` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/store_addon_editor_smoke.sh:71` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
+| `scripts/store_addon_editor_smoke.sh:85` | `grep -E "project_setup\|kanama:tools\|kanama\]\|SCRIPT ERROR\|ERROR:\|at: " "$log" >&2 \|\| true` | justified: the tail below |
+| `scripts/store_addon_editor_smoke.sh:91` | `grep -E "\[kanama:tools\] (Running\|Build JDK\|Set Up)" "$log" \|\| true` | justified: context lines for the log only |
 | `scripts/tool_smoke.sh:29` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:37` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/tool_smoke.sh:145` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
@@ -352,7 +356,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/web_hand_metric.py:99` | `except OSError:` | justified: a size metric for a report, not a gate; an unreadable file counts as 0 lines |
 | `.github/workflows/package.yml:376` | `chmod +x "$templates/${{ matrix.export_template }}" \|\| true` | justified: a template that is not executable is not an error (Windows); the smoke below fails if it cannot run. |
 | `.github/workflows/package.yml:393` | `chmod +x "$godot_bin" \|\| true` | justified: if the editor binary is not executable the smoke's own executable check on it fails the step. |
-| `.github/workflows/package.yml:751` | `gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \|\| \` | justified: `gh release view` is the existence probe; failing it means "create the release" on the next line. |
+| `.github/workflows/package.yml:833` | `gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \|\| \` | justified: `gh release view` is the existence probe; failing it means "create the release" on the next line. |
 | `.github/workflows/web.yml:237` | `continue-on-error: true` | justified: an experiment, not a gate (see the comment above the job); its failure must never block a merge. |
 | `.github/workflows/web.yml:290` | `"$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe --import \|\| true` | justified: the import only warms .godot/; the export on the next line fails loudly if it did not take. |
 | `.github/workflows/web.yml:318` | `set +e` | justified: `set +e` only reads the probe's exit status into $status, which the case below prints; the job is an experiment. |
@@ -472,7 +476,7 @@ parallel shards (`--shard 1/3` … `3/3`, every third case; about 10 minutes eac
 | `check_android_remap_sources.py (address space)` | a runtime source addresses native memory by absolute address (fails on Android's tagged heap pointers) | `[android-remap-sources] FAIL src/jvmMain/kotlin/net/multigesture/kanama/ZzRedRun.kt:2: whole-address-space segment: an Android heap pointer is tagged (top byte 0xB4) and negative as a long, so it is n` | green |
 | `check_android_remap_sources.py (address space, wrapped)` | a ktfmt-wrapped `MemorySegment.NULL⏎.reinterpret(` chain | `[android-remap-sources] FAIL src/jvmMain/kotlin/net/multigesture/kanama/ZzRedRun.kt:3: whole-address-space segment: an Android heap pointer is tagged (top byte 0xB4) and negative as a long, so it is n` | green |
 | `check_android_remap_sources.py (address space, NULL_SEGMENT)` | Kanama's `NULL_SEGMENT` reinterpreted as the whole address space | `[android-remap-sources] FAIL src/jvmMain/kotlin/net/multigesture/kanama/ZzRedRun.kt:2: whole-address-space segment: an Android heap pointer is tagged (top byte 0xB4) and negative as a long, so it is n` | green |
-| `check_doc_claims.py` | a marked doc line states the wrong Web protocol | `check_doc_claims: FAIL — 1 stale or malformed claim(s): / docs/exporting/web.md:5: claims protocol 21, but WebScriptCodeEmitter declares 36` | green |
+| `check_doc_claims.py` | a marked doc line states the wrong Web protocol | `check_doc_claims: FAIL — 1 stale or malformed claim(s): / docs/contributing/platform-evidence.md:472: claims protocol 939, but WebScriptCodeEmitter declares 39` | green |
 | `check_doc_claims.py (iOS size, marked doc)` | the iOS backend page states an iOS static library size the measurement in version-support.md does not | `docs/contributing/backends/ios.md:142: claims 200 MB debug / 110 MB release, but docs/reference/version-support.md measured 168 / 110` | green |
 | `check_expect_no_defaults.py` | an `expect fun` declares a default argument | `[expect_defaults] FAIL 1 default argument(s) on an `expect` declaration. The Android lane skips *.expect.kt, so the default would not exist there; declare an overload per omitted argument instead (tas` | green |
 | `check_gate_evidence.py` | the evidence ledger carries a wrong schema version | `[check_gate_evidence] FAIL ledger must be an object with schemaVersion 1: evidence/gates.json` | green |
@@ -536,7 +540,7 @@ parallel shards (`--shard 1/3` … `3/3`, every third case; about 10 minutes eac
 | `generate_web_exercise.py --check (shape without a row)` | a Web call shape of the contract has no exercise row (here: the row names a shape the contract lacks) | `UTILITY_NOARGS_VOID: the contract shape has no exercise row / UTILITY_NOARGS_VOID_RED_RUN: not a contract shape` | green |
 | `generate_web_exercise.py --check (rows hand-edited)` | a generated Web exercise row is edited by hand (an oracle row made a reach row): the committed probe must be the generator's | `[web_exercise] FAIL stale: web-runtime/src/web3dSmoke/web/kotlin-src/ApiExerciseProbe.kt (run python3 scripts/generate_web_exercise.py)` | green |
 | `check_property_coverage.py` | a generated wrapper property disappears | `[property_coverage] FAIL 1 generated property(ies) are silently dropped (no wrapper member, not private, not allow-listed): / CanvasItem.visible (getter=is_visible)` | green |
-| `check_protocol_pins.py` | the bridge pins protocol 35 while the emitter says 36 | `[protocol_pins] FAIL the protocol version disagrees across its pins: / 35  bridge constant  (web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js)` | green |
+| `check_protocol_pins.py` | the bridge pins another protocol than the emitter (a 9 put before its number, so the case outlives a protocol bump) | `[protocol_pins] FAIL the protocol version disagrees across its pins: / 39  emitter constant (the source)  (processor/src/main/kotlin/net/multigesture/kanama/processor/WebScriptCodeEmitter.kt)` | green |
 | `check_protocol_pins.py (sentinel)` | the bridge's script-error sentinel differs from the emitter's GDScript constant | `[protocol_pins] FAIL script-error sentinel (_KANAMA_SCRIPT_ERROR / scriptErrorResult) disagrees: emitter '\\\\u001fkanama-script-error\\\\u001f' vs bridge '\\u001fkanama-script-errorX\\u001f'` | green |
 | `check_protocol_pins.py (freed-check opcode)` | the bridge asks the freed check on opcode 1005 while the proxy answers 1004 | `[protocol_pins] FAIL freed-check opcode (FREED_CHECK_OPCODE / KANAMA_WEB_OPCODE_FREED_CHECK) disagrees: emitter '1004' vs bridge '1005'` | green |
 | `check_pt_tag_tables.py` | one copy of the iOS ptrcall tag table is renumbered | `[pt_tags] FAIL value-mismatch VOID: C enum=0 (ios/bootstrap/kanama_ios_shim.c), generator=99 (scripts/generate_api_wrapper.py), ObjectCalls=0 (src/iosMain/kotlin/net/multigesture/kanama/binding/runtim` | green |
@@ -675,6 +679,7 @@ parallel shards (`--shard 1/3` … `3/3`, every third case; about 10 minutes eac
 | `check_budgets.py --self-test (default cap margin)` | the per-tick default sinks below 1.9x the CI runner's fps measurement (0.26 per tick) | `the per-tick default 0.45 is under 1.9x the highest measured run (fps on the CI runner's Chrome, 0.26): 1.73x` | green |
 | `web/bridge_simtime_selftest.mjs` | the bridge adds the _process delta once per scripted handle again: simSeconds scales with the number of scripted nodes (dodge's mobs made it 4-7x game time) | `_process with 5 scripted node(s): simSeconds 9.999999999999876, game time 2 (500 dispatches) / _process with 60 scripted node(s): simSeconds 119.99999999999326, game time 2 (6000 dispatches)` | green |
 | `web/bridge_simtime_selftest.mjs (physics)` | the bridge adds the physics delta once per scripted handle again | `_physics_process, 8 node(s) x 1 step(s) per frame: simSeconds 13.333333333333576, game time 1.6666666666666667 (800 dispatches) / _physics_process, 8 node(s) x 2 step(s) per frame: simSeconds 26.66666` | green |
+| `web/bridge_bootstrap_selftest.mjs` | the bridge stops comparing the module's protocol with its own: a bridge and a module from two builds start and fail later, far from the cause | `protocol mismatch: the bridge started` | green |
 | `web/bridge_rc_ownership_selftest.mjs (fallback hold)` | without a working FinalizationRegistry a Sprite2D texture snapshot's hold counts again, and its end releases a texture a Kotlin wrapper still names | `fallback: a texture snapshot's hold (+1 then -1) released a handle a Kotlin wrapper still names` | green |
 | `web/bridge_rc_ownership_selftest.mjs (fallback drop)` | once the registry refused a wrapper, ending a counted temporary's hold releases the handle an uncounted wrapper still names | `late fallback: dropWrapper released a handle the uncounted Kotlin wrapper still names` | green |
 | `web/bridge_rc_ownership_selftest.mjs (lent cap order)` | the lent cap evicts the first minted lend again, not the least recently wrapped one | `cap: evicted the first minted lend although it was wrapped most recently / cap: the least recently wrapped lend must go first` | green |

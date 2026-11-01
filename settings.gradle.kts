@@ -12,3 +12,7 @@ include(":kanama-common-api")
 include(":processor")
 include(":project-scripts")
 include(":web-runtime")
+
+// The Web runtime library the checkout's :web-runtime and kit projects link (task 135 item 5).
+include(":kanama-web")
+project(":kanama-web").projectDir = file("web-runtime/library")

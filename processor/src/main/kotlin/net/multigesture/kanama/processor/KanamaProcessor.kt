@@ -349,15 +349,8 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     return found.singleOrNull()
   }
 
-  /** `res://<path>` of [file] inside [projectDir], else the script-root derived path. */
-  private fun projectResourcePath(file: KSFile, projectDir: File): String {
-    val canonical = runCatching { File(file.filePath).canonicalFile }.getOrNull()
-    val root = projectDir.path + File.separator
-    if (canonical != null && canonical.path.startsWith(root)) {
-      return "res://" + canonical.path.removePrefix(root).replace(File.separatorChar, '/')
-    }
-    return scriptResourcePath(file)
-  }
+  private fun projectResourcePath(file: KSFile, projectDir: File): String =
+    projectResourcePath(file.filePath, projectDir, scriptRoots)
 
   /**
    * Task 133 C2: the `res://` path of the file declaring [uid] (a `.uid` sidecar's script, or a
@@ -389,24 +382,8 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       ?.let { File(projectDir, it.removePrefix("res://")) }
       ?.takeIf { it.isFile }
 
-  /** The `res://…` path Godot reports for [file], relative to the configured script roots. */
-  private fun scriptResourcePath(file: KSFile): String {
-    val norm = file.filePath.replace(File.separatorChar, '/')
-    val root =
-      scriptRoots
-        .map { it.replace(File.separatorChar, '/').removeSuffix("/") }
-        .filter { norm.startsWith("$it/") }
-        .maxByOrNull { it.length }
-    if (root != null) {
-      val rel = norm.removePrefix("$root/")
-      return if (root.substringAfterLast('/') == "kotlin-src") "res://kotlin-src/$rel"
-      else "res://$rel"
-    }
-    // Fallback when roots are not provided: anchor at a kotlin-src segment if present.
-    val idx = norm.indexOf("/kotlin-src/")
-    return if (idx >= 0) "res://" + norm.substring(idx + 1)
-    else "res://" + norm.substringAfterLast('/')
-  }
+  private fun scriptResourcePath(file: KSFile): String =
+    scriptResourcePath(file.filePath, scriptRoots)
 
   private fun buildScriptClassTypeMap(
     scriptSymbols: List<KSClassDeclaration>
@@ -2552,6 +2529,50 @@ private val KOTLIN_KEYWORDS =
     "when",
     "while",
   )
+
+/** The configured script root [filePath] lies under (the longest), with `/` separators, or null. */
+private fun scriptRootOf(filePath: String, scriptRoots: List<String>): String? {
+  val norm = filePath.replace(File.separatorChar, '/')
+  return scriptRoots
+    .map { it.replace(File.separatorChar, '/').removeSuffix("/") }
+    .filter { norm.startsWith("$it/") }
+    .maxByOrNull { it.length }
+}
+
+/** The `res://…` path Godot reports for the script at [filePath], relative to [scriptRoots]. */
+internal fun scriptResourcePath(filePath: String, scriptRoots: List<String>): String {
+  val norm = filePath.replace(File.separatorChar, '/')
+  val root = scriptRootOf(filePath, scriptRoots)
+  if (root != null) {
+    val rel = norm.removePrefix("$root/")
+    return if (root.substringAfterLast('/') == "kotlin-src") "res://kotlin-src/$rel"
+    else "res://$rel"
+  }
+  // Fallback when roots are not provided: anchor at a kotlin-src segment if present.
+  val idx = norm.indexOf("/kotlin-src/")
+  return if (idx >= 0) "res://" + norm.substring(idx + 1)
+  else "res://" + norm.substringAfterLast('/')
+}
+
+/**
+ * `res://<path>` of the script at [filePath] inside [projectDir], else the script-root derived
+ * path. A file under a configured script root always takes the script-root path: a kit's Web build
+ * compiles a merged copy of kotlin-src under the project's `build/`, whose path in the project is
+ * not the script's `res://` path.
+ */
+internal fun projectResourcePath(
+  filePath: String,
+  projectDir: File,
+  scriptRoots: List<String>,
+): String {
+  if (scriptRootOf(filePath, scriptRoots) != null) return scriptResourcePath(filePath, scriptRoots)
+  val canonical = runCatching { File(filePath).canonicalFile }.getOrNull()
+  val root = projectDir.path + File.separator
+  if (canonical != null && canonical.path.startsWith(root)) {
+    return "res://" + canonical.path.removePrefix(root).replace(File.separatorChar, '/')
+  }
+  return scriptResourcePath(filePath, scriptRoots)
+}
 
 private fun kotlinStringLiteral(value: String): String =
   value.replace("\\", "\\\\").replace("\"", "\\\"")

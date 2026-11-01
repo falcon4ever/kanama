@@ -62,7 +62,6 @@ export your project.
 
 | What does not work | Why | What to do instead |
 |---|---|---|
-| Exporting needs a checkout of the Kanama repository; a project made from the release kit or the store addon cannot export to the Web on its own. | The Web build compiles your scripts from the checkout, and no release carries a Web addon. | Install Kanama from a [source checkout](../getting-started/source-checkout.md) and run `exportWeb` from it, as [Export for the Web](../exporting/web.md) shows. |
 | Your Web export preset is not used: its export filters, HTML page options and custom HTML shell do not apply. | The Web export uses Kanama's own preset and page, which start your scripts before the game. | Set the game's name, icon, window size and main scene in Project Settings, which the export uses. Keep files you do not want to ship out of the project folder. |
 | Threads and `SharedArrayBuffer` are not available. | The export uses Godot's single-thread Web template. | Keep the work on the main thread, and split long work over frames with `launch` and `nextFrame()`. |
 | Forward+ and Mobile rendering are missing, and with them volumetric fog, SDFGI, VoxelGI, SSAO, SSIL and SSR. A shader can hitch once the first time it compiles. | The Web export uses the Compatibility renderer. | Switch your project to the Compatibility renderer while you build the Web version, so you see what the browser will show. |

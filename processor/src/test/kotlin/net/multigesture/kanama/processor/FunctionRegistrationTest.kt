@@ -561,11 +561,11 @@ class FunctionRegistrationTest {
       WebScriptCodeEmitter(listOf(WebScriptInput(model, "res://InputFixture.kt"))).registrySource()
     assertContains(
       source,
-      "(script as S1_InputFixture).input($inputEvent(GodotHandle.fromBackendToken(eventHandle.toLong())))",
+      "(script as S1_InputFixture).input($inputEvent(WebObjectId(eventHandle)))",
     )
     assertContains(
       source,
-      "(script as S1_InputFixture).unhandledInput($inputEvent(GodotHandle.fromBackendToken(eventHandle.toLong())))",
+      "(script as S1_InputFixture).unhandledInput($inputEvent(WebObjectId(eventHandle)))",
     )
   }
 

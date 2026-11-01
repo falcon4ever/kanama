@@ -308,15 +308,15 @@ internal object WebValueTypes {
     "$UNPACK(${gdTypeConstant(type)}, $packed)"
 
   /** The Kotlin expression packing [access] (a value of a Web value type). */
-  fun kotlinPack(access: String): String = "$RUNTIME.encode($access)"
+  fun kotlinPack(access: String): String = "$RUNTIME.encodeValue($access)"
 
   /** The Kotlin expression decoding [packed] into [type]. */
   fun kotlinUnpack(type: TypeMapping, packed: String): String =
-    "($RUNTIME.decode($packed, ${type.kotlinType}::class) as ${type.kotlinType})"
+    "($RUNTIME.decodeValue($packed, ${type.kotlinType}::class) as ${type.kotlinType})"
 
   /** The Kotlin expression building [type] from the numeric-crossing slot expressions [slots]. */
   fun kotlinFromSlots(type: TypeMapping, slots: List<String>): String =
-    "($RUNTIME.fromComponents(${type.kotlinType}::class, doubleArrayOf(${slots.joinToString(", ")})) as ${type.kotlinType})"
+    "($RUNTIME.valueFromComponents(${type.kotlinType}::class, doubleArrayOf(${slots.joinToString(", ")})) as ${type.kotlinType})"
 
   const val PACK = "_kanama_web_pack_value"
   const val UNPACK = "_kanama_web_unpack_value"
@@ -325,5 +325,7 @@ internal object WebValueTypes {
   const val NEST = "_kanama_web_nest"
   const val UNNEST = "_kanama_web_unnest"
   const val PACK_HELD_OBJECT = "_kanama_web_pack_held_object"
-  private const val RUNTIME = "net.multigesture.kanama.web.WebPackedValues"
+  // The runtime's facade for generated code: a kit project compiles its registry in a module of its
+  // own, which cannot reach the runtime's internal WebPackedValues.
+  private const val RUNTIME = "net.multigesture.kanama.web.KanamaWebGenerated"
 }

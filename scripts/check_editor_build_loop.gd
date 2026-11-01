@@ -69,7 +69,8 @@ func _run() -> void:
 
     # The Platforms menu. Beside a Kanama checkout: the commands the export pages give, run in the
     # checkout, iOS only on macOS. In a project whose build applies the Kanama Gradle plugin (a kit or
-    # store-addon project): Android is its buildAndroidScripts. Nothing with neither.
+    # store-addon project): the plugin's buildAndroidScripts, buildIosScripts and exportWeb. Nothing with
+    # neither.
     var mac: Array = _kanama.platform_builds_for("macOS", "", "/k", "/p", "/p/kotlin-src")
     var linux: Array = _kanama.platform_builds_for("Linux", "", "/k", "/p", "/p/kotlin-src")
     _expect(_platform_ids(mac) == ["android", "ios", "web"], "platform builds on macOS beside a checkout: %s" % [_platform_ids(mac)])
@@ -85,13 +86,20 @@ func _run() -> void:
         _expect(mac[2]["steps"][0]["task"] == ":web-runtime:exportWeb" and mac[2]["steps"][0]["args"] == ["-PkanamaWebProjectDir=/p"],
             "the Web platform build runs %s" % [mac[2]["steps"]])
     var kit: Array = _kanama.platform_builds_for("Linux", "/p", "", "/p", "/p/kotlin-src")
-    _expect(_platform_ids(kit) == ["android"], "platform builds of a kit project: %s" % [_platform_ids(kit)])
-    if kit.size() == 1:
+    _expect(_platform_ids(kit) == ["android", "web"], "platform builds of a kit project on Linux: %s" % [_platform_ids(kit)])
+    if kit.size() == 2:
         _expect(kit[0]["steps"] == [{"dir": "/p", "task": "buildAndroidScripts", "args": []}],
             "a kit project's Android build runs %s, not the project's buildAndroidScripts" % [kit[0]["steps"]])
+        _expect(kit[1]["steps"] == [{"dir": "/p", "task": "exportWeb", "args": []}],
+            "a kit project's Web build runs %s, not the project's exportWeb" % [kit[1]["steps"]])
+    var kit_mac: Array = _kanama.platform_builds_for("macOS", "/p", "", "/p", "/p/kotlin-src")
+    _expect(_platform_ids(kit_mac) == ["android", "ios", "web"] and kit_mac[1]["steps"] == [{"dir": "/p", "task": "buildIosScripts", "args": []}],
+        "a kit project's iOS build on macOS runs %s, not the project's buildIosScripts" % [kit_mac])
     var both: Array = _kanama.platform_builds_for("macOS", "/p", "/k", "/p", "/p/kotlin-src")
-    _expect(both.size() == 3 and both[0]["steps"][0]["task"] == "buildAndroidScripts" and both[1]["steps"][0]["dir"] == "/k",
-        "a project with the Kanama Gradle plugin beside a checkout: Android must be the plugin's task, iOS the checkout's: %s" % [both])
+    _expect(both.size() == 3 and both[0]["steps"] == [{"dir": "/p", "task": "buildAndroidScripts", "args": []}]
+        and both[1]["steps"] == [{"dir": "/p", "task": "buildIosScripts", "args": []}]
+        and both[2]["steps"] == [{"dir": "/p", "task": "exportWeb", "args": []}],
+        "a project with the Kanama Gradle plugin beside a checkout: every platform must be the plugin's task: %s" % [both])
     _expect(_kanama.applies_kanama_gradle_plugin('plugins {\n    kotlin("jvm") version "2.4.21"\n    id("net.multigesture.kanama")\n}\n'),
         "the release kit's build.gradle.kts is not seen to apply the Kanama Gradle plugin")
     _expect(not _kanama.applies_kanama_gradle_plugin('plugins {\n    // id("net.multigesture.kanama")\n}\n'),

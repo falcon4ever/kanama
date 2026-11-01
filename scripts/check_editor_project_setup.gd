@@ -85,11 +85,12 @@ func _run() -> void:
     if dialog != null:
         dialog.queue_free()
     # The added HelloScript.kt is not a save: no build starts by itself. The toolbar follows the new
-    # Gradle build without a restart: it applies the Kanama Gradle plugin, so Platforms has Android.
+    # Gradle build without a restart: it applies the Kanama Gradle plugin, so Platforms has its tasks,
+    # buildAndroidScripts first.
     await get_tree().create_timer(2.0).timeout
     _expect(kanama.get_build_status() == "stale", "after the setup the status light is %s, expected stale (scripts not built yet)" % kanama.get_build_status())
     var platforms := _find_control("KanamaPlatformBuilds") as MenuButton
-    _expect(platforms != null and platforms.get_popup().item_count == 1 and platforms.get_popup().get_item_text(0).contains("buildAndroidScripts"),
+    _expect(platforms != null and platforms.get_popup().item_count == (3 if OS.get_name() == "macOS" else 2) and platforms.get_popup().get_item_text(0).contains("buildAndroidScripts"),
         "after the setup the Platforms menu does not offer the project's buildAndroidScripts")
 
     # The project builds: the merged settings resolve the Kanama Gradle plugin from the addon.

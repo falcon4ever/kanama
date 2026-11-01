@@ -95,7 +95,10 @@ matches the task, then use targeted `rg` searches.
   and the seams come from `src/commonMain`.
 - `web-runtime`: the Kotlin/Wasm Web backend, the Web API wrappers (one
   generated file per Godot class under `api/generated/`, plus the hand-shaped
-  facades beside them), generated proxies, JS bridge, and export tasks.
+  facades beside them), generated proxies, JS bridge, and export tasks. The
+  runtime's sources compile in `:kanama-web` (`web-runtime/library`), the klib
+  kits ship; `:web-runtime` is the executable that links it with a project's
+  scripts, as a kit project's `exportWeb` does.
 - `annotations`: public KSP annotation definitions for game scripts.
 - `processor`: KSP processor that emits script registrars and metadata.
 - `project-scripts`: Gradle support for compiling consumer project scripts.
