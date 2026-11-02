@@ -64,12 +64,30 @@ editor_env() {
 RUN_BOUNDED_PID=""
 RUN_BOUNDED_WATCHDOG=""
 
-# _run_bounded_end PID: TERM to PID and its children, then KILL to those still alive after RUN_BOUNDED_GRACE
-# seconds. The children are listed first: once PID is gone they belong to init and pgrep -P no longer finds them.
+# _run_bounded_tree PID: PID and every process below it. A function run in the background is a subshell, so the
+# editor is a child of RUN_BOUNDED_PID and its Gradle client (and that client's single-use daemon) are further down.
+_run_bounded_tree() {
+  local queue="$1" tree="" pid
+  while [[ -n "$queue" ]]; do
+    pid="${queue%% *}"
+    queue="${queue#"$pid"}"
+    queue="${queue# }"
+    tree="$tree $pid"
+    # justified: a process with no children (or no pgrep, on Git Bash) adds nothing; the processes listed so far
+    # are still stopped.
+    queue="$queue $(pgrep -P "$pid" 2>/dev/null | tr '\n' ' ' || true)"
+    queue="${queue# }"
+    queue="${queue%% }"
+  done
+  printf '%s\n' "${tree# }"
+}
+
+# _run_bounded_end PID: TERM to PID and everything below it, then KILL to whatever is still alive after
+# RUN_BOUNDED_GRACE seconds. The tree is listed first: once a parent is gone its children belong to init and
+# pgrep -P no longer finds them.
 _run_bounded_end() {
-  local pid="$1" waited=0 targets
-  # justified: no children (or no pgrep, on Git Bash) leaves the list empty; PID itself is still stopped.
-  targets="$(pgrep -P "$pid" 2>/dev/null || true) $pid"
+  local waited=0 targets
+  targets="$(_run_bounded_tree "$1")"
   # justified: a target may have exited since it was listed.
   kill -TERM $targets 2>/dev/null || true
   while [[ "$waited" -lt "${RUN_BOUNDED_GRACE:-10}" ]] && _run_bounded_any_alive $targets; do

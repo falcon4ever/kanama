@@ -162,15 +162,15 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_script_portability.py:1478` | `except UnicodeDecodeError:` | justified: a binary file is not a script; only text files are scanned |
 | `scripts/check_shell_lint.sh:27` | `if ! command -v shellcheck >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/check_wrapper_generator.py:563` | `except ValueError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/editor_check_lib.sh:72` | `targets="$(pgrep -P "$pid" 2>/dev/null \|\| true) $pid"` | justified: no children (or no pgrep, on Git Bash) leaves the list empty; PID itself is still stopped. |
-| `scripts/editor_check_lib.sh:74` | `kill -TERM $targets 2>/dev/null \|\| true` | justified: a target may have exited since it was listed. |
-| `scripts/editor_check_lib.sh:80` | `kill -KILL $targets 2>/dev/null \|\| true` | justified: as above; KILL only reaches what TERM did not stop. |
-| `scripts/editor_check_lib.sh:86` | `if kill -0 "$target" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/editor_check_lib.sh:100` | `sleep "$limit" \|\| exit 0` | justified: a sleep stopped because the command finished is no timeout. |
-| `scripts/editor_check_lib.sh:118` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
-| `scripts/editor_check_lib.sh:120` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
-| `scripts/editor_check_lib.sh:122` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
-| `scripts/editor_check_lib.sh:131` | `wait "$pid" 2>/dev/null \|\| true` | justified: reaping the stopped command; the script is already on its way out with its own status. |
+| `scripts/editor_check_lib.sh:78` | `queue="$queue $(pgrep -P "$pid" 2>/dev/null \| tr '\n' ' ' \|\| true)"` | justified: a process with no children (or no pgrep, on Git Bash) adds nothing; the processes listed so far are still stopped. |
+| `scripts/editor_check_lib.sh:92` | `kill -TERM $targets 2>/dev/null \|\| true` | justified: a target may have exited since it was listed. |
+| `scripts/editor_check_lib.sh:98` | `kill -KILL $targets 2>/dev/null \|\| true` | justified: as above; KILL only reaches what TERM did not stop. |
+| `scripts/editor_check_lib.sh:104` | `if kill -0 "$target" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/editor_check_lib.sh:118` | `sleep "$limit" \|\| exit 0` | justified: a sleep stopped because the command finished is no timeout. |
+| `scripts/editor_check_lib.sh:136` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
+| `scripts/editor_check_lib.sh:138` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/editor_check_lib.sh:140` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
+| `scripts/editor_check_lib.sh:149` | `wait "$pid" 2>/dev/null \|\| true` | justified: reaping the stopped command; the script is already on its way out with its own status. |
 | `scripts/editor_probe_smoke.sh:54` | `values="$( { printf '%s\n' "$PROJECT/"; sed -n 's/.*-PkanamaProjectScriptsDir=\([^ ]*\).*/\1/p' "$LOG_FILE" 2>` | justified: an editor that never started a build leaves no such line; the install's own value is still listed. |
 | `scripts/editor_probe_smoke.sh:99` | `grep -E "^\[editor_probe\] (PASS\|FAIL\|the build)" "$LOG_FILE" \|\| true` | justified: the verdict is checked below; these lines are the summary |
 | `scripts/export_game_assemble.sh:231` | `if command -v codesign >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
