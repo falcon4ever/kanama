@@ -40,7 +40,7 @@ if [[ -z "$LOG_FILE" ]]; then
 fi
 echo "$TAG log: $LOG_FILE"
 
-SCRATCH="$(mktemp -d "${TMPDIR:-/tmp}/kanama_editor_probes.XXXXXX")"
+SCRATCH="$(mktemp -d "${TMPDIR:-/tmp}/kanama_editor_probe_scratch.XXXXXX")"
 PROJECT="$SCRATCH/project"
 # The project's scripts build in project-scripts/build/<hash of the scripts folder> (project-scripts/build.gradle.kts):
 # a folder per scratch project, removed with it.
