@@ -239,9 +239,13 @@ The maintainer decides when a release is cut. The steps:
    Gradle coordinates, docs snippets, demo project versions, the status badge
    in `README.md`, the package workflow variables and the companion demo
    defaults. Grep the repository for the old version before you finish.
-2. **Changelog.** Turn `## Unreleased` into the version heading and open a new,
-   empty `## Unreleased` above it: `check_public_signature_changes.py` counts no
-   break as announced without one. Keep every `Source break` line.
+2. **Changelog.** Turn `## Unreleased` into `## <version> - <date>`, keeping
+   its "What's new" summary and its `### Details` entries under it, and open a
+   new, empty `## Unreleased` above it: `check_public_signature_changes.py`
+   counts no break as announced without one. Keep every `Source break` line.
+   Check that the summary still matches the entries, in particular the
+   toolchain line (Kotlin, KSP and Godot versions). Entry headings under
+   `### Details` are `####` and carry no task ids.
 3. **Gates.** Run `scripts/local_ci.sh` with the pinned Godot, then the
    isolated gates from clean clones: `scripts/fresh_clone_smoke.sh` and, for
    Web, `scripts/web_fresh_checkout_smoke.sh`. Smoke the packages as
