@@ -34,7 +34,11 @@ Kanama supports reload for attachable script classes:
    `@ScriptClass` templates.
 7. `KanamaScriptLanguage.callFrame()` periodically calls
    `KanamaHotReload.frameTick()`, which checks the script jar mtime and reloads
-   changed templates.
+   changed templates. Each load sets the `Engine` metadata
+   `kanama_scripts_jar_loaded_mtime` to the jar's time (a failed one sets
+   `kanama_scripts_jar_failed_mtime`), and the Kanama Tools plugin reloads the
+   open scenes after a build only once one of them matches the new jar, so no
+   scene is rebuilt on the old build's code.
 
 ## Connections Across A Reload
 

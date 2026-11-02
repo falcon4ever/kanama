@@ -1374,6 +1374,16 @@ case("editor_probe_smoke.sh (reload after a build)", ["bash", "scripts/editor_pr
      # each run room above them for a slow nightly Linux shard.
      pre=[["./gradlew", "-p", ".", "-q", "--no-daemon", "-Pkotlin.compiler.execution.strategy=in-process", "syncExampleAddonJar"]],
      timeout=2400, requires_env="KANAMA_GODOT_BIN", slow=True)
+# The plugin reloads the open scene after a build without waiting for the runtime to load the new jar, and the
+# runtime looks at the jar every 5 s instead of every 500 ms, so the scene is always reloaded first: its @Tool node
+# keeps the old build's code (the race the Linux CI run found).
+case("editor_probe_smoke.sh (scene reload waits for the runtime)", ["bash", "scripts/editor_probe_smoke.sh", GODOT],
+     plugin_edit("    await _wait_for_runtime_reload()\n", "")
+     + [Edit("src/jvmMain/kotlin/binding/KanamaHotReload.kt", "CHECK_INTERVAL_NANOS: Long = 500_000_000L",
+             "CHECK_INTERVAL_NANOS: Long = 5_000_000_000L")],
+     "the plugin reloaded the scene before the runtime loaded the rebuilt jar", "Kanama Tools reloads the open scene right after a build again, not once the runtime says it loaded the new jar: on a host where the runtime looks later than the reload, the scene's @Tool node keeps running the previous build",
+     pre=[["./gradlew", "-p", ".", "-q", "--no-daemon", "-Pkotlin.compiler.execution.strategy=in-process", "syncExampleAddonJar"]],
+     timeout=2400, requires_env="KANAMA_GODOT_BIN", slow=True)
 case("export_guard_selftest.sh",["bash", "scripts/export_guard_selftest.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", "    if not problems.is_empty():\n        messages.append", "    if false:\n        messages.append")],
      "the stale export exited 0", "the export guard stops finding problems: a stale-jar export must still exit non-zero with the message (its own green and red exports are inside the self-test)",

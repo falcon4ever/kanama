@@ -53,8 +53,10 @@ const SYNC_ADDON_TEXT := "Sync Addon"
 # edit it makes to project.godot needs Project > Reload Current Project (Godot leaves no such mark).
 const EDITOR_PID_FILE := "res://.godot/kanama_editor.pid"
 const SCRIPTS_JAR := "res://addons/kanama/kanama-scripts.jar"
-# Engine metadata the runtime sets to the modified time of the scripts jar it loaded (KanamaHotReload.LOADED_JAR_META).
+# Engine metadata the runtime sets to the modified time of the scripts jar it loaded, or could not load
+# (KanamaHotReload.LOADED_JAR_META and FAILED_JAR_META; scripts/editor_probe_smoke.sh holds the keys equal).
 const LOADED_JAR_META := "kanama_scripts_jar_loaded_mtime"
+const FAILED_JAR_META := "kanama_scripts_jar_failed_mtime"
 const RUNTIME_RELOAD_WAIT_MSEC := 10000
 # The .kt files the last successful script build compiled (sources_fingerprint), so the status light
 # is right after an editor restart too. In .godot/: it describes this checkout, not the project.
@@ -1858,14 +1860,20 @@ func _current_project_install_args() -> Array:
 
 ## The Kanama runtime loads a rebuilt kanama-scripts.jar by itself, when it next looks (every 500 ms): a scene
 ## reloaded before that kept the old build's code in its @Tool scripts. Waits until the runtime's Engine metadata
-## says it loaded the jar as it is now, up to RUNTIME_RELOAD_WAIT_MSEC. A runtime that sets no such metadata (an
-## older addon) is not waited for.
+## says it loaded the jar as it is now, or could not load it, up to RUNTIME_RELOAD_WAIT_MSEC. A runtime that sets
+## no such metadata (an older addon) is not waited for. The times are whole seconds, as FileAccess gives them.
 func _wait_for_runtime_reload() -> void:
     if not Engine.has_meta(LOADED_JAR_META):
         return
     var deadline := Time.get_ticks_msec() + RUNTIME_RELOAD_WAIT_MSEC
     while Time.get_ticks_msec() < deadline:
-        if not FileAccess.file_exists(SCRIPTS_JAR) or int(Engine.get_meta(LOADED_JAR_META)) == FileAccess.get_modified_time(SCRIPTS_JAR):
+        if not FileAccess.file_exists(SCRIPTS_JAR):
+            return
+        var jar_time := FileAccess.get_modified_time(SCRIPTS_JAR)
+        if int(Engine.get_meta(LOADED_JAR_META)) == jar_time:
+            return
+        if int(Engine.get_meta(FAILED_JAR_META, -1)) == jar_time:
+            push_warning("[kanama:tools] The Kanama runtime could not load the new build of your scripts; see the Output panel. The scene keeps the build it runs.")
             return
         await get_tree().process_frame
     push_warning("[kanama:tools] The Kanama runtime did not load the rebuilt kanama-scripts.jar within %d s; reloading the scene anyway." % (RUNTIME_RELOAD_WAIT_MSEC / 1000))
@@ -1892,8 +1900,8 @@ func _reload_edited_scene_async() -> void:
     if scene_path.is_empty():
         return
     await _wait_for_runtime_reload()
-    root = editor.get_edited_scene_root()
-    if root == null or root.scene_file_path != scene_path:
+    # The user may have switched scenes meanwhile: the built scene is reloaded while it is still open.
+    if not editor.get_open_scenes().has(scene_path):
         return
 
     if editor.has_method("reload_scene_from_path"):

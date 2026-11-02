@@ -69,6 +69,16 @@ finish() {
 trap finish EXIT
 run_bounded_signal_traps
 
+# The plugin waits on Engine metadata the runtime sets: both sides must name the same keys.
+for key in LOADED_JAR_META FAILED_JAR_META; do
+  kotlin_key="$(sed -n "s/^ *const val $key: String = \"\(.*\)\"$/\1/p" "$ROOT_DIR/src/jvmMain/kotlin/binding/KanamaHotReload.kt")"
+  plugin_key="$(sed -n "s/^const $key := \"\(.*\)\"$/\1/p" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd")"
+  if [[ -z "$kotlin_key" || "$kotlin_key" != "$plugin_key" ]]; then
+    echo "$TAG FAIL: $key is '$kotlin_key' in KanamaHotReload.kt but '$plugin_key' in the Kanama Tools plugin" >&2
+    exit 1
+  fi
+done
+
 mkdir -p "$PROJECT/addons"
 cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$PROJECT/addons/"
 editor_check_plugin "$PROJECT" editor_probes "$ROOT_DIR/scripts/check_editor_probes.gd"
@@ -100,10 +110,11 @@ run_bounded 1300 "$TAG" editor_env GRADLE_OPTS="${GRADLE_OPTS:+$GRADLE_OPTS }-Do
   "$GODOT_BIN" --headless --editor --path "$PROJECT" >"$LOG_FILE" 2>&1 || rc=$?
 grep -E "^\[editor_probe\] (PASS|FAIL|the build)" "$LOG_FILE" || true # justified: the verdict is checked below; these lines are the summary
 fail=0
-# After each successful build the plugin reloads the open scene only once the runtime has loaded the new jar
-# (_wait_for_runtime_reload): a scene reloaded first keeps the old build's code.
-early_reload="$(awk '/\[kanama:tools\] Running: /{loaded=0} /hot-reload: reloaded scripts from/{loaded=1}
-  /\[kanama:tools\] Reloaded scene after sync/{if (!loaded) print NR}' "$LOG_FILE")"
+# After each build the plugin reloads the open scene only once the runtime has loaded the new jar
+# (_wait_for_runtime_reload). The bug's signature: a "Reloaded scene" line, then that build's "hot-reload: reloaded"
+# line, both before the next build starts. (A build that left the jar as it was has no reload line at all.)
+early_reload="$(awk '/\[kanama:tools\] Running: /{scene=0} /\[kanama:tools\] Reloaded scene after sync/{scene=NR}
+  /hot-reload: reloaded scripts from/{if (scene) print scene; scene=0}' "$LOG_FILE")"
 if [[ -n "$early_reload" ]]; then
   echo "$TAG FAIL: the plugin reloaded the scene before the runtime loaded the rebuilt jar (log lines: $(printf '%s' "$early_reload" | tr '\n' ' '))" >&2
   fail=1

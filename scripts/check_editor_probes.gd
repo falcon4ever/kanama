@@ -95,7 +95,7 @@ func _run() -> void:
     var script := _script()
     _expect(_has_property(script, PROPERTY), "ProbeScript's script property list lacks %s after the build: %s" % [PROPERTY, _property_names(script)])
     _expect(_has_method(script, METHOD), "ProbeScript's script method list lacks %s after the build: %s" % [METHOD, _method_names(script)])
-    _expect(int(Engine.get_meta("kanama_scripts_jar_loaded_mtime", -2)) == FileAccess.get_modified_time(ProjectSettings.globalize_path(SCRIPTS_JAR)),
+    _expect(int(Engine.get_meta(_loaded_jar_meta(), -2)) == FileAccess.get_modified_time(ProjectSettings.globalize_path(SCRIPTS_JAR)),
         "the runtime's Engine metadata does not name the jar it loaded (the plugin waits on it before it reloads the scene): %s" % _reload_state())
     _expect(_global_class_path("ProbeScript") == SCRIPT_PATH, "the global class list does not name ProbeScript at %s: %s" % [SCRIPT_PATH, _global_class_path("ProbeScript")])
     _end()
@@ -231,9 +231,14 @@ func _method_names(script: Script) -> PackedStringArray:
     return names
 
 
+## The Engine metadata key the Kanama Tools plugin waits on (editor_probe_smoke.sh holds it equal to the runtime's).
+func _loaded_jar_meta() -> String:
+    return String(_kanama.get_script().get_script_constant_map().get("LOADED_JAR_META", "<the plugin has no LOADED_JAR_META>"))
+
+
 ## What the runtime says it loaded against the jar on disk, for a failure message.
 func _reload_state() -> String:
-    return "the runtime loaded the jar of %s, the jar on disk is of %s" % [Engine.get_meta("kanama_scripts_jar_loaded_mtime", "<no metadata>"), FileAccess.get_modified_time(ProjectSettings.globalize_path(SCRIPTS_JAR))]
+    return "the runtime loaded the jar of %s, the jar on disk is of %s" % [Engine.get_meta(_loaded_jar_meta(), "<no metadata>"), FileAccess.get_modified_time(ProjectSettings.globalize_path(SCRIPTS_JAR))]
 
 
 ## The node's probe_answer(), or null when it has no such method (no error printed).

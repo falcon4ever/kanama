@@ -59,10 +59,11 @@ Kotlin has no `free()` for them. Ports no longer need a local `ClassDB.instantia
 
 ### Fixed — the open scene runs the new build after Build Scripts
 
-After a build, Kanama Tools reloads the scene you have open. On a slow machine it could do that before the Kanama
-runtime had loaded the new `kanama-scripts.jar` (the runtime looks every half second), and the scene's `@Tool`
-scripts then kept running the previous build until the next reload. The plugin now waits until the runtime says
-it loaded the new jar, for up to 10 seconds, before it reloads the scene.
+After a build, Kanama Tools reloads the scene you have open. It could do that before the Kanama runtime had
+loaded the new `kanama-scripts.jar` (the runtime looks every half second), and the scene's `@Tool` scripts then
+kept running the previous build until the next reload. That race was there on any machine; slow ones lost it
+more often. The plugin now waits until the runtime says it loaded the new jar, for up to 10 seconds, before it
+reloads the scene, and says so at once when the runtime could not load it.
 
 ### Fixed — iOS from a source checkout finds scripts outside `kotlin-src`
 
