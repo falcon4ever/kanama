@@ -158,8 +158,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_public_signature_changes.py:1058` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_public_signature_changes.py:1067` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_public_signature_changes.py:1532` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_script_portability.py:1155` | `except SyntaxError as error:` | justified: reported as a `parse` finding (the return value), the gate stays red |
-| `scripts/check_script_portability.py:1478` | `except UnicodeDecodeError:` | justified: a binary file is not a script; only text files are scanned |
+| `scripts/check_script_portability.py:1157` | `except SyntaxError as error:` | justified: reported as a `parse` finding (the return value), the gate stays red |
+| `scripts/check_script_portability.py:1480` | `except UnicodeDecodeError:` | justified: a binary file is not a script; only text files are scanned |
 | `scripts/check_shell_lint.sh:27` | `if ! command -v shellcheck >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/check_wrapper_generator.py:563` | `except ValueError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/editor_check_lib.sh:78` | `queue="$queue $(pgrep -P "$pid" 2>/dev/null \| tr '\n' ' ' \|\| true)"` | justified: a process with no children (or no pgrep, on Git Bash) adds nothing; the processes listed so far are still stopped. |
@@ -172,8 +172,11 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/editor_check_lib.sh:140` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
 | `scripts/editor_check_lib.sh:149` | `wait "$pid" 2>/dev/null \|\| true` | justified: reaping the stopped command; the script is already on its way out with its own status. |
 | `scripts/editor_probe_smoke.sh:54` | `values="$( { printf '%s\n' "$PROJECT/"; sed -n 's/.*-PkanamaProjectScriptsDir=\([^ ]*\).*/\1/p' "$LOG_FILE" 2>` | justified: an editor that never started a build leaves no such line; the install's own value is still listed. |
-| `scripts/editor_probe_smoke.sh:111` | `grep -E "^\[editor_probe\] (PASS\|FAIL\|the build)" "$LOG_FILE" \|\| true` | justified: the verdict is checked below; these lines are the summary |
-| `scripts/editor_probe_smoke.sh:131` | `grep -E "editor_probe\|kanama:tools\|SCRIPT ERROR\|hot-reload" "$LOG_FILE" \| tail -n 80 >&2 \|\| true` | justified: diagnostics; the verdict is already FAIL |
+| `scripts/editor_probe_smoke.sh:110` | `echo "$TAG core dumps: ulimit -c $(ulimit -c), core_pattern $(cat /proc/sys/kernel/core_pattern 2>/dev/null \|\|` | justified: macOS has no /proc |
+| `scripts/editor_probe_smoke.sh:113` | `cores="$(find /tmp "$PROJECT" -maxdepth 1 -name 'core*' -type f -newer "$LOG_FILE.install" 2>/dev/null \|\| true` | justified: a folder that is gone lists nothing; the cores are under mktemp names, without spaces. |
+| `scripts/editor_probe_smoke.sh:116` | `if command -v gdb >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/editor_probe_smoke.sh:136` | `grep -E "^\[editor_probe\] (PASS\|FAIL\|the build)" "$LOG_FILE" \|\| true` | justified: the verdict is checked below; these lines are the summary |
+| `scripts/editor_probe_smoke.sh:156` | `grep -E "editor_probe\|kanama:tools\|SCRIPT ERROR\|hot-reload" "$LOG_FILE" \| tail -n 80 >&2 \|\| true` | justified: diagnostics; the verdict is already FAIL |
 | `scripts/export_game_assemble.sh:231` | `if command -v codesign >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/export_game_smoke.sh:133` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
 | `scripts/export_game_smoke.sh:150` | `"$ROOT_DIR/gradlew" --no-daemon -p "$ROOT_DIR" buildNativeBootstrap syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
@@ -360,6 +363,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/web_fresh_checkout_smoke.sh:106` | `demo_project_dir "$demo" >/dev/null \|\| die "unknown --demo: $demo (expected one of: ${ALL_DEMOS[*]} \| all)"` | justified: not a swallow; `\|\| die` fails the script with a message |
 | `scripts/web_fresh_checkout_smoke.sh:225` | `git -C "$DEMOS_DIR" status --short >&2 \|\| true` | justified: diagnostics; FAILED=1 above already decided |
 | `scripts/web_hand_metric.py:99` | `except OSError:` | justified: a size metric for a report, not a gate; an unreadable file counts as 0 lines |
+| `.github/workflows/ci.yml:68` | `if ! command -v gdb >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `.github/workflows/package.yml:376` | `chmod +x "$templates/${{ matrix.export_template }}" \|\| true` | justified: a template that is not executable is not an error (Windows); the smoke below fails if it cannot run. |
 | `.github/workflows/package.yml:393` | `chmod +x "$godot_bin" \|\| true` | justified: if the editor binary is not executable the smoke's own executable check on it fails the step. |
 | `.github/workflows/package.yml:833` | `gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \|\| \` | justified: `gh release view` is the existence probe; failing it means "create the release" on the next line. |

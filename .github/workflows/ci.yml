@@ -58,6 +58,18 @@ jobs:
           unzip -q "$godot_zip" -d "$HOME/godot"
           rm -f "$godot_zip"
 
+      # A crash in an editor smoke must say where it crashed: the runner's default core_pattern hands cores to
+      # apport, which keeps none, so cores go to /tmp, and editor_probe_smoke.sh prints the crashed editor's
+      # backtraces with gdb (installed here when the image lacks it).
+      - name: Keep core dumps for the smokes
+        shell: bash
+        run: |
+          sudo sysctl -w kernel.core_pattern=/tmp/core.%e.%p
+          if ! command -v gdb >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq gdb
+          fi
+
       - name: Run local CI gate
         shell: bash
         env:
@@ -70,6 +82,8 @@ jobs:
         run: |
           godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
           chmod +x "$godot_bin"
+          # Cores for a crashed smoke (the step above points them at /tmp).
+          ulimit -c unlimited
           # --skip-docs: mkdocs strict runs in the dedicated `docs` job below.
           # The native bootstrap build (CMake + gcc, preinstalled on ubuntu) is
           # kept in for parity; add --skip-bootstrap for faster PR turnaround.

@@ -102,6 +102,31 @@ fi
 # never gets that far, and both stay inside ci.yml local-ci's budget. The builds the editor starts are the checkout's
 # gradlew on the machine's Gradle cache; GRADLE_OPTS and the ORG_GRADLE_PROJECT_ property reach them through the
 # plugin's launch.
+# A crashed editor's core, where the host keeps one (ci.yml points core_pattern at /tmp and installs gdb): every
+# thread's backtrace goes to the job output, the crashed thread's first. Cores of this run only (newer than the
+# install log), each removed once read.
+print_core_backtraces() {
+  local core found=0
+  echo "$TAG core dumps: ulimit -c $(ulimit -c), core_pattern $(cat /proc/sys/kernel/core_pattern 2>/dev/null || echo '(not Linux)')" >&2 # justified: macOS has no /proc
+  local cores
+  # justified: a folder that is gone lists nothing; the cores are under mktemp names, without spaces.
+  cores="$(find /tmp "$PROJECT" -maxdepth 1 -name 'core*' -type f -newer "$LOG_FILE.install" 2>/dev/null || true)"
+  for core in $cores; do
+    found=1
+    if command -v gdb >/dev/null 2>&1; then
+      echo "$TAG gdb on $core: the crashed thread, then every thread:" >&2
+      gdb -batch -nx -ex "set pagination off" -ex "info signals SIGSEGV" -ex "bt 40" -ex "info threads" \
+        -ex "thread apply all bt 16" "$GODOT_BIN" "$core" 2>&1 | head -n 600 >&2
+    else
+      echo "$TAG $core is there, but gdb is not installed" >&2
+    fi
+    rm -f "$core"
+  done
+  if [[ "$found" -eq 0 ]]; then
+    echo "$TAG no core of this run in /tmp or the project" >&2
+  fi
+}
+
 # A fatal JVM error writes its report beside the log (KANAMA_JVM_OPTIONS reaches the editor's JVM).
 rc=0
 run_bounded 1300 "$TAG" editor_env GRADLE_OPTS="${GRADLE_OPTS:+$GRADLE_OPTS }-Dorg.gradle.daemon=false" \
@@ -137,6 +162,9 @@ if [[ "$rc" -ne 0 || "$fail" -ne 0 ]] || ! grep -Fxq "[editor_probe] PASS" "$LOG
       head -n 80 "$hs_err" >&2
     fi
   done
+  if [[ "$rc" -eq 134 || "$rc" -eq 139 ]]; then
+    print_core_backtraces
+  fi
   case "$rc" in
     134) echo "$TAG the editor aborted (exit 134, SIGABRT)" >&2 ;;
     139) echo "$TAG the editor crashed (exit 139, SIGSEGV); without a Godot backtrace above it crashed after Godot's crash handler was gone" >&2 ;;
