@@ -1403,6 +1403,7 @@ case("editor_probe_smoke.sh (scripts jar replaced, not rewritten)", ["bash", "sc
 case("hot_reload_in_process_smoke.sh (jars left to the running game)", ["bash", "scripts/hot_reload_in_process_smoke.sh", GODOT],
      [Edit("build.gradle.kts", "  eachFile(runningEditorInstall(provider { exampleAddonDir }))\n", "")],
      "syncExampleAddonJar rewrote", "syncExampleAddonJar lets Copy rewrite kanama.jar and kanama-scripts.jar in place again while the example project runs: the class loaders that keep them open read the rewritten files (the hot-reload flow syncs while Godot runs)",
+     pre=[WARM_EXAMPLE],
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("export_guard_selftest.sh",["bash", "scripts/export_guard_selftest.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", "    if not problems.is_empty():\n        messages.append", "    if false:\n        messages.append")],
