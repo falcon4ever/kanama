@@ -64,10 +64,11 @@ object KanamaHotReload {
   )
 
   /**
-   * `Engine` metadata: the modified time (Unix seconds, as Godot's `FileAccess.get_modified_time`) of the
-   * `kanama-scripts.jar` the runtime last loaded, or -1 before any. The Kanama Tools editor plugin reloads the
-   * edited scene after a build only once this matches the jar on disk: a scene reloaded before the runtime's next
-   * look at the jar (every [CHECK_INTERVAL_NANOS]) kept running the old build's code (task 143 item 4).
+   * `Engine` metadata: the modified time (Unix seconds, as Godot's `FileAccess.get_modified_time`)
+   * of the `kanama-scripts.jar` the runtime last loaded, or -1 before any. The Kanama Tools editor
+   * plugin reloads the edited scene after a build only once this matches the jar on disk: a scene
+   * reloaded before the runtime's next look at the jar (every [CHECK_INTERVAL_NANOS]) kept running
+   * the old build's code (task 143 item 4).
    */
   const val LOADED_JAR_META: String = "kanama_scripts_jar_loaded_mtime"
 
@@ -79,7 +80,8 @@ object KanamaHotReload {
 
   private fun publishLoadedJar(mtimeSeconds: Long) {
     runCatching {
-      GodotObject(GodotHandle(ObjectCalls.getSingleton("Engine"))).setMeta(LOADED_JAR_META, mtimeSeconds)
+      GodotObject(GodotHandle(ObjectCalls.getSingleton("Engine")))
+        .setMeta(LOADED_JAR_META, mtimeSeconds)
     }
   }
 
