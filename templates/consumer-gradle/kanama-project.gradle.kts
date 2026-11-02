@@ -104,34 +104,6 @@ tasks.named<Jar>("jar") {
     isReproducibleFileOrder = true
 }
 
-// The running editor of this project keeps reading kanama-scripts.jar (the class loader of a build
-// that still has live objects loads its classes lazily), so a new jar never rewrites the old one in
-// place: a changed jar replaces it by a rename, an identical one is left alone. Windows cannot
-// rename over a jar the JVM holds open, so there the jar is rewritten as before. The same rule as
-// installForRunningEditor in the Kanama checkout's build.gradle.kts (task 143 item 4).
-fun installForRunningEditor(source: File, target: File) {
-    if (target.isFile && java.nio.file.Files.mismatch(source.toPath(), target.toPath()) == -1L) return
-    target.parentFile.mkdirs()
-    if (System.getProperty("os.name").lowercase().contains("windows")) {
-        // In place, as Copy wrote it: File.copyTo deletes the target first, which Windows refuses
-        // for a jar the JVM holds open.
-        java.io.FileOutputStream(target).use { out -> source.inputStream().use { it.copyTo(out) } }
-        return
-    }
-    val incoming = target.resolveSibling(target.name + ".kanama-new")
-    try {
-        source.copyTo(incoming, overwrite = true)
-        java.nio.file.Files.move(
-            incoming.toPath(),
-            target.toPath(),
-            java.nio.file.StandardCopyOption.REPLACE_EXISTING,
-            java.nio.file.StandardCopyOption.ATOMIC_MOVE,
-        )
-    } finally {
-        java.nio.file.Files.deleteIfExists(incoming.toPath())
-    }
-}
-
 val installScriptJar by tasks.registering {
     group = "kanama"
     description = "Install compiled Kotlin scripts into addons/kanama."
@@ -145,8 +117,40 @@ val installScriptJar by tasks.registering {
     val version = kanamaVersion
     inputs.property("kanamaVersion", version)
     outputs.file(stamp)
+    val windows = System.getProperty("os.name").lowercase().contains("windows")
+    // The running editor of this project keeps kanama-scripts.jar open (the class loader of the
+    // project's @RegisterClass classes reads it lazily for the whole session), so a new jar never
+    // rewrites the old one in place: a changed jar replaces it by a rename, an identical one is
+    // left alone. Windows cannot rename over a jar the JVM holds open, so there the jar is
+    // rewritten in place as before. The same rule as installForRunningEditor in the Kanama
+    // checkout's build.gradle.kts (task 143 item 4); written out here so the action captures only
+    // plain values (the configuration cache).
     doLast {
-        installForRunningEditor(jar.get().asFile, installed.asFile)
+        val source = jar.get().asFile
+        val target = installed.asFile
+        if (!target.isFile || java.nio.file.Files.mismatch(source.toPath(), target.toPath()) != -1L) {
+            target.parentFile.mkdirs()
+            if (windows) {
+                // In place, as Copy wrote it: File.copyTo deletes the target first, which Windows
+                // refuses for a jar the JVM holds open.
+                java.io.FileOutputStream(target).use { out -> source.inputStream().use { it.copyTo(out) } }
+            } else {
+                val incoming = target.resolveSibling(target.name + ".kanama-new")
+                try {
+                    source.copyTo(incoming, overwrite = true)
+                    java.nio.file.Files.setPosixFilePermissions(
+                        incoming.toPath(), java.nio.file.Files.getPosixFilePermissions(source.toPath()))
+                    java.nio.file.Files.move(
+                        incoming.toPath(),
+                        target.toPath(),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+                        java.nio.file.StandardCopyOption.ATOMIC_MOVE,
+                    )
+                } finally {
+                    java.nio.file.Files.deleteIfExists(incoming.toPath())
+                }
+            }
+        }
         stamp.asFile.writeText(version + "\n")
     }
 }

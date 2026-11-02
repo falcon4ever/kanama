@@ -64,8 +64,9 @@ the native bootstrap over the one the open editor had loaded. On Linux that sile
 the library, and the editor crashed (segmentation fault) when it quit. The build now leaves an unchanged library
 alone, and replaces a changed one with a new file, so a running editor keeps the library it loaded. The same
 goes for `kanama-scripts.jar` and `kanama.jar`, from a checkout and in kit and store-addon projects
-(`buildScripts`): a class the running editor first needed after a build used to come from the new jar, or fail to
-load, because the old build's class loader read a file that had been rewritten under it. On Windows, where an
+(`buildScripts`), and `syncExampleAddonJar` in a checkout: a `@RegisterClass` class (or Kanama's own) that the
+running editor first needed after a build used to come from the new jar, or fail to load, because the class loader
+that keeps the startup jar open read a file that had been rewritten under it. On Windows, where an
 open file cannot be replaced, the files are written in place as before, and a changed library the open editor has
 loaded fails the build with a message to close the editor.
 

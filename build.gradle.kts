@@ -586,10 +586,12 @@ tasks.withType<Test>().configureEach { useJUnitPlatform() }
 /**
  * Installs [source] as [target], a file a running Godot editor of the project may have open: the
  * native bootstrap it loaded, or kanama.jar and kanama-scripts.jar, which the JVM reads lazily
- * (the hot-reload class loaders of a build that still has live objects keep reading their jar).
- * Copy rewrites in place, and that breaks a running editor: on Linux truncating a mapped library
- * throws away the process's relocations of it (the editor crashed on quit, task 143 item 4), and a
- * jar rewritten under an open reader yields corrupt entries for classes an old build loads later.
+ * (kanama.jar on the JVM class path, and kanama-scripts.jar through the class loader that
+ * registered the project's @RegisterClass classes at startup and stays open all session; retired
+ * hot-reload loaders are closed). Copy rewrites in place, and that breaks a running editor: on
+ * Linux truncating a mapped library throws away the process's relocations of it (the editor
+ * crashed on quit, task 143 item 4), and a jar rewritten under an open reader hands it the new
+ * jar's classes, or corrupt entries, for classes it loads later.
  * So an identical file is left alone and a changed one replaces the old file by a rename: the
  * editor keeps the inode it opened. Windows cannot rename over a file the JVM or the loader holds
  * open, so there the file is rewritten in place as before, and a DLL the editor loaded, which
@@ -618,6 +620,11 @@ fun installForRunningEditor(source: File, target: File): Boolean {
   val incoming = target.resolveSibling(target.name + ".kanama-new")
   try {
     source.copyTo(incoming, overwrite = true)
+    // copyTo drops the mode bits; the library keeps the source's (Copy kept them).
+    java.nio.file.Files.setPosixFilePermissions(
+      incoming.toPath(),
+      java.nio.file.Files.getPosixFilePermissions(source.toPath()),
+    )
     java.nio.file.Files.move(
       incoming.toPath(),
       target.toPath(),
@@ -816,7 +823,14 @@ tasks.register<Copy>("syncExampleAddonJar") {
   dependsOn(":project-scripts:jar")
   from(layout.buildDirectory.file("libs/kanama.jar"))
   from(project(":project-scripts").tasks.named<Jar>("jar").flatMap { it.archiveFile })
-  into(layout.projectDirectory.dir("example_project/addons/kanama"))
+  val exampleAddonDir = layout.projectDirectory.dir("example_project/addons/kanama").asFile
+  into(exampleAddonDir)
+  // An editor or game of the example project may be running (the hot-reload flow syncs while it
+  // runs): the jars go in by installForRunningEditor, beside the copy, so Gradle does not count
+  // them as outputs and a deleted one must still make the task run.
+  val syncedJars = listOf("kanama.jar", "kanama-scripts.jar").map { exampleAddonDir.resolve(it) }
+  outputs.upToDateWhen { syncedJars.all { it.isFile } }
+  eachFile(runningEditorInstall(provider { exampleAddonDir }))
 }
 
 tasks.register("publishKanamaToMavenLocal") {
