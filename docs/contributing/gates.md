@@ -80,8 +80,9 @@ It edits the `.kt` file and prints one PASS or FAIL line per probe:
 5. A compile error turns the light red while the last good build keeps
    working, and the fix turns it green and runs.
 
-It takes about a minute with a warm Gradle daemon, so it runs in `local_ci.sh`
-(and so in CI on Linux) right after the `@Tool` smoke. Run it alone with:
+It takes about 75 seconds and leaves no Gradle or Kotlin daemon behind, so it
+runs in `local_ci.sh` (and so in CI on Linux) right after the `@Tool` smoke. An
+interrupted run (Ctrl-C) stops the editor and its build. Run it alone with:
 
 ```sh
 scripts/editor_probe_smoke.sh /absolute/path/to/godot-4.7.2-stable

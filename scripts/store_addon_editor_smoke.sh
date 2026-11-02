@@ -22,7 +22,9 @@ godot_bin="$2"
 [[ -f "$zip_path" ]] || { echo "$TAG no such zip: $zip_path" >&2; exit 2; }
 
 work="$(mktemp -d "${TMPDIR:-/tmp}/kanama_store_editor.XXXXXX")"
-trap 'rm -rf "$work"' EXIT
+# An interrupted run stops the editor and its Gradle client first (editor_check_lib.sh, run_bounded_stop).
+trap 'run_bounded_stop; rm -rf "$work"' EXIT
+run_bounded_signal_traps
 project="$work/project"
 mkdir -p "$project"
 python3 - "$zip_path" "$project" <<'PY'

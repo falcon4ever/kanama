@@ -162,13 +162,17 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_script_portability.py:1478` | `except UnicodeDecodeError:` | justified: a binary file is not a script; only text files are scanned |
 | `scripts/check_shell_lint.sh:27` | `if ! command -v shellcheck >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/check_wrapper_generator.py:563` | `except ValueError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/editor_check_lib.sh:63` | `sleep "$limit" \|\| exit 0` | justified: a sleep stopped because the command finished is no timeout. |
-| `scripts/editor_check_lib.sh:66` | `pkill -TERM -P "$pid" 2>/dev/null \|\| true` | justified: the command may have exited between the sleep and the kill. |
-| `scripts/editor_check_lib.sh:68` | `kill -TERM "$pid" 2>/dev/null \|\| true` | justified: as above. |
-| `scripts/editor_check_lib.sh:73` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
-| `scripts/editor_check_lib.sh:75` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
-| `scripts/editor_check_lib.sh:77` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
-| `scripts/editor_probe_smoke.sh:90` | `grep -E "^\[editor_probe\] (PASS\|FAIL\|the build)" "$LOG_FILE" \|\| true` | justified: the verdict is checked below; these lines are the summary |
+| `scripts/editor_check_lib.sh:72` | `targets="$(pgrep -P "$pid" 2>/dev/null \|\| true) $pid"` | justified: no children (or no pgrep, on Git Bash) leaves the list empty; PID itself is still stopped. |
+| `scripts/editor_check_lib.sh:74` | `kill -TERM $targets 2>/dev/null \|\| true` | justified: a target may have exited since it was listed. |
+| `scripts/editor_check_lib.sh:80` | `kill -KILL $targets 2>/dev/null \|\| true` | justified: as above; KILL only reaches what TERM did not stop. |
+| `scripts/editor_check_lib.sh:86` | `if kill -0 "$target" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/editor_check_lib.sh:100` | `sleep "$limit" \|\| exit 0` | justified: a sleep stopped because the command finished is no timeout. |
+| `scripts/editor_check_lib.sh:118` | `pkill -P "$watchdog" 2>/dev/null \|\| true` | justified: the watchdog and its sleep only have to be gone; it may already have fired. |
+| `scripts/editor_check_lib.sh:120` | `kill "$watchdog" 2>/dev/null \|\| true` | justified: as above. |
+| `scripts/editor_check_lib.sh:122` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
+| `scripts/editor_check_lib.sh:131` | `wait "$pid" 2>/dev/null \|\| true` | justified: reaping the stopped command; the script is already on its way out with its own status. |
+| `scripts/editor_probe_smoke.sh:54` | `values="$( { printf '%s\n' "$PROJECT/"; sed -n 's/.*-PkanamaProjectScriptsDir=\([^ ]*\).*/\1/p' "$LOG_FILE" 2>` | justified: an editor that never started a build leaves no such line; the install's own value is still listed. |
+| `scripts/editor_probe_smoke.sh:99` | `grep -E "^\[editor_probe\] (PASS\|FAIL\|the build)" "$LOG_FILE" \|\| true` | justified: the verdict is checked below; these lines are the summary |
 | `scripts/export_game_assemble.sh:231` | `if command -v codesign >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/export_game_smoke.sh:133` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
 | `scripts/export_game_smoke.sh:150` | `"$ROOT_DIR/gradlew" --no-daemon -p "$ROOT_DIR" buildNativeBootstrap syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
@@ -181,8 +185,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:215` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:257` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:259` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1658` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:1742` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1662` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1746` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:682` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:725` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -289,9 +293,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/runtime_smoke.sh:932` | `elif compgen -G "$SIGTERM_ERR_DIR/hs_err_*" >/dev/null \|\| grep -q "A fatal error has been detected" "$SIGTERM_` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/runtime_smoke.sh:940` | `cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null \| head -n 40 >&2 \|\| true` | justified: diagnostics only; the leg fails just below |
 | `scripts/scene_connection_lint.py:103` | `except OSError:` | justified: an unreadable script registers no methods, so every connection to it is reported missing |
-| `scripts/store_addon_editor_smoke.sh:41` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/store_addon_editor_smoke.sh:57` | `grep -E "project_setup\|kanama:tools\|kanama\]\|SCRIPT ERROR\|ERROR:\|at: " "$log" >&2 \|\| true` | justified: the tail below |
-| `scripts/store_addon_editor_smoke.sh:63` | `grep -E "\[kanama:tools\] (Running\|Build JDK\|Set Up)" "$log" \|\| true` | justified: context lines for the log only |
+| `scripts/store_addon_editor_smoke.sh:43` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/store_addon_editor_smoke.sh:59` | `grep -E "project_setup\|kanama:tools\|kanama\]\|SCRIPT ERROR\|ERROR:\|at: " "$log" >&2 \|\| true` | justified: the tail below |
+| `scripts/store_addon_editor_smoke.sh:65` | `grep -E "\[kanama:tools\] (Running\|Build JDK\|Set Up)" "$log" \|\| true` | justified: context lines for the log only |
 | `scripts/tool_smoke.sh:31` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:39` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/tool_smoke.sh:147` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |

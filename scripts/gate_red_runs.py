@@ -1369,7 +1369,11 @@ case("editor_probe_smoke.sh (reload after a build)", ["bash", "scripts/editor_pr
      [Edit("src/jvmMain/kotlin/binding/KanamaHotReload.kt", "      if (!force && mtime == lastScriptsJarMtime) return\n",
            "      if (!force) return\n")],
      "[editor_probe] FAIL probe 2: ", "the Kanama runtime no longer reloads kanama-scripts.jar when a build replaces it in a running editor: the light turns green, but the class list lacks the edit's new property and method",
-     requires_env="KANAMA_GODOT_BIN", slow=True)
+     # A fresh worktree builds kanama.jar and the native bootstrap cold, and the mutation and its revert rebuild
+     # kanama.jar: warm the first build outside the smoke's own bounds (600 s install, 1300 s editor), and give
+     # each run room above them for a slow nightly Linux shard.
+     pre=[["./gradlew", "-p", ".", "-q", "--no-daemon", "-Pkotlin.compiler.execution.strategy=in-process", "syncExampleAddonJar"]],
+     timeout=2400, requires_env="KANAMA_GODOT_BIN", slow=True)
 case("export_guard_selftest.sh",["bash", "scripts/export_guard_selftest.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", "    if not problems.is_empty():\n        messages.append", "    if false:\n        messages.append")],
      "the stale export exited 0", "the export guard stops finding problems: a stale-jar export must still exit non-zero with the message (its own green and red exports are inside the self-test)",

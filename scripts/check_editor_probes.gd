@@ -31,7 +31,11 @@ const SAVED_VALUE := "saved-value"
 # A real Gradle build of the scripts: a warm daemon takes seconds, a cold one up to a few minutes.
 const BUILD_WAIT_SEC := 300.0
 const RELOAD_WAIT_SEC := 30.0
-const TIMEOUT_SEC := 1500.0
+# The runtime looks at kanama-scripts.jar every 500 ms (KanamaHotReload.CHECK_INTERVAL_NANOS): after a failed build
+# the probe waits a few of those before it holds the old class to being usable, so a jar the build broke is seen.
+const AFTER_FAILED_BUILD_SEC := 1.6
+const SCRIPTS_JAR := "res://addons/kanama/kanama-scripts.jar"
+const TIMEOUT_SEC := 1200.0
 
 var _kanama: EditorPlugin
 var _light: Button
@@ -132,11 +136,14 @@ func _run() -> void:
 
     # 5. A broken edit: red, the last good build stays usable; the fix: green, and the fixed code runs.
     _begin("probe 5: a compile error turns the light red and keeps the old class usable; the fix turns it green")
+    var jar_before := _jar_state()
     await _edit_source(MARKER, BROKEN_MEMBER + MARKER)
     await _expect_build("failed", "the broken edit")
     var output := String(_kanama._last_build.get("output", ""))
     _expect(output.contains("probeNoSuchValue"), "the failed build's output does not name the compile error: %s" % output.right(1500))
-    await _frames(10)
+    await get_tree().create_timer(AFTER_FAILED_BUILD_SEC).timeout
+    var jar_after := _jar_state()
+    _expect(jar_after == jar_before, "the failed build changed kanama-scripts.jar (modified time, size, MD5): %s before, %s after" % [jar_before, jar_after])
     script = _script()
     _expect(_has_property(script, PROPERTY) and _has_method(script, METHOD), "after the failed build ProbeScript lost its members: %s %s" % [_property_names(script), _method_names(script)])
     node = _probe_node()
@@ -283,6 +290,18 @@ func _instantiate_fresh() -> Node:
     var probe := root.get_node_or_null("Probe")
     root.queue_free()
     return probe
+
+
+## The scripts jar's modified time, size and MD5 (empty values when it is missing).
+func _jar_state() -> Array:
+    var path := ProjectSettings.globalize_path(SCRIPTS_JAR)
+    if not FileAccess.file_exists(path):
+        return [0, -1, ""]
+    var file := FileAccess.open(path, FileAccess.READ)
+    var size := file.get_length() if file != null else -1
+    if file != null:
+        file.close()
+    return [FileAccess.get_modified_time(path), size, FileAccess.get_md5(path)]
 
 
 func _read_source() -> String:

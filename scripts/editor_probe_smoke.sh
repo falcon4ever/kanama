@@ -40,31 +40,34 @@ if [[ -z "$LOG_FILE" ]]; then
 fi
 echo "$TAG log: $LOG_FILE"
 
-SCRATCH="$(mktemp -d "${TMPDIR:-/tmp}/kanama_editor_probe_scratch.XXXXXX")"
+# The physical path (macOS: /private/tmp, not /tmp): Godot reports the project under it, and the plugin's builds
+# then name the same scripts folder as the install below, so they share its build folder.
+SCRATCH="$(cd "$(mktemp -d "${TMPDIR:-/tmp}/kanama_editor_probe_scratch.XXXXXX")" && pwd -P)"
 PROJECT="$SCRATCH/project"
-# The project's scripts build in project-scripts/build/<hash of the scripts folder> (project-scripts/build.gradle.kts):
-# a folder per scratch project, removed with it.
+# The project's scripts build in project-scripts/build/<first 16 hex digits of the SHA-256 of the
+# -PkanamaProjectScriptsDir value> (shortHash in project-scripts/build.gradle.kts). Only the folders of the values
+# this run passed are removed: its own install's, and each one the editor's builds name in the log.
 SCRIPT_BUILDS="$ROOT_DIR/project-scripts/build"
-mkdir -p "$SCRIPT_BUILDS"
-builds_before=" "
-for dir in "$SCRIPT_BUILDS"/*; do
-  if [[ -e "$dir" ]]; then
-    builds_before="$builds_before${dir##*/} "
-  fi
-done
+remove_script_builds() {
+  local dir values
+  # justified: an editor that never started a build leaves no such line; the install's own value is still listed.
+  values="$( { printf '%s\n' "$PROJECT/"; sed -n 's/.*-PkanamaProjectScriptsDir=\([^ ]*\).*/\1/p' "$LOG_FILE" 2>/dev/null || true; } | sort -u)"
+  for dir in $(printf '%s\n' "$values" | python3 -c 'import hashlib, sys
+for line in sys.stdin.read().splitlines():
+    if line:
+        print(hashlib.sha256(line.encode("utf-8")).hexdigest()[:16])'); do
+    rm -rf "${SCRIPT_BUILDS:?}/$dir"
+  done
+}
 finish() {
   local status=$?
-  local dir
-  for dir in "$SCRIPT_BUILDS"/*; do
-    case "$builds_before" in
-      *" ${dir##*/} "*) ;;
-      *) rm -rf "$dir" ;;
-    esac
-  done
+  run_bounded_stop
+  remove_script_builds
   rm -rf "$SCRATCH"
   run_logs_finish "$status" editor_probe_smoke
 }
 trap finish EXIT
+run_bounded_signal_traps
 
 mkdir -p "$PROJECT/addons"
 cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$PROJECT/addons/"
@@ -76,17 +79,23 @@ editor_check_home "$SCRATCH/editor_home"
 
 # The project starts built, as Build Scripts leaves it: the same installAddonJar the plugin runs for a project
 # beside a checkout (_current_project_install_args in plugin.gd).
-if ! run_bounded 900 "$TAG" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" -q installAddonJar "-PkanamaProjectDir=$PROJECT/" \
-  "-PkanamaProjectScriptsDir=$PROJECT/" >"$LOG_FILE.install" 2>&1; then
+# No Gradle or Kotlin daemon outlives the run (local_ci.sh's convention): --no-daemon and in-process Kotlin compiles,
+# here and, through the environment, for the builds the editor starts.
+if ! run_bounded 600 "$TAG" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" -q --no-daemon -Pkotlin.compiler.execution.strategy=in-process \
+  installAddonJar "-PkanamaProjectDir=$PROJECT/" "-PkanamaProjectScriptsDir=$PROJECT/" >"$LOG_FILE.install" 2>&1; then
   tail -n 60 "$LOG_FILE.install" >&2
   echo "$TAG FAIL: installAddonJar into the probe project failed (log: $LOG_FILE.install)" >&2
   exit 1
 fi
 
-# The check quits the editor with its verdict (it gives up itself after 1500 s); the bound covers an editor that
-# never gets that far. The builds it starts are the checkout's gradlew, on the machine's Gradle cache and daemon.
+# The check quits the editor with its verdict (it gives up itself after 1200 s); the bound covers an editor that
+# never gets that far, and both stay inside ci.yml local-ci's budget. The builds the editor starts are the checkout's
+# gradlew on the machine's Gradle cache; GRADLE_OPTS and the ORG_GRADLE_PROJECT_ property reach them through the
+# plugin's launch.
 rc=0
-(cd "$PROJECT" && run_bounded 1800 "$TAG" editor_env "$GODOT_BIN" --headless --editor --path .) >"$LOG_FILE" 2>&1 || rc=$?
+run_bounded 1300 "$TAG" editor_env GRADLE_OPTS="${GRADLE_OPTS:+$GRADLE_OPTS }-Dorg.gradle.daemon=false" \
+  ORG_GRADLE_PROJECT_kotlin.compiler.execution.strategy=in-process \
+  "$GODOT_BIN" --headless --editor --path "$PROJECT" >"$LOG_FILE" 2>&1 || rc=$?
 grep -E "^\[editor_probe\] (PASS|FAIL|the build)" "$LOG_FILE" || true # justified: the verdict is checked below; these lines are the summary
 fail=0
 for probe in 1 2 3 4 5; do

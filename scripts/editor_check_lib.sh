@@ -17,7 +17,15 @@
 #       run COMMAND with that scratch HOME
 #   run_bounded SECONDS TAG COMMAND...
 #       COMMAND's exit status, or a failure once SECONDS passed (COMMAND and its children are then stopped and
-#       TAG says so): the bound for an editor that never gets as far as its check's own timeout
+#       TAG says so): the bound for an editor that never gets as far as its check's own timeout. COMMAND runs in
+#       the background (run it from this shell, not a subshell, so the traps below can reach it)
+#   run_bounded_stop
+#       stop the command run_bounded is running, if any, with its children (an editor's Gradle client): TERM, then
+#       KILL after RUN_BOUNDED_GRACE seconds (default 10). A script that uses run_bounded calls it from its EXIT
+#       trap and calls run_bounded_signal_traps: a background job ignores the terminal's Ctrl-C, and a script that
+#       is stopped does not stop its children, so without them an interrupted run left a headless editor running
+#   run_bounded_signal_traps
+#       turn INT and TERM into an exit (130, 143), so the script's EXIT trap runs
 
 editor_check_plugin() {
   local project="$1" name="$2" check_gd="$3"
@@ -53,27 +61,79 @@ editor_env() {
     XDG_CACHE_HOME="$EDITOR_HOME/.cache" GRADLE_USER_HOME="$EDITOR_GRADLE_HOME" "$@"
 }
 
+RUN_BOUNDED_PID=""
+RUN_BOUNDED_WATCHDOG=""
+
+# _run_bounded_end PID: TERM to PID and its children, then KILL to those still alive after RUN_BOUNDED_GRACE
+# seconds. The children are listed first: once PID is gone they belong to init and pgrep -P no longer finds them.
+_run_bounded_end() {
+  local pid="$1" waited=0 targets
+  # justified: no children (or no pgrep, on Git Bash) leaves the list empty; PID itself is still stopped.
+  targets="$(pgrep -P "$pid" 2>/dev/null || true) $pid"
+  # justified: a target may have exited since it was listed.
+  kill -TERM $targets 2>/dev/null || true
+  while [[ "$waited" -lt "${RUN_BOUNDED_GRACE:-10}" ]] && _run_bounded_any_alive $targets; do
+    sleep 1
+    waited=$((waited + 1))
+  done
+  # justified: as above; KILL only reaches what TERM did not stop.
+  kill -KILL $targets 2>/dev/null || true
+}
+
+_run_bounded_any_alive() {
+  local target
+  for target in "$@"; do
+    if kill -0 "$target" 2>/dev/null; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 run_bounded() {
-  local limit="$1" tag="$2" pid watchdog rc=0
+  local limit="$1" tag="$2" rc=0
   shift 2
   "$@" &
-  pid=$!
+  RUN_BOUNDED_PID=$!
   (
     # justified: a sleep stopped because the command finished is no timeout.
     sleep "$limit" || exit 0
     echo "$tag timed out after ${limit}s: $*" >&2
-    # justified: the command may have exited between the sleep and the kill.
-    pkill -TERM -P "$pid" 2>/dev/null || true
-    # justified: as above.
-    kill -TERM "$pid" 2>/dev/null || true
+    _run_bounded_end "$RUN_BOUNDED_PID"
   ) &
-  watchdog=$!
-  wait "$pid" || rc=$?
+  RUN_BOUNDED_WATCHDOG=$!
+  wait "$RUN_BOUNDED_PID" || rc=$?
+  RUN_BOUNDED_PID=""
+  _run_bounded_stop_watchdog
+  return "$rc"
+}
+
+_run_bounded_stop_watchdog() {
+  local watchdog="$RUN_BOUNDED_WATCHDOG"
+  if [[ -z "$watchdog" ]]; then
+    return 0
+  fi
+  RUN_BOUNDED_WATCHDOG=""
   # justified: the watchdog and its sleep only have to be gone; it may already have fired.
   pkill -P "$watchdog" 2>/dev/null || true
   # justified: as above.
   kill "$watchdog" 2>/dev/null || true
   # justified: reaping the watchdog; its status is not the verdict.
   wait "$watchdog" 2>/dev/null || true
-  return "$rc"
+}
+
+run_bounded_stop() {
+  local pid="$RUN_BOUNDED_PID"
+  if [[ -n "$pid" ]]; then
+    RUN_BOUNDED_PID=""
+    _run_bounded_end "$pid"
+    # justified: reaping the stopped command; the script is already on its way out with its own status.
+    wait "$pid" 2>/dev/null || true
+  fi
+  _run_bounded_stop_watchdog
+}
+
+run_bounded_signal_traps() {
+  trap 'exit 130' INT
+  trap 'exit 143' TERM
 }

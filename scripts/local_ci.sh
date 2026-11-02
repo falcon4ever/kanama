@@ -939,7 +939,7 @@ for godot_bin in "${godot_bins[@]}"; do
   "$ROOT_DIR/scripts/tool_smoke.sh" "$godot_bin"
 
   # The Kotlin edit loop in a real editor with the real build (task 143 item 4): build on save, the class's new
-  # members, the inspector, the saved scene, and a compile error. About a minute with a warm Gradle daemon.
+  # members, the inspector, the saved scene, and a compile error. About 75 s; no daemon outlives it.
   stage "editor probes: $godot_bin"
   "$ROOT_DIR/scripts/editor_probe_smoke.sh" "$godot_bin"
 
