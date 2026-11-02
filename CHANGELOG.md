@@ -26,31 +26,39 @@ the snapshots are regenerated with `--write`, so the pull request shows every ch
 Additions and source-compatible changes (a parameter gains a default, a declaration becomes `open`,
 a class gains a supertype) need only `--write`. Every public declaration must state its type.
 
+New entries go under `### Details` as `#### Added|Changed|Fixed — <title>`, newest first, without task ids.
+A change users will notice also gets a line in the summary.
+
 ## Unreleased
 
 Upgrading from 0.4? See [Upgrading from 0.4 to 0.5](docs/getting-started/upgrading-0.4-to-0.5.md).
 
 ### What's new in 0.5
 
-0.5 makes the Godot API one thing on every platform, and moves the build and export steps into the editor and the
-release kit. Source breaks are listed under Details with their old and new spellings.
+0.5 gives desktop, Android and iOS one Godot API, brings the Web close to it, and moves the build and export steps into
+the editor and the release kit. Source breaks are listed under Details with their old and new spellings; three migration
+scripts rewrite your old annotations, export hints and enum constants.
 
-- **Scripts read like GDScript.** Public functions are callable from Godot with no annotation, every `@export_*` hint has
-  a typed twin such as `@ExportRange`, and `node<Timer>("ScoreTimer")` and `preload<PackedScene>("res://mob.tscn")`
-  replace `@onready` and `preload`. `launch { wait(1.0) }` is `await`, a script class can extend another, and `Label.create()`
-  is `Label.new()` for every class Godot can instantiate.
+- **Scripts read like GDScript.** Public functions need no annotation, every `@export_*` hint has a typed twin such as
+  `@ExportRange`, and `node<Timer>("ScoreTimer")` and `preload<PackedScene>("res://mob.tscn")` replace `@onready` and
+  `preload`. `launch { wait(1.0) }` is `await`, a script class can extend another, and `Label.create()` is GDScript's
+  `Label.new()` for every node and `RefCounted` class.
 - **Typed signals and enums.** `area.bodyEntered.connect { body -> }`, `timer.timeout.await()`, `Node.ProcessMode.ALWAYS`
-  and `Key.ESCAPE`. Three migration scripts rewrite your old annotations, export hints and enum constants.
-- **One API on desktop, Android, iOS and Web.** The hand-written classes are generated like the rest, so a member exists
-  everywhere or nowhere. `Mathf` runs in Kotlin, and every decimal is a `Double`.
-- **`close()` is optional.** A resource you forget is released after the garbage collector drops it. A Kotlin exception in
-  a callback is a Godot script error that shows in the Errors tab, and using a freed node throws what GDScript reports.
-- **Export without a checkout.** A project made from a release kit or the store addon exports for Android, iOS and the
-  Web with `buildAndroidScripts`, `buildIosScripts` and `exportWeb`. From a checkout, `exportWeb` also takes your own
-  project, and the Web script API now compiles the starter script. See [Export for the Web](docs/exporting/web.md).
+  and `Key.ESCAPE`.
+- **More of Godot on Kotlin's own types.** String, NodePath and Callable methods, typed `Autoloads.<Name>`, and every
+  value type as an export, parameter or signal type.
+- **One API across platforms.** The hand-written classes are generated like the rest, so desktop, Android and iOS share
+  every member and the Web has a subset. `Mathf` runs in Kotlin, and every decimal is a `Double`.
+- **`close()` is optional.** A resource you forget is released after the garbage collector drops it.
+- **Errors reach Godot.** A Kotlin exception in a callback is a script error in the Errors tab, and using a freed node
+  throws what GDScript reports.
+- **Export without a checkout.** A project from a release kit or the store addon exports for Android and iOS (macOS kit,
+  on a Mac) with `buildAndroidScripts` or `buildIosScripts` and then Godot's export, and for the Web with `exportWeb`.
+  From a checkout, `exportWeb` takes your own project and the Web script API compiles the starter script. See
+  [Export for the Web](docs/exporting/web.md).
 - **Android 13 is the minimum.** Set **Min SDK** to `33`; the editor stops an export that sets it lower.
-- **A status light in the editor.** It shows whether your scripts are built, builds run on save, and **Set Up Kanama
-  Project** turns a project with the store addon into a Kanama project.
+- **The editor builds for you.** A toolbar status light shows whether your scripts are built, saving a `.kt` file starts a
+  build, and **Set Up Kanama Project** turns a store-addon project into a Kanama project.
   See [Edit, Build, Run](docs/getting-started/editor-workflow.md).
 - **Exports are safe to ship.** The editor stops an export whose Kotlin scripts do not bind, and a desktop game carries
   its own trimmed Java runtime, which you can build for another desktop platform.
@@ -807,7 +815,7 @@ scripted `Resource` (`@ScriptClass(attachTo = "Resource")`) that Godot freed ski
 teardown (its pending `await`s and lambda connections stayed; a debug export logged "Attempt to call
 function ... in base 'null instance'"); it now ends them like a scripted node does.
 
-#### Fixed — Web: a RefCounted lives while Kotlin holds it, and every RefCounted has `close()` (closes [#332](https://github.com/falcon4ever/kanama/issues/332))
+#### Fixed — Web: a RefCounted lives while Kotlin holds it, and every RefCounted has `close()`
 
 On Web, a `RefCounted` that only your Kotlin code kept did not follow desktop's rule. An argument
 (an `InputEvent`, a `Resource`) stayed valid for its call and the next 2 frames, then lived only
@@ -1230,7 +1238,7 @@ pointers, which are untagged, but a Kotlin emit hands a lambda its heap frame).
 (`MemorySegment.NULL`/`NULL_SEGMENT`/`ofAddress(0)` reinterpreted, wrapped or through a `val`
 alias) in the runtime sources.
 
-#### Fixed — Web: a lambda signal connection no longer leaks its callback (protocol 34)
+#### Fixed — Web: a lambda signal connection no longer leaks its callback
 
 - A Kotlin lambda connected to a signal on Web (`signal.connect(this) { ... }`, the typed
   `connectLong`/`connectObject` forms) kept its callback registered until its receiving script was
@@ -1693,7 +1701,7 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   desktop (`Basis(x, y, z)`, `withX(value)`, `lookingAt(target, up, useModelFront)`,
   `interpolateWith(xform, weight)`, `withBasis(value)`, `bounce(n)`, `times(scale)`).
 
-#### Fixed — Web: a script's property initializers can call the engine (protocol 33)
+#### Fixed — Web: a script's property initializers can call the engine
 
 - On Web a script's constructor ran before its proxy had installed its callbacks, so a property
   initializer that called the engine (`private val config = ConfigFile.create()`,
@@ -2488,7 +2496,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `KanamaScript<Base>` subclass and, for a Node base, an `@OnReady` stub. It no longer adds
   `@GlobalClass` unless the template asks for it.
 
-#### Fixed — Kanama finds the right JDK on Linux and Windows desktop launchers (#277)
+#### Fixed — Kanama finds the right JDK on Linux and Windows desktop launchers
 
 - **Build Scripts no longer builds against a stray system JDK.** Godot started from a desktop launcher
   does not inherit the shell's `JAVA_HOME`, so on Linux the build ran on the system default JDK and
@@ -3326,7 +3334,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `Image` sugar sites, one `PlaneMesh`, and one for `iosMain/.../StandardMaterial3D.kt`, a file P1'(c)
   already deleted): 20 → 16 marked sites, SUGAR 9 → 5.
 
-#### Changed — `Viewport` and `Resource` generated once — group A complete — **desktop source break**
+#### Changed — `Viewport` and `Resource` generated once — **desktop source break**
 
 - The last two group-A classes are generated once into the shared wrapper tree
   (`src/sharedApi/.../api/Viewport.kt`, `.../Resource.kt`); both per-platform copies of each are
@@ -5035,7 +5043,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `web.yml` carried their own pins. All three are fixed; `web.yml` derives its
   template folder from `GODOT_VERSION`.
 
-#### Fixed — Web behaviour (agent-surface audit)
+#### Fixed — Web behaviour
 
 An adversarial audit of the Web backend's agent-written surfaces found and closed
 nineteen defects. The ones that change what a running script does:

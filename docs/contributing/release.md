@@ -244,8 +244,10 @@ The maintainer decides when a release is cut. The steps:
    new, empty `## Unreleased` above it: `check_public_signature_changes.py`
    counts no break as announced without one. Keep every `Source break` line.
    Check that the summary still matches the entries, in particular the
-   toolchain line (Kotlin, KSP and Godot versions). Entry headings under
-   `### Details` are `####` and carry no task ids.
+   toolchain line (Kotlin, KSP and Godot versions). If there is no
+   `### What's new in <x.y>` yet, write one: at most 25 lines, second person,
+   one link per paragraph ([docs-style.md](docs-style.md)). Entry headings
+   under `### Details` are `####` and carry no task ids.
 3. **Gates.** Run `scripts/local_ci.sh` with the pinned Godot, then the
    isolated gates from clean clones: `scripts/fresh_clone_smoke.sh` and, for
    Web, `scripts/web_fresh_checkout_smoke.sh`. Smoke the packages as
