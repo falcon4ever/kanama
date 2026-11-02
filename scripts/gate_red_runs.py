@@ -1384,6 +1384,14 @@ case("editor_probe_smoke.sh (scene reload waits for the runtime)", ["bash", "scr
      "the plugin reloaded the scene before the runtime loaded the rebuilt jar", "Kanama Tools reloads the open scene right after a build again, not once the runtime says it loaded the new jar: on a host where the runtime looks later than the reload, the scene's @Tool node keeps running the previous build",
      pre=[["./gradlew", "-p", ".", "-q", "--no-daemon", "-Pkotlin.compiler.execution.strategy=in-process", "syncExampleAddonJar"]],
      timeout=2400, requires_env="KANAMA_GODOT_BIN", slow=True)
+# installAddonJar copies the native bootstrap over the one the editor has loaded again, in place: on Linux that throws
+# away the editor's relocations of the library, and the editor crashed in its destructor when it quit (exit 139).
+case("editor_probe_smoke.sh (loaded native library left alone)", ["bash", "scripts/editor_probe_smoke.sh", GODOT],
+     [Edit("build.gradle.kts", "        val nativeLibrary = details.file.extension in nativeLibraryExtensions\n",
+           "        val nativeLibrary = false\n")],
+     "the builds rewrote the native library the editor had loaded", "installAddonJar rewrites the native bootstrap a running editor has loaded, in place, on every Build Scripts: on Linux the truncated mapping loses the editor's relocations of the library and the editor crashes in its destructor on quit (macOS survives, so the smoke checks the file itself: its inode and modified time)",
+     pre=[["./gradlew", "-p", ".", "-q", "--no-daemon", "-Pkotlin.compiler.execution.strategy=in-process", "syncExampleAddonJar"]],
+     timeout=2400, requires_env="KANAMA_GODOT_BIN", slow=True)
 case("export_guard_selftest.sh",["bash", "scripts/export_guard_selftest.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", "    if not problems.is_empty():\n        messages.append", "    if false:\n        messages.append")],
      "the stale export exited 0", "the export guard stops finding problems: a stale-jar export must still exit non-zero with the message (its own green and red exports are inside the self-test)",

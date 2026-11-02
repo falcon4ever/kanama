@@ -57,6 +57,13 @@ classes Web wraps. A new node is yours to add to the tree or `queueFree()`; a ne
 reference of your own, as before. Plain `Object` classes (`UndoRedo`, `JSONRPC`) get none, since
 Kotlin has no `free()` for them. Ports no longer need a local `ClassDB.instantiate` helper.
 
+### Fixed — the Linux editor no longer crashes on quit after Build Scripts from a checkout
+
+In a project built from a Kanama checkout (`installAddonJar`, what Build Scripts runs there), every build copied
+the native bootstrap over the one the open editor had loaded. On Linux that silently undid the editor's setup of
+the library, and the editor crashed (segmentation fault) when it quit. The build now leaves an unchanged library
+alone, and replaces a changed one with a new file, so a running editor keeps the library it loaded.
+
 ### Fixed — the open scene runs the new build after Build Scripts
 
 After a build, Kanama Tools reloads the scene you have open. It could do that before the Kanama runtime had

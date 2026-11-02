@@ -98,6 +98,26 @@ if ! run_bounded 600 "$TAG" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" -q --no-daemon -P
   exit 1
 fi
 
+# The native bootstrap the editor loads must not be rewritten under it: on Linux a truncated mapped library loses the
+# running process's relocations, and the editor crashed in the library's destructor when it quit (installAddonJar
+# rewrote it on every Build Scripts). Its inode and modified time, before and after the editor session.
+native_library_state() {
+  python3 - "$PROJECT/addons/kanama" <<'PY'
+import os, sys
+names = sorted(n for n in os.listdir(sys.argv[1]) if n.endswith((".so", ".dylib", ".dll")))
+for name in names:
+    st = os.stat(os.path.join(sys.argv[1], name))
+    print(f"{name} inode={st.st_ino} mtime_ns={st.st_mtime_ns}")
+if not names:
+    print("no native library")
+PY
+}
+native_before="$(native_library_state)"
+if [[ "$native_before" == "no native library" ]]; then
+  echo "$TAG FAIL: installAddonJar put no native bootstrap into $PROJECT/addons/kanama" >&2
+  exit 1
+fi
+
 # The check quits the editor with its verdict (it gives up itself after 1200 s); the bound covers an editor that
 # never gets that far, and both stay inside ci.yml local-ci's budget. The builds the editor starts are the checkout's
 # gradlew on the machine's Gradle cache; GRADLE_OPTS and the ORG_GRADLE_PROJECT_ property reach them through the
@@ -115,7 +135,7 @@ print_core_backtraces() {
     found=1
     if command -v gdb >/dev/null 2>&1; then
       echo "$TAG gdb on $core: the crashed thread, then every thread:" >&2
-      gdb -batch -nx -ex "set pagination off" -ex "info signals SIGSEGV" -ex "bt 40" -ex "info threads" \
+      gdb -batch -nx -ex "set pagination off" -ex "info signals SIGSEGV" -ex "bt 40" -ex "info sharedlibrary" -ex "info threads" \
         -ex "thread apply all bt 16" "$GODOT_BIN" "$core" 2>&1 | head -n 600 >&2
     else
       echo "$TAG $core is there, but gdb is not installed" >&2
@@ -135,6 +155,11 @@ run_bounded 1300 "$TAG" editor_env GRADLE_OPTS="${GRADLE_OPTS:+$GRADLE_OPTS }-Do
   "$GODOT_BIN" --headless --editor --path "$PROJECT" >"$LOG_FILE" 2>&1 || rc=$?
 grep -E "^\[editor_probe\] (PASS|FAIL|the build)" "$LOG_FILE" || true # justified: the verdict is checked below; these lines are the summary
 fail=0
+native_after="$(native_library_state)"
+if [[ "$native_after" != "$native_before" ]]; then
+  echo "$TAG FAIL: the builds rewrote the native library the editor had loaded (before: $native_before; after: $native_after)" >&2
+  fail=1
+fi
 # After each build the plugin reloads the open scene only once the runtime has loaded the new jar
 # (_wait_for_runtime_reload). The bug's signature: a "Reloaded scene" line, then that build's "hot-reload: reloaded"
 # line, both before the next build starts. (A build that left the jar as it was has no reload line at all.)

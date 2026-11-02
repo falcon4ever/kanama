@@ -2304,6 +2304,13 @@ tasks.register<Copy>("installAddonJar") {
   val extensionListFile = targetProjectDir.map { file(it).resolve(".godot/extension_list.cfg") }
   val preserveAndroidExtensionMetadata = objects.property<Boolean>().convention(false)
   val byteStableFiles = setOf("kanama.jar", "kanama-scripts.jar")
+  // The native bootstrap a running editor of the project has loaded. Copy rewrites a file in place,
+  // and on Linux truncating a mapped library throws away the running process's relocations of it:
+  // after a Build Scripts the editor jumped to an unrelocated address in the library's destructor
+  // when it quit (exit 139, task 143 item 4). An identical library is left alone; a changed one
+  // replaces the old file by a rename, so the running editor keeps the library it mapped.
+  val nativeLibraryExtensions = setOf("so", "dylib", "dll")
+  val hostNativeLibrary = hostNativeBootstrapArtifactName()
 
   dependsOn(tasks.named("jvmJar"))
   dependsOn(":project-scripts:jar")
@@ -2349,13 +2356,16 @@ tasks.register<Copy>("installAddonJar") {
   // record it as an output of this task: deleting the jar afterwards left the task UP-TO-DATE, and
   // Build Scripts reported success with no kanama-scripts.jar. Whichever jar is missing, run again.
   val installedByteStableFiles =
-    targetProjectDir.map { dir -> byteStableFiles.map { file(dir).resolve("addons/kanama/$it") } }
+    targetProjectDir.map { dir ->
+      (byteStableFiles + hostNativeLibrary).map { file(dir).resolve("addons/kanama/$it") }
+    }
   outputs.upToDateWhen { installedByteStableFiles.getOrElse(emptyList()).all { it.isFile } }
 
   eachFile(
     object : org.gradle.api.Action<org.gradle.api.file.FileCopyDetails> {
       override fun execute(details: org.gradle.api.file.FileCopyDetails) {
-        if (details.name in byteStableFiles && targetProjectDir.isPresent) {
+        val nativeLibrary = details.file.extension in nativeLibraryExtensions
+        if ((details.name in byteStableFiles || nativeLibrary) && targetProjectDir.isPresent) {
           val installedFile: File =
             file(targetProjectDir.get()).resolve("addons/kanama").resolve(details.path)
           if (
@@ -2363,6 +2373,16 @@ tasks.register<Copy>("installAddonJar") {
               java.nio.file.Files.mismatch(details.file.toPath(), installedFile.toPath()) == -1L
           ) {
             details.exclude()
+          } else if (nativeLibrary && installedFile.isFile) {
+            details.exclude()
+            val incoming = installedFile.resolveSibling(installedFile.name + ".kanama-new")
+            details.file.copyTo(incoming, overwrite = true)
+            java.nio.file.Files.move(
+              incoming.toPath(),
+              installedFile.toPath(),
+              java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+              java.nio.file.StandardCopyOption.ATOMIC_MOVE,
+            )
           }
         }
       }
