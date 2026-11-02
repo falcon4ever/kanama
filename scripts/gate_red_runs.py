@@ -1362,6 +1362,14 @@ case("tool_smoke.sh (deleted scripts jar restored)", ["bash", "scripts/tool_smok
            "            true")],
      "installAddonJar did not restore a deleted kanama-scripts.jar", "installAddonJar skips the scripts jar whatever is installed: a deleted kanama-scripts.jar must come back with the next Build Scripts",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+# The editor probes (scripts/check_editor_probes.gd, driven by editor_probe_smoke.sh): a real build in a real editor.
+# The runtime stops picking up a rebuilt scripts jar while the editor runs: build on save still builds and the light
+# goes green, but the class list never gains the new members (only a restart would show them).
+case("editor_probe_smoke.sh (reload after a build)", ["bash", "scripts/editor_probe_smoke.sh", GODOT],
+     [Edit("src/jvmMain/kotlin/binding/KanamaHotReload.kt", "      if (!force && mtime == lastScriptsJarMtime) return\n",
+           "      if (!force) return\n")],
+     "[editor_probe] FAIL probe 2: ", "the Kanama runtime no longer reloads kanama-scripts.jar when a build replaces it in a running editor: the light turns green, but the class list lacks the edit's new property and method",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("export_guard_selftest.sh",["bash", "scripts/export_guard_selftest.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", "    if not problems.is_empty():\n        messages.append", "    if false:\n        messages.append")],
      "the stale export exited 0", "the export guard stops finding problems: a stale-jar export must still exit non-zero with the message (its own green and red exports are inside the self-test)",
