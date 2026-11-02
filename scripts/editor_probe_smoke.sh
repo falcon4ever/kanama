@@ -5,7 +5,7 @@
 #
 # A scratch Godot project beside this checkout (kanama/tools/repo_dir, so Build Scripts runs installAddonJar here, the
 # example_project layout) holds a @ScriptClass in a scene; scripts/check_editor_probes.gd runs as an editor plugin
-# beside Kanama Tools and drives it. Each of its five probes prints its own PASS or FAIL line. The scratch project,
+# beside Kanama Tools and drives it. Each of its six probes prints its own PASS or FAIL line. The scratch project,
 # its scripts build under project-scripts/build/ and the scratch editor HOME are removed afterwards.
 #
 # usage: scripts/editor_probe_smoke.sh /path/to/godot
@@ -84,7 +84,8 @@ cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$PROJECT/addons/"
 editor_check_plugin "$PROJECT" editor_probes "$ROOT_DIR/scripts/check_editor_probes.gd"
 editor_check_project_godot "$PROJECT" kanama-editor-probes "kanama_tools editor_probes" \
   '[kanama]' '' "tools/repo_dir=\"$ROOT_DIR\"" 'tools/java_preflight_enabled=false'
-cp "$ROOT_DIR/scripts/fixtures/editor-probes/ProbeScript.kt" "$ROOT_DIR/scripts/fixtures/editor-probes/probe.tscn" "$PROJECT/"
+cp "$ROOT_DIR/scripts/fixtures/editor-probes/ProbeScript.kt" "$ROOT_DIR/scripts/fixtures/editor-probes/ProbeRegistered.kt" \
+  "$ROOT_DIR/scripts/fixtures/editor-probes/probe.tscn" "$PROJECT/"
 editor_check_home "$SCRATCH/editor_home"
 
 # The project starts built, as Build Scripts leaves it: the same installAddonJar the plugin runs for a project
@@ -145,6 +146,15 @@ print_core_backtraces() {
   if [[ "$found" -eq 0 ]]; then
     echo "$TAG no core of this run in /tmp or the project" >&2
   fi
+  # A crash in a library's destructor jumps to a .fini_array entry: its raw bytes, to compare with the address.
+  if command -v readelf >/dev/null 2>&1; then
+    for library in "$PROJECT"/addons/kanama/*.so; do
+      if [[ -f "$library" ]]; then
+        echo "$TAG readelf -x .fini_array $library:" >&2
+        readelf -x .fini_array "$library" >&2 || true # justified: diagnostics after the verdict
+      fi
+    done
+  fi
 }
 
 # A fatal JVM error writes its report beside the log (KANAMA_JVM_OPTIONS reaches the editor's JVM).
@@ -169,7 +179,7 @@ if [[ -n "$early_reload" ]]; then
   echo "$TAG FAIL: the plugin reloaded the scene before the runtime loaded the rebuilt jar (log lines: $(printf '%s' "$early_reload" | tr '\n' ' '))" >&2
   fail=1
 fi
-for probe in 1 2 3 4 5; do
+for probe in 1 2 3 4 5 6; do
   if ! grep -Eq "^\[editor_probe\] PASS probe $probe: " "$LOG_FILE"; then
     echo "$TAG FAIL: probe $probe did not pass" >&2
     fail=1

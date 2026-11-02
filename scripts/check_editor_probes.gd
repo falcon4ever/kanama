@@ -10,7 +10,8 @@ extends EditorPlugin
 ##      property list and in the inspector;
 ##   4. the saved scene: a value set on the property survives saving the scene and reloading it (.tscn text too);
 ##   5. a broken edit (a compile error) turns the light red while the last good build stays usable; fixing it
-##      turns the light green and the fixed code runs.
+##      turns the light green and the fixed code runs;
+##   6. the class loader of the startup build still loads a class it first needs after builds replaced the jar.
 ## Each probe prints `[editor_probe] PASS probe N: ...` or `[editor_probe] FAIL probe N: ...` lines; the check
 ## quits with 0 after `[editor_probe] PASS`, else 1.
 ##
@@ -25,6 +26,9 @@ const MARKER := "  // probe: new members\n"
 const NEW_MEMBERS := "  @Export var probeLabel: String = \"probe-default\"\n\n  fun probeAnswer(): Long = 42\n"
 const BROKEN_MEMBER := "  fun probeBroken(): Long = probeNoSuchValue\n"
 const FIXED_MEMBERS := "  @Export var probeLabel: String = \"probe-default\"\n\n  fun probeAnswer(): Long = 43\n"
+const REGISTERED_PATH := "res://ProbeRegistered.kt"
+const LAZY_OLD := "fun answer(): Long = 7"
+const LAZY_NEW := "fun answer(): Long = 8"
 const PROPERTY := "probe_label"
 const METHOD := "probe_answer"
 const SAVED_VALUE := "saved-value"
@@ -84,7 +88,15 @@ func _run() -> void:
 
     # 1. Edit the .kt (a new @Export property and a new method) and save: build on save runs the real build.
     _begin("probe 1: a saved .kt edit is built by build on save and the light ends green")
-    await _edit_source(MARKER, NEW_MEMBERS + MARKER)
+    # The same save changes the value the startup build's ProbeLazyHolder returns (probe 6): only a class loader
+    # that reads the new jar sees it.
+    # Both files in one frame: one save, one build.
+    var registered_source := FileAccess.get_file_as_string(ProjectSettings.globalize_path(REGISTERED_PATH))
+    _expect(registered_source.contains(LAZY_OLD), "ProbeRegistered.kt does not contain %s" % LAZY_OLD)
+    _expect(_read_source().contains(MARKER), "ProbeScript.kt does not contain %s" % MARKER.strip_edges())
+    await get_tree().create_timer(1.1).timeout
+    _write_file(REGISTERED_PATH, registered_source.replace(LAZY_OLD, LAZY_NEW))
+    _write_file(SCRIPT_PATH, _read_source().replace(MARKER, NEW_MEMBERS + MARKER))
     var build_ok := await _expect_build("current", "the edit")
     _end()
 
@@ -161,6 +173,20 @@ func _run() -> void:
     node = _probe_node()
     _expect(node != null and _answer(node) == 43, "after the fix the Probe node's %s() returns %s, expected 43 (the fixed build); %s; a fresh instance returns %s" % [METHOD, _answer(node) if node != null else null, _reload_state(), _answer(_instantiate_fresh())])
     _expect(node != null and node.get(PROPERTY) == SAVED_VALUE, "after the fix the Probe node's %s is %s, expected the saved %s" % [PROPERTY, node.get(PROPERTY) if node != null else null, SAVED_VALUE])
+    _end()
+
+    # 6. A class the startup build loads only now, after builds replaced kanama-scripts.jar: the class loader that
+    # registered ProbeRegistered at startup still reads the jar it opened, so ProbeLazyHolder is its own (7). A build
+    # that rewrote the jar in place handed it the new build's bytes: the new class (8) at an unchanged offset, or a
+    # ZipException or ClassFormatError where the offsets moved.
+    _begin("probe 6: the startup build still loads its own classes after builds replaced the jar")
+    _expect(ClassDB.class_exists("ProbeRegistered"), "ProbeRegistered is not a registered class")
+    if ClassDB.class_exists("ProbeRegistered"):
+        var registered: Object = ClassDB.instantiate("ProbeRegistered")
+        var lazy: Variant = registered.call("lazy_answer") if registered != null and registered.has_method("lazy_answer") else null
+        _expect(lazy == 7, "ProbeRegistered.lazy_answer() returned %s, expected 7: its class loader did not read ProbeLazyHolder from the jar it opened at startup (8 is the rebuilt jar's class)" % [lazy])
+        if registered is Node:
+            (registered as Node).free()
     _end()
     _finish()
 
@@ -334,9 +360,13 @@ func _edit_source(old: String, new: String) -> void:
 ## modification time (seconds) changes.
 func _write_source(text: String) -> void:
     await get_tree().create_timer(1.1).timeout
-    var file := FileAccess.open(ProjectSettings.globalize_path(SCRIPT_PATH), FileAccess.WRITE)
+    _write_file(SCRIPT_PATH, text)
+
+
+func _write_file(res_path: String, text: String) -> void:
+    var file := FileAccess.open(ProjectSettings.globalize_path(res_path), FileAccess.WRITE)
     if file == null:
-        _expect(false, "cannot write %s" % SCRIPT_PATH)
+        _expect(false, "cannot write %s" % res_path)
         return
     file.store_string(text)
     file.close()

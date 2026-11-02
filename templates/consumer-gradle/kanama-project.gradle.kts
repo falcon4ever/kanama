@@ -104,18 +104,51 @@ tasks.named<Jar>("jar") {
     isReproducibleFileOrder = true
 }
 
-val installScriptJar by tasks.registering(Copy::class) {
+// The running editor of this project keeps reading kanama-scripts.jar (the class loader of a build
+// that still has live objects loads its classes lazily), so a new jar never rewrites the old one in
+// place: a changed jar replaces it by a rename, an identical one is left alone. Windows cannot
+// rename over a jar the JVM holds open, so there the jar is rewritten as before. The same rule as
+// installForRunningEditor in the Kanama checkout's build.gradle.kts (task 143 item 4).
+fun installForRunningEditor(source: File, target: File) {
+    if (target.isFile && java.nio.file.Files.mismatch(source.toPath(), target.toPath()) == -1L) return
+    target.parentFile.mkdirs()
+    if (System.getProperty("os.name").lowercase().contains("windows")) {
+        // In place, as Copy wrote it: File.copyTo deletes the target first, which Windows refuses
+        // for a jar the JVM holds open.
+        java.io.FileOutputStream(target).use { out -> source.inputStream().use { it.copyTo(out) } }
+        return
+    }
+    val incoming = target.resolveSibling(target.name + ".kanama-new")
+    try {
+        source.copyTo(incoming, overwrite = true)
+        java.nio.file.Files.move(
+            incoming.toPath(),
+            target.toPath(),
+            java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+            java.nio.file.StandardCopyOption.ATOMIC_MOVE,
+        )
+    } finally {
+        java.nio.file.Files.deleteIfExists(incoming.toPath())
+    }
+}
+
+val installScriptJar by tasks.registering {
     group = "kanama"
     description = "Install compiled Kotlin scripts into addons/kanama."
-    dependsOn(tasks.named("jar"))
-    from(tasks.named<Jar>("jar").flatMap { it.archiveFile })
-    into(layout.projectDirectory.dir("addons/kanama"))
+    val jar = tasks.named<Jar>("jar").flatMap { it.archiveFile }
+    val installed = layout.projectDirectory.file("addons/kanama/kanama-scripts.jar")
+    inputs.file(jar)
+    outputs.file(installed)
     // The Kanama version this jar was built with: the editor compares it with
     // addons/kanama/kanama.version and offers to rebuild when an addon update moved the version.
     val stamp = layout.projectDirectory.file("addons/kanama/kanama-scripts.version")
     val version = kanamaVersion
     inputs.property("kanamaVersion", version)
-    doLast { stamp.asFile.writeText(version + "\n") }
+    outputs.file(stamp)
+    doLast {
+        installForRunningEditor(jar.get().asFile, installed.asFile)
+        stamp.asFile.writeText(version + "\n")
+    }
 }
 
 tasks.register("buildScripts") {

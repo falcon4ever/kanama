@@ -583,6 +583,71 @@ tasks
 
 tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
+/**
+ * Installs [source] as [target], a file a running Godot editor of the project may have open: the
+ * native bootstrap it loaded, or kanama.jar and kanama-scripts.jar, which the JVM reads lazily
+ * (the hot-reload class loaders of a build that still has live objects keep reading their jar).
+ * Copy rewrites in place, and that breaks a running editor: on Linux truncating a mapped library
+ * throws away the process's relocations of it (the editor crashed on quit, task 143 item 4), and a
+ * jar rewritten under an open reader yields corrupt entries for classes an old build loads later.
+ * So an identical file is left alone and a changed one replaces the old file by a rename: the
+ * editor keeps the inode it opened. Windows cannot rename over a file the JVM or the loader holds
+ * open, so there the file is rewritten in place as before, and a DLL the editor loaded, which
+ * cannot be written, fails with what to do. Returns whether it wrote the file.
+ * `templates/consumer-gradle/kanama-project.gradle.kts` (installScriptJar) keeps a copy of this
+ * for kit and store-addon projects, which do not see this build.
+ */
+fun installForRunningEditor(source: File, target: File): Boolean {
+  if (target.isFile && java.nio.file.Files.mismatch(source.toPath(), target.toPath()) == -1L) {
+    return false
+  }
+  target.parentFile.mkdirs()
+  if (System.getProperty("os.name").lowercase().contains("windows")) {
+    try {
+      // In place, as Copy writes: File.copyTo deletes the target first, which Windows refuses for
+      // a file the JVM holds open.
+      java.io.FileOutputStream(target).use { out -> source.inputStream().use { it.copyTo(out) } }
+    } catch (e: java.io.IOException) {
+      throw GradleException(
+        "Could not write ${target.absolutePath} (${e.message}): a running Godot editor of the " +
+          "project has it open. Close the editor and build again."
+      )
+    }
+    return true
+  }
+  val incoming = target.resolveSibling(target.name + ".kanama-new")
+  try {
+    source.copyTo(incoming, overwrite = true)
+    java.nio.file.Files.move(
+      incoming.toPath(),
+      target.toPath(),
+      java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+      java.nio.file.StandardCopyOption.ATOMIC_MOVE,
+    )
+  } finally {
+    java.nio.file.Files.deleteIfExists(incoming.toPath())
+  }
+  return true
+}
+
+/**
+ * The `eachFile` action of a task that installs Kanama into a project ([addonDir] is its
+ * addons/kanama): the files a running editor holds open ([installForRunningEditor]) are installed
+ * by it and left out of the copy; everything else is copied as usual.
+ */
+fun runningEditorInstall(addonDir: Provider<File>): org.gradle.api.Action<org.gradle.api.file.FileCopyDetails> =
+  object : org.gradle.api.Action<org.gradle.api.file.FileCopyDetails> {
+    override fun execute(details: org.gradle.api.file.FileCopyDetails) {
+      val heldOpen =
+        details.name in setOf("kanama.jar", "kanama-scripts.jar") ||
+          details.file.extension in setOf("so", "dylib", "dll")
+      if (heldOpen && addonDir.isPresent) {
+        details.exclude()
+        installForRunningEditor(details.file, addonDir.get().resolve(details.path))
+      }
+    }
+  }
+
 fun hostNativeBootstrapArtifactName(): String {
   val osName = System.getProperty("os.name").lowercase()
   return when {
@@ -2259,6 +2324,16 @@ tasks.register<Copy>("installIosAddon") {
   from(selectedReleaseXcframeworkDir) { into("bin/ios/kanama_ios.release.xcframework") }
   into(targetProjectDir.map { file(it).resolve("addons/kanama") })
   outputs.file(extensionListFile)
+  // The jars and the host native bootstrap are installed beside the copy (runningEditorInstall), so
+  // Gradle does not count them as outputs: a deleted one must still make the task run.
+  val installedHeldOpenFiles =
+    targetProjectDir.map { dir ->
+      listOf("kanama.jar", "kanama-scripts.jar", hostNativeBootstrapArtifactName()).map {
+        file(dir).resolve("addons/kanama/$it")
+      }
+    }
+  outputs.upToDateWhen { installedHeldOpenFiles.getOrElse(emptyList()).all { it.isFile } }
+  eachFile(runningEditorInstall(targetProjectDir.map { file(it).resolve("addons/kanama") }))
 
   doFirst {
     if (!targetProjectDir.isPresent) {
@@ -2303,13 +2378,8 @@ tasks.register<Copy>("installAddonJar") {
   val targetProjectDir = providers.gradleProperty("kanamaProjectDir")
   val extensionListFile = targetProjectDir.map { file(it).resolve(".godot/extension_list.cfg") }
   val preserveAndroidExtensionMetadata = objects.property<Boolean>().convention(false)
+  // The files a running editor holds open (installForRunningEditor): never rewritten in place.
   val byteStableFiles = setOf("kanama.jar", "kanama-scripts.jar")
-  // The native bootstrap a running editor of the project has loaded. Copy rewrites a file in place,
-  // and on Linux truncating a mapped library throws away the running process's relocations of it:
-  // after a Build Scripts the editor jumped to an unrelocated address in the library's destructor
-  // when it quit (exit 139, task 143 item 4). An identical library is left alone; a changed one
-  // replaces the old file by a rename, so the running editor keeps the library it mapped.
-  val nativeLibraryExtensions = setOf("so", "dylib", "dll")
   val hostNativeLibrary = hostNativeBootstrapArtifactName()
 
   dependsOn(tasks.named("jvmJar"))
@@ -2352,42 +2422,17 @@ tasks.register<Copy>("installAddonJar") {
   from(generateKanamaVersionFile) { rename { "kanama-scripts.version" } }
   into(targetProjectDir.map { file(it).resolve("addons/kanama") })
   outputs.file(extensionListFile)
-  // The byte-stable exclusion below leaves an identical jar out of the copy, so Gradle does not
-  // record it as an output of this task: deleting the jar afterwards left the task UP-TO-DATE, and
-  // Build Scripts reported success with no kanama-scripts.jar. Whichever jar is missing, run again.
+  // The jars and the native bootstrap are installed beside the copy (runningEditorInstall), so
+  // Gradle does not record them as outputs of this task: deleting the jar afterwards left the task
+  // UP-TO-DATE, and Build Scripts reported success with no kanama-scripts.jar. Whichever is
+  // missing, run again.
   val installedByteStableFiles =
     targetProjectDir.map { dir ->
       (byteStableFiles + hostNativeLibrary).map { file(dir).resolve("addons/kanama/$it") }
     }
   outputs.upToDateWhen { installedByteStableFiles.getOrElse(emptyList()).all { it.isFile } }
 
-  eachFile(
-    object : org.gradle.api.Action<org.gradle.api.file.FileCopyDetails> {
-      override fun execute(details: org.gradle.api.file.FileCopyDetails) {
-        val nativeLibrary = details.file.extension in nativeLibraryExtensions
-        if ((details.name in byteStableFiles || nativeLibrary) && targetProjectDir.isPresent) {
-          val installedFile: File =
-            file(targetProjectDir.get()).resolve("addons/kanama").resolve(details.path)
-          if (
-            installedFile.isFile &&
-              java.nio.file.Files.mismatch(details.file.toPath(), installedFile.toPath()) == -1L
-          ) {
-            details.exclude()
-          } else if (nativeLibrary && installedFile.isFile) {
-            details.exclude()
-            val incoming = installedFile.resolveSibling(installedFile.name + ".kanama-new")
-            details.file.copyTo(incoming, overwrite = true)
-            java.nio.file.Files.move(
-              incoming.toPath(),
-              installedFile.toPath(),
-              java.nio.file.StandardCopyOption.REPLACE_EXISTING,
-              java.nio.file.StandardCopyOption.ATOMIC_MOVE,
-            )
-          }
-        }
-      }
-    }
-  )
+  eachFile(runningEditorInstall(targetProjectDir.map { file(it).resolve("addons/kanama") }))
 
   doFirst {
     if (!targetProjectDir.isPresent) {

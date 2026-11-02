@@ -79,6 +79,8 @@ It edits the `.kt` file and prints one PASS or FAIL line per probe:
 4. A value set on the property survives saving and reloading the scene.
 5. A compile error turns the light red while the last good build keeps
    working, and the fix turns it green and runs.
+6. A class the editor registered at startup still loads a class it first
+   needs after builds replaced `kanama-scripts.jar`.
 
 It takes about 75 seconds and leaves no Gradle or Kotlin daemon behind, so it
 runs in `local_ci.sh` (and so in CI on Linux) right after the `@Tool` smoke. An

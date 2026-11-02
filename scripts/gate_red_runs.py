@@ -1358,8 +1358,8 @@ case("tool_smoke.sh (setup adds nothing twice)", ["bash", "scripts/tool_smoke.sh
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("tool_smoke.sh (deleted scripts jar restored)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Edit("build.gradle.kts",
-           "            installedFile.isFile &&\n              java.nio.file.Files.mismatch(details.file.toPath(), installedFile.toPath()) == -1L",
-           "            true")],
+           "  if (target.isFile && java.nio.file.Files.mismatch(source.toPath(), target.toPath()) == -1L) {\n",
+           "  if (true) {\n")],
      "installAddonJar did not restore a deleted kanama-scripts.jar", "installAddonJar skips the scripts jar whatever is installed: a deleted kanama-scripts.jar must come back with the next Build Scripts",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 # The editor probes (scripts/check_editor_probes.gd, driven by editor_probe_smoke.sh): a real build in a real editor.
@@ -1387,9 +1387,17 @@ case("editor_probe_smoke.sh (scene reload waits for the runtime)", ["bash", "scr
 # installAddonJar copies the native bootstrap over the one the editor has loaded again, in place: on Linux that throws
 # away the editor's relocations of the library, and the editor crashed in its destructor when it quit (exit 139).
 case("editor_probe_smoke.sh (loaded native library left alone)", ["bash", "scripts/editor_probe_smoke.sh", GODOT],
-     [Edit("build.gradle.kts", "        val nativeLibrary = details.file.extension in nativeLibraryExtensions\n",
-           "        val nativeLibrary = false\n")],
+     [Edit("build.gradle.kts", "          details.file.extension in setOf(\"so\", \"dylib\", \"dll\")\n",
+           "          false\n")],
      "the builds rewrote the native library the editor had loaded", "installAddonJar rewrites the native bootstrap a running editor has loaded, in place, on every Build Scripts: on Linux the truncated mapping loses the editor's relocations of the library and the editor crashes in its destructor on quit (macOS survives, so the smoke checks the file itself: its inode and modified time)",
+     pre=[["./gradlew", "-p", ".", "-q", "--no-daemon", "-Pkotlin.compiler.execution.strategy=in-process", "syncExampleAddonJar"]],
+     timeout=2400, requires_env="KANAMA_GODOT_BIN", slow=True)
+# installAddonJar writes a changed kanama-scripts.jar into the old file again, in place: the class loader that
+# registered the project's classes at startup keeps that file open, and a class it first loads after the rebuild
+# reads the new jar's bytes at the old jar's offsets.
+case("editor_probe_smoke.sh (scripts jar replaced, not rewritten)", ["bash", "scripts/editor_probe_smoke.sh", GODOT],
+     [Edit("build.gradle.kts", '        details.name in setOf("kanama.jar", "kanama-scripts.jar") ||\n', "        false ||\n")],
+     "[editor_probe] FAIL probe 6: ", "installAddonJar lets Copy rewrite a changed kanama-scripts.jar in place again: the editor's startup class loader keeps that file open, and a class it first needs after the rebuild comes from the rebuilt jar (or is corrupt)",
      pre=[["./gradlew", "-p", ".", "-q", "--no-daemon", "-Pkotlin.compiler.execution.strategy=in-process", "syncExampleAddonJar"]],
      timeout=2400, requires_env="KANAMA_GODOT_BIN", slow=True)
 case("export_guard_selftest.sh",["bash", "scripts/export_guard_selftest.sh", GODOT],
