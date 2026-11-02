@@ -37,17 +37,21 @@ Steps:
   5. tree        the generated wrapper tree (generate_api_wrapper.py --write-tree: re-adopts every
                  class, adopts the classes the new API adds, sets the desktop ObjectCalls `actual`
                  set)
-  6. outputs     every other generated output: builtin ops, engine-method table, Web backend,
-                 Web wrappers, Web exercise, API exercise, generator/coverage reports,
-                 enum migration table, iOS handwritten report; then the KDoc sync
+  6. outputs     the release kit's project.godot `config/features` (moved to the pin's
+                 major.minor), then every other generated output: builtin ops, engine-method
+                 table, Web backend, Web wrappers, Web exercise, API exercise,
+                 generator/coverage reports, enum migration table, iOS handwritten report; then
+                 the KDoc sync
   7. format      ./gradlew ktfmtFormat (the regen leaves the iOS region, the expect and toggled
                  desktop members unformatted)
   8. gates index docs/reference/generated/gates.md (last: it reads the gate list and the ledger)
   9. gates       every drift gate and API check, run to the end and summarised: API validation
                  (after the re-adopt, so a removed method is an inventory line, not a stop), the
-                 wrapper drift gate, KDoc, pins, the --check form of every generator above. Two
-                 more are listed as human decisions: public signature changes (CHANGELOG source
-                 breaks) and the gate-evidence ledger (every entry goes stale on a pin move).
+                 wrapper drift gate, KDoc, pins (the Godot pin files and the release kit's
+                 version lockstep), the --check form of every generator above. Three more are
+                 listed as human decisions: the adopted-list pending helpers, public signature
+                 changes (CHANGELOG source breaks) and the gate-evidence ledger (every entry goes
+                 stale on a pin move).
 
 Modes:
   (default)   the bump: run every step. Start from a clean tree plus the pin edit (the files
@@ -81,7 +85,8 @@ are done and only the listed human decisions remain (local CI stays red until th
 Test hook: KANAMA_UPGRADE_FAIL_AFTER_STEP=<n> stops the run with exit 1 once step <n> is done, the
 way a crash would (scripts/upgrade_godot_rerun_selftest.sh uses it to prove a re-run).
 
-This script never edits support claims, CHANGELOG, badges, or templates, and
+This script never edits support claims, CHANGELOG, badges, or templates (one line
+excepted: the release kit's `config/features`, which it keeps at the pin's major.minor), and
 never runs device gates — those are human-judgment steps by design.
 EOF
 }
@@ -597,7 +602,31 @@ run_hard report_removed_classes
 # the bump used to leave these stale for the gates to find one per local_ci run). Order matters
 # where one reads another: the coverage page reads the generator report, and the KDoc sync runs
 # after the builtin ops, which rewrite the value types without their KDoc.
-step "step 6: the other generated outputs, then the KDoc sync"
+step "step 6: the kit's Godot version, the other generated outputs, then the KDoc sync"
+# The release kit's project.godot names the Godot minor it was made for (`config/features`);
+# check_kit_version_pins.py holds it to the pin (task 139 U12). The other `config/features` lines
+# (example_project, web3dSmoke, the fixtures) are not gated and stay as they are.
+# Only the first element changes: an editor re-save appends the renderer (`("4.8", "Forward Plus")`).
+sync_kit_godot_feature() {
+  python3 - "$ROOT_DIR/templates/release-kit/project.godot" "$PIN" <<'EOF'
+import re, sys
+
+path, pin = sys.argv[1], sys.argv[2]
+minor = ".".join(pin.split(".")[:2])
+with open(path, encoding="utf-8") as handle:
+    text = handle.read()
+new, count = re.subn(r'^(config/features=PackedStringArray\(")[0-9.]+(")', r"\g<1>" + minor + r"\g<2>", text, count=1, flags=re.MULTILINE)
+if count != 1:
+    raise SystemExit(f"no config/features=PackedStringArray(\"x.y\") line in {path}")
+if new == text:
+    print(f"release kit config/features is already {minor}")
+else:
+    with open(path, "w", encoding="utf-8") as handle:
+        handle.write(new)
+    print(f"release kit config/features moved to {minor} (the pin {pin})")
+EOF
+}
+run_soft "release kit Godot version (config/features)" sync_kit_godot_feature
 run_soft "builtin operators and methods" python3 "$ROOT_DIR/scripts/generate_builtin_ops.py" --write
 run_soft "engine method-name table" python3 "$ROOT_DIR/scripts/generate_engine_method_table.py"
 run_soft "Web backend dispatch" python3 "$ROOT_DIR/scripts/generate_web_backend.py" \
@@ -630,6 +659,7 @@ DRIFT_RC=$LAST_RC
 run_soft "ktfmt formatting" run_with_timeout "$GRADLE_TIMEOUT" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" --quiet ktfmtCheck
 run_soft "KDoc staleness" python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --check
 run_soft "Godot version pins (with the new API header)" python3 "$ROOT_DIR/scripts/check_godot_version_pin.py"
+run_soft "release kit version pins" python3 "$ROOT_DIR/scripts/check_kit_version_pins.py"
 run_soft "virtual-method signature table" python3 "$ROOT_DIR/scripts/generate_virtual_signature_table.py" --check
 run_soft "engine method-name table" python3 "$ROOT_DIR/scripts/generate_engine_method_table.py" --check
 run_soft "builtin operators and methods" python3 "$ROOT_DIR/scripts/generate_builtin_ops.py" --check
@@ -664,7 +694,7 @@ if [[ $DRIFT_RC -eq 0 ]]; then
 fi
 run_human "public API signatures: announce each source break in CHANGELOG.md, then --write the snapshots" \
   python3 "$ROOT_DIR/scripts/check_public_signature_changes.py"
-run_human "gate-evidence ledger: re-run each stale gate on the new pin, or accept it stale with a reason and a date" \
+run_human "gate-evidence ledger: re-run each stale gate on the new pin, or accept it stale with a reason and a date; then re-run python3 scripts/generate_gates_index.py --markdown docs/reference/generated/gates.md (the index shows the ledger)" \
   python3 "$ROOT_DIR/scripts/check_gate_evidence.py"
 
 if [[ "$MODE" == plan ]]; then
@@ -736,16 +766,19 @@ cat <<EOF
   2. Run local CI against the new binary: scripts/local_ci.sh $GODOT_BIN
      The runtime smoke re-records nothing: when Godot adds a builtin member, re-record the Web parity
      hashes from its log (generate_builtin_ops.py --record-parity <log>).
-  3. Run the API exercise rows headless and review the new classes' rows (runbook).
-  4. Re-run the platform smoke/device gates per the release-gate matrix (§6) in
+  3. Run the red runs: python3 scripts/gate_red_runs.py --strict
+     A case that cannot apply its mutation names the file it needs updated (runbook, "After the Script").
+  4. Run the API exercise rows headless and review the new classes' rows (runbook).
+  5. Re-run the platform smoke/device gates per the release-gate matrix (§6) in
      the internal task repo, and record them in evidence/gates.json. This script does NOT change
      support claims; support wording moves only after the matching gate passes.
-  5. Refresh release-facing wording by hand: CHANGELOG.md, README.md, docs
-     version badges/wording, templates, companion demo defaults. Review the
+  6. Refresh release-facing wording by hand: CHANGELOG.md, README.md, docs
+     version badges/wording, templates (the release kit's Godot version is already moved, step 6),
+     companion demo defaults. Review the
      .gdextension compatibility_minimum invariant before touching it
      (see AGENTS.md "Looks Wrong But Isn't").
-  6. Bump the KDoc docs-pin commit hash in docs/contributing/wrapper-maintenance.md.
-  7. Before tagging: scripts/fresh_clone_smoke.sh $GODOT_BIN
+  7. Bump the KDoc docs-pin commit hash in docs/contributing/wrapper-maintenance.md.
+  8. Before tagging: scripts/fresh_clone_smoke.sh $GODOT_BIN
 EOF
 if [[ ${#HUMAN_ITEMS[@]} -gt 0 ]]; then
   exit 3

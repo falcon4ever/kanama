@@ -52,7 +52,7 @@ CI_DEFAULT_WHERE = "PR + push to main (ci.yml `local-ci`); local"
 
 # Stages whose reach differs from "every local_ci run", keyed by stage name.
 STAGE_WHERE_OVERRIDES = {
-    "wrapper KDoc staleness check (4.7-stable)": "local only when a Godot `doc/classes` checkout is present (`GODOT_DOCS`); on CI it prints `SKIP: kdoc-staleness` and is allowed to skip only through `KANAMA_ALLOW_SKIP` in ci.yml",
+    "wrapper KDoc staleness check ($godot_pin)": "local only when a Godot `doc/classes` checkout is present (`GODOT_DOCS`); on CI it prints `SKIP: kdoc-staleness` and is allowed to skip only through `KANAMA_ALLOW_SKIP` in ci.yml",
     "claim audit (task 85 aggregator)": "PR + push to main (ci.yml `local-ci`); local. The task-index check inside it runs only where `kanama-tasks` exists; elsewhere it prints `SKIP: task-index`, and CI allows that skip only through `KANAMA_ALLOW_SKIP` in ci.yml",
     "bootstrap cmake build": "PR + push to main; local when cmake is installed (`--skip-bootstrap` skips)",
     "mkdocs strict build": "PR + push to main via the `docs (mkdocs strict)` job (`local-ci` passes `--skip-docs`); local when mkdocs is installed",
@@ -506,7 +506,7 @@ def render(carried: dict[str, str], shallow: bool) -> str:
         where = STAGE_WHERE_OVERRIDES.get(stage.name, CI_DEFAULT_WHERE)
         script_cell = code(stage.script) if stage.script else code(first_sentence(stage.command, 80))
         landed = first_landed(stage.script, date_cache, carried, shallow) if stage.script else "—"
-        name = stage.name.replace("$godot_bin", "<godot>")
+        name = stage.name.replace("$godot_bin", "<godot>").replace("$godot_pin", "<pin>")
         out(f"| {index} | {code(name)} | {md_cell(proves)} | {md_cell(where)} | {script_cell} | {landed} |")
     out("")
 
