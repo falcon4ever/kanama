@@ -172,7 +172,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/editor_check_lib.sh:140` | `wait "$watchdog" 2>/dev/null \|\| true` | justified: reaping the watchdog; its status is not the verdict. |
 | `scripts/editor_check_lib.sh:149` | `wait "$pid" 2>/dev/null \|\| true` | justified: reaping the stopped command; the script is already on its way out with its own status. |
 | `scripts/editor_probe_smoke.sh:54` | `values="$( { printf '%s\n' "$PROJECT/"; sed -n 's/.*-PkanamaProjectScriptsDir=\([^ ]*\).*/\1/p' "$LOG_FILE" 2>` | justified: an editor that never started a build leaves no such line; the install's own value is still listed. |
-| `scripts/editor_probe_smoke.sh:99` | `grep -E "^\[editor_probe\] (PASS\|FAIL\|the build)" "$LOG_FILE" \|\| true` | justified: the verdict is checked below; these lines are the summary |
+| `scripts/editor_probe_smoke.sh:101` | `grep -E "^\[editor_probe\] (PASS\|FAIL\|the build)" "$LOG_FILE" \|\| true` | justified: the verdict is checked below; these lines are the summary |
+| `scripts/editor_probe_smoke.sh:120` | `grep -E "editor_probe\|kanama:tools\|SCRIPT ERROR\|hot-reload" "$LOG_FILE" \| tail -n 80 >&2 \|\| true` | justified: diagnostics; the verdict is already FAIL |
 | `scripts/export_game_assemble.sh:231` | `if command -v codesign >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/export_game_smoke.sh:133` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
 | `scripts/export_game_smoke.sh:150` | `"$ROOT_DIR/gradlew" --no-daemon -p "$ROOT_DIR" buildNativeBootstrap syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |

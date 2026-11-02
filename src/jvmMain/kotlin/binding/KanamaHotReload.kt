@@ -10,6 +10,7 @@ import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.SignalCallables
 import net.multigesture.kanama.binding.runtime.SignalCallbackRegistry
 
@@ -62,9 +63,24 @@ object KanamaHotReload {
     val ref: WeakReference<ChildFirstClassLoader>,
   )
 
+  /**
+   * `Engine` metadata: the modified time (Unix seconds, as Godot's `FileAccess.get_modified_time`) of the
+   * `kanama-scripts.jar` the runtime last loaded, or -1 before any. The Kanama Tools editor plugin reloads the
+   * edited scene after a build only once this matches the jar on disk: a scene reloaded before the runtime's next
+   * look at the jar (every [CHECK_INTERVAL_NANOS]) kept running the old build's code (task 143 item 4).
+   */
+  const val LOADED_JAR_META: String = "kanama_scripts_jar_loaded_mtime"
+
   fun initialize(library: MemorySegment) {
     this.library = library
     reloadScripts(force = true)
+    if (lastScriptsJarMtime < 0) publishLoadedJar(-1)
+  }
+
+  private fun publishLoadedJar(mtimeSeconds: Long) {
+    runCatching {
+      GodotObject(GodotHandle(ObjectCalls.getSingleton("Engine"))).setMeta(LOADED_JAR_META, mtimeSeconds)
+    }
   }
 
   fun shutdown() {
@@ -170,6 +186,7 @@ object KanamaHotReload {
         val oldLoader = scriptClassLoader
         scriptClassLoader = newLoader
         lastScriptsJarMtime = mtime
+        publishLoadedJar(Math.floorDiv(mtime, 1000L))
         // Task 133 C2: autoloads outlive the scene reload; give them the new build's objects.
         val autoloads = AutoloadReload.recreate(oldLoader)
         retireLoader(oldLoader)

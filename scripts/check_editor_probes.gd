@@ -95,19 +95,23 @@ func _run() -> void:
     var script := _script()
     _expect(_has_property(script, PROPERTY), "ProbeScript's script property list lacks %s after the build: %s" % [PROPERTY, _property_names(script)])
     _expect(_has_method(script, METHOD), "ProbeScript's script method list lacks %s after the build: %s" % [METHOD, _method_names(script)])
+    _expect(int(Engine.get_meta("kanama_scripts_jar_loaded_mtime", -2)) == FileAccess.get_modified_time(ProjectSettings.globalize_path(SCRIPTS_JAR)),
+        "the runtime's Engine metadata does not name the jar it loaded (the plugin waits on it before it reloads the scene): %s" % _reload_state())
     _expect(_global_class_path("ProbeScript") == SCRIPT_PATH, "the global class list does not name ProbeScript at %s: %s" % [SCRIPT_PATH, _global_class_path("ProbeScript")])
     _end()
 
     # 3. Node members: the scene's node shows the new property, with its default, as the inspector lists it.
     _begin("probe 3: the node in the open scene shows the new @Export property with its default")
-    await _wait_for(func() -> bool: return _probe_node() != null and _node_has_editor_property(_probe_node(), PROPERTY), RELOAD_WAIT_SEC)
+    # The new code runs once the runtime has loaded the jar and the plugin has reloaded the scene: a bounded poll,
+    # not one read (a slow host builds for 20 s and reloads after the light turned green).
+    await _wait_for(func() -> bool: return _probe_node() != null and _node_has_editor_property(_probe_node(), PROPERTY) and _answer(_probe_node()) == 42, RELOAD_WAIT_SEC)
     var node := _probe_node()
     _expect(node != null, "the open scene has no Probe node")
     if node != null:
         _expect(_node_has_editor_property(node, PROPERTY), "the Probe node's property list has no editor-visible %s: %s" % [PROPERTY, _node_script_properties(node)])
         _expect(node.get(PROPERTY) == "probe-default", "the Probe node's %s is %s, expected the default probe-default" % [PROPERTY, node.get(PROPERTY)])
         _expect(script != null and script.get_property_default_value(PROPERTY) == "probe-default", "ProbeScript's default for %s is %s" % [PROPERTY, script.get_property_default_value(PROPERTY) if script != null else null])
-        _expect(_answer(node) == 42, "the Probe node's %s() returns %s, expected 42 (the new build's code)" % [METHOD, _answer(node)])
+        _expect(_answer(node) == 42, "the Probe node's %s() returns %s, expected 42 (the new build's code); %s" % [METHOD, _answer(node), _reload_state()])
         EditorInterface.edit_node(node)
         await _wait_for(func() -> bool: return _inspector_shows(PROPERTY), 5.0)
         _expect(_inspector_shows(PROPERTY), "the inspector shows no %s for the Probe node" % PROPERTY)
@@ -155,7 +159,7 @@ func _run() -> void:
     if await _expect_build("current", "the fix"):
         await _wait_for(func() -> bool: return _probe_node() != null and _answer(_probe_node()) == 43, RELOAD_WAIT_SEC)
     node = _probe_node()
-    _expect(node != null and _answer(node) == 43, "after the fix the Probe node's %s() returns %s, expected 43 (the fixed build)" % [METHOD, _answer(node) if node != null else null])
+    _expect(node != null and _answer(node) == 43, "after the fix the Probe node's %s() returns %s, expected 43 (the fixed build); %s; a fresh instance returns %s" % [METHOD, _answer(node) if node != null else null, _reload_state(), _answer(_instantiate_fresh())])
     _expect(node != null and node.get(PROPERTY) == SAVED_VALUE, "after the fix the Probe node's %s is %s, expected the saved %s" % [PROPERTY, node.get(PROPERTY) if node != null else null, SAVED_VALUE])
     _end()
     _finish()
@@ -225,6 +229,11 @@ func _method_names(script: Script) -> PackedStringArray:
         for method in script.get_script_method_list():
             names.append(String(method["name"]))
     return names
+
+
+## What the runtime says it loaded against the jar on disk, for a failure message.
+func _reload_state() -> String:
+    return "the runtime loaded the jar of %s, the jar on disk is of %s" % [Engine.get_meta("kanama_scripts_jar_loaded_mtime", "<no metadata>"), FileAccess.get_modified_time(ProjectSettings.globalize_path(SCRIPTS_JAR))]
 
 
 ## The node's probe_answer(), or null when it has no such method (no error printed).

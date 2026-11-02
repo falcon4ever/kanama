@@ -57,6 +57,13 @@ classes Web wraps. A new node is yours to add to the tree or `queueFree()`; a ne
 reference of your own, as before. Plain `Object` classes (`UndoRedo`, `JSONRPC`) get none, since
 Kotlin has no `free()` for them. Ports no longer need a local `ClassDB.instantiate` helper.
 
+### Fixed — the open scene runs the new build after Build Scripts
+
+After a build, Kanama Tools reloads the scene you have open. On a slow machine it could do that before the Kanama
+runtime had loaded the new `kanama-scripts.jar` (the runtime looks every half second), and the scene's `@Tool`
+scripts then kept running the previous build until the next reload. The plugin now waits until the runtime says
+it loaded the new jar, for up to 10 seconds, before it reloads the scene.
+
 ### Fixed — iOS from a source checkout finds scripts outside `kotlin-src`
 
 `installIosAddon` registered a script in a scripts folder named anything but `kotlin-src` (say `game/kotlin`)

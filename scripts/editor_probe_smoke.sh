@@ -92,12 +92,22 @@ fi
 # never gets that far, and both stay inside ci.yml local-ci's budget. The builds the editor starts are the checkout's
 # gradlew on the machine's Gradle cache; GRADLE_OPTS and the ORG_GRADLE_PROJECT_ property reach them through the
 # plugin's launch.
+# A fatal JVM error writes its report beside the log (KANAMA_JVM_OPTIONS reaches the editor's JVM).
 rc=0
 run_bounded 1300 "$TAG" editor_env GRADLE_OPTS="${GRADLE_OPTS:+$GRADLE_OPTS }-Dorg.gradle.daemon=false" \
   ORG_GRADLE_PROJECT_kotlin.compiler.execution.strategy=in-process \
+  KANAMA_JVM_OPTIONS="${KANAMA_JVM_OPTIONS:+$KANAMA_JVM_OPTIONS }-XX:ErrorFile=$LOG_FILE.hs_err_pid%p.log" \
   "$GODOT_BIN" --headless --editor --path "$PROJECT" >"$LOG_FILE" 2>&1 || rc=$?
 grep -E "^\[editor_probe\] (PASS|FAIL|the build)" "$LOG_FILE" || true # justified: the verdict is checked below; these lines are the summary
 fail=0
+# After each successful build the plugin reloads the open scene only once the runtime has loaded the new jar
+# (_wait_for_runtime_reload): a scene reloaded first keeps the old build's code.
+early_reload="$(awk '/\[kanama:tools\] Running: /{loaded=0} /hot-reload: reloaded scripts from/{loaded=1}
+  /\[kanama:tools\] Reloaded scene after sync/{if (!loaded) print NR}' "$LOG_FILE")"
+if [[ -n "$early_reload" ]]; then
+  echo "$TAG FAIL: the plugin reloaded the scene before the runtime loaded the rebuilt jar (log lines: $(printf '%s' "$early_reload" | tr '\n' ' '))" >&2
+  fail=1
+fi
 for probe in 1 2 3 4 5; do
   if ! grep -Eq "^\[editor_probe\] PASS probe $probe: " "$LOG_FILE"; then
     echo "$TAG FAIL: probe $probe did not pass" >&2
@@ -105,7 +115,22 @@ for probe in 1 2 3 4 5; do
   fi
 done
 if [[ "$rc" -ne 0 || "$fail" -ne 0 ]] || ! grep -Fxq "[editor_probe] PASS" "$LOG_FILE" || grep -Fq "SCRIPT ERROR" "$LOG_FILE"; then
-  grep -E "editor_probe|kanama:tools|SCRIPT ERROR|ERROR:|at: |hot-reload" "$LOG_FILE" | tail -n 80 >&2 || tail -n 80 "$LOG_FILE" >&2
+  # Everything goes to the job output: a CI runner's /tmp, and the kept logs with it, is gone after the job.
+  echo "$TAG the probe, build and reload lines:" >&2
+  grep -E "editor_probe|kanama:tools|SCRIPT ERROR|hot-reload" "$LOG_FILE" | tail -n 80 >&2 || true # justified: diagnostics; the verdict is already FAIL
+  echo "$TAG the editor log's last 150 lines (stdout and stderr):" >&2
+  tail -n 150 "$LOG_FILE" >&2
+  for hs_err in "$LOG_FILE".hs_err_pid*.log; do
+    if [[ -f "$hs_err" ]]; then
+      echo "$TAG the JVM's fatal error report $hs_err (first 80 lines):" >&2
+      head -n 80 "$hs_err" >&2
+    fi
+  done
+  case "$rc" in
+    134) echo "$TAG the editor aborted (exit 134, SIGABRT)" >&2 ;;
+    139) echo "$TAG the editor crashed (exit 139, SIGSEGV); without a Godot backtrace above it crashed after Godot's crash handler was gone" >&2 ;;
+    143 | 137) echo "$TAG the editor was stopped at the bound (exit $rc)" >&2 ;;
+  esac
   echo "$TAG FAIL (editor exit $rc): the editor probes (log: $LOG_FILE)" >&2
   exit 1
 fi

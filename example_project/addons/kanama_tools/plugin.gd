@@ -53,6 +53,9 @@ const SYNC_ADDON_TEXT := "Sync Addon"
 # edit it makes to project.godot needs Project > Reload Current Project (Godot leaves no such mark).
 const EDITOR_PID_FILE := "res://.godot/kanama_editor.pid"
 const SCRIPTS_JAR := "res://addons/kanama/kanama-scripts.jar"
+# Engine metadata the runtime sets to the modified time of the scripts jar it loaded (KanamaHotReload.LOADED_JAR_META).
+const LOADED_JAR_META := "kanama_scripts_jar_loaded_mtime"
+const RUNTIME_RELOAD_WAIT_MSEC := 10000
 # The .kt files the last successful script build compiled (sources_fingerprint), so the status light
 # is right after an editor restart too. In .godot/: it describes this checkout, not the project.
 const BUILD_STAMP_FILE := "kanama_build_stamp"
@@ -1853,6 +1856,21 @@ func _current_project_install_args() -> Array:
     ]
 
 
+## The Kanama runtime loads a rebuilt kanama-scripts.jar by itself, when it next looks (every 500 ms): a scene
+## reloaded before that kept the old build's code in its @Tool scripts. Waits until the runtime's Engine metadata
+## says it loaded the jar as it is now, up to RUNTIME_RELOAD_WAIT_MSEC. A runtime that sets no such metadata (an
+## older addon) is not waited for.
+func _wait_for_runtime_reload() -> void:
+    if not Engine.has_meta(LOADED_JAR_META):
+        return
+    var deadline := Time.get_ticks_msec() + RUNTIME_RELOAD_WAIT_MSEC
+    while Time.get_ticks_msec() < deadline:
+        if not FileAccess.file_exists(SCRIPTS_JAR) or int(Engine.get_meta(LOADED_JAR_META)) == FileAccess.get_modified_time(SCRIPTS_JAR):
+            return
+        await get_tree().process_frame
+    push_warning("[kanama:tools] The Kanama runtime did not load the rebuilt kanama-scripts.jar within %d s; reloading the scene anyway." % (RUNTIME_RELOAD_WAIT_MSEC / 1000))
+
+
 func _queue_reload_edited_scene() -> void:
     call_deferred("_reload_edited_scene_async")
 
@@ -1872,6 +1890,10 @@ func _reload_edited_scene_async() -> void:
 
     var scene_path := root.scene_file_path
     if scene_path.is_empty():
+        return
+    await _wait_for_runtime_reload()
+    root = editor.get_edited_scene_root()
+    if root == null or root.scene_file_path != scene_path:
         return
 
     if editor.has_method("reload_scene_from_path"):
