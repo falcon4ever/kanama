@@ -10,6 +10,8 @@ fi
 
 # shellcheck source=scripts/run_logs.sh
 source "$ROOT_DIR/scripts/run_logs.sh"
+# shellcheck source=scripts/editor_check_lib.sh
+source "$ROOT_DIR/scripts/editor_check_lib.sh"
 # Logs default to a directory of this run's own (scripts/run_logs.sh): deleted when the run passes, kept and
 # named when it fails. A fixed /tmp path was shared by concurrent runs.
 LOG_FILE="${KANAMA_TOOL_SMOKE_LOG:-}"
@@ -202,13 +204,10 @@ fi
 # in the editor's temp folder and checks which ones the guard deletes. --quit-after bounds the run if the
 # plugin never loads (then there is no PASS line).
 DISCARD_PROJECT="$JDK_SCRATCH/guard_discard"
-mkdir -p "$DISCARD_PROJECT/addons/guard_discard_test"
+mkdir -p "$DISCARD_PROJECT/addons"
 cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$DISCARD_PROJECT/addons/"
-cp "$ROOT_DIR/scripts/check_export_guard_discard.gd" "$DISCARD_PROJECT/addons/guard_discard_test/plugin.gd"
-printf '[plugin]\n\nname="guard_discard_test"\ndescription=""\nauthor=""\nversion=""\nscript="plugin.gd"\n' \
-  >"$DISCARD_PROJECT/addons/guard_discard_test/plugin.cfg"
-printf 'config_version=5\n\n[application]\nconfig/name="kanama-guard-discard"\n\n[editor_plugins]\nenabled=PackedStringArray("res://addons/guard_discard_test/plugin.cfg")\n' \
-  >"$DISCARD_PROJECT/project.godot"
+editor_check_plugin "$DISCARD_PROJECT" guard_discard_test "$ROOT_DIR/scripts/check_export_guard_discard.gd"
+editor_check_project_godot "$DISCARD_PROJECT" kanama-guard-discard guard_discard_test
 discard_rc=0
 (cd "$DISCARD_PROJECT" && "$GODOT_BIN" --headless --editor --path . --quit-after 3000) >"$LOG_FILE.discard" 2>&1 || discard_rc=$?
 if [[ "$discard_rc" -ne 0 ]] || ! grep -Fq "[export_guard_discard] PASS" "$LOG_FILE.discard" ||
@@ -247,14 +246,8 @@ case "$(uname -s)" in
     echo "[tool_smoke] note: the editor build loop and setup checks use a POSIX fake gradlew; not run on Windows"
     ;;
   *)
-    EDITOR_HOME="$JDK_SCRATCH/editor_home"
-    mkdir -p "$EDITOR_HOME"
-    # Gradle keeps the machine's own cache: the setup check runs a real build.
-    EDITOR_GRADLE_HOME="${GRADLE_USER_HOME:-$HOME/.gradle}"
-    editor_env() {
-      env HOME="$EDITOR_HOME" XDG_CONFIG_HOME="$EDITOR_HOME/.config" XDG_DATA_HOME="$EDITOR_HOME/.local/share" \
-        XDG_CACHE_HOME="$EDITOR_HOME/.cache" GRADLE_USER_HOME="$EDITOR_GRADLE_HOME" "$@"
-    }
+    # Gradle keeps the machine's own cache (editor_check_lib.sh): the setup check runs a real build.
+    editor_check_home "$JDK_SCRATCH/editor_home"
     # A JDK-shaped folder for Build Scripts' JDK check; the fake gradlew never starts it.
     FAKE_JDK="$JDK_SCRATCH/fake_jdk"
     mkdir -p "$FAKE_JDK/bin" "$FAKE_JDK/include"
@@ -264,16 +257,13 @@ case "$(uname -s)" in
 
     LOOP_PROJECT="$JDK_SCRATCH/build_loop"
     LOOP_CONTROL="$JDK_SCRATCH/build_loop_control"
-    mkdir -p "$LOOP_PROJECT/addons/build_loop_test" "$LOOP_PROJECT/kotlin-src" "$LOOP_CONTROL"
+    mkdir -p "$LOOP_PROJECT/addons" "$LOOP_PROJECT/kotlin-src" "$LOOP_CONTROL"
     cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$LOOP_PROJECT/addons/"
-    cp "$ROOT_DIR/scripts/check_editor_build_loop.gd" "$LOOP_PROJECT/addons/build_loop_test/plugin.gd"
-    printf '[plugin]\n\nname="build_loop_test"\ndescription=""\nauthor=""\nversion=""\nscript="plugin.gd"\n' \
-      >"$LOOP_PROJECT/addons/build_loop_test/plugin.cfg"
+    editor_check_plugin "$LOOP_PROJECT" build_loop_test "$ROOT_DIR/scripts/check_editor_build_loop.gd"
     write_loop_project_godot() {
-      printf '%s\n' 'config_version=5' '' '[application]' '' 'config/name="kanama-build-loop"' '' '[editor_plugins]' '' \
-        'enabled=PackedStringArray("res://addons/kanama_tools/plugin.cfg", "res://addons/build_loop_test/plugin.cfg")' '' \
+      editor_check_project_godot "$LOOP_PROJECT" kanama-build-loop "kanama_tools build_loop_test" \
         '[kanama]' '' 'tools/auto_build_on_save=false' 'tools/auto_build_debounce_ms=1500' 'tools/reload_scene_after_sync=false' \
-        'tools/java_preflight_enabled=false' >"$LOOP_PROJECT/project.godot"
+        'tools/java_preflight_enabled=false'
     }
     write_loop_project_godot
     cp "$ROOT_DIR/templates/starter/HelloScript.kt" "$LOOP_PROJECT/kotlin-src/HelloScript.kt"
@@ -344,7 +334,7 @@ EOF
       smoke_fail "publishKanamaPackageMavenRepository failed" "$LOG_FILE.maven"
     SETUP_PROJECT="$JDK_SCRATCH/plain_project"
     setup_template="$SETUP_PROJECT/addons/kanama/templates/release-kit"
-    mkdir -p "$SETUP_PROJECT/addons/project_setup_test" "$setup_template/kotlin-src" "$setup_template/gradle"
+    mkdir -p "$setup_template/kotlin-src" "$setup_template/gradle"
     cp -R "$PROJECT_DIR/addons/kanama" "$SETUP_PROJECT/addons/"
     rm -f "$SETUP_PROJECT/addons/kanama/kanama-scripts.jar"
     cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$SETUP_PROJECT/addons/"
@@ -361,12 +351,9 @@ EOF
     : >"$SETUP_PROJECT/addons/kanama/templates/.gdignore"
     cp "$ROOT_DIR/templates/store-addon/setup-kanama-project.sh" "$ROOT_DIR/templates/store-addon/setup-kanama-project.ps1" \
       "$SETUP_PROJECT/addons/kanama/"
-    cp "$ROOT_DIR/scripts/check_editor_project_setup.gd" "$SETUP_PROJECT/addons/project_setup_test/plugin.gd"
-    printf '[plugin]\n\nname="project_setup_test"\ndescription=""\nauthor=""\nversion=""\nscript="plugin.gd"\n' \
-      >"$SETUP_PROJECT/addons/project_setup_test/plugin.cfg"
-    printf '%s\n' 'config_version=5' '' '[application]' '' 'config/name="kanama-plain-project"' '' '[editor_plugins]' '' \
-      'enabled=PackedStringArray("res://addons/kanama_tools/plugin.cfg", "res://addons/project_setup_test/plugin.cfg")' '' \
-      '[kanama]' '' 'tools/java_preflight_enabled=false' >"$SETUP_PROJECT/project.godot"
+    editor_check_plugin "$SETUP_PROJECT" project_setup_test "$ROOT_DIR/scripts/check_editor_project_setup.gd"
+    editor_check_project_godot "$SETUP_PROJECT" kanama-plain-project "kanama_tools project_setup_test" \
+      '[kanama]' '' 'tools/java_preflight_enabled=false'
     printf '%s\n' "// the user's own settings.gradle.kts" 'rootProject.name = "mine"' >"$SETUP_PROJECT/settings.gradle.kts"
     setup_rc=0
     (cd "$SETUP_PROJECT" && editor_env "$GODOT_BIN" --headless --editor --path . --quit-after 120000) \

@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ProbeScript.kt" id="1"]
+
+[node name="ProbeRoot" type="Node2D"]
+
+[node name="Probe" type="Node2D" parent="."]
+script = ExtResource("1")

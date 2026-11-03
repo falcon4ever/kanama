@@ -84,6 +84,7 @@ NOT_EVERYWHERE = {
     "shellcheck": "a toolchain install (brew/apt), not part of either stock image; the lint gate probes for it and skips with a reason",
     "mkdocs": "a pip install (docs extra); run it only behind the docs gate's own availability check",
     "ktfmt": "fetched by Gradle (ktfmtCheck), not an installed command; call it through ./gradlew",
+    "gdb": "not on a stock macOS (ci.yml installs it on the ubuntu runner for crash backtraces); use it only behind `command -v gdb`",
 }
 # Shell keywords and builtins (not external commands).
 SHELL_WORDS = frozenset(
@@ -198,6 +199,8 @@ PLATFORM_ONLY_USES: dict[tuple[str, str], tuple[int, str]] = {
     ("scripts/local_ci.sh", "cmake"): (3, "behind `command -v cmake`; absent cmake is a named gate_skip (bootstrap-cmake), never a silent pass"),
     ("scripts/local_ci.sh", "mkdocs"): (2, "behind `command -v mkdocs`; absent mkdocs is a named gate_skip (mkdocs), never a silent pass"),
     ("scripts/check_bootstrap_jdk_resolution.sh", "cmake"): (3, "the gate's whole job is the cmake configure; it probes `command -v cmake` first and exits 2 with install instructions"),
+    ("scripts/editor_probe_smoke.sh", "readelf"): (2, "behind `command -v readelf`, only for a crashed editor's diagnostics: the native bootstrap's .fini_array bytes"),
+    ("scripts/editor_probe_smoke.sh", "gdb"): (2, "behind `command -v gdb`, only for a core a crashed editor left (ci.yml keeps cores and installs gdb on the ubuntu runner); without gdb the smoke says the core is there"),
     ("scripts/check_shell_lint.sh", "shellcheck"): (3, "the lint gate probes `command -v shellcheck` first and fails with install instructions (the ubuntu runner ships it)"),
 }
 

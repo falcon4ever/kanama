@@ -1358,9 +1358,52 @@ case("tool_smoke.sh (setup adds nothing twice)", ["bash", "scripts/tool_smoke.sh
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("tool_smoke.sh (deleted scripts jar restored)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Edit("build.gradle.kts",
-           "            installedFile.isFile &&\n              java.nio.file.Files.mismatch(details.file.toPath(), installedFile.toPath()) == -1L",
-           "            true")],
+           "  if (target.isFile && java.nio.file.Files.mismatch(source.toPath(), target.toPath()) == -1L) {\n",
+           "  if (true) {\n")],
      "installAddonJar did not restore a deleted kanama-scripts.jar", "installAddonJar skips the scripts jar whatever is installed: a deleted kanama-scripts.jar must come back with the next Build Scripts",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# The editor probes (scripts/check_editor_probes.gd, driven by editor_probe_smoke.sh): a real build in a real editor.
+# The runtime stops picking up a rebuilt scripts jar while the editor runs: build on save still builds and the light
+# goes green, but the class list never gains the new members (only a restart would show them).
+case("editor_probe_smoke.sh (reload after a build)", ["bash", "scripts/editor_probe_smoke.sh", GODOT],
+     [Edit("src/jvmMain/kotlin/binding/KanamaHotReload.kt", "      if (!force && mtime == lastScriptsJarMtime) return\n",
+           "      if (!force) return\n")],
+     "[editor_probe] FAIL probe 2: ", "the Kanama runtime no longer reloads kanama-scripts.jar when a build replaces it in a running editor: the light turns green, but the class list lacks the edit's new property and method",
+     # A fresh worktree builds kanama.jar and the native bootstrap cold, and the mutation and its revert rebuild
+     # kanama.jar: warm the first build outside the smoke's own bounds (600 s install, 1300 s editor), and give
+     # each run room above them for a slow nightly Linux shard.
+     pre=[["./gradlew", "-p", ".", "-q", "--no-daemon", "-Pkotlin.compiler.execution.strategy=in-process", "syncExampleAddonJar"]],
+     timeout=2400, requires_env="KANAMA_GODOT_BIN", slow=True)
+# The plugin reloads the open scene after a build without waiting for the runtime to load the new jar, and the
+# runtime looks at the jar every 5 s instead of every 500 ms, so the scene is always reloaded first: its @Tool node
+# keeps the old build's code (the race the Linux CI run found).
+case("editor_probe_smoke.sh (scene reload waits for the runtime)", ["bash", "scripts/editor_probe_smoke.sh", GODOT],
+     plugin_edit("    await _wait_for_runtime_reload()\n", "")
+     + [Edit("src/jvmMain/kotlin/binding/KanamaHotReload.kt", "CHECK_INTERVAL_NANOS: Long = 500_000_000L",
+             "CHECK_INTERVAL_NANOS: Long = 5_000_000_000L")],
+     "the plugin reloaded the scene before the runtime loaded the rebuilt jar", "Kanama Tools reloads the open scene right after a build again, not once the runtime says it loaded the new jar: on a host where the runtime looks later than the reload, the scene's @Tool node keeps running the previous build",
+     pre=[["./gradlew", "-p", ".", "-q", "--no-daemon", "-Pkotlin.compiler.execution.strategy=in-process", "syncExampleAddonJar"]],
+     timeout=2400, requires_env="KANAMA_GODOT_BIN", slow=True)
+# installAddonJar copies the native bootstrap over the one the editor has loaded again, in place: on Linux that throws
+# away the editor's relocations of the library, and the editor crashed in its destructor when it quit (exit 139).
+case("editor_probe_smoke.sh (loaded native library left alone)", ["bash", "scripts/editor_probe_smoke.sh", GODOT],
+     [Edit("build.gradle.kts", "          details.file.extension in setOf(\"so\", \"dylib\", \"dll\")\n",
+           "          false\n")],
+     "the builds rewrote the native library the editor had loaded", "installAddonJar rewrites the native bootstrap a running editor has loaded, in place, on every Build Scripts: on Linux the truncated mapping loses the editor's relocations of the library and the editor crashes in its destructor on quit (macOS survives, so the smoke checks the file itself: its inode and modified time)",
+     pre=[["./gradlew", "-p", ".", "-q", "--no-daemon", "-Pkotlin.compiler.execution.strategy=in-process", "syncExampleAddonJar"]],
+     timeout=2400, requires_env="KANAMA_GODOT_BIN", slow=True)
+# installAddonJar writes a changed kanama-scripts.jar into the old file again, in place: the class loader that
+# registered the project's classes at startup keeps that file open, and a class it first loads after the rebuild
+# reads the new jar's bytes at the old jar's offsets.
+case("editor_probe_smoke.sh (scripts jar replaced, not rewritten)", ["bash", "scripts/editor_probe_smoke.sh", GODOT],
+     [Edit("build.gradle.kts", '        details.name in setOf("kanama.jar", "kanama-scripts.jar") ||\n', "        false ||\n")],
+     "[editor_probe] FAIL probe 6: ", "installAddonJar lets Copy rewrite a changed kanama-scripts.jar in place again: the editor's startup class loader keeps that file open, and a class it first needs after the rebuild comes from the rebuilt jar (or is corrupt)",
+     pre=[["./gradlew", "-p", ".", "-q", "--no-daemon", "-Pkotlin.compiler.execution.strategy=in-process", "syncExampleAddonJar"]],
+     timeout=2400, requires_env="KANAMA_GODOT_BIN", slow=True)
+case("hot_reload_in_process_smoke.sh (jars left to the running game)", ["bash", "scripts/hot_reload_in_process_smoke.sh", GODOT],
+     [Edit("build.gradle.kts", "  eachFile(runningEditorInstall(provider { exampleAddonDir }))\n", "")],
+     "syncExampleAddonJar rewrote", "syncExampleAddonJar lets Copy rewrite kanama.jar and kanama-scripts.jar in place again while the example project runs: the class loaders that keep them open read the rewritten files (the hot-reload flow syncs while Godot runs)",
+     pre=[WARM_EXAMPLE],
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("export_guard_selftest.sh",["bash", "scripts/export_guard_selftest.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", "    if not problems.is_empty():\n        messages.append", "    if false:\n        messages.append")],

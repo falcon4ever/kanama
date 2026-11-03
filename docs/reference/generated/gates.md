@@ -10,7 +10,7 @@ Every check that decides whether Kanama is green, in one place: what each one pr
 
 A green PR means the first two tiers passed. It does not mean the third tier was run — that is what the ledger is for.
 
-## Local CI stages (92)
+## Local CI stages (93)
 
 In `scripts/local_ci.sh` order. "What it proves" is the first sentence of the script's docstring or header where a script exists, otherwise the stage's own comment.
 
@@ -105,9 +105,10 @@ In `scripts/local_ci.sh` order. "What it proves" is the first sentence of the sc
 | 87 | `web Wasm compile + coverage gate` | Kotlin/Wasm compile + the fail-loud gameplay coverage gate, over a project that is not a demo (task 142): a fresh starter goes through the user path -- the kotlin-src merge, KSP over a real script, the Wasm compile of it, and the generic s… | PR + push to main (ci.yml `local-ci`); local | `web_starter_root="$(mktemp -d "${TMPDIR:-/tmp}/kanama_local_ci_web_starter.XXXX…` | — |
 | 88 | `runtime smoke: <godot>` | Godot loads the GDExtension, starts the JVM, registers the script language and resource loader, loads Kotlin scripts, and runs the example project to its expected log markers. | PR + push to main (ci.yml `local-ci`); local | `scripts/runtime_smoke.sh` | 2026-05-20 |
 | 89 | `@Tool smoke: <godot>` | A `@Tool` script executes inside the headless editor process and its expected log patterns appear. | PR + push to main (ci.yml `local-ci`); local | `scripts/tool_smoke.sh` | 2026-05-20 |
-| 90 | `JDK lookup parity, bootstrap.c vs plugin: <godot>` | The runtime (bootstrap.c) and the editor plugin pick the same JDK from the same layout (kanama#277). | PR + push to main (ci.yml `local-ci`); local | `scripts/check_jdk_lookup_parity.sh` | 2026-10-02 |
-| 91 | `hot reload smoke: <godot>` | Across two editor runs around a HelloScript.kt rebuild, the `hot-reload: reloaded scripts from ...kanama-scripts.jar (loader, old_loader, rebound, autoloads)` marker appears. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_smoke.sh` | 2026-05-20 |
-| 92 | `in-process hot reload smoke: <godot>` | One running editor process reloads an edited script after the `in-process hot reload smoke ready` signal, without a restart. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_in_process_smoke.sh` | 2026-05-20 |
+| 90 | `editor probes: <godot>` | A saved Kotlin edit in a real editor is built on save by the checkout's Gradle build, reloaded, and seen by the editor: the status light, the new members, the inspector, the saved scene, and a compile error's red light. | PR + push to main (ci.yml `local-ci`); local | `scripts/editor_probe_smoke.sh` | 2026-11-01 |
+| 91 | `JDK lookup parity, bootstrap.c vs plugin: <godot>` | The runtime (bootstrap.c) and the editor plugin pick the same JDK from the same layout (kanama#277). | PR + push to main (ci.yml `local-ci`); local | `scripts/check_jdk_lookup_parity.sh` | 2026-10-02 |
+| 92 | `hot reload smoke: <godot>` | Across two editor runs around a HelloScript.kt rebuild, the `hot-reload: reloaded scripts from ...kanama-scripts.jar (loader, old_loader, rebound, autoloads)` marker appears. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_smoke.sh` | 2026-05-20 |
+| 93 | `in-process hot reload smoke: <godot>` | One running editor process reloads an edited script after the `in-process hot reload smoke ready` signal, without a restart. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_in_process_smoke.sh` | 2026-05-20 |
 
 ## CI workflow jobs
 

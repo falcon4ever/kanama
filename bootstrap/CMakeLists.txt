@@ -145,17 +145,19 @@ target_include_directories(kanama_bootstrap PRIVATE
 # This is its own ALL target, not a POST_BUILD hook on kanama_bootstrap: a
 # POST_BUILD step only runs when the library is relinked, so deleting or
 # truncating just the installed copy was never repaired ("Built target", no
-# copy). A custom target runs on every build, and copy_if_different compares
-# content, so a missing or truncated copy is recreated while an intact one is
-# left alone.
+# copy). A custom target runs on every build, and install_into_example.cmake
+# compares content, so a missing or truncated copy is recreated while an intact
+# one is left alone; a changed one replaces the old file by a rename, never by
+# writing into a library an open editor has loaded.
 set(KANAMA_EXAMPLE_ADDON_DIR
     "${CMAKE_CURRENT_SOURCE_DIR}/../example_project/addons/kanama"
 )
 add_custom_target(kanama_bootstrap_install ALL
     COMMAND ${CMAKE_COMMAND} -E make_directory "${KANAMA_EXAMPLE_ADDON_DIR}"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "$<TARGET_FILE:kanama_bootstrap>"
-        "${KANAMA_EXAMPLE_ADDON_DIR}/$<TARGET_FILE_NAME:kanama_bootstrap>"
+    COMMAND ${CMAKE_COMMAND}
+        "-DSRC=$<TARGET_FILE:kanama_bootstrap>"
+        "-DDST=${KANAMA_EXAMPLE_ADDON_DIR}/$<TARGET_FILE_NAME:kanama_bootstrap>"
+        -P "${CMAKE_CURRENT_SOURCE_DIR}/install_into_example.cmake"
     DEPENDS kanama_bootstrap
     COMMENT "Copying kanama_bootstrap into example_project/addons/kanama"
 )

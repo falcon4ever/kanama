@@ -93,6 +93,27 @@ classes Web wraps. A new node is yours to add to the tree or `queueFree()`; a ne
 reference of your own, as before. Plain `Object` classes (`UndoRedo`, `JSONRPC`) get none, since
 Kotlin has no `free()` for them. Ports no longer need a local `ClassDB.instantiate` helper.
 
+#### Fixed — a build no longer rewrites files the open editor is using (a Linux crash on quit)
+
+In a project built from a Kanama checkout (`installAddonJar`, what Build Scripts runs there), every build copied
+the native bootstrap over the one the open editor had loaded. On Linux that silently undid the editor's setup of
+the library, and the editor crashed (segmentation fault) when it quit. The build now leaves an unchanged library
+alone, and replaces a changed one with a new file, so a running editor keeps the library it loaded. The same
+goes for `kanama-scripts.jar` and `kanama.jar`, from a checkout and in kit and store-addon projects
+(`buildScripts`), and `syncExampleAddonJar` in a checkout: a `@RegisterClass` class (or Kanama's own) that the
+running editor first needed after a build used to come from the new jar, or fail to load, because the class loader
+that keeps the startup jar open read a file that had been rewritten under it. On Windows, where an
+open file cannot be replaced, the files are written in place as before, and a changed library the open editor has
+loaded fails the build with a message to close the editor.
+
+#### Fixed — the open scene runs the new build after Build Scripts
+
+After a build, Kanama Tools reloads the scene you have open. It could do that before the Kanama runtime had
+loaded the new `kanama-scripts.jar` (the runtime looks every half second), and the scene's `@Tool` scripts then
+kept running the previous build until the next reload. That race was there on any machine; slow ones lost it
+more often. The plugin now waits until the runtime says it loaded the new jar, for up to 10 seconds, before it
+reloads the scene, and says so at once when the runtime could not load it.
+
 #### Fixed — iOS from a source checkout finds scripts outside `kotlin-src`
 
 `installIosAddon` registered a script in a scripts folder named anything but `kotlin-src` (say `game/kotlin`)

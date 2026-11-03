@@ -10,6 +10,7 @@ import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.SignalCallables
 import net.multigesture.kanama.binding.runtime.SignalCallbackRegistry
 
@@ -62,9 +63,34 @@ object KanamaHotReload {
     val ref: WeakReference<ChildFirstClassLoader>,
   )
 
+  /**
+   * `Engine` metadata: the modified time (Unix seconds, as Godot's `FileAccess.get_modified_time`)
+   * of the `kanama-scripts.jar` the runtime last loaded, or -1 before any. The Kanama Tools editor
+   * plugin reloads the edited scene after a build only once this matches the jar on disk: a scene
+   * reloaded before the runtime's next look at the jar (every [CHECK_INTERVAL_NANOS]) kept running
+   * the old build's code (task 143 item 4). The plugin's `LOADED_JAR_META` holds the same key
+   * (`scripts/editor_probe_smoke.sh` checks it). The time is in whole seconds because GDScript's
+   * file times are: two builds of one project cannot finish within the same second.
+   */
+  const val LOADED_JAR_META: String = "kanama_scripts_jar_loaded_mtime"
+
+  /**
+   * `Engine` metadata: the modified time (as [LOADED_JAR_META]) of a `kanama-scripts.jar` the
+   * runtime could not load. The plugin then stops waiting for [LOADED_JAR_META] at once and says
+   * so; its `FAILED_JAR_META` holds the same key.
+   */
+  const val FAILED_JAR_META: String = "kanama_scripts_jar_failed_mtime"
+
   fun initialize(library: MemorySegment) {
     this.library = library
     reloadScripts(force = true)
+    if (lastScriptsJarMtime < 0) publishJarMeta(LOADED_JAR_META, -1)
+  }
+
+  private fun publishJarMeta(key: String, mtimeSeconds: Long) {
+    runCatching {
+      GodotObject(GodotHandle(ObjectCalls.getSingleton("Engine"))).setMeta(key, mtimeSeconds)
+    }
   }
 
   fun shutdown() {
@@ -153,6 +179,9 @@ object KanamaHotReload {
         )
 
       val previousTemplates = KanamaScript.snapshotScriptTemplates()
+      // Set once the new build is the current one: a failure after it must not close that build's
+      // loader or bring the old templates back.
+      var committed = false
       try {
         KanamaScript.clearScriptTemplates()
         // Register only reloadable project script templates from the scripts jar.
@@ -169,25 +198,36 @@ object KanamaHotReload {
 
         val oldLoader = scriptClassLoader
         scriptClassLoader = newLoader
+        committed = true
+        // This jar is the current build from here on: a failure below is not retried every check.
         lastScriptsJarMtime = mtime
         // Task 133 C2: autoloads outlive the scene reload; give them the new build's objects.
-        val autoloads = AutoloadReload.recreate(oldLoader)
-        retireLoader(oldLoader)
+        val autoloads =
+          try {
+            AutoloadReload.recreate(oldLoader)
+          } finally {
+            retireLoader(oldLoader)
+          }
         // The reset autoloads' old objects are gone: a build with nothing else left is done now.
         sweepRetiredConnections()
+        publishJarMeta(LOADED_JAR_META, Math.floorDiv(mtime, 1000L))
         System.err.println(
           "[kanama:kt] hot-reload: reloaded scripts from $scriptsJar " +
             "(loader=${newLoader.reloadId}, old_loader=${oldLoader?.reloadId ?: 0}, rebound=$rebound, " +
             "autoloads=$autoloads)"
         )
       } catch (t: Throwable) {
-        KanamaScript.restoreScriptTemplates(previousTemplates)
-        try {
-          newLoader.close()
-        } catch (_: Throwable) {}
+        if (!committed) {
+          KanamaScript.restoreScriptTemplates(previousTemplates)
+          try {
+            newLoader.close()
+          } catch (_: Throwable) {}
+        }
+        publishJarMeta(FAILED_JAR_META, Math.floorDiv(mtime, 1000L))
         System.err.println(
-          "[kanama:kt] hot-reload: failed loader=${newLoader.reloadId}: " +
-            "${t::class.qualifiedName}: ${t.message}"
+          "[kanama:kt] hot-reload: failed loader=${newLoader.reloadId}" +
+            (if (committed) " (after the new build was loaded)" else "") +
+            ": ${t::class.qualifiedName}: ${t.message}"
         )
       }
     }

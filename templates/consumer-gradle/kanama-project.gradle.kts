@@ -104,18 +104,58 @@ tasks.named<Jar>("jar") {
     isReproducibleFileOrder = true
 }
 
-val installScriptJar by tasks.registering(Copy::class) {
+val installScriptJar by tasks.registering {
     group = "kanama"
     description = "Install compiled Kotlin scripts into addons/kanama."
-    dependsOn(tasks.named("jar"))
-    from(tasks.named<Jar>("jar").flatMap { it.archiveFile })
-    into(layout.projectDirectory.dir("addons/kanama"))
+    val jar = tasks.named<Jar>("jar").flatMap { it.archiveFile }
+    val installed = layout.projectDirectory.file("addons/kanama/kanama-scripts.jar")
+    inputs.file(jar)
+    outputs.file(installed)
     // The Kanama version this jar was built with: the editor compares it with
     // addons/kanama/kanama.version and offers to rebuild when an addon update moved the version.
     val stamp = layout.projectDirectory.file("addons/kanama/kanama-scripts.version")
     val version = kanamaVersion
     inputs.property("kanamaVersion", version)
-    doLast { stamp.asFile.writeText(version + "\n") }
+    outputs.file(stamp)
+    val windows = System.getProperty("os.name").lowercase().contains("windows")
+    // The running editor of this project keeps kanama-scripts.jar open (the class loader of the
+    // project's @RegisterClass classes reads it lazily for the whole session), so a new jar never
+    // rewrites the old one in place: a changed jar replaces it by a rename, an identical one is
+    // left alone. Windows cannot rename over a jar the JVM holds open, so there the jar is
+    // rewritten in place as before. The same rule as installForRunningEditor in the Kanama
+    // checkout's build.gradle.kts (task 143 item 4); written out here so the action captures only
+    // plain values (the configuration cache).
+    doLast {
+        val source = jar.get().asFile
+        val target = installed.asFile
+        if (!target.isFile || java.nio.file.Files.mismatch(source.toPath(), target.toPath()) != -1L) {
+            target.parentFile.mkdirs()
+            if (windows) {
+                // In place, as Copy wrote it: File.copyTo deletes the target first, which Windows
+                // refuses for a jar the JVM holds open.
+                java.io.FileOutputStream(target).use { out -> source.inputStream().use { it.copyTo(out) } }
+            } else {
+                val incoming = target.resolveSibling(target.name + ".kanama-new")
+                try {
+                    source.copyTo(incoming, overwrite = true)
+                    try { // best effort: a FAT or exFAT mount refuses chmod
+                        java.nio.file.Files.setPosixFilePermissions(
+                            incoming.toPath(), java.nio.file.Files.getPosixFilePermissions(source.toPath()))
+                    } catch (_: java.io.IOException) {
+                    }
+                    java.nio.file.Files.move(
+                        incoming.toPath(),
+                        target.toPath(),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+                        java.nio.file.StandardCopyOption.ATOMIC_MOVE,
+                    )
+                } finally {
+                    java.nio.file.Files.deleteIfExists(incoming.toPath())
+                }
+            }
+        }
+        stamp.asFile.writeText(version + "\n")
+    }
 }
 
 tasks.register("buildScripts") {

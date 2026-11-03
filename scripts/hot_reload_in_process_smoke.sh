@@ -123,6 +123,16 @@ check() {
   fi
 }
 
+# "<name> <inode> <modified time ns>" of the two jars a running Godot of the example project holds open.
+held_open_state() {
+  python3 - "$PROJECT_DIR/addons/kanama" <<'PY'
+import os, sys
+for name in ("kanama.jar", "kanama-scripts.jar"):
+    st = os.stat(os.path.join(sys.argv[1], name))
+    print(f"{name} {st.st_ino} {st.st_mtime_ns}")
+PY
+}
+
 set_marker "A"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
 
@@ -140,7 +150,25 @@ set_marker "B"
 # Build B of the scene autoload: a new marker, and `mood` changes from Long to String.
 perl -pi -e 's/const val BUILD = "A"/const val BUILD = "B"/; s/var mood: Long = 3/var mood: String = "calm"/' "$AUTOLOAD_FILE"
 grep -q 'var mood: String = "calm"' "$AUTOLOAD_FILE" || smoke_fail "the build-B edit of KanamaSceneAutoload.kt did not apply" "var mood: String"
-"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
+# The sync runs while Godot has kanama.jar and kanama-scripts.jar open: it must not rewrite them under it
+# (build.gradle.kts installForRunningEditor; task 143 item 4). The unchanged kanama.jar keeps its inode and time,
+# and the rebuilt scripts jar is a new file (a rename), not the old one rewritten. Windows rewrites in place.
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*)
+    "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
+    ;;
+  *)
+    held_open_before="$(held_open_state)"
+    "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
+    held_open_after="$(held_open_state)"
+    if [[ "$(printf '%s\n' "$held_open_before" | grep '^kanama.jar ')" != "$(printf '%s\n' "$held_open_after" | grep '^kanama.jar ')" ]]; then
+      smoke_fail "syncExampleAddonJar rewrote the unchanged kanama.jar the running game holds open" "before: $held_open_before; after: $held_open_after"
+    fi
+    if [[ "$(printf '%s\n' "$held_open_before" | awk '/^kanama-scripts.jar /{print $2}')" == "$(printf '%s\n' "$held_open_after" | awk '/^kanama-scripts.jar /{print $2}')" ]]; then
+      smoke_fail "syncExampleAddonJar rewrote kanama-scripts.jar in place under the running game, not by a rename" "before: $held_open_before; after: $held_open_after"
+    fi
+    ;;
+esac
 touch "$SIGNAL_FILE"
 
 # task 133 C2 -- the Kotlin autoloads are reset in place with the new build's script objects (and

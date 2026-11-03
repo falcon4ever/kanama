@@ -56,13 +56,39 @@ headline ones are:
 - native bootstrap configure/build when CMake is available,
 - strict docs build when `mkdocs` is available,
 - runtime smoke through `scripts/runtime_smoke.sh`,
-- `@Tool` editor execution smoke, and
+- `@Tool` editor execution smoke,
+- editor probes, and
 - hot-reload smoke.
 
 `runtime_smoke.sh` checks the core Kanama runtime path: Godot loads the
 GDExtension, starts the JVM, registers the script language and resource
 loader, loads Kotlin scripts, and runs the example project far enough to verify
 the expected markers.
+
+`editor_probe_smoke.sh` checks the Kotlin edit loop the way a user meets it,
+in a headless editor with the real Gradle build of the checkout. A scratch
+project beside the checkout holds a `@ScriptClass` in a scene, and
+`scripts/check_editor_probes.gd` runs as an editor plugin beside Kanama Tools.
+It edits the `.kt` file and prints one PASS or FAIL line per probe:
+
+1. Build on save runs the real build and the status light ends green.
+2. The script Godot loaded for the file lists the new `@Export` property and
+   method.
+3. The node in the open scene has the new property, with its default, in its
+   property list and in the inspector.
+4. A value set on the property survives saving and reloading the scene.
+5. A compile error turns the light red while the last good build keeps
+   working, and the fix turns it green and runs.
+6. A class the editor registered at startup still loads a class it first
+   needs after builds replaced `kanama-scripts.jar`.
+
+It takes about 75 seconds and leaves no Gradle or Kotlin daemon behind, so it
+runs in `local_ci.sh` (and so in CI on Linux) right after the `@Tool` smoke. An
+interrupted run (Ctrl-C) stops the editor and its build. Run it alone with:
+
+```sh
+scripts/editor_probe_smoke.sh /absolute/path/to/godot-4.7.2-stable
+```
 
 The Godot pin is `kanamaGodotVersion` in `gradle.properties`;
 `scripts/check_godot_version_pin.py` fails `local_ci.sh` when a workflow or
