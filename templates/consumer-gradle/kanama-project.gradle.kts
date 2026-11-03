@@ -138,8 +138,11 @@ val installScriptJar by tasks.registering {
                 val incoming = target.resolveSibling(target.name + ".kanama-new")
                 try {
                     source.copyTo(incoming, overwrite = true)
-                    java.nio.file.Files.setPosixFilePermissions(
-                        incoming.toPath(), java.nio.file.Files.getPosixFilePermissions(source.toPath()))
+                    try { // best effort: a FAT or exFAT mount refuses chmod
+                        java.nio.file.Files.setPosixFilePermissions(
+                            incoming.toPath(), java.nio.file.Files.getPosixFilePermissions(source.toPath()))
+                    } catch (_: java.io.IOException) {
+                    }
                     java.nio.file.Files.move(
                         incoming.toPath(),
                         target.toPath(),

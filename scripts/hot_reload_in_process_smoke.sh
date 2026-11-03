@@ -153,12 +153,14 @@ grep -q 'var mood: String = "calm"' "$AUTOLOAD_FILE" || smoke_fail "the build-B 
 # The sync runs while Godot has kanama.jar and kanama-scripts.jar open: it must not rewrite them under it
 # (build.gradle.kts installForRunningEditor; task 143 item 4). The unchanged kanama.jar keeps its inode and time,
 # and the rebuilt scripts jar is a new file (a rename), not the old one rewritten. Windows rewrites in place.
-held_open_before="$(held_open_state)"
-"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
-held_open_after="$(held_open_state)"
 case "$(uname -s)" in
-  MINGW*|MSYS*|CYGWIN*) ;;
+  MINGW*|MSYS*|CYGWIN*)
+    "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
+    ;;
   *)
+    held_open_before="$(held_open_state)"
+    "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
+    held_open_after="$(held_open_state)"
     if [[ "$(printf '%s\n' "$held_open_before" | grep '^kanama.jar ')" != "$(printf '%s\n' "$held_open_after" | grep '^kanama.jar ')" ]]; then
       smoke_fail "syncExampleAddonJar rewrote the unchanged kanama.jar the running game holds open" "before: $held_open_before; after: $held_open_after"
     fi

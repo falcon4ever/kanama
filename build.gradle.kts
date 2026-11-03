@@ -620,11 +620,15 @@ fun installForRunningEditor(source: File, target: File): Boolean {
   val incoming = target.resolveSibling(target.name + ".kanama-new")
   try {
     source.copyTo(incoming, overwrite = true)
-    // copyTo drops the mode bits; the library keeps the source's (Copy kept them).
-    java.nio.file.Files.setPosixFilePermissions(
-      incoming.toPath(),
-      java.nio.file.Files.getPosixFilePermissions(source.toPath()),
-    )
+    // copyTo drops the mode bits; the library keeps the source's (Copy kept them). Best effort: a
+    // FAT or exFAT mount refuses chmod, and the file works without it.
+    try {
+      java.nio.file.Files.setPosixFilePermissions(
+        incoming.toPath(),
+        java.nio.file.Files.getPosixFilePermissions(source.toPath()),
+      )
+    } catch (_: java.io.IOException) {
+    }
     java.nio.file.Files.move(
       incoming.toPath(),
       target.toPath(),
@@ -826,8 +830,8 @@ tasks.register<Copy>("syncExampleAddonJar") {
   val exampleAddonDir = layout.projectDirectory.dir("example_project/addons/kanama").asFile
   into(exampleAddonDir)
   // An editor or game of the example project may be running (the hot-reload flow syncs while it
-  // runs): the jars go in by installForRunningEditor, beside the copy, so Gradle does not count
-  // them as outputs and a deleted one must still make the task run.
+  // runs): the jars go in by installForRunningEditor, beside the copy. The into() folder is still
+  // the task's output; the rule below makes a deleted jar rerun the task either way.
   val syncedJars = listOf("kanama.jar", "kanama-scripts.jar").map { exampleAddonDir.resolve(it) }
   outputs.upToDateWhen { syncedJars.all { it.isFile } }
   eachFile(runningEditorInstall(provider { exampleAddonDir }))

@@ -191,8 +191,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:215` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:257` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:259` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1692` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:1776` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1693` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1777` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:682` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:725` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -222,10 +222,11 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/hot_reload_in_process_smoke.sh:86` | `tail -n 160 "$LOG_FILE" >&2 2>/dev/null \|\| true` | justified: diagnostics only; the next lines print the reason and exit 1 either way. |
 | `scripts/hot_reload_in_process_smoke.sh:102` | `if [[ -n "$GODOT_PID" ]] && ! kill -0 "$GODOT_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
 | `scripts/hot_reload_in_process_smoke.sh:137` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/hot_reload_in_process_smoke.sh:157` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/hot_reload_in_process_smoke.sh:184` | `autoload_rows="$(grep -c "autoload kotlin=autoload:1 gd=KanamaSmokeAutoload:5 missing=true wrong_class=true wr` | justified: grep -c exits 1 when it counts 0 rows; the count below is the verdict. |
-| `scripts/hot_reload_in_process_smoke.sh:196` | `handler_rows="$(grep -c "scene autoload handler build=$build" "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when it counts 0 rows; the count below is the verdict. |
-| `scripts/hot_reload_in_process_smoke.sh:206` | `lambda_rows="$(grep -c "surviving-target lambda build=$build" "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when it counts 0 rows; the count below is the verdict. |
+| `scripts/hot_reload_in_process_smoke.sh:158` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/hot_reload_in_process_smoke.sh:162` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/hot_reload_in_process_smoke.sh:186` | `autoload_rows="$(grep -c "autoload kotlin=autoload:1 gd=KanamaSmokeAutoload:5 missing=true wrong_class=true wr` | justified: grep -c exits 1 when it counts 0 rows; the count below is the verdict. |
+| `scripts/hot_reload_in_process_smoke.sh:198` | `handler_rows="$(grep -c "scene autoload handler build=$build" "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when it counts 0 rows; the count below is the verdict. |
+| `scripts/hot_reload_in_process_smoke.sh:208` | `lambda_rows="$(grep -c "surviving-target lambda build=$build" "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when it counts 0 rows; the count below is the verdict. |
 | `scripts/hot_reload_smoke.sh:30` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/hot_reload_smoke.sh:50` | `if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null; then` | justified: output dropped, the command's exit status is the condition of the `if` |
 | `scripts/hot_reload_smoke.sh:123` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
