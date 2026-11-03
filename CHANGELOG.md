@@ -26,11 +26,47 @@ the snapshots are regenerated with `--write`, so the pull request shows every ch
 Additions and source-compatible changes (a parameter gains a default, a declaration becomes `open`,
 a class gains a supertype) need only `--write`. Every public declaration must state its type.
 
+New entries go under `### Details` as `#### Added|Changed|Fixed — <title>`, newest first, without task ids.
+A change users will notice also gets a line in the summary.
+
 ## Unreleased
 
 Upgrading from 0.4? See [Upgrading from 0.4 to 0.5](docs/getting-started/upgrading-0.4-to-0.5.md).
 
-### Added — Android export from the release kit and the store addon
+### What's new in 0.5
+
+0.5 gives desktop, Android and iOS one Godot API, brings the Web close to it, and moves the build and export steps into
+the editor and the release kit. Source breaks are listed under Details with their old and new spellings; three migration
+scripts rewrite your old annotations, export hints and enum constants.
+
+- **Scripts read like GDScript.** Public functions need no annotation, every `@export_*` hint has a typed twin such as
+  `@ExportRange`, and `node<Timer>("ScoreTimer")` and `preload<PackedScene>("res://mob.tscn")` replace `@onready` and
+  `preload`. `launch { wait(1.0) }` is `await`, a script class can extend another, and `Label.create()` is GDScript's
+  `Label.new()` for every node and `RefCounted` class.
+- **Typed signals and enums.** `area.bodyEntered.connect { body -> }`, `timer.timeout.await()`, `Node.ProcessMode.ALWAYS`
+  and `Key.ESCAPE`.
+- **More of Godot on Kotlin's own types.** String, NodePath and Callable methods, typed `Autoloads.<Name>`, and every
+  value type as an export, parameter or signal type.
+- **One API across platforms.** The hand-written classes are generated like the rest, so desktop, Android and iOS share
+  every member and the Web has a subset. `Mathf` runs in Kotlin, and every decimal is a `Double`.
+- **`close()` is optional.** A resource you forget is released after the garbage collector drops it.
+- **Errors reach Godot.** A Kotlin exception in a callback is a script error in the Errors tab, and using a freed node
+  throws what GDScript reports.
+- **Export without a checkout.** A project from a release kit or the store addon exports for Android and iOS (macOS kit,
+  on a Mac) with `buildAndroidScripts` or `buildIosScripts` and then Godot's export, and for the Web with `exportWeb`.
+  From a checkout, `exportWeb` takes your own project and the Web script API compiles the starter script. See
+  [Export for the Web](docs/exporting/web.md).
+- **Android 13 is the minimum.** Set **Min SDK** to `33`; the editor stops an export that sets it lower.
+- **The editor builds for you.** A toolbar status light shows whether your scripts are built, saving a `.kt` file starts a
+  build, and **Set Up Kanama Project** turns a store-addon project into a Kanama project.
+  See [Edit, Build, Run](docs/getting-started/editor-workflow.md).
+- **Exports are safe to ship.** The editor stops an export whose Kotlin scripts do not bind, and a desktop game carries
+  its own trimmed Java runtime, which you can build for another desktop platform.
+- **Toolchain:** Kotlin 2.4.21, KSP 2.3.12 and Godot 4.7.2. <!-- the Godot upgrade updates this line -->
+
+### Details
+
+#### Added — Android export from the release kit and the store addon
 
 A project made from a release kit or the store addon now exports for Android without a Kanama checkout:
 `./gradlew buildAndroidScripts`, then export from Godot as before. Kits and the store addon carry the
@@ -48,7 +84,7 @@ it: Gradle's `build/` folder now carries a `.gdignore`, so the editor no longer 
 `project.godot` turns on the ETC2/ASTC texture import Android export needs; and the editor plugin's
 `plugin.cfg` states the Kanama version instead of `0.1`.
 
-### Added — `X.create()` for every class GDScript can `new`
+#### Added — `X.create()` for every class GDScript can `new`
 
 `Label.create()`, `Area2D.create()`, `Timer.create()`, `RandomNumberGenerator.create()`: every
 class Godot can instantiate that is a `Node` or a `RefCounted` now has `create()`, GDScript's
@@ -57,14 +93,14 @@ classes Web wraps. A new node is yours to add to the tree or `queueFree()`; a ne
 reference of your own, as before. Plain `Object` classes (`UndoRedo`, `JSONRPC`) get none, since
 Kotlin has no `free()` for them. Ports no longer need a local `ClassDB.instantiate` helper.
 
-### Fixed — iOS from a source checkout finds scripts outside `kotlin-src`
+#### Fixed — iOS from a source checkout finds scripts outside `kotlin-src`
 
 `installIosAddon` registered a script in a scripts folder named anything but `kotlin-src` (say `game/kotlin`)
 as `res://X.kt`, so a scene that attached `res://game/kotlin/X.kt` found no script on the phone. A scripts
 folder inside the project now registers each script under its path in the project, as `buildIosScripts` in
 the kit already did. A project with its scripts in `kotlin-src/` at the top is unchanged.
 
-### Fixed — an Android export after a Godot upgrade no longer stops at the old build template
+#### Fixed — an Android export after a Godot upgrade no longer stops at the old build template
 
 Godot refuses an Android export when `res://android/build` was installed by another Godot version (4.7
 says "Android build version mismatch", 4.8 says "Unable to set up Android build directory"). The repository's
@@ -73,7 +109,7 @@ with one line when `GODOT_BIN` is not the pinned editor. In your own project on 
 `res://android/build` and run **Project > Install Android Build Template**; on 4.8, delete it or turn on
 **Editor Settings > Export > Android > Build > Automatically Delete Build Directory**. [Troubleshooting](docs/getting-started/troubleshooting.md) has the row.
 
-### Fixed — the exported-scene check no longer leaks a project's music at exit
+#### Fixed — the exported-scene check no longer leaks a project's music at exit
 
 `check_exported_scene_properties.gd` quits on its first frame. A project with an autoplaying audio
 autoload, like Squash the Creeps' `MusicPlayer`, started its stream on that frame, and Godot 4.7 leaks
@@ -83,7 +119,7 @@ smokes now fail when their scene check leaks at exit. The check also skips nodes
 it reported the TPS demo's Skeleton3D `bones/N/position` and AnimationPlayer `libraries` as lost
 script properties, because ClassDB does not list those native properties.
 
-### Fixed — a script class named `Arena` or `Signals` compiles
+#### Fixed — a script class named `Arena` or `Signals` compiles
 
 A script class whose name matched a type Kanama's generated registration code imports
 (`java.lang.foreign.Arena`, the runtime's `Signals`, `MemorySegment`, and on Web `GodotHandle`)
@@ -91,7 +127,7 @@ failed to compile with "Conflicting import". The generated code now refers to th
 an alias, so any class name works, and two script classes may share a simple name in different
 packages.
 
-### Fixed — a script constructor that throws no longer crashes Godot
+#### Fixed — a script constructor that throws no longer crashes Godot
 
 When a script's constructor (or a property initializer) threw while the script was attached, Godot
 crashed with signal 11 right after printing the script error. It now reports the error with your
@@ -101,14 +137,14 @@ the editor no longer disappears from the scene), and none of its code runs. GDSc
 half-built instance instead; a Kotlin constructor that threw leaves no object to run. On iOS, which
 has no placeholder instances, the node is left without the script. Web already handled it.
 
-### Fixed — forgotten wrappers are released at low frame rates too
+#### Fixed — forgotten wrappers are released at low frame rates too
 
 A wrapper you drop without `close()` is released by the garbage-collector fallback within a small
 time budget each frame. At a few frames a second (a phone under heavy load) that budget released a
 few hundred a minute; it now grows with the number waiting and with the frame time, up to 4 ms a
 frame. At a normal frame rate nothing changes.
 
-### Changed — `Mathf`'s math runs in Kotlin
+#### Changed — `Mathf`'s math runs in Kotlin
 
 `Mathf.sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `sinh`, `cosh`, `tanh`, `pow`, `exp`,
 `log`, `ease`, `dbToLinear` and `linearToDb` are now computed in Kotlin with Godot's formulas
@@ -120,7 +156,7 @@ the last bit or two (Kotlin's math library is not the host's). On Web, `GD.asin`
 clamp outside [-1, 1] as Godot does (they answered NaN), and `asinh`, `acosh` and `atanh` run in
 the engine, since Kotlin's lose precision near zero.
 
-### Added — a build status light, and build on save by default
+#### Added — a build status light, and build on save by default
 
 The Kanama Tools row in the editor toolbar starts with a status light: green when your scripts are
 built and no `.kt` file changed since, yellow while a build runs or when a `.kt` file changed or
@@ -137,7 +173,7 @@ Save** (`kanama/build/build_on_save`). It is an editor setting now; the old proj
 **Platforms** menu runs `buildAndroidScripts` in a kit or store-addon project, and the Android, iOS
 and Web commands of the export pages in a project set up from a Kanama checkout. See [Edit, Build, Run](docs/getting-started/editor-workflow.md#the-status-light).
 
-### Added — Set Up Kanama Project, from the editor
+#### Added — Set Up Kanama Project, from the editor
 
 **Project > Tools > Kanama Tools: Set Up Kanama Project** turns a Godot project with the store
 addon into a Kanama project without a terminal. It adds only what is missing (the Gradle build and
@@ -151,7 +187,7 @@ runs the addon's `setup-kanama-project.sh` (or `.ps1` on Windows), which gains `
 added it next to your own before), and writes `build/.gdignore`. See
 [Add Kanama to an Existing Project](docs/getting-started/store-addon.md#installation).
 
-### Fixed — a deleted kanama-scripts.jar came back only with --rerun
+#### Fixed — a deleted kanama-scripts.jar came back only with --rerun
 
 `installAddonJar` skips copying a jar that is byte-identical to the installed one. Gradle then no
 longer counted that jar as the task's output, so after you deleted `addons/kanama/kanama-scripts.jar`
@@ -160,7 +196,7 @@ left the jar missing until `installAddonJar --rerun`. The task now runs again wh
 jar is missing. The build-on-save watcher also skips folders with a `.gdignore`, so the store
 addon's setup template no longer counts as one of your scripts.
 
-### Added — iOS export from the release kit and the store addon
+#### Added — iOS export from the release kit and the store addon
 
 A project made from the macOS release kit or the store addon now exports for iOS without a Kanama
 checkout: `./gradlew buildIosScripts` on a Mac, then export the Xcode project from Godot as before. The
@@ -177,7 +213,7 @@ The runtime-only `kanama-mobile-addon-ios` zip (`packageMobileAddonIos`) is gone
 `buildAndroidScripts`, it turns on the ETC2/ASTC texture import Godot's iOS export needs. Fixed with it:
 the kit's project has an app icon, without which Godot's iOS export stops.
 
-### Added — Web export from the release kit and the store addon
+#### Added — Web export from the release kit and the store addon
 
 A project made from a release kit or the store addon now exports for the Web without a Kanama checkout:
 `./gradlew exportWeb` in the project, and the export lands in `build/web-export/`; serve it with
@@ -194,7 +230,7 @@ a kit project does; the generated Web registry implements the runtime's `KanamaW
 its generated `main()` starts the runtime. A page whose module did not start the runtime, or whose bridge
 and module come from different builds, now stops with one line saying what to do.
 
-### Changed — Android 13 is now the minimum — BREAKING
+#### Changed — Android 13 is now the minimum — BREAKING
 
 Android 13 (API 33) is now the minimum; set **Min SDK** to `33` in your Android export preset
 (**Gradle Build > Min SDK**). Release builds already crashed at startup on Android 12 and older, so a
@@ -204,7 +240,7 @@ one line that says what to set (`Kanama: Export stopped: Android 13 or newer is 
 Export dialog shows the same warning on the Min SDK field. The Android 8-12 fallbacks are gone: the
 garbage-collector release of forgotten wrappers is always on for Android.
 
-### Added — Web export of your own project
+#### Added — Web export of your own project
 
 `./gradlew :web-runtime:exportWeb -PkanamaWebProjectDir=/path/to/your-project` exports your own
 project to the Web, from a Kanama checkout; before, only the Kanama demos could be exported. Godot
@@ -214,7 +250,7 @@ Web API gains `getNodeAsOrNull`, `requireNodeAs`, `castOrNull`, `cast`, `getNode
 so the starter script and the code the guides teach compile for the Web. See
 [Export for the Web](docs/exporting/web.md).
 
-### Added — docs: Open in IntelliJ IDEA, and how long the edit loop takes
+#### Added — docs: Open in IntelliJ IDEA, and how long the edit loop takes
 
 A new page, [Open in IntelliJ IDEA](docs/getting-started/intellij.md), takes a starter from
 **File > Open** to completion on the Godot API and a debugger stopped in your script, with the
@@ -223,13 +259,13 @@ now records how long a save takes to show (median 3.7 s in the editor with build
 the build alone, on an Apple M1 Max) and sets a budget of 5 s. `scripts/measure_edit_loop.py`
 measures it on your machine.
 
-### Changed — the JDWP debug port listens on localhost only
+#### Changed — the JDWP debug port listens on localhost only
 
 `kanama/debug/jdwp_enabled` and a bare `KANAMA_JDWP_PORT=5005` now open the debug port on `localhost`
 instead of every network interface: anyone who could reach the port could run code in the game. To
 debug a game on another machine, give a full address: `KANAMA_JDWP_PORT='*:5005'`.
 
-### Fixed — reading an Array of objects could release an element twice
+#### Fixed — reading an Array of objects could release an element twice
 
 Kanama reads an Array into a list of objects one element at a time, and it handed Godot the slot
 it had just freed the previous element from. Godot's next write released that element a second
@@ -240,7 +276,7 @@ beta it also hit every RefCounted element of a typed engine return such as
 five crashed. Every container read now resets the slot to nil after freeing it, on desktop and
 Android. iOS and Web were not affected.
 
-### Fixed — debugging a game started from the editor on Linux and Windows
+#### Fixed — debugging a game started from the editor on Linux and Windows
 
 On Linux and Windows the editor took the project's JDWP port itself (only macOS recognised the
 editor process), so the game started with Play could not open it and exited at startup. The editor
@@ -253,20 +289,20 @@ process claims its port with a lock the OS drops when the process ends (a file l
 folder on macOS and Linux, a named mutex on Windows); on macOS and Linux it also checks that no
 other program listens on the port.
 
-### Fixed — a running game no longer stalls once a second after a hot reload
+#### Fixed — a running game no longer stalls once a second after a hot reload
 
 After a new `kanama-scripts.jar` was loaded, a game whose scene was not reloaded (its nodes keep the
 old build's code) forced three full garbage collections and three 25 ms sleeps on the main thread
 every second (about 100 ms), and logged a `retired-loader-check` line each time, for as long as it ran. The check now
 forces collections only when an old build can be collected, and logs only when its result changes.
 
-### Fixed — build on save built twice per save
+#### Fixed — build on save built twice per save
 
 The Kanama Tools watcher also scanned Gradle's `build/` folder, where every build rewrites the
 generated `.kt` registrars, so each save started a second build (the editor is busy while a build
 runs). It now skips `build/`, `android/` and hidden folders.
 
-### Changed — tooling: one `upgrade_godot.sh` run does the mechanical work of a Godot bump
+#### Changed — tooling: one `upgrade_godot.sh` run does the mechanical work of a Godot bump
 
 Contributors: after the pin edit, `scripts/upgrade_godot.sh` now refreshes every generated output
 (the builtin operators, the engine-method table, the Web wrappers, backend and exercise, the API
@@ -280,7 +316,7 @@ templates, and `--reset` and `--baseline-ref` re-run a bump that stopped half-wa
 Exit status 3 means only human decisions are left. `./gradlew ktfmtFormat` now always runs; it could skip a file that a regen had
 rewritten. See the [Godot Upgrade Runbook](docs/contributing/godot-upgrade.md).
 
-### Changed — tooling: a Godot bump needs no hand edit for the kit pin or the red runs
+#### Changed — tooling: a Godot bump needs no hand edit for the kit pin or the red runs
 
 Contributors: `scripts/upgrade_godot.sh` moves the release kit's `config/features` to the new pin's
 major.minor (step 6) and runs `check_kit_version_pins.py` in step 9, so the first `local_ci.sh` no
@@ -293,14 +329,14 @@ a row instead of replacing an empty `{}`, and the signature cases no longer depe
 release announces: a `Source break` line naming `Node` announced the old mutation away. See the
 [Godot Upgrade Runbook](docs/contributing/godot-upgrade.md).
 
-### Changed — tooling: a `KANAMA-BLOCKED` marker can name a GitHub issue
+#### Changed — tooling: a `KANAMA-BLOCKED` marker can name a GitHub issue
 
 Contributors: `scripts/audit_stale_blockers.py` accepts `issue:<n>` tokens. The marker holds while GitHub issue #<n> is open
 and fails the audit once it is closed (looked up with `gh`; skipped with a note when `gh` cannot reach GitHub, and
 `--require-issues` makes that fatal; CI passes a read-only token). The dodge-on-Linux-Firefox quarantine now tracks
 [#370](https://github.com/falcon4ever/kanama/issues/370).
 
-### Changed — Kotlin 2.4.21 and KSP 2.3.12
+#### Changed — Kotlin 2.4.21 and KSP 2.3.12
 
 Kanama builds with Kotlin 2.4.21 (was 2.3.21) and KSP 2.3.12 (was 2.3.9); the release kit and the
 starter use the same versions. Projects that build their scripts with their own Gradle build should
@@ -317,7 +353,7 @@ Android scripts now compile against kotlinx.coroutines 1.6.4, the version Godot 
 build template puts in the APK, so a coroutines API newer than that fails the build instead of
 the app on the device (desktop and iOS keep 1.11.0).
 
-### Fixed — iOS: `Map` exports keep their keys, and a non-String key is refused like desktop
+#### Fixed — iOS: `Map` exports keep their keys, and a non-String key is refused like desktop
 
 On iOS a script method returning a `Map<Int, V>` (or a list holding one) reached Godot with its keys
 turned into Strings (`"1"`), and a `Map` argument with such keys failed with an iOS-only message.
@@ -331,7 +367,7 @@ the scene, the inspector or GDScript and read back with its keys as they are, li
 a Map with object or script values (`Map<String, Texture2D>`, `Map<Int, Node3D>`) too, its
 Resource values held while the property holds them; a key or value of another type drops its entry.
 
-### Fixed — iOS: `get`, `call` and `callv` with RID, PackedByteArray and value types in arrays
+#### Fixed — iOS: `get`, `call` and `callv` with RID, PackedByteArray and value types in arrays
 
 On iOS the generic Variant path (`GodotObject.get`, `call`, `callv`, `getMeta`, signal arguments)
 lost or refused values that work on desktop:
@@ -358,7 +394,7 @@ lost or refused values that work on desktop:
 alike. On iOS only, a signal or script-method argument of either type fails with an error naming
 the type, where desktop passes `null`.
 
-### Fixed — Web: an object argument is accepted however the object was obtained
+#### Fixed — Web: an object argument is accepted however the object was obtained
 
 On Web, passing an object to a wrapper member threw `Kanama Web browser handle=... has kind=NODE,
 expected=RESOURCE` (or `expected=NODE`, `expected=OBJECT`) when the object came another way than the
@@ -370,12 +406,12 @@ one the member's first demo used: a resource from `duplicate()` or from a getter
 `LightmapGI.lightData`, `MeshLibrary.setItemMesh`, `Mesh.surfaceSetMaterial`,
 `Input.setCustomMouseCursor`, `CanvasItem.drawTexture`).
 
-### Fixed — Web: a generic call that returns a PackedStringArray
+#### Fixed — Web: a generic call that returns a PackedStringArray
 
 `WebExperimentalGenericCall.callImmediate(...).asAny()` of a `PackedStringArray` result threw
 `IndexOutOfBoundsException`; it returns the `List<String>`.
 
-### Added — tooling: the Web API exercise, one generated row per Web call shape
+#### Added — tooling: the Web API exercise, one generated row per Web call shape
 
 Contributors: `scripts/generate_web_exercise.py` writes one row per call shape of
 `scripts/platform_backend_calls.json` into the web3d fixture (`ApiExerciseProbe.kt`) and the
@@ -384,11 +420,11 @@ checks it against the generic tier on the same object, and the web3d driver requ
 pass (`checks.apiExercise`) in Chrome and Firefox. `--check` (local_ci, `:web-runtime:check`) fails
 when a contract shape has no row.
 
-### Added — tooling: an inventory of every `ObjectCalls` helper and how a generated exercise can check it
+#### Added — tooling: an inventory of every `ObjectCalls` helper and how a generated exercise can check it
 
 Contributors: `scripts/generate_api_exercise.py` classifies each of the 1,492 helpers the shared tree calls (static, property pair, const oracle, singleton, reach only, excluded with a reason) into [API Exercise Inventory](docs/reference/generated/api-exercise.md); the local_ci stage "API exercise inventory drift" fails when the page is stale, when `scripts/api_exercise_policy.py` names a class or method the API lacks, or when a helper is classified by nothing.
 
-### Changed — Web ray queries and RIDs use desktop's API
+#### Changed — Web ray queries and RIDs use desktop's API
 
 A raycasting script is now the same code on Web as on every other platform:
 `PhysicsRayQueryParameters3D.create(from, to, mask, listOf(self.getRid()))` and
@@ -427,7 +463,7 @@ their shared sources. The bridge protocol is 39: re-export every Web game.
   | `springArm.addExcludedObject(body)` | `springArm.addExcludedObject(body.getRid())` |
   | at most one exclusion, no flags | any number of RIDs; `collideWithAreas`, `collideWithBodies`, `hitFromInside`, `hitBackFaces` |
 
-### Added — tooling: the API exercise runs its static and property-pair rows on the desktop and on iOS
+#### Added — tooling: the API exercise runs its static and property-pair rows on the desktop and on iOS
 
 Contributors: `scripts/generate_api_exercise.py --report` now also writes
 `src/commonMain/kotlin/net/multigesture/kanama/exercise/ApiExercise.generated.kt`: one row per helper whose
@@ -450,7 +486,7 @@ for a tracked gap can be listed in `KNOWN_FINDINGS` with the failure text it exc
 failure of its Variant-path half prints `KNOWN:` (counted as `known`) instead of `FAIL:`, any other
 failure still fails, and a pass fails until the entry is removed. The list is empty.
 
-### Fixed — calls that return an engine-built array no longer crash
+#### Fixed — calls that return an engine-built array no longer crash
 
 A Godot method whose engine implementation builds its `Array` result in place (a C++ `Vector<Variant>`,
 `Vector<RID>` or `Vector<Plane>` return, such as `Camera3D.getFrustum()` and
@@ -460,7 +496,7 @@ Android and iOS: the return buffer Kanama handed the engine was zero-filled inst
 passes a constructed one (the desktop and Android helpers, and on iOS the shim's typed-array and
 container return paths).
 
-### Added — tooling: the API exercise runs const, singleton and RID factory rows
+#### Added — tooling: the API exercise runs const, singleton and RID factory rows
 
 Contributors: the generated API exercise (`ApiExercise.generated.kt`, see
 [API Exercise Inventory](docs/reference/generated/api-exercise.md)) now also runs a row for every helper
@@ -484,7 +520,7 @@ each row's verdict) and names the row a crash happened in. Each run writes under
 so two runs of the example project at once (two worktrees) no longer delete each other's fixtures; a
 crashed run's directory is removed by the next run.
 
-### Added — tooling: the API exercise runs on Android
+#### Added — tooling: the API exercise runs on Android
 
 Contributors: `KANAMA_ANDROID_API_EXERCISE=1 scripts/android_smoke.sh ...` builds the runtime AAR with
 `-PkanamaApiExercise=true`, opts the demo's debug build in through `kanama/debug/api_exercise` and
@@ -497,7 +533,7 @@ refuses a release variant or publication with the flag, `packageMobileAddonAndro
 with exercise classes, and `generate_api_exercise.py --check-jar` (which now reads an AAR's jars) runs
 on the runtime AAR in CI's Android lane and in `android_export_minified.sh`.
 
-### Fixed — an object parameter Godot defaults to `null` can be left out, or passed `null`
+#### Fixed — an object parameter Godot defaults to `null` can be left out, or passed `null`
 
 `Tree.createItem()` could not make a tree's root item: its `parent` was a required, non-null `TreeItem`,
 where GDScript's `create_item()` passes `null`. The same held for `Expression.execute` (`baseInstance`),
@@ -511,7 +547,7 @@ points, colors)`). Found by the API exercise's reach rows, which could not write
   — the parameter above is `T? = null` instead of `T`. Calls compile unchanged; only a function reference
   typed with the old non-null parameter needs the `?`.
 
-### Added — tooling: the API exercise runs every reach-only helper and one row per Variant type
+#### Added — tooling: the API exercise runs every reach-only helper and one row per Variant type
 
 Contributors: the generated API exercise (`ApiExercise.generated.kt`) now runs a row for every helper the
 inventory could only reach (F, 602): the helper is called once on a valid receiver (a fresh instance, the
@@ -526,7 +562,7 @@ compared, on the desktop and on iOS; these replace the hand-written iOS `variant
 The inventory page lists which rows cover each typed-Array argument kind. The desktop run takes under a
 second (`in <ms>` in the summary).
 
-### Fixed — the nightly task 71 control launches Firefox like the Web matrix, and says so when it never ran
+#### Fixed — the nightly Web control launches Firefox like the Web matrix, and says so when it never ran
 
 The control (a plain GDScript visibility-notifier export, `visibility-control` in `web.yml`) handed the
 Firefox driver the browser found by `command -v firefox`, the one launch input the Web matrix does
@@ -534,7 +570,7 @@ not pass, and Firefox reported "WebGL2 missing" so the probe never ran. It now l
 the browser exactly as `web_export_smoke.sh` does and prints the candidate binaries. A control that
 never ran now emits a `::warning::` and a job-summary line instead of a silent green tick.
 
-### Changed — the Web dodge cell is deterministic and checks hits strictly
+#### Changed — the Web dodge cell is deterministic and checks hits strictly
 
 The dodge driver of the Web matrix used to restart a round when the stationary player was hit early,
 and a run that was hit early in three rounds in a row failed, which happened by chance on CI. It now
@@ -561,7 +597,7 @@ the `dodge:firefox` quarantine (task 71) is renewed until 2027-03-31.
 The quarantine reason and the Web and version-support docs now name that symptom (no `screen_exited`)
 instead of "mobs never free": the round's `queue_free` still frees every mob there.
 
-### Changed — iOS device runs read the app's engine errors; the gate verdict is per step
+#### Changed — iOS device runs read the app's engine errors; the gate verdict is per step
 
 After the console window, the demos' iOS runner fetches the device's log archive over USB
 (`idevicesyslog … archive`, read with `log show` and filtered to the app) and prints the app's
@@ -575,7 +611,7 @@ later demo; `--check-results` and `--check-built-bundle-id` check this without a
 probe in the export-time editor. The Web matrix retries an export once only when Godot aborted with
 exit 134 after a finished pack, and records the retry.
 
-### Changed — every engine call keeps its wrapper reachable until it returns
+#### Changed — every engine call keeps its wrapper reachable until it returns
 
 Generated and hand-written call paths on desktop and Android now end with a reachability fence on the
 receiver and on every object, `Callable` and `Signal` argument, so the JVM cannot collect a wrapper while
@@ -584,7 +620,7 @@ any thread be released by the garbage collector (see "a forgotten `close()` is a
 thread"). On Android 8 (API 26-27) the fence does not exist and is skipped; the GC release stays off there.
 Measured cost on desktop: within noise.
 
-### Changed — the source-checkout starter is a Gradle project IntelliJ IDEA imports
+#### Changed — the source-checkout starter is a Gradle project IntelliJ IDEA imports
 
 `createStarterProject` now writes the same project shape as a desktop kit: `kotlin-src/HelloScript.kt`
 attached to `main.tscn`, `build.gradle.kts` and `settings.gradle.kts`, the Gradle wrapper, and
@@ -599,7 +635,7 @@ from a checkout, `installStarterTemplate` no longer copies the template's README
 project's, and a scripts dir at a Gradle project's root no longer feeds its `*.kts` build files to
 the script compiler.
 
-### Fixed — the starter's `HelloScript.kt` compiles for iOS
+#### Fixed — the starter's `HelloScript.kt` compiles for iOS
 
 The starter script of the desktop kit, the store addon and `createStarterProject` formatted its
 status line with `String.format`, which exists only on the JVM, so building a fresh starter's
@@ -607,7 +643,7 @@ status line with `String.format`, which exists only on the JVM, so building a fr
 `Unresolved reference 'format'`. It now rounds with `kotlin.math`, and the iOS smoke's Kotlin
 modes compile it too.
 
-### Changed — Web `set("position:x", …)` does what it does on desktop: nothing
+#### Changed — Web `set("position:x", …)` does what it does on desktop: nothing
 
 On Web, `GodotObject.set(property, value)` wrote a property path (Godot's `set_indexed`), so
 `node.set("position:x", 5.0)` moved the node on Web and did nothing on desktop, Android and iOS,
@@ -624,7 +660,7 @@ writes the same property as before. Web's `set` and `setIndexed` take any value 
   GodotEnumValue)` are one `set(property: String, value: Any?)`, so a call that names the first
   argument writes `property =`.
 
-### Changed — a forgotten `close()` is a late release on every thread
+#### Changed — a forgotten `close()` is a late release on every thread
 
 Owned `RefCounted` wrappers made on a worker thread (a `Dispatchers.Default` coroutine, your own
 `Thread`, a `ResourceLoader` load on a worker, a `WorkerThreadPool` task) are now released by the
@@ -639,7 +675,7 @@ frame, for testing (desktop and Android code). The runtime's ownership self-test
 device and prints a getter microbenchmark; `scripts/android_smoke.sh` switches it on and requires its
 verdict, and the iOS runtime self-test gained the same two rows.
 
-### Fixed — a `@RegisterClass` method returning a `RefCounted` hands Godot its own reference
+#### Fixed — a `@RegisterClass` method returning a `RefCounted` hands Godot its own reference
 
 A `@RegisterClass` method whose return is a `RefCounted` object (declared `GodotObject`) wrote the raw
 pointer into Godot's return slot when GDScript called it with a typed receiver (the ptrcall path), so
@@ -648,7 +684,7 @@ as soon as GDScript let go of the result, and a fresh one died once the collecto
 Kotlin wrapper. The method now hands Godot a reference of its own, as godot-cpp does; the
 `Object.call` path keeps the result's wrapper reachable until the Variant holds its reference.
 
-### Fixed — A failing headless export of a project without `.godot/` exits 1, not 134
+#### Fixed — A failing headless export of a project without `.godot/` exits 1, not 134
 
 `godot --headless --export-release <preset>` on a fresh checkout (no `.godot/` folder) crashed on exit
 with code 134 when the export failed (an unknown preset, an unwritable target folder, an export
@@ -661,7 +697,7 @@ update runs while the editor is still up and the export exits 1 with the same er
 loads only `addons/kanama` without the Kanama Tools plugin enabled can still crash this way;
 `tool_smoke.sh` runs the failing export on a fresh copy of the example project.
 
-### Added — the editor stops an export whose Kotlin scripts do not bind
+#### Added — the editor stops an export whose Kotlin scripts do not bind
 
 When `kanama-scripts.jar` does not contain a `.kt` script, Godot's export converts every scene that
 uses it without the script's property values; when the desktop addon is missing, the export leaves the
@@ -693,7 +729,7 @@ as text with their values, and the check passes with a note).
 `tool_smoke.sh` checks the one-click clean-up in a headless editor on scratch files in the real temp
 folder. See `docs/exporting/android.md` (Export Guard).
 
-### Fixed — iOS: a value-type script property set to a value of another type follows GDScript
+#### Fixed — iOS: a value-type script property set to a value of another type follows GDScript
 
 A `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, `Vector4i`, `Rect2`, `Rect2i`, `Plane`,
 `Quaternion`, `AABB`, `Basis`, `Transform2D`, `Transform3D`, `Projection`, `Color` or `NodePath`
@@ -708,7 +744,7 @@ and the property keeps its value. The on-device probe sets wrong-typed and conve
 and the converted ones. The `Boolean`, `Long`, `Double`, `String`, `List` and `Map` properties are
 unchanged on iOS.
 
-### Fixed — Desktop and Android: a script property set to a value of the wrong type is an error, not a zero value
+#### Fixed — Desktop and Android: a script property set to a value of the wrong type is an error, not a zero value
 
 A `@Export` property of type `Boolean`, `Long`, `Double`, `String`, `NodePath`, `Vector2`,
 `Vector2i`, `Vector3`, `Vector3i`, `Color`, `List<T>` or `Map<K, V>` that received a Variant of
@@ -728,7 +764,7 @@ each shape against its GDScript twin. Function arguments keep their own decoding
 argument of another type is refused, now also named by Godot's type), and the contents of a list or
 map (an element of the wrong type) still decode fail-soft.
 
-### Fixed — `GD.clamp` on numbers matches GDScript when `min` is greater than `max`
+#### Fixed — `GD.clamp` on numbers matches GDScript when `min` is greater than `max`
 
 `GD.clamp(Double, Double, Double)` (and the `Long` and `Int` overloads) called the typed `clampf` /
 `clampi`, so `GD.clamp(0.0, 3.0, 1.0)` was `3.0` in Kotlin and `1.0` in GDScript. GDScript's `clamp`
@@ -736,7 +772,7 @@ sets the value to `min` if it is less, then to `max` if it is greater; the three
 same, in Kotlin on every platform (no engine call). `clampf` and `clampi` keep Godot's typed result.
 Both are pinned against GDScript in the runtime smoke's parity rows.
 
-### Fixed — desktop hot reload: an old build's lambda connections stop with its last script object
+#### Fixed — desktop hot reload: an old build's lambda connections stop with its last script object
 
 After a desktop hot reload, a lambda connection whose target outlived the script object that made it
 (`self.tree.processFrame.connect(self.tree) { }`, a lambda bound to a GDScript autoload, the scene root or
@@ -751,14 +787,14 @@ survive a reload, as in GDScript. A build whose objects are still alive (a scene
 reloaded) keeps its connections. `retired-loader-check` lines gain `swept=N`. See
 [Signals: hot reload](docs/game-dev/signals.md#hot-reload).
 
-### Fixed — Web: layer and collision masks take all 32 bits
+#### Fixed — Web: layer and collision masks take all 32 bits
 
 On Web, a ray query made with `PhysicsRayQueryParameters3D.create(from, to)`, whose default mask is
 `0xffffffff`, failed with "Failed requirement." at `intersectRay`, and `collisionLayer`,
 `collisionMask` and `VisualInstance3D.layers` refused a mask with bit 31 set. They now take the
 whole uint32 range `0..0xffffffff`, as on desktop.
 
-### Fixed — Web: a node you looked up lives as long as the node
+#### Fixed — Web: a node you looked up lives as long as the node
 
 On Web, a `Node` or plain `Object` you got from a lookup (`getNode`, `getChild`), a call's result,
 a construction (`Sprite2D.create()`) or an instantiated scene was released with the script that got
@@ -779,7 +815,7 @@ scripted `Resource` (`@ScriptClass(attachTo = "Resource")`) that Godot freed ski
 teardown (its pending `await`s and lambda connections stayed; a debug export logged "Attempt to call
 function ... in base 'null instance'"); it now ends them like a scripted node does.
 
-### Fixed — Web: a RefCounted lives while Kotlin holds it, and every RefCounted has `close()` (closes [#332](https://github.com/falcon4ever/kanama/issues/332))
+#### Fixed — Web: a RefCounted lives while Kotlin holds it, and every RefCounted has `close()`
 
 On Web, a `RefCounted` that only your Kotlin code kept did not follow desktop's rule. An argument
 (an `InputEvent`, a `Resource`) stayed valid for its call and the next 2 frames, then lived only
@@ -813,7 +849,7 @@ where it stayed `LOADED`.
   no longer declare `close()` and `AutoCloseable` themselves; both come from `RefCounted` now, so
   every call still compiles (`ScriptResource.close()` overrides it). Nothing to migrate.
 
-### Changed — tooling: script portability gate, module-class KDoc, three gate fixes (task 138 items 15, 25, 28, 34)
+#### Changed — tooling: script portability gate, module-class KDoc, three gate fixes
 
 Tooling and documentation only; no change to the API a script sees beyond IDE docs. The wrapper KDoc now
 also covers the classes a Godot module defines (`ZIPReader`/`ZIPPacker`, `WebSocket*`, `WebRTC*`, `CSG*`,
@@ -828,7 +864,7 @@ handed, and lists the tools only one platform has (`cygpath`, `cmake`, `shellche
 has a `--check` mode in `local_ci.sh` (the generated page was already stale on main), and the Android remap
 audit tracks `${...}` template nesting, so `"${"/*"}"` no longer hides the lines after it.
 
-### Fixed — Web: an object a handler receives can be kept, and it is the object
+#### Fixed — Web: an object a handler receives can be kept, and it is the object
 
 On Web, an object a signal handler, `_input` / `_unhandled_input` or a script method received as an
 argument was valid only while the handler ran: kept (`lastHit = body`) and used a frame later, it
@@ -846,7 +882,7 @@ Control: one, its transform), where every dispatch used to cost two.
 A `RefCounted` argument follows desktop's rule too, see "Web: a RefCounted lives while Kotlin holds
 it" above; a node you looked up, see "Web: a node you looked up lives as long as the node".
 
-### Changed — iOS: the runtime self-tests no longer run or ship in users' builds (task 138 item 24)
+#### Changed — iOS: the runtime self-tests no longer run or ship in users' builds
 
 The iOS self-tests (the C `PTRCALL SELFTEST MATRIX` and the Kotlin `OBJECTCALLS SELFTEST` rows at
 scene init and on frame 1) ran in every iOS build, release exports included, and their code shipped
@@ -858,7 +894,7 @@ summaries (`PTRCALL SELFTEST MATRIX`, `OBJECTCALLS SELFTEST`, `OBJECTCALLS SELFT
 `0 failed`): a console without them fails. `ios_visual_smoke.sh --check-selftest-log LOG` runs that
 verdict on a saved console log.
 
-### Fixed — RefCounted elements of an `Object.call` container result survive the call (task 122 item 3)
+#### Fixed — RefCounted elements of an `Object.call` container result survive the call
 
 `node.call("make_items")` (any `Object.call`-family call: `call`, `callv`, `callDeferred`,
 `callThreadSafe`, `callGroup`, `GDScript.new`, `ClassDB.classCallStatic`, and `GodotCallable.call`/
@@ -881,14 +917,14 @@ Elements of a `call()` made off the main thread get no garbage
 collector fallback (the release must run on the main thread): close them yourself, the same rule as
 for the elements of a typed `Array` returned off the main thread.
 
-### Fixed — iOS: script properties report their default value (task 138 item 8)
+#### Fixed — iOS: script properties report their default value
 
 The iOS script answered "no default" for every `@Export`, so a scene packed at runtime stored every
 script property and `property_get_revert` had nothing to offer. It now answers the initializer the
 desktop registrar uses (scalars, `String`, `NodePath`, the vector and color types, Kotlin and Godot
 enums), from the same literal.
 
-### Fixed — iOS: a lambda connection's closure lives as long as any Callable of it (task 113)
+#### Fixed — iOS: a lambda connection's closure lives as long as any Callable of it
 
 The custom-Callable lifetime matrix (seven `OBJECTCALLS SELFTEST callable-lifetime` rows: every
 order of connect, disconnect, emit and freeing the emitter and the receiver, a reference-counted
@@ -904,7 +940,7 @@ own callers could reach the second one.
   export it implemented had no caller left once the Callable free counts lifetimes
   (`kanamaIosRuntimeCallableFreed`). It was never meant to be called from a script.
 
-### Fixed — iOS: a signal lambda receives Array, Dictionary and Packed*Array arguments (task 122 item 4)
+#### Fixed — iOS: a signal lambda receives Array, Dictionary and Packed*Array arguments
 
 A `GodotSignal.connect(target, n) { args -> ... }` lambda on iPhone could not receive a container
 argument: an emitted `Array`, `Dictionary` or `Packed*Array` failed the
@@ -920,7 +956,7 @@ On iOS a container nested more than 8 levels deep, or holding an element type th
 encoder does not carry (a `Vector3i` inside an `Array`), delivers `null` for that element; and a
 container the shim cannot allocate is reported as out of memory rather than "not marshalled".
 
-### Changed — wrapper and Android gates hold what they claimed to (task 119 batch B)
+#### Changed — wrapper and Android gates hold what they claimed to
 
 Gate and tooling fixes, no change to the API a script sees. The drift gate compares the iOS
 `ObjectCalls` GENERATED MEMBERS region by content (comments, spacing, `;` and trailing commas
@@ -937,7 +973,7 @@ inside a string no longer blinds it for the rest of the file. `scripts/android_s
 desktop addon, build-template install) instead of two drifting copies. Each has a case in
 `scripts/gate_red_runs.py`.
 
-### Fixed — Desktop and Android: a script property or argument of the wrong Variant type is an error, not a zero value (task 138 item 9)
+#### Fixed — Desktop and Android: a script property or argument of the wrong Variant type is an error, not a zero value
 
 A `@RegisterProperty`/`@RegisterFunction` value of type `Quaternion`, `Basis`, `Rect2`, `Rect2i`,
 `AABB`, `Plane`, `Transform2D`, `Transform3D`, `Projection`, `Vector4`, `Vector4i` or `RID` that
@@ -948,13 +984,13 @@ argument, the expected and the actual type, like the "Expected X argument" error
 arguments. iOS and Web decode these types through tagged or packed components, not a Variant cast, and
 have no such fallback.
 
-### Fixed — Desktop: a registered function returning `GodotObject?` compiles (task 119 finding 31)
+#### Fixed — Desktop: a registered function returning `GodotObject?` compiles
 
 `@RegisterFunction fun target(): GodotObject?` made the generated registrar fail to compile
 ("expected `GodotObject`, actual `GodotObject?`"): the return lost its `?`. It keeps it now, and the
 glue writes `null` as nil.
 
-### Changed — `GodotObject.set` returns `Unit`; the signature gate also holds the annotations (task 137 items 7, 9)
+#### Changed — `GodotObject.set` returns `Unit`; the signature gate also holds the annotations
 
 Desktop, Android and iOS. `GodotObject.set(property, value)` returned a `Long` that was always `0`;
 Godot's `Object.set` returns nothing, and the Web wrapper already returned `Unit`. It returns `Unit`
@@ -966,7 +1002,7 @@ The signature gate (`scripts/check_public_signature_changes.py`) gains an `annot
 (`api-snapshots/annotations.txt`): the annotations a script is written with and their parameters are
 public API, and task 133 B had changed them without the gate seeing it.
 
-### Changed — the generator report lists every Godot default the wrappers cannot express (task 137 item 5)
+#### Changed — the generator report lists every Godot default the wrappers cannot express
 
 A Godot default the generator cannot write as a Kotlin default argument (`CanvasItem.drawTexture`'s
 `modulate = Color(1, 1, 1, 1)`, a `Callable()`, an Object `null`, ...) makes the parameter required.
@@ -975,7 +1011,7 @@ Expressed" section with every case (294 parameters today), and the report check 
 changes without the page being regenerated, so a new required parameter, or a default that is
 gained, shows up in the pull request. Expressing the defaults is a separate, additive change.
 
-### Changed — Web compiles the shared `GD`, `Mathf` and `GodotCallable` (task 129 E, task 138 items 2 and 4)
+#### Changed — Web compiles the shared `GD`, `Mathf` and `GodotCallable`
 
 Web kept its own `GD` (16 members) and `Mathf` (18). It now compiles the same generated `GD` as
 desktop and iOS (every Godot utility function, with the typed overloads) and the same `Mathf`. The
@@ -1039,7 +1075,7 @@ Behaviour changes on Web, from the shared code:
   removed too: delete `import net.multigesture.kanama.api.call` (and `.callDeferred`); the member
   takes the call.
 
-### Changed — Web `Window` is a generated `Viewport` subclass (task 129 E, inventory row 10)
+#### Changed — Web `Window` is a generated `Viewport` subclass
 
 Web's `Window` was a hand facade with two shapes: a handle-backed root window and a handle-less
 mirror `Node.getWindow()` returned. It is now generated from the contract like every other Web
@@ -1051,7 +1087,7 @@ stand-ins for engine classes (`Time`, `DisplayServer`, `IP`, the single-player m
 classes, the ray-query helpers) are listed in the Web generator's `WEB_INERT_FACADES`, and its
 `--check` fails on any other hand-written Godot class.
 
-### Fixed — two Kotlin lambdas on one signal (task 138 item 20)
+#### Fixed — two Kotlin lambdas on one signal
 
 Godot keys a signal's connections by the base callable and ignores bound arguments, so on Web a
 second lambda connected from the same script to the same signal failed with "already connected"
@@ -1060,7 +1096,7 @@ targets its own guard object, so both connect and both fire. Desktop and iOS wer
 (each lambda's Callable carries its own callback id); the desktop/Android signal self-test now
 checks a second lambda on one signal.
 
-### Fixed — a freed Kanama-scripted object on Web (task 138 item 22)
+#### Fixed — a freed Kanama-scripted object on Web
 
 A call on a script-backed object freed while another script held it threw "Stale Kanama Web
 browser handle"; it now throws desktop's `IllegalStateException: Invalid access to previously freed
@@ -1068,7 +1104,7 @@ instance`. A setter queued on such an object before it was freed (the free appli
 same batch) failed the whole batch; it is now skipped and reported once as a script error, like a
 command on an engine-freed node.
 
-### Added — a typed-signal self-test for the Kanama smokes, desktop and Android (task 138 item 23)
+#### Added — a typed-signal self-test for the Kanama smokes, desktop and Android
 
 The Android-only typed-emit failure below lived five days because no Android smoke needed a typed
 signal to fire (squash emits only when the player dies or squashes a mob). `SignalSelfTest` (shared
@@ -1093,7 +1129,7 @@ the setting (an environment variable cannot reach an Android app). Both require 
 FAIL line, so a demo smoke fails when typed signals do not work on the device. `gate_red_runs.py` has a
 slow case that makes `emit` skip the call.
 
-### Fixed — iOS: a no-arg getter returning a String or an array ran the Godot method twice (task 129 D)
+#### Fixed — iOS: a no-arg getter returning a String or an array ran the Godot method twice
 
 On iOS every no-arg method returning a `String`, `StringName`, `NodePath`, `PackedByteArray`,
 `PackedInt32Array`, `PackedFloat32Array`, `PackedStringArray`, `PackedVector2Array`,
@@ -1107,7 +1143,7 @@ it whole. The C no-arg read-back entry points left only for the C self-test are 
 A new gate, `scripts/check_ios_single_call_returns.py`, fails when an iOS function names the same
 C entry point twice or calls one in a loop.
 
-### Changed — `FileAccess` and `DirAccess` are RefCounted classes, as in GDScript (task 129 D) — BREAKING
+#### Changed — `FileAccess` and `DirAccess` are RefCounted classes, as in GDScript — BREAKING
 
 Desktop, Android and iOS. The last two per-platform classes are generated once from
 `extension_api.json`, like the other 1,032: `FileAccess` and `DirAccess` are `RefCounted` classes
@@ -1186,7 +1222,7 @@ DirAccess.open("user://")?.use { dir -> dir.getFiles() }
   goes through `setIndexed` / `getIndexed` like desktop), and the engine-wide `MethodName`,
   `PropertyName` and `SignalName` constants (iOS gains them). `PER_PLATFORM_WRAPPERS` is empty.
 
-### Fixed — Android: a typed signal `emit` failed on the device (task 138 item 21)
+#### Fixed — Android: a typed signal `emit` failed on the device
 
 On an arm64 Android device (Android 11+ tags heap pointers; seen on the Pixel 7) every typed
 `emit(...)` (`Signal0`..`Signal5`) failed with `IndexOutOfBoundsException: Out of bound access on
@@ -1202,7 +1238,7 @@ pointers, which are untagged, but a Kotlin emit hands a lambda its heap frame).
 (`MemorySegment.NULL`/`NULL_SEGMENT`/`ofAddress(0)` reinterpreted, wrapped or through a `val`
 alias) in the runtime sources.
 
-### Fixed — Web: a lambda signal connection no longer leaks its callback (protocol 34, task 131 item 12)
+#### Fixed — Web: a lambda signal connection no longer leaks its callback
 
 - A Kotlin lambda connected to a signal on Web (`signal.connect(this) { ... }`, the typed
   `connectLong`/`connectObject` forms) kept its callback registered until its receiving script was
@@ -1212,7 +1248,7 @@ alias) in the runtime sources.
   freed), as on desktop. The proxy protocol is bumped to 34 (re-export a Web game with this
   version).
 
-### Fixed — Web: a script exception is reported to Godot and contained (task 131 item 14)
+#### Fixed — Web: a script exception is reported to Godot and contained
 
 - An exception in a Web script callback (`_ready`, `_process`, a signal handler, a `@Function`
   call, a coroutine, a constructor) used to end the page with a failure banner and reached no Godot
@@ -1226,7 +1262,7 @@ alias) in the runtime sources.
   answers its declared type's default (`0`, `""`, a zero `Vector2`; `null` for a Vector3, Color or
   other Variant return) without a second error.
 
-### Fixed — Web: using a node the engine freed throws the freed-instance error (task 138 item 3)
+#### Fixed — Web: using a node the engine freed throws the freed-instance error
 
 - A node freed by the engine (a child freed with its parent) while a script still held it failed
   with "string query callback did not publish a string result" (or a similar bridge message). It now
@@ -1240,14 +1276,14 @@ alias) in the runtime sources.
   is applied and the page keeps running (it used to end the page with `command batch applied 0 of 1
   commands`).
 
-### Fixed — Web: a freed shared node could read as a live script (task 138 item 18)
+#### Fixed — Web: a freed shared node could read as a live script
 
 - A node several scripts hold could, depending on how many scripts the scene had, share its
   handle's slot and generation with a live script, so using it after it was freed failed in the
   bridge ("No Kanama Web proxy owns handle=...") instead of with the stale-handle error. The two
   handle spaces are now kept apart.
 
-### Changed — 20 more per-platform classes generated once for every platform (task 129 C) — BREAKING
+#### Changed — 20 more per-platform classes generated once for every platform — BREAKING
 
 Desktop, Android and iOS. Twenty classes were still written per platform: by hand on desktop and
 generated on iOS (`ConfigFile`, `ENetMultiplayerPeer`, `InputEventKey`, `InputEventMouseMotion`,
@@ -1337,7 +1373,7 @@ are kept. `FileAccess` and `DirAccess` followed in task 129 D.
   and is in `common.txt` now (unchanged, or source-compatibly) as moved, not removed: every native
   platform still compiles it. Only a real change of a moved declaration needs a Source break line.
 
-### Changed — iOS: no silent method skips; script errors name the Kotlin line on the device (task 131 item 13, N7)
+#### Changed — iOS: no silent method skips; script errors name the Kotlin line on the device
 
 - **Source break:** iOS builds (no API declaration changes) — a script method iOS cannot dispatch
   now fails the iOS build instead of warning: a registered function or virtual with a parameter
@@ -1367,7 +1403,7 @@ are kept. `FileAccess` and `DirAccess` followed in task 129 D.
   0. Release builds still have no lines. See
   [iOS backend](docs/contributing/backends/ios.md#script-errors-the-kotlin-line-on-a-device).
 
-### Changed — wrapper calls without a lazy check; JVM options for desktop games (task 131 item 18)
+#### Changed — wrapper calls without a lazy check; JVM options for desktop games
 
 - **MethodBinds are static finals.** Each generated wrapper method read its MethodBind
   through a per-method `by lazy` (`SynchronizedLazyImpl.getValue` on every call), and every
@@ -1410,7 +1446,7 @@ are kept. `FileAccess` and `DirAccess` followed in task 129 D.
   more with twice the collections. Cause, evidence and the table:
   [Desktop and Packaging → JVM Options](docs/exporting/desktop.md#jvm-options).
 
-### Fixed — Desktop: a crash or hang when a game is stopped with SIGTERM or `System.exit`
+#### Fixed — Desktop: a crash or hang when a game is stopped with SIGTERM or `System.exit`
 
 Stopping a desktop game with SIGTERM (a process manager, `kill`, a test harness) -- or with SIGINT or
 SIGHUP when the JVM handled them, or with `System.exit` / `exitProcess` from Kotlin -- crashed the JVM
@@ -1427,7 +1463,7 @@ kanama-demos: `tpsBuildAndMultiplayerSmokeGodot` no longer SIGKILLs its peers. T
 the client still connected, the client quits after it, and both must exit with code 0, with no
 `hs_err` file and no hang.
 
-### Added — a warning for a direct call to an `@Rpc` function (task 131 item 4)
+#### Added — a warning for a direct call to an `@Rpc` function
 
 A plain Kotlin call to an `@Rpc` function runs on this peer only: it is GDScript's
 `prepare_game()`, not `prepare_game.rpc()`. It compiled without a word, and the tps-demo port had
@@ -1445,7 +1481,7 @@ senders, and `tpsBuildAndMultiplayerSmokeGodot` runs a headless host and client 
 and checks that a server RPC reaches the client. The multiplayer row of
 [C# Compatibility](docs/reference/c-sharp-compat.md) says what that smoke covers and what it does not.
 
-### Added — Godot's String, NodePath, Callable, Signal and PackedByteArray methods (task 134 D2)
+#### Added — Godot's String, NodePath, Callable, Signal and PackedByteArray methods
 
 Desktop, Android and iOS; Web as noted. Before, a script had Kotlin's own `String` functions and
 nothing of Godot's (`get_extension`, `to_snake_case`, `String.num`, `md5_text`, `uri_encode`,
@@ -1490,7 +1526,7 @@ nothing of Godot's (`get_extension`, `to_snake_case`, `String.num`, `md5_text`, 
   every other method with a recorded reason. The runtime smoke compares every new member with
   GDScript (`bytes=` over 64 random arrays, `text=` on fixed samples with emoji and CJK text).
 
-### Changed — `GD` generated once from Godot's utility functions, `Mathf` written once (task 129 B) — BREAKING
+#### Changed — `GD` generated once from Godot's utility functions, `Mathf` written once — BREAKING
 
 Desktop, Android and iOS. `GD` (Godot's global functions: `print`, `randf`, `lerpf`, `str`,
 `typeof`, ...) was hand-written per platform: desktop called 84 of Godot's 114 utility functions,
@@ -1548,7 +1584,7 @@ reproducible). `Mathf` was written three times (desktop 55 members, iOS 18, Web 
 - Web is unchanged: its `GD` and `Mathf` are still the Web runtime's own subset (task 129 parcel 10
   generates them through the Web bridge, whose utility path covers the no-argument calls today).
 
-### Changed — `Tween` and `InputEventMouseButton` generated once for every platform (task 129 A) — BREAKING
+#### Changed — `Tween` and `InputEventMouseButton` generated once for every platform — BREAKING
 
 Desktop, Android and iOS. Both classes were hand-written twice, once per platform, and had drifted:
 iOS `Tween` had 7 of Godot's 28 methods, and iOS `InputEventMouseButton` extended `InputEvent`, so
@@ -1605,7 +1641,7 @@ classes; the desktop names, overloads and factories are kept.
   gate until it is listed; a seam/runtime-core/sugar file that legitimately grows raises its
   ratchet with `--write --reason "<why>"`.
 
-### Added — Web parity for signals and value types (task 134 D1)
+#### Added — Web parity for signals and value types
 
 Web (Kotlin/Wasm), bridge protocol 32. On desktop, Android and iOS only the value-type change
 below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
@@ -1665,7 +1701,7 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   desktop (`Basis(x, y, z)`, `withX(value)`, `lookingAt(target, up, useModelFront)`,
   `interpolateWith(xform, weight)`, `withBasis(value)`, `bounce(n)`, `times(scale)`).
 
-### Fixed — Web: a script's property initializers can call the engine (protocol 33)
+#### Fixed — Web: a script's property initializers can call the engine
 
 - On Web a script's constructor ran before its proxy had installed its callbacks, so a property
   initializer that called the engine (`private val config = ConfigFile.create()`,
@@ -1697,7 +1733,7 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   The tpsdemo driver also stops at the first boundary error or fatal before the menu is ready and
   prints that log instead of waiting three minutes.
 
-### Fixed — Web: a node looked up by two scripts survives the first script's free
+#### Fixed — Web: a node looked up by two scripts survives the first script's free
 
 - On Web, when two scripts looked up the same plain node (`requireAs("../Target", ::Node)` in both),
   freeing the first script released the shared handle for the second too: its next call on that node
@@ -1710,7 +1746,7 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   Protocol 38 replaced the per-owner count: a node's handle now lives as long as the node (see
   "Web: a node you looked up lives as long as the node" above).
 
-### Fixed — Web: a typed `await()` on an engine object (task 134 C follow-up)
+#### Fixed — Web: a typed `await()` on an engine object
 
 - On Web, `animationPlayer.animationFinished.await()`, `sound.finished.await()` and every other
   typed `await()` whose emitter carries no Kanama script failed to connect (Godot: "the provided
@@ -1721,7 +1757,7 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   `typedAwaitOnEngineEmitterResumes` check (an `AudioStreamPlayer.finished.await()`), and the
   charactercontroller / thirdperson cells of the Web matrix.
 
-### Added — every Godot value type is a script type (task 133)
+#### Added — every Godot value type is a script type
 
 - **`Rect2`, `Rect2i`, `Vector4`, `Vector4i`, `Plane`, `AABB`, `Transform2D`, `Transform3D` and
   `Projection`** are script types on desktop, Android and iOS, like `Color`: an `@Export`
@@ -1750,7 +1786,7 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   spell: `Basis.FLIP_*` and `Transform3D.FLIP_*` (generated by `generate_builtin_ops.py`),
   `Rect2.ZERO`, `Plane.ZERO` and `Plane(a, b, c, d)`.
 
-### Fixed — `@RegisterClass` value-type arguments and returns (task 133 review)
+#### Fixed — `@RegisterClass` value-type arguments and returns
 
 - A `Vector2i` / `Vector3i` argument of a `@RegisterClass` method was read into a 4-byte scratch
   the engine wrote 8 / 12 bytes into (an out-of-bounds read, and a native overrun); value-type
@@ -1759,12 +1795,12 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   `extension_api.json` for single and double precision), and the `RegisterClassValueTypes` row of
   `runtime_smoke.sh` passes all sixteen value types both ways over `call` and `ptrcall`.
 
-### Fixed — iOS `Color` export read back as nil (task 133)
+#### Fixed — iOS `Color` export read back as nil
 
 - An `Object.get` of a `Color` `@Export` and a `Color` return answered nil on iOS: the return
   encoder had no `Color` arm. It ships the four float32 channels now.
 
-### Added — typed engine signals (task 134 D4)
+#### Added — typed engine signals
 
 Desktop, Android and iOS; Web gets `Signal0`/`Signal1` for the signals its wrappers expose (below).
 
@@ -1860,7 +1896,7 @@ Desktop, Android and iOS; Web gets `Signal0`/`Signal1` for the signals its wrapp
   the `InputEvent`/`Resource` argument of the others non-null, and `OpenXRFutureResult.completed`
   is a `Signal1<Any?>`, per the scan above.
 
-### Fixed — StringName values decoded as nil (task 134 D4)
+#### Fixed — StringName values decoded as nil
 
 - A `StringName` read through the generic decode (`GodotObject.call`, `get`, an untyped signal
   lambda's `List<Any?>` — `animation_finished(anim_name)`) arrived as `null` on desktop and
@@ -1871,7 +1907,7 @@ Desktop, Android and iOS; Web gets `Signal0`/`Signal1` for the signals its wrapp
   point, not called from game code) takes the PT-tagged argument cells and returns the expected
   argument count on a too-short emission. Nothing to migrate in game code.
 
-### Added — `Color` script type, Kotlin-typed constant folding, autoloads from threads and across hot reload (task 133 C2)
+#### Added — `Color` script type, Kotlin-typed constant folding, autoloads from threads and across hot reload
 
 Desktop, Android, iOS and Web.
 
@@ -1921,7 +1957,7 @@ Desktop, Android, iOS and Web.
 - `scripts/check_hand_copies.py` (a `local_ci.sh` stage) holds the iOS copy of the annotations
   equal to `annotations/` and the four `kanamaAutoloadInputs` copies equal.
 
-### Changed — typed export hints, generated autoloads, script inheritance (task 133 C) — BREAKING
+#### Changed — typed export hints, generated autoloads, script inheritance — BREAKING
 
 Desktop, Android, iOS and Web.
 
@@ -1987,7 +2023,7 @@ Desktop, Android, iOS and Web.
   declarations, and an unannotated `override fun ready()` registered a public method `ready`.
   Proof: `ScriptInheritanceTest`, the `inheritance` row of `scripts/runtime_smoke.sh`.
 
-### Added — every value-type operator, method, constant and enum, generated from the Godot API (task 134 B)
+#### Added — every value-type operator, method, constant and enum, generated from the Godot API
 
 - **Operators:** every operator Godot declares for a value type is a Kotlin operator with GDScript's
   meaning: `Transform3D * Transform3D`, `Basis * Basis`, `Quaternion * Vector3`, `transform * plane`
@@ -2039,7 +2075,7 @@ Desktop, Android, iOS and Web.
   (Kotlin prefers members): rename such an extension if its meaning differs from Godot's.
 - `Transform2D.get_origin()` is the existing `origin` property.
 
-### Changed — value-type methods follow Godot exactly (task 134 B)
+#### Changed — value-type methods follow Godot exactly
 
 - `Vector2.angle()` is computed by the engine: Kotlin's `atan2` differed from Godot's in the last
   bit for 5.75 % of inputs. It costs ~13 ns per call on desktop (GDScript: ~22 ns).
@@ -2053,7 +2089,7 @@ Desktop, Android, iOS and Web.
   `Vector3.bounce(n)` (was `normal`), `Vector3.reflect(line)`, Web `Vector3.limitLength(length)` (was `max`), `Transform3D.interpolateWith(xform,
   weight)` (was `to`). Only calls that name the argument change.
 
-### Changed — faster wrapper calls on desktop (task 131 item 16)
+#### Changed — faster wrapper calls on desktop
 
 - The downcall handles every wrapper call goes through (`object_method_bind_ptrcall`,
   `object_get_instance_id`, the freed-object check's `object_get_instance_from_id`,
@@ -2079,7 +2115,7 @@ Desktop, Android, iOS and Web.
   handles but keeps `invokeWithArguments` (Kotlin cannot emit an exact call against android.jar);
   iOS (direct C calls) and Web had no such overhead and are unchanged.
 
-### Added — script authoring like GDScript: node access, checked casts, await, preload (task 133 A)
+#### Added — script authoring like GDScript: node access, checked casts, await, preload
 
 Desktop, Android and iOS; Web gets the coroutine members, `isScript`/`asScript` and the tree
 accessors now and the rest in a follow-up (see "Web" below).
@@ -2130,7 +2166,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   casts and `instantiate*` helpers need a Web class-token table and `get_class` / `is_node_ready` in
   the Web call contract, and follow separately.
 
-### Removed — `KanamaCoroutineOwner` (task 133 A)
+#### Removed — `KanamaCoroutineOwner`
 
 - **Source break:** `KanamaCoroutineOwner` is removed and `KanamaScope` is internal, on desktop,
   Android, iOS and Web: a script's coroutines live on its `KanamaScript` scope, which the free path
@@ -2153,7 +2189,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   (`src/commonMain/.../api/KanamaScript.kt`); its members are unchanged, so a script does not
   notice, but the per-platform snapshots record the move as a removal.
 
-### Changed — every decimal value is `Double`; value types store Godot's width (task 134 A)
+#### Changed — every decimal value is `Double`; value types store Godot's width
 
 - **Vector, transform and color components are `Double`** in every signature on every platform
   (desktop, Android, iOS, Web), like every other decimal value Kanama hands out and like GDScript's
@@ -2214,7 +2250,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `GodotReal.fromNumber`/`fromDouble`/`fromFloat`; `GodotRealSegment.readIndex`/`writeIndex` take
   and return `Double` (they were `real_t`).
 
-### Changed — one annotation set, public functions registered automatically, typed input handlers (task 133 B) — BREAKING
+#### Changed — one annotation set, public functions registered automatically, typed input handlers — BREAKING
 
 - **One GDScript-shaped annotation per concept.** The aliases are removed in this release (no
   deprecation period); the compiler rejects every leftover, and the KSP processor reports each one
@@ -2267,7 +2303,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   - **Source break:** script annotations (`net.multigesture.kanama.annotations`: the removed names
     above) and lifecycle input handlers (`GodotObject` → `InputEvent`). No generated API signature
     changes.
-### Changed — a forgotten `close()` is a late release, not a leak (task 132)
+#### Changed — a forgotten `close()` is a late release, not a leak
 
 - **Owned `RefCounted` wrappers you never close are released after the garbage collector drops
   them**, on desktop, Android 13+ and iOS (desktop smoke-tested; the Android and iOS device runs
@@ -2387,7 +2423,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   build, at the price of a slower wrapper construction (~30 ns instead of ~11 ns). It is not the
   default: on a Bunnymark-style loop it is slower than the debug lookup it would replace.
 
-### Added — the generated API conventions page and the public-signature gate (task 126)
+#### Added — the generated API conventions page and the public-signature gate
 
 - **[Generated API Conventions](docs/reference/wrapper-conventions.md)** states what a script
   author can rely on in the generated Godot API, rule by rule, each with the generator code that
@@ -2409,7 +2445,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `KanamaScope.coroutineContext` and `MainThread.postNextFrame` (Web) now state their types; no
   behaviour changes.
 
-### Fixed — freed objects, wrapper equality, coroutine errors, the New Script template (task 131)
+#### Fixed — freed objects, wrapper equality, coroutine errors, the New Script template
 
 - **Calling a freed object is a script error, not a crash** (F2), on desktop, Android and iOS debug
   builds (the editor and debug export templates), with GDScript's semantics. A method called through
@@ -2460,7 +2496,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `KanamaScript<Base>` subclass and, for a Node base, an `@OnReady` stub. It no longer adds
   `@GlobalClass` unless the template asks for it.
 
-### Fixed — Kanama finds the right JDK on Linux and Windows desktop launchers (#277)
+#### Fixed — Kanama finds the right JDK on Linux and Windows desktop launchers
 
 - **Build Scripts no longer builds against a stray system JDK.** Godot started from a desktop launcher
   does not inherit the shell's `JAVA_HOME`, so on Linux the build ran on the system default JDK and
@@ -2494,7 +2530,7 @@ accessors now and the rest in a follow-up (see "Web" below).
 - `tool_smoke.sh` runs `scripts/check_editor_jdk_resolution.gd` against the plugin and now also fails
   if the two copies of `plugin.gd` drift.
 
-### Fixed — Kotlin exceptions reach Godot's error log; lambda connections no longer leak (task 131)
+#### Fixed — Kotlin exceptions reach Godot's error log; lambda connections no longer leak
 
 - **A Kotlin exception is a Godot script error** (F4) on desktop, Android and iOS (not yet on Web).
   An exception escaping a script method, a lifecycle callback (`_ready`, `_process`, ...), a signal
@@ -2530,7 +2566,7 @@ accessors now and the rest in a follow-up (see "Web" below).
 - **Docs:** `docs/game-dev/scripts.md` now says where output and errors appear: `System.err.println`
   reaches the process stderr only, not "Godot output" as it claimed.
 
-### Fixed — Android smoke builds the demo scripts against this checkout, not mavenLocal (task 119 item 40)
+#### Fixed — Android smoke builds the demo scripts against this checkout, not mavenLocal
 
 - **The scripts AAR's registrars come from this checkout's KSP processor.** `assembleAndroidScriptsAar`
   (run by `installAndroidPluginAar -PkanamaAndroidDemoDir=...`) now runs `:project-scripts:kspKotlin`
@@ -2544,7 +2580,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   desktop CI lane uses) instead of `<demo>/gradlew jar`. A project without its own Gradle build now
   works too. `docs/contributing/backends/android.md` says where demo scripts are compiled from.
 
-### Fixed — the native bootstrap build no longer accepts a truncated library (task 119 item 39)
+#### Fixed — the native bootstrap build no longer accepts a truncated library
 
 - **`buildNativeBootstrap` fails on a missing or empty artifact**, and deletes a 0-byte
   `libkanama_bootstrap.dylib` / `.so` / `kanama_bootstrap.dll` (both the `build/bootstrap` link output and
@@ -2557,7 +2593,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   step on the library, so deleting or truncating only the copy is repaired by the next build rather than
   failing with "was not created".
 
-### Changed — typed Godot enums and required returns (task 128 A) — BREAKING
+#### Changed — typed Godot enums and required returns — BREAKING
 
 - **Every Godot enum and bitfield is a `@JvmInline value class`** wrapping its `Long`: 764 class
   enums (37 bitfields), 22 global enums (4 bitfields) and the 7 enums of the builtin value types —
@@ -2751,7 +2787,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `tweenMethod` return their `CallbackTweener` / `MethodTweener` like desktop. The bridge and the
   generated proxies move to protocol 29 together.
 
-### Changed — the API tree is common code (task 117 P4′)
+#### Changed — the API tree is common code
 
 - **The Godot API wrapper tree moved from `src/sharedApi/kotlin` to
   `src/commonMain/kotlin/net/multigesture/kanama/api/`** — the 1,010 generated classes and the
@@ -2807,7 +2843,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   is not comparable on that machine: 530 s and 1,506 s for the same baseline commit, 1,270 s and
   1,072 s after, tracking the machine's background load. Within noise everywhere else.
 
-### Fixed — Android 17 September update: every Kanama app aborted in PanamaPort's FFI bootstrap (task 127)
+#### Fixed — Android 17 September update: every Kanama app aborted in PanamaPort's FFI bootstrap
 
 - After the September 2026 **Android 17** update (API 37, build `CP3A.260905.009`) a Pixel 7 aborted every Kanama app during startup
   (the same phone on an earlier Android 17 build passed the nine-demo matrix on 2026-09-15 with the old fork):
@@ -2823,7 +2859,7 @@ accessors now and the rest in a follow-up (see "Web" below).
 - `docs/contributing/backends/android.md` gains the patch list and a rebase routine (compare the
   fork's upstream base before every release; smoke early after an Android OS update).
 
-### Changed — the roots written once (task 117 P3′) — **desktop and iOS source breaks**
+#### Changed — the roots written once — **desktop and iOS source breaks**
 
 - **`GodotObject`, `RefCounted` and `GodotCallable` exist once**, hand-written, in
   `src/sharedApi/kotlin/net/multigesture/kanama/api/` — the same source directory the generated
@@ -2901,7 +2937,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   on a stale per-platform copy of a root (task 119 item 34). The generator's `SHARED_HAND_ROOTS`
   keeps `RefCounted` out of the generated tree; `PER_PLATFORM_WRAPPERS` is 25 → **24** classes.
 
-### Fixed — iOS: the bridge no longer fails quietly (task 124)
+#### Fixed — iOS: the bridge no longer fails quietly
 
 - **Every guarded early return in the iOS C shim now reports.** `ios/bootstrap/kanama_ios_shim.c` is the
   whole iOS surface — **132 exported entry points** and **24 `static ..._dispatch` bodies** — and it
@@ -2960,7 +2996,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `kanama_ios_godot_property_tweener_from_color`. Their Kotlin callers retired with the task 117 P2'
   tweener cluster and nothing under `src/` referenced them.
 
-### Added — iOS: a fault counter, seven permanent probes, and a gate that keeps the property
+#### Added — iOS: a fault counter, seven permanent probes, and a gate that keeps the property
 
 - **`ObjectCalls.faultCount()` and `ObjectCalls.lastFault()`** on iOS, over the shim's new
   `kanama_ios_fault_count` / `kanama_ios_last_fault` cinterop exports, plus
@@ -2993,7 +3029,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   probe mode and why line order across stdout/stderr cannot be relied on, the sink's concurrency
   contract and the seven expected probes in `docs/contributing/backends/ios.md`.
 
-### Fixed — iOS: Godot **static** methods called through the shared wrapper tree were silent no-ops
+#### Fixed — iOS: Godot **static** methods called through the shared wrapper tree were silent no-ops
 
 - **Every `is_static` Godot method reached through `src/sharedApi` did nothing on iOS.** The generator
   renders `NULL_SEGMENT` as the instance for a static method (`_null_segment()` in
@@ -3173,7 +3209,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   names the non-default row that carries the Plane record decode
   (`array-ret(Geometry3D.build_box_planes has 6 planes)`).
 
-### Changed — the `Tweener` family is generated once (task 117 P2', 3/3) — **source break: fluent setters return `X?`**
+#### Changed — the `Tweener` family is generated once — **source break: fluent setters return `X?`**
 
 - `Tweener`, `PropertyTweener`, `CallbackTweener` and `MethodTweener` retire together into the shared
   wrapper tree (`src/sharedApi/.../api/<Class>.kt`). They had to go as a set: the iOS hand cluster in
@@ -3224,7 +3260,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   1006 → **1010** classes, `PER_PLATFORM_WRAPPERS` 29 → **25**, and `IOS_UNSUPPORTED_CLASSES` is down to
   `DirAccess` alone.
 
-### Fixed — `StaticBody3D` sits on the real physics chain on iOS (task 117 P2', 2/3)
+#### Fixed — `StaticBody3D` sits on the real physics chain on iOS
 
 - `StaticBody3D` is generated once into the shared wrapper tree (`src/sharedApi/.../api/StaticBody3D.kt`);
   the generated desktop copy and the hand-written iOS class in `IosGodotApi.kt` are both deleted and
@@ -3249,7 +3285,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   divergence since P0. The shared tree grows 1005 → **1006** classes, `PER_PLATFORM_WRAPPERS` shrinks
   30 → 29, and iOS hand-writes 10 collision classes instead of 11.
 
-### Changed — `Image` and `PlaneMesh` generated once — iOS gains 21 `Image` members (task 117 P2', 1/3)
+#### Changed — `Image` and `PlaneMesh` generated once — iOS gains 21 `Image` members
 
 - The first two group-B classes are generated once into the shared wrapper tree
   (`src/sharedApi/.../api/Image.kt`, `.../PlaneMesh.kt`); all four per-platform copies are deleted and
@@ -3298,7 +3334,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `Image` sugar sites, one `PlaneMesh`, and one for `iosMain/.../StandardMaterial3D.kt`, a file P1'(c)
   already deleted): 20 → 16 marked sites, SUGAR 9 → 5.
 
-### Changed — `Viewport` and `Resource` generated once — group A complete (task 117 P1'(c), 3/3) — **desktop source break**
+#### Changed — `Viewport` and `Resource` generated once — **desktop source break**
 
 - The last two group-A classes are generated once into the shared wrapper tree
   (`src/sharedApi/.../api/Viewport.kt`, `.../Resource.kt`); both per-platform copies of each are
@@ -3365,7 +3401,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   and the three roots (`GodotObject`, `RefCounted`, `GodotCallable`). The shared tree grows
   1001 → 1003 classes and `PER_PLATFORM_WRAPPERS` shrinks 34 → 32.
 
-### Changed — `Button`, `LineEdit`, `Range`, `Slider` generated once (task 117 P1'(c), 2/3) — **desktop source break**
+#### Changed — `Button`, `LineEdit`, `Range`, `Slider` generated once — **desktop source break**
 
 - Four more classes are generated once into the shared wrapper tree (`src/sharedApi/.../api/<Class>.kt`);
   both per-platform copies are deleted and `PER_PLATFORM_WRAPPERS` loses all four entries. For each of
@@ -3415,7 +3451,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `PER_PLATFORM_WRAPPERS` shrinks 38 → 34. No new `ObjectCalls` helper is referenced (the common
   `expect object` stays at 1414) and no new native path.
 
-### Changed — `TabBar`, `AnimationPlayer`, `Light3D`, `StandardMaterial3D` generated once (task 117 P1'(c), 1/3) — **desktop source break**
+#### Changed — `TabBar`, `AnimationPlayer`, `Light3D`, `StandardMaterial3D` generated once — **desktop source break**
 
 - Four more classes are generated once into the shared wrapper tree (`src/sharedApi/.../api/<Class>.kt`)
   instead of living as two per-platform copies; both copies are deleted and `PER_PLATFORM_WRAPPERS`
@@ -3464,7 +3500,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   lines go (228 → 207): TabBar 8, Light3D 12, StandardMaterial3D 1, AnimationPlayer 0. The shared tree
   grows 993 → 997 classes and `PER_PLATFORM_WRAPPERS` shrinks 42 → 38.
 
-### Changed — `Node` generated once (task 117 P1'(b2)) — **desktop source break**
+#### Changed — `Node` generated once — **desktop source break**
 
 - `Node` is generated once into the shared wrapper tree (`src/sharedApi/.../api/Node.kt`) instead of
   being hand-written on desktop (`src/jvmMain/.../api/Node.kt`, 2,285 lines) and generated on iOS
@@ -3556,7 +3592,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   (`KanamaProcessor.kt:2019,2024,2031`, `IosScriptCodeEmitter.kt:570,577,583`) are unaffected: the
   generated class keeps the public `Node(handle: GodotHandle)` constructor and all three members.
 
-### Changed — `SceneTree` generated once, `SceneTreeHandle` retired (task 117 P1'(b1))
+#### Changed — `SceneTree` generated once, `SceneTreeHandle` retired
 
 - `SceneTree` is generated once into the shared wrapper tree (`src/sharedApi/.../api/SceneTree.kt`)
   as `class SceneTree(handle: GodotHandle) : MainLoop(handle)` — Godot's real chain. It replaces
@@ -3669,7 +3705,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   else in the repository changed shape. `SceneTree` was never in the wrapper parity gate's
   `HAND_SHAPED` list, so the gate stays at 18 classes / 265 allowlisted divergences.
 
-### Changed — wrapper classes generated once: `Node3D` (task 117 P1'(b1))
+#### Changed — wrapper classes generated once: `Node3D`
 
 - `Node3D` is generated once into the shared wrapper tree (`src/sharedApi/.../api/Node3D.kt`)
   instead of being hand-written on desktop (`src/jvmMain/.../api/Node3D.kt`) and generated on iOS
@@ -3706,7 +3742,7 @@ accessors now and the rest in a follow-up (see "Web" below).
 - The wrapper parity gate no longer lists `Node3D` (19 → 18 classes, 265 allowlisted divergences —
   unchanged, because the class contributed none).
 
-### Changed — wrapper classes generated once: `BaseMaterial3D` (task 117 P1'(a))
+#### Changed — wrapper classes generated once: `BaseMaterial3D`
 
 - `BaseMaterial3D` is generated once into the shared wrapper tree
   (`src/sharedApi/.../api/BaseMaterial3D.kt`) instead of being hand-written on desktop
@@ -3750,7 +3786,7 @@ accessors now and the rest in a follow-up (see "Web" below).
 - The wrapper parity gate no longer lists `BaseMaterial3D` (19 classes, 265 allowlisted divergences —
   unchanged, because the class contributed none).
 
-### Changed — wrapper classes generated once: `ButtonGroup` (task 117 P1'(a))
+#### Changed — wrapper classes generated once: `ButtonGroup`
 
 - `ButtonGroup` is generated once into the shared wrapper tree
   (`src/sharedApi/.../api/ButtonGroup.kt`) instead of being hand-written on desktop
@@ -3783,7 +3819,7 @@ accessors now and the rest in a follow-up (see "Web" below).
 - The wrapper parity gate no longer lists `ButtonGroup` (19 classes, 265 allowlisted divergences —
   unchanged, because the class contributed none).
 
-### Changed — wrapper classes generated once: `Camera3D` (task 117 P1'(a))
+#### Changed — wrapper classes generated once: `Camera3D`
 
 - `Camera3D` is generated once into the shared wrapper tree instead of being hand-written on desktop
   and generated on iOS. The two copies already had the same 64 members, and every one keeps its
@@ -3815,7 +3851,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `ptrcallNoArgsRetPlaneList` is hand-written on both backends (the desktop file has no generated
   region; on iOS it sits above the region), so its `actual` is hand-added on each.
 
-### Changed — wrapper classes generated once: `MeshLibrary` (task 117 P1'(a))
+#### Changed — wrapper classes generated once: `MeshLibrary`
 
 - `MeshLibrary` is generated once into the shared wrapper tree instead of being hand-written on
   desktop and generated on iOS. All 24 members the desktop hand file had keep their names,
@@ -3839,7 +3875,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   already opened with `checkOpen()` on both sides, so no guard was added. No new `ObjectCalls`
   helper was referenced (the common `expect object` stays at 1380 members).
 
-### Changed — wrapper classes generated once: `PhysicsBody3D` (task 117 P1'(a))
+#### Changed — wrapper classes generated once: `PhysicsBody3D`
 
 - `PhysicsBody3D` is generated once into the shared wrapper tree instead of being hand-written on
   desktop and generated on iOS. All eight members the desktop hand file had keep their names,
@@ -3870,7 +3906,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `ptrcallWithVector3BoolFloatBoolIntArgsRetObject` (`moveAndCollide`) are now part of the common
   `expect object ObjectCalls` (1378 → 1380 members), so both platforms declare them as `actual`.
 
-### Changed — generator: factory/downcast companion helpers are table-driven (task 119 item 33)
+#### Changed — generator: factory/downcast companion helpers are table-driven
 
 - The wrapper generator's `create()` and `from*` downcast companion helpers are rows in one
   `FACTORY_HELPERS` table rendered by `render_factory_helpers`, instead of Kotlin pasted per class
@@ -3886,7 +3922,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   generator actually renders, and a companion section that still pastes a helper the table renders is
   a hard error, so the same helper cannot be emitted twice.
 
-### Changed — iOS exports require iOS 15.0; the gate fixture and docs follow Godot 4.7.2's default (task 123)
+#### Changed — iOS exports require iOS 15.0; the gate fixture and docs follow Godot 4.7.2's default
 
 - The iOS visual-smoke fixture (`scripts/ios_visual_smoke.sh`) exported with `application/min_ios_version="14.0"`, a
   pin carried over from an older Godot, and the docs said 14.0 was the default. Godot 4.7.2's exporter defaults to
@@ -3895,7 +3931,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   fixture now pins 15.0 and the iOS toolchain table says so; the demo corpus makes the same change in its presets. No
   validated device runs anything older than iOS 26, so nothing shipped is affected.
 
-### Changed — wrapper classes generated once: `EditorExportPlatform` (task 117 P1'(a))
+#### Changed — wrapper classes generated once: `EditorExportPlatform`
 
 - `EditorExportPlatform` is generated once into the shared wrapper tree instead of being hand-written
   on desktop and generated on iOS. All 26 instance members keep their names, signatures, default
@@ -3918,7 +3954,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `ptrcallWithTwoStringPackedStringList…` ssh helpers) are now part of the common
   `expect object ObjectCalls`, so both platforms declare them as `actual`.
 
-### Changed — wrapper classes generated once: `ArrayMesh` (task 117 P1'(a))
+#### Changed — wrapper classes generated once: `ArrayMesh`
 
 - `ArrayMesh` is generated once into the shared wrapper tree instead of being hand-written on desktop
   and generated on iOS. `ArrayMesh.fromResource(value: Resource): ArrayMesh?` survives as a generated
@@ -3943,7 +3979,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   (`surfaceUpdate*Region`) are now part of the common `expect object ObjectCalls`, so both platforms
   declare them as `actual`.
 
-### Changed — wrapper classes generated once: `Font` (task 117 P1'(a))
+#### Changed — wrapper classes generated once: `Font`
 
 - `Font` is generated once into the shared wrapper tree instead of being hand-written on desktop and
   generated on iOS. Every member keeps the name, signature, default arguments and body it had in the
@@ -3967,7 +4003,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   the two `ptrcallWithStringLongDouble…RetVector2` string-size helpers): they existed on both
   backends already and are now declared in the common `expect object ObjectCalls`.
 
-### Added — gate: the five iOS PT tag tables must agree (task 119 item 30)
+#### Added — gate: the five iOS PT tag tables must agree
 
 - The iOS ptrcall type tags (`PT_*`) are the wire protocol of the iOS seam — the C shim's dispatch
   switches on those numbers — and the table exists **five times**: the `KANAMA_IOS_PT_*` enum in
@@ -3987,7 +4023,7 @@ accessors now and the rest in a follow-up (see "Web" below).
 - Runs as the `iOS PT tag table parity (five copies, task 119 item 30)` stage of
   `scripts/local_ci.sh`, so it gates every PR through `ci.yml`'s `gate` job.
 
-### Changed — wrapper classes generated once: `PackedScene` (task 117 P1'(a))
+#### Changed — wrapper classes generated once: `PackedScene`
 
 - `PackedScene` is generated once into the shared wrapper tree instead of being hand-written on
   desktop and generated on iOS. `PackedScene.create()` survives as a generated companion helper with
@@ -4001,14 +4037,14 @@ accessors now and the rest in a follow-up (see "Web" below).
 - No int width changed: `pack` still returns `Long` and `instantiate(editState: Long = 0L)` keeps its
   `Long` parameter and default (`0L` == `GEN_EDIT_STATE_DISABLED`).
 
-### Fixed — the API coverage page counts the shared tree (task 117 P1'(a))
+#### Fixed — the API coverage page counts the shared tree
 
 - `docs/reference/generated/api-coverage.md` counted method coverage only from the desktop directory, so every class
   generated into `src/sharedApi` showed 0/N (Sprite2D, Node2D, Label, … and, after this change, Material/Mesh/PackedScene).
   The scanner now reads the shared tree and companion files like the class scanner already did; the totals rise
   accordingly and are the real numbers.
 
-### Changed — wrapper classes generated once: `Mesh` (task 117 P1'(a))
+#### Changed — wrapper classes generated once: `Mesh`
 
 - `Mesh` is generated once into the shared wrapper tree instead of being hand-written on desktop and
   generated on iOS. `Mesh.fromObject` survives as a generated companion helper with the same
@@ -4023,7 +4059,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   (used by `surfaceGetBlendShapeArrays` / `createConvexShape`) are now part of the common
   `expect object ObjectCalls`, so both platforms declare them as `actual`.
 
-### Changed — wrapper classes generated once: `Material` (task 117 P1'(a))
+#### Changed — wrapper classes generated once: `Material`
 
 - `Material` is no longer hand-written per platform: it is generated once into the shared wrapper
   tree, so desktop/Android and iOS get the same class from the same renderer. `Material.fromResource`
@@ -4032,7 +4068,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   tree's self-return collapse (a call that returns this object releases the extra reference and
   returns `this` instead of minting a second wrapper).
 
-### Fixed — iOS: container arguments and `PackedVector4Array` (task 122)
+#### Fixed — iOS: container arguments and `PackedVector4Array`
 
 - `Object.set` / `call` / `set_deferred` with a `List<String>`, `List<Double>`, `List<Vector2>`, a `Map` or a nested
   container argument threw on iOS ("unsupported List element type"); desktop boxed them. The argument encoder now lays
@@ -4045,7 +4081,7 @@ accessors now and the rest in a follow-up (see "Web" below).
 - Not changed: object elements of a returned container stay borrowed on both platforms; the owning design is
   recorded in task 122.
 
-### Fixed — iOS: container results of `Object.call` / `Object.get` reach Kotlin (task 121)
+#### Fixed — iOS: container results of `Object.call` / `Object.get` reach Kotlin
 
 - `Object.get` of a `List<String>` `@ScriptProperty` (and a `call(...)` whose result is an Array, a
   Dictionary or one of the nine packed arrays below) returned null on iOS; desktop returned the container. The C call path
@@ -4058,7 +4094,7 @@ accessors now and the rest in a follow-up (see "Web" below).
 - Found by the third-person demo's iPhone smoke reading a BeetlebotSkin `_force_loop` export; its
   starter-probe twin (`probe_tags`, `smoke_modes`) is now asserted instead of "requested".
 
-### Fixed — iOS: Object-typed values now cross from Kotlin scripts to the engine (task 115)
+#### Fixed — iOS: Object-typed values now cross from Kotlin scripts to the engine
 
 - `Object.get("shooter")` on a `@ScriptProperty var shooter: Node?` returned nil on iOS (desktop
   returned the node): the iOS bridge generator skipped Object and `@ScriptClass`-typed properties in
@@ -4078,7 +4114,7 @@ accessors now and the rest in a follow-up (see "Web" below).
 - Found by the third-person demo's iPhone smoke, which sets a bullet's `shooter` through
   `Object.set` before `add_child` and reads it back through `Object.get`.
 
-### Changed — Kanama is one Kotlin Multiplatform module (task 104, step 3 parcels C+D)
+#### Changed — Kanama is one Kotlin Multiplatform module
 
 - **Contributors' commands change; game code does not.** No wrapper member, signature or runtime
   type changed, and the published surface is unchanged too: the module still publishes exactly one
@@ -4113,7 +4149,7 @@ accessors now and the rest in a follow-up (see "Web" below).
 - The Android PanamaPort remap skips `*.expect.kt` and strips a leading `actual ` modifier; its
   audit now ignores comments and matches declaration keywords instead of two text fragments.
 
-### Fixed — Android smokes exported without the desktop runtime and never installed the build template (task 116)
+#### Fixed — Android smokes exported without the desktop runtime and never installed the build template
 
 - `scripts/android_smoke.sh` and `scripts/android_export_minified.sh` installed the Android AAR but not
   the desktop addon, so on a fresh checkout the export-time editor printed `No loader found for
@@ -4126,7 +4162,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   unbound script, and run the exported-scene parity check (task 112) before touching the device.
   Found on a fresh clone with a Pixel 7; the first nine-demo matrix stopped on demo one.
 
-### Internal — `ObjectCalls` is one object per platform, with a name-parity gate (task 104, step 3 parcel B)
+#### Internal — `ObjectCalls` is one object per platform, with a name-parity gate
 
 - **Not a user-facing change.** No wrapper member, signature or runtime type changed; game code
   never names `ObjectCalls`.
@@ -4151,7 +4187,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   whitespace-tolerant regex, which also fixes a regen that rewrote the generated file raw on every
   run because three ktfmt-wrapped helpers were missed.
 
-### Internal — the shared wrapper tree no longer names `java.lang.foreign` (task 104, step 3 parcel A)
+#### Internal — the shared wrapper tree no longer names `java.lang.foreign`
 
 - **Not a user-facing change.** No member, signature or runtime type changed: `GodotHandle.segment`
   is declared as `net.multigesture.kanama.binding.runtime.RawSegment`, which is a plain `typealias`
@@ -4173,7 +4209,7 @@ accessors now and the rest in a follow-up (see "Web" below).
 - `check_wrapper_generator.py` now fails when any file under `src/commonMain` names a
   `java.lang.foreign` type.
 
-### Fixed — iOS: calling a `@RegisterFunction` with omitted default arguments aborted the app (task 114)
+#### Fixed — iOS: calling a `@RegisterFunction` with omitted default arguments aborted the app
 
 - The generated iOS bridge dispatched every registered method as one positional call
   (`script.spawn(args[0] as Double)`), so a Godot-side caller that left a defaulted parameter out —
@@ -4184,7 +4220,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   branch per admissible count, so Kotlin fills the defaults — the same shape the JVM bridge has always
   used. Value-returning methods (`callVReturning`) get the same treatment.
 
-### Changed — iOS device gate: the demos' smoke scripts run on the phone; crash reports are read (task 111)
+#### Changed — iOS device gate: the demos' smoke scripts run on the phone; crash reports are read
 
 - **`System.getenv` on iOS reads the process environment** (`platform.posix.getenv`) instead of
   returning null. Every demo ships a `SmokeQuit` script (spawn / damage / free / unload / quit) gated
@@ -4199,7 +4235,7 @@ accessors now and the rest in a follow-up (see "Web" below).
 - Godot's own ERROR output on iOS goes to the unified log (`OsLogLogger`), not the console stream the
   gate reads; capturing it stays open (task 111, item 3).
 
-### Added — export integrity check for scene-stored `@ScriptProperty` values (task 112)
+#### Added — export integrity check for scene-stored `@ScriptProperty` values
 
 - `scripts/check_exported_scene_properties.gd` runs headless in an exported project, loads every
   scene Godot converted to binary next to its source `.tscn` (via `.godot/exported/*/file_cache`)
@@ -4210,7 +4246,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   Verified on Match3: passes on a correct export, fails with the five dropped Main-node properties
   when the example project's scripts jar is installed.
 
-### Fixed — iOS: freeing a node after its signal emitter crashed in `Object::~Object` (task 108)
+#### Fixed — iOS: freeing a node after its signal emitter crashed in `Object::~Object`
 
 - **Third-person's BeeBot crashed the iPhone in `SceneTree::_flush_delete_queue` →
   `Object::~Object` → `Object::_disconnect` (`KERN_INVALID_ADDRESS at 0x18`)**, intermittently,
@@ -4225,7 +4261,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `lambda-callable(disconnect then free emitter before receiver)` reproduces the order; it
   segfaulted the app at extension init before the fix.
 
-### Fixed — iOS export dropped every scene-stored `@ScriptProperty` value (task 106)
+#### Fixed — iOS export dropped every scene-stored `@ScriptProperty` value
 
 - **Match3 crashed two seconds after launch on the iPhone** (`tile_scene is not assigned` in
   `Main._ready`) because the exported `main.scn` no longer contained the Main node's `tile_scene`,
@@ -4250,7 +4286,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   September 13 pass and the September 11/14 failures on the same code differed only in which
   desktop jar sat in the demo's addon folder when the scene was first converted.
 
-### Changed — one shared body per Godot value type (task 104, step 2)
+#### Changed — one shared body per Godot value type
 
 - **The 19 builtin value types are one set of files, not two.** `Vector3`, `Basis`,
   `Transform3D`, `Quaternion`, `Vector2`, `AABB`, `Plane`, … used to exist twice — once for
@@ -4293,7 +4329,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   changed. Scripts that used a member on the platform that had it keep compiling, on every
   platform now.
 
-### Breaking — `GodotHandle` replaces `MemorySegment` in every public signature (task 104, step 1)
+#### Breaking — `GodotHandle` replaces `MemorySegment` in every public signature
 
 - **Every attachable script constructor changes type.** The opaque handle a wrapper and a
   `KanamaScript` take is `net.multigesture.kanama.api.GodotHandle` — a zero-cost
@@ -4320,7 +4356,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   not an object handle: `GDExtensionManager.loadExtensionFromFunction(initFunc)`,
   `OpenXRAPIExtension.transformFromPose(pose)` and `OpenXRAPIExtension.setCustomPlaySpace(space)`.
 
-### Added — Web render-quality, window and glue families (task 64, tps-demo parcel 8)
+#### Added — Web render-quality, window and glue families
 
 - **Web protocol 27 → 28.** The Kotlin/Wasm backend admits the settings families tps-demo's
   Settings / Menu / Level write on every graphics apply: `Environment.set_ssao_enabled` (322) and
@@ -4348,7 +4384,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   **Existing Web exports must be rebuilt**: a protocol-27 export refuses to load against a
   protocol-28 bridge, and vice versa.
 
-### Added — Web SceneTree.create_timer (task 64, tps-demo parcel 7)
+#### Added — Web SceneTree.create_timer
 
 - **Web protocol 26 → 27.** `SceneTree.create_timer(time_sec)` (opcode 321, new `DOUBLE_RET_HANDLE`
   shape: the seconds ride the property-object channel, the applier registers the `SceneTreeTimer`
@@ -4364,7 +4400,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   **Existing Web exports must be rebuilt**: a protocol-26 export refuses to load against a
   protocol-27 bridge, and vice versa.
 
-### Added — Web node lifecycle queries (task 64, tps-demo parcel 6)
+#### Added — Web node lifecycle queries
 
 - **Web protocol 25 → 26.** The Kotlin/Wasm backend admits `Node.is_inside_tree` (319) and
   `Object.is_queued_for_deletion` (320) as immediate bool queries — the guards tps-demo's Level,
@@ -4374,7 +4410,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   protocol-26 bridge, and vice versa. Demos side: tps-demo's Blast, Door, FlyingForklift
   and CameraNoiseShakeEffect drop their Web overrides.
 
-### Added — Web: typed cross-script call helpers (task 64, parcel 5)
+#### Added — Web: typed cross-script call helpers
 
 - The Web script processor now emits the `<Script>Methods` objects desktop has always had (one
   overload per `@RegisterFunction` taking the Kotlin instance, one resolving it from a
@@ -4384,7 +4420,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `call` in per-frame functions" rule holds on the shared file. No protocol change (a direct Kotlin
   call through the script-instance registry; no Godot crossing).
 
-### Added — Web: the CameraMode family (task 64, parcel 4)
+#### Added — Web: the CameraMode family
 
 - **Web protocol 24 → 25.** The Kotlin/Wasm backend admits `Input.is_key_pressed` (opcode 313, a
   new `LONG_RET_BOOL_SINGLETON` shape: the key code rides the object-query string channel),
@@ -4400,7 +4436,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   restores the previous camera. **Existing Web exports must be rebuilt** (protocol mismatch
   refuses to load).
 
-### Changed — iOS device gate: the demo steps watch the device console (task 105)
+#### Changed — iOS device gate: the demo steps watch the device console
 
 - `scripts/ios_device_gate.sh --console-seconds N` (default 30) makes every demo step stream the
   phone's console for N seconds after launch and fail on a crash signature (`App terminated due
@@ -4410,7 +4446,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   2026-09-10). Needs a demos checkout whose `ios_device_run.sh` supports
   `KANAMA_IOS_CONSOLE_SECONDS`; `--console-seconds 0` keeps the launch-only behaviour.
 
-### Added — Web: the DemoPage set (task 64, parcel 3)
+#### Added — Web: the DemoPage set
 
 - **Web protocol 23 → 24.** The Kotlin/Wasm backend admits `SceneTree.is_paused` (307),
   `Control.release_focus` (308), `Environment.set_ssil_enabled` / `set_sdfgi_enabled` (309/310),
@@ -4425,7 +4461,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   **Existing Web exports must be rebuilt**: a protocol-23 export refuses to load against a
   protocol-24 bridge, and vice versa.
 
-### Changed — iOS shape gap page: desktop-only-by-design members recorded (task 100 close-out)
+#### Changed — iOS shape gap page: desktop-only-by-design members recorded
 
 - The generated gap page (`docs/reference/generated/ios-shape-gap.md`) now separates members that
   desktop keeps desktop-only on purpose — `GDExtensionManager.load_extension_from_function`
@@ -4435,7 +4471,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   that wait on an iOS helper. With parcels 1-11 merged that count is **0**: the shared tree is the
   whole generated API on both native backends. No wrapper changes; desktop keeps the three members.
 
-### Added — iOS: Callable returns on every audited argument shape (task 100, parcel 11)
+#### Added — iOS: Callable returns on every audited argument shape
 
 - A method returning a `Callable` — `TreeItem.get_custom_draw_callback`,
   `MultiplayerSpawner.get_spawn_function` (and the `spawn_function` property), the four
@@ -4455,7 +4491,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   popup callback for an invalid RID back as `null` (no Control is constructed: a Control's
   post-initialize needs the theme contexts, which do not exist before `Main::setup2`).
 
-### Added — iOS: typed arrays of containers and packed arrays on every audited shape (task 100, parcel 10)
+#### Added — iOS: typed arrays of containers and packed arrays on every audited shape
 
 - A method taking an `Array[Dictionary]`, `Array[Array]`, `Array[PackedByteArray]` or
   `Array[PackedStringArray]` argument — or returning an `Array[Array]` — was desktop-only; every such
@@ -4480,7 +4516,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   one) and three JSON-pointer PackedStringArrays (a non-ASCII element, an empty array, an empty
   string).
 
-### Added — iOS: typed-object-list returns on every audited argument shape (task 100, parcel 9)
+#### Added — iOS: typed-object-list returns on every audited argument shape
 
 - A method returning `Array[<Object subclass>]` (`List<T>` on Kotlin) reached iOS through three
   hand-written argument layouts only (no-arg, one bool, two String + two bool); every other such
@@ -4501,7 +4537,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   matches) and the pending slot (200 distinct match handles), `InputMap.action_get_events` by
   handle identity and an empty `TranslationServer.find_translations`.
 
-### Added — iOS: typed-array and Rect2i arguments on every audited shape (task 100, parcel 8)
+#### Added — iOS: typed-array and Rect2i arguments on every audited shape
 
 - A method taking a typed `Array[...]` argument — `Array[RID]`, `Array[String]`, `Array[StringName]`,
   `Array[NodePath]`, `Array[int]`, `Array[Vector2i]`, `Array[Plane]`, `Array[Transform3D]`,
@@ -4528,7 +4564,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   generated setter and its read-back, feed the unit cube's six planes to
   `Geometry3D.compute_convex_mesh_points`, and round-trip a `Rect2i` and a `Vector4`.
 
-### Added — iOS: Dictionary, Array and Variant arguments on every audited shape (task 100, parcel 7)
+#### Added — iOS: Dictionary, Array and Variant arguments on every audited shape
 
 - A method taking a `Variant`, a `Dictionary` or a generic `Array` argument was callable on iOS
   only through the hand-written Object-call helpers (`callWithVariantArgs` and the few shapes
@@ -4555,7 +4591,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `ConfigFile.set_value` / `get_value`, an Array element through `Expression.execute`, a Dictionary
   through `AudioStreamWAV.set_tags` / `get_tags`, and a Variant through `ProjectSettings.set_setting`.
 
-### Added — iOS: string-list and typed-array returns on every audited argument shape (task 100, parcel 5)
+#### Added — iOS: string-list and typed-array returns on every audited argument shape
 
 - A method returning a PackedStringArray or a typed `Array[...]` of RID, Vector2i, Vector3i,
   String, StringName, NodePath, int, Plane, Vector2, Vector3, Rect2, Transform3D,
@@ -4581,7 +4617,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `get_inheriters_from_class("Object")` through the pending slot), Array[Vector2i] with and
   without arguments, Array[StringName], Array[Plane] and Array[Vector3i].
 
-### Added — iOS: Packed*Array arguments on every audited shape (task 100, parcel 4)
+#### Added — iOS: Packed*Array arguments on every audited shape
 
 - A method taking a PackedByteArray, PackedInt32Array, PackedInt64Array, PackedFloat32Array,
   PackedFloat64Array, PackedVector2Array, PackedVector3Array, PackedColorArray or
@@ -4606,7 +4642,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   still pushed one at a time on the C side (the builder predates this parcel); a bulk `resize` +
   copy is a follow-up, not a correctness concern.
 
-### Added — iOS: Dictionary and Array returns on every audited argument shape (task 100, parcel 6)
+#### Added — iOS: Dictionary and Array returns on every audited argument shape
 
 - A method returning a `Dictionary`, a generic `Array` or an `Array[Dictionary]` reached iOS only
   through two hand-written generic-Array helpers and the fixed-shape raycast decode. Every such
@@ -4632,7 +4668,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   inline buffer with nested records, the drained pending slot, and a two-StringName-argument
   Dictionary.
 
-### Added — Web Curve.sample (task 64, Curve + Resource-typed hydration parcel)
+#### Added — Web Curve.sample
 
 - **Web protocol 22 → 23.** The Kotlin/Wasm backend admits `Curve.sample(offset: Double):
   Double` (opcode 306, `DOUBLE_RET_DOUBLE` shape), generating a Web `Curve` wrapper class for
@@ -4650,7 +4686,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   accepts any published x1000 integer (0 included), and the generated GDScript applier gained
   the `Curve.sample` arm it was missing.
 
-### Changed — macOS exported games: validated on the bundled runtime, and the signing gap written down (task 63)
+#### Changed — macOS exported games: validated on the bundled runtime, and the signing gap written down
 
 - The bundled-jlink-runtime work was proven end to end on Windows and Linux from a macOS host;
   macOS itself had only the first slice's export and no current evidence. `export_game_smoke.sh`
@@ -4670,7 +4706,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   hashes, inside-out signing, notarize and staple. Signing and notarization remain non-goals; this
   is documentation of the gap, not an implementation.
 
-### Added — iOS: Packed*Array returns on every audited argument shape (task 100, parcel 3)
+#### Added — iOS: Packed*Array returns on every audited argument shape
 
 - A method returning a PackedByteArray, PackedInt32Array, PackedInt64Array, PackedFloat32Array,
   PackedFloat64Array, PackedVector2Array, PackedVector3Array or PackedColorArray was called on iOS
@@ -4690,7 +4726,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   byte (3000 elements through the pending slot) and Vector3 arrays via AStar2D, Crypto and
   Curve3D.
 
-### Added — iOS: Variant-scalar returns on every audited argument shape (task 100, parcel 2)
+#### Added — iOS: Variant-scalar returns on every audited argument shape
 
 - A Variant-returning method with arguments was called on iOS only through three hand-written
   helpers (the no-arg and StringName-arg getters, and the owned `ClassDB.instantiate` decode).
@@ -4708,7 +4744,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   desktop-only members (252 → 250 companion files). Seven self-test rows round-trip int, float,
   bool, short and 3000-byte Strings and null through `StreamPeerBuffer.put_var` / `get_var`.
 
-### Added — iOS: String, StringName and NodePath returns on every audited argument shape (task 100, parcel 1)
+#### Added — iOS: String, StringName and NodePath returns on every audited argument shape
 
 - The iOS backend used to call a String-, StringName- or NodePath-returning method only when
   its exact shape had a hand-written helper (the no-arg getters plus a handful of arg-bearing
@@ -4725,7 +4761,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   desktop-only members (277 → 252 companion files). Four self-test rows cover the three return
   builtins and a 3000-byte String through the pending slot.
 
-### Fixed — root `build` / `publishToMavenLocal` no longer compile ios-runtime metadata
+#### Fixed — root `build` / `publishToMavenLocal` no longer compile ios-runtime metadata
 
 - `ios-runtime` ships as a static xcframework and is not a Maven/KMP library, but the
   Kotlin Multiplatform plugin still registered a publication for it, and a root `./gradlew
@@ -4738,7 +4774,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   metadata compilation and publications are disabled; `publishKanamaToMavenLocal` (the gate's
   task) was never affected.
 
-### Changed — one shared generated wrapper tree (task 103)
+#### Changed — one shared generated wrapper tree
 
 - **The generated Godot API wrappers are emitted once.** The shared tree
   `src/commonMain/kotlin/net/multigesture/kanama/api` (979 classes) is compiled by the
@@ -4776,7 +4812,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   companions), warm 4.6 s → 5.7 s; iOS `compileKotlinIosArm64` from clean 46.5 s → 46.3 s;
   `linkDebugStaticIosArm64` 106 s → 103 s.
 
-### Changed — Web wrappers generated from the call contract (task 96)
+#### Changed — Web wrappers generated from the call contract
 
 - **The Web API surface is generated.** Every opcode in
   `scripts/platform_backend_calls.json` now renders one member on the Godot
@@ -4807,7 +4843,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   20,931 / 5,181 (4.04) before, 17,875 / 11,108 (1.61) after — and admission
   PRs paste it.
 
-### Changed — docs consolidation (task 94)
+#### Changed — docs consolidation
 
 - **One page owns each fact.** Requirements (Godot pin, JDKs, host platforms,
   per-workflow toolchains) and platform status/evidence are stated once, in
@@ -4838,7 +4874,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `local_ci.sh` docs-check stages and `scripts/upgrade_godot.sh` check them
   there. `evidence/gates.json` citations point at the consolidated pages.
 
-### Fixed — lifetime safety (task 98)
+#### Fixed — lifetime safety
 
 - **`GD.isInstanceValid` no longer reads a freed object.** `GodotObject` captures
   its engine instance id once at construction (`instanceId`, via the
@@ -4872,7 +4908,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   meaning (`siCall`, the property accessors) stay on top. No new native adapter
   is linked, so the prewarm gate is unaffected.
 
-### Added — threading note and diagnostic
+#### Added — threading note and diagnostic
 
 - `docs/game-dev/scripts.md` gains a **Threads** section: what runs on the main
   thread, that Kanama performs no thread-affinity checks, and that
@@ -4884,7 +4920,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `free()`, use-after-close at receiver, inherited, generated and argument
   positions) and the upcall-containment row.
 
-### Fixed — CI change filter skipped the mobile and Web lanes on large PRs
+#### Fixed — CI change filter skipped the mobile and Web lanes on large PRs
 
 - `ci.yml` and `web.yml` decide whether to run the Android/iOS lanes and the Web matrix
   by grepping the PR's changed-file list. The step runs under `pipefail`, and
@@ -4894,7 +4930,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   every mobile lane skipped with `ios-runtime/` in the list). The filter now reads the
   list from a here-string. Small PRs were never affected.
 
-### Changed — one resource-ownership rule, and `close()` no longer needs an opt-in
+#### Changed — one resource-ownership rule, and `close()` no longer needs an opt-in
 
 - **Getters are owned; the docs now say so in one place and nowhere contradicts
   it** (task 97). Every `RefCounted`-typed return — `create()`,
@@ -4921,7 +4957,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   call minted the object (`call("duplicate")`); use the typed wrapper getter or
   `ClassDB.instantiate` to hold one. No behaviour change.
 
-### Added — Web input-map, key-event, process-mode and window-mode families
+#### Added — Web input-map, key-event, process-mode and window-mode families
 
 - **Web protocol 21 → 22.** The Kotlin/Wasm backend admits the call families the
   third-person demo's shared `Player.kt` and `FullScreenHandler.kt` need so they
@@ -4940,7 +4976,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   **Existing Web exports must be rebuilt**: a protocol-21 export refuses to load
   against a protocol-22 bridge, and vice versa.
 
-### Changed — Backend call contract is Web-local
+#### Changed — Backend call contract is Web-local
 
 - **`kanama-common-api` is the Web backend's call table, not a shared platform
   seam** (task 95). The desktop (JVM/Panama) and iOS (Kotlin/Native)
@@ -4958,7 +4994,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   wrapper generator and the Web contract, whose hashes are validated against the
   same file — instead of claiming native backends consume the contract.
 
-### Changed — Verification hygiene (task 99)
+#### Changed — Verification hygiene
 
 - **The `kanama-common-api` tests now run.** `local_ci.sh` names
   `:kanama-common-api:jvmTest` and `checkPlatformBackendContract` explicitly;
@@ -4985,7 +5021,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   writes `build/local-ci-timings.json`. Web quarantine entries carry an expiry
   date; the matrix prints `QUARANTINE EXPIRED` past it (non-fatal for now).
 
-### Changed — Godot baseline
+#### Changed — Godot baseline
 
 - **Godot baseline re-pinned to 4.7.2 stable** (task 91). `scripts/upgrade_godot.sh`
   classifies the 4.7.0 → 4.7.2 dump as **metadata-only**: the `extension_api.json`
@@ -5007,7 +5043,7 @@ accessors now and the rest in a follow-up (see "Web" below).
   `web.yml` carried their own pins. All three are fixed; `web.yml` derives its
   template folder from `GODOT_VERSION`.
 
-### Fixed — Web behaviour (agent-surface audit, tasks 88/89)
+#### Fixed — Web behaviour
 
 An adversarial audit of the Web backend's agent-written surfaces found and closed
 nineteen defects. The ones that change what a running script does:
@@ -5041,7 +5077,7 @@ re-parent repair, 20 for the scalar tween arm, 21 for `PropertyTweener.from`). T
 generated proxies and the JS bridge compare it at startup, so an export built against an
 older protocol will refuse to run — rebuild rather than mixing.
 
-### Fixed — gates that certified the wrong thing
+#### Fixed — gates that certified the wrong thing
 
 Several gates passed without testing what they claimed. These are developer-facing, but
 they are why the defects above went unseen:
@@ -5058,7 +5094,7 @@ they are why the defects above went unseen:
 - The envelope schema's pass mirror now encodes all four legs; the protocol check is
   derived from the export manifest rather than hardcoded.
 
-### Added — checks that would have caught them
+#### Added — checks that would have caught them
 
 - **Exercised-member coverage report** naming every declared member no driver reaches,
   and a **desktop↔Web differential probe**.
@@ -5069,7 +5105,7 @@ they are why the defects above went unseen:
 - **Documentation claims are checked against their sources**, so a marked claim fails the
   build when the code moves out from under it.
 
-### Added
+#### Added
 
 - **The Web corpus grew from two demos to twelve.** After 0.4.0 shipped Match3 and
   Bunnymark, dodge-the-creeps, the 3D Platformer, squash-the-creeps, FPS, the
@@ -5136,7 +5172,7 @@ they are why the defects above went unseen:
   and `ubuntu-24.04` — a runner building its own runtime would prove only
   same-OS packaging.
 
-### Fixed
+#### Fixed
 
 - **Web: coroutine delays resume in every demo.** The frame scheduler is now pumped once
   per engine frame from every generated proxy; before, eight of the twelve demos never
@@ -5236,7 +5272,7 @@ they are why the defects above went unseen:
   shape: typed member + typed local assignment, `is` check, load identity, and
   a property round-trip.
 
-### Changed
+#### Changed
 
 - `GD.isInstanceValid` now takes `GodotObject?` instead of `Any?`, matching the
   Web backend (task 78). Godot answers false for every non-object Variant, so
