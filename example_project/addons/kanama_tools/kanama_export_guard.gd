@@ -57,6 +57,12 @@ const ANDROID_MIN_SDK := 33
 const ANDROID_OS_NAME := "Android"
 const OPTION_GRADLE_BUILD := "gradle_build/use_gradle_build"
 const OPTION_MIN_SDK := "gradle_build/min_sdk"
+const OPTION_MINIFICATION := "gradle_build/minification"
+
+## A minified Android export must run R8 in compat mode: PanamaPort's R8 rules are written for it, and AGP's
+## default full mode breaks the engine's startup on the device, after a build that looks fine.
+const ANDROID_GRADLE_PROPERTIES := "res://android/build/gradle.properties"
+const R8_FULL_MODE_PROPERTY := "android.enableR8.fullMode"
 
 const REASON_NO_LOADER := "no .kt loader: the desktop addon (addons/kanama) is missing or did not load, so the export would leave the script out and could not convert or check the scenes that use it"
 const REASON_NOT_BOUND := "not in kanama-scripts.jar: the scenes that use it would be exported without its property values"
@@ -86,6 +92,10 @@ func _export_begin(_features: PackedStringArray, _is_debug: bool, path: String, 
         var sdk_problem := android_min_sdk_problem(get_option(OPTION_GRADLE_BUILD), get_option(OPTION_MIN_SDK))
         if not sdk_problem.is_empty():
             messages.append("Export stopped: " + sdk_problem)
+        if get_option(OPTION_GRADLE_BUILD) == true and get_option(OPTION_MINIFICATION) == true:
+            var r8_problem := keep_r8_compat_mode(ANDROID_GRADLE_PROPERTIES)
+            if not r8_problem.is_empty():
+                messages.append("Export stopped: " + r8_problem)
     var problems := find_unbound_scripts(get_export_preset())
     if not problems.is_empty():
         messages.append(format_message(problems))
@@ -121,6 +131,31 @@ static func android_min_sdk_problem(use_gradle_build: Variant, min_sdk: Variant)
         return ""
     var current: String = "empty" if value.is_empty() else value
     return "Android 13 or newer is required, and this preset's Min SDK is %s. Set Min SDK to %d in the Android export preset (Gradle Build > Min SDK)." % [current, ANDROID_MIN_SDK]
+
+
+## Writes the compat-mode line into the Android build template's gradle.properties; "" when it is there.
+static func keep_r8_compat_mode(path: String) -> String:
+    var text := FileAccess.get_file_as_string(path)
+    var updated := with_r8_compat_mode(text)
+    if updated == text:
+        return ""
+    var file := FileAccess.open(path, FileAccess.WRITE)
+    if file == null:
+        return "cannot write %s, and a minified build needs %s=false in it." % [path, R8_FULL_MODE_PROPERTY]
+    file.store_string(updated)
+    return ""
+
+
+## [text], a gradle.properties, with R8's full mode switched off.
+static func with_r8_compat_mode(text: String) -> String:
+    var line := "%s=false" % R8_FULL_MODE_PROPERTY
+    if ("\n%s\n" % text).contains("\n%s\n" % line):
+        return text
+    var kept := PackedStringArray()
+    for existing in text.split("\n"):
+        if not existing.strip_edges().begins_with(R8_FULL_MODE_PROPERTY):
+            kept.append(existing)
+    return "%s\n%s\n" % ["\n".join(kept).strip_edges(false, true), line]
 
 
 func _export_end() -> void:

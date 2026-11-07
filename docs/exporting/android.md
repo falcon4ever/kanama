@@ -119,6 +119,11 @@ in one step.
 Export with `--export-release` and a release keystore set in the preset, as
 for any Godot Android game.
 
+To shrink a release build with R8, turn on **Gradle Build > Minification** in the
+preset (Godot 4.8 and newer). Kanama sets `android.enableR8.fullMode=false` in
+`android/build/gradle.properties` for you when it exports: Kanama's Android runtime
+works only with R8 in that mode.
+
 ## Performance on Devices
 
 A phone shows a short hitch the first time the game loads a scene, decodes an

@@ -3,15 +3,14 @@ set -euo pipefail
 
 # Reproducible R8-minified Android release smoke for the Kanama plugin.
 #
-# Godot's stock Android Gradle template ships no minify support, and a forked
-# `android_source.zip` would be version-locked to one Godot release. Instead
-# this script PATCHES the generated `<demo>/android/build/build.gradle` after
-# the template is installed, so it survives Godot export-template upgrades.
+# Since Godot 4.8 the Android export has its own option, Gradle Build > Minification
+# (`gradle_build/minification`), so this script takes the path a user takes: it turns the option on
+# for the run and restores the preset afterwards. The Kanama export guard keeps R8 in compat mode.
 #
 # Flow:
 #   - build + install the Kanama Android plugin AAR into the demo,
 #   - install/refresh the Godot Android build template,
-#   - inject `minifyEnabled true` into the release buildType,
+#   - turn on the preset's minification,
 #   - export a *release* APK (R8 runs, consumer-rules.pro applies),
 #   - install, launch, and assert Kanama starts past the PanamaPort FFI
 #     bootstrap (the R8 gate this validates).
@@ -117,6 +116,9 @@ cleanup() {
     # justified: cleanup after the verdict; the app may already have exited.
     "$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 || true
   fi
+  if [[ -n "${PRESET_BACKUP:-}" && -f "$PRESET_BACKUP" ]]; then
+    cp "$PRESET_BACKUP" "$DEMO_DIR/export_presets.cfg"
+  fi
   run_logs_finish "$status" android_export_minified
 }
 trap cleanup EXIT
@@ -143,57 +145,48 @@ install_desktop_addon
 # 1) Install/refresh the Godot Android build template (regenerates build.gradle).
 ensure_android_build_template
 
-# 2) Inject minify into the generated build.gradle (idempotent, marker-guarded).
-#    Re-opens the existing release buildType, so we don't depend on the template's
-#    internal block layout. Survives Godot template upgrades.
-# PanamaPort's annotation-driven R8 rules (R8Annotations) are written against
-# R8 compat mode. AGP 8+ defaults to R8 full mode, which is more aggressive and
-# corrupts PanamaPort's LLVM downcall-stub type dispatch -> shouldNotReachHere at
-# nativeLinker().downcallHandle(). Force compat mode for the minified build.
-GP="$DEMO_DIR/android/build/gradle.properties"
-set_gradle_property "$GP" "android.enableR8.fullMode" "false"
+# 2) Turn on the preset's minification for this run; cleanup restores the preset.
+PRESET_BACKUP="$RUN_DIR/export_presets.cfg.orig"
+cp "$DEMO_DIR/export_presets.cfg" "$PRESET_BACKUP"
+python3 - "$DEMO_DIR/export_presets.cfg" <<'EOF'
+import re
+import sys
 
-# Drop any stale rules file from earlier script versions.
+path = sys.argv[1]
+with open(path, encoding="utf-8") as handle:
+    text = handle.read()
+sections = re.split(r"(?m)^(?=\[preset\.)", text)
+for index, section in enumerate(sections):
+    if re.match(r"\[preset\.\d+\]", section) and 'platform="Android"' in section:
+        options = re.sub(r"(?m)^gradle_build/minification=.*\n", "", sections[index + 1])
+        sections[index + 1] = re.sub(r"(?m)^(\[preset\.\d+\.options\]\n)", r"\1gradle_build/minification=true\n", options, count=1)
+        break
+else:
+    raise SystemExit(f"no Android preset in {path}")
+with open(path, "w", encoding="utf-8") as handle:
+    handle.write("".join(sections))
+EOF
+echo "[android_minified] preset: gradle_build/minification=true for this run"
+
+# Drop what earlier script versions left in the template.
+GP="$DEMO_DIR/android/build/gradle.properties"
 rm -f "$DEMO_DIR/android/build/kanama-minify.pro"
 
-# Re-apply the patch fresh every run. --install-android-build-template does not
-# always regenerate build.gradle, so a skip-if-present guard would reuse a stale
-# patch; strip our previous block (marker -> EOF) and re-append.
-# Strip this script's earlier block and android_smoke.sh's (marker -> EOF each).
+# Strip earlier runs' blocks, this script's and android_smoke.sh's (marker -> EOF each).
 for marker in kanama-local-maven kanama-r8-minify; do
   if grep -q "=== $marker " "$BUILD_GRADLE"; then
     sed_inplace "$BUILD_GRADLE" "/=== $marker /,\$d"
   fi
 done
-echo "[android_minified] patching $BUILD_GRADLE (enable R8 on release)"
-cat >>"$BUILD_GRADLE" <<'GRADLE'
-
-// === kanama-r8-minify (injected by scripts/android_export_minified.sh) ===
-// Godot's stock Android template ships no minify support. Enable R8 on the
-// release build here, on the generated output, so this survives Godot
-// export-template upgrades instead of forking android_source.zip. The Kanama
-// AAR's consumer-rules.pro is applied automatically by R8. R8 compat mode is
-// forced via gradle.properties (android.enableR8.fullMode=false) so PanamaPort's
-// annotation-driven rules behave as designed. Repositories are NOT added here:
-// PanamaPort resolves through the repository KanamaAndroid.gdap declares, as in
-// a user's editor export (KANAMA_PANAMAPORT_MAVEN_REPO adds one, see below).
-
-android {
-    buildTypes {
-        release {
-            minifyEnabled true
-            shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
-        }
-    }
-}
-GRADLE
+# Repositories are NOT added here: PanamaPort resolves through the repository KanamaAndroid.gdap
+# declares, as in a user's editor export (KANAMA_PANAMAPORT_MAVEN_REPO adds one).
 if [[ -n "$PANAMAPORT_MAVEN_REPO" ]]; then
   cat >>"$BUILD_GRADLE" <<GRADLE
 
+// === kanama-local-maven (injected by scripts/android_export_minified.sh, KANAMA_PANAMAPORT_MAVEN_REPO) ===
 allprojects {
     repositories {
-        maven { url '$PANAMAPORT_MAVEN_REPO' } // KANAMA_PANAMAPORT_MAVEN_REPO
+        maven { url '$PANAMAPORT_MAVEN_REPO' }
     }
 }
 GRADLE
@@ -245,6 +238,13 @@ fi
 
 # Task 118: prove the APK is the package this run will launch, before anything is installed.
 assert_apk_package_id "[android_minified]" "$ANDROID_SDK_DIR" "$APK_PATH" "$PACKAGE_NAME" || exit 1
+
+# PanamaPort's R8 rules hold in compat mode only: AGP's default full mode corrupts its downcall-stub
+# dispatch, and the crash shows only on the device. The export guard writes this line, as for a user.
+if ! grep -q '^android.enableR8.fullMode=false$' "$GP"; then
+  echo "[android_minified] R8 did not run in compat mode: no android.enableR8.fullMode=false in $GP (the export guard writes it)" >&2
+  exit 1
+fi
 
 echo "[android_minified] install: $PACKAGE_NAME"
 "$ADB_BIN" start-server >/dev/null
