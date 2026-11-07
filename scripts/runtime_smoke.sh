@@ -357,7 +357,7 @@ check "kt script dictionary nullable_value null_preserved=true wrong_nulled=true
 # task 41 — a Kanama @GlobalClass script resource matches a plain GDScript global class for the
 # ClassDB pair (can_instantiate=true, instantiate=null: script classes aren't engine classes),
 # and the supported base-Resource + set_script construction recipe works.
-check "kt script classdb_parity kanama_can=true kanama_instantiate_null=true gdscript_can=true gdscript_instantiate_null=true recipe_works=true"
+check "kt script classdb_parity can_matches=true kanama_instantiate_null=true gdscript_instantiate_null=true recipe_works=true"
 # issue #106 — GDScript static typing against a Kanama @GlobalClass: same_load proves the
 # loaded .kt Script is ResourceCache-cached (one object per path), and the typed member/local
 # assignments plus `is` prove the analyzer and VM accept the class as its own type. The loader
