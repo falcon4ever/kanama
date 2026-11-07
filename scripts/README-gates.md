@@ -486,7 +486,8 @@ cut says nothing about its gate. The job works the deadline out from its own sta
 Before the first case the job fetches what the repo's builds resolve (`resolve_build_dependencies.init.gradle.kts`), with
 retries, because Gradle remembers a 404 for a day and one bad minute of Maven Central would fail the rest of the shard. That
 covers the configurations of the root build and of `android/godot-plugin`, so what `packageDesktopKit`, `stageWebProject` and
-the kit's Android package resolve. It does not cover what a task downloads for itself, such as Kotlin's Node and Binaryen. The
+the kit's Android package resolve. What a task fetches for itself when it runs is not among them: KSP's own classpath (the
+step's `syncExampleAddonJar` build fetches that one, and the Web build uses the same) and Kotlin's Node and Binaryen. The
 consumer projects of `package_install_smoke.sh` need no cover: each resolves in a Gradle home of its own, so a 404 fails that
 one case and goes with it.
 
