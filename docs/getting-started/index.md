@@ -9,7 +9,10 @@ running in a scene, in about ten minutes.
 
 - **Godot 4.7.2** from the
   [4.7.2 stable archive](https://godotengine.org/download/archive/4.7.2-stable/).
-  Kanama is built and tested against this release.
+  Release 0.4.0 is built and tested against this version. If you build Kanama
+  from a checkout of `main`, you need
+  [Godot 4.8 beta 2](https://github.com/godotengine/godot-builds/releases/tag/4.8-beta2) instead; see
+  [Godot Version](../reference/version-support.md#godot-version).
 - **A JDK 25 or newer**, for example [Temurin 25](https://adoptium.net/).
   Kanama runs your scripts on it and builds them with it.
 - **A desktop computer** running macOS (Apple silicon), Windows (x64) or

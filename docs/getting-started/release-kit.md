@@ -12,7 +12,7 @@ Start a new game from it. To add Kanama to a project you already have, use the
 
 ## Requirements
 
-You need Godot 4.7.2 and a JDK 25 or newer, as listed in
+You need Godot 4.7.2 for the 0.4.0 kit and a JDK 25 or newer, as listed in
 [Get Started](index.md#requirements). The kit brings everything else. The
 first build downloads Gradle and the Kotlin compiler, so it needs a network
 connection.

@@ -270,7 +270,7 @@ into one evidence JSON plus a Markdown summary.
 ```sh
 scripts/web_ci_matrix.sh \
   --godot /absolute/path/to/godot \
-  --template "$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable/web_nothreads_release.zip" \
+  --template "$HOME/Library/Application Support/Godot/export_templates/<pin>/web_nothreads_release.zip" \
   --demos-dir /absolute/path/to/kanama-demos \
   --demo-set full \
   --engine chrome --engine firefox \
@@ -502,7 +502,7 @@ asserts what a promotion review needs to see:
 
 ```sh
 scripts/web_fresh_checkout_smoke.sh \
-  --template "$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable/web_nothreads_release.zip" \
+  --template "$HOME/Library/Application Support/Godot/export_templates/<pin>/web_nothreads_release.zip" \
   --demo web3d --demo match3 \
   --evidence /tmp/web-fresh-checkout.json \
   /absolute/path/to/godot

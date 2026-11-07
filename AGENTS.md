@@ -322,7 +322,7 @@ python3 scripts/check_wrapper_generator.py
 mkdocs build --strict
 ./gradlew ktfmtFormat            # format hand-written Kotlin (ktfmtCheck gates CI)
 ./gradlew jvmJar
-./scripts/local_ci.sh /absolute/path/to/godot-4.7.2-stable
+./scripts/local_ci.sh /absolute/path/to/godot
 ```
 
 Hand-written Kotlin is formatted with ktfmt (googleStyle, 2-space) via the root
@@ -349,7 +349,7 @@ desktop runtime behaves — not that it is device-safe on mobile.
 Before a release tag, prefer an isolated clone gate:
 
 ```sh
-./scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7.2-stable
+./scripts/fresh_clone_smoke.sh /absolute/path/to/godot
 ```
 
 The Web analog is `scripts/web_fresh_checkout_smoke.sh`: it exports from a clean

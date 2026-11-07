@@ -1,6 +1,6 @@
 # Calling Godot APIs
 
-If you know Godot's API, you know Kanama's. Every Godot 4.7 class has a Kotlin
+If you know Godot's API, you know Kanama's. Every Godot class has a Kotlin
 class of the same name, with the same methods, properties and signals. This
 page shows how a Godot name becomes a Kotlin name, and the five places where
 Kotlin behaves differently from GDScript: `self`, immutable vectors, number

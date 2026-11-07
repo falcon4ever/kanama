@@ -2,17 +2,18 @@
 
 This page lists what you need to install for each way of working with Kanama,
 and how far each platform is supported. The current release is Kanama
-`0.4.0`.
+`0.4.0`, on Godot 4.7.2. The `main` branch is on Godot 4.8 beta 2, on its way
+to 0.5.0; see [Godot Version](#godot-version).
 
 ## Requirements
 
 | Workflow | What you need |
 | --- | --- |
-| A desktop project, from a release kit, the store addon or a source checkout | **Godot 4.7.2 stable**, the editor and its export templates, from the [Godot 4.7.2 archive](https://godotengine.org/download/archive/4.7.2-stable/). A **JDK 25** or newer; Temurin 25 is a good choice. A computer running macOS on Apple silicon, Windows x64, Linux x64 or Linux arm64. |
+| A desktop project, from a release kit, the store addon or a source checkout | **Godot**, the editor and its export templates: [4.7.2 stable](https://godotengine.org/download/archive/4.7.2-stable/) for release 0.4.0, [4.8 beta 2](https://github.com/godotengine/godot-builds/releases/tag/4.8-beta2) for a checkout of `main` (see [Godot Version](#godot-version)). A **JDK 25** or newer; Temurin 25 is a good choice. A computer running macOS on Apple silicon, Windows x64, Linux x64 or Linux arm64. |
 | A source checkout | Everything in the first row, plus **CMake 3.22** or newer and a C compiler, because the checkout builds Kanama's native library. Release kits and the store addon ship that library prebuilt. You do not need Godot's source code. |
-| Exporting for Android | Godot 4.7.2's Android export templates, a **JDK 21** for Godot's Android build, and the Android SDK packages listed in [Export for Android](../exporting/android.md#requirements). Kanama and your scripts still build with your JDK 25. |
-| Exporting for iOS | Godot 4.7.2's iOS export templates, a Mac with the full Xcode app and 16 GB of memory, and an Apple Developer account. See [Export for iOS](../exporting/ios.md#requirements). |
-| Exporting for the Web | Godot 4.7.2 and its `web_nothreads_release` export template, and a network connection for the first export. See [Export for the Web](../exporting/web.md#requirements). |
+| Exporting for Android | The Android export templates of that Godot, a **JDK 21** for Godot's Android build, and the Android SDK packages listed in [Export for Android](../exporting/android.md#requirements). Kanama and your scripts still build with your JDK 25. |
+| Exporting for iOS | The iOS export templates of that Godot, a Mac with the full Xcode app and 16 GB of memory, and an Apple Developer account. See [Export for iOS](../exporting/ios.md#requirements). |
+| Exporting for the Web | That Godot and its `web_nothreads_release` export template, and a network connection for the first export. See [Export for the Web](../exporting/web.md#requirements). |
 
 ## Platform Status
 
@@ -28,8 +29,10 @@ and how far each platform is supported. The current release is Kanama
 
 **Supported** means you can build and ship your own game on that platform.
 **Experimental** means the platform runs the Kanama demos, but nothing is
-promised for your own game. The runs behind each status are on
-[Platform Evidence](../contributing/platform-evidence.md).
+promised for your own game. Each status is for release 0.4.0 on Godot 4.7.2, and
+the runs behind it are on
+[Platform Evidence](../contributing/platform-evidence.md). The device and
+browser runs for Godot 4.8 happen before 0.5.0 is released.
 
 A desktop export carries its own Java runtime, and you can build it for any
 of the four desktop platforms from any of them. What does not work on
@@ -37,10 +40,18 @@ each platform, and what to do instead, is on [Limitations](limitations.md).
 
 ## Godot Version
 
-Kanama is built against Godot 4.7.2 stable. Its Godot classes are generated
-from that version's API, so use 4.7.2 for the editor, the export templates and
-the games you ship. Kanama moves to a new Godot version only when that version
-has a stable release.
+Kanama's Godot classes are generated from one Godot version's API, so use that
+version for the editor, the export templates and the games you ship:
+
+| Your Kanama | Godot |
+| --- | --- |
+| Release 0.4.0: a release kit or the store addon | 4.7.2 stable |
+| A source checkout of `main` | 4.8 beta 2 |
+| Release 0.5.0, not out yet | 4.8 stable |
+
+If you use a release, you never need a beta: a Kanama release ships only on a
+stable Godot. `main` moves to a new Godot during its beta, so that the upgrade
+is ready when the stable version arrives.
 
 ## Kotlin Version
 
@@ -48,7 +59,7 @@ The current source build uses Kotlin `2.4.21`, KSP `2.3.12`, and
 kotlinx.coroutines `1.11.0`. Your scripts compile with the same versions.
 
 An Android APK runs on the Kotlin libraries of Godot's Android build template
-(4.7.2: kotlin-stdlib 2.1.21, kotlinx.coroutines 1.6.4), so the Android runtime
+(on 4.7.2 and 4.8: kotlin-stdlib 2.1.21, kotlinx.coroutines 1.6.4), so the Android runtime
 and scripts compile at Kotlin API level 2.1 and against kotlinx.coroutines 1.6.4:
 a newer API fails the build, not the device.
 

@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-  <img alt="Godot 4.7.2 stable" src="https://img.shields.io/badge/Godot-4.7.2_stable-478cbf.svg">
+  <img alt="Godot 4.7.2 stable, main on 4.8 beta 2" src="https://img.shields.io/badge/Godot-4.7.2_stable%20%7C%20main%3A%204.8_beta_2-478cbf.svg">
   <img alt="JDK 25+" src="https://img.shields.io/badge/JDK-25%2B-f89820.svg">
   <img alt="Android: supported" src="https://img.shields.io/badge/Android-supported-3ddc84.svg">
   <img alt="iOS: supported" src="https://img.shields.io/badge/iOS-supported-000000.svg">
@@ -23,7 +23,7 @@ Kanama lets you write Godot scripts in Kotlin. A `.kt` file attaches to a node
 like a `.gd` file does, and you keep the Godot editor, scenes and inspector you
 already use.
 
-- **Every Godot 4.7 class has a Kotlin class** with the same methods,
+- **Every Godot class has a Kotlin class** with the same methods,
   properties and signals, and Godot's own documentation in your IDE.
 - **No engine fork and no engine module.** Kanama is an addon in your project.
 - **Desktop, Android and iOS are supported**, Web is experimental. Desktop
@@ -54,7 +54,10 @@ class Player(godotObject: GodotHandle) :
 ## Getting Started in Five Minutes
 
 You need [Godot 4.7.2](https://godotengine.org/download/archive/4.7.2-stable/)
-and a JDK 25 or newer. Download a desktop kit for your machine from the
+and a JDK 25 or newer for release 0.4.0. (A checkout of `main` needs
+[Godot 4.8 beta 2](https://github.com/godotengine/godot-builds/releases/tag/4.8-beta2);
+see [Godot Version](docs/reference/version-support.md#godot-version).)
+Download a desktop kit for your machine from the
 [releases page](https://github.com/falcon4ever/kanama/releases), unzip it, and
 build its Kotlin script:
 

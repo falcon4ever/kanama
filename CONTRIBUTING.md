@@ -59,7 +59,7 @@ Typical validation:
 ```sh
 ./gradlew build
 python3 scripts/validate_godot_api.py --api extension_api.json
-./scripts/local_ci.sh /path/to/godot-4.7.2-stable
+./scripts/local_ci.sh /path/to/godot
 ```
 
 Gate scripts follow two rules (`scripts/README-gates.md`): a check that cannot run prints
@@ -73,7 +73,7 @@ Before release-facing changes, validate from isolated clones instead of your
 development worktree:
 
 ```sh
-./scripts/fresh_clone_smoke.sh /path/to/godot-4.7.2-stable
+./scripts/fresh_clone_smoke.sh /path/to/godot
 ```
 
 For a consumer project:

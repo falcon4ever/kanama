@@ -81,7 +81,7 @@ Java runtime and your compiled scripts to the export, as
 
 | What you see | Cause | Fix |
 | --- | --- | --- |
-| Godot cannot export for iOS. | The iOS export templates are not installed. | Install the iOS export templates for Godot 4.7.2. See [Export for iOS](../exporting/ios.md#requirements). |
+| Godot cannot export for iOS. | The iOS export templates are not installed. | Install the iOS export templates for your Godot version. See [Export for iOS](../exporting/ios.md#requirements). |
 | Xcode reports no signing team, or cannot create a provisioning profile. | The preset has no team, or Xcode is not signed in to your Apple Developer account. | Set the team in the preset or under **Signing & Capabilities**, and sign in to your account in Xcode. See [Export for iOS](../exporting/ios.md#troubleshooting). |
 | `buildIosScripts` stops with `Xcode not found`. | The Mac has only the Command Line Tools, or `xcode-select` points at them. | Install Xcode and run `sudo xcode-select -s /Applications/Xcode.app`. See [Export for iOS](../exporting/ios.md#requirements). |
 | `buildIosScripts` stops with `addons/kanama/maven has no Kanama iOS runtime`. | The addon came from a Linux or Windows kit, or the unzip was incomplete. | Unzip the macOS kit or the store addon of the same Kanama version into the project again. |

@@ -13,22 +13,22 @@ checks behind the API conventions, and the source-break gate.
 Run the local CI shortcut with one or more Godot binaries:
 
 ```sh
-scripts/local_ci.sh /absolute/path/to/godot-4.7.2-stable
+scripts/local_ci.sh /absolute/path/to/godot
 ```
 
 With several binaries, the Godot stages run once per binary:
 
 ```sh
 scripts/local_ci.sh \
-  /absolute/path/to/godot-4.7.2-stable \
-  /absolute/path/to/godot-4.7.2-stable
+  /absolute/path/to/godot \
+  /absolute/path/to/godot
 ```
 
 Before tagging a release, run the isolated source-and-demo gate from a clean
 temporary clone:
 
 ```sh
-scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7.2-stable
+scripts/fresh_clone_smoke.sh /absolute/path/to/godot
 ```
 
 For package validation, build the packaged artifacts (packaging needs the Android
@@ -41,11 +41,11 @@ package as well:
 scripts/package_install_smoke.sh \
   --desktop-kit \
   build/distributions/kanama-desktop-kit-v<version>-<platform>.zip \
-  /absolute/path/to/godot-4.7.2-stable
+  /absolute/path/to/godot
 scripts/package_install_smoke.sh \
   --store-addon \
   build/distributions/kanama-store-addon-v<version>.zip \
-  /absolute/path/to/godot-4.7.2-stable
+  /absolute/path/to/godot
 ```
 
 `local_ci.sh` runs about forty stages (read the script for the list); the
@@ -87,7 +87,7 @@ runs in `local_ci.sh` (and so in CI on Linux) right after the `@Tool` smoke. An
 interrupted run (Ctrl-C) stops the editor and its build. Run it alone with:
 
 ```sh
-scripts/editor_probe_smoke.sh /absolute/path/to/godot-4.7.2-stable
+scripts/editor_probe_smoke.sh /absolute/path/to/godot
 ```
 
 The Godot pin is `kanamaGodotVersion` in `gradle.properties`;
@@ -107,7 +107,7 @@ pip install -r docs/requirements.txt
 
 ### Linux Validation
 
-Use a matching Linux Godot binary from the Godot 4.7.2 stable archive and set
+Use a Linux Godot binary of the pinned version and set
 `JAVA_HOME` to JDK 25+:
 
 ```sh
@@ -116,14 +116,14 @@ JAVA_HOME=/path/to/jdk-25 \
 XDG_DATA_HOME=/tmp/kanama-godot-state-linux \
 XDG_CONFIG_HOME=/tmp/kanama-godot-config-linux \
 KANAMA_DESKTOP_SMOKE_LOG_DIR=/tmp/kanama-desktop-smokes-linux \
-scripts/desktop_smoke_all.sh /path/to/Godot_v4.7.2-stable_linux.arm64
+scripts/desktop_smoke_all.sh /path/to/Godot_linux.arm64
 ```
 
 `desktop_smoke_all.sh` defaults both XDG variables to those paths on Linux; set
 them explicitly only to relocate the isolated state.
 
 Use the Godot binary for the architecture under test, such as
-`Godot_v4.7.2-stable_linux.arm64` or `Godot_v4.7.2-stable_linux.x86_64`. The
+`Godot_v<version>_linux.arm64` or `Godot_v<version>_linux.x86_64`. The
 demo smoke script uses Godot's OpenGL Compatibility renderer on desktop.
 Before refreshing demo addons, rebuild the native bootstrap from a clean
 checkout and preflight `libkanama_bootstrap.so` with `file`, `ldd`, and
@@ -132,7 +132,7 @@ checkout and preflight `libkanama_bootstrap.so` with `file`, `ldd`, and
 ### Windows Validation
 
 Launch Godot from an environment with `JAVA_HOME` set to JDK 25+ so Kanama can
-load `%JAVA_HOME%\bin\server\jvm.dll`, and use the 4.7 stable **console**
+load `%JAVA_HOME%\bin\server\jvm.dll`, and use the pinned **console**
 binary so smoke markers reach the terminal.
 
 The native bootstrap needs CMake and MSVC, which are not on the default
@@ -149,13 +149,13 @@ Point the demo builds at the Godot console binary either with the
 (the root aggregate tasks forward the property to nested demo builds):
 
 ```bat
-cmd /c "call ""...\VsDevCmd.bat"" -arch=x64 -host_arch=x64 && .\gradlew.bat importAllGodot -PkanamaRoot=C:\path\to\kanama -Pkanama.godot.executable=C:\path\to\Godot_v4.7.2-stable_win64_console.exe"
+cmd /c "call ""...\VsDevCmd.bat"" -arch=x64 -host_arch=x64 && .\gradlew.bat importAllGodot -PkanamaRoot=C:\path\to\kanama -Pkanama.godot.executable=C:\path\to\Godot_win64_console.exe"
 ```
 
 Run the demo smoke matrix through Git Bash:
 
 ```bat
-cmd /c "set KANAMA_DESKTOP_SMOKE_LOG_DIR=%TEMP%\kanama-desktop-smokes&& ""C:\Program Files\Git\bin\bash.exe"" scripts/desktop_smoke_all.sh C:\path\to\Godot_v4.7.2-stable_win64_console.exe"
+cmd /c "set KANAMA_DESKTOP_SMOKE_LOG_DIR=%TEMP%\kanama-desktop-smokes&& ""C:\Program Files\Git\bin\bash.exe"" scripts/desktop_smoke_all.sh C:\path\to\Godot_win64_console.exe"
 ```
 
 The Gradle audit tasks resolve Python as `py`/`python` on Windows (the

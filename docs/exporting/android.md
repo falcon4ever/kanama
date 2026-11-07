@@ -10,8 +10,8 @@ Android or native code of your own.
   [release kit](../getting-started/release-kit.md) or set up with the
   [store addon](../getting-started/store-addon.md). The addon carries the
   Kanama Android runtime, so you need nothing else from Kanama.
-- Godot's Android export templates for 4.7.2, installed from **Editor > Manage
-  Export Templates**.
+- Godot's Android export templates for the Godot version of your Kanama ([Godot Version](../reference/version-support.md#godot-version)),
+  installed from **Editor > Manage Export Templates**.
 - A JDK 21 for Godot's Android build, set in **Editor Settings > Export >
   Android > Java SDK Path**. Kanama and your scripts still build with your
   JDK 25.

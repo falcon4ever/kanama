@@ -7,10 +7,10 @@ Windows, macOS and Linux, from any of the three.
 
 ## Requirements
 
-- The project runs in the editor: Godot 4.7.2 and a JDK 25 or newer, as in
+- The project runs in the editor: Godot and a JDK 25 or newer, as in
   [Get Started](../getting-started/index.md#requirements).
-- Godot's export templates for 4.7.2, installed from **Editor > Manage Export
-  Templates**.
+- Godot's export templates for the Godot version of your Kanama ([Godot Version](../reference/version-support.md#godot-version)),
+  installed from **Editor > Manage Export Templates**.
 - A checkout of the Kanama repository, which builds the runtime and holds the
   assembly script. If you started from a release kit or the store addon, clone
   it once as in [Cloning Kanama](../getting-started/source-checkout.md#cloning-kanama);

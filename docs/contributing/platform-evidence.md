@@ -435,8 +435,9 @@ other stated size to it.
 ## Web
 
 Web is **Experimental (Kotlin/Wasm preview)** on the Godot 4.7 stable baseline.
-It is **not a Supported target**: it is a source-checkout export (no packaged
-addon), single-thread Compatibility renderer only, and makes no support claim.
+It is **not a Supported target**: it exports from a release kit, the store addon
+or a source checkout, runs the single-thread Compatibility renderer only, and
+makes no support claim.
 The twelve-demo corpus passes the automated production export smoke in Chrome,
 Firefox, and Safari.
 
