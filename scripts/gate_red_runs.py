@@ -19,8 +19,8 @@ its browser are the gate's to stop), then KILL to what is left once the group is
 (10 s), so a leader that is still stopping what it started is not killed halfway. Two things can outlive
 that: a process that left the group and that the gate's cleanup missed (if it holds the output, the
 case's log says so; the harness then stops waiting for it), and a Gradle daemon, which is detached and
-stays for the next build on purpose. Mutations are still reverted between the red and the final green run, and the
-directories a mutation created are removed again.
+stays for the next build on purpose. Mutations are still reverted between the red and the final green
+run, and the directories a mutation created are removed again.
 
 Usage:
     python3 scripts/gate_red_runs.py                  # every fast case
@@ -1795,7 +1795,7 @@ case("gate_red_runs_selftest.py (deadline named)", STOP_SELFTEST,
      [Edit("scripts/gate_red_runs.py", "if remaining is not None and remaining < case_.timeout:", "if False:")],
      "the cut is reported as a broken gate", "a case the deadline cut reads as a broken gate again, with no annotation when it was the shard's last")
 case("gate_red_runs_selftest.py (signal stops the case)", STOP_SELFTEST,
-     [Edit("scripts/gate_red_runs.py", "    if LIVE is not None:  # in a session of its own, so it got no signal from the terminal, and nothing else stops it\n        stop_group(LIVE)\n", "")],
+     [Edit("scripts/gate_red_runs.py", "    if LIVE is not None:  # in a session of its own, so it got no signal from the terminal, and nothing else stops it\n        stop_group(LIVE)\n        LIVE = None\n", "")],
      "Ctrl-C: left running", "Ctrl-C on the harness leaves the running case going, in a session of its own, against a deleted workspace")
 case("gate_red_runs_selftest.py (held output)", STOP_SELFTEST,
      [Edit("scripts/gate_red_runs.py", "return proc.communicate(timeout=seconds)[0] or \"\", True", "return proc.communicate()[0] or \"\", True")],
