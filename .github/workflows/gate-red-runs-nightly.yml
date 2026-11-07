@@ -120,7 +120,8 @@ jobs:
         shell: bash
         run: |
           fetch() {
-            local init=scripts/resolve_build_dependencies.init.gradle.kts
+            # Absolute: with -p, Gradle looks for a relative init script under the project directory.
+            local init="$PWD/scripts/resolve_build_dependencies.init.gradle.kts"
             ./gradlew -q --init-script "$init" -p android/godot-plugin resolveBuildDependencies "$@" &&
               ./gradlew -q --init-script "$init" resolveBuildDependencies "$@" &&
               ./gradlew -q syncExampleAddonJar "$@"
