@@ -151,7 +151,7 @@ made, and copies them only when the installed ones came from other inputs.
 Measured on an M1 Max, the release link runs out of a 2 GB heap and links in
 3 GB, and its process peaks at 9 to 11 GB with LLVM's native memory, which is
 why the user page asks for a 16 GB Mac. The checkout's own libraries measure
-roughly 168 MB debug / 110 MB release; a kit project's debug library is about 195 MB. <!-- kanama-claim: ios-static-size -->
+roughly 172 MB debug / 113 MB release; a kit project's debug library is about 195 MB. <!-- kanama-claim: ios-static-size -->
 
 `scripts/package_install_smoke.sh --ios` runs the documented commands from an
 unzipped macOS kit or store addon with a fresh `GRADLE_USER_HOME`: then a
