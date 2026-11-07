@@ -12,9 +12,9 @@ Generated drafts are emitted to `build/wrapper-generator/drafts` during local ru
 | --- | ---: | --- |
 | API classes | 1069 |  |
 | Classes with generated output | 874 | `██████████░░` 81.8% |
-| Classes with complete method generation | 774 | `█████████░░░` 72.4% |
-| Methods generated | 15669/17203 (91.1%) | `███████████░` 91.1% |
-| Methods skipped | 1534 |  |
+| Classes with complete method generation | 783 | `█████████░░░` 73.2% |
+| Methods generated | 15694/17203 (91.2%) | `███████████░` 91.2% |
+| Methods skipped | 1509 |  |
 | Properties generated | 4199/4270 (98.3%) | `████████████` 98.3% |
 | Signals generated | 518/518 (100.0%) | `████████████` 100.0% |
 
