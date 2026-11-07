@@ -185,14 +185,18 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/export_game_smoke.sh:153` | `buildNativeBootstrap syncExampleAddonJar jlinkGameRuntime >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/export_game_smoke.sh:298` | `system_root="$(cygpath -u "${SYSTEMROOT:-C:\\Windows}" 2>/dev/null \|\| printf '/c/Windows')"` | justified: the fallback is the standard Windows root; a wrong PATH makes the game fail to launch, which is the verdict. |
 | `scripts/export_game_smoke.sh:350` | `export_dir_native="$(cygpath -m "$export_dir" 2>/dev/null \|\| printf '%s' "$export_dir")"` | justified: without cygpath the path is already native; a wrong one fails the launch below. |
-| `scripts/gate_red_runs.py:180` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/gate_red_runs.py:200` | `except OSError:` | justified: a directory a gate filled meanwhile is the gate's own output; it is not ours to delete |
-| `scripts/gate_red_runs.py:220` | `except subprocess.TimeoutExpired:` | justified: reported as exit 124 with the partial output; the case then fails |
-| `scripts/gate_red_runs.py:223` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
-| `scripts/gate_red_runs.py:265` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
-| `scripts/gate_red_runs.py:267` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1702` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:1805` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:196` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:216` | `except OSError:` | justified: a directory a gate filled meanwhile is the gate's own output; it is not ours to delete |
+| `scripts/gate_red_runs.py:225` | `except (ProcessLookupError, PermissionError):` | justified: the group is gone (macOS answers EPERM for a group of zombies); nothing is left to signal |
+| `scripts/gate_red_runs.py:233` | `except subprocess.TimeoutExpired as expired:` | justified: the caller goes on to KILL, or reports the holder of the output |
+| `scripts/gate_red_runs.py:273` | `except subprocess.TimeoutExpired:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:318` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
+| `scripts/gate_red_runs.py:320` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
+| `scripts/gate_red_runs.py:1770` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1838` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1889` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs_selftest.py:75` | `except ProcessLookupError:` | justified: gone is the answer; the callers report what is still alive |
+| `scripts/gate_red_runs_selftest.py:93` | `except subprocess.TimeoutExpired:` | justified: the None status is the failure, the callers report it |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:682` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:725` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -460,10 +464,11 @@ Method. `python3 scripts/gate_red_runs.py` holds each listed gate to green, red,
 it is, a reversible mutation (an edit, a created, deleted or renamed file) makes it exit non-zero **and** print the
 expected text, and it passes again after the revert. Every case runs in a **throwaway `git worktree`** of HEAD carrying
 the dev checkout's uncommitted changes, so a killed run (SIGTERM, a timeout, a crash) cannot leave a mutation in the
-checkout you work in; a timeout kills the case's whole process group; `--strict` (implied under `CI`) makes a SKIPPED
+checkout you work in; a timeout, the deadline or a signal stops the case's whole process group, TERM first so the gate's
+own cleanup runs and KILL ten seconds later (`gate_red_runs_selftest.py` proves it, and the docstring says what can outlive it); `--strict` (implied under `CI`) makes a SKIPPED
 case (a missing `GODOT_DOCS`, or a gate whose baseline says it could not run the mutated row, such as
 `export_guard_selftest.sh` with no Android export template) a failure unless named by `--allow-skip`. The rows below were produced by that command
-on the committed branch (`--markdown`): the fast set (171 cases) took about 25 minutes (about 55 on a loaded machine); the Godot and Gradle smokes run
+on the committed branch (`--markdown`): the fast set (253 cases) took about 25 minutes (about 55 on a loaded machine); the Godot and Gradle smokes run
 with `--slow` (`KANAMA_GODOT_BIN` set). Gates that drive a browser, a device or a long export are in the second table.
 
 **CI.** `ci.yml` job `gate-red-runs` runs the fast set with `--strict --allow-skip sync_kdoc` on every push to main and on
@@ -474,8 +479,16 @@ parallel shards (`--shard 1/3` … `3/3`, every third case; about 10 minutes eac
 Its twelve shards are sized for the slowest runner: hosted runners differ by a factor of 1.9, and the whole `--slow` set
 takes about 7.5 hours of a slow one. Each case prints its time (`took 123.4s`), so `gh run view <id> --log` is the
 measurement when a shard grows; add shards to the matrix then, the job count is the N of `--shard K/N`. With
-`--deadline-minutes` a shard that runs out of time ends itself before the job's limit: its failures so far, the case it
-stopped on and the cases it never ran are in the log and in an annotation, where a cancelled job would show none of them.
+`--deadline-minutes` a shard that runs out of time ends itself before the job's limit: its failures so far are in the log,
+and the case it stopped on (`<gate>: cut by the deadline at the red run`), the cases it never ran and how many failed are
+in the log and in an annotation, where a cancelled job would show none of them. The run exits 1, and a case the deadline
+cut says nothing about its gate. The job works the deadline out from its own start, so a slow setup costs test time, not the limit.
+Before the first case the job fetches what the repo's builds resolve (`resolve_build_dependencies.init.gradle.kts`), with
+retries, because Gradle remembers a 404 for a day and one bad minute of Maven Central would fail the rest of the shard. That
+covers the configurations of the root build and of `android/godot-plugin`, so what `packageDesktopKit`, `stageWebProject` and
+the kit's Android package resolve. It does not cover what a task downloads for itself, such as Kotlin's Node and Binaryen. The
+consumer projects of `package_install_smoke.sh` need no cover: each resolves in a Gradle home of its own, so a 404 fails that
+one case and goes with it.
 
 ### 2a. `scripts/gate_red_runs.py` (exercised on this branch)
 
@@ -715,6 +728,10 @@ stopped on and the cases it never ran are in the log and in an annotation, where
 | `web/dodge_restart_selftest.mjs (no screen exit)` | dodge's mobsSpawnAndFree counts only the mobs that freed themselves off screen again: a host that never fires screen_exited (the Linux CI runner's Firefox, issue #370) fails it too, although new_game frees every mob | `FAIL no mob is ever reported off screen (Linux CI Firefox): red checks are [mobsSpawnAndFree, mobsFreedOffScreen], expected exactly [mobsFreedOffScreen] / FAIL screen_exited reaches the bridge, the mo` | green |
 | `web/dodge_restart_selftest.mjs (off-screen free required)` | dodge stops requiring one mob to free itself off screen: a host or build where screen_exited never fires or never frees the mob (issue #370) passes | `FAIL no mob is ever reported off screen (Linux CI Firefox): mobsFreedOffScreen must be false (red: []) / FAIL no mob is ever reported off screen (Linux CI Firefox): red checks are [], expected exactly` | green |
 | `web_export_smoke.sh (browser-floor)` | web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that) | `FAIL: below-floor expected exit 1, got 0 / stderr: coverage_report: FAIL — /var/folders/ff/9rnnrh052dq9rcxspsmtvy100000gn/T/kanama-web-scaffold.sXm8dF/below-floor/result.json carries no exercisedMembe` | green |
+| `gate_red_runs_selftest.py (TERM first)` | the harness goes straight to KILL again: a gate's cleanup never runs, and the driver it started in a session of its own stays behind | `- deadline: the gate's TERM cleanup did not run / - deadline: left running: [pids]` | green |
+| `gate_red_runs_selftest.py (deadline named)` | a case the deadline cut reads as a broken gate again, with no annotation when it was the shard's last | `- deadline: the cut is reported as a broken gate` | green |
+| `gate_red_runs_selftest.py (signal stops the case)` | Ctrl-C on the harness leaves the running case going, in a session of its own, against a deleted workspace | `- Ctrl-C: left running: [pids]` | green |
+| `gate_red_runs_selftest.py (held output)` | the harness waits for ever on a process that left the case's group and holds its output | `- held output: the harness was still running after 25s` | green |
 
 ### 2b. Self-tests, browser/device gates, and gates exercised another way
 
@@ -837,7 +854,7 @@ defect); `KANAMA_WEB_CPU_THROTTLE=<rate>` (Chrome driver) is the matching slow-C
 ## Re-running
 
 ```sh
-python3 scripts/gate_red_runs.py                          # every fast case (about 7 minutes)
+python3 scripts/gate_red_runs.py                          # every fast case (about 25 minutes)
 python3 scripts/gate_red_runs.py --only audit_            # a subset
 KANAMA_GODOT_BIN=/path/to/godot python3 scripts/gate_red_runs.py --slow   # + the Godot / Gradle smokes
 python3 scripts/gate_red_runs.py --markdown /tmp/red.md   # the table rows

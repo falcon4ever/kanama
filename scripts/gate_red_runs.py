@@ -12,9 +12,13 @@ harness holds each listed gate to the three-step proof, with a reversible mutati
 Every case runs in a THROWAWAY checkout (`git worktree add --detach` of HEAD, plus the uncommitted
 changes and untracked files of the dev checkout), so the checkout you work in is never mutated: a
 SIGTERM, a timeout or a crash cannot leave a half-applied mutation behind. The workspace is removed
-on exit, also on SIGTERM/SIGHUP/Ctrl-C. A timeout kills the whole process group of the case (a
-gate that spawned Gradle or Godot leaves nothing behind). Mutations are still reverted between the
-red and the final green run, and the directories a mutation created are removed again.
+on exit, also on SIGTERM/SIGHUP/Ctrl-C. A timeout, the deadline and those signals all stop the case the
+same way: TERM to its whole process group, so the gate's own cleanup runs (a session-leader driver and
+its browser are the gate's to stop), and KILL ten seconds later. Two things can outlive that: a process
+that left the group and that the gate's cleanup missed (if it holds the output, the case's log says so;
+the harness then stops waiting for it), and a Gradle daemon, which is detached and stays for the next
+build on purpose. Mutations are still reverted between the red and the final green run, and the
+directories a mutation created are removed again.
 
 Usage:
     python3 scripts/gate_red_runs.py                  # every fast case
@@ -57,6 +61,8 @@ from pathlib import Path
 SRC = Path(__file__).resolve().parents[1]  # the dev checkout; never mutated
 WORK = SRC  # the throwaway checkout every case runs in (set by main())
 DEADLINE: float | None = None  # the time.monotonic() at which --deadline-minutes ends the run (set by main())
+LIVE: subprocess.Popen | None = None  # the case running right now, for on_signal to stop
+STOP_GRACE = 10.0  # seconds a stopped case gets to clean up after TERM, and to let go of its output after KILL
 PY = sys.executable
 
 
@@ -127,6 +133,16 @@ class UnappliableMutation(Exception):
     """A case's mutation no longer applies (the file it edits changed). The CASE fails with this
     message; the harness carries on with the next case (task 139 U9: one stale case used to abort the
     whole run and leave every later case unrun)."""
+
+
+class DeadlineCut(Exception):
+    """--deadline-minutes ended a case's command. That says nothing about the gate, so no verdict is drawn
+    from the run: the case stops here, and no case runs after it. The message is one line; `tail` is the end
+    of what the command printed before it was stopped."""
+
+    def __init__(self, message: str, tail: str):
+        super().__init__(message)
+        self.tail = tail
 
 
 class Mutator:
@@ -203,27 +219,64 @@ class Mutator:
         return False
 
 
-def run(case_: Case) -> tuple[int, str, float]:
+def signal_group(proc: subprocess.Popen, signum: int) -> None:
+    try:
+        os.killpg(proc.pid, signum)
+    except (ProcessLookupError, PermissionError):  # justified: the group is gone (macOS answers EPERM for a group of zombies); nothing is left to signal
+        pass
+
+
+def read_rest(proc: subprocess.Popen) -> tuple[str, bool]:
+    """What the case printed so far, and whether its output closed within STOP_GRACE."""
+    try:
+        return proc.communicate(timeout=STOP_GRACE)[0] or "", True
+    except subprocess.TimeoutExpired as expired:  # justified: the caller goes on to KILL, or reports the holder of the output
+        partial = expired.output or b""
+        return partial.decode("utf-8", "replace") if isinstance(partial, bytes) else partial, False
+
+
+def stop_group(proc: subprocess.Popen) -> str:
+    """Stops a case and returns what it printed. TERM first: repo cleanup runs on TERM (an EXIT trap, a
+    run_with_timeout, run_bounded_stop), and a browser driver in its own session is reachable only that way.
+    KILL then gets whatever stayed, also when the output closed at once: a member that ignores TERM may have
+    its output elsewhere."""
+    signal_group(proc, signal.SIGTERM)
+    out, closed = read_rest(proc)
+    signal_group(proc, signal.SIGKILL)
+    if closed:
+        return out
+    out, closed = read_rest(proc)
+    if closed:
+        return out
+    proc.stdout.close()  # never waited for again: the holder gets SIGPIPE on its next write
+    proc.poll()
+    return f"{out}\na process outside the case's group still holds its output; it may still be running\n"
+
+
+def run(case_: Case, stage: str) -> tuple[int, str, float]:
+    global LIVE
     env = dict(os.environ)
     env.update(case_.env)
     # A gate that skips under CI would read as red here for the wrong reason; the harness decides about skips itself.
     env.pop("CI", None)
-    timeout = case_.timeout if DEADLINE is None else min(case_.timeout, max(DEADLINE - time.monotonic(), 0))
+    remaining = None if DEADLINE is None else max(DEADLINE - time.monotonic(), 0)
+    timeout = case_.timeout if remaining is None else min(case_.timeout, remaining)
     started = time.monotonic()
     proc = subprocess.Popen(
-        case_.cmd, cwd=WORK, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
-        start_new_session=True,  # its own process group, so a timeout can kill everything the gate spawned
+        case_.cmd, cwd=WORK, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace",
+        start_new_session=True,  # its own process group, so a timeout can stop everything the gate spawned
     )
+    LIVE = proc
     try:
         out, _ = proc.communicate(timeout=timeout)
         return proc.returncode, out, time.monotonic() - started
-    except subprocess.TimeoutExpired:  # justified: reported as exit 124 with the partial output; the case then fails
-        try:
-            os.killpg(proc.pid, signal.SIGKILL)
-        except ProcessLookupError:  # justified: the group already exited between the timeout and the kill
-            pass
-        out, _ = proc.communicate()
-        return 124, f"timeout after {timeout:.0f}s (process group killed)\n{out or ''}", time.monotonic() - started
+    except subprocess.TimeoutExpired:  # justified: reported as exit 124 or a DeadlineCut with the partial output; the case then fails
+        out = stop_group(proc)
+        if remaining is not None and remaining < case_.timeout:
+            raise DeadlineCut(f"{case_.gate}: cut by the deadline at the {stage} run", out[-800:]) from None
+        return 124, f"{out}\ntimeout after {timeout:.0f}s (process group stopped)\n", time.monotonic() - started
+    finally:
+        LIVE = None
 
 
 def red_excerpt(output: str, expect: str) -> str:
@@ -1677,6 +1730,21 @@ case("web/dodge_restart_selftest.mjs (off-screen free required)", ["node", "scri
 case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then', 'if false; then')],
      "below-floor expected exit 1", "web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that)")
+# The harness's own stop, on a fixture tree shaped like the slow gates (a TERM trap, a driver in its own session, a
+# member that ignores TERM). This is what keeps a deadline or a Ctrl-C from leaving a browser against a deleted workspace.
+STOP_SELFTEST = script("gate_red_runs_selftest.py")
+case("gate_red_runs_selftest.py (TERM first)", STOP_SELFTEST,
+     [Edit("scripts/gate_red_runs.py", "    signal_group(proc, signal.SIGTERM)\n", "")],
+     "the gate's TERM cleanup did not run", "the harness goes straight to KILL again: a gate's cleanup never runs, and the driver it started in a session of its own stays behind")
+case("gate_red_runs_selftest.py (deadline named)", STOP_SELFTEST,
+     [Edit("scripts/gate_red_runs.py", "if remaining is not None and remaining < case_.timeout:", "if False:")],
+     "the cut is reported as a broken gate", "a case the deadline cut reads as a broken gate again, with no annotation when it was the shard's last")
+case("gate_red_runs_selftest.py (signal stops the case)", STOP_SELFTEST,
+     [Edit("scripts/gate_red_runs.py", "        if LIVE is not None:  # in a session of its own, so it got no signal from the terminal, and nothing else stops it\n            stop_group(LIVE)\n", "")],
+     "Ctrl-C: left running", "Ctrl-C on the harness leaves the running case going, in a session of its own, against a deleted workspace")
+case("gate_red_runs_selftest.py (held output)", STOP_SELFTEST,
+     [Edit("scripts/gate_red_runs.py", "return proc.communicate(timeout=STOP_GRACE)[0] or \"\", True", "return proc.communicate()[0] or \"\", True")],
+     "held output: the harness was still running", "the harness waits for ever on a process that left the case's group and holds its output")
 
 #CASES-END
 
@@ -1714,6 +1782,10 @@ def main() -> int:
         return 2
 
     def on_signal(signum, _frame):  # the finally below then removes the workspace
+        for ignored in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT):  # one stop: a second Ctrl-C must not cut it short
+            signal.signal(ignored, signal.SIG_IGN)
+        if LIVE is not None:  # in a session of its own, so it got no signal from the terminal, and nothing else stops it
+            stop_group(LIVE)
         raise SystemExit(128 + signum)
 
     for signum in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT):
@@ -1751,22 +1823,34 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
     failures: list[str] = []
     rows: list[str] = []
     skipped: list[str] = []
+    stopped, tail = "", ""
+    reached = len(cases)
     for index, c in enumerate(cases):
         if DEADLINE is not None and time.monotonic() >= DEADLINE:
-            not_run = [other.gate for other in cases[index:]]
-            stopped = f"the --deadline-minutes budget ended during {cases[index - 1].gate}" if index else "the --deadline-minutes budget was spent before the first case"
-            failures.append(f"{stopped}; {len(not_run)} of {len(cases)} case(s) not run: {', '.join(not_run)}")
-            print(f"   {failures[-1]}", flush=True)
-            if os.environ.get("GITHUB_ACTIONS"):
-                print(f"::error title=gate_red_runs deadline::{failures[-1]}", flush=True)
+            stopped = f"the --deadline-minutes budget ended after {cases[index - 1].gate}" if index else "the --deadline-minutes budget was spent before the first case"
+            reached = index
             break
         print(f"== {c.gate}: {c.how}", flush=True)
         started = time.monotonic()
         failed_before = len(failures)
-        run_case(c, strict, allowed_skips, failures, rows, skipped)
+        try:
+            run_case(c, strict, allowed_skips, failures, rows, skipped)
+        except DeadlineCut as cut:
+            stopped, tail, reached = str(cut), f":\n{cut.tail}" if cut.tail else "", index + 1
+            rows.append(f"| `{c.gate}` | {c.how} | UNPROVEN | - |")
         for failure in failures[failed_before:]:
             print(f"   FAIL: {failure.splitlines()[0]}", flush=True)
         print(f"   took {time.monotonic() - started:.1f}s", flush=True)
+        if stopped:
+            break
+    if stopped:
+        not_run = [other.gate for other in cases[reached:]]
+        summary = f"{stopped}; {len(not_run)} of {len(cases)} case(s) not run" + (f": {', '.join(not_run)}" if not_run else "")
+        summary += f"; {len(failures)} failure(s) before that" if failures else ""
+        failures.append(summary + tail)
+        print(f"   {summary}", flush=True)
+        if os.environ.get("GITHUB_ACTIONS"):
+            print(f"::error title=gate_red_runs deadline::{summary}", flush=True)
     return failures, rows, skipped
 
 
@@ -1785,10 +1869,10 @@ def run_case(c: Case, strict: bool, allowed_skips: list[str], failures: list[str
         skip(f"needs {' and '.join(missing_env)} to name an existing path")
         return
     for pre in c.pre:
-        pre_rc, pre_out, _ = run(Case(c.gate, pre, [], "", "", env=c.env, timeout=c.timeout))
+        pre_rc, pre_out, _ = run(Case(c.gate, pre, [], "", "", env=c.env, timeout=c.timeout), "prerequisite")
         if pre_rc != 0:
             failures.append(f"{c.gate}: prerequisite {pre} failed (exit {pre_rc}):\n{pre_out[-600:]}")
-    rc, out, _secs = run(c)
+    rc, out, _secs = run(c, "baseline")
     if rc != 0:
         failures.append(f"{c.gate}: not green before the mutation (exit {rc}):\n{out[-800:]}")
         print(f"   baseline NOT green (exit {rc}); skipped", flush=True)
@@ -1801,13 +1885,13 @@ def run_case(c: Case, strict: bool, allowed_skips: list[str], failures: list[str
         mutations = c.mutations() if callable(c.mutations) else c.mutations
         expect = c.expect() if callable(c.expect) else c.expect
         with Mutator(mutations):
-            red_rc, red_out, red_secs = run(c)
+            red_rc, red_out, red_secs = run(c, "red")
     except UnappliableMutation as error:
         failures.append(f"{c.gate}: {error}")
         print(f"   UNAPPLIABLE: {error}", flush=True)
         rows.append(f"| `{c.gate}` | {c.how} | UNPROVEN | - |")
         return
-    green_rc, green_out, _ = run(c)
+    green_rc, green_out, _ = run(c, "green")
     alternatives = (expect,) if isinstance(expect, str) else expect
     matched = next((text for text in alternatives if text in red_out), None)
     ok = True

@@ -35,6 +35,10 @@ jobs:
       matrix:
         shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     steps:
+      - name: Note the job's start
+        shell: bash
+        run: echo "JOB_STARTED=$(date +%s)" >>"$GITHUB_ENV"
+
       - name: Checkout
         uses: actions/checkout@v6
         with:
@@ -57,6 +61,7 @@ jobs:
 
       - name: Download Godot and the Web and Android export templates
         if: steps.godot-cache.outputs.cache-hit != 'true'
+        timeout-minutes: 10
         shell: bash
         run: |
           mkdir -p "$HOME/godot"
@@ -102,18 +107,24 @@ jobs:
           cat "$settings"
 
       # Maven Central has answered 404 for files it holds (2026-11-04), and Gradle then remembers that jar as missing
-      # for a day without asking again, so one bad minute failed every later Gradle case of the shard. The build the
-      # smokes start with is fetched here, where a retry can ask again. Gradle's build cache hands the cases its output.
+      # for a day without asking again, so one bad minute failed every later Gradle case of the shard. What the root
+      # build and the Android plugin's build resolve is fetched here, where a retry can ask again, and the build the
+      # smokes start with is built: Gradle's build cache hands the cases its output. The resolving took about 70 s from
+      # an empty cache (a Mac, 590 MB, 2026-11-07) and seconds from a full one; README-gates.md has what it does not cover.
       - name: Fetch the build's dependencies
         timeout-minutes: 12
         shell: bash
         run: |
-          refresh=""
-          for attempt in 1 2 3; do
-            ./gradlew -q syncExampleAddonJar $refresh && exit 0
-            echo "::warning::the build failed (attempt $attempt); asking the repositories again in a minute"
-            refresh="--refresh-dependencies"
+          fetch() {
+            local init=scripts/resolve_build_dependencies.init.gradle.kts
+            ./gradlew -q --init-script "$init" -p android/godot-plugin resolveBuildDependencies "$@" &&
+              ./gradlew -q --init-script "$init" resolveBuildDependencies syncExampleAddonJar "$@"
+          }
+          fetch && exit 0
+          for attempt in 1 2; do
+            echo "::warning::the build failed (attempt $attempt of 3); asking the repositories again in a minute"
             sleep 60
+            fetch --refresh-dependencies && exit 0
           done
           exit 1
 
@@ -125,7 +136,9 @@ jobs:
           godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
           chmod +x "$godot_bin"
           # sync_kdoc needs a Godot docs checkout and the iOS kit smokes a Mac with Xcode, which this runner does not
-          # have: skipped by name. The deadline is the job's 75 minutes less the 13 the steps above may take: a slow
-          # shard then ends itself, with its failures and the cases it never reached in the log and an annotation.
+          # have: skipped by name. The deadline is what is left of the job's 75 minutes, less 3 to stop the running case
+          # (TERM, then KILL, 20 s at most) and report: a slow shard then ends itself, with its failures and the cases
+          # it never reached in the log and an annotation.
+          elapsed=$(( ($(date +%s) - JOB_STARTED + 59) / 60 ))
           KANAMA_GODOT_BIN="$godot_bin" python3 scripts/gate_red_runs.py --slow --strict --allow-skip "sync_kdoc,smoke.sh --ios" \
-            --deadline-minutes 62 --shard ${{ matrix.shard }}/${{ strategy.job-total }}
+            --deadline-minutes $(( 72 - elapsed )) --shard ${{ matrix.shard }}/${{ strategy.job-total }}
