@@ -205,6 +205,9 @@ API_EXERCISE_STATUS=0
 KANAMA_API_EXERCISE_TRACE=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://api_exercise_smoke.tscn --quit --verbose >"$API_EXERCISE_LOG" 2>&1 || API_EXERCISE_STATUS=$?
 rm -f "$API_EXERCISE_OVERRIDE"
 cat "$API_EXERCISE_LOG" >>"$LOG_FILE"
+# A row whose class only the editor can instantiate is weak in a game: the same rows, once, in the editor.
+API_EXERCISE_EDITOR_LOG="${LOG_FILE}.api_exercise_editor"
+KANAMA_API_EXERCISE=1 KANAMA_API_EXERCISE_TRACE=1 "$GODOT_BIN" --headless --editor --path "$PROJECT_DIR_FOR_GODOT" --quit-after 400 >"$API_EXERCISE_EDITOR_LOG" 2>&1 || smoke_fail_later="the API exercise in the editor exited non-zero"
 # task 138 item 6 -- a @RegisterClass method returning a fresh owned Resource, called typed from the
 # main thread and from a GDScript Thread, and through Object.call, with a collection every frame
 # (KANAMA_GC_STRESS=1): Godot gets a reference of its own, so the wrapper's release never frees what
@@ -253,6 +256,16 @@ if grep -q "API EXERCISE FAIL" "$API_EXERCISE_LOG"; then
   smoke_fail "unexpected pattern" "API EXERCISE FAIL"
 fi
 check "\[kanama\] API EXERCISE: [1-9][0-9]* passed, 0 failed, [0-9]+ weak, [0-9]+ known, [1-9][0-9]* reach, [0-9]+ excluded in [0-9]+ ms"
+if [[ -n "${smoke_fail_later:-}" ]]; then
+  smoke_fail "$smoke_fail_later" "$API_EXERCISE_EDITOR_LOG"
+fi
+if grep -q "API EXERCISE FAIL" "$API_EXERCISE_EDITOR_LOG"; then
+  grep "API EXERCISE FAIL" "$API_EXERCISE_EDITOR_LOG" >&2
+  smoke_fail "unexpected pattern in the editor run" "API EXERCISE FAIL"
+fi
+if ! grep -q "API EXERCISE row F EditorExportPlugin.add_apple_embedded_platform_spm_package = R" "$API_EXERCISE_EDITOR_LOG"; then
+  smoke_fail "the editor run did not reach the row" "EditorExportPlugin.add_apple_embedded_platform_spm_package = R"
+fi
 check "ResourceFormatLoader\\._load path=res://HelloScript\\.kt"
 check "HelloScript\\(file\\)\\._ready health=99 speed=5\\.1 label=from_tscn difficulty=HARD"
 check "ResourceOwnerSmoke payload=from_tscn present=true"

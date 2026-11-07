@@ -13,7 +13,7 @@ scratch directory, the singleton rows, the Variant type values) are hand-kept in
 the desktop smoke and in the iOS self-test build, the C, A, B and D rows asserting values, the F rows
 reach only, and the T rows one value per Godot Variant type through each generic Variant path.
 
-**Referenced helpers:** 1490 (1485 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15672 generated (13302 instance, 2254 singleton, 116 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 885 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 541 (of the 541 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 605; excluded 339. A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the runs count those apart (`weak` in the summary line), so this count is an upper bound.
+**Referenced helpers:** 1502 (1497 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15697 generated (13319 instance, 2262 singleton, 116 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 894 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 549 (of the 549 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 609; excluded 339. A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the runs count those apart (`weak` in the summary line), so this count is an upper bound.
 
 ## Cases
 
@@ -26,9 +26,9 @@ on a healthy host (**weak**), and then the second row is the one that can tell a
 |---|---|---|---|
 | C static | `is_static` with a return value, class not excluded | the wrapper's result equals `ClassDB.class_call_static` with the same arguments, and is not the type's zero (an `Error` static: a known non-OK `Error`) | 45 |
 | A property pair | setter or getter of a non-indexed property of an instantiable class (or its receiver below), or of a `SINGLETON_PAIRS` singleton, or a `SINGLETON_KEYED_PAIRS` method | a value set through the wrapper reads back through the getter and `Object.get` (on a singleton, the value read first is set back in a `finally`) | 91 |
-| B const oracle | const non-void instance method on such a class (or an argument-free RID factory of a `RID_FACTORIES` class) | the wrapper's result equals `Object.call` with the same arguments on the same object; a result equal to its type's zero is **weak** (counted apart, not failed) | 311 |
-| D singleton | const non-void method of a non-excluded singleton, any non-void method of a stateless singleton, or an argument-free RID factory of a `RID_FACTORIES` server | the wrapper's result equals `Object.call` on the singleton (weak as B); a factory returns a valid RID, one read of it agrees on both paths, and the RID is freed | 94 |
-| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 605 |
+| B const oracle | const non-void instance method on such a class (or an argument-free RID factory of a `RID_FACTORIES` class) | the wrapper's result equals `Object.call` with the same arguments on the same object; a result equal to its type's zero is **weak** (counted apart, not failed) | 316 |
+| D singleton | const non-void method of a non-excluded singleton, any non-void method of a stateless singleton, or an argument-free RID factory of a `RID_FACTORIES` server | the wrapper's result equals `Object.call` on the singleton (weak as B); a factory returns a valid RID, one read of it agrees on both paths, and the RID is freed | 97 |
+| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 609 |
 | E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 339 |
 | N runtime helper | no generated method calls it with a MethodBind | nothing of its own: every row uses it | 5 |
 
@@ -38,9 +38,9 @@ or the factory `RECEIVER_SOURCES` names, because the declaring class is abstract
 ## Where the rows are
 
 - **C static** by class: `FileAccess` 13, `DirAccess` 9, `JSON` 3, `AudioStreamMP3` 2, `AudioStreamWAV` 2, `GLTFDocument` 2, `Image` 2, `DPITexture` 1, `GLTFAccessor` 1, `GLTFCamera` 1, `ImporterMesh` 1, `Node` 1, `PathFollow3D` 1, `PhysicsRayQueryParameters2D` 1, `PhysicsRayQueryParameters3D` 1, `PortableCompressedTexture2D` 1, `Resource` 1, `TLSOptions` 1, `Tween` 1.
-- **D singleton** by class: `RenderingServer` 19, `Geometry2D` 16, `Geometry3D` 13, `ClassDB` 11, `NavigationServer2D` 10, `NavigationServer3D` 10, `Time` 5, `Marshalls` 3, `PhysicsServer3D` 3, `TranslationServer` 2, `AccessibilityServer` 1, `ProjectSettings` 1.
+- **D singleton** by class: `RenderingServer` 19, `Geometry2D` 16, `Geometry3D` 13, `ClassDB` 11, `NavigationServer2D` 10, `NavigationServer3D` 10, `Time` 5, `PhysicsServer3D` 4, `Marshalls` 3, `TranslationServer` 2, `AccessibilityServer` 1, `DisplayServer` 1.
 - **B const** through a descendant, by declaring class: `TextServer` 56, `CollisionObject2D` 8, `Font` 7, `InputEvent` 4, `IterateIK3D` 2, `Noise` 2, `TileSetSource` 2, `AnimationMixer` 1, `BaseMaterial3D` 1, `CanvasItem` 1, `CollisionObject3D` 1.
-- **F reach only**, largest classes: `RenderingServer` 86, `CanvasItem` 28, `TextServer` 27, `AccessibilityServer` 22, `Animation` 19, `FontFile` 14, `PhysicsServer2D` 14, `RichTextLabel` 14, `Image` 12, `AnimationPlayer` 9, `AStar2D` 8, `PhysicsServer3D` 8.
+- **F reach only**, largest classes: `RenderingServer` 87, `CanvasItem` 28, `TextServer` 27, `AccessibilityServer` 22, `Animation` 19, `FontFile` 14, `PhysicsServer2D` 14, `RichTextLabel` 14, `Image` 12, `AnimationPlayer` 9, `PhysicsServer3D` 9, `AStar2D` 8.
 
 ## By iOS ptrcall tag
 
@@ -48,37 +48,37 @@ The generated iOS helpers by the type tags their bodies pack (a helper counts on
 
 | tag | helpers | sites | C | A | B | D | F | E |
 |---|---|---|---|---|---|---|---|---|
-| `PT_INT64` | 827 | 3518 | 19 | 2 | 197 | 30 | 347 | 232 |
-| `PT_VOID` | 574 | 2967 | – | 34 | – | – | 428 | 112 |
-| `PT_RID` | 364 | 1766 | – | 2 | 55 | 41 | 176 | 90 |
-| `PT_BOOL` | 350 | 1274 | 9 | – | 63 | 25 | 170 | 83 |
-| `PT_OBJECT` | 269 | 690 | 20 | – | 26 | 2 | 124 | 97 |
-| `PT_STRING` | 263 | 1018 | 25 | 3 | 29 | 8 | 66 | 132 |
-| `PT_FLOAT64` | 232 | 696 | 2 | – | 52 | 9 | 150 | 19 |
-| `PT_STRING_NAME` | 134 | 501 | – | 1 | 31 | 14 | 60 | 28 |
+| `PT_INT64` | 832 | 3523 | 19 | 2 | 199 | 32 | 348 | 232 |
+| `PT_VOID` | 578 | 2971 | – | 34 | – | – | 432 | 112 |
+| `PT_RID` | 368 | 1770 | – | 2 | 56 | 42 | 178 | 90 |
+| `PT_BOOL` | 352 | 1287 | 9 | – | 65 | 25 | 170 | 83 |
+| `PT_OBJECT` | 271 | 703 | 20 | – | 28 | 2 | 124 | 97 |
+| `PT_STRING` | 264 | 1019 | 25 | 3 | 29 | 8 | 67 | 132 |
+| `PT_FLOAT64` | 235 | 700 | 2 | – | 54 | 10 | 150 | 19 |
+| `PT_STRING_NAME` | 136 | 505 | – | 1 | 33 | 14 | 60 | 28 |
 | `PT_VECTOR2` | 134 | 260 | 1 | – | 38 | 12 | 77 | 6 |
 | `PT_VECTOR2I` | 101 | 186 | – | – | 48 | 1 | 46 | 6 |
 | `PT_COLOR` | 97 | 167 | – | – | 8 | 1 | 78 | 10 |
 | `PT_VARIANT` | 77 | 158 | 3 | 3 | 12 | 2 | 37 | 20 |
-| `PT_TYPED_ARRAY_BLOB` | 65 | 111 | 3 | 11 | – | 3 | 21 | 27 |
+| `PT_TYPED_ARRAY_BLOB` | 66 | 112 | 3 | 11 | – | 3 | 22 | 27 |
 | `PT_VECTOR3` | 60 | 192 | 1 | – | 18 | 16 | 20 | 5 |
 | `PT_CALLABLE` | 54 | 122 | – | – | – | – | 15 | 39 |
 | `PT_PACKED_BYTE_ARRAY` | 47 | 64 | 5 | 1 | – | 1 | 21 | 19 |
 | `PT_RECT2` | 45 | 56 | – | – | 9 | 1 | 29 | 6 |
 | `PT_TRANSFORM3D` | 34 | 114 | 1 | 2 | 3 | 2 | 18 | 8 |
-| `PT_PACKED_STRING_ARRAY` | 28 | 44 | – | 1 | 1 | 1 | 2 | 23 |
+| `PT_PACKED_STRING_ARRAY` | 29 | 45 | – | 1 | 1 | 1 | 3 | 23 |
 | `PT_TRANSFORM2D` | 25 | 82 | – | 2 | 6 | 1 | 16 | – |
 | `PT_ARRAY` | 24 | 47 | – | 1 | 1 | – | 11 | 11 |
 | `PT_NODE_PATH` | 24 | 110 | – | 1 | 7 | – | 14 | 2 |
 | `PT_PACKED_VECTOR2_ARRAY` | 23 | 33 | – | – | – | 9 | 12 | 2 |
 | `PT_DICTIONARY` | 22 | 60 | 4 | 1 | 1 | 2 | 8 | 6 |
-| `PT_RECT2I` | 19 | 41 | – | 2 | 4 | – | 10 | 3 |
+| `PT_RECT2I` | 20 | 42 | – | 2 | 4 | – | 11 | 3 |
 | `PT_PACKED_INT32_ARRAY` | 16 | 36 | – | 1 | – | – | 11 | 4 |
 | `PT_PACKED_FLOAT32_ARRAY` | 15 | 16 | – | – | 1 | – | 12 | 2 |
 | `PT_PACKED_VECTOR3_ARRAY` | 14 | 22 | – | 1 | – | 2 | 9 | 2 |
 | `PT_VECTOR3I` | 12 | 13 | – | – | 7 | 1 | 2 | 2 |
+| `PT_QUATERNION` | 11 | 27 | – | 2 | 3 | 1 | 4 | 1 |
 | `PT_PACKED_COLOR_ARRAY` | 9 | 11 | – | – | 1 | – | 6 | 2 |
-| `PT_QUATERNION` | 9 | 25 | – | 2 | 3 | – | 3 | 1 |
 | `PT_AABB` | 8 | 44 | – | 2 | 1 | 2 | 3 | – |
 | `PT_BASIS` | 6 | 13 | – | 2 | 3 | – | 1 | – |
 | `PT_PACKED_INT64_ARRAY` | 5 | 7 | – | 1 | – | – | – | 4 |
@@ -455,7 +455,8 @@ proves the call is accepted, not the element values):
 | `TypedStringNameArray` | `ptrcallWithCallableStringNameListArgs` (E), `ptrcallWithCallableStringNameListObjectArgs` (E), `ptrcallWithCallableStringNameTwoStringStringNameListArgs` (E), `ptrcallWithStringNameListArg` (F) |
 | `TypedNodePathArray` | `ptrcallWithNodePathListArg` (A) |
 | `TypedVector2iArray` | `ptrcallWithIntAndVector2iListArgsRetObject` (F), `ptrcallWithIntVector2iListTwoIntAndBoolArgs` (F), `ptrcallWithVector2iListArgRetObject` (F), `ptrcallWithVector2iListTwoIntAndBoolArgs` (F) |
-| `TypedTransform3DArray` | `ptrcallWithObjectListTransform3DListBoolArgsRetObject` (C), `ptrcallWithRIDAndTransform3DListArgs` (F), `ptrcallWithTransform3DListArg` (A) |
+| `TypedProjectionArray` | `ptrcallWithRIDProjectionListTransform3DListArgs` (F) |
+| `TypedTransform3DArray` | `ptrcallWithObjectListTransform3DListBoolArgsRetObject` (C), `ptrcallWithRIDAndTransform3DListArgs` (F), `ptrcallWithRIDProjectionListTransform3DListArgs` (F), `ptrcallWithTransform3DListArg` (A) |
 | `TypedPlaneArray` | `ptrcallWithPackedVector3ListPackedVector2ListPackedColorListPackedVector2ListPackedVector3ListPlaneListArgs` (F), `ptrcallWithPlaneListAndRIDArgsRetPackedInt64List` (D), `ptrcallWithPlaneListArgRetPackedVector3List` (D), `ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List` (D) |
 | `TypedPackedVector2Array` | `ptrcallWithPackedVector2ListListArg` (A) |
 | `TypedDictionaryArray` | `ptrcallWithDictionaryDictionaryListArgsRetDictionary` (E), `ptrcallWithDictionaryListArg` (A), `ptrcallWithDictionaryListIntArgsRetRID` (F), `ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong` (E) |
@@ -773,6 +774,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithIntArgRetQuaternion` | B | `BoneTwistDisperser3D.get_twist_from` (const non-void method) | 2 | PT_INT64 PT_QUATERNION |
 | `ptrcallWithIntArgRetRID` | B | `KinematicCollision3D.get_collider_rid` (const non-void method) | 16 | PT_INT64 PT_RID |
 | `ptrcallWithIntArgRetRect2` | B | `ItemList.get_item_icon_region` (const non-void method) | 5 | PT_INT64 PT_RECT2 |
+| `ptrcallWithIntArgRetRect2List` | D | `DisplayServer.get_display_cutouts` (a read of the screen, safe on every host: empty, so weak, without a notch (SCENE_ROWS)) | 1 | PT_INT64 |
 | `ptrcallWithIntArgRetRect2i` | E | `DisplayServer.get_display_safe_area` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 3 | PT_INT64 PT_RECT2I |
 | `ptrcallWithIntArgRetString` | C | `DirAccess.get_drive_name` (static with a return value); then B `AnimationNode.get_input_name` (const non-void method) | 83 | PT_INT64 PT_STRING |
 | `ptrcallWithIntArgRetStringName` | B | `AnimationNodeBlendSpace1D.get_blend_point_name` (const non-void method) | 20 | PT_INT64 PT_STRING_NAME |
@@ -1039,6 +1041,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectObjectIntTwoBoolArgs` | E | `PopupMenu.add_icon_shortcut` (*Popup*: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_INT64 PT_OBJECT PT_VOID |
 | `ptrcallWithObjectRIDArgsRetRID` | E | `RenderingDevice.texture_create_shared` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_OBJECT PT_RID |
 | `ptrcallWithObjectRIDCallableArgsRetObject` | E | `OpenXRSpatialAnchorCapability.persist_anchor` (*XR*: an XR runtime and its devices) | 2 | PT_CALLABLE PT_OBJECT PT_RID |
+| `ptrcallWithObjectRIDThreeUInt32LongUInt32ArgsRetRID` | B | `RenderingDevice.texture_create_shared_from_slice` (a slice of a real texture: weak where the renderer has no RenderingDevice (headless, Compatibility) (SCENE_ROWS)) | 1 | PT_INT64 PT_OBJECT PT_RID |
 | `ptrcallWithObjectRect2BoolColorBoolArgs` | F | `CanvasItem.draw_texture_rect` on `Control` (void method) | 1 | PT_BOOL PT_COLOR PT_OBJECT PT_RECT2 PT_VOID |
 | `ptrcallWithObjectRect2iAndVector2iArgs` | F | `Image.blend_rect` (void method) | 2 | PT_OBJECT PT_RECT2I PT_VECTOR2I PT_VOID |
 | `ptrcallWithObjectStringAndIntArgs` | F | `OptionButton.add_icon_item` (void method) | 1 | PT_INT64 PT_OBJECT PT_STRING PT_VOID |
@@ -1174,6 +1177,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithRIDAndPackedFloat32ListArgRetDouble` | F | `TextServer.shaped_text_tab_align` on `TextServerManager.get_primary_interface()` (non-const method) | 1 | PT_FLOAT64 PT_PACKED_FLOAT32_ARRAY PT_RID |
 | `ptrcallWithRIDAndPackedVector2ListArg` | F | `NavigationServer2D.obstacle_set_vertices` (void singleton method) | 1 | PT_PACKED_VECTOR2_ARRAY PT_RID PT_VOID |
 | `ptrcallWithRIDAndPackedVector3ListArg` | F | `NavigationServer3D.obstacle_set_vertices` (void singleton method) | 1 | PT_PACKED_VECTOR3_ARRAY PT_RID PT_VOID |
+| `ptrcallWithRIDAndQuaternionArgs` | F | `PhysicsServer3D.generic_6dof_joint_set_angular_target_rotation` (a real 6DOF joint; the read-back is the getter's row (SCENE_ROWS)) | 1 | PT_QUATERNION PT_RID PT_VOID |
 | `ptrcallWithRIDAndRIDListArgs` | F | `RenderingServer.compositor_set_compositor_effects` (void singleton method) | 1 | PT_RID PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithRIDAndRect2Arg` | F | `AccessibilityServer.update_set_bounds` (void singleton method) | 3 | PT_RECT2 PT_RID PT_VOID |
 | `ptrcallWithRIDAndStringArg` | F | `AccessibilityServer.update_set_braille_label` (void singleton method) | 35 | PT_RID PT_STRING PT_VOID |
@@ -1247,6 +1251,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithRIDArgRetPackedStringList` | F | `TextServer.font_get_language_support_overrides` on `TextServerManager.get_primary_interface()` (non-const method) | 3 | PT_RID |
 | `ptrcallWithRIDArgRetPackedVector2List` | D | `NavigationServer2D.obstacle_get_vertices` (const non-void singleton method) | 1 | PT_RID |
 | `ptrcallWithRIDArgRetPackedVector3List` | D | `NavigationServer3D.obstacle_get_vertices` (const non-void singleton method) | 2 | PT_RID |
+| `ptrcallWithRIDArgRetQuaternion` | D | `PhysicsServer3D.generic_6dof_joint_get_angular_target_rotation` (a real 6DOF joint: a fresh one answers with an engine error. Only Jolt keeps the target (SCENE_ROWS)) | 1 | PT_QUATERNION PT_RID |
 | `ptrcallWithRIDArgRetRID` | B | `TextServer.shaped_text_get_parent` on `TextServerManager.get_primary_interface()` (const non-void method) | 25 | PT_RID |
 | `ptrcallWithRIDArgRetRIDList` | D | `NavigationServer2D.map_get_agents` (const non-void singleton method) | 8 | PT_RID |
 | `ptrcallWithRIDArgRetRect2` | D | `NavigationServer2D.region_get_bounds` (const non-void singleton method) | 2 | PT_RECT2 PT_RID |
@@ -1342,6 +1347,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithRIDPackedVector2ListPackedColorListPackedVector2ListAndRIDArgs` | F | `RenderingServer.canvas_item_add_polygon` (void singleton method) | 2 | PT_PACKED_COLOR_ARRAY PT_PACKED_VECTOR2_ARRAY PT_RID PT_VOID |
 | `ptrcallWithRIDPackedVector3ListPackedColorListTwoPackedInt32ListArgs` | F | `RenderingServer.lightmap_set_probe_capture_data` (void singleton method) | 1 | PT_PACKED_COLOR_ARRAY PT_PACKED_INT32_ARRAY PT_PACKED_VECTOR3_ARRAY PT_RID PT_VOID |
 | `ptrcallWithRIDPackedVector3ListPackedInt32ListArgs` | F | `RenderingServer.occluder_set_mesh` (void singleton method) | 1 | PT_PACKED_INT32_ARRAY PT_PACKED_VECTOR3_ARRAY PT_RID PT_VOID |
+| `ptrcallWithRIDProjectionListTransform3DListArgs` | F | `RenderingServer.camera_set_xr_projections` (two views with offsets, the shape a headset uses; the server has no getter for them (SCENE_ROWS)) | 1 | PT_RID PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithRIDRIDListPackedInt64ListObjectArgsRetRID` | E | `OpenXRSpatialEntityExtension.update_spatial_entities` (*XR*: an XR runtime and its devices) | 1 | PT_OBJECT PT_PACKED_INT64_ARRAY PT_RID PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList` | F | `RenderingServer.bake_render_uv2` (non-const singleton method) | 1 | PT_RID PT_TYPED_ARRAY_BLOB PT_VECTOR2I |
 | `ptrcallWithRIDRIDTransform3DRIDTransform3DArgs` | F | `PhysicsServer3D.joint_make_cone_twist` (void singleton method) | 4 | PT_RID PT_TRANSFORM3D PT_VOID |
@@ -1424,6 +1430,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithRect2iAndColorArg` | F | `Image.fill_rect` (void method) | 1 | PT_COLOR PT_RECT2I PT_VOID |
 | `ptrcallWithRect2iAndDoubleArg` | F | `AStarGrid2D.fill_weight_scale_region` (void method) | 1 | PT_FLOAT64 PT_RECT2I PT_VOID |
 | `ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList` | B | `BitMap.opaque_to_polygons` (const non-void method) | 1 | PT_FLOAT64 PT_RECT2I |
+| `ptrcallWithRect2iAndIntArg` | F | `DisplayServer.window_set_ime_rect` (a hint for where the IME draws: nothing shows while no text field has focus (SCENE_ROWS)) | 1 | PT_INT64 PT_RECT2I PT_VOID |
 | `ptrcallWithRect2iArg` | A | `AStarGrid2D.set_region` (setter of `region`) | 7 | PT_RECT2I PT_VOID |
 | `ptrcallWithRect2iArgRetDictionaryList` | B | `AStarGrid2D.get_point_data_in_region` (const non-void method) | 1 | PT_RECT2I |
 | `ptrcallWithRect2iArgRetObject` | F | `Image.get_region` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 2 | PT_OBJECT PT_RECT2I |
@@ -1559,6 +1566,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithStringNameArgRetString` | E | `InputMap.get_action_description` (InputMap: the running project's process-wide action map) | 1 | PT_STRING PT_STRING_NAME |
 | `ptrcallWithStringNameArgRetStringName` | B | `AnimationPlayer.animation_get_next` (const non-void method) | 7 | hand |
 | `ptrcallWithStringNameArgRetStringNameList` | F | `GraphEdit.get_attached_nodes_of_frame` (non-const method) | 1 | PT_STRING_NAME |
+| `ptrcallWithStringNameArgRetTransform3DList` | B | `XRInterface.get_camera_offsets` (an XR read: a fresh or uninitialized interface answers an empty list (SCENE_ROWS)) | 2 | PT_STRING_NAME |
 | `ptrcallWithStringNameArgRetTypedObjectList` | F | `SceneTree.get_nodes_in_group` (non-const method) | 2 | PT_STRING_NAME |
 | `ptrcallWithStringNameArgRetVariantScalar` | B | `AnimationNode.get_parameter` (const non-void method) | 20 | hand |
 | `ptrcallWithStringNameArgRetVariantScalarOwned` | F | `ClassDB.instantiate` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | hand |
@@ -1589,6 +1597,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithStringNamePackedStringListAndStringNameArgs` | F | `Translation.add_plural_message` (void method) | 1 | PT_PACKED_STRING_ARRAY PT_STRING_NAME PT_VOID |
 | `ptrcallWithStringNamePackedStringListArgRetVariantScalar` | D | `ProjectSettings.get_setting_with_override_and_custom_features` (const non-void singleton method) | 1 | PT_PACKED_STRING_ARRAY PT_STRING_NAME |
 | `ptrcallWithStringNameStringAndVariantArg` | F | `SceneTree.set_group` (void method) | 1 | PT_STRING PT_STRING_NAME PT_VARIANT PT_VOID |
+| `ptrcallWithStringNameThreeDoubleArgsRetProjectionList` | B | `XRInterface.get_camera_projections` (an XR read: a fresh or uninitialized interface answers an empty list (SCENE_ROWS)) | 2 | PT_FLOAT64 PT_STRING_NAME |
 | `ptrcallWithStringNameThreeDoubleBoolTwoLongArgs` | F | `AnimationPlayer.play_with_capture` (void method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_STRING_NAME PT_VOID |
 | `ptrcallWithStringNameTransform3DTwoVector3LongArgs` | E | `XRPositionalTracker.set_pose` (*XR*: an XR runtime and its devices) | 1 | PT_INT64 PT_STRING_NAME PT_TRANSFORM3D PT_VECTOR3 PT_VOID |
 | `ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs` | F | `AnimationNode.blend_animation` (void method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_STRING_NAME PT_VOID |
@@ -1635,6 +1644,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithThreeDoubleBoolArgsRetDouble` | F | `SkeletonModification2D.clamp_angle` (non-const method) | 1 | PT_BOOL PT_FLOAT64 |
 | `ptrcallWithThreeIntAndVector2Arg` | F | `FontFile.set_glyph_advance` (void method) | 1 | PT_INT64 PT_VECTOR2 PT_VOID |
 | `ptrcallWithThreeIntArgs` | F | `AudioServer.swap_bus_effects` (void singleton method) | 5 | PT_INT64 PT_VOID |
+| `ptrcallWithThreeIntArgsRetDouble` | D | `Input.get_joy_touchpad_finger_pressure` (a read of a device no host has: -1, which a no-op cannot answer (SCENE_ROWS)) | 1 | PT_FLOAT64 PT_INT64 |
 | `ptrcallWithThreeIntArgsRetInt` | B | `FontFile.get_glyph_index` (const non-void method) | 1 | PT_INT64 |
 | `ptrcallWithThreeIntArgsRetObject` | F | `AudioServer.get_bus_effect_instance` (non-const singleton method) | 1 | PT_INT64 PT_OBJECT |
 | `ptrcallWithThreeIntArgsRetVector2` | B | `FontFile.get_glyph_advance` (const non-void method) | 2 | PT_INT64 PT_VECTOR2 |
@@ -1687,6 +1697,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithTwoBoolArgsRetObject` | F | `Mesh.create_convex_shape` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_OBJECT |
 | `ptrcallWithTwoBoolArgsRetString` | F | `Time.get_datetime_string_from_system` (reads the clock: two reads an oracle compares can differ (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_STRING |
 | `ptrcallWithTwoBoolArgsRetVector2iList` | B | `TextEdit.get_line_ranges_from_carets` (const non-void method) | 1 | PT_BOOL |
+| `ptrcallWithTwoBoolDoubleArgsRetLong` | B | `Image.generate_mipmaps` (a real image: the mipmaps are the result, the Error of a fresh empty image is the failure path (SCENE_ROWS)) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 |
 | `ptrcallWithTwoByteArrayArgsRetBool` | F | `Crypto.constant_time_compare` (non-const method) | 1 | PT_BOOL PT_PACKED_BYTE_ARRAY |
 | `ptrcallWithTwoCallableArgs` | E | `DisplayServer.help_set_search_callbacks` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_CALLABLE PT_VOID |
 | `ptrcallWithTwoColorArgs` | F | `RichTextLabel.set_cell_row_background_color` (void method) | 1 | PT_COLOR PT_VOID |
@@ -1768,6 +1779,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs` | F | `RichTextLabel.push_paragraph` (void method) | 1 | PT_INT64 PT_PACKED_FLOAT32_ARRAY PT_STRING PT_VOID |
 | `ptrcallWithTwoLongUInt32RIDListPackedInt64ListArgs` | E | `RenderingDevice.draw_list_bind_vertex_buffers_format` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_PACKED_INT64_ARRAY PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithTwoObjectArgs` | F | `CanvasItem.draw_multimesh` on `Control` (void method) | 7 | PT_OBJECT PT_VOID |
+| `ptrcallWithTwoObjectArgsRetBool` | B | `PhysicsDirectSpaceState2D.cast_motion_into` (fills its result object from a query on a world with one static box (SCENE_ROWS)) | 12 | PT_BOOL PT_OBJECT |
 | `ptrcallWithTwoObjectArgsRetLong` | E | `StreamPeerTLS.accept_stream` (StreamPeerTLS: opens sockets or talks to the network) | 1 | PT_INT64 PT_OBJECT |
 | `ptrcallWithTwoObjectArgsRetObject` | C | `TLSOptions.server` (static with a return value) | 1 | PT_OBJECT |
 | `ptrcallWithTwoObjectByteArrayListArgsRetRID` | E | `RenderingDevice.texture_create` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_OBJECT PT_RID PT_TYPED_ARRAY_BLOB |
@@ -1855,6 +1867,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithTwoStringNameTwoObjectBoolArgsRetRID` | E | `RenderSceneBuffersRD.create_texture_from_format` (*RenderSceneBuffers*: only meaningful inside a frame being rendered by a RenderingDevice renderer) | 1 | PT_BOOL PT_OBJECT PT_RID PT_STRING_NAME |
 | `ptrcallWithTwoStringNameUInt32ArgRetVector2i` | E | `RenderSceneBuffersRD.get_texture_slice_size` (*RenderSceneBuffers*: only meaningful inside a frame being rendered by a RenderingDevice renderer) | 1 | PT_INT64 PT_STRING_NAME PT_VECTOR2I |
 | `ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong` | E | `EditorExportPlatform.ssh_push_to_remote` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING |
+| `ptrcallWithTwoStringPackedStringListArgs` | F | `EditorExportPlugin.add_apple_embedded_platform_spm_package` (instantiable only in the editor: weak in a game. The plugin only stores the package (SCENE_ROWS)) | 1 | PT_PACKED_STRING_ARRAY PT_STRING PT_VOID |
 | `ptrcallWithTwoStringPackedStringListCallableArgsRetLong` | E | `DisplayServer.dialog_show` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_CALLABLE PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING |
 | `ptrcallWithTwoStringPackedStringListStringArrayIntArgsRetLong` | E | `EditorExportPlatform.ssh_run_on_remote` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_ARRAY PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING |
 | `ptrcallWithTwoStringPackedStringListStringIntArgsRetLong` | E | `EditorExportPlatform.ssh_run_on_remote_no_wait` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING |

@@ -13,8 +13,8 @@ internal object ApiExerciseRows {
   /** Referenced helpers the inventory excludes (case E): reported, never run. */
   const val EXCLUDED: Int = 339
 
-  /** Rows in this file: 45 static (C), 60 pair (A), 321 const (B), 168 singleton (D), 141 Variant type (T), 605 reach (F). */
-  const val ROWS: Int = 1340
+  /** Rows in this file: 45 static (C), 60 pair (A), 337 const (B), 173 singleton (D), 141 Variant type (T), 609 reach (F). */
+  const val ROWS: Int = 1365
 
   fun runStatic(r: ApiExerciseRunner) {
     c000(r)
@@ -449,6 +449,22 @@ internal object ApiExerciseRows {
     b318(r)
     b319(r)
     b320(r)
+    b321(r)
+    b322(r)
+    b323(r)
+    b324(r)
+    b325(r)
+    b326(r)
+    b327(r)
+    b328(r)
+    b329(r)
+    b330(r)
+    b331(r)
+    b332(r)
+    b333(r)
+    b334(r)
+    b335(r)
+    b336(r)
   }
 
   fun runSingletons(r: ApiExerciseRunner) {
@@ -620,6 +636,11 @@ internal object ApiExerciseRows {
     d165(r)
     d166(r)
     d167(r)
+    d168(r)
+    d169(r)
+    d170(r)
+    d171(r)
+    d172(r)
   }
 
   fun runTypes(r: ApiExerciseRunner) {
@@ -1372,6 +1393,10 @@ internal object ApiExerciseRows {
     f602(r)
     f603(r)
     f604(r)
+    f605(r)
+    f606(r)
+    f607(r)
+    f608(r)
   }
 
   // static with a return value; weak: argument-free static whose result can be its type's zero on a healthy host
@@ -8717,6 +8742,477 @@ internal object ApiExerciseRows {
     r.end()
   }
 
+  // a real image: the mipmaps are the result, the Error of a fresh empty image is the failure path (SCENE_ROWS)
+  private fun b321(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoBoolDoubleArgsRetLong", "Image.generate_mipmaps")
+    try {
+      val o = r.track(checkNotNull(Image.createEmpty(8, 8, false, Image.Format.RGBA8)))
+      val p = r.track(checkNotNull(Image.createEmpty(8, 8, false, Image.Format.RGBA8)))
+      val got = o.generateMipmaps(true, true, 0.25)
+      r.wrapperValue(o.hasMipmaps(), false)
+      r.oracle()
+      val oracle = p.call("generate_mipmaps", true, true, 0.25)
+      r.readBack(got, oracle, "generate_mipmaps")
+      r.sameAsCall(o.hasMipmaps(), p.hasMipmaps())
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // fills its result object from a query on a world with one static box (SCENE_ROWS)
+  private fun b322(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoObjectArgsRetBool", "PhysicsDirectSpaceState2D.cast_motion_into")
+    try {
+      val w = r.physics2D()
+      val q = w.castQuery()
+      val a = r.track(PhysicsCastMotionResult2D.create())
+      val b = r.track(PhysicsCastMotionResult2D.create())
+      val queryRefs = q.getReferenceCount()
+      val resultRefs = a.getReferenceCount()
+      val got = w.state.castMotionInto(q, a)
+      r.wrapperValue(got, false)
+      r.sameReferences(q, queryRefs)
+      r.sameReferences(a, resultRefs)
+      r.wrapperValue(a.getSafeFraction(), false)
+      r.wrapperValue(a.getUnsafeFraction(), false)
+      r.oracle()
+      val oracle = r.track(w.state.call("cast_motion_into", q, b))
+      r.readBack(a.getSafeFraction(), b.getSafeFraction(), "getSafeFraction()")
+      r.readBack(a.getUnsafeFraction(), b.getUnsafeFraction(), "getUnsafeFraction()")
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // fills its result object from a query on a world with one static box (SCENE_ROWS)
+  private fun b323(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoObjectArgsRetBool", "PhysicsDirectSpaceState2D.collide_shape_into")
+    try {
+      val w = r.physics2D()
+      val q = w.touchQuery()
+      val a = r.track(PhysicsCollideShapeResult2D.create())
+      val b = r.track(PhysicsCollideShapeResult2D.create())
+      val queryRefs = q.getReferenceCount()
+      val resultRefs = a.getReferenceCount()
+      val got = w.state.collideShapeInto(q, a)
+      r.wrapperValue(got, false)
+      r.sameReferences(q, queryRefs)
+      r.sameReferences(a, resultRefs)
+      r.wrapperValue(a.getCollisionCount(), false)
+      r.wrapperValue(a.getPointOnQueriedShape(0), false)
+      r.wrapperValue(a.getPointOnCollidingShape(0), false)
+      r.oracle()
+      val oracle = r.track(w.state.call("collide_shape_into", q, b))
+      r.readBack(a.getCollisionCount(), b.getCollisionCount(), "getCollisionCount()")
+      r.readBack(a.getPointOnQueriedShape(0), b.getPointOnQueriedShape(0), "getPointOnQueriedShape(0)")
+      r.readBack(a.getPointOnCollidingShape(0), b.getPointOnCollidingShape(0), "getPointOnCollidingShape(0)")
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // fills its result object from a query on a world with one static box (SCENE_ROWS)
+  private fun b324(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoObjectArgsRetBool", "PhysicsDirectSpaceState2D.get_rest_info_into")
+    try {
+      val w = r.physics2D()
+      val q = w.touchQuery()
+      val a = r.track(PhysicsGetRestInfoResult2D.create())
+      val b = r.track(PhysicsGetRestInfoResult2D.create())
+      val queryRefs = q.getReferenceCount()
+      val resultRefs = a.getReferenceCount()
+      val got = w.state.getRestInfoInto(q, a)
+      r.wrapperValue(got, false)
+      r.sameReferences(q, queryRefs)
+      r.sameReferences(a, resultRefs)
+      r.wrapperValue(a.getPoint(), false)
+      r.wrapperValue(a.getNormal(), false)
+      r.wrapperValue(a.getColliderRid(), false)
+      r.wrapperValue(a.getColliderId(), false)
+      r.oracle()
+      val oracle = r.track(w.state.call("get_rest_info_into", q, b))
+      r.readBack(a.getPoint(), b.getPoint(), "getPoint()")
+      r.readBack(a.getNormal(), b.getNormal(), "getNormal()")
+      r.readBack(a.getColliderRid(), b.getColliderRid(), "getColliderRid()")
+      r.readBack(a.getColliderId(), b.getColliderId(), "getColliderId()")
+      r.readBack(a.getColliderShape(), b.getColliderShape(), "getColliderShape()")
+      r.readBack(a.getColliderVelocity(), b.getColliderVelocity(), "getColliderVelocity()")
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // fills its result object from a query on a world with one static box (SCENE_ROWS)
+  private fun b325(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoObjectArgsRetBool", "PhysicsDirectSpaceState2D.intersect_point_into")
+    try {
+      val w = r.physics2D()
+      val q = w.pointQuery()
+      val a = r.track(PhysicsIntersectPointResult2D.create())
+      val b = r.track(PhysicsIntersectPointResult2D.create())
+      val queryRefs = q.getReferenceCount()
+      val resultRefs = a.getReferenceCount()
+      val got = w.state.intersectPointInto(q, a)
+      r.wrapperValue(got, false)
+      r.sameReferences(q, queryRefs)
+      r.sameReferences(a, resultRefs)
+      r.wrapperValue(a.getIntersectionCount(), false)
+      r.wrapperValue(a.getColliderRid(0), false)
+      r.wrapperValue(a.getColliderId(0), false)
+      r.wrapperValue(a.getCollider(0), false)
+      r.oracle()
+      val oracle = r.track(w.state.call("intersect_point_into", q, b))
+      r.readBack(a.getIntersectionCount(), b.getIntersectionCount(), "getIntersectionCount()")
+      r.readBack(a.getColliderRid(0), b.getColliderRid(0), "getColliderRid(0)")
+      r.readBack(a.getColliderId(0), b.getColliderId(0), "getColliderId(0)")
+      r.readBack(a.getColliderShape(0), b.getColliderShape(0), "getColliderShape(0)")
+      r.readBack(a.getCollider(0), b.getCollider(0), "getCollider(0)")
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // fills its result object from a query on a world with one static box (SCENE_ROWS)
+  private fun b326(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoObjectArgsRetBool", "PhysicsDirectSpaceState2D.intersect_ray_into")
+    try {
+      val w = r.physics2D()
+      val q = w.rayQuery()
+      val a = r.track(PhysicsIntersectRayResult2D.create())
+      val b = r.track(PhysicsIntersectRayResult2D.create())
+      val queryRefs = q.getReferenceCount()
+      val resultRefs = a.getReferenceCount()
+      val got = w.state.intersectRayInto(q, a)
+      r.wrapperValue(got, false)
+      r.sameReferences(q, queryRefs)
+      r.sameReferences(a, resultRefs)
+      r.wrapperValue(a.getPosition(), false)
+      r.wrapperValue(a.getNormal(), false)
+      r.wrapperValue(a.getColliderRid(), false)
+      r.wrapperValue(a.getColliderId(), false)
+      r.wrapperValue(a.getCollider(), false)
+      r.oracle()
+      val oracle = r.track(w.state.call("intersect_ray_into", q, b))
+      r.readBack(a.getPosition(), b.getPosition(), "getPosition()")
+      r.readBack(a.getNormal(), b.getNormal(), "getNormal()")
+      r.readBack(a.getColliderRid(), b.getColliderRid(), "getColliderRid()")
+      r.readBack(a.getColliderId(), b.getColliderId(), "getColliderId()")
+      r.readBack(a.getColliderShape(), b.getColliderShape(), "getColliderShape()")
+      r.readBack(a.getCollider(), b.getCollider(), "getCollider()")
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // fills its result object from a query on a world with one static box (SCENE_ROWS)
+  private fun b327(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoObjectArgsRetBool", "PhysicsDirectSpaceState2D.intersect_shape_into")
+    try {
+      val w = r.physics2D()
+      val q = w.overlapQuery()
+      val a = r.track(PhysicsIntersectShapeResult2D.create())
+      val b = r.track(PhysicsIntersectShapeResult2D.create())
+      val queryRefs = q.getReferenceCount()
+      val resultRefs = a.getReferenceCount()
+      val got = w.state.intersectShapeInto(q, a)
+      r.wrapperValue(got, false)
+      r.sameReferences(q, queryRefs)
+      r.sameReferences(a, resultRefs)
+      r.wrapperValue(a.getIntersectionCount(), false)
+      r.wrapperValue(a.getColliderRid(0), false)
+      r.wrapperValue(a.getColliderId(0), false)
+      r.wrapperValue(a.getCollider(0), false)
+      r.oracle()
+      val oracle = r.track(w.state.call("intersect_shape_into", q, b))
+      r.readBack(a.getIntersectionCount(), b.getIntersectionCount(), "getIntersectionCount()")
+      r.readBack(a.getColliderRid(0), b.getColliderRid(0), "getColliderRid(0)")
+      r.readBack(a.getColliderId(0), b.getColliderId(0), "getColliderId(0)")
+      r.readBack(a.getColliderShape(0), b.getColliderShape(0), "getColliderShape(0)")
+      r.readBack(a.getCollider(0), b.getCollider(0), "getCollider(0)")
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // fills its result object from a query on a world with one static box (SCENE_ROWS)
+  private fun b328(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoObjectArgsRetBool", "PhysicsDirectSpaceState3D.cast_motion_into")
+    try {
+      val w = r.physics3D()
+      val q = w.castQuery()
+      val a = r.track(PhysicsCastMotionResult3D.create())
+      val b = r.track(PhysicsCastMotionResult3D.create())
+      val queryRefs = q.getReferenceCount()
+      val resultRefs = a.getReferenceCount()
+      val got = w.state.castMotionInto(q, a)
+      r.wrapperValue(got, false)
+      r.sameReferences(q, queryRefs)
+      r.sameReferences(a, resultRefs)
+      r.wrapperValue(a.getSafeFraction(), false)
+      r.wrapperValue(a.getUnsafeFraction(), false)
+      r.oracle()
+      val oracle = r.track(w.state.call("cast_motion_into", q, b))
+      r.readBack(a.getSafeFraction(), b.getSafeFraction(), "getSafeFraction()")
+      r.readBack(a.getUnsafeFraction(), b.getUnsafeFraction(), "getUnsafeFraction()")
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // fills its result object from a query on a world with one static box (SCENE_ROWS)
+  private fun b329(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoObjectArgsRetBool", "PhysicsDirectSpaceState3D.collide_shape_into")
+    try {
+      val w = r.physics3D()
+      val q = w.touchQuery()
+      val a = r.track(PhysicsCollideShapeResult3D.create())
+      val b = r.track(PhysicsCollideShapeResult3D.create())
+      val queryRefs = q.getReferenceCount()
+      val resultRefs = a.getReferenceCount()
+      val got = w.state.collideShapeInto(q, a)
+      r.wrapperValue(got, false)
+      r.sameReferences(q, queryRefs)
+      r.sameReferences(a, resultRefs)
+      r.wrapperValue(a.getCollisionCount(), false)
+      r.wrapperValue(a.getPointOnQueriedShape(0), false)
+      r.wrapperValue(a.getPointOnCollidingShape(0), false)
+      r.oracle()
+      val oracle = r.track(w.state.call("collide_shape_into", q, b))
+      r.readBack(a.getCollisionCount(), b.getCollisionCount(), "getCollisionCount()")
+      r.readBack(a.getPointOnQueriedShape(0), b.getPointOnQueriedShape(0), "getPointOnQueriedShape(0)")
+      r.readBack(a.getPointOnCollidingShape(0), b.getPointOnCollidingShape(0), "getPointOnCollidingShape(0)")
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // fills its result object from a query on a world with one static box (SCENE_ROWS)
+  private fun b330(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoObjectArgsRetBool", "PhysicsDirectSpaceState3D.get_rest_info_into")
+    try {
+      val w = r.physics3D()
+      val q = w.touchQuery()
+      val a = r.track(PhysicsGetRestInfoResult3D.create())
+      val b = r.track(PhysicsGetRestInfoResult3D.create())
+      val queryRefs = q.getReferenceCount()
+      val resultRefs = a.getReferenceCount()
+      val got = w.state.getRestInfoInto(q, a)
+      r.wrapperValue(got, false)
+      r.sameReferences(q, queryRefs)
+      r.sameReferences(a, resultRefs)
+      r.wrapperValue(a.getPoint(), false)
+      r.wrapperValue(a.getNormal(), false)
+      r.wrapperValue(a.getColliderRid(), false)
+      r.wrapperValue(a.getColliderId(), false)
+      r.oracle()
+      val oracle = r.track(w.state.call("get_rest_info_into", q, b))
+      r.readBack(a.getPoint(), b.getPoint(), "getPoint()")
+      r.readBack(a.getNormal(), b.getNormal(), "getNormal()")
+      r.readBack(a.getColliderRid(), b.getColliderRid(), "getColliderRid()")
+      r.readBack(a.getColliderId(), b.getColliderId(), "getColliderId()")
+      r.readBack(a.getColliderShape(), b.getColliderShape(), "getColliderShape()")
+      r.readBack(a.getColliderVelocity(), b.getColliderVelocity(), "getColliderVelocity()")
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // fills its result object from a query on a world with one static box (SCENE_ROWS)
+  private fun b331(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoObjectArgsRetBool", "PhysicsDirectSpaceState3D.intersect_point_into")
+    try {
+      val w = r.physics3D()
+      val q = w.pointQuery()
+      val a = r.track(PhysicsIntersectPointResult3D.create())
+      val b = r.track(PhysicsIntersectPointResult3D.create())
+      val queryRefs = q.getReferenceCount()
+      val resultRefs = a.getReferenceCount()
+      val got = w.state.intersectPointInto(q, a)
+      r.wrapperValue(got, false)
+      r.sameReferences(q, queryRefs)
+      r.sameReferences(a, resultRefs)
+      r.wrapperValue(a.getIntersectionCount(), false)
+      r.wrapperValue(a.getColliderRid(0), false)
+      r.wrapperValue(a.getColliderId(0), false)
+      r.wrapperValue(a.getCollider(0), false)
+      r.oracle()
+      val oracle = r.track(w.state.call("intersect_point_into", q, b))
+      r.readBack(a.getIntersectionCount(), b.getIntersectionCount(), "getIntersectionCount()")
+      r.readBack(a.getColliderRid(0), b.getColliderRid(0), "getColliderRid(0)")
+      r.readBack(a.getColliderId(0), b.getColliderId(0), "getColliderId(0)")
+      r.readBack(a.getColliderShape(0), b.getColliderShape(0), "getColliderShape(0)")
+      r.readBack(a.getCollider(0), b.getCollider(0), "getCollider(0)")
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // fills its result object from a query on a world with one static box (SCENE_ROWS)
+  private fun b332(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoObjectArgsRetBool", "PhysicsDirectSpaceState3D.intersect_ray_into")
+    try {
+      val w = r.physics3D()
+      val q = w.rayQuery()
+      val a = r.track(PhysicsIntersectRayResult3D.create())
+      val b = r.track(PhysicsIntersectRayResult3D.create())
+      val queryRefs = q.getReferenceCount()
+      val resultRefs = a.getReferenceCount()
+      val got = w.state.intersectRayInto(q, a)
+      r.wrapperValue(got, false)
+      r.sameReferences(q, queryRefs)
+      r.sameReferences(a, resultRefs)
+      r.wrapperValue(a.getPosition(), false)
+      r.wrapperValue(a.getNormal(), false)
+      r.wrapperValue(a.getColliderRid(), false)
+      r.wrapperValue(a.getColliderId(), false)
+      r.wrapperValue(a.getCollider(), false)
+      r.oracle()
+      val oracle = r.track(w.state.call("intersect_ray_into", q, b))
+      r.readBack(a.getPosition(), b.getPosition(), "getPosition()")
+      r.readBack(a.getNormal(), b.getNormal(), "getNormal()")
+      r.readBack(a.getColliderRid(), b.getColliderRid(), "getColliderRid()")
+      r.readBack(a.getColliderId(), b.getColliderId(), "getColliderId()")
+      r.readBack(a.getColliderShape(), b.getColliderShape(), "getColliderShape()")
+      r.readBack(a.getCollider(), b.getCollider(), "getCollider()")
+      r.readBack(a.getColliderFaceIndex(), b.getColliderFaceIndex(), "getColliderFaceIndex()")
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // fills its result object from a query on a world with one static box (SCENE_ROWS)
+  private fun b333(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithTwoObjectArgsRetBool", "PhysicsDirectSpaceState3D.intersect_shape_into")
+    try {
+      val w = r.physics3D()
+      val q = w.overlapQuery()
+      val a = r.track(PhysicsIntersectShapeResult3D.create())
+      val b = r.track(PhysicsIntersectShapeResult3D.create())
+      val queryRefs = q.getReferenceCount()
+      val resultRefs = a.getReferenceCount()
+      val got = w.state.intersectShapeInto(q, a)
+      r.wrapperValue(got, false)
+      r.sameReferences(q, queryRefs)
+      r.sameReferences(a, resultRefs)
+      r.wrapperValue(a.getIntersectionCount(), false)
+      r.wrapperValue(a.getColliderRid(0), false)
+      r.wrapperValue(a.getColliderId(0), false)
+      r.wrapperValue(a.getCollider(0), false)
+      r.oracle()
+      val oracle = r.track(w.state.call("intersect_shape_into", q, b))
+      r.readBack(a.getIntersectionCount(), b.getIntersectionCount(), "getIntersectionCount()")
+      r.readBack(a.getColliderRid(0), b.getColliderRid(0), "getColliderRid(0)")
+      r.readBack(a.getColliderId(0), b.getColliderId(0), "getColliderId(0)")
+      r.readBack(a.getColliderShape(0), b.getColliderShape(0), "getColliderShape(0)")
+      r.readBack(a.getCollider(0), b.getCollider(0), "getCollider(0)")
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // a slice of a real texture: weak where the renderer has no RenderingDevice (headless, Compatibility) (SCENE_ROWS)
+  private fun b334(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithObjectRIDThreeUInt32LongUInt32ArgsRetRID", "RenderingDevice.texture_create_shared_from_slice")
+    try {
+      val rd = RenderingServer.getRenderingDevice()
+      if (rd == null) {
+        r.weakBecause("this renderer has no RenderingDevice")
+      } else {
+        val format = r.track(RDTextureFormat.create())
+        format.width = 4L
+        format.height = 4L
+        format.format = RenderingDevice.DataFormat.R8G8B8A8_UNORM
+        format.usageBits = RenderingDevice.TextureUsageBits(129L)
+        val view = r.track(RDTextureView.create())
+        val texture = rd.textureCreate(format, view, emptyList())
+        if (texture.value == 0L) {
+          r.weakBecause("the RenderingDevice made no texture")
+        } else {
+          try {
+            val got = rd.textureCreateSharedFromSlice(view, texture, 0L, 0L, 1L, RenderingDevice.TextureSliceType.SLICE_2D, 1L)
+            r.wrapperValue(got, false)
+            if (got.value != 0L) rd.freeRid(got)
+            r.oracle()
+            val oracle = rd.call("texture_create_shared_from_slice", view, texture, 0L, 0L, 1L, 0L, 1L) as RID
+            r.wrapperValue(oracle, false)
+            if (oracle.value != 0L) rd.freeRid(oracle)
+            r.sameAsCall(got.value != 0L, oracle.value != 0L)
+          } finally {
+            rd.freeRid(texture)
+          }
+        }
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // an XR read: a fresh or uninitialized interface answers an empty list (SCENE_ROWS)
+  private fun b335(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameArgRetTransform3DList", "XRInterface.get_camera_offsets")
+    try {
+      val i = r.xrInterface()
+      if (i == null) {
+        r.weakBecause("this build has no Native mobile XR interface")
+      } else {
+        val got = i.getCameraOffsets("head")
+        r.wrapperValue(got, false)
+        r.oracle()
+        val oracle = r.track(i.call("get_camera_offsets", "head"))
+        r.sameAsCall(got, oracle)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // an XR read: a fresh or uninitialized interface answers an empty list (SCENE_ROWS)
+  private fun b336(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringNameThreeDoubleArgsRetProjectionList", "XRInterface.get_camera_projections")
+    try {
+      val i = r.xrInterface()
+      if (i == null) {
+        r.weakBecause("this build has no Native mobile XR interface")
+      } else {
+        val got = i.getCameraProjections("head", 1.5, 0.1, 100.0)
+        r.wrapperValue(got, false)
+        r.oracle()
+        val oracle = r.track(i.call("get_camera_projections", "head", 1.5, 0.1, 100.0))
+        r.sameAsCall(got, oracle)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
   // const non-void singleton method
   private fun d000(r: ApiExerciseRunner) {
     r.begin('D', "ptrcallWithAABBRIDArgsRetPackedInt64List", "RenderingServer.instances_cull_aabb")
@@ -12253,6 +12749,98 @@ internal object ApiExerciseRows {
       } finally {
         if (viaCall.value != 0L) RenderingServer.freeRid(viaCall)
         if (rid.value != 0L) RenderingServer.freeRid(rid)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // a read of the screen, safe on every host: empty, so weak, without a notch (SCENE_ROWS)
+  private fun d168(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithIntArgRetRect2List", "DisplayServer.get_display_cutouts")
+    try {
+      val s = r.singleton("DisplayServer")
+      val got = DisplayServer.getDisplayCutouts(-1)
+      r.oracle()
+      val oracle = r.track(s.call("get_display_cutouts", -1))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // a read of a device no host has: -1, which a no-op cannot answer (SCENE_ROWS)
+  private fun d169(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithThreeIntArgsRetDouble", "Input.get_joy_touchpad_finger_pressure")
+    try {
+      val s = r.singleton("Input")
+      val got = Input.getJoyTouchpadFingerPressure(7, 3, 5)
+      r.oracle()
+      val oracle = s.call("get_joy_touchpad_finger_pressure", 7, 3, 5)
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // a real 6DOF joint: a fresh one answers with an engine error. Only Jolt keeps the target (SCENE_ROWS)
+  private fun d170(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithRIDArgRetQuaternion", "PhysicsServer3D.generic_6dof_joint_get_angular_target_rotation")
+    try {
+      val j = r.joint6dof()
+      val s = r.singleton("PhysicsServer3D")
+      val target = Quaternion(0.0, 0.0, 0.6, 0.8)
+      PhysicsServer3D.generic6dofJointSetAngularTargetRotation(j.joint, target)
+      val got = PhysicsServer3D.generic6dofJointGetAngularTargetRotation(j.joint)
+      if (ProjectSettings.getSetting("physics/3d/physics_engine") == "Jolt Physics") {
+        r.readBack(got, target, "the target just set")
+      }
+      r.oracle()
+      s.call("generic_6dof_joint_set_angular_target_rotation", j.joint, target)
+      val oracle = s.call("generic_6dof_joint_get_angular_target_rotation", j.joint)
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // an XR read: a fresh or uninitialized interface answers an empty list (SCENE_ROWS)
+  private fun d171(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithStringNameArgRetTransform3DList", "XRServer.get_camera_offsets")
+    try {
+      val i = r.xrInterface()
+      if (i == null) {
+        r.weakBecause("this build has no Native mobile XR interface")
+      } else {
+        val got = XRServer.getCameraOffsets("head")
+        r.wrapperValue(got, false)
+        r.oracle()
+        val oracle = r.track(r.singleton("XRServer").call("get_camera_offsets", "head"))
+        r.sameAsCall(got, oracle)
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // an XR read: a fresh or uninitialized interface answers an empty list (SCENE_ROWS)
+  private fun d172(r: ApiExerciseRunner) {
+    r.begin('D', "ptrcallWithStringNameThreeDoubleArgsRetProjectionList", "XRServer.get_camera_projections")
+    try {
+      val i = r.xrInterface()
+      if (i == null) {
+        r.weakBecause("this build has no Native mobile XR interface")
+      } else {
+        val got = XRServer.getCameraProjections("head", 1.5, 0.1, 100.0)
+        r.wrapperValue(got, false)
+        r.oracle()
+        val oracle = r.track(r.singleton("XRServer").call("get_camera_projections", "head", 1.5, 0.1, 100.0))
+        r.sameAsCall(got, oracle)
       }
     } catch (t: Throwable) {
       r.threw(t)
@@ -23881,6 +24469,69 @@ internal object ApiExerciseRows {
       val a1: Int = 7
       o.setCellItem(a0, a1)
       r.reached()
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // a hint for where the IME draws: nothing shows while no text field has focus (SCENE_ROWS)
+  private fun f605(r: ApiExerciseRunner) {
+    r.begin('F', "ptrcallWithRect2iAndIntArg", "DisplayServer.window_set_ime_rect")
+    try {
+      DisplayServer.windowSetImeRect(Rect2i(Vector2i(1, 2), Vector2i(3, 4)), 0)
+      r.reached()
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // instantiable only in the editor: weak in a game. The plugin only stores the package (SCENE_ROWS)
+  private fun f606(r: ApiExerciseRunner) {
+    r.begin('F', "ptrcallWithTwoStringPackedStringListArgs", "EditorExportPlugin.add_apple_embedded_platform_spm_package")
+    try {
+      if (!ClassDB.canInstantiate("EditorExportPlugin")) {
+        r.weakBecause("EditorExportPlugin can only be instantiated by the editor")
+      } else {
+        val o = r.ref(EditorExportPlugin(r.construct("EditorExportPlugin")))
+        o.addAppleEmbeddedPlatformSpmPackage("https://example.org/kanama", "1.0.0", listOf("Kanama"))
+        r.reached()
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // a real 6DOF joint; the read-back is the getter's row (SCENE_ROWS)
+  private fun f607(r: ApiExerciseRunner) {
+    r.begin('F', "ptrcallWithRIDAndQuaternionArgs", "PhysicsServer3D.generic_6dof_joint_set_angular_target_rotation")
+    try {
+      val j = r.joint6dof()
+      PhysicsServer3D.generic6dofJointSetAngularTargetRotation(j.joint, Quaternion(0.0, 0.0, 0.6, 0.8))
+      r.reached()
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // two views with offsets, the shape a headset uses; the server has no getter for them (SCENE_ROWS)
+  private fun f608(r: ApiExerciseRunner) {
+    r.begin('F', "ptrcallWithRIDProjectionListTransform3DListArgs", "RenderingServer.camera_set_xr_projections")
+    try {
+      var camera = RID(0L)
+      try {
+        camera = RenderingServer.cameraCreate()
+        val view = Projection(Vector4(1.0, 0.0, 0.0, 0.0), Vector4(0.0, 1.0, 0.0, 0.0), Vector4(0.0, 0.0, -1.0, -1.0), Vector4(0.0, 0.0, -0.25, 0.0))
+        val left = Transform3D(Transform3D.IDENTITY.basis, Vector3(-0.03, 0.0, 0.0))
+        val right = Transform3D(Transform3D.IDENTITY.basis, Vector3(0.03, 0.0, 0.0))
+        RenderingServer.cameraSetXrProjections(camera, listOf(view, view), listOf(left, right))
+        r.reached()
+      } finally {
+        if (camera.value != 0L) RenderingServer.freeRid(camera)
+      }
     } catch (t: Throwable) {
       r.threw(t)
     }
