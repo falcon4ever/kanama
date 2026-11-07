@@ -403,6 +403,14 @@ case("check_gate_evidence.py", py("check_gate_evidence.py"),
 case("check_godot_version_pin.py", py("check_godot_version_pin.py"),
      [Edit("gradle.properties", "kanamaGodotVersion=", "kanamaGodotVersion=0.")],
      "Godot version pins drifted", "gradle.properties pins a different Godot than CI")
+case("check_godot_version_pin.py (release guard wired)", py("check_godot_version_pin.py"),
+     [Edit(".github/workflows/package.yml", "run: python3 scripts/check_godot_version_pin.py --release", "run: echo no guard")],
+     "lost its release guard", "package.yml no longer runs the release guard on a tag")
+# The tree's own pin may be a prerelease, so the guard is shown green on a scratch copy of a stable pin.
+case("check_godot_version_pin.py --release", py("check_godot_version_pin.py", "--release", "--properties", "build/redrun-release-pin.properties"),
+     [Edit("build/redrun-release-pin.properties", "kanamaGodotVersion=9.9.stable", "kanamaGodotVersion=9.9.beta2")],
+     "is not a stable Godot release", "a release is cut while the pin is a prerelease",
+     pre=[[PY, "-c", "import pathlib; p = pathlib.Path('build/redrun-release-pin.properties'); p.parent.mkdir(exist_ok=True); p.write_text('kanamaGodotVersion=9.9.stable\\n')"]])
 case("check_kotlin_pins.py", py("check_kotlin_pins.py"),
      [Edit("templates/release-kit/build.gradle.kts", 'id("com.google.devtools.ksp") version "', 'id("com.google.devtools.ksp") version "0.')],
      "templates/release-kit/build.gradle.kts:3: ksp 0.2", "the release kit pins a KSP version the root build does not use")

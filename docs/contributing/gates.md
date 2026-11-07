@@ -93,7 +93,9 @@ scripts/editor_probe_smoke.sh /absolute/path/to/godot-4.7.2-stable
 The Godot pin is `kanamaGodotVersion` in `gradle.properties`;
 `scripts/check_godot_version_pin.py` fails `local_ci.sh` when a workflow or
 build file drifts from it, and the [Godot Upgrade Runbook](godot-upgrade.md) is
-the only process that moves it. The JDK floor is the Gradle toolchain
+the only process that moves it. With `--release` the same script fails unless
+the pin is a stable Godot; the package workflow runs that first on every `v*`
+tag. The JDK floor is the Gradle toolchain
 (`jvmToolchain(25)` in `build.gradle.kts`). Gradle build cache is enabled for
 the main Kanama build and the Android plugin build.
 

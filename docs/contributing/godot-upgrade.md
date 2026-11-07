@@ -7,16 +7,20 @@ runs and release wording.
 
 ## Upgrade Policy
 
-Kanama re-pins **only on stable Godot releases**. Dev, beta and rc builds are
-never the baseline, and `scripts/upgrade_godot.sh` refuses a non-stable pin
-unless you ask for a trial (see [Trying a Prerelease](#trying-a-prerelease)).
-When a new stable ships, the bump is planned work, not an automatic follow;
-wrapper-coverage work in flight should land first.
+**A release ships only on a stable Godot.** `main` may sit on a beta or rc
+while the next Godot is on its way, so that the bump is found and fixed before
+the stable arrives, but no release is cut from it: on a `v*` tag the package
+workflow runs `python3 scripts/check_godot_version_pin.py --release`, which fails
+on a non-stable pin, and nothing is published (see
+[Pinning a Prerelease](#pinning-a-prerelease)). A dev build is never the
+baseline. A bump is planned work, not an automatic follow; wrapper-coverage work
+in flight should land first.
 
 The baseline has one source of truth: `kanamaGodotVersion` in
 `gradle.properties`, in Godot's own spelling (`4.8.stable` for a `.0` release,
-`4.7.2.stable` for a maintenance release). The CI workflows carry the same
-version in dash form (`GODOT_VERSION: 4.8-stable`, the GitHub release tag) in
+`4.7.2.stable` for a maintenance release, `4.8.beta2` for a prerelease). The CI
+workflows carry the same version in dash form (`GODOT_VERSION: 4.8-stable` or
+`4.8-beta2`, the GitHub release tag) in
 `package.yml`, `ci.yml`, `web.yml` and `gate-red-runs-nightly.yml`, and
 `web.yml` derives the export-template folder from it. Everything else reads the
 property. `scripts/check_godot_version_pin.py` fails the build when a pin
@@ -25,12 +29,13 @@ releases follow the same runbook; the diff is just smaller.
 
 ## What You Need
 
-- The new **stable** Godot editor binary for your machine, and its export
-  templates (`.tpz`).
+- The new Godot editor binary for your machine, and its export templates
+  (`.tpz`).
 - `JEXTRACT_HOME` pointing at a jextract 25+ install.
 - A Godot **source checkout at the matching tag**: KDoc is synced from its
   `doc/classes`, and the script checks the checkout's `version.py` against the
-  pin. Never sync from an rc or `master` tree.
+  pin. Never sync from `master`, or from a tree of another build. A prerelease
+  takes the commit of that build: its `version.py` says `beta` without the number.
 - A clean working tree apart from the pin edit, so the bump diff stays
   reviewable.
 
@@ -276,9 +281,22 @@ failure included, it lists what it changed and restores it. It installs no
 export templates. Run it after a toolchain or generator change, so the next
 real bump starts from a proven pipeline.
 
-## Trying a Prerelease
+## Pinning a Prerelease
 
-To see what a beta or rc would break before it ships, run the bump on a
-throwaway branch with `--prerelease-trial`. It accepts a pin such as
-`4.8.beta1` and a source checkout whose `version.py` says `beta`. Never merge a
-prerelease pin.
+To put `main` on a beta or rc, or to see what one would break on a throwaway
+branch, add `--prerelease` to the same commands. It accepts a pin such as
+`4.8.beta2` and a source checkout whose `version.py` says `beta`. A prerelease
+differs from a stable bump in two ways:
+
+- **A tag refuses it.** `main` can merge the pin and run every gate on it, but no
+  release is cut until the pin is stable. Manual runs of the package workflow
+  still build, for testing the packages.
+- **The download names change.** The release tag and the files carry the same
+  dash form (`4.8-beta2`, `Godot_v4.8-beta2_linux.x86_64.zip`), so the workflows
+  need nothing for that. A 4.8 prerelease has no universal macOS zip;
+  `scripts/download_godot_macos.sh` takes the `macos.arm64` zip when a release
+  has one, and `macos.universal` when not.
+
+Leaving a prerelease is an ordinary bump: edit the pin to `4.8.stable`, and run
+the script with the stable editor, its templates and its source tag, without
+`--prerelease`.

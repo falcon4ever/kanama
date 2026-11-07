@@ -18,7 +18,7 @@ GRADLE_TIMEOUT="${KANAMA_UPGRADE_GRADLE_TIMEOUT:-1200}"
 
 usage() {
   cat <<'EOF'
-usage: scripts/upgrade_godot.sh [--plan | --dry-run] [--prerelease-trial] [--baseline-ref REF]
+usage: scripts/upgrade_godot.sh [--plan | --dry-run] [--prerelease] [--baseline-ref REF]
                                 [--godot-docs /path/to/godot/doc/classes]
                                 [--templates /path/to/export_templates.tpz]
                                 /absolute/path/to/godot_binary
@@ -68,8 +68,9 @@ Modes:
                      this Godot added all diff against it, so a bump whose half-done result was
                      committed can be re-run with the pre-bump commit here and reach the same result.
 
---prerelease-trial   allow a beta/rc pin (4.8.beta1), for a trial on a throwaway branch. Kanama
-                     re-pins only on stable releases; never merge a prerelease pin.
+--prerelease         allow a beta/rc pin (4.8.beta2) and a source checkout whose version.py says `beta`.
+                     A prerelease pin may live on main; a release may not: a tag on one stops
+                     (scripts/check_godot_version_pin.py --release). A stable pin needs no flag.
 --templates PATH     the export templates .tpz (or the directory holding it): installed into the
                      templates folder for the pin when it is missing, checked against the pin when not.
 
@@ -105,7 +106,7 @@ while [[ $# -gt 0 ]]; do
       MODE=plan
       shift
       ;;
-    --prerelease-trial)
+    --prerelease)
       PRERELEASE=1
       shift
       ;;
@@ -197,14 +198,14 @@ if [[ -z "$PIN" ]]; then
   exit 1
 fi
 
-# Upgrade policy (maintainer decision, 2026-07-09): Kanama re-pins only on stable Godot releases.
-# --prerelease-trial lets a beta/rc pin through for a trial branch (task 139: the RC re-run).
+# Upgrade policy: a beta or rc pin is a deliberate choice, so it takes --prerelease. It may live on main
+# (maintainer decision, 2026-11-07); a release may not ship on one, see check_godot_version_pin.py --release.
 if [[ "$PIN" == *.stable ]]; then
   :
 elif [[ $PRERELEASE -eq 1 && "$PIN" =~ \.(beta|rc)[0-9]+$ ]]; then
-  log "prerelease trial: kanamaGodotVersion=$PIN (a trial branch only; never merge a prerelease pin)"
+  log "prerelease pin: kanamaGodotVersion=$PIN (main may carry it; no release is cut on it)"
 else
-  preflight_fail "kanamaGodotVersion=$PIN is not a stable release. Kanama re-pins only on stable Godot releases; --prerelease-trial allows a beta/rc pin on a trial branch"
+  preflight_fail "kanamaGodotVersion=$PIN is not a stable release; pass --prerelease to pin a beta or rc on purpose (no release can be cut on it)"
 fi
 
 # justified: a binary that prints no version leaves BIN_VERSION empty, which fails the pin comparison just below.

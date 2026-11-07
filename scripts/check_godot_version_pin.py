@@ -11,6 +11,11 @@ bump can't land a partial upgrade.
     python3 scripts/check_godot_version_pin.py                   # the gate
     python3 scripts/check_godot_version_pin.py --list-files      # the files a pin edit touches
     python3 scripts/check_godot_version_pin.py --skip-api-header # pins only (before the API re-dump)
+    python3 scripts/check_godot_version_pin.py --release         # refuse a pin a release may not ship on
+
+A prerelease pin (`4.8.beta2`) may live on main; a release may not. `--release` fails unless the pin is
+a stable Godot, and `package.yml` runs it first on every `v*` tag, in the job every package job needs, so
+a tag on a prerelease pin publishes nothing. The plain gate fails when that step is gone from the workflow.
 
 `--list-files` is what `scripts/upgrade_godot.sh` allows to be dirty when a bump starts (the human
 pin edit), so the preflight and this gate cannot disagree about which files a bump edits.
@@ -29,15 +34,30 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 WORKFLOWS = ("package.yml", "ci.yml", "web.yml", "gate-red-runs-nightly.yml")
 # Every file a Godot pin edit changes by hand (the rest read gradle.properties).
 PIN_FILES = ("gradle.properties", *(f".github/workflows/{wf}" for wf in WORKFLOWS))
+# The job of package.yml that every package job needs, directly or not, and the step that stops it on a tag.
+RELEASE_GUARD_JOB = "gdextension-header"
+RELEASE_GUARD_IF = "if: startsWith(github.ref, 'refs/tags/v')"
+RELEASE_GUARD_RUN = "python3 scripts/check_godot_version_pin.py --release"
 
 
-def read_canonical() -> str:
-    text = (ROOT / "gradle.properties").read_text()
+def read_canonical(properties: pathlib.Path) -> str:
+    text = properties.read_text()
     m = re.search(r"^kanamaGodotVersion=(.+)$", text, re.MULTILINE)
     if not m:
-        print("[check_godot_version_pin] FAIL kanamaGodotVersion missing from gradle.properties")
+        print(f"[check_godot_version_pin] FAIL kanamaGodotVersion missing from {properties}")
         sys.exit(1)
     return m.group(1).strip()
+
+
+def release_guard_problem(package_yml: str) -> str | None:
+    """Why package.yml would let a tag through on a prerelease pin, or None."""
+    job = re.search(rf"^  {RELEASE_GUARD_JOB}:\n(.*?)(?=^  \S|\Z)", package_yml, re.MULTILINE | re.DOTALL)
+    if job is None:
+        return f"no job `{RELEASE_GUARD_JOB}`, which holds the release guard"
+    body = job.group(1)
+    if RELEASE_GUARD_RUN not in body or RELEASE_GUARD_IF not in body:
+        return f"job `{RELEASE_GUARD_JOB}` lost its release guard: a step with `{RELEASE_GUARD_IF}` running `{RELEASE_GUARD_RUN}`"
+    return None
 
 
 def to_dash(dot_version: str) -> str:
@@ -49,11 +69,23 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--list-files", action="store_true", help="print the files a pin edit touches, one per line")
     parser.add_argument("--skip-api-header", action="store_true", help="do not compare the extension_api.json header")
+    parser.add_argument("--release", action="store_true", help="fail unless the pin is a stable Godot (a release may not ship on a prerelease)")
+    parser.add_argument("--properties", type=pathlib.Path, default=ROOT / "gradle.properties", help="the file holding kanamaGodotVersion (a red run points --release at a scratch copy)")
     args = parser.parse_args()
     if args.list_files:
         print("\n".join(PIN_FILES))
         return 0
-    canonical = read_canonical()
+    canonical = read_canonical(args.properties)
+    if args.release:
+        if canonical.endswith(".stable"):
+            print(f"[check_godot_version_pin] PASS — a release may ship on kanamaGodotVersion={canonical}")
+            return 0
+        print(
+            f"[check_godot_version_pin] FAIL — kanamaGodotVersion={canonical} is not a stable Godot release. "
+            "A prerelease pin may live on main, but no release is cut on one: move the pin to the stable "
+            "release with scripts/upgrade_godot.sh first (docs/contributing/release.md)."
+        )
+        return 1
     dash = to_dash(canonical)
     failures: list[str] = []
 
@@ -77,6 +109,10 @@ def main() -> int:
                     f".github/workflows/{wf}: stray export_templates/{stray}/ pin "
                     f"(expected {canonical}, or a GODOT_VERSION-derived form)"
                 )
+
+    guard = release_guard_problem((ROOT / ".github/workflows/package.yml").read_text())
+    if guard:
+        failures.append(f".github/workflows/package.yml: {guard}")
 
     # build.gradle.kts must not re-hardcode an export-template version (it reads the property).
     bg = (ROOT / "build.gradle.kts").read_text()

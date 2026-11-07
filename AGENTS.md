@@ -8,7 +8,8 @@ release shape.
 ## Current Baseline
 
 The release line is `version` in `build.gradle.kts`, the Godot pin `kanamaGodotVersion` in
-`gradle.properties` (re-pinned only on stable releases, by `docs/contributing/godot-upgrade.md`),
+`gradle.properties` (moved by `docs/contributing/godot-upgrade.md`; `main` may sit on a beta or rc, a
+release ships only on a stable Godot),
 the JDK floor `jvmToolchain(25)`. **Android 13 (API 33) is the minimum** for every Android build
 (the plugin `minSdk`, and the export guard's Min SDK check). Platform status, requirements and
 per-platform caveats are on `docs/reference/version-support.md` and
@@ -274,7 +275,8 @@ python3 scripts/api_wrapper_coverage.py --markdown docs/reference/generated/api-
 ### Godot Upgrade
 
 Follow `docs/contributing/godot-upgrade.md` (the authoritative runbook).
-Kanama re-pins only on stable Godot releases. Edit `kanamaGodotVersion` in
+`main` may carry a beta or rc pin (`--prerelease`); a `v*` tag on one stops in the
+package workflow (`check_godot_version_pin.py --release`). Edit `kanamaGodotVersion` in
 `gradle.properties` (plus the CI `GODOT_VERSION` dash form; `check_godot_version_pin.py
 --list-files` names the files), then run the mechanical pipeline (`--plan` prints it first):
 
@@ -288,7 +290,7 @@ output, formats, and runs every gate to one summary, then stops at the human-jud
 boundary (source-break notes, device gates, support claims, release wording). Run
 local CI and demo smoke checks before changing support claims.
 
-**Every stable bump: scan for newly deprecated GDExtension functions and keep the
+**Every bump: scan for newly deprecated GDExtension functions and keep the
 backends converged.** 4.7 is the baseline — we do not carry deprecated GDExtension
 callbacks once a newer variant solves the same problem. Diff
 `gdextension/gdextension_interface.h` for `@deprecated` entries, migrate every
