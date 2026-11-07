@@ -185,18 +185,19 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/export_game_smoke.sh:153` | `buildNativeBootstrap syncExampleAddonJar jlinkGameRuntime >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/export_game_smoke.sh:298` | `system_root="$(cygpath -u "${SYSTEMROOT:-C:\\Windows}" 2>/dev/null \|\| printf '/c/Windows')"` | justified: the fallback is the standard Windows root; a wrong PATH makes the game fail to launch, which is the verdict. |
 | `scripts/export_game_smoke.sh:350` | `export_dir_native="$(cygpath -m "$export_dir" 2>/dev/null \|\| printf '%s' "$export_dir")"` | justified: without cygpath the path is already native; a wrong one fails the launch below. |
-| `scripts/gate_red_runs.py:196` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/gate_red_runs.py:216` | `except OSError:` | justified: a directory a gate filled meanwhile is the gate's own output; it is not ours to delete |
-| `scripts/gate_red_runs.py:225` | `except (ProcessLookupError, PermissionError):` | justified: the group is gone (macOS answers EPERM for a group of zombies); nothing is left to signal |
-| `scripts/gate_red_runs.py:233` | `except subprocess.TimeoutExpired as expired:` | justified: the caller goes on to KILL, or reports the holder of the output |
-| `scripts/gate_red_runs.py:273` | `except subprocess.TimeoutExpired:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/gate_red_runs.py:318` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
-| `scripts/gate_red_runs.py:320` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1770` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:1838` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/gate_red_runs.py:1889` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/gate_red_runs_selftest.py:75` | `except ProcessLookupError:` | justified: gone is the answer; the callers report what is still alive |
-| `scripts/gate_red_runs_selftest.py:93` | `except subprocess.TimeoutExpired:` | justified: the None status is the failure, the callers report it |
+| `scripts/gate_red_runs.py:203` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:223` | `except OSError:` | justified: a directory a gate filled meanwhile is the gate's own output; it is not ours to delete |
+| `scripts/gate_red_runs.py:232` | `except (ProcessLookupError, PermissionError):` | justified: the group is gone (macOS answers EPERM for a group of zombies); nothing is left to signal |
+| `scripts/gate_red_runs.py:240` | `except subprocess.TimeoutExpired as expired:` | justified: the caller waits on, goes on to KILL, or reports the holder of the output |
+| `scripts/gate_red_runs.py:249` | `except (ProcessLookupError, PermissionError):` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:327` | `except subprocess.TimeoutExpired:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:372` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
+| `scripts/gate_red_runs.py:374` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
+| `scripts/gate_red_runs.py:1831` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1892` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1943` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs_selftest.py:126` | `except ProcessLookupError:` | justified: gone is the answer; the callers report what is still alive |
+| `scripts/gate_red_runs_selftest.py:150` | `except subprocess.TimeoutExpired:` | justified: the None status is the failure, the callers report it |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:682` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:725` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -465,7 +466,8 @@ it is, a reversible mutation (an edit, a created, deleted or renamed file) makes
 expected text, and it passes again after the revert. Every case runs in a **throwaway `git worktree`** of HEAD carrying
 the dev checkout's uncommitted changes, so a killed run (SIGTERM, a timeout, a crash) cannot leave a mutation in the
 checkout you work in; a timeout, the deadline or a signal stops the case's whole process group, TERM first so the gate's
-own cleanup runs and KILL ten seconds later (`gate_red_runs_selftest.py` proves it, and the docstring says what can outlive it); `--strict` (implied under `CI`) makes a SKIPPED
+own cleanup runs, then KILL once the group is empty or after 15 seconds, more than the editor smokes' own 10-second
+`RUN_BOUNDED_GRACE` (`gate_red_runs_selftest.py` proves it, and the docstring says what can outlive it); `--strict` (implied under `CI`) makes a SKIPPED
 case (a missing `GODOT_DOCS`, or a gate whose baseline says it could not run the mutated row, such as
 `export_guard_selftest.sh` with no Android export template) a failure unless named by `--allow-skip`. The rows below were produced by that command
 on the committed branch (`--markdown`): the fast set (253 cases) took about 25 minutes (about 55 on a loaded machine); the Godot and Gradle smokes run
@@ -489,7 +491,10 @@ covers the configurations of the root build and of `android/godot-plugin`, so wh
 the kit's Android package resolve. What a task fetches for itself when it runs is not among them: KSP's own classpath (the
 step's `syncExampleAddonJar` build fetches that one, and the Web build uses the same) and Kotlin's Node and Binaryen. The
 consumer projects of `package_install_smoke.sh` need no cover: each resolves in a Gradle home of its own, so a 404 fails that
-one case and goes with it.
+one case and goes with it. The init script had only run on a Mac when it landed, and a failure of that step fails all twelve
+shards. If it fails on Linux for a reason of its own (not a 404), drop the two `resolveBuildDependencies` lines of the step's
+`fetch()`: `syncExampleAddonJar` alone is the build every smoke starts with, and it then fetches only KSP's classpath and what
+that build itself resolves; the rest goes back to being fetched by the cases, without a retry.
 
 ### 2a. `scripts/gate_red_runs.py` (exercised on this branch)
 

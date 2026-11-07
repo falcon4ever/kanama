@@ -14,10 +14,12 @@ changes and untracked files of the dev checkout), so the checkout you work in is
 SIGTERM, a timeout or a crash cannot leave a half-applied mutation behind. The workspace is removed
 on exit, also on SIGTERM/SIGHUP/Ctrl-C. A timeout, the deadline and those signals all stop the case the
 same way: TERM to its whole process group, so the gate's own cleanup runs (a session-leader driver and
-its browser are the gate's to stop), and KILL ten seconds later. Two things can outlive that: a process
-that left the group and that the gate's cleanup missed (if it holds the output, the case's log says so;
-the harness then stops waiting for it), and a Gradle daemon, which is detached and stays for the next
-build on purpose. Mutations are still reverted between the red and the final green run, and the
+its browser are the gate's to stop), then KILL to what is left once the group is empty or STOP_GRACE
+(15 s) has passed, whichever comes first. That is longer than the editor smokes' own RUN_BOUNDED_GRACE
+(10 s), so a leader that is still stopping what it started is not killed halfway. Two things can outlive
+that: a process that left the group and that the gate's cleanup missed (if it holds the output, the
+case's log says so; the harness then stops waiting for it), and a Gradle daemon, which is detached and
+stays for the next build on purpose. Mutations are still reverted between the red and the final green run, and the
 directories a mutation created are removed again.
 
 Usage:
@@ -62,7 +64,12 @@ SRC = Path(__file__).resolve().parents[1]  # the dev checkout; never mutated
 WORK = SRC  # the throwaway checkout every case runs in (set by main())
 DEADLINE: float | None = None  # the time.monotonic() at which --deadline-minutes ends the run (set by main())
 LIVE: subprocess.Popen | None = None  # the case running right now, for on_signal to stop
-STOP_GRACE = 10.0  # seconds a stopped case gets to clean up after TERM, and to let go of its output after KILL
+STARTING = False  # run() is inside Popen(): on_signal only records the signal, run() acts on it once LIVE is set
+SIGNALLED: int | None = None  # the signal on_signal recorded while STARTING
+# Seconds a stopped case's group gets to empty itself after TERM. Longer than RUN_BOUNDED_GRACE (10 s,
+# editor_check_lib.sh), so an editor smoke's leader gets to its own `kill -KILL` of what left the group below it.
+STOP_GRACE = 15.0
+KILL_GRACE = 5.0  # seconds the output gets to close after KILL; a holder still there by then has left the group
 PY = sys.executable
 
 
@@ -226,26 +233,45 @@ def signal_group(proc: subprocess.Popen, signum: int) -> None:
         pass
 
 
-def read_rest(proc: subprocess.Popen) -> tuple[str, bool]:
-    """What the case printed so far, and whether its output closed within STOP_GRACE."""
+def read_rest(proc: subprocess.Popen, seconds: float) -> tuple[str, bool]:
+    """What the case printed so far, and whether its output closed within `seconds`."""
     try:
-        return proc.communicate(timeout=STOP_GRACE)[0] or "", True
-    except subprocess.TimeoutExpired as expired:  # justified: the caller goes on to KILL, or reports the holder of the output
+        return proc.communicate(timeout=seconds)[0] or "", True
+    except subprocess.TimeoutExpired as expired:  # justified: the caller waits on, goes on to KILL, or reports the holder of the output
         partial = expired.output or b""
         return partial.decode("utf-8", "replace") if isinstance(partial, bytes) else partial, False
+
+
+def group_empty(proc: subprocess.Popen) -> bool:
+    proc.poll()  # reaps the leader once it exits: an unreaped leader is a zombie that keeps the group alive
+    try:
+        os.killpg(proc.pid, 0)
+    except (ProcessLookupError, PermissionError):  # justified: no member left (macOS answers EPERM for a group of zombies)
+        return True
+    return False
 
 
 def stop_group(proc: subprocess.Popen) -> str:
     """Stops a case and returns what it printed. TERM first: repo cleanup runs on TERM (an EXIT trap, a
     run_with_timeout, run_bounded_stop), and a browser driver in its own session is reachable only that way.
-    KILL then gets whatever stayed, also when the output closed at once: a member that ignores TERM may have
-    its output elsewhere."""
+    Then it waits, reading the output meanwhile, until the group is empty or STOP_GRACE has passed: the
+    output closing says nothing, as a member still cleaning up may have its output elsewhere. KILL then gets
+    whatever stayed (a member that ignores TERM)."""
     signal_group(proc, signal.SIGTERM)
-    out, closed = read_rest(proc)
+    until = time.monotonic() + STOP_GRACE
+    out, closed = "", False
+    while True:
+        left = until - time.monotonic()
+        if not closed:
+            out, closed = read_rest(proc, min(max(left, 0), 0.1))
+        if group_empty(proc) or left <= 0:
+            break
+        if closed:
+            time.sleep(0.05)
     signal_group(proc, signal.SIGKILL)
     if closed:
         return out
-    out, closed = read_rest(proc)
+    out, closed = read_rest(proc, KILL_GRACE)
     if closed:
         return out
     proc.stdout.close()  # never waited for again: the holder gets SIGPIPE on its next write
@@ -253,8 +279,27 @@ def stop_group(proc: subprocess.Popen) -> str:
     return f"{out}\na process outside the case's group still holds its output; it may still be running\n"
 
 
-def run(case_: Case, stage: str) -> tuple[int, str, float]:
+def stop_now(signum: int) -> None:
+    """A signal's stop: the running case, then SystemExit (main()'s finally removes the workspace)."""
     global LIVE
+    for ignored in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT):  # one stop: a second Ctrl-C must not cut it short
+        signal.signal(ignored, signal.SIG_IGN)
+    if LIVE is not None:  # in a session of its own, so it got no signal from the terminal, and nothing else stops it
+        stop_group(LIVE)
+        LIVE = None
+    raise SystemExit(128 + signum)
+
+
+def on_signal(signum: int, _frame) -> None:
+    global SIGNALLED
+    if STARTING:  # no SIG_IGN here: a child forked after this would inherit it, and TERM would never reach its cleanup
+        SIGNALLED = SIGNALLED or signum
+        return
+    stop_now(signum)
+
+
+def run(case_: Case, stage: str) -> tuple[int, str, float]:
+    global LIVE, STARTING
     env = dict(os.environ)
     env.update(case_.env)
     # A gate that skips under CI would read as red here for the wrong reason; the harness decides about skips itself.
@@ -262,11 +307,20 @@ def run(case_: Case, stage: str) -> tuple[int, str, float]:
     remaining = None if DEADLINE is None else max(DEADLINE - time.monotonic(), 0)
     timeout = case_.timeout if remaining is None else min(case_.timeout, remaining)
     started = time.monotonic()
-    proc = subprocess.Popen(
-        case_.cmd, cwd=WORK, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace",
-        start_new_session=True,  # its own process group, so a timeout can stop everything the gate spawned
-    )
-    LIVE = proc
+    # A signal inside Popen() would raise out of it with the child already running and LIVE not set yet, so
+    # on_signal only records it there and the finally below acts on it. Blocking signals instead would block them
+    # in the gate too: exec keeps the signal mask.
+    STARTING = True
+    try:
+        proc = subprocess.Popen(
+            case_.cmd, cwd=WORK, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace",
+            start_new_session=True,  # its own process group, so a timeout can stop everything the gate spawned
+        )
+        LIVE = proc
+    finally:
+        STARTING = False
+        if SIGNALLED is not None:
+            stop_now(SIGNALLED)
     try:
         out, _ = proc.communicate(timeout=timeout)
         return proc.returncode, out, time.monotonic() - started
@@ -1730,8 +1784,9 @@ case("web/dodge_restart_selftest.mjs (off-screen free required)", ["node", "scri
 case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then', 'if false; then')],
      "below-floor expected exit 1", "web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that)")
-# The harness's own stop, on a fixture tree shaped like the slow gates (a TERM trap, a driver in its own session, a
-# member that ignores TERM). This is what keeps a deadline or a Ctrl-C from leaving a browser against a deleted workspace.
+# The harness's own stop, on fixture trees shaped like the slow gates (a TERM trap, a driver in its own session, a
+# member that ignores TERM, a member slow to clean up). This is what keeps a deadline or a Ctrl-C from leaving a
+# browser against a deleted workspace.
 STOP_SELFTEST = script("gate_red_runs_selftest.py")
 case("gate_red_runs_selftest.py (TERM first)", STOP_SELFTEST,
      [Edit("scripts/gate_red_runs.py", "    signal_group(proc, signal.SIGTERM)\n", "")],
@@ -1740,11 +1795,17 @@ case("gate_red_runs_selftest.py (deadline named)", STOP_SELFTEST,
      [Edit("scripts/gate_red_runs.py", "if remaining is not None and remaining < case_.timeout:", "if False:")],
      "the cut is reported as a broken gate", "a case the deadline cut reads as a broken gate again, with no annotation when it was the shard's last")
 case("gate_red_runs_selftest.py (signal stops the case)", STOP_SELFTEST,
-     [Edit("scripts/gate_red_runs.py", "        if LIVE is not None:  # in a session of its own, so it got no signal from the terminal, and nothing else stops it\n            stop_group(LIVE)\n", "")],
+     [Edit("scripts/gate_red_runs.py", "    if LIVE is not None:  # in a session of its own, so it got no signal from the terminal, and nothing else stops it\n        stop_group(LIVE)\n", "")],
      "Ctrl-C: left running", "Ctrl-C on the harness leaves the running case going, in a session of its own, against a deleted workspace")
 case("gate_red_runs_selftest.py (held output)", STOP_SELFTEST,
-     [Edit("scripts/gate_red_runs.py", "return proc.communicate(timeout=STOP_GRACE)[0] or \"\", True", "return proc.communicate()[0] or \"\", True")],
+     [Edit("scripts/gate_red_runs.py", "return proc.communicate(timeout=seconds)[0] or \"\", True", "return proc.communicate()[0] or \"\", True")],
      "held output: the harness was still running", "the harness waits for ever on a process that left the case's group and holds its output")
+case("gate_red_runs_selftest.py (cleanup waited for)", STOP_SELFTEST,
+     [Edit("scripts/gate_red_runs.py", "        if group_empty(proc) or left <= 0:\n", "        if closed or group_empty(proc) or left <= 0:\n")],
+     "slow cleanup: the member's cleanup was cut short", "the harness KILLs the group as soon as the output closes again: a member still cleaning up with its output elsewhere (an editor smoke's leader stopping what it started) is cut short")
+case("gate_red_runs_selftest.py (signal while starting)", STOP_SELFTEST,
+     [Edit("scripts/gate_red_runs.py", "        if SIGNALLED is not None:\n            stop_now(SIGNALLED)\n", "")],
+     "signal at start: the gate's TERM cleanup did not run", "a Ctrl-C that lands inside Popen() is dropped again: the case it was starting runs on, and the harness with it")
 
 #CASES-END
 
@@ -1780,13 +1841,6 @@ def main() -> int:
     if not cases:
         print("gate_red_runs: no case matches", file=sys.stderr)
         return 2
-
-    def on_signal(signum, _frame):  # the finally below then removes the workspace
-        for ignored in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT):  # one stop: a second Ctrl-C must not cut it short
-            signal.signal(ignored, signal.SIG_IGN)
-        if LIVE is not None:  # in a session of its own, so it got no signal from the terminal, and nothing else stops it
-            stop_group(LIVE)
-        raise SystemExit(128 + signum)
 
     for signum in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT):
         signal.signal(signum, on_signal)

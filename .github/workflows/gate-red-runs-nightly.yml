@@ -111,6 +111,10 @@ jobs:
       # build and the Android plugin's build resolve is fetched here, where a retry can ask again, and the build the
       # smokes start with is built: Gradle's build cache hands the cases its output. The resolving took about 70 s from
       # an empty cache (a Mac, 590 MB, 2026-11-07) and seconds from a full one; README-gates.md has what it does not cover.
+      # The init script was only ever run on a Mac before it landed here, and a failure of this step fails all twelve
+      # shards. If it fails on Linux for a reason of its own (not a 404), drop the two `resolveBuildDependencies` lines
+      # of fetch(). `syncExampleAddonJar` alone is the build every smoke starts with, which Linux runners have built for
+      # months: it then fetches less here (README-gates.md says what), and the rest is fetched by the cases, unretried.
       - name: Fetch the build's dependencies
         timeout-minutes: 12
         shell: bash
@@ -118,7 +122,8 @@ jobs:
           fetch() {
             local init=scripts/resolve_build_dependencies.init.gradle.kts
             ./gradlew -q --init-script "$init" -p android/godot-plugin resolveBuildDependencies "$@" &&
-              ./gradlew -q --init-script "$init" resolveBuildDependencies syncExampleAddonJar "$@"
+              ./gradlew -q --init-script "$init" resolveBuildDependencies "$@" &&
+              ./gradlew -q syncExampleAddonJar "$@"
           }
           fetch && exit 0
           for attempt in 1 2; do
@@ -137,8 +142,10 @@ jobs:
           chmod +x "$godot_bin"
           # sync_kdoc needs a Godot docs checkout and the iOS kit smokes a Mac with Xcode, which this runner does not
           # have: skipped by name. The deadline is what is left of the job's 75 minutes, less 3 to stop the running case
-          # (TERM, then KILL, 20 s at most) and report: a slow shard then ends itself, with its failures and the cases
-          # it never reached in the log and an annotation.
+          # and report: a slow shard then ends itself, with its failures and the cases it never reached in the log and
+          # an annotation. The stop takes 20 s at most (TERM, up to STOP_GRACE = 15 s for the case's group to empty,
+          # which is more than an editor smoke's own 10 s RUN_BOUNDED_GRACE; KILL, up to 5 s for the output to close);
+          # the rest of the 3 minutes is for the workspace removal and the report.
           elapsed=$(( ($(date +%s) - JOB_STARTED + 59) / 60 ))
           KANAMA_GODOT_BIN="$godot_bin" python3 scripts/gate_red_runs.py --slow --strict --allow-skip "sync_kdoc,smoke.sh --ios" \
             --deadline-minutes $(( 72 - elapsed )) --shard ${{ matrix.shard }}/${{ strategy.job-total }}
