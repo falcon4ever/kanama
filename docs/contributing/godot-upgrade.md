@@ -152,8 +152,10 @@ These steps need a person or a device, so the script prints them and stops:
   the iOS and Android device runs, which run the same rows (see "The exercise rows"
   in `wrapper-maintenance.md`).
 - When Godot adds a builtin member (a new `Vector2` method, a new operator), the
-  Web builtin parity hashes need re-recording from a runtime smoke log:
-  `python3 scripts/generate_builtin_ops.py --record-parity <log>`.
+  Web builtin parity hashes need one more row, recorded from a runtime smoke log:
+  `python3 scripts/generate_builtin_ops.py --record-parity <log>`, then `--write`.
+  Each entry draws its inputs from a stream of its own, keyed by its name, so the
+  other rows do not move, and the output is ktfmt-clean.
 - Re-run the platform smoke and device gates per the release-gate matrix (§6) in
   the internal task repo, and record each run in `evidence/gates.json`.
   **Support claims move only after the matching gate passes**; the upgrade

@@ -9,18 +9,23 @@ import net.multigesture.kanama.builtins.*
 
 /**
  * Task 134 B/D1: the value types compiled to Wasm run the runtime smoke's builtin parity row (the
- * same fixed-seed inputs, entry for entry; an entry without a recorded hash only consumes its
- * draws) and must produce the hashes Godot 4.7.2's GDScript printed for it, recorded in
+ * same fixed-seed inputs, entry for entry, each entry on a stream of its own) and must produce the
+ * hashes the pinned Godot's GDScript printed for it, recorded in
  * `scripts/fixtures/builtin_parity_expected.json` (`generate_builtin_ops.py --record-parity`; the
  * runtime smoke re-checks the recording against the live GDScript line).
  */
 class WebBuiltinParityTest {
   @Test
   fun webMembersMatchGodot() {
-    repeat(256) { round() }
-    skip(130944) // the edge row
+    repeat(256) {
+      inputRound = it
+      round()
+    }
     recordValues = true
-    repeat(8) { facadeRound() }
+    repeat(8) {
+      inputRound = it
+      facadeRound()
+    }
     val wrong = EXPECTED.filter { (key, hash) -> hashes[key]?.toString(16) != hash }.keys
     assertEquals(emptySet(), wrong, "entries whose hash differs from Godot's")
     val outOfBound =
@@ -374,7 +379,7 @@ class WebBuiltinParityTest {
     pure19()
     pure20()
     pure21()
-    skip(2) // Vector2.inverse
+    pure22()
     pure23()
     pure24()
     pure25()
@@ -552,7 +557,6 @@ class WebBuiltinParityTest {
     pure197()
     pure198()
     pure199()
-    skip(9) // Basis.get_rotation_quaternion
     pure201()
     pure202()
     pure203()
@@ -703,302 +707,194 @@ class WebBuiltinParityTest {
   /** The facade row: the methods the Web build runs in Kotlin (WebLocalBuiltins), task 134 D1. */
   private fun facadeRound() {
     facade0()
-    skip(4) // Vector2.angle_to
-    skip(4) // Vector2.angle_to_point
-    skip(2) // Vector2.is_normalized
-    skip(5) // Vector2.slerp
-    skip(9) // Vector2.cubic_interpolate
-    skip(12) // Vector2.cubic_interpolate_in_time
-    skip(9) // Vector2.bezier_interpolate
-    skip(9) // Vector2.bezier_derivative
     facade9()
-    skip(4) // Vector2.snapped
-    skip(3) // Vector2.snappedf
-    skip(1) // Vector2.from_angle
-    skip(6) // Vector3.angle_to
     facade14()
-    skip(6) // Vector3.snapped
-    skip(4) // Vector3.snappedf
     facade17()
-    skip(7) // Vector3.slerp
-    skip(13) // Vector3.cubic_interpolate
-    skip(16) // Vector3.cubic_interpolate_in_time
-    skip(13) // Vector3.bezier_interpolate
-    skip(13) // Vector3.bezier_derivative
-    skip(6) // Vector3.outer
-    skip(3) // Vector3.octahedron_encode
-    skip(2) // Vector3.octahedron_decode
-    skip(17) // Vector4.cubic_interpolate
-    skip(20) // Vector4.cubic_interpolate_in_time
-    skip(8) // Vector4.snapped
-    skip(5) // Vector4.snappedf
-    skip(4) // Vector4.is_normalized
-    skip(4) // Quaternion.is_normalized
-    skip(4) // Quaternion.inverse
-    skip(4) // Quaternion.log
-    skip(4) // Quaternion.exp
-    skip(8) // Quaternion.angle_to
     facade36()
-    skip(9) // Quaternion.slerpni
-    skip(17) // Quaternion.spherical_cubic_interpolate
-    skip(20) // Quaternion.spherical_cubic_interpolate_in_time
-    skip(5) // Quaternion.get_euler
-    skip(3) // Quaternion.from_euler
-    skip(4) // Quaternion.get_axis
-    skip(4) // Quaternion.get_angle
-    skip(4) // Plane.normalized
-    skip(8) // Plane.is_equal_approx
-    skip(4) // Plane.is_finite
-    skip(12) // Plane.intersect_3
-    skip(10) // Plane.intersects_segment
-    skip(4) // Rect2.is_finite
-    skip(6) // AABB.abs
-    skip(6) // AABB.is_finite
-    skip(10) // AABB.intersects_plane
-    skip(12) // AABB.intersection
-    skip(9) // AABB.expand
-    skip(7) // AABB.grow
-    skip(9) // AABB.get_support
-    skip(6) // AABB.get_longest_axis
-    skip(6) // AABB.get_longest_axis_index
-    skip(6) // AABB.get_longest_axis_size
-    skip(6) // AABB.get_shortest_axis
-    skip(6) // AABB.get_shortest_axis_index
-    skip(6) // AABB.get_shortest_axis_size
-    skip(7) // AABB.get_endpoint
-    skip(12) // AABB.intersects_segment
-    skip(12) // AABB.intersects_ray
     facade66()
-    skip(7) // Basis.scaled_local
     facade68()
-    skip(7) // Basis.tdotx
-    skip(7) // Basis.tdoty
-    skip(7) // Basis.tdotz
-    skip(9) // Basis.slerp
-    skip(4) // Basis.is_conformal
-    skip(4) // Basis.is_finite
-    skip(4) // Basis.is_orthonormal
     facade76()
-    skip(3) // Basis.from_scale
     facade78()
-    skip(11) // Transform3D.rotated
-    skip(11) // Transform3D.rotated_local
-    skip(10) // Transform3D.scaled
-    skip(10) // Transform3D.scaled_local
     facade83()
     facade84()
-    skip(7) // Transform3D.is_finite
-    skip(4) // Transform2D.affine_inverse
-    skip(4) // Transform2D.get_rotation
-    skip(4) // Transform2D.get_scale
-    skip(4) // Transform2D.get_skew
-    skip(4) // Transform2D.orthonormalized
-    skip(5) // Transform2D.rotated
-    skip(5) // Transform2D.rotated_local
-    skip(6) // Transform2D.scaled
-    skip(6) // Transform2D.scaled_local
-    skip(4) // Transform2D.determinant
-    skip(9) // Transform2D.interpolate_with
-    skip(4) // Transform2D.is_conformal
-    skip(4) // Transform2D.is_finite
-    skip(6) // Transform2D.looking_at
-    skip(1) // Projection.create_depth_correction
-    skip(4) // Projection.create_light_atlas_rect
-    skip(5) // Projection.create_perspective
-    skip(8) // Projection.create_perspective_hmd
-    skip(8) // Projection.create_for_hmd
-    skip(6) // Projection.create_orthogonal
-    skip(5) // Projection.create_orthogonal_aspect
-    skip(6) // Projection.create_frustum
-    skip(7) // Projection.create_frustum_aspect
-    skip(6) // Projection.create_fit_aabb
-    skip(16) // Projection.determinant
-    skip(17) // Projection.perspective_znear_adjusted
-    skip(17) // Projection.get_projection_plane
-    skip(16) // Projection.flipped_y
-    skip(18) // Projection.jitter_offseted
-    skip(2) // Projection.get_fovy
-    skip(16) // Projection.get_z_far
-    skip(16) // Projection.get_z_near
-    skip(16) // Projection.get_aspect
-    skip(16) // Projection.get_fov
-    skip(16) // Projection.is_orthogonal
-    skip(16) // Projection.get_viewport_half_extents
-    skip(16) // Projection.get_far_plane_half_extents
-    skip(16) // Projection.inverse
-    skip(17) // Projection.get_pixels_per_meter
-    skip(16) // Projection.get_lod_multiplier
-    skip(4) // Color.to_argb32
-    skip(4) // Color.to_abgr32
-    skip(4) // Color.to_rgba32
-    skip(4) // Color.to_argb64
-    skip(4) // Color.to_abgr64
-    skip(4) // Color.to_rgba64
-    skip(5) // Color.lightened
-    skip(5) // Color.darkened
-    skip(8) // Color.blend
-    skip(4) // Color.srgb_to_linear
-    skip(4) // Color.linear_to_srgb
-    skip(8) // Color.is_equal_approx
-    skip(1) // Color.hex
-    skip(1) // Color.hex64
-    skip(4) // Color.from_string
-    skip(4) // Color.from_hsv
-    skip(4) // Color.from_ok_hsl
-    skip(1) // Color.from_rgbe9995
-    skip(4) // Color.from_rgba8
-    skip(4) // Vector2i.snapped
-    skip(3) // Vector2i.snappedi
-    skip(6) // Vector3i.snapped
-    skip(4) // Vector3i.snappedi
-    skip(8) // Vector4i.snapped
-    skip(5) // Vector4i.snappedi
   }
 
   private fun pure0() {
+    reseed(2408218736L)
     val l = Vector2(nv(), nv())
     mix("unary- Vector2", -l)
   }
 
   private fun pure1() {
+    reseed(2941451878L)
     val l = Vector2(nv(), nv())
     mix("unary+ Vector2", +l)
   }
 
   private fun pure2() {
+    reseed(3770135283L)
     val l = Vector2(nv(), nv())
     val r = ri().toLong()
     mix("Vector2 * int", l * r)
   }
 
   private fun pure3() {
+    reseed(2545693560L)
     val l = Vector2(nv(), nv())
     val r = ri().toLong()
     mix("Vector2 / int", l / r)
   }
 
   private fun pure4() {
+    reseed(219221208L)
     val l = Vector2(nv(), nv())
     val r = nv()
     mix("Vector2 * float", l * r)
   }
 
   private fun pure5() {
+    reseed(3217091411L)
     val l = Vector2(nv(), nv())
     val r = nv()
     mix("Vector2 / float", l / r)
   }
 
   private fun pure6() {
+    reseed(541408971L)
     val l = Vector2(nv(), nv())
     val r = Vector2(nv(), nv())
     mix("Vector2 < Vector2", l < r)
   }
 
   private fun pure7() {
+    reseed(1185530214L)
     val l = Vector2(nv(), nv())
     val r = Vector2(nv(), nv())
     mix("Vector2 + Vector2", l + r)
   }
 
   private fun pure8() {
+    reseed(652297072L)
     val l = Vector2(nv(), nv())
     val r = Vector2(nv(), nv())
     mix("Vector2 - Vector2", l - r)
   }
 
   private fun pure9() {
+    reseed(53276265L)
     val l = Vector2(nv(), nv())
     val r = Vector2(nv(), nv())
     mix("Vector2 * Vector2", l * r)
   }
 
   private fun pure10() {
+    reseed(493377282L)
     val l = Vector2(nv(), nv())
     val r = Vector2(nv(), nv())
     mix("Vector2 / Vector2", l / r)
   }
 
   private fun pure11() {
+    reseed(2950492876L)
     val l = Vector2(nv(), nv())
     val r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Vector2 * Transform2D", l * r)
   }
 
   private fun pure12() {
+    reseed(3239029801L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.direction_to", b.directionTo(a0))
   }
 
   private fun pure13() {
+    reseed(1513576095L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.distance_to", b.distanceTo(a0))
   }
 
   private fun pure14() {
+    reseed(4198464593L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure15() {
+    reseed(1572801086L)
     val b = Vector2(nv(), nv())
     mix("Vector2.length", b.length())
   }
 
   private fun pure16() {
+    reseed(3550342632L)
     val b = Vector2(nv(), nv())
     mix("Vector2.length_squared", b.lengthSquared())
   }
 
   private fun pure17() {
+    reseed(2468691926L)
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.limit_length", b.limitLength(a0))
   }
 
   private fun pure18() {
+    reseed(2209434831L)
     val b = Vector2(nv(), nv())
     mix("Vector2.normalized", b.normalized())
   }
 
   private fun pure19() {
+    reseed(2084264670L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure20() {
+    reseed(970407634L)
     val b = Vector2(nv(), nv())
     mix("Vector2.is_zero_approx", b.isZeroApprox())
   }
 
   private fun pure21() {
+    reseed(3802917748L)
     val b = Vector2(nv(), nv())
     mix("Vector2.is_finite", b.isFinite())
   }
 
+  private fun pure22() {
+    reseed(3172940786L)
+    val b = Vector2(nv(), nv())
+    mix("Vector2.inverse", b.inverse())
+  }
+
   private fun pure23() {
+    reseed(2054745108L)
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.posmod", b.posmod(a0))
   }
 
   private fun pure24() {
+    reseed(777788998L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.posmodv", b.posmodv(a0))
   }
 
   private fun pure25() {
+    reseed(1158144939L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.project", b.project(a0))
   }
 
   private fun pure26() {
+    reseed(1710168639L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     val a1 = nv()
@@ -1006,16 +902,19 @@ class WebBuiltinParityTest {
   }
 
   private fun pure27() {
+    reseed(3824829595L)
     val b = Vector2(nv(), nv())
     mix("Vector2.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure28() {
+    reseed(3635196729L)
     val b = Vector2(nv(), nv())
     mix("Vector2.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure29() {
+    reseed(4176435583L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     val a1 = nv()
@@ -1023,71 +922,84 @@ class WebBuiltinParityTest {
   }
 
   private fun pure30() {
+    reseed(2122336217L)
     val b = Vector2(nv(), nv())
     mix("Vector2.orthogonal", b.orthogonal())
   }
 
   private fun pure31() {
+    reseed(547219716L)
     val b = Vector2(nv(), nv())
     mix("Vector2.floor", b.floor())
   }
 
   private fun pure32() {
+    reseed(1513214783L)
     val b = Vector2(nv(), nv())
     mix("Vector2.ceil", b.ceil())
   }
 
   private fun pure33() {
+    reseed(1191847018L)
     val b = Vector2(nv(), nv())
     mix("Vector2.round", b.round())
   }
 
   private fun pure34() {
+    reseed(2183608290L)
     val b = Vector2(nv(), nv())
     mix("Vector2.aspect", b.aspect())
   }
 
   private fun pure35() {
+    reseed(3107875105L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.dot", b.dot(a0))
   }
 
   private fun pure36() {
+    reseed(2295000095L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector2.slide", b.slide(a0))
   }
 
   private fun pure37() {
+    reseed(78380634L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector2.bounce", b.bounce(a0))
   }
 
   private fun pure38() {
+    reseed(3462658799L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector2.reflect", b.reflect(a0))
   }
 
   private fun pure39() {
+    reseed(61254490L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.cross", b.cross(a0))
   }
 
   private fun pure40() {
+    reseed(1815746526L)
     val b = Vector2(nv(), nv())
     mix("Vector2.abs", b.abs())
   }
 
   private fun pure41() {
+    reseed(305833863L)
     val b = Vector2(nv(), nv())
     mix("Vector2.sign", b.sign())
   }
 
   private fun pure42() {
+    reseed(2844850473L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     val a1 = Vector2(nv(), nv())
@@ -1095,6 +1007,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure43() {
+    reseed(1043887965L)
     val b = Vector2(nv(), nv())
     val a0 = nv()
     val a1 = nv()
@@ -1102,106 +1015,124 @@ class WebBuiltinParityTest {
   }
 
   private fun pure44() {
+    reseed(3272422798L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.min", b.min(a0))
   }
 
   private fun pure45() {
+    reseed(4123778104L)
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.minf", b.minf(a0))
   }
 
   private fun pure46() {
+    reseed(3036153036L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.max", b.max(a0))
   }
 
   private fun pure47() {
+    reseed(2356107166L)
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.maxf", b.maxf(a0))
   }
 
   private fun pure48() {
+    reseed(2424996355L)
     val l = Vector3(nv(), nv(), nv())
     mix("unary- Vector3", -l)
   }
 
   private fun pure49() {
+    reseed(2958229497L)
     val l = Vector3(nv(), nv(), nv())
     mix("unary+ Vector3", +l)
   }
 
   private fun pure50() {
+    reseed(3377521380L)
     val l = Vector3(nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector3 * int", l * r)
   }
 
   private fun pure51() {
+    reseed(1835633447L)
     val l = Vector3(nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector3 / int", l / r)
   }
 
   private fun pure52() {
+    reseed(2370979871L)
     val l = Vector3(nv(), nv(), nv())
     val r = nv()
     mix("Vector3 * float", l * r)
   }
 
   private fun pure53() {
+    reseed(148931052L)
     val l = Vector3(nv(), nv(), nv())
     val r = nv()
     mix("Vector3 / float", l / r)
   }
 
   private fun pure54() {
+    reseed(3343879467L)
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 < Vector3", l < r)
   }
 
   private fun pure55() {
+    reseed(3276956814L)
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 + Vector3", l + r)
   }
 
   private fun pure56() {
+    reseed(1708484320L)
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 - Vector3", l - r)
   }
 
   private fun pure57() {
+    reseed(1882190961L)
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 * Vector3", l * r)
   }
 
   private fun pure58() {
+    reseed(3846203354L)
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 / Vector3", l / r)
   }
 
   private fun pure59() {
+    reseed(1832696475L)
     val l = Vector3(nv(), nv(), nv())
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Vector3 * Quaternion", l * r)
   }
 
   private fun pure60() {
+    reseed(1818447147L)
     val l = Vector3(nv(), nv(), nv())
     val r = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Vector3 * Basis", l * r)
   }
 
   private fun pure61() {
+    reseed(4104719498L)
     val l = Vector3(nv(), nv(), nv())
     val r =
       Transform3D(
@@ -1212,81 +1143,96 @@ class WebBuiltinParityTest {
   }
 
   private fun pure62() {
+    reseed(695953388L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure63() {
+    reseed(1354666414L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure64() {
+    reseed(1451728668L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.direction_to", b.directionTo(a0))
   }
 
   private fun pure65() {
+    reseed(4024419308L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.distance_to", b.distanceTo(a0))
   }
 
   private fun pure66() {
+    reseed(292019118L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure67() {
+    reseed(4261400983L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.length", b.length())
   }
 
   private fun pure68() {
+    reseed(502161641L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.length_squared", b.lengthSquared())
   }
 
   private fun pure69() {
+    reseed(2055916247L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.limit_length", b.limitLength(a0))
   }
 
   private fun pure70() {
+    reseed(1213793922L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.normalized", b.normalized())
   }
 
   private fun pure71() {
+    reseed(3077200553L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.is_normalized", b.isNormalized())
   }
 
   private fun pure72() {
+    reseed(1139683625L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure73() {
+    reseed(2993431555L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.is_zero_approx", b.isZeroApprox())
   }
 
   private fun pure74() {
+    reseed(888106243L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.is_finite", b.isFinite())
   }
 
   private fun pure75() {
+    reseed(195543569L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.inverse", b.inverse())
   }
 
   private fun pure76() {
+    reseed(2681208398L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = Vector3(nv(), nv(), nv())
@@ -1294,6 +1240,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure77() {
+    reseed(3161266424L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     val a1 = nv()
@@ -1301,6 +1248,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure78() {
+    reseed(1937235870L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = nv()
@@ -1308,6 +1256,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure79() {
+    reseed(3726347408L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = nv()
@@ -1315,167 +1264,196 @@ class WebBuiltinParityTest {
   }
 
   private fun pure80() {
+    reseed(1117540114L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.dot", b.dot(a0))
   }
 
   private fun pure81() {
+    reseed(3474009941L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.cross", b.cross(a0))
   }
 
   private fun pure82() {
+    reseed(2199171433L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.abs", b.abs())
   }
 
   private fun pure83() {
+    reseed(1544078475L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.floor", b.floor())
   }
 
   private fun pure84() {
+    reseed(308817102L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.ceil", b.ceil())
   }
 
   private fun pure85() {
+    reseed(2945145221L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.round", b.round())
   }
 
   private fun pure86() {
+    reseed(2511880789L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.posmod", b.posmod(a0))
   }
 
   private fun pure87() {
+    reseed(3557825817L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.posmodv", b.posmodv(a0))
   }
 
   private fun pure88() {
+    reseed(254645412L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.project", b.project(a0))
   }
 
   private fun pure89() {
+    reseed(2668297288L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.slide", b.slide(a0))
   }
 
   private fun pure90() {
+    reseed(547176047L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.bounce", b.bounce(a0))
   }
 
   private fun pure91() {
+    reseed(2589191412L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.reflect", b.reflect(a0))
   }
 
   private fun pure92() {
+    reseed(3987136690L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.sign", b.sign())
   }
 
   private fun pure93() {
+    reseed(887161873L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.min", b.min(a0))
   }
 
   private fun pure94() {
+    reseed(3040479061L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.minf", b.minf(a0))
   }
 
   private fun pure95() {
+    reseed(1190438943L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.max", b.max(a0))
   }
 
   private fun pure96() {
+    reseed(740636283L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.maxf", b.maxf(a0))
   }
 
   private fun pure97() {
+    reseed(2508884450L)
     val l = Vector4(nv(), nv(), nv(), nv())
     mix("unary- Vector4", -l)
   }
 
   private fun pure98() {
+    reseed(2975007116L)
     val l = Vector4(nv(), nv(), nv(), nv())
     mix("unary+ Vector4", +l)
   }
 
   private fun pure99() {
+    reseed(1367022229L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector4 * int", l * r)
   }
 
   private fun pure100() {
+    reseed(1680117682L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector4 / int", l / r)
   }
 
   private fun pure101() {
+    reseed(2303104014L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Vector4 * float", l * r)
   }
 
   private fun pure102() {
+    reseed(2290904617L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Vector4 / float", l / r)
   }
 
   private fun pure103() {
+    reseed(3123324175L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 < Vector4", l < r)
   }
 
   private fun pure104() {
+    reseed(4131127154L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 + Vector4", l + r)
   }
 
   private fun pure105() {
+    reseed(3601267420L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 - Vector4", l - r)
   }
 
   private fun pure106() {
+    reseed(3678567357L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 * Vector4", l * r)
   }
 
   private fun pure107() {
+    reseed(636176142L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 / Vector4", l / r)
   }
 
   private fun pure108() {
+    reseed(3563492129L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r =
       Projection(
@@ -1488,51 +1466,61 @@ class WebBuiltinParityTest {
   }
 
   private fun pure109() {
+    reseed(2442273319L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure110() {
+    reseed(1326971597L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure111() {
+    reseed(3707877544L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.length", b.length())
   }
 
   private fun pure112() {
+    reseed(625522230L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.length_squared", b.lengthSquared())
   }
 
   private fun pure113() {
+    reseed(3826345756L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.abs", b.abs())
   }
 
   private fun pure114() {
+    reseed(2129315045L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.sign", b.sign())
   }
 
   private fun pure115() {
+    reseed(3690219138L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.floor", b.floor())
   }
 
   private fun pure116() {
+    reseed(4256840069L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.ceil", b.ceil())
   }
 
   private fun pure117() {
+    reseed(4121978548L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.round", b.round())
   }
 
   private fun pure118() {
+    reseed(341271245L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     val a1 = nv()
@@ -1540,18 +1528,21 @@ class WebBuiltinParityTest {
   }
 
   private fun pure119() {
+    reseed(1599763954L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Vector4.posmod", b.posmod(a0))
   }
 
   private fun pure120() {
+    reseed(2674327244L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.posmodv", b.posmodv(a0))
   }
 
   private fun pure121() {
+    reseed(2077365883L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     val a1 = Vector4(nv(), nv(), nv(), nv())
@@ -1559,6 +1550,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure122() {
+    reseed(146329511L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     val a1 = nv()
@@ -1566,180 +1558,212 @@ class WebBuiltinParityTest {
   }
 
   private fun pure123() {
+    reseed(3257113105L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.normalized", b.normalized())
   }
 
   private fun pure124() {
+    reseed(3662684755L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.direction_to", b.directionTo(a0))
   }
 
   private fun pure125() {
+    reseed(77677881L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.distance_to", b.distanceTo(a0))
   }
 
   private fun pure126() {
+    reseed(3660589391L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure127() {
+    reseed(3489047403L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.dot", b.dot(a0))
   }
 
   private fun pure128() {
+    reseed(636035608L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.inverse", b.inverse())
   }
 
   private fun pure129() {
+    reseed(748306856L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure130() {
+    reseed(1969951556L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_zero_approx", b.isZeroApprox())
   }
 
   private fun pure131() {
+    reseed(11997050L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_finite", b.isFinite())
   }
 
   private fun pure132() {
+    reseed(2335716888L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.min", b.min(a0))
   }
 
   private fun pure133() {
+    reseed(2810038362L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Vector4.minf", b.minf(a0))
   }
 
   private fun pure134() {
+    reseed(2706104434L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.max", b.max(a0))
   }
 
   private fun pure135() {
+    reseed(4268867452L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Vector4.maxf", b.maxf(a0))
   }
 
   private fun pure136() {
+    reseed(3597679725L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("unary- Quaternion", -l)
   }
 
   private fun pure137() {
+    reseed(2444234883L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("unary+ Quaternion", +l)
   }
 
   private fun pure138() {
+    reseed(2851289822L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = ri().toLong()
     mix("Quaternion * int", l * r)
   }
 
   private fun pure139() {
+    reseed(1098717081L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = ri().toLong()
     mix("Quaternion / int", l / r)
   }
 
   private fun pure140() {
+    reseed(4221021701L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = nv()
     mix("Quaternion * float", l * r)
   }
 
   private fun pure141() {
+    reseed(1328898402L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = nv()
     mix("Quaternion / float", l / r)
   }
 
   private fun pure142() {
+    reseed(2752083523L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Vector3(nv(), nv(), nv())
     mix("Quaternion * Vector3", l * r)
   }
 
   private fun pure143() {
+    reseed(2392759460L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion + Quaternion", l + r)
   }
 
   private fun pure144() {
+    reseed(2647852722L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion - Quaternion", l - r)
   }
 
   private fun pure145() {
+    reseed(2586672685L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion * Quaternion", l * r)
   }
 
   private fun pure146() {
+    reseed(517160897L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.length", b.length())
   }
 
   private fun pure147() {
+    reseed(1822887831L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.length_squared", b.lengthSquared())
   }
 
   private fun pure148() {
+    reseed(2179064044L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.normalized", b.normalized())
   }
 
   private fun pure149() {
+    reseed(2943240299L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure150() {
+    reseed(4177444529L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.is_finite", b.isFinite())
   }
 
   private fun pure151() {
+    reseed(4095541124L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.dot", b.dot(a0))
   }
 
   private fun pure152() {
+    reseed(2743723189L)
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("unary- Plane", -l)
   }
 
   private fun pure153() {
+    reseed(1715104491L)
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("unary+ Plane", +l)
   }
 
   private fun pure154() {
+    reseed(915557820L)
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val r =
       Transform3D(
@@ -1750,23 +1774,27 @@ class WebBuiltinParityTest {
   }
 
   private fun pure155() {
+    reseed(3879814381L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("Plane.get_center", b.getCenter())
   }
 
   private fun pure156() {
+    reseed(3539735307L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Plane.is_point_over", b.isPointOver(a0))
   }
 
   private fun pure157() {
+    reseed(1560040574L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Plane.distance_to", b.distanceTo(a0))
   }
 
   private fun pure158() {
+    reseed(4197163150L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = nv()
@@ -1774,12 +1802,14 @@ class WebBuiltinParityTest {
   }
 
   private fun pure159() {
+    reseed(4145482154L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Plane.project", b.project(a0))
   }
 
   private fun pure160() {
+    reseed(1589364528L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = Vector3(nv(), nv(), nv())
@@ -1787,39 +1817,46 @@ class WebBuiltinParityTest {
   }
 
   private fun pure161() {
+    reseed(314846183L)
     val l = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Rect2 * Transform2D", l * r)
   }
 
   private fun pure162() {
+    reseed(3452985387L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.get_center", b.getCenter())
   }
 
   private fun pure163() {
+    reseed(1378255491L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.get_area", b.area())
   }
 
   private fun pure164() {
+    reseed(16292519L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.has_area", b.hasArea())
   }
 
   private fun pure165() {
+    reseed(3997273460L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Vector2(nv(), nv())
     mix("Rect2.has_point", b.hasPoint(a0))
   }
 
   private fun pure166() {
+    reseed(3234829821L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure167() {
+    reseed(585162897L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a1 = rb()
@@ -1827,42 +1864,49 @@ class WebBuiltinParityTest {
   }
 
   private fun pure168() {
+    reseed(1583904209L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.encloses", b.encloses(a0))
   }
 
   private fun pure169() {
+    reseed(919617246L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.intersection", b.intersection(a0))
   }
 
   private fun pure170() {
+    reseed(1408174913L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.merge", b.merge(a0))
   }
 
   private fun pure171() {
+    reseed(822394139L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Vector2(nv(), nv())
     mix("Rect2.expand", b.expand(a0))
   }
 
   private fun pure172() {
+    reseed(1527357237L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Vector2(nv(), nv())
     mix("Rect2.get_support", b.getSupport(a0))
   }
 
   private fun pure173() {
+    reseed(3806890648L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = nv()
     mix("Rect2.grow", b.grow(a0))
   }
 
   private fun pure174() {
+    reseed(328486878L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = rs().toLong()
     val a1 = nv()
@@ -1870,6 +1914,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure175() {
+    reseed(3521964486L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = nv()
     val a1 = nv()
@@ -1879,11 +1924,13 @@ class WebBuiltinParityTest {
   }
 
   private fun pure176() {
+    reseed(1462396157L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.abs", b.abs())
   }
 
   private fun pure177() {
+    reseed(2471085742L)
     val l = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val r =
       Transform3D(
@@ -1894,129 +1941,152 @@ class WebBuiltinParityTest {
   }
 
   private fun pure178() {
+    reseed(3317731379L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_center", b.getCenter())
   }
 
   private fun pure179() {
+    reseed(1470041184L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_volume", b.volume())
   }
 
   private fun pure180() {
+    reseed(2420616412L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.has_volume", b.hasVolume())
   }
 
   private fun pure181() {
+    reseed(4140279721L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.has_surface", b.hasSurface())
   }
 
   private fun pure182() {
+    reseed(3997791804L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Vector3(nv(), nv(), nv())
     mix("AABB.has_point", b.hasPoint(a0))
   }
 
   private fun pure183() {
+    reseed(1542440885L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure184() {
+    reseed(31879161L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.intersects", b.intersects(a0))
   }
 
   private fun pure185() {
+    reseed(1020225673L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.encloses", b.encloses(a0))
   }
 
   private fun pure186() {
+    reseed(954798953L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.merge", b.merge(a0))
   }
 
   private fun pure187() {
+    reseed(3888026430L)
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = ri().toLong()
     mix("Basis * int", l * r)
   }
 
   private fun pure188() {
+    reseed(1764391545L)
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = ri().toLong()
     mix("Basis / int", l / r)
   }
 
   private fun pure189() {
+    reseed(2817517157L)
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = nv()
     mix("Basis * float", l * r)
   }
 
   private fun pure190() {
+    reseed(4241534530L)
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = nv()
     mix("Basis / float", l / r)
   }
 
   private fun pure191() {
+    reseed(417053667L)
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = Vector3(nv(), nv(), nv())
     mix("Basis * Vector3", l * r)
   }
 
   private fun pure192() {
+    reseed(2590525357L)
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis * Basis", l * r)
   }
 
   private fun pure193() {
+    reseed(1792232159L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.inverse", b.inverse())
   }
 
   private fun pure194() {
+    reseed(2777653080L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.transposed", b.transposed())
   }
 
   private fun pure195() {
+    reseed(3340755916L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.orthonormalized", b.orthonormalized())
   }
 
   private fun pure196() {
+    reseed(603529372L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.determinant", b.determinant())
   }
 
   private fun pure197() {
+    reseed(2235769835L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv())
     mix("Basis.scaled", b.scaled(a0))
   }
 
   private fun pure198() {
+    reseed(2709661926L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.get_scale", b.getScale())
   }
 
   private fun pure199() {
+    reseed(1619399883L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val a0 = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure201() {
+    reseed(718197479L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2027,6 +2097,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure202() {
+    reseed(2684542884L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2037,6 +2108,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure203() {
+    reseed(2354633388L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2047,6 +2119,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure204() {
+    reseed(1452311007L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2057,6 +2130,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure205() {
+    reseed(145590810L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2067,6 +2141,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure206() {
+    reseed(3007220728L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2077,6 +2152,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure207() {
+    reseed(3022722904L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2087,6 +2163,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure208() {
+    reseed(1698483241L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2101,6 +2178,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure209() {
+    reseed(116775411L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2111,6 +2189,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure210() {
+    reseed(3130060046L)
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2120,6 +2199,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure211() {
+    reseed(1730131442L)
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2129,6 +2209,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure212() {
+    reseed(3141626533L)
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2138,6 +2219,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure213() {
+    reseed(350605992L)
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2148,6 +2230,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure214() {
+    reseed(1956012088L)
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2158,6 +2241,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure215() {
+    reseed(2321045066L)
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2172,94 +2256,110 @@ class WebBuiltinParityTest {
   }
 
   private fun pure216() {
+    reseed(2073728526L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = ri().toLong()
     mix("Transform2D * int", l * r)
   }
 
   private fun pure217() {
+    reseed(3203301385L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = ri().toLong()
     mix("Transform2D / int", l / r)
   }
 
   private fun pure218() {
+    reseed(3833350709L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = nv()
     mix("Transform2D * float", l * r)
   }
 
   private fun pure219() {
+    reseed(1067948050L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = nv()
     mix("Transform2D / float", l / r)
   }
 
   private fun pure220() {
+    reseed(2969098240L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = Vector2(nv(), nv())
     mix("Transform2D * Vector2", l * r)
   }
 
   private fun pure221() {
+    reseed(1670842623L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Transform2D * Rect2", l * r)
   }
 
   private fun pure222() {
+    reseed(1632460141L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D * Transform2D", l * r)
   }
 
   private fun pure223() {
+    reseed(844601705L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = listOf(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D * PackedVector2Array", l * r)
   }
 
   private fun pure224() {
+    reseed(384113135L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D.inverse", b.inverse())
   }
 
   private fun pure225() {
+    reseed(1027120134L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D.get_origin", b.origin)
   }
 
   private fun pure226() {
+    reseed(2619053927L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv())
     mix("Transform2D.translated", b.translated(a0))
   }
 
   private fun pure227() {
+    reseed(544027331L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv())
     mix("Transform2D.translated_local", b.translatedLocal(a0))
   }
 
   private fun pure228() {
+    reseed(917391560L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv())
     mix("Transform2D.basis_xform", b.basisXform(a0))
   }
 
   private fun pure229() {
+    reseed(3527981608L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv())
     mix("Transform2D.basis_xform_inv", b.basisXformInv(a0))
   }
 
   private fun pure230() {
+    reseed(3049468443L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure231() {
+    reseed(2715974335L)
     val l =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -2272,6 +2372,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure232() {
+    reseed(3788860319L)
     val l =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -2290,70 +2391,82 @@ class WebBuiltinParityTest {
   }
 
   private fun pure233() {
+    reseed(805697464L)
     val l = Color(nv(), nv(), nv(), nv())
     mix("unary- Color", -l)
   }
 
   private fun pure234() {
+    reseed(4179669938L)
     val l = Color(nv(), nv(), nv(), nv())
     mix("unary+ Color", +l)
   }
 
   private fun pure235() {
+    reseed(3518752843L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Color * int", l * r)
   }
 
   private fun pure236() {
+    reseed(3081088656L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Color / int", l / r)
   }
 
   private fun pure237() {
+    reseed(1542719536L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Color * float", l * r)
   }
 
   private fun pure238() {
+    reseed(527383179L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Color / float", l / r)
   }
 
   private fun pure239() {
+    reseed(2201858938L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color + Color", l + r)
   }
 
   private fun pure240() {
+    reseed(3587874176L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color - Color", l - r)
   }
 
   private fun pure241() {
+    reseed(2238950341L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color * Color", l * r)
   }
 
   private fun pure242() {
+    reseed(86694990L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color / Color", l / r)
   }
 
   private fun pure243() {
+    reseed(3983162445L)
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = rb()
     mix("Color.to_html", b.toHtml(a0))
   }
 
   private fun pure244() {
+    reseed(319613249L)
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = Color(nv(), nv(), nv(), nv())
     val a1 = Color(nv(), nv(), nv(), nv())
@@ -2361,11 +2474,13 @@ class WebBuiltinParityTest {
   }
 
   private fun pure245() {
+    reseed(278459419L)
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.inverted", b.inverted())
   }
 
   private fun pure246() {
+    reseed(661654487L)
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = Color(nv(), nv(), nv(), nv())
     val a1 = nv()
@@ -2373,134 +2488,158 @@ class WebBuiltinParityTest {
   }
 
   private fun pure247() {
+    reseed(3280328687L)
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.get_luminance", b.getLuminance())
   }
 
   private fun pure248() {
+    reseed(268937051L)
     val l = Vector2i(ri(), ri())
     mix("unary- Vector2i", -l)
   }
 
   private fun pure249() {
+    reseed(245756317L)
     val l = Vector2i(ri(), ri())
     mix("unary+ Vector2i", +l)
   }
 
   private fun pure250() {
+    reseed(3445010572L)
     val l = Vector2i(ri(), ri())
     val r = ri().toLong()
     mix("Vector2i * int", l * r)
   }
 
   private fun pure251() {
+    reseed(286226511L)
     val l = Vector2i(ri(), ri())
     val r = rnz().toLong()
     mix("Vector2i / int", l / r)
   }
 
   private fun pure252() {
+    reseed(2208992989L)
     val l = Vector2i(ri(), ri())
     val r = rnz().toLong()
     mix("Vector2i % int", l % r)
   }
 
   private fun pure253() {
+    reseed(3704012359L)
     val l = Vector2i(ri(), ri())
     val r = nv()
     mix("Vector2i * float", l * r)
   }
 
   private fun pure254() {
+    reseed(174201044L)
     val l = Vector2i(ri(), ri())
     val r = nv()
     mix("Vector2i / float", l / r)
   }
 
   private fun pure255() {
+    reseed(1369372827L)
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i < Vector2i", l < r)
   }
 
   private fun pure256() {
+    reseed(1364969968L)
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i + Vector2i", l + r)
   }
 
   private fun pure257() {
+    reseed(1505180742L)
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i - Vector2i", l - r)
   }
 
   private fun pure258() {
+    reseed(82796237L)
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i * Vector2i", l * r)
   }
 
   private fun pure259() {
+    reseed(2232094404L)
     val l = Vector2i(ri(), ri())
     val r = Vector2i(rnz(), rnz())
     mix("Vector2i / Vector2i", l / r)
   }
 
   private fun pure260() {
+    reseed(1064143102L)
     val l = Vector2i(ri(), ri())
     val r = Vector2i(rnz(), rnz())
     mix("Vector2i % Vector2i", l % r)
   }
 
   private fun pure261() {
+    reseed(4099120283L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.aspect", b.aspect())
   }
 
   private fun pure262() {
+    reseed(1645239702L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure263() {
+    reseed(3245303556L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure264() {
+    reseed(757457108L)
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.distance_to", b.distanceTo(a0))
   }
 
   private fun pure265() {
+    reseed(892286886L)
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure266() {
+    reseed(235317471L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.length", b.length())
   }
 
   private fun pure267() {
+    reseed(406270017L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.length_squared", b.lengthSquared())
   }
 
   private fun pure268() {
+    reseed(2688769930L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.sign", b.sign())
   }
 
   private fun pure269() {
+    reseed(3750415249L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.abs", b.abs())
   }
 
   private fun pure270() {
+    reseed(2146359190L)
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     val a1 = Vector2i(ri(), ri())
@@ -2508,6 +2647,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure271() {
+    reseed(1677592173L)
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
@@ -2515,148 +2655,174 @@ class WebBuiltinParityTest {
   }
 
   private fun pure272() {
+    reseed(3510021193L)
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.min", b.min(a0))
   }
 
   private fun pure273() {
+    reseed(2031154784L)
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     mix("Vector2i.mini", b.mini(a0))
   }
 
   private fun pure274() {
+    reseed(3273854599L)
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.max", b.max(a0))
   }
 
   private fun pure275() {
+    reseed(506495146L)
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     mix("Vector2i.maxi", b.maxi(a0))
   }
 
   private fun pure276() {
+    reseed(4094381278L)
     val l = Vector3i(ri(), ri(), ri())
     mix("unary- Vector3i", -l)
   }
 
   private fun pure277() {
+    reseed(581455792L)
     val l = Vector3i(ri(), ri(), ri())
     mix("unary+ Vector3i", +l)
   }
 
   private fun pure278() {
+    reseed(2433024929L)
     val l = Vector3i(ri(), ri(), ri())
     val r = ri().toLong()
     mix("Vector3i * int", l * r)
   }
 
   private fun pure279() {
+    reseed(2419818214L)
     val l = Vector3i(ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector3i / int", l / r)
   }
 
   private fun pure280() {
+    reseed(2687185496L)
     val l = Vector3i(ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector3i % int", l % r)
   }
 
   private fun pure281() {
+    reseed(3113742250L)
     val l = Vector3i(ri(), ri(), ri())
     val r = nv()
     mix("Vector3i * float", l * r)
   }
 
   private fun pure282() {
+    reseed(4215552365L)
     val l = Vector3i(ri(), ri(), ri())
     val r = nv()
     mix("Vector3i / float", l / r)
   }
 
   private fun pure283() {
+    reseed(877801977L)
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i < Vector3i", l < r)
   }
 
   private fun pure284() {
+    reseed(3681701042L)
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i + Vector3i", l + r)
   }
 
   private fun pure285() {
+    reseed(2491387052L)
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i - Vector3i", l - r)
   }
 
   private fun pure286() {
+    reseed(105969943L)
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i * Vector3i", l * r)
   }
 
   private fun pure287() {
+    reseed(3462629302L)
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(rnz(), rnz(), rnz())
     mix("Vector3i / Vector3i", l / r)
   }
 
   private fun pure288() {
+    reseed(1730158804L)
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(rnz(), rnz(), rnz())
     mix("Vector3i % Vector3i", l % r)
   }
 
   private fun pure289() {
+    reseed(872518043L)
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure290() {
+    reseed(1511773513L)
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure291() {
+    reseed(1044148789L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.distance_to", b.distanceTo(a0))
   }
 
   private fun pure292() {
+    reseed(3220969291L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure293() {
+    reseed(3304624780L)
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.length", b.length())
   }
 
   private fun pure294() {
+    reseed(3895359002L)
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.length_squared", b.lengthSquared())
   }
 
   private fun pure295() {
+    reseed(4222841569L)
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.sign", b.sign())
   }
 
   private fun pure296() {
+    reseed(2253829664L)
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.abs", b.abs())
   }
 
   private fun pure297() {
+    reseed(3292176863L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     val a1 = Vector3i(ri(), ri(), ri())
@@ -2664,6 +2830,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure298() {
+    reseed(2655818114L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
@@ -2671,136 +2838,160 @@ class WebBuiltinParityTest {
   }
 
   private fun pure299() {
+    reseed(2631592908L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.min", b.min(a0))
   }
 
   private fun pure300() {
+    reseed(2443244735L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector3i.mini", b.mini(a0))
   }
 
   private fun pure301() {
+    reseed(2865199646L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.max", b.max(a0))
   }
 
   private fun pure302() {
+    reseed(1325779285L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector3i.maxi", b.maxi(a0))
   }
 
   private fun pure303() {
+    reseed(4095116753L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     mix("unary- Vector4i", -l)
   }
 
   private fun pure304() {
+    reseed(179043199L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     mix("unary+ Vector4i", +l)
   }
 
   private fun pure305() {
+    reseed(3886032562L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = ri().toLong()
     mix("Vector4i * int", l * r)
   }
 
   private fun pure306() {
+    reseed(3572937109L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector4i / int", l / r)
   }
 
   private fun pure307() {
+    reseed(3548402615L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector4i % int", l % r)
   }
 
   private fun pure308() {
+    reseed(2318621993L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = nv()
     mix("Vector4i * float", l * r)
   }
 
   private fun pure309() {
+    reseed(2330821390L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = nv()
     mix("Vector4i / float", l / r)
   }
 
   private fun pure310() {
+    reseed(735041147L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i < Vector4i", l < r)
   }
 
   private fun pure311() {
+    reseed(3756608L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i + Vector4i", l + r)
   }
 
   private fun pure312() {
+    reseed(2387159950L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i - Vector4i", l - r)
   }
 
   private fun pure313() {
+    reseed(124152869L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i * Vector4i", l * r)
   }
 
   private fun pure314() {
+    reseed(3970823100L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(rnz(), rnz(), rnz(), rnz())
     mix("Vector4i / Vector4i", l / r)
   }
 
   private fun pure315() {
+    reseed(791261798L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(rnz(), rnz(), rnz(), rnz())
     mix("Vector4i % Vector4i", l % r)
   }
 
   private fun pure316() {
+    reseed(47588366L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure317() {
+    reseed(481429676L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure318() {
+    reseed(3251204525L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.length", b.length())
   }
 
   private fun pure319() {
+    reseed(242646739L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.length_squared", b.lengthSquared())
   }
 
   private fun pure320() {
+    reseed(2385785324L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.sign", b.sign())
   }
 
   private fun pure321() {
+    reseed(2479388499L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.abs", b.abs())
   }
 
   private fun pure322() {
+    reseed(1814180564L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     val a1 = Vector4i(ri(), ri(), ri(), ri())
@@ -2808,6 +2999,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure323() {
+    reseed(4141211527L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
@@ -2815,99 +3007,116 @@ class WebBuiltinParityTest {
   }
 
   private fun pure324() {
+    reseed(1969964159L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.min", b.min(a0))
   }
 
   private fun pure325() {
+    reseed(3990630050L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector4i.mini", b.mini(a0))
   }
 
   private fun pure326() {
+    reseed(2203467729L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.max", b.max(a0))
   }
 
   private fun pure327() {
+    reseed(2026262184L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector4i.maxi", b.maxi(a0))
   }
 
   private fun pure328() {
+    reseed(259203722L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.distance_to", b.distanceTo(a0))
   }
 
   private fun pure329() {
+    reseed(3369025712L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure330() {
+    reseed(2561521356L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.get_center", b.getCenter())
   }
 
   private fun pure331() {
+    reseed(3278307100L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.get_area", b.area())
   }
 
   private fun pure332() {
+    reseed(3117956200L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.has_area", b.hasArea())
   }
 
   private fun pure333() {
+    reseed(827932525L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Vector2i(ri(), ri())
     mix("Rect2i.has_point", b.hasPoint(a0))
   }
 
   private fun pure334() {
+    reseed(275157174L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.intersects", b.intersects(a0))
   }
 
   private fun pure335() {
+    reseed(3582972378L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.encloses", b.encloses(a0))
   }
 
   private fun pure336() {
+    reseed(176222145L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.intersection", b.intersection(a0))
   }
 
   private fun pure337() {
+    reseed(3828809144L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.merge", b.merge(a0))
   }
 
   private fun pure338() {
+    reseed(3850027988L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Vector2i(ri(), ri())
     mix("Rect2i.expand", b.expand(a0))
   }
 
   private fun pure339() {
+    reseed(938186727L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = ri().toLong()
     mix("Rect2i.grow", b.grow(a0))
   }
 
   private fun pure340() {
+    reseed(3237362659L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = rs().toLong()
     val a1 = ri().toLong()
@@ -2915,6 +3124,7 @@ class WebBuiltinParityTest {
   }
 
   private fun pure341() {
+    reseed(2785431763L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
@@ -2924,38 +3134,45 @@ class WebBuiltinParityTest {
   }
 
   private fun pure342() {
+    reseed(3141125996L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.abs", b.abs())
   }
 
   private fun pure343() {
+    reseed(2711476823L)
     val l = RID(rl())
     val r = RID(rl())
     mix("RID < RID", l < r)
   }
 
   private fun pure344() {
+    reseed(1101502367L)
     val b = RID(rl())
     mix("RID.is_valid", b.isValid())
   }
 
   private fun pure345() {
+    reseed(4011005894L)
     val b = RID(rl())
     mix("RID.get_id", b.getId())
   }
 
   private fun facade0() {
+    reseed(3535864697L)
     val b = Vector2(nv(), nv()).normalized()
     mix("Vector2.angle", b.angle())
   }
 
   private fun facade9() {
+    reseed(1355399367L)
     val b = Vector2(nv(), nv()).normalized()
     val a0 = nv()
     mix("Vector2.rotated", b.rotated(a0))
   }
 
   private fun facade14() {
+    reseed(1949204089L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -2963,6 +3180,7 @@ class WebBuiltinParityTest {
   }
 
   private fun facade17() {
+    reseed(3672682928L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = nv()
@@ -2970,6 +3188,7 @@ class WebBuiltinParityTest {
   }
 
   private fun facade36() {
+    reseed(2527569475L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a1 = nv()
@@ -2977,6 +3196,7 @@ class WebBuiltinParityTest {
   }
 
   private fun facade66() {
+    reseed(2804666462L)
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = nv()
@@ -2984,12 +3204,14 @@ class WebBuiltinParityTest {
   }
 
   private fun facade68() {
+    reseed(274287925L)
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = rs().toLong()
     mix("Basis.get_euler", b.getEuler(a0))
   }
 
   private fun facade76() {
+    reseed(1944853062L)
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
     val a2 = rb()
@@ -2997,12 +3219,14 @@ class WebBuiltinParityTest {
   }
 
   private fun facade78() {
+    reseed(1434415051L)
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = rs().toLong()
     mix("Basis.from_euler", Basis.fromEuler(a0, a1))
   }
 
   private fun facade83() {
+    reseed(2644076473L)
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
@@ -3012,6 +3236,7 @@ class WebBuiltinParityTest {
   }
 
   private fun facade84() {
+    reseed(3907275442L)
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 =
@@ -3029,7 +3254,15 @@ class WebBuiltinParityTest {
     return seed
   }
 
-  private fun skip(draws: Int) = repeat(draws) { nextRandom() }
+  // Every entry draws from a stream of its own, so a new entry changes no other entry's inputs.
+  private var inputRound = 0
+
+  private fun reseed(entry: Long) {
+    seed = (entry xor (inputRound * 2654435761L)) and 0xFFFFFFFFL
+    if (seed == 0L) seed = 2463534242L
+    nextRandom()
+    nextRandom()
+  }
 
   private fun nv(): Double {
     val r = nextRandom()
@@ -3100,353 +3333,354 @@ class WebBuiltinParityTest {
   private companion object {
     val SCALES = doubleArrayOf(0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0)
 
-    // Godot 4.7.2's hashes for the entries above (scripts/fixtures/builtin_parity_expected.json).
+    // The pinned Godot's hashes of the entries above (builtin_parity_expected.json).
     val EXPECTED =
       mapOf(
-        "unary-_Vector2" to "7b41f3aa",
-        "unary+_Vector2" to "5180ee25",
-        "Vector2_*_int" to "5c39b1f",
-        "Vector2_/_int" to "4d122173",
-        "Vector2_*_float" to "c568038",
-        "Vector2_/_float" to "e60c498e",
-        "Vector2_<_Vector2" to "d1ec7eec",
-        "Vector2_+_Vector2" to "99b26e7f",
-        "Vector2_-_Vector2" to "fb7b2b4",
-        "Vector2_*_Vector2" to "8b65ba48",
-        "Vector2_/_Vector2" to "14a6a635",
-        "Vector2_*_Transform2D" to "b3605be6",
-        "Vector2.direction_to" to "18087e4c",
-        "Vector2.distance_to" to "835292c5",
-        "Vector2.distance_squared_to" to "1d32701d",
-        "Vector2.length" to "be6f7f75",
-        "Vector2.length_squared" to "c7d9405b",
-        "Vector2.limit_length" to "15e69ae8",
-        "Vector2.normalized" to "5e1d3556",
+        "unary-_Vector2" to "e945c25",
+        "unary+_Vector2" to "e3107d72",
+        "Vector2_*_int" to "967de1e5",
+        "Vector2_/_int" to "67987e92",
+        "Vector2_*_float" to "a08b7004",
+        "Vector2_/_float" to "adb7bdc9",
+        "Vector2_<_Vector2" to "289b6a9d",
+        "Vector2_+_Vector2" to "eaf89de3",
+        "Vector2_-_Vector2" to "d3c3de26",
+        "Vector2_*_Vector2" to "21d4b03c",
+        "Vector2_/_Vector2" to "cd1e2de6",
+        "Vector2_*_Transform2D" to "e98ce6c5",
+        "Vector2.direction_to" to "4d1ec3c9",
+        "Vector2.distance_to" to "3321699",
+        "Vector2.distance_squared_to" to "5d8c5ad5",
+        "Vector2.length" to "221429af",
+        "Vector2.length_squared" to "7d9f4bc6",
+        "Vector2.limit_length" to "5dc6e6a6",
+        "Vector2.normalized" to "65b428d8",
         "Vector2.is_equal_approx" to "4d7705c5",
         "Vector2.is_zero_approx" to "4d7705c5",
         "Vector2.is_finite" to "256151c5",
-        "Vector2.posmod" to "829c0613",
-        "Vector2.posmodv" to "1a70bd47",
-        "Vector2.project" to "31758bfc",
-        "Vector2.lerp" to "15f30811",
-        "Vector2.max_axis_index" to "a34066a4",
-        "Vector2.min_axis_index" to "907961a5",
-        "Vector2.move_toward" to "a7ccfccb",
-        "Vector2.orthogonal" to "b4c35f5b",
-        "Vector2.floor" to "5027c445",
-        "Vector2.ceil" to "74b13745",
-        "Vector2.round" to "1dacb945",
-        "Vector2.aspect" to "29b4e1b4",
-        "Vector2.dot" to "138cb946",
-        "Vector2.slide" to "f63332dd",
-        "Vector2.bounce" to "e000770c",
-        "Vector2.reflect" to "e6330cce",
-        "Vector2.cross" to "34be67cc",
-        "Vector2.abs" to "107ec6f7",
-        "Vector2.sign" to "a9316dc5",
-        "Vector2.clamp" to "caef25de",
-        "Vector2.clampf" to "ce920032",
-        "Vector2.min" to "41b7ff8",
-        "Vector2.minf" to "1c16a02f",
-        "Vector2.max" to "a235620a",
-        "Vector2.maxf" to "e8cf53b2",
-        "unary-_Vector3" to "937fd600",
-        "unary+_Vector3" to "f47abfc3",
-        "Vector3_*_int" to "fd675cdd",
-        "Vector3_/_int" to "4d819316",
-        "Vector3_*_float" to "53bd3410",
-        "Vector3_/_float" to "a599b10a",
-        "Vector3_<_Vector3" to "90337d74",
-        "Vector3_+_Vector3" to "2519fb6c",
-        "Vector3_-_Vector3" to "972675d6",
-        "Vector3_*_Vector3" to "94978062",
-        "Vector3_/_Vector3" to "20558d6f",
-        "Vector3_*_Quaternion" to "649797c1",
-        "Vector3_*_Basis" to "f98eebc5",
-        "Vector3_*_Transform3D" to "526d2558",
-        "Vector3.min_axis_index" to "9ec60fb6",
-        "Vector3.max_axis_index" to "e7e539cd",
-        "Vector3.direction_to" to "d9df33ac",
-        "Vector3.distance_to" to "6d2c0a3a",
-        "Vector3.distance_squared_to" to "45c01256",
-        "Vector3.length" to "2c7beafe",
-        "Vector3.length_squared" to "c3bb4d2a",
-        "Vector3.limit_length" to "6fccf940",
-        "Vector3.normalized" to "41aca8c7",
+        "Vector2.inverse" to "9913d7cd",
+        "Vector2.posmod" to "82e93558",
+        "Vector2.posmodv" to "1914e099",
+        "Vector2.project" to "766861e2",
+        "Vector2.lerp" to "b6412d89",
+        "Vector2.max_axis_index" to "387acc55",
+        "Vector2.min_axis_index" to "c0aa1f4",
+        "Vector2.move_toward" to "f5e282ff",
+        "Vector2.orthogonal" to "80d28d62",
+        "Vector2.floor" to "7eea4445",
+        "Vector2.ceil" to "967c73c5",
+        "Vector2.round" to "7f9e6dc5",
+        "Vector2.aspect" to "8c06a2cb",
+        "Vector2.dot" to "724a6d47",
+        "Vector2.slide" to "bda3ff3a",
+        "Vector2.bounce" to "15e1389e",
+        "Vector2.reflect" to "a7faf645",
+        "Vector2.cross" to "c79ee0de",
+        "Vector2.abs" to "f2ee8c93",
+        "Vector2.sign" to "29316dc5",
+        "Vector2.clamp" to "34b15b5",
+        "Vector2.clampf" to "bbe228a6",
+        "Vector2.min" to "b5602006",
+        "Vector2.minf" to "6e3db993",
+        "Vector2.max" to "f60e37f4",
+        "Vector2.maxf" to "f00b049d",
+        "unary-_Vector3" to "d7e69e30",
+        "unary+_Vector3" to "e9f79e07",
+        "Vector3_*_int" to "c43a5ac6",
+        "Vector3_/_int" to "34b6b1c6",
+        "Vector3_*_float" to "cdee9812",
+        "Vector3_/_float" to "1d656642",
+        "Vector3_<_Vector3" to "bc9f996d",
+        "Vector3_+_Vector3" to "550cf036",
+        "Vector3_-_Vector3" to "a92f1048",
+        "Vector3_*_Vector3" to "3b276bdc",
+        "Vector3_/_Vector3" to "50c447da",
+        "Vector3_*_Quaternion" to "6056c4a",
+        "Vector3_*_Basis" to "90feeb01",
+        "Vector3_*_Transform3D" to "1be18639",
+        "Vector3.min_axis_index" to "6b71fbfc",
+        "Vector3.max_axis_index" to "ce1793ef",
+        "Vector3.direction_to" to "bd1b97f",
+        "Vector3.distance_to" to "dc2f45bb",
+        "Vector3.distance_squared_to" to "9bb016c6",
+        "Vector3.length" to "e741b863",
+        "Vector3.length_squared" to "300953f6",
+        "Vector3.limit_length" to "61036267",
+        "Vector3.normalized" to "f04d0f6d",
         "Vector3.is_normalized" to "4d7705c5",
         "Vector3.is_equal_approx" to "4d7705c5",
         "Vector3.is_zero_approx" to "4d7705c5",
         "Vector3.is_finite" to "256151c5",
-        "Vector3.inverse" to "92c3a027",
-        "Vector3.clamp" to "8b4cea76",
-        "Vector3.clampf" to "27bffca1",
-        "Vector3.lerp" to "6fc5a238",
-        "Vector3.move_toward" to "f7b5fac3",
-        "Vector3.dot" to "35e04dc8",
-        "Vector3.cross" to "13dcb5dc",
-        "Vector3.abs" to "9cec5062",
-        "Vector3.floor" to "3e317ac5",
-        "Vector3.ceil" to "d3b38cc5",
-        "Vector3.round" to "307bb845",
-        "Vector3.posmod" to "801c8d58",
-        "Vector3.posmodv" to "151be0db",
-        "Vector3.project" to "d44d4a6b",
-        "Vector3.slide" to "f302b5f6",
-        "Vector3.bounce" to "a966a58d",
-        "Vector3.reflect" to "85cfda3e",
-        "Vector3.sign" to "146bd5c5",
-        "Vector3.min" to "7caf7c3d",
-        "Vector3.minf" to "645e9e1f",
-        "Vector3.max" to "63039907",
-        "Vector3.maxf" to "7c49d87a",
-        "unary-_Vector4" to "4602f310",
-        "unary+_Vector4" to "d570841f",
-        "Vector4_*_int" to "76474c88",
-        "Vector4_/_int" to "5b974f79",
-        "Vector4_*_float" to "1fb463d5",
-        "Vector4_/_float" to "f42a7ee4",
-        "Vector4_<_Vector4" to "cfd95285",
-        "Vector4_+_Vector4" to "a8993aa9",
-        "Vector4_-_Vector4" to "281f9088",
-        "Vector4_*_Vector4" to "2d92be25",
-        "Vector4_/_Vector4" to "e0ff6efc",
-        "Vector4_*_Projection" to "942ea708",
-        "Vector4.min_axis_index" to "c11873ce",
-        "Vector4.max_axis_index" to "653cd1dd",
-        "Vector4.length" to "adcba4a3",
-        "Vector4.length_squared" to "4b94686b",
-        "Vector4.abs" to "7d212715",
+        "Vector3.inverse" to "29112caa",
+        "Vector3.clamp" to "a1ac61dc",
+        "Vector3.clampf" to "fd288368",
+        "Vector3.lerp" to "a846133f",
+        "Vector3.move_toward" to "c8a9bb5b",
+        "Vector3.dot" to "68e4e5d6",
+        "Vector3.cross" to "a9c9e1af",
+        "Vector3.abs" to "b0fe8000",
+        "Vector3.floor" to "26ebadc5",
+        "Vector3.ceil" to "1c199c5",
+        "Vector3.round" to "698c35c5",
+        "Vector3.posmod" to "1ae641b4",
+        "Vector3.posmodv" to "a6c29643",
+        "Vector3.project" to "3c47e234",
+        "Vector3.slide" to "8496ca60",
+        "Vector3.bounce" to "35f3f0d4",
+        "Vector3.reflect" to "44db951",
+        "Vector3.sign" to "946bd5c5",
+        "Vector3.min" to "ff18660d",
+        "Vector3.minf" to "8ebf9335",
+        "Vector3.max" to "7a650e66",
+        "Vector3.maxf" to "71dd4821",
+        "unary-_Vector4" to "fca57aca",
+        "unary+_Vector4" to "76d48382",
+        "Vector4_*_int" to "f5d8a846",
+        "Vector4_/_int" to "70a0a7e1",
+        "Vector4_*_float" to "a4686855",
+        "Vector4_/_float" to "a21eb281",
+        "Vector4_<_Vector4" to "10ee708d",
+        "Vector4_+_Vector4" to "fb603ed0",
+        "Vector4_-_Vector4" to "acea7ea6",
+        "Vector4_*_Vector4" to "86f8a848",
+        "Vector4_/_Vector4" to "80fbc1f4",
+        "Vector4_*_Projection" to "975565b",
+        "Vector4.min_axis_index" to "697254d6",
+        "Vector4.max_axis_index" to "c6cdf987",
+        "Vector4.length" to "bfb3ba06",
+        "Vector4.length_squared" to "707f62fd",
+        "Vector4.abs" to "15bbcda1",
         "Vector4.sign" to "4fa63dc5",
-        "Vector4.floor" to "81ceb445",
-        "Vector4.ceil" to "580f2d45",
-        "Vector4.round" to "c36fd345",
-        "Vector4.lerp" to "200f9126",
-        "Vector4.posmod" to "500beafb",
-        "Vector4.posmodv" to "2dc78daf",
-        "Vector4.clamp" to "9dd1fac5",
-        "Vector4.clampf" to "fad25db1",
-        "Vector4.normalized" to "55f9621d",
-        "Vector4.direction_to" to "5ffbc27e",
-        "Vector4.distance_to" to "a4722ef8",
-        "Vector4.distance_squared_to" to "4dacf5b7",
-        "Vector4.dot" to "cdcf933",
-        "Vector4.inverse" to "81937f25",
+        "Vector4.floor" to "611cdcc5",
+        "Vector4.ceil" to "939d96c5",
+        "Vector4.round" to "4327d545",
+        "Vector4.lerp" to "417c73d7",
+        "Vector4.posmod" to "4969b842",
+        "Vector4.posmodv" to "e603753",
+        "Vector4.clamp" to "fa750795",
+        "Vector4.clampf" to "be573431",
+        "Vector4.normalized" to "6a48478b",
+        "Vector4.direction_to" to "a7e71319",
+        "Vector4.distance_to" to "6d25b8a0",
+        "Vector4.distance_squared_to" to "51087cd5",
+        "Vector4.dot" to "bcf6fa8d",
+        "Vector4.inverse" to "633b55d7",
         "Vector4.is_equal_approx" to "4d7705c5",
         "Vector4.is_zero_approx" to "4d7705c5",
         "Vector4.is_finite" to "256151c5",
-        "Vector4.min" to "c2fd253f",
-        "Vector4.minf" to "cd5e2c87",
-        "Vector4.max" to "8e0e0ecf",
-        "Vector4.maxf" to "321f4291",
-        "unary-_Quaternion" to "7bab69f4",
-        "unary+_Quaternion" to "e35139f3",
-        "Quaternion_*_int" to "873bb829",
-        "Quaternion_/_int" to "76f2f78",
-        "Quaternion_*_float" to "7afbb20d",
-        "Quaternion_/_float" to "d8bc4c10",
-        "Quaternion_*_Vector3" to "fc4aa58b",
-        "Quaternion_+_Quaternion" to "3a24334",
-        "Quaternion_-_Quaternion" to "1d593cf0",
-        "Quaternion_*_Quaternion" to "77bda8f0",
-        "Quaternion.length" to "bc47cd5d",
-        "Quaternion.length_squared" to "6f44acc5",
-        "Quaternion.normalized" to "5bcc5371",
+        "Vector4.min" to "7ed38774",
+        "Vector4.minf" to "ee800566",
+        "Vector4.max" to "40eb35e3",
+        "Vector4.maxf" to "a61a46de",
+        "unary-_Quaternion" to "89dc2058",
+        "unary+_Quaternion" to "5965bac3",
+        "Quaternion_*_int" to "dbcae290",
+        "Quaternion_/_int" to "76649801",
+        "Quaternion_*_float" to "15aaedc5",
+        "Quaternion_/_float" to "957b77",
+        "Quaternion_*_Vector3" to "ee7a7b83",
+        "Quaternion_+_Quaternion" to "cf512bc0",
+        "Quaternion_-_Quaternion" to "887aab2e",
+        "Quaternion_*_Quaternion" to "697b6db6",
+        "Quaternion.length" to "469963c8",
+        "Quaternion.length_squared" to "bcf8cad",
+        "Quaternion.normalized" to "d1a74f8",
         "Quaternion.is_equal_approx" to "4d7705c5",
         "Quaternion.is_finite" to "256151c5",
-        "Quaternion.dot" to "78db7574",
-        "unary-_Plane" to "1cc4079e",
-        "unary+_Plane" to "d3e550bf",
-        "Plane_*_Transform3D" to "33218130",
-        "Plane.get_center" to "ee2044aa",
-        "Plane.is_point_over" to "c8e2626d",
-        "Plane.distance_to" to "afda0ee",
-        "Plane.has_point" to "1b324bfc",
-        "Plane.project" to "e5863e7c",
-        "Plane.intersects_ray" to "dee64a3c",
-        "Rect2_*_Transform2D" to "573f219f",
-        "Rect2.get_center" to "eae1fa58",
-        "Rect2.get_area" to "d7f65978",
+        "Quaternion.dot" to "96cbe64",
+        "unary-_Plane" to "1c924e48",
+        "unary+_Plane" to "58f7f1d0",
+        "Plane_*_Transform3D" to "4469cf88",
+        "Plane.get_center" to "cf6c7003",
+        "Plane.is_point_over" to "e38ea124",
+        "Plane.distance_to" to "709ad6",
+        "Plane.has_point" to "e70a3d64",
+        "Plane.project" to "60027b7e",
+        "Plane.intersects_ray" to "5762a6c0",
+        "Rect2_*_Transform2D" to "fb9c95e7",
+        "Rect2.get_center" to "61ce528",
+        "Rect2.get_area" to "5a207284",
         "Rect2.has_area" to "256151c5",
-        "Rect2.has_point" to "9608caad",
+        "Rect2.has_point" to "d23321ac",
         "Rect2.is_equal_approx" to "4d7705c5",
-        "Rect2.intersects" to "4a455525",
-        "Rect2.encloses" to "67d14ebc",
-        "Rect2.intersection" to "c2b8e11d",
-        "Rect2.merge" to "dcea0e38",
-        "Rect2.expand" to "93ad74ef",
-        "Rect2.get_support" to "b03e8a9b",
-        "Rect2.grow" to "bda1fdf",
-        "Rect2.grow_side" to "9ef450a",
-        "Rect2.grow_individual" to "540a3549",
-        "Rect2.abs" to "81886346",
-        "AABB_*_Transform3D" to "98896384",
-        "AABB.get_center" to "858b9c66",
-        "AABB.get_volume" to "2b5b457d",
+        "Rect2.intersects" to "dd3f4af4",
+        "Rect2.encloses" to "d0af0735",
+        "Rect2.intersection" to "76e1deac",
+        "Rect2.merge" to "8b1cc999",
+        "Rect2.expand" to "60778e49",
+        "Rect2.get_support" to "44a81ed5",
+        "Rect2.grow" to "ad38504d",
+        "Rect2.grow_side" to "6bc2439e",
+        "Rect2.grow_individual" to "ccc23f0b",
+        "Rect2.abs" to "24ced55c",
+        "AABB_*_Transform3D" to "ce0cca5e",
+        "AABB.get_center" to "ee481199",
+        "AABB.get_volume" to "afbdf216",
         "AABB.has_volume" to "256151c5",
         "AABB.has_surface" to "256151c5",
-        "AABB.has_point" to "27c103d5",
+        "AABB.has_point" to "3ffb39ad",
         "AABB.is_equal_approx" to "4d7705c5",
-        "AABB.intersects" to "615c90cc",
-        "AABB.encloses" to "5bf16cfc",
-        "AABB.merge" to "388b297d",
-        "Basis_*_int" to "17714c36",
-        "Basis_/_int" to "f31046fd",
-        "Basis_*_float" to "a231f8a0",
-        "Basis_/_float" to "3678a0b4",
-        "Basis_*_Vector3" to "8a9fb60",
-        "Basis_*_Basis" to "36ccdac4",
-        "Basis.inverse" to "34b69dd3",
-        "Basis.transposed" to "8fce6061",
-        "Basis.orthonormalized" to "d9d7164f",
-        "Basis.determinant" to "6e5150d2",
-        "Basis.scaled" to "dea79d8d",
-        "Basis.get_scale" to "846f0fd2",
+        "AABB.intersects" to "4ddc33d",
+        "AABB.encloses" to "4d7705c5",
+        "AABB.merge" to "383a94db",
+        "Basis_*_int" to "48c0320",
+        "Basis_/_int" to "ec53e7b5",
+        "Basis_*_float" to "508d9f33",
+        "Basis_/_float" to "e22cbcd6",
+        "Basis_*_Vector3" to "afa84a18",
+        "Basis_*_Basis" to "b56ae619",
+        "Basis.inverse" to "1cbee0a5",
+        "Basis.transposed" to "980f5ac2",
+        "Basis.orthonormalized" to "721dcffe",
+        "Basis.determinant" to "78925b7a",
+        "Basis.scaled" to "1d443d8b",
+        "Basis.get_scale" to "ece882d0",
         "Basis.is_equal_approx" to "4d7705c5",
-        "Transform3D_*_int" to "6774a6cf",
-        "Transform3D_/_int" to "ed32f5ff",
-        "Transform3D_*_float" to "a3fb6c8b",
-        "Transform3D_/_float" to "689990bb",
-        "Transform3D_*_Vector3" to "25ebec40",
-        "Transform3D_*_Plane" to "a255fbf5",
-        "Transform3D_*_AABB" to "18e4e3bc",
-        "Transform3D_*_Transform3D" to "d8193f4c",
-        "Transform3D_*_PackedVector3Array" to "976a7d4c",
-        "Transform3D.inverse" to "817eb961",
-        "Transform3D.affine_inverse" to "bcaffef9",
-        "Transform3D.orthonormalized" to "ed89fab8",
-        "Transform3D.translated" to "a47cae4",
-        "Transform3D.translated_local" to "6aa44a4d",
+        "Transform3D_*_int" to "a0a3919",
+        "Transform3D_/_int" to "e998ddf4",
+        "Transform3D_*_float" to "392f158d",
+        "Transform3D_/_float" to "bc01fe1",
+        "Transform3D_*_Vector3" to "6e56ddfb",
+        "Transform3D_*_Plane" to "dbabd27a",
+        "Transform3D_*_AABB" to "2743373e",
+        "Transform3D_*_Transform3D" to "afa87128",
+        "Transform3D_*_PackedVector3Array" to "d40c0291",
+        "Transform3D.inverse" to "375e72b0",
+        "Transform3D.affine_inverse" to "7d5c9a6",
+        "Transform3D.orthonormalized" to "47ed3bdd",
+        "Transform3D.translated" to "c1c77880",
+        "Transform3D.translated_local" to "d136ca2f",
         "Transform3D.is_equal_approx" to "4d7705c5",
-        "Transform2D_*_int" to "eb7d74fc",
-        "Transform2D_/_int" to "48ca386",
-        "Transform2D_*_float" to "b3ab72b0",
-        "Transform2D_/_float" to "d914ea33",
-        "Transform2D_*_Vector2" to "7b4e4b90",
-        "Transform2D_*_Rect2" to "5592beec",
-        "Transform2D_*_Transform2D" to "33fbf14c",
-        "Transform2D_*_PackedVector2Array" to "f94bbf96",
-        "Transform2D.inverse" to "bc8c8cf6",
-        "Transform2D.get_origin" to "ee53d3e9",
-        "Transform2D.translated" to "3b361f26",
-        "Transform2D.translated_local" to "a4e274ad",
-        "Transform2D.basis_xform" to "5f5d9190",
-        "Transform2D.basis_xform_inv" to "d0f49c03",
+        "Transform2D_*_int" to "83b19847",
+        "Transform2D_/_int" to "77986be1",
+        "Transform2D_*_float" to "39e7e101",
+        "Transform2D_/_float" to "c078563",
+        "Transform2D_*_Vector2" to "c6daa070",
+        "Transform2D_*_Rect2" to "9d61ab12",
+        "Transform2D_*_Transform2D" to "5ee19560",
+        "Transform2D_*_PackedVector2Array" to "638fdbf5",
+        "Transform2D.inverse" to "5f4835cd",
+        "Transform2D.get_origin" to "66a2f59f",
+        "Transform2D.translated" to "87cf507f",
+        "Transform2D.translated_local" to "c75f5755",
+        "Transform2D.basis_xform" to "4d481c85",
+        "Transform2D.basis_xform_inv" to "5a32e54f",
         "Transform2D.is_equal_approx" to "4d7705c5",
-        "Projection_*_Vector4" to "94dddd66",
-        "Projection_*_Projection" to "8f945375",
-        "unary-_Color" to "901fcc14",
-        "unary+_Color" to "e91a843b",
-        "Color_*_int" to "17455940",
-        "Color_/_int" to "dc493dc5",
-        "Color_*_float" to "d9bc230f",
-        "Color_/_float" to "1a117b1e",
-        "Color_+_Color" to "f6238b75",
-        "Color_-_Color" to "c9aca18f",
-        "Color_*_Color" to "5f0a1de1",
-        "Color_/_Color" to "53726a89",
-        "Color.to_html" to "879c9a83",
-        "Color.clamp" to "48fdf80d",
-        "Color.inverted" to "9d4e7840",
-        "Color.lerp" to "68a542fb",
-        "Color.get_luminance" to "beb00310",
-        "unary-_Vector2i" to "b8ee6e81",
-        "unary+_Vector2i" to "7d673b09",
-        "Vector2i_*_int" to "a5bcd30c",
-        "Vector2i_/_int" to "39c21629",
-        "Vector2i_%_int" to "a2a44bb3",
-        "Vector2i_*_float" to "9450c337",
-        "Vector2i_/_float" to "82b5fe4f",
-        "Vector2i_<_Vector2i" to "791768fc",
-        "Vector2i_+_Vector2i" to "65e13e24",
-        "Vector2i_-_Vector2i" to "16be12ec",
-        "Vector2i_*_Vector2i" to "149fffd3",
-        "Vector2i_/_Vector2i" to "3ed255f6",
-        "Vector2i_%_Vector2i" to "33a124ff",
-        "Vector2i.aspect" to "74c0a931",
-        "Vector2i.max_axis_index" to "2f2c39c4",
-        "Vector2i.min_axis_index" to "a375c14d",
-        "Vector2i.distance_to" to "71bb05d5",
-        "Vector2i.distance_squared_to" to "adbf2365",
-        "Vector2i.length" to "507e13f8",
-        "Vector2i.length_squared" to "8f69d95",
-        "Vector2i.sign" to "f7545c01",
-        "Vector2i.abs" to "866389b2",
-        "Vector2i.clamp" to "c62d230e",
-        "Vector2i.clampi" to "f636413a",
-        "Vector2i.min" to "6f3bf0d3",
-        "Vector2i.mini" to "bbc52d8b",
-        "Vector2i.max" to "fb2fd38e",
-        "Vector2i.maxi" to "79029e44",
-        "unary-_Vector3i" to "4a242e47",
-        "unary+_Vector3i" to "8d6f1c0e",
-        "Vector3i_*_int" to "3cb88dd3",
-        "Vector3i_/_int" to "fdaa09bb",
-        "Vector3i_%_int" to "355df347",
-        "Vector3i_*_float" to "d5817694",
-        "Vector3i_/_float" to "90ecf32a",
-        "Vector3i_<_Vector3i" to "37b28e2c",
-        "Vector3i_+_Vector3i" to "ccc5a95b",
-        "Vector3i_-_Vector3i" to "4d3f01c",
-        "Vector3i_*_Vector3i" to "f79a23d4",
-        "Vector3i_/_Vector3i" to "b725d094",
-        "Vector3i_%_Vector3i" to "2a281c46",
-        "Vector3i.min_axis_index" to "8fbd3535",
-        "Vector3i.max_axis_index" to "7570743f",
-        "Vector3i.distance_to" to "553d3e8d",
-        "Vector3i.distance_squared_to" to "5f1ad57e",
-        "Vector3i.length" to "abc4b833",
-        "Vector3i.length_squared" to "d3fb61b",
-        "Vector3i.sign" to "5c6b09fe",
-        "Vector3i.abs" to "afad48f0",
-        "Vector3i.clamp" to "c5475c30",
-        "Vector3i.clampi" to "1b932b5c",
-        "Vector3i.min" to "c7f796a",
-        "Vector3i.mini" to "df230ad",
-        "Vector3i.max" to "9f10491b",
-        "Vector3i.maxi" to "c93b3bab",
-        "unary-_Vector4i" to "4df4ceba",
-        "unary+_Vector4i" to "3fc464b2",
-        "Vector4i_*_int" to "e421bc45",
-        "Vector4i_/_int" to "dfe826c2",
-        "Vector4i_%_int" to "5476968e",
-        "Vector4i_*_float" to "c8690773",
-        "Vector4i_/_float" to "f9e557d8",
-        "Vector4i_<_Vector4i" to "de079ead",
-        "Vector4i_+_Vector4i" to "53b0c87d",
-        "Vector4i_-_Vector4i" to "91d0b5a9",
-        "Vector4i_*_Vector4i" to "feb59f18",
-        "Vector4i_/_Vector4i" to "920eb96f",
-        "Vector4i_%_Vector4i" to "a6debfc8",
-        "Vector4i.min_axis_index" to "ca51f09c",
-        "Vector4i.max_axis_index" to "ed98a534",
-        "Vector4i.length" to "60c5a789",
-        "Vector4i.length_squared" to "6e8b942e",
-        "Vector4i.sign" to "bd87c91e",
-        "Vector4i.abs" to "6a1dca7a",
-        "Vector4i.clamp" to "13932f6f",
-        "Vector4i.clampi" to "722440f4",
-        "Vector4i.min" to "ffd6728f",
-        "Vector4i.mini" to "c1e633c6",
-        "Vector4i.max" to "d4d15f2c",
-        "Vector4i.maxi" to "b4294dba",
-        "Vector4i.distance_to" to "6929e71b",
-        "Vector4i.distance_squared_to" to "f0b171b5",
-        "Rect2i.get_center" to "21ded678",
-        "Rect2i.get_area" to "8eeedb63",
+        "Projection_*_Vector4" to "d21486f3",
+        "Projection_*_Projection" to "322ed298",
+        "unary-_Color" to "afb3a8f9",
+        "unary+_Color" to "aca1af80",
+        "Color_*_int" to "c001c56e",
+        "Color_/_int" to "c35f6070",
+        "Color_*_float" to "48701867",
+        "Color_/_float" to "40daf6e4",
+        "Color_+_Color" to "3fdb5a6a",
+        "Color_-_Color" to "6a92b625",
+        "Color_*_Color" to "e6224894",
+        "Color_/_Color" to "b4e2977c",
+        "Color.to_html" to "706a555f",
+        "Color.clamp" to "dde5aa3d",
+        "Color.inverted" to "79d971df",
+        "Color.lerp" to "ed58ef95",
+        "Color.get_luminance" to "7b8ca4b",
+        "unary-_Vector2i" to "908bb30c",
+        "unary+_Vector2i" to "2ce69874",
+        "Vector2i_*_int" to "43971a71",
+        "Vector2i_/_int" to "6118435e",
+        "Vector2i_%_int" to "ead85154",
+        "Vector2i_*_float" to "68a0c08f",
+        "Vector2i_/_float" to "812e2726",
+        "Vector2i_<_Vector2i" to "5ba614bc",
+        "Vector2i_+_Vector2i" to "6bdc87e5",
+        "Vector2i_-_Vector2i" to "a995e473",
+        "Vector2i_*_Vector2i" to "53fe7311",
+        "Vector2i_/_Vector2i" to "6a651125",
+        "Vector2i_%_Vector2i" to "59c5c49f",
+        "Vector2i.aspect" to "29d43e92",
+        "Vector2i.max_axis_index" to "89869d45",
+        "Vector2i.min_axis_index" to "1d4e9ac",
+        "Vector2i.distance_to" to "b4be37be",
+        "Vector2i.distance_squared_to" to "3e3f6057",
+        "Vector2i.length" to "7c017f05",
+        "Vector2i.length_squared" to "8a7c7aa3",
+        "Vector2i.sign" to "ab478c0a",
+        "Vector2i.abs" to "6a55a379",
+        "Vector2i.clamp" to "dfbd407b",
+        "Vector2i.clampi" to "2f287660",
+        "Vector2i.min" to "e9c7d2e1",
+        "Vector2i.mini" to "643aa385",
+        "Vector2i.max" to "c7446b20",
+        "Vector2i.maxi" to "20c3e66c",
+        "unary-_Vector3i" to "3c8f04f7",
+        "unary+_Vector3i" to "fbb418e5",
+        "Vector3i_*_int" to "cb6b07b8",
+        "Vector3i_/_int" to "55dc42e9",
+        "Vector3i_%_int" to "d3320702",
+        "Vector3i_*_float" to "b6cd9d71",
+        "Vector3i_/_float" to "bc8d7fc7",
+        "Vector3i_<_Vector3i" to "369bbf6d",
+        "Vector3i_+_Vector3i" to "421c25c1",
+        "Vector3i_-_Vector3i" to "e8274f89",
+        "Vector3i_*_Vector3i" to "c57ae50c",
+        "Vector3i_/_Vector3i" to "6a836e4",
+        "Vector3i_%_Vector3i" to "cdc35efb",
+        "Vector3i.min_axis_index" to "7a740ad4",
+        "Vector3i.max_axis_index" to "212aef4e",
+        "Vector3i.distance_to" to "2d461ccb",
+        "Vector3i.distance_squared_to" to "c06d2b99",
+        "Vector3i.length" to "18b2530c",
+        "Vector3i.length_squared" to "f6dcc961",
+        "Vector3i.sign" to "f47bd9ca",
+        "Vector3i.abs" to "2de6e456",
+        "Vector3i.clamp" to "a10f11f3",
+        "Vector3i.clampi" to "5d2f91b0",
+        "Vector3i.min" to "e128345a",
+        "Vector3i.mini" to "607b2f5f",
+        "Vector3i.max" to "d6559728",
+        "Vector3i.maxi" to "52c98cda",
+        "unary-_Vector4i" to "1265cec0",
+        "unary+_Vector4i" to "bb872a34",
+        "Vector4i_*_int" to "7e05ccae",
+        "Vector4i_/_int" to "b5fa2bd",
+        "Vector4i_%_int" to "f84210c4",
+        "Vector4i_*_float" to "b4daa5a1",
+        "Vector4i_/_float" to "4dfe16e4",
+        "Vector4i_<_Vector4i" to "334c863d",
+        "Vector4i_+_Vector4i" to "f244b3a4",
+        "Vector4i_-_Vector4i" to "e32fc3f4",
+        "Vector4i_*_Vector4i" to "fadb730c",
+        "Vector4i_/_Vector4i" to "f3c2764e",
+        "Vector4i_%_Vector4i" to "3bbbe1a9",
+        "Vector4i.min_axis_index" to "10ca0874",
+        "Vector4i.max_axis_index" to "4b9c905f",
+        "Vector4i.length" to "387d966d",
+        "Vector4i.length_squared" to "ca51df81",
+        "Vector4i.sign" to "a787ffb6",
+        "Vector4i.abs" to "e8d60a0f",
+        "Vector4i.clamp" to "62cfb0ab",
+        "Vector4i.clampi" to "30674158",
+        "Vector4i.min" to "467d6dc2",
+        "Vector4i.mini" to "5cc4c9d8",
+        "Vector4i.max" to "b3c551e5",
+        "Vector4i.maxi" to "5fa90e3b",
+        "Vector4i.distance_to" to "b3123f19",
+        "Vector4i.distance_squared_to" to "fd34e32e",
+        "Rect2i.get_center" to "f0084533",
+        "Rect2i.get_area" to "71d87973",
         "Rect2i.has_area" to "256151c5",
-        "Rect2i.has_point" to "7e10d54d",
-        "Rect2i.intersects" to "47132acc",
-        "Rect2i.encloses" to "e75756c",
-        "Rect2i.intersection" to "f684fba4",
-        "Rect2i.merge" to "b2aae2fb",
-        "Rect2i.expand" to "222133b3",
-        "Rect2i.grow" to "22282f4a",
-        "Rect2i.grow_side" to "aa0f07b2",
-        "Rect2i.grow_individual" to "24ccbebe",
-        "Rect2i.abs" to "8a7b973e",
-        "RID_<_RID" to "4f942a4d",
+        "Rect2i.has_point" to "b9c98475",
+        "Rect2i.intersects" to "836464fc",
+        "Rect2i.encloses" to "a6e4bec",
+        "Rect2i.intersection" to "e5b32f25",
+        "Rect2i.merge" to "11cc336a",
+        "Rect2i.expand" to "d2523245",
+        "Rect2i.grow" to "aec64234",
+        "Rect2i.grow_side" to "47820f18",
+        "Rect2i.grow_individual" to "8e6b81bb",
+        "Rect2i.abs" to "36ea740e",
+        "RID_<_RID" to "c45b5d7c",
         "RID.is_valid" to "256151c5",
-        "RID.get_id" to "8b6fe4fa",
+        "RID.get_id" to "d0258395",
       )
 
     // GDScript's facade-row values (float64 bits) for the Web-local methods and the ulp bound
@@ -3456,570 +3690,570 @@ class WebBuiltinParityTest {
         "Vector2.angle" to
           (1 to
             longArrayOf(
-              -4609320015433302016L,
-              -4613618976512016384L,
-              4609755815027408896L,
-              -4609115648004456448L,
-              4609823927303143424L,
-              -4609115594317365248L,
-              4609753031351730176L,
-              -4609116017371643904L,
+              4613766027602296832L,
+              4609754115830972416L,
+              -4613603948958318592L,
+              -4613657488410017792L,
+              4514825535863390208L,
+              4594213331258048512L,
+              4609753057658404864L,
+              -4613618652778856448L,
             )),
         "Vector2.rotated" to
           (1 to
             longArrayOf(
-              4607149502170660864L,
-              4590819222614966272L,
-              4606889645911834624L,
-              -4625144797739352064L,
-              4607154819877044224L,
-              4590300945153261568L,
-              -4616204424954511360L,
-              4588420755573702656L,
-              -4620418698941825024L,
-              4605810612151255040L,
-              -4618613790475288576L,
-              -4619049184194985984L,
-              4599383842669723648L,
-              -4616654436595400704L,
-              4607182404304502784L,
-              -4657657644335497216L,
+              4607182364039184384L,
+              4570175114414391296L,
+              4607151714078818304L,
+              4590609226631479296L,
+              4603545458747375616L,
+              4605406413315899392L,
+              -4616459200267026432L,
+              -4625455366824525824L,
+              4600022208490766336L,
+              -4616767870439784448L,
+              4602707209980215296L,
+              4605959222314663936L,
+              -4616189713617780736L,
+              4571959362477621248L,
+              -4649281085329375232L,
+              4607182231432069120L,
             )),
         "Vector3.signed_angle_to" to
           (1 to
             longArrayOf(
-              -4613691264569704448L,
-              4607745874485837824L,
-              -4613615523358310400L,
-              4609722531715219456L,
-              4612459581228974080L,
-              -4615953574705233920L,
-              -4638278546274385920L,
-              -4613604033247051776L,
+              4609280945726423040L,
+              -4631290939963342848L,
+              -4617732157706600448L,
+              -4609697771228758016L,
+              -4613421639944634368L,
+              4560502502855802880L,
+              -4614239687333117952L,
+              -4625092873195356160L,
             )),
         "Vector3.rotated" to
           (1 to
             longArrayOf(
-              4539807439700099072L,
-              -4616189688921718784L,
-              -4652150802624806912L,
-              4579860800390299648L,
-              4602697784674484224L,
-              -4617408523330912256L,
-              4607181668791353344L,
-              4578584887476355072L,
-              -4664489152207650816L,
-              4586837049197199360L,
-              -4616199288710496256L,
-              4556661178595540992L,
-              4596423872542146560L,
-              4606996411282620416L,
-              -4642578941335306240L,
-              4607181721941573632L,
-              -4645126551652794368L,
-              -4657395528387002368L,
-              -4629294568834072576L,
-              4597387908016504832L,
-              4606858555717320704L,
-              -4646978041724010496L,
-              -4616190029834747904L,
-              -4654419771570257920L,
+              4591297837664305152L,
+              -4631486670749827072L,
+              -4616273400518672384L,
+              4605708765054894080L,
+              -4663343521221050368L,
+              -4620259684757012480L,
+              4603143123927826432L,
+              4598901437311746048L,
+              -4618153251332685824L,
+              4607182402157019136L,
+              4566310850733801472L,
+              4553085393372708864L,
+              4598962929432264704L,
+              -4625440613611864064L,
+              -4616870334400823296L,
+              -4663805605478137856L,
+              4606122714002882560L,
+              -4621222931568001024L,
+              4586918749138845696L,
+              -4638317100585189376L,
+              4607167309105070080L,
+              -4618193075880067072L,
+              4546690762057711616L,
+              -4619533140573028352L,
             )),
         "Quaternion.slerp" to
           (1 to
             longArrayOf(
-              4601181763224469504L,
-              -4618699551308513280L,
-              -4636754240369328128L,
-              -4620231765322104832L,
-              4606278941290790912L,
-              -4621858274268938240L,
-              4581906323125305344L,
-              4582549940080738304L,
-              4604683028617232384L,
-              4604400404199899136L,
-              4580723493963825152L,
-              4561056658326814720L,
-              4607182405378244608L,
-              -4657603012888363008L,
-              4546859057129979904L,
-              4530940280001527808L,
-              4597280507527430144L,
-              -4630157955507945472L,
-              -4655174308740464640L,
-              -4616486270372151296L,
-              -4644566135730077696L,
-              4561723029482110976L,
-              -4625150231946723328L,
-              4606889532095201280L,
-              -4616201569338130432L,
-              -4642750674528894976L,
-              -4654412729434505216L,
-              4587141849067552768L,
-              4605721285958303744L,
-              4575580549262868480L,
-              -4620299156043333632L,
-              -4636229841505484800L,
+              4606906292131332096L,
+              4597881161388130304L,
+              -4636967031302782976L,
+              4569286645131509760L,
+              -4620601881444483072L,
+              -4651572591041970176L,
+              4605913254353436672L,
+              -4637296997534007296L,
+              -4618903439311634432L,
+              -4624622806741549056L,
+              4556379027161481216L,
+              -4619274442881630208L,
+              -4626963977845342208L,
+              4606998677951610880L,
+              -4683961984708771840L,
+              -4660804568483889152L,
+              4571223122941837312L,
+              -4671300527957475328L,
+              -4616317580162891776L,
+              -4628154199182409728L,
+              4550616991378964480L,
+              4605992658635063296L,
+              4599513435254816768L,
+              4600449594243940352L,
+              -4709519272429223936L,
+              -4654092947107610624L,
+              4602700875977195520L,
+              4605960881245782016L,
+              -4651183122333827072L,
+              4576072094311251968L,
+              -4670209240655200256L,
+              -4616190049698971648L,
             )),
         "Basis.rotated" to
           (1 to
             longArrayOf(
-              4607182416652533760L,
-              4551744937300852736L,
-              4559506196070924288L,
-              4531338547487047680L,
-              -4616535911067287552L,
-              4598618680824168448L,
-              4559784068106944512L,
-              -4624753357104349184L,
-              -4616535913214771200L,
-              4605567594311712768L,
-              4595389630458626048L,
-              -4620291393426817024L,
-              -4625937575687749632L,
-              -4618230922058137600L,
-              -4619873744364503040L,
-              -4620483901377216512L,
-              4603669461432532992L,
-              -4619836651953192960L,
-              -4616191489586757632L,
-              -4658953050495385600L,
-              4581520026787381248L,
-              4578098613426585600L,
-              4605040518072631296L,
-              4604004934348701696L,
-              -4642972071503069184L,
-              4604005927023017984L,
-              -4618333107383173120L,
-              -4616601145714933760L,
-              4598945977733218304L,
-              -4634604390731218944L,
-              -4624335665629233152L,
-              -4616655104999686144L,
-              4592558339161849856L,
-              -4640635660296781824L,
-              4593479246722105344L,
-              4607112032339099648L,
-              4606791841453441024L,
-              -4666442791633551360L,
-              4598918884542644224L,
-              4557150591729532928L,
-              4607182417726275584L,
-              4538744522804297728L,
-              -4624453152849002496L,
-              4547606678865969152L,
-              4606791842527182848L,
-              -4616525741121601536L,
-              -4649890098270175232L,
-              -4624826305513259008L,
-              -4682673839727968256L,
-              -4616191804193112064L,
-              4582006985884434432L,
-              -4624825136745283584L,
-              4581772974591311872L,
-              4606844189051715584L,
-              4607175398675972096L,
-              -4642037245564420096L,
-              -4638281560804556800L,
-              -4656057335762911232L,
-              4605713090086961152L,
-              -4620266329608290304L,
-              4585840244732985344L,
-              4603102556351102976L,
-              4605706818897838080L,
-              -4632052305594679296L,
-              -4618873295620538368L,
-              -4618836736858914816L,
-              -4616617150373691392L,
-              -4629005181453860864L,
-              4598500575129108480L,
-              -4624474764050694144L,
-              4604456418626502656L,
-              -4619293488377233408L,
+              -4617003189550448640L,
+              -4623065609976938496L,
+              4596083442696847360L,
+              4600304827002519552L,
+              -4616829269144764416L,
+              -4637810918288261120L,
+              4596089580741984256L,
+              4585433807682797568L,
+              4607008496246849536L,
+              4603034467697688576L,
+              4605753383859519488L,
+              -4638443869766156288L,
+              -4617615521427226624L,
+              4603038454501081088L,
+              4573092254054350848L,
+              4582160299037032448L,
+              4582813633355972608L,
+              4607177348591124480L,
+              -4618572053056847872L,
+              -4667327751391281152L,
+              4604277853213687808L,
+              -4662374265213943808L,
+              4607182415578791936L,
+              -4668609423856369664L,
+              -4619094187936055296L,
+              -4662655233921384448L,
+              -4618572053593718784L,
+              4607006598408175616L,
+              4595741546120216576L,
+              4589944961083899904L,
+              4595912054174384128L,
+              -4618422414248771584L,
+              -4619505202884509696L,
+              -4634539163062894592L,
+              4603879288301682688L,
+              -4618247034091077632L,
+              4604111963323105280L,
+              -4618424052241924096L,
+              -4644548202631004160L,
+              -4618423354846609408L,
+              -4619262971560853504L,
+              -4641369641216638976L,
+              4575628371039354880L,
+              4582723415420436480L,
+              -4616192598762061824L,
+              4607172478098210816L,
+              -4636622395073888256L,
+              4577361081642516480L,
+              4586751944957100032L,
+              4607172986514964480L,
+              -4660001111636180992L,
+              -4646050190275379200L,
+              4565635794617761792L,
+              4607181889982169088L,
+              4606040691938689024L,
+              4602001769654910976L,
+              4594705016429740032L,
+              -4621393792883228672L,
+              4604319810749202432L,
+              4603286349812858880L,
+              4594844632394760192L,
+              -4620095268577083392L,
+              4605461497345212416L,
+              4604549923285762048L,
+              -4633758076015476736L,
+              -4618863570740838400L,
+              -4619643983478390784L,
+              -4620277721472172032L,
+              -4620088178122948608L,
+              -4623484686042136576L,
+              4605695152156049408L,
+              -4621974761298198528L,
             )),
         "Basis.get_euler" to
           (1 to
             longArrayOf(
-              4606835561536159744L,
-              -4609115675384872960L,
-              -4609115542777757696L,
-              -4673912782901477376L,
-              4593735233215397888L,
-              4567215305884958720L,
-              4614250459647967232L,
-              -4609186032317890560L,
-              -4669631590639337472L,
-              -4664849254076907520L,
-              -4609117832532197376L,
-              -4687999644272164864L,
-              4613448936072413184L,
-              4612735856074031104L,
-              -4624265253935382528L,
-              4611232969707749376L,
-              4609129578730881024L,
-              -4628469934576369664L,
-              -4632173847800446976L,
-              -4648872717691387904L,
-              -4609326552373526528L,
-              -4609115384400838656L,
-              4520318497313521664L,
-              -4626945612028313600L,
+              -4638384159520194560L,
+              -4695979716056711168L,
+              -4609115624382136320L,
+              4566616495102099456L,
+              -4673588232624013312L,
+              -4627624518045663232L,
+              4613780778130604032L,
+              -4651030783065063424L,
+              4557790086590103552L,
+              -4645386377309978624L,
+              -4609185873940971520L,
+              4551215424204701696L,
+              4588162022985695232L,
+              4614206747081441280L,
+              4604874601338503168L,
+              4614256497835114496L,
+              -4609115386548322304L,
+              -4635599467544838144L,
+              -4610152205075349504L,
+              -4609115466542088192L,
+              -4673007327022940160L,
+              4581219318410248192L,
+              4613565147686895616L,
+              4613832703748341760L,
             )),
         "Basis.looking_at" to
           (0 to
             longArrayOf(
-              -4627089370489290752L,
-              4571466563835658240L,
-              -4616367061944238080L,
-              4607005055441174528L,
-              4561017742701887488L,
-              -4627089436524412928L,
-              4533436650285432832L,
-              -4616189699659137024L,
-              -4651805844273364992L,
-              -4619996230926204928L,
-              -4630624336342941696L,
-              4605459628497567744L,
-              4579890845834018816L,
-              -4616263310029881344L,
-              -4629637262664007680L,
-              4605528103698038784L,
-              -4634430704401252352L,
-              4603348572077817856L,
-              -4671312129737883648L,
-              -4616190505502375936L,
-              4579244013021822976L,
-              -4646136983511367680L,
-              4579244869867798528L,
-              4607181029914968064L,
-              -4616190119492190208L,
-              4544556894529781760L,
-              -4646135843734421504L,
-              4607181932394971136L,
-              -4662860762065141760L,
-              4577127126720839680L,
-              4574235698365726720L,
-              -4618683485446471680L,
-              -4618975672071618560L,
-              4575791448263229440L,
-              4604396642882289664L,
-              -4618683884878430208L,
-              4552941900125962240L,
-              4607077917950738432L,
-              -4628731756856475648L,
-              4607182386587762688L,
-              -4664299591678558208L,
-              -4655198181242437632L,
-              -4655042818853568512L,
-              -4628731799806148608L,
-              -4616294150042550272L,
-              4589691986973294592L,
-              4589935945947545600L,
-              4607136273671389184L,
-              4600128730659028992L,
-              4606541683767640064L,
-              -4631974501188370432L,
-              -4616811643672723456L,
-              4600213095091011584L,
-              4585721603240755200L,
-              4603105892466950144L,
-              -4681201856725123072L,
-              -4617659038572740608L,
-              4605712998282035200L,
-              -4678804172441649152L,
-              4603105892466950144L,
-              -4677681619924942848L,
+              -4625115330505605120L,
+              4606878953590751232L,
+              -4637694253017858048L,
+              -4616593172108148736L,
+              -4625063773181313024L,
+              -4628939327257182208L,
+              -4628761705126559744L,
+              -4664462381139623936L,
+              4607079063633264640L,
+              4601897830372605952L,
+              -4620305786399096832L,
+              4604522645948465152L,
+              4598989469108928512L,
+              4605738780970713088L,
+              4601881931477417984L,
+              -4617637576084291584L,
+              -4676821236506951680L,
+              4603072924297986048L,
+              4607180838252052480L,
+              4573671253226815488L,
+              4580762627558342656L,
+              -4649644075564138496L,
+              4607182215325941760L,
+              4568427092789690368L,
+              -4642614305559150592L,
+              -4654695303922843648L,
+              4607180972469780480L,
+              -4640083939535355904L,
+              -4624802693930549248L,
+              -4616532185183158272L,
+              4575564498433212416L,
+              -4616528904365015040L,
+              4598567364018044928L,
+              -4616193044364918784L,
+              -4670276398911324160L,
+              4583606567533805568L,
+              4572500824709660672L,
+              -4616189823676317696L,
+              4571801799991754752L,
+              -4618385023337234432L,
+              -4648926628120887296L,
+              -4619303991182884864L,
+              4604068183110844416L,
+              -4679506307252748288L,
+              -4618384869792153600L,
+              -4622209282618687488L,
+              4606190794066362368L,
+              4595921892870717440L,
+              -4621165455778775040L,
+              -4622712081018257408L,
+              4605296247404756992L,
+              4605167284569243648L,
+              4597813008310206464L,
+              4603425902963982336L,
+              4561476490843127808L,
+              4605904919432527872L,
+              4602799212474662912L,
+              -4665241575717076992L,
+              -4620572827064467456L,
+              4605904923727495168L,
+              4607182413968179200L,
+              -4660870652998189056L,
+              4510268933655232512L,
+              4550802989769555968L,
               -4616189618054758400L,
-              4524920713684975616L,
-              4607161034694721536L,
-              4550593017945260032L,
-              -4633745273791709184L,
-              4586767980217499648L,
-              4604881110361440256L,
-              4604174398188945408L,
-              4587566593415839744L,
-              -4619183443262046208L,
-              4604865117513842688L,
+              4532863875594321920L,
+              4607182056949022720L,
+              4550798940689137664L,
+              -4647049199131557888L,
+              4576322836112605184L,
+              4533820718609072128L,
+              4607182056949022720L,
             )),
         "Basis.from_euler" to
           (1 to
             longArrayOf(
-              4603046904849235968L,
-              4605746185494331392L,
-              4584524722020024320L,
-              -4617620781688422400L,
-              4603043643895316480L,
-              4581360273868193792L,
-              4523348400782966784L,
-              -4637939655637991424L,
-              4607176391350288384L,
-              4603042238367268864L,
-              4579678626668085248L,
-              -4617618953642967040L,
-              -4646967610859061248L,
-              4607181425588830208L,
-              4577913072450011136L,
-              4605753810135023616L,
-              4563763709104619520L,
-              4603042914824617984L,
-              4605214553905561600L,
-              -4622088790532423680L,
-              4601940403699056640L,
-              4571279691956092928L,
-              4604832709838110720L,
-              4604242026743988224L,
-              -4619577555366707200L,
-              -4620472069279186944L,
-              4603393485087703040L,
-              4603089145315721216L,
-              4580308474495238144L,
-              4605722526666981376L,
-              -4631372151352459264L,
-              4607125558264856576L,
-              4586954862297612288L,
-              -4617704006880329728L,
-              -4630707825138466816L,
-              4603072921613631488L,
-              4603075286529998848L,
-              -4633036244484358144L,
-              4605699607110877184L,
-              4530713394596020224L,
-              4607142709679882240L,
-              4591423140113940480L,
-              -4617639107240132608L,
-              -4635858440651014144L,
-              4603053689823821824L,
-              4603042049388707840L,
-              -4617617998012743680L,
-              4575729861653430272L,
-              4605754371701997568L,
-              4603041916781592576L,
-              -4652023659781685248L,
-              -4662297500726591488L,
-              4576273644778422272L,
-              4607182060170248192L,
-              4607181458874826752L,
-              -4644840976592928768L,
-              4574745680634970112L,
-              4562289798198329344L,
-              4603042634578001920L,
-              4605753993744875520L,
-              -4643823528905277440L,
-              -4617618913914519552L,
-              4603042232461688832L,
-              4603225457914019840L,
-              -4618073026712305664L,
-              4598000996881268736L,
-              4604751297122402304L,
-              4603686618216267776L,
-              4599152252664414208L,
-              -4622663390047764480L,
-              4576001895755153408L,
-              4606466417687003136L,
+              4603041872221306880L,
+              4569075821829947392L,
+              4605754440958345216L,
+              -4650310027423252480L,
+              4607182279750451200L,
+              -4716307298052472832L,
+              -4617617712934289408L,
+              -4651326698795565056L,
+              4603041947383234560L,
+              4606117286774833152L,
+              4599145314681618432L,
+              4600171732945338368L,
+              -4621202605098401792L,
+              4603290305477738496L,
+              4604250771297402880L,
+              4541561461930983424L,
+              -4618306592402571264L,
+              4603976464084238336L,
+              4605756415032688640L,
+              4600706730177855488L,
+              4600389333705293824L,
+              4573095052762415104L,
+              4604338529290420224L,
+              -4618628658041454592L,
+              -4620333425587388416L,
+              4603722295972724736L,
+              4603343101363224576L,
+              4603700437273542656L,
+              -4625107429376393216L,
+              4604907806267539456L,
+              -4636018715945598976L,
+              4606570363411759104L,
+              4600136639841304576L,
+              -4618097554733662208L,
+              -4625062609245175808L,
+              4603210375599489024L,
+              4603144099422273536L,
+              4598735352000151552L,
+              -4618123661692370944L,
+              -4628347192464113664L,
+              4606819245492273152L,
+              4597430274647654400L,
+              4605543799656022016L,
+              4562930397939236864L,
+              4603355331282599936L,
+              4603041830345375744L,
+              -4617617522881986560L,
+              -4664862693029576704L,
+              4605754516120272896L,
+              4603041830882246656L,
+              4549754186136289280L,
+              4551007094668525568L,
+              -4664954596202905600L,
+              4607182417189404672L,
+              4603087377936678912L,
+              -4617834026814668800L,
+              4595848926208196608L,
+              4605668777835626496L,
+              4603172834364096512L,
+              -4662168022495002624L,
+              -4631345362567692288L,
+              4594743395183755264L,
+              4607026203323269120L,
+              4603140939936956416L,
+              -4628455775142936576L,
+              -4617820767176884224L,
+              4598682517459959808L,
+              4606826945831763968L,
+              4548744294906724352L,
+              4605259990901456896L,
+              -4625994624127729664L,
+              4603344699091058688L,
             )),
         "Transform3D.looking_at" to
           (0 to
             longArrayOf(
-              -4661345161521922048L,
-              4585575839566921728L,
-              -4616195983196291072L,
-              -4637925024831897600L,
-              4607169988627791872L,
-              4585577288581513216L,
-              4607176353232453632L,
-              4585448495934078976L,
-              4556308798003740672L,
-              -4595031707211530240L,
-              -4658428454063046656L,
-              4562351354206486528L,
-              4590517431369203712L,
-              -4645282214152503296L,
-              -4616220035550019584L,
-              -4619252524052905984L,
-              -4618441621879390208L,
-              -4636764565470707712L,
-              -4618469282005647360L,
-              4604132166312394752L,
-              -4633745798314590208L,
-              -4572418148199825408L,
-              4650067330632515584L,
-              -4587890546155978752L,
-              -4628888079170535424L,
-              -4627548088028889088L,
-              4606927053466370048L,
-              -4616288224061423616L,
-              4584244623043461120L,
-              -4628996951759650816L,
-              -4656038813716447232L,
-              -4616348721897013248L,
-              -4627462573082542080L,
-              -4633238444565331968L,
-              4645667788935921664L,
-              4634989824317587456L,
-              -4676129390290010112L,
+              -4616189821528834048L,
+              4573906894996897792L,
+              4567605751698161664L,
+              4574242861297434624L,
+              4605789330588303360L,
+              4602986813424926720L,
+              4563919203026862080L,
+              4602986844563439616L,
+              -4617582505476751360L,
+              4583022948587143168L,
+              -4619455448372740096L,
+              4576051347471728640L,
+              -4677690534666436608L,
+              4525004597080621056L,
               -4616189618054758400L,
-              -4673941176930271232L,
-              -4616193924833214464L,
-              4547566696478539776L,
-              -4638802445311410176L,
-              4584569595838332928L,
-              4549310606208925696L,
-              -4616193924833214464L,
-              -4586751979853709312L,
-              4603161424783474688L,
-              4659208670305845248L,
-              -4620362183614660608L,
-              4580610408011792384L,
-              4605773376932282368L,
-              -4617602562437152768L,
-              4583448835933601792L,
-              -4620359706492272640L,
-              -4638594851288383488L,
-              -4616194240513310720L,
-              -4686629581380124672L,
-              4628943249099194368L,
-              4651237650701746176L,
-              4576820173461258240L,
-              -4616192222415552512L,
-              -4681130665494708224L,
-              -4640784807331102720L,
-              4582586820964909056L,
-              4576361211645394944L,
-              -4616192590172127232L,
-              4553531542227386368L,
-              -4616189985811333120L,
-              -4647012998999703552L,
-              4584397519584231424L,
-              4660229896490975232L,
-              4629827080891138048L,
-              -4632178798823997440L,
-              -4616251870384488448L,
-              4590040225606008832L,
-              4607145370412122112L,
-              -4632194102866214912L,
-              4573827491789012992L,
-              4558316121836486656L,
-              4590058757853020160L,
-              4607157142917480448L,
-              4573755707853111296L,
-              4580920308155809792L,
-              4622022342556516352L,
-              -4703091027089555456L,
-              4590042468652679168L,
-              -4616214740392214528L,
-              -4616237867180490752L,
-              -4631280073159213056L,
-              -4647829352023588864L,
-              -4631259307529207808L,
-              4607109182628298752L,
-              4590013671970701312L,
-              4599713108821278720L,
-              -4610294406073810944L,
-              4605399894092414976L,
+              4604075297724170240L,
+              -4618391032533352448L,
+              -4679944393380069376L,
+              -4618391032533352448L,
+              -4619296739130605568L,
+              4543948974658158592L,
+              4650757471747440640L,
+              4649744074213949440L,
+              -4642232961855389696L,
+              4545632830008328192L,
+              -4616265813458944000L,
+              4593844440275091456L,
+              4534504604641001472L,
+              -4629527596579684352L,
+              -4616265813458944000L,
+              4607182418800017408L,
+              4545718111952699392L,
+              4525435276536840192L,
+              4650534491004076032L,
+              -4642352289468645376L,
+              4568881789703028736L,
+              -4660874681677512704L,
+              -4673271434225647616L,
+              4607182413968179200L,
+              4559433626156007424L,
+              -4616189619665371136L,
+              -4673297935784476672L,
+              4607182411820695552L,
+              4559432058492944384L,
+              4562497862520274944L,
+              -4573153853549051904L,
+              -4619658020505255936L,
+              4594036591743205376L,
+              -4683648155743420416L,
+              -4634813445579997184L,
+              4607167113684058112L,
+              -4676293706611949568L,
+              -4616204923170717696L,
+              -4634813445043126272L,
+              4607182418800017408L,
+              -4676172369490870272L,
+              4538067246727036928L,
+              4666581995281711104L,
+              4552949567716327424L,
+              4598202781424156672L,
+              4606690763156226048L,
+              4599541742847393792L,
+              4568247656572256256L,
+              -4637826973949755392L,
+              4591893365481537536L,
+              4607130657464778752L,
+              4599503227728166912L,
+              -4616729319350206464L,
+              4592376022631972864L,
+              -4639353252318543872L,
+              4591220364507348992L,
+              4591847193509363712L,
+              -4637426841911558144L,
+              4607171662591295488L,
+              4583685766730743808L,
+              4604794537242525696L,
+              4577276164233494528L,
+              4604283009858797568L,
+              4604273051977121792L,
+              4587033267999342592L,
+              -4618581563725053952L,
+              4606589925377179648L,
+              -4643233697825292288L,
+              -4642906556071936000L,
+              4602764225671069696L,
+              -4618389263543697408L,
+              4601081846715908096L,
+              4603591326313742336L,
+              4604071915974295552L,
+              4601923745668399104L,
+              -4619652770981478400L,
+              4579202376535113728L,
+              4605272921974243328L,
+              -4592876452893949952L,
+              4606597581156384768L,
+              4632118146369585152L,
             )),
         "Transform3D.interpolate_with" to
           (64 to
             longArrayOf(
-              4597352646335004672L,
-              4606946930038145024L,
-              -4672494937961398272L,
-              4606946926816919552L,
-              -4626019388372287488L,
-              -4663061699962601472L,
-              -4662866118963101696L,
-              -4704044170526851072L,
-              -4616189621275983872L,
-              -4558589417047982080L,
-              -4600631537111662592L,
-              -4580325751001186304L,
-              4607181616714874880L,
-              4562286034733236224L,
-              -4644548202631004160L,
-              4560601056249118720L,
-              -4616190614487171072L,
-              -4643649585951014912L,
-              -4644540425518972928L,
-              4579715481245581312L,
-              -4616191410129862656L,
-              -4592134104304058368L,
-              -4611140565096988672L,
-              4628130503847837696L,
-              4607067145099018240L,
-              4572387371537924096L,
-              -4628461147073282048L,
-              4572316118567354368L,
-              4607174364125724672L,
-              4589042594897461248L,
-              4594916804488331264L,
-              -4634330215588298752L,
-              4607058973923737600L,
-              -4514912637800153088L,
-              4705965600382386176L,
-              -4548483945800400896L,
-              4604762263247650816L,
-              4590741002133700608L,
-              4604271409689001984L,
-              4593815966252531712L,
-              4606797916684681216L,
-              -4625040581431656448L,
-              -4619164382197186560L,
-              4598652293775097856L,
-              4604383084744278016L,
-              4647397912358158336L,
-              4662053177753862144L,
-              4604180170624991232L,
-              4607180691686293504L,
-              -4642298206703583232L,
-              -4650376354066333696L,
-              4580148072499118080L,
-              4603531701430255616L,
-              4605415235178725376L,
-              -4645397487316631552L,
-              -4617957416930115584L,
-              4603533315264217088L,
-              -4585586411628920832L,
-              -4583914589166501888L,
-              4632561770320363520L,
-              -4624156253034119168L,
-              4606683461711822848L,
-              4592880927713001472L,
-              4606683714578022400L,
-              4599394528548356096L,
-              -4632790068770111488L,
-              -4630507597521223680L,
-              4590604809794486272L,
-              -4616278989881737216L,
-              -4572759659840012288L,
-              4630265853139484672L,
-              -4548024249008259072L,
-              4606901403921678336L,
-              4595763558901350400L,
-              -4628184683249664000L,
-              4595908662223962112L,
-              -4631640814441725952L,
-              4606979171820765184L,
-              4595024405767127040L,
-              -4616385998455046144L,
-              -4629546893330874368L,
-              -4573269495543496704L,
-              -4557489199971827712L,
-              -4588500954424279040L,
-              4600317744653533184L,
-              4598683125734703104L,
-              4606163483979939840L,
-              4598805734166102016L,
-              -4616711313773559808L,
-              4595543414983884800L,
-              4606143785112436736L,
-              4595922203718975488L,
-              -4622011358177656832L,
-              -4533467816715616256L,
-              4705159396366221312L,
-              -4566687009338294272L,
+              -4616699795745013760L,
+              -4643246402875424768L,
+              4599641751697752064L,
+              4580180290122547200L,
+              -4616190751389253632L,
+              -4655949603487612928L,
+              4599641642176086016L,
+              4569161133302218752L,
+              4606673371759902720L,
+              4649401463599005696L,
+              -4572094505771073536L,
+              -4572194903315972096L,
+              4604571012648927232L,
+              -4618922737673437184L,
+              4592079396084383744L,
+              4603409394720309248L,
+              4604140322455289856L,
+              4602192390504054784L,
+              -4622537505630060544L,
+              -4624727253903736832L,
+              4606056826520207360L,
+              -4564850822235553792L,
+              -4535068869391286272L,
+              -4597956243858915328L,
+              4606383811507257344L,
+              -4625369559820402688L,
+              -4623744328626339840L,
+              -4626418584107614208L,
+              4600853188562649088L,
+              -4617168890999341056L,
+              4599983264948551680L,
+              4606135171018653696L,
+              4599262132960231424L,
+              -4600416315226718208L,
+              -4539829636627955712L,
+              -4539187292593455104L,
+              -4616195539740917760L,
+              -4638002848565559296L,
+              4568769638980124672L,
+              4585369739118772224L,
+              -4616195511823630336L,
+              4563595447318347776L,
+              4568657741123420160L,
+              4564070315008720896L,
+              4607182373702860800L,
+              -4643025073010114560L,
+              4658207256267980800L,
+              -4577829885375938560L,
+              4603632807644758016L,
+              4605340653608501248L,
+              -4653420608632127488L,
+              -4618031391836209152L,
+              4603632529545625600L,
+              -4648545391791308800L,
+              -4652945153604976640L,
+              4574708879207694336L,
+              4607182140700884992L,
+              4621685808783425536L,
+              -4581782764969263104L,
+              -4539437404645228544L,
+              4607120620663078912L,
+              4593087019571216384L,
+              -4653122350533836800L,
+              4593085499152793600L,
+              -4616270730659627008L,
+              4589373926391414784L,
+              4571442559263440896L,
+              -4634000829177659392L,
+              -4616208931985817600L,
+              -4576839189428961280L,
+              -4575264964729634816L,
+              -4596186285151879168L,
+              4607124594581569536L,
+              4592815892244463616L,
+              4562767565528498176L,
+              4592815959353327616L,
+              -4616249022284300288L,
+              -4642325994068246528L,
+              -4661066443377344512L,
+              4581047681853423616L,
+              -4616191197528981504L,
+              4664280538666762240L,
+              4636223030224224256L,
+              4654714288215162880L,
+              -4633866913171111936L,
+              4599386226913443840L,
+              -4616676293147099136L,
+              -4623985602172289024L,
+              -4617039062727917568L,
+              -4624634953982803968L,
+              -4616676304421388288L,
+              4598737418416291840L,
+              4594985933060702208L,
+              -4564971188157153280L,
+              4658031709143433216L,
+              4690272519490371584L,
             )),
       )
 
-    // Godot 4.7.2's `bytes=` row (task 134 D2).
+    // The pinned Godot's `bytes=` row (task 134 D2).
     val EXPECTED_BYTES =
       mapOf(
         "PackedByteArray.hex_encode" to "32bce924",

@@ -26,15 +26,24 @@ import net.multigesture.kanama.types.*
 class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotObject, ::Node2D) {
   @OnReady
   fun ready() {
-    repeat(256) { pureRound() }
+    repeat(256) {
+      inputRound = it
+      pureRound()
+    }
     report("pure=n=256 " + summary())
     hashes.clear()
     edge = true
-    repeat(64) { edgeRound() }
+    repeat(64) {
+      inputRound = it
+      edgeRound()
+    }
     edge = false
     report("edge=n=64 " + summary())
     hashes.clear()
-    repeat(8) { facadeRound() }
+    repeat(8) {
+      inputRound = it
+      facadeRound()
+    }
     report("facade=n=8 " + summary())
     hashes.clear()
     constants()
@@ -3135,154 +3144,181 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure0() {
+    reseed(2408218736L)
     val l = Vector2(nv(), nv())
     mix("unary- Vector2", -l)
   }
 
   private fun pure1() {
+    reseed(2941451878L)
     val l = Vector2(nv(), nv())
     mix("unary+ Vector2", +l)
   }
 
   private fun pure2() {
+    reseed(3770135283L)
     val l = Vector2(nv(), nv())
     val r = ri().toLong()
     mix("Vector2 * int", l * r)
   }
 
   private fun pure3() {
+    reseed(2545693560L)
     val l = Vector2(nv(), nv())
     val r = ri().toLong()
     mix("Vector2 / int", l / r)
   }
 
   private fun pure4() {
+    reseed(219221208L)
     val l = Vector2(nv(), nv())
     val r = nv()
     mix("Vector2 * float", l * r)
   }
 
   private fun pure5() {
+    reseed(3217091411L)
     val l = Vector2(nv(), nv())
     val r = nv()
     mix("Vector2 / float", l / r)
   }
 
   private fun pure6() {
+    reseed(541408971L)
     val l = Vector2(nv(), nv())
     val r = Vector2(nv(), nv())
     mix("Vector2 < Vector2", l < r)
   }
 
   private fun pure7() {
+    reseed(1185530214L)
     val l = Vector2(nv(), nv())
     val r = Vector2(nv(), nv())
     mix("Vector2 + Vector2", l + r)
   }
 
   private fun pure8() {
+    reseed(652297072L)
     val l = Vector2(nv(), nv())
     val r = Vector2(nv(), nv())
     mix("Vector2 - Vector2", l - r)
   }
 
   private fun pure9() {
+    reseed(53276265L)
     val l = Vector2(nv(), nv())
     val r = Vector2(nv(), nv())
     mix("Vector2 * Vector2", l * r)
   }
 
   private fun pure10() {
+    reseed(493377282L)
     val l = Vector2(nv(), nv())
     val r = Vector2(nv(), nv())
     mix("Vector2 / Vector2", l / r)
   }
 
   private fun pure11() {
+    reseed(2950492876L)
     val l = Vector2(nv(), nv())
     val r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Vector2 * Transform2D", l * r)
   }
 
   private fun pure12() {
+    reseed(3239029801L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.direction_to", b.directionTo(a0))
   }
 
   private fun pure13() {
+    reseed(1513576095L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.distance_to", b.distanceTo(a0))
   }
 
   private fun pure14() {
+    reseed(4198464593L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure15() {
+    reseed(1572801086L)
     val b = Vector2(nv(), nv())
     mix("Vector2.length", b.length())
   }
 
   private fun pure16() {
+    reseed(3550342632L)
     val b = Vector2(nv(), nv())
     mix("Vector2.length_squared", b.lengthSquared())
   }
 
   private fun pure17() {
+    reseed(2468691926L)
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.limit_length", b.limitLength(a0))
   }
 
   private fun pure18() {
+    reseed(2209434831L)
     val b = Vector2(nv(), nv())
     mix("Vector2.normalized", b.normalized())
   }
 
   private fun pure19() {
+    reseed(2084264670L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure20() {
+    reseed(970407634L)
     val b = Vector2(nv(), nv())
     mix("Vector2.is_zero_approx", b.isZeroApprox())
   }
 
   private fun pure21() {
+    reseed(3802917748L)
     val b = Vector2(nv(), nv())
     mix("Vector2.is_finite", b.isFinite())
   }
 
   private fun pure22() {
+    reseed(3172940786L)
     val b = Vector2(nv(), nv())
     mix("Vector2.inverse", b.inverse())
   }
 
   private fun pure23() {
+    reseed(2054745108L)
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.posmod", b.posmod(a0))
   }
 
   private fun pure24() {
+    reseed(777788998L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.posmodv", b.posmodv(a0))
   }
 
   private fun pure25() {
+    reseed(1158144939L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.project", b.project(a0))
   }
 
   private fun pure26() {
+    reseed(1710168639L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     val a1 = nv()
@@ -3290,16 +3326,19 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure27() {
+    reseed(3824829595L)
     val b = Vector2(nv(), nv())
     mix("Vector2.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure28() {
+    reseed(3635196729L)
     val b = Vector2(nv(), nv())
     mix("Vector2.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure29() {
+    reseed(4176435583L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     val a1 = nv()
@@ -3307,71 +3346,84 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure30() {
+    reseed(2122336217L)
     val b = Vector2(nv(), nv())
     mix("Vector2.orthogonal", b.orthogonal())
   }
 
   private fun pure31() {
+    reseed(547219716L)
     val b = Vector2(nv(), nv())
     mix("Vector2.floor", b.floor())
   }
 
   private fun pure32() {
+    reseed(1513214783L)
     val b = Vector2(nv(), nv())
     mix("Vector2.ceil", b.ceil())
   }
 
   private fun pure33() {
+    reseed(1191847018L)
     val b = Vector2(nv(), nv())
     mix("Vector2.round", b.round())
   }
 
   private fun pure34() {
+    reseed(2183608290L)
     val b = Vector2(nv(), nv())
     mix("Vector2.aspect", b.aspect())
   }
 
   private fun pure35() {
+    reseed(3107875105L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.dot", b.dot(a0))
   }
 
   private fun pure36() {
+    reseed(2295000095L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector2.slide", b.slide(a0))
   }
 
   private fun pure37() {
+    reseed(78380634L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector2.bounce", b.bounce(a0))
   }
 
   private fun pure38() {
+    reseed(3462658799L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector2.reflect", b.reflect(a0))
   }
 
   private fun pure39() {
+    reseed(61254490L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.cross", b.cross(a0))
   }
 
   private fun pure40() {
+    reseed(1815746526L)
     val b = Vector2(nv(), nv())
     mix("Vector2.abs", b.abs())
   }
 
   private fun pure41() {
+    reseed(305833863L)
     val b = Vector2(nv(), nv())
     mix("Vector2.sign", b.sign())
   }
 
   private fun pure42() {
+    reseed(2844850473L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     val a1 = Vector2(nv(), nv())
@@ -3379,6 +3431,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure43() {
+    reseed(1043887965L)
     val b = Vector2(nv(), nv())
     val a0 = nv()
     val a1 = nv()
@@ -3386,106 +3439,124 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure44() {
+    reseed(3272422798L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.min", b.min(a0))
   }
 
   private fun pure45() {
+    reseed(4123778104L)
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.minf", b.minf(a0))
   }
 
   private fun pure46() {
+    reseed(3036153036L)
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.max", b.max(a0))
   }
 
   private fun pure47() {
+    reseed(2356107166L)
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.maxf", b.maxf(a0))
   }
 
   private fun pure48() {
+    reseed(2424996355L)
     val l = Vector3(nv(), nv(), nv())
     mix("unary- Vector3", -l)
   }
 
   private fun pure49() {
+    reseed(2958229497L)
     val l = Vector3(nv(), nv(), nv())
     mix("unary+ Vector3", +l)
   }
 
   private fun pure50() {
+    reseed(3377521380L)
     val l = Vector3(nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector3 * int", l * r)
   }
 
   private fun pure51() {
+    reseed(1835633447L)
     val l = Vector3(nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector3 / int", l / r)
   }
 
   private fun pure52() {
+    reseed(2370979871L)
     val l = Vector3(nv(), nv(), nv())
     val r = nv()
     mix("Vector3 * float", l * r)
   }
 
   private fun pure53() {
+    reseed(148931052L)
     val l = Vector3(nv(), nv(), nv())
     val r = nv()
     mix("Vector3 / float", l / r)
   }
 
   private fun pure54() {
+    reseed(3343879467L)
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 < Vector3", l < r)
   }
 
   private fun pure55() {
+    reseed(3276956814L)
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 + Vector3", l + r)
   }
 
   private fun pure56() {
+    reseed(1708484320L)
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 - Vector3", l - r)
   }
 
   private fun pure57() {
+    reseed(1882190961L)
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 * Vector3", l * r)
   }
 
   private fun pure58() {
+    reseed(3846203354L)
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 / Vector3", l / r)
   }
 
   private fun pure59() {
+    reseed(1832696475L)
     val l = Vector3(nv(), nv(), nv())
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Vector3 * Quaternion", l * r)
   }
 
   private fun pure60() {
+    reseed(1818447147L)
     val l = Vector3(nv(), nv(), nv())
     val r = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Vector3 * Basis", l * r)
   }
 
   private fun pure61() {
+    reseed(4104719498L)
     val l = Vector3(nv(), nv(), nv())
     val r =
       Transform3D(
@@ -3496,81 +3567,96 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure62() {
+    reseed(695953388L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure63() {
+    reseed(1354666414L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure64() {
+    reseed(1451728668L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.direction_to", b.directionTo(a0))
   }
 
   private fun pure65() {
+    reseed(4024419308L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.distance_to", b.distanceTo(a0))
   }
 
   private fun pure66() {
+    reseed(292019118L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure67() {
+    reseed(4261400983L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.length", b.length())
   }
 
   private fun pure68() {
+    reseed(502161641L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.length_squared", b.lengthSquared())
   }
 
   private fun pure69() {
+    reseed(2055916247L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.limit_length", b.limitLength(a0))
   }
 
   private fun pure70() {
+    reseed(1213793922L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.normalized", b.normalized())
   }
 
   private fun pure71() {
+    reseed(3077200553L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.is_normalized", b.isNormalized())
   }
 
   private fun pure72() {
+    reseed(1139683625L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure73() {
+    reseed(2993431555L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.is_zero_approx", b.isZeroApprox())
   }
 
   private fun pure74() {
+    reseed(888106243L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.is_finite", b.isFinite())
   }
 
   private fun pure75() {
+    reseed(195543569L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.inverse", b.inverse())
   }
 
   private fun pure76() {
+    reseed(2681208398L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = Vector3(nv(), nv(), nv())
@@ -3578,6 +3664,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure77() {
+    reseed(3161266424L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     val a1 = nv()
@@ -3585,6 +3672,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure78() {
+    reseed(1937235870L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = nv()
@@ -3592,6 +3680,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure79() {
+    reseed(3726347408L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = nv()
@@ -3599,167 +3688,196 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure80() {
+    reseed(1117540114L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.dot", b.dot(a0))
   }
 
   private fun pure81() {
+    reseed(3474009941L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.cross", b.cross(a0))
   }
 
   private fun pure82() {
+    reseed(2199171433L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.abs", b.abs())
   }
 
   private fun pure83() {
+    reseed(1544078475L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.floor", b.floor())
   }
 
   private fun pure84() {
+    reseed(308817102L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.ceil", b.ceil())
   }
 
   private fun pure85() {
+    reseed(2945145221L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.round", b.round())
   }
 
   private fun pure86() {
+    reseed(2511880789L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.posmod", b.posmod(a0))
   }
 
   private fun pure87() {
+    reseed(3557825817L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.posmodv", b.posmodv(a0))
   }
 
   private fun pure88() {
+    reseed(254645412L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.project", b.project(a0))
   }
 
   private fun pure89() {
+    reseed(2668297288L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.slide", b.slide(a0))
   }
 
   private fun pure90() {
+    reseed(547176047L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.bounce", b.bounce(a0))
   }
 
   private fun pure91() {
+    reseed(2589191412L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.reflect", b.reflect(a0))
   }
 
   private fun pure92() {
+    reseed(3987136690L)
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.sign", b.sign())
   }
 
   private fun pure93() {
+    reseed(887161873L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.min", b.min(a0))
   }
 
   private fun pure94() {
+    reseed(3040479061L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.minf", b.minf(a0))
   }
 
   private fun pure95() {
+    reseed(1190438943L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.max", b.max(a0))
   }
 
   private fun pure96() {
+    reseed(740636283L)
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.maxf", b.maxf(a0))
   }
 
   private fun pure97() {
+    reseed(2508884450L)
     val l = Vector4(nv(), nv(), nv(), nv())
     mix("unary- Vector4", -l)
   }
 
   private fun pure98() {
+    reseed(2975007116L)
     val l = Vector4(nv(), nv(), nv(), nv())
     mix("unary+ Vector4", +l)
   }
 
   private fun pure99() {
+    reseed(1367022229L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector4 * int", l * r)
   }
 
   private fun pure100() {
+    reseed(1680117682L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector4 / int", l / r)
   }
 
   private fun pure101() {
+    reseed(2303104014L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Vector4 * float", l * r)
   }
 
   private fun pure102() {
+    reseed(2290904617L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Vector4 / float", l / r)
   }
 
   private fun pure103() {
+    reseed(3123324175L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 < Vector4", l < r)
   }
 
   private fun pure104() {
+    reseed(4131127154L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 + Vector4", l + r)
   }
 
   private fun pure105() {
+    reseed(3601267420L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 - Vector4", l - r)
   }
 
   private fun pure106() {
+    reseed(3678567357L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 * Vector4", l * r)
   }
 
   private fun pure107() {
+    reseed(636176142L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 / Vector4", l / r)
   }
 
   private fun pure108() {
+    reseed(3563492129L)
     val l = Vector4(nv(), nv(), nv(), nv())
     val r =
       Projection(
@@ -3772,51 +3890,61 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure109() {
+    reseed(2442273319L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure110() {
+    reseed(1326971597L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure111() {
+    reseed(3707877544L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.length", b.length())
   }
 
   private fun pure112() {
+    reseed(625522230L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.length_squared", b.lengthSquared())
   }
 
   private fun pure113() {
+    reseed(3826345756L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.abs", b.abs())
   }
 
   private fun pure114() {
+    reseed(2129315045L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.sign", b.sign())
   }
 
   private fun pure115() {
+    reseed(3690219138L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.floor", b.floor())
   }
 
   private fun pure116() {
+    reseed(4256840069L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.ceil", b.ceil())
   }
 
   private fun pure117() {
+    reseed(4121978548L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.round", b.round())
   }
 
   private fun pure118() {
+    reseed(341271245L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     val a1 = nv()
@@ -3824,18 +3952,21 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure119() {
+    reseed(1599763954L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Vector4.posmod", b.posmod(a0))
   }
 
   private fun pure120() {
+    reseed(2674327244L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.posmodv", b.posmodv(a0))
   }
 
   private fun pure121() {
+    reseed(2077365883L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     val a1 = Vector4(nv(), nv(), nv(), nv())
@@ -3843,6 +3974,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure122() {
+    reseed(146329511L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     val a1 = nv()
@@ -3850,180 +3982,212 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure123() {
+    reseed(3257113105L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.normalized", b.normalized())
   }
 
   private fun pure124() {
+    reseed(3662684755L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.direction_to", b.directionTo(a0))
   }
 
   private fun pure125() {
+    reseed(77677881L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.distance_to", b.distanceTo(a0))
   }
 
   private fun pure126() {
+    reseed(3660589391L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure127() {
+    reseed(3489047403L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.dot", b.dot(a0))
   }
 
   private fun pure128() {
+    reseed(636035608L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.inverse", b.inverse())
   }
 
   private fun pure129() {
+    reseed(748306856L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure130() {
+    reseed(1969951556L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_zero_approx", b.isZeroApprox())
   }
 
   private fun pure131() {
+    reseed(11997050L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_finite", b.isFinite())
   }
 
   private fun pure132() {
+    reseed(2335716888L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.min", b.min(a0))
   }
 
   private fun pure133() {
+    reseed(2810038362L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Vector4.minf", b.minf(a0))
   }
 
   private fun pure134() {
+    reseed(2706104434L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.max", b.max(a0))
   }
 
   private fun pure135() {
+    reseed(4268867452L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Vector4.maxf", b.maxf(a0))
   }
 
   private fun pure136() {
+    reseed(3597679725L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("unary- Quaternion", -l)
   }
 
   private fun pure137() {
+    reseed(2444234883L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("unary+ Quaternion", +l)
   }
 
   private fun pure138() {
+    reseed(2851289822L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = ri().toLong()
     mix("Quaternion * int", l * r)
   }
 
   private fun pure139() {
+    reseed(1098717081L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = ri().toLong()
     mix("Quaternion / int", l / r)
   }
 
   private fun pure140() {
+    reseed(4221021701L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = nv()
     mix("Quaternion * float", l * r)
   }
 
   private fun pure141() {
+    reseed(1328898402L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = nv()
     mix("Quaternion / float", l / r)
   }
 
   private fun pure142() {
+    reseed(2752083523L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Vector3(nv(), nv(), nv())
     mix("Quaternion * Vector3", l * r)
   }
 
   private fun pure143() {
+    reseed(2392759460L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion + Quaternion", l + r)
   }
 
   private fun pure144() {
+    reseed(2647852722L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion - Quaternion", l - r)
   }
 
   private fun pure145() {
+    reseed(2586672685L)
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion * Quaternion", l * r)
   }
 
   private fun pure146() {
+    reseed(517160897L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.length", b.length())
   }
 
   private fun pure147() {
+    reseed(1822887831L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.length_squared", b.lengthSquared())
   }
 
   private fun pure148() {
+    reseed(2179064044L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.normalized", b.normalized())
   }
 
   private fun pure149() {
+    reseed(2943240299L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure150() {
+    reseed(4177444529L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.is_finite", b.isFinite())
   }
 
   private fun pure151() {
+    reseed(4095541124L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.dot", b.dot(a0))
   }
 
   private fun pure152() {
+    reseed(2743723189L)
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("unary- Plane", -l)
   }
 
   private fun pure153() {
+    reseed(1715104491L)
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("unary+ Plane", +l)
   }
 
   private fun pure154() {
+    reseed(915557820L)
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val r =
       Transform3D(
@@ -4034,23 +4198,27 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure155() {
+    reseed(3879814381L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("Plane.get_center", b.getCenter())
   }
 
   private fun pure156() {
+    reseed(3539735307L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Plane.is_point_over", b.isPointOver(a0))
   }
 
   private fun pure157() {
+    reseed(1560040574L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Plane.distance_to", b.distanceTo(a0))
   }
 
   private fun pure158() {
+    reseed(4197163150L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = nv()
@@ -4058,12 +4226,14 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure159() {
+    reseed(4145482154L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Plane.project", b.project(a0))
   }
 
   private fun pure160() {
+    reseed(1589364528L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = Vector3(nv(), nv(), nv())
@@ -4071,39 +4241,46 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure161() {
+    reseed(314846183L)
     val l = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Rect2 * Transform2D", l * r)
   }
 
   private fun pure162() {
+    reseed(3452985387L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.get_center", b.getCenter())
   }
 
   private fun pure163() {
+    reseed(1378255491L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.get_area", b.area())
   }
 
   private fun pure164() {
+    reseed(16292519L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.has_area", b.hasArea())
   }
 
   private fun pure165() {
+    reseed(3997273460L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Vector2(nv(), nv())
     mix("Rect2.has_point", b.hasPoint(a0))
   }
 
   private fun pure166() {
+    reseed(3234829821L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure167() {
+    reseed(585162897L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a1 = rb()
@@ -4111,42 +4288,49 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure168() {
+    reseed(1583904209L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.encloses", b.encloses(a0))
   }
 
   private fun pure169() {
+    reseed(919617246L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.intersection", b.intersection(a0))
   }
 
   private fun pure170() {
+    reseed(1408174913L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.merge", b.merge(a0))
   }
 
   private fun pure171() {
+    reseed(822394139L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Vector2(nv(), nv())
     mix("Rect2.expand", b.expand(a0))
   }
 
   private fun pure172() {
+    reseed(1527357237L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Vector2(nv(), nv())
     mix("Rect2.get_support", b.getSupport(a0))
   }
 
   private fun pure173() {
+    reseed(3806890648L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = nv()
     mix("Rect2.grow", b.grow(a0))
   }
 
   private fun pure174() {
+    reseed(328486878L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = rs().toLong()
     val a1 = nv()
@@ -4154,6 +4338,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure175() {
+    reseed(3521964486L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = nv()
     val a1 = nv()
@@ -4163,11 +4348,13 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure176() {
+    reseed(1462396157L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.abs", b.abs())
   }
 
   private fun pure177() {
+    reseed(2471085742L)
     val l = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val r =
       Transform3D(
@@ -4178,134 +4365,158 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure178() {
+    reseed(3317731379L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_center", b.getCenter())
   }
 
   private fun pure179() {
+    reseed(1470041184L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_volume", b.volume())
   }
 
   private fun pure180() {
+    reseed(2420616412L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.has_volume", b.hasVolume())
   }
 
   private fun pure181() {
+    reseed(4140279721L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.has_surface", b.hasSurface())
   }
 
   private fun pure182() {
+    reseed(3997791804L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Vector3(nv(), nv(), nv())
     mix("AABB.has_point", b.hasPoint(a0))
   }
 
   private fun pure183() {
+    reseed(1542440885L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure184() {
+    reseed(31879161L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.intersects", b.intersects(a0))
   }
 
   private fun pure185() {
+    reseed(1020225673L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.encloses", b.encloses(a0))
   }
 
   private fun pure186() {
+    reseed(954798953L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.merge", b.merge(a0))
   }
 
   private fun pure187() {
+    reseed(3888026430L)
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = ri().toLong()
     mix("Basis * int", l * r)
   }
 
   private fun pure188() {
+    reseed(1764391545L)
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = ri().toLong()
     mix("Basis / int", l / r)
   }
 
   private fun pure189() {
+    reseed(2817517157L)
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = nv()
     mix("Basis * float", l * r)
   }
 
   private fun pure190() {
+    reseed(4241534530L)
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = nv()
     mix("Basis / float", l / r)
   }
 
   private fun pure191() {
+    reseed(417053667L)
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = Vector3(nv(), nv(), nv())
     mix("Basis * Vector3", l * r)
   }
 
   private fun pure192() {
+    reseed(2590525357L)
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis * Basis", l * r)
   }
 
   private fun pure193() {
+    reseed(1792232159L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.inverse", b.inverse())
   }
 
   private fun pure194() {
+    reseed(2777653080L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.transposed", b.transposed())
   }
 
   private fun pure195() {
+    reseed(3340755916L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.orthonormalized", b.orthonormalized())
   }
 
   private fun pure196() {
+    reseed(603529372L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.determinant", b.determinant())
   }
 
   private fun pure197() {
+    reseed(2235769835L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv())
     mix("Basis.scaled", b.scaled(a0))
   }
 
   private fun pure198() {
+    reseed(2709661926L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.get_scale", b.getScale())
   }
 
   private fun pure199() {
+    reseed(1619399883L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val a0 = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure200() {
+    reseed(1745173391L)
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.get_rotation_quaternion", b.getRotationQuaternion())
   }
 
   private fun pure201() {
+    reseed(718197479L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4316,6 +4527,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure202() {
+    reseed(2684542884L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4326,6 +4538,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure203() {
+    reseed(2354633388L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4336,6 +4549,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure204() {
+    reseed(1452311007L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4346,6 +4560,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure205() {
+    reseed(145590810L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4356,6 +4571,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure206() {
+    reseed(3007220728L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4366,6 +4582,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure207() {
+    reseed(3022722904L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4376,6 +4593,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure208() {
+    reseed(1698483241L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4390,6 +4608,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure209() {
+    reseed(116775411L)
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4400,6 +4619,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure210() {
+    reseed(3130060046L)
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4409,6 +4629,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure211() {
+    reseed(1730131442L)
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4418,6 +4639,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure212() {
+    reseed(3141626533L)
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4427,6 +4649,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure213() {
+    reseed(350605992L)
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4437,6 +4660,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure214() {
+    reseed(1956012088L)
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4447,6 +4671,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure215() {
+    reseed(2321045066L)
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -4461,94 +4686,110 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure216() {
+    reseed(2073728526L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = ri().toLong()
     mix("Transform2D * int", l * r)
   }
 
   private fun pure217() {
+    reseed(3203301385L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = ri().toLong()
     mix("Transform2D / int", l / r)
   }
 
   private fun pure218() {
+    reseed(3833350709L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = nv()
     mix("Transform2D * float", l * r)
   }
 
   private fun pure219() {
+    reseed(1067948050L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = nv()
     mix("Transform2D / float", l / r)
   }
 
   private fun pure220() {
+    reseed(2969098240L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = Vector2(nv(), nv())
     mix("Transform2D * Vector2", l * r)
   }
 
   private fun pure221() {
+    reseed(1670842623L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Transform2D * Rect2", l * r)
   }
 
   private fun pure222() {
+    reseed(1632460141L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D * Transform2D", l * r)
   }
 
   private fun pure223() {
+    reseed(844601705L)
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = listOf(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D * PackedVector2Array", l * r)
   }
 
   private fun pure224() {
+    reseed(384113135L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D.inverse", b.inverse())
   }
 
   private fun pure225() {
+    reseed(1027120134L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D.get_origin", b.origin)
   }
 
   private fun pure226() {
+    reseed(2619053927L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv())
     mix("Transform2D.translated", b.translated(a0))
   }
 
   private fun pure227() {
+    reseed(544027331L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv())
     mix("Transform2D.translated_local", b.translatedLocal(a0))
   }
 
   private fun pure228() {
+    reseed(917391560L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv())
     mix("Transform2D.basis_xform", b.basisXform(a0))
   }
 
   private fun pure229() {
+    reseed(3527981608L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv())
     mix("Transform2D.basis_xform_inv", b.basisXformInv(a0))
   }
 
   private fun pure230() {
+    reseed(3049468443L)
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun pure231() {
+    reseed(2715974335L)
     val l =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -4561,6 +4802,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure232() {
+    reseed(3788860319L)
     val l =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -4579,70 +4821,82 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure233() {
+    reseed(805697464L)
     val l = Color(nv(), nv(), nv(), nv())
     mix("unary- Color", -l)
   }
 
   private fun pure234() {
+    reseed(4179669938L)
     val l = Color(nv(), nv(), nv(), nv())
     mix("unary+ Color", +l)
   }
 
   private fun pure235() {
+    reseed(3518752843L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Color * int", l * r)
   }
 
   private fun pure236() {
+    reseed(3081088656L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Color / int", l / r)
   }
 
   private fun pure237() {
+    reseed(1542719536L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Color * float", l * r)
   }
 
   private fun pure238() {
+    reseed(527383179L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Color / float", l / r)
   }
 
   private fun pure239() {
+    reseed(2201858938L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color + Color", l + r)
   }
 
   private fun pure240() {
+    reseed(3587874176L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color - Color", l - r)
   }
 
   private fun pure241() {
+    reseed(2238950341L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color * Color", l * r)
   }
 
   private fun pure242() {
+    reseed(86694990L)
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color / Color", l / r)
   }
 
   private fun pure243() {
+    reseed(3983162445L)
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = rb()
     mix("Color.to_html", b.toHtml(a0))
   }
 
   private fun pure244() {
+    reseed(319613249L)
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = Color(nv(), nv(), nv(), nv())
     val a1 = Color(nv(), nv(), nv(), nv())
@@ -4650,11 +4904,13 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure245() {
+    reseed(278459419L)
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.inverted", b.inverted())
   }
 
   private fun pure246() {
+    reseed(661654487L)
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = Color(nv(), nv(), nv(), nv())
     val a1 = nv()
@@ -4662,134 +4918,158 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure247() {
+    reseed(3280328687L)
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.get_luminance", b.getLuminance())
   }
 
   private fun pure248() {
+    reseed(268937051L)
     val l = Vector2i(ri(), ri())
     mix("unary- Vector2i", -l)
   }
 
   private fun pure249() {
+    reseed(245756317L)
     val l = Vector2i(ri(), ri())
     mix("unary+ Vector2i", +l)
   }
 
   private fun pure250() {
+    reseed(3445010572L)
     val l = Vector2i(ri(), ri())
     val r = ri().toLong()
     mix("Vector2i * int", l * r)
   }
 
   private fun pure251() {
+    reseed(286226511L)
     val l = Vector2i(ri(), ri())
     val r = rnz().toLong()
     mix("Vector2i / int", l / r)
   }
 
   private fun pure252() {
+    reseed(2208992989L)
     val l = Vector2i(ri(), ri())
     val r = rnz().toLong()
     mix("Vector2i % int", l % r)
   }
 
   private fun pure253() {
+    reseed(3704012359L)
     val l = Vector2i(ri(), ri())
     val r = nv()
     mix("Vector2i * float", l * r)
   }
 
   private fun pure254() {
+    reseed(174201044L)
     val l = Vector2i(ri(), ri())
     val r = nv()
     mix("Vector2i / float", l / r)
   }
 
   private fun pure255() {
+    reseed(1369372827L)
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i < Vector2i", l < r)
   }
 
   private fun pure256() {
+    reseed(1364969968L)
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i + Vector2i", l + r)
   }
 
   private fun pure257() {
+    reseed(1505180742L)
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i - Vector2i", l - r)
   }
 
   private fun pure258() {
+    reseed(82796237L)
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i * Vector2i", l * r)
   }
 
   private fun pure259() {
+    reseed(2232094404L)
     val l = Vector2i(ri(), ri())
     val r = Vector2i(rnz(), rnz())
     mix("Vector2i / Vector2i", l / r)
   }
 
   private fun pure260() {
+    reseed(1064143102L)
     val l = Vector2i(ri(), ri())
     val r = Vector2i(rnz(), rnz())
     mix("Vector2i % Vector2i", l % r)
   }
 
   private fun pure261() {
+    reseed(4099120283L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.aspect", b.aspect())
   }
 
   private fun pure262() {
+    reseed(1645239702L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure263() {
+    reseed(3245303556L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure264() {
+    reseed(757457108L)
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.distance_to", b.distanceTo(a0))
   }
 
   private fun pure265() {
+    reseed(892286886L)
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure266() {
+    reseed(235317471L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.length", b.length())
   }
 
   private fun pure267() {
+    reseed(406270017L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.length_squared", b.lengthSquared())
   }
 
   private fun pure268() {
+    reseed(2688769930L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.sign", b.sign())
   }
 
   private fun pure269() {
+    reseed(3750415249L)
     val b = Vector2i(ri(), ri())
     mix("Vector2i.abs", b.abs())
   }
 
   private fun pure270() {
+    reseed(2146359190L)
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     val a1 = Vector2i(ri(), ri())
@@ -4797,6 +5077,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure271() {
+    reseed(1677592173L)
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
@@ -4804,148 +5085,174 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure272() {
+    reseed(3510021193L)
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.min", b.min(a0))
   }
 
   private fun pure273() {
+    reseed(2031154784L)
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     mix("Vector2i.mini", b.mini(a0))
   }
 
   private fun pure274() {
+    reseed(3273854599L)
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.max", b.max(a0))
   }
 
   private fun pure275() {
+    reseed(506495146L)
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     mix("Vector2i.maxi", b.maxi(a0))
   }
 
   private fun pure276() {
+    reseed(4094381278L)
     val l = Vector3i(ri(), ri(), ri())
     mix("unary- Vector3i", -l)
   }
 
   private fun pure277() {
+    reseed(581455792L)
     val l = Vector3i(ri(), ri(), ri())
     mix("unary+ Vector3i", +l)
   }
 
   private fun pure278() {
+    reseed(2433024929L)
     val l = Vector3i(ri(), ri(), ri())
     val r = ri().toLong()
     mix("Vector3i * int", l * r)
   }
 
   private fun pure279() {
+    reseed(2419818214L)
     val l = Vector3i(ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector3i / int", l / r)
   }
 
   private fun pure280() {
+    reseed(2687185496L)
     val l = Vector3i(ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector3i % int", l % r)
   }
 
   private fun pure281() {
+    reseed(3113742250L)
     val l = Vector3i(ri(), ri(), ri())
     val r = nv()
     mix("Vector3i * float", l * r)
   }
 
   private fun pure282() {
+    reseed(4215552365L)
     val l = Vector3i(ri(), ri(), ri())
     val r = nv()
     mix("Vector3i / float", l / r)
   }
 
   private fun pure283() {
+    reseed(877801977L)
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i < Vector3i", l < r)
   }
 
   private fun pure284() {
+    reseed(3681701042L)
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i + Vector3i", l + r)
   }
 
   private fun pure285() {
+    reseed(2491387052L)
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i - Vector3i", l - r)
   }
 
   private fun pure286() {
+    reseed(105969943L)
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i * Vector3i", l * r)
   }
 
   private fun pure287() {
+    reseed(3462629302L)
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(rnz(), rnz(), rnz())
     mix("Vector3i / Vector3i", l / r)
   }
 
   private fun pure288() {
+    reseed(1730158804L)
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(rnz(), rnz(), rnz())
     mix("Vector3i % Vector3i", l % r)
   }
 
   private fun pure289() {
+    reseed(872518043L)
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure290() {
+    reseed(1511773513L)
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure291() {
+    reseed(1044148789L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.distance_to", b.distanceTo(a0))
   }
 
   private fun pure292() {
+    reseed(3220969291L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure293() {
+    reseed(3304624780L)
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.length", b.length())
   }
 
   private fun pure294() {
+    reseed(3895359002L)
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.length_squared", b.lengthSquared())
   }
 
   private fun pure295() {
+    reseed(4222841569L)
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.sign", b.sign())
   }
 
   private fun pure296() {
+    reseed(2253829664L)
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.abs", b.abs())
   }
 
   private fun pure297() {
+    reseed(3292176863L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     val a1 = Vector3i(ri(), ri(), ri())
@@ -4953,6 +5260,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure298() {
+    reseed(2655818114L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
@@ -4960,136 +5268,160 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure299() {
+    reseed(2631592908L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.min", b.min(a0))
   }
 
   private fun pure300() {
+    reseed(2443244735L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector3i.mini", b.mini(a0))
   }
 
   private fun pure301() {
+    reseed(2865199646L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.max", b.max(a0))
   }
 
   private fun pure302() {
+    reseed(1325779285L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector3i.maxi", b.maxi(a0))
   }
 
   private fun pure303() {
+    reseed(4095116753L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     mix("unary- Vector4i", -l)
   }
 
   private fun pure304() {
+    reseed(179043199L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     mix("unary+ Vector4i", +l)
   }
 
   private fun pure305() {
+    reseed(3886032562L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = ri().toLong()
     mix("Vector4i * int", l * r)
   }
 
   private fun pure306() {
+    reseed(3572937109L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector4i / int", l / r)
   }
 
   private fun pure307() {
+    reseed(3548402615L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector4i % int", l % r)
   }
 
   private fun pure308() {
+    reseed(2318621993L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = nv()
     mix("Vector4i * float", l * r)
   }
 
   private fun pure309() {
+    reseed(2330821390L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = nv()
     mix("Vector4i / float", l / r)
   }
 
   private fun pure310() {
+    reseed(735041147L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i < Vector4i", l < r)
   }
 
   private fun pure311() {
+    reseed(3756608L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i + Vector4i", l + r)
   }
 
   private fun pure312() {
+    reseed(2387159950L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i - Vector4i", l - r)
   }
 
   private fun pure313() {
+    reseed(124152869L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i * Vector4i", l * r)
   }
 
   private fun pure314() {
+    reseed(3970823100L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(rnz(), rnz(), rnz(), rnz())
     mix("Vector4i / Vector4i", l / r)
   }
 
   private fun pure315() {
+    reseed(791261798L)
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(rnz(), rnz(), rnz(), rnz())
     mix("Vector4i % Vector4i", l % r)
   }
 
   private fun pure316() {
+    reseed(47588366L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure317() {
+    reseed(481429676L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure318() {
+    reseed(3251204525L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.length", b.length())
   }
 
   private fun pure319() {
+    reseed(242646739L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.length_squared", b.lengthSquared())
   }
 
   private fun pure320() {
+    reseed(2385785324L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.sign", b.sign())
   }
 
   private fun pure321() {
+    reseed(2479388499L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.abs", b.abs())
   }
 
   private fun pure322() {
+    reseed(1814180564L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     val a1 = Vector4i(ri(), ri(), ri(), ri())
@@ -5097,6 +5429,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure323() {
+    reseed(4141211527L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
@@ -5104,99 +5437,116 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure324() {
+    reseed(1969964159L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.min", b.min(a0))
   }
 
   private fun pure325() {
+    reseed(3990630050L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector4i.mini", b.mini(a0))
   }
 
   private fun pure326() {
+    reseed(2203467729L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.max", b.max(a0))
   }
 
   private fun pure327() {
+    reseed(2026262184L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector4i.maxi", b.maxi(a0))
   }
 
   private fun pure328() {
+    reseed(259203722L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.distance_to", b.distanceTo(a0))
   }
 
   private fun pure329() {
+    reseed(3369025712L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure330() {
+    reseed(2561521356L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.get_center", b.getCenter())
   }
 
   private fun pure331() {
+    reseed(3278307100L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.get_area", b.area())
   }
 
   private fun pure332() {
+    reseed(3117956200L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.has_area", b.hasArea())
   }
 
   private fun pure333() {
+    reseed(827932525L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Vector2i(ri(), ri())
     mix("Rect2i.has_point", b.hasPoint(a0))
   }
 
   private fun pure334() {
+    reseed(275157174L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.intersects", b.intersects(a0))
   }
 
   private fun pure335() {
+    reseed(3582972378L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.encloses", b.encloses(a0))
   }
 
   private fun pure336() {
+    reseed(176222145L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.intersection", b.intersection(a0))
   }
 
   private fun pure337() {
+    reseed(3828809144L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.merge", b.merge(a0))
   }
 
   private fun pure338() {
+    reseed(3850027988L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Vector2i(ri(), ri())
     mix("Rect2i.expand", b.expand(a0))
   }
 
   private fun pure339() {
+    reseed(938186727L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = ri().toLong()
     mix("Rect2i.grow", b.grow(a0))
   }
 
   private fun pure340() {
+    reseed(3237362659L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = rs().toLong()
     val a1 = ri().toLong()
@@ -5204,6 +5554,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure341() {
+    reseed(2785431763L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
@@ -5213,55 +5564,65 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure342() {
+    reseed(3141125996L)
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.abs", b.abs())
   }
 
   private fun pure343() {
+    reseed(2711476823L)
     val l = RID(rl())
     val r = RID(rl())
     mix("RID < RID", l < r)
   }
 
   private fun pure344() {
+    reseed(1101502367L)
     val b = RID(rl())
     mix("RID.is_valid", b.isValid())
   }
 
   private fun pure345() {
+    reseed(4011005894L)
     val b = RID(rl())
     mix("RID.get_id", b.getId())
   }
 
   private fun edgeFinite243() {
+    reseed(3983162445L)
     val b = Color(nvf(), nvf(), nvf(), nvf())
     val a0 = rb()
     mix("Color.to_html", b.toHtml(a0))
   }
 
   private fun facade0() {
+    reseed(3535864697L)
     val b = Vector2(nv(), nv()).normalized()
     mix("Vector2.angle", b.angle())
   }
 
   private fun facade1() {
+    reseed(511070983L)
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector2.angle_to", b.angleTo(a0))
   }
 
   private fun facade2() {
+    reseed(3757248414L)
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector2.angle_to_point", b.angleToPoint(a0))
   }
 
   private fun facade3() {
+    reseed(263996382L)
     val b = Vector2(nv(), nv()).normalized()
     mix("Vector2.is_normalized", b.isNormalized())
   }
 
   private fun facade4() {
+    reseed(2224206610L)
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     val a1 = nv()
@@ -5269,6 +5630,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade5() {
+    reseed(3447707336L)
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     val a1 = Vector2(nv(), nv()).normalized()
@@ -5278,6 +5640,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade6() {
+    reseed(148442970L)
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     val a1 = Vector2(nv(), nv()).normalized()
@@ -5290,6 +5653,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade7() {
+    reseed(4228098245L)
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     val a1 = Vector2(nv(), nv()).normalized()
@@ -5299,6 +5663,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade8() {
+    reseed(3295687099L)
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     val a1 = Vector2(nv(), nv()).normalized()
@@ -5308,35 +5673,41 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade9() {
+    reseed(1355399367L)
     val b = Vector2(nv(), nv()).normalized()
     val a0 = nv()
     mix("Vector2.rotated", b.rotated(a0))
   }
 
   private fun facade10() {
+    reseed(4108853243L)
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector2.snapped", b.snapped(a0))
   }
 
   private fun facade11() {
+    reseed(644465703L)
     val b = Vector2(nv(), nv()).normalized()
     val a0 = nv()
     mix("Vector2.snappedf", b.snappedf(a0))
   }
 
   private fun facade12() {
+    reseed(544734034L)
     val a0 = nv()
     mix("Vector2.from_angle", Vector2.fromAngle(a0))
   }
 
   private fun facade13() {
+    reseed(892044766L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.angle_to", b.angleTo(a0))
   }
 
   private fun facade14() {
+    reseed(1949204089L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5344,18 +5715,21 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade15() {
+    reseed(1250882196L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.snapped", b.snapped(a0))
   }
 
   private fun facade16() {
+    reseed(1359508214L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = nv()
     mix("Vector3.snappedf", b.snappedf(a0))
   }
 
   private fun facade17() {
+    reseed(3672682928L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = nv()
@@ -5363,6 +5737,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade18() {
+    reseed(3550150277L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = nv()
@@ -5370,6 +5745,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade19() {
+    reseed(4269953967L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5379,6 +5755,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade20() {
+    reseed(2204301897L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5391,6 +5768,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade21() {
+    reseed(2832065180L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5400,6 +5778,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade22() {
+    reseed(3649097212L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5409,22 +5788,26 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade23() {
+    reseed(1853164898L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.outer", b.outer(a0))
   }
 
   private fun facade24() {
+    reseed(3655102293L)
     val b = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.octahedron_encode", b.octahedronEncode())
   }
 
   private fun facade25() {
+    reseed(2781365193L)
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector3.octahedron_decode", Vector3.octahedronDecode(a0))
   }
 
   private fun facade26() {
+    reseed(1889978402L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     val a1 = Vector4(nv(), nv(), nv(), nv())
@@ -5434,6 +5817,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade27() {
+    reseed(2568526592L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     val a1 = Vector4(nv(), nv(), nv(), nv())
@@ -5446,49 +5830,58 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade28() {
+    reseed(1443952833L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.snapped", b.snapped(a0))
   }
 
   private fun facade29() {
+    reseed(599224037L)
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Vector4.snappedf", b.snappedf(a0))
   }
 
   private fun facade30() {
+    reseed(3979569692L)
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_normalized", b.isNormalized())
   }
 
   private fun facade31() {
+    reseed(1777335079L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.is_normalized", b.isNormalized())
   }
 
   private fun facade32() {
+    reseed(2453509247L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.inverse", b.inverse())
   }
 
   private fun facade33() {
+    reseed(1885161605L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.log", b.log())
   }
 
   private fun facade34() {
+    reseed(2076048220L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.exp", b.exp())
   }
 
   private fun facade35() {
+    reseed(1335312816L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.angle_to", b.angleTo(a0))
   }
 
   private fun facade36() {
+    reseed(2527569475L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a1 = nv()
@@ -5496,6 +5889,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade37() {
+    reseed(2437837594L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a1 = nv()
@@ -5503,6 +5897,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade38() {
+    reseed(4164680505L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a1 = Quaternion(nv(), nv(), nv(), nv()).normalized()
@@ -5512,6 +5907,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade39() {
+    reseed(215503487L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a1 = Quaternion(nv(), nv(), nv(), nv()).normalized()
@@ -5527,43 +5923,51 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade40() {
+    reseed(1943237525L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = rs().toLong()
     mix("Quaternion.get_euler", b.getEuler(a0))
   }
 
   private fun facade41() {
+    reseed(766006827L)
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Quaternion.from_euler", Quaternion.fromEuler(a0))
   }
 
   private fun facade42() {
+    reseed(2958602301L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.get_axis", b.getAxis())
   }
 
   private fun facade43() {
+    reseed(3847186903L)
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.get_angle", b.getAngle())
   }
 
   private fun facade44() {
+    reseed(1263822452L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("Plane.normalized", b.normalized())
   }
 
   private fun facade45() {
+    reseed(3128367299L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("Plane.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun facade46() {
+    reseed(1069321945L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("Plane.is_finite", b.isFinite())
   }
 
   private fun facade47() {
+    reseed(1747510588L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a1 = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
@@ -5571,6 +5975,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade48() {
+    reseed(3933953357L)
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5578,87 +5983,103 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade49() {
+    reseed(454345663L)
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.is_finite", b.isFinite())
   }
 
   private fun facade50() {
+    reseed(3059684661L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.abs", b.abs())
   }
 
   private fun facade51() {
+    reseed(709386439L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.is_finite", b.isFinite())
   }
 
   private fun facade52() {
+    reseed(69938452L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("AABB.intersects_plane", b.intersectsPlane(a0))
   }
 
   private fun facade53() {
+    reseed(1669535094L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.intersection", b.intersection(a0))
   }
 
   private fun facade54() {
+    reseed(3123612547L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("AABB.expand", b.expand(a0))
   }
 
   private fun facade55() {
+    reseed(1644480656L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = nv()
     mix("AABB.grow", b.grow(a0))
   }
 
   private fun facade56() {
+    reseed(753136429L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("AABB.get_support", b.getSupport(a0))
   }
 
   private fun facade57() {
+    reseed(2549248724L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_longest_axis", b.getLongestAxis())
   }
 
   private fun facade58() {
+    reseed(3756415047L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_longest_axis_index", b.getLongestAxisIndex())
   }
 
   private fun facade59() {
+    reseed(565661792L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_longest_axis_size", b.getLongestAxisSize())
   }
 
   private fun facade60() {
+    reseed(430104980L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_shortest_axis", b.getShortestAxis())
   }
 
   private fun facade61() {
+    reseed(2072013831L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_shortest_axis_index", b.getShortestAxisIndex())
   }
 
   private fun facade62() {
+    reseed(239093280L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_shortest_axis_size", b.getShortestAxisSize())
   }
 
   private fun facade63() {
+    reseed(2208861699L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = rs().toLong()
     mix("AABB.get_endpoint", b.getEndpoint(a0))
   }
 
   private fun facade64() {
+    reseed(3783579363L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5666,6 +6087,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade65() {
+    reseed(3646249822L)
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5673,6 +6095,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade66() {
+    reseed(2804666462L)
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = nv()
@@ -5680,36 +6103,42 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade67() {
+    reseed(3393633703L)
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Basis.scaled_local", b.scaledLocal(a0))
   }
 
   private fun facade68() {
+    reseed(274287925L)
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = rs().toLong()
     mix("Basis.get_euler", b.getEuler(a0))
   }
 
   private fun facade69() {
+    reseed(1844290142L)
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Basis.tdotx", b.tdotx(a0))
   }
 
   private fun facade70() {
+    reseed(1861067761L)
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Basis.tdoty", b.tdoty(a0))
   }
 
   private fun facade71() {
+    reseed(1810734904L)
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Basis.tdotz", b.tdotz(a0))
   }
 
   private fun facade72() {
+    reseed(3564409251L)
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a1 = nv()
@@ -5717,21 +6146,25 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade73() {
+    reseed(3503827781L)
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     mix("Basis.is_conformal", b.isConformal())
   }
 
   private fun facade74() {
+    reseed(3702803793L)
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     mix("Basis.is_finite", b.isFinite())
   }
 
   private fun facade75() {
+    reseed(2210169423L)
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     mix("Basis.is_orthonormal", b.isOrthonormal())
   }
 
   private fun facade76() {
+    reseed(1944853062L)
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
     val a2 = rb()
@@ -5739,17 +6172,20 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade77() {
+    reseed(3309767200L)
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Basis.from_scale", Basis.fromScale(a0))
   }
 
   private fun facade78() {
+    reseed(1434415051L)
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = rs().toLong()
     mix("Basis.from_euler", Basis.fromEuler(a0, a1))
   }
 
   private fun facade79() {
+    reseed(2519602283L)
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
@@ -5758,6 +6194,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade80() {
+    reseed(3344312871L)
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
@@ -5766,6 +6203,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade81() {
+    reseed(3367845720L)
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
@@ -5773,6 +6211,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade82() {
+    reseed(1661445704L)
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
@@ -5780,6 +6219,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade83() {
+    reseed(2644076473L)
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
@@ -5789,6 +6229,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade84() {
+    reseed(3907275442L)
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 =
@@ -5798,66 +6239,78 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade85() {
+    reseed(3731026072L)
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     mix("Transform3D.is_finite", b.isFinite())
   }
 
   private fun facade86() {
+    reseed(3075929945L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.affine_inverse", b.affineInverse())
   }
 
   private fun facade87() {
+    reseed(812583482L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.get_rotation", b.getRotation())
   }
 
   private fun facade88() {
+    reseed(4001630390L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.get_scale", b.getScale())
   }
 
   private fun facade89() {
+    reseed(452849462L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.get_skew", b.getSkew())
   }
 
   private fun facade90() {
+    reseed(14201020L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.orthonormalized", b.orthonormalized())
   }
 
   private fun facade91() {
+    reseed(533272046L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a0 = nv()
     mix("Transform2D.rotated", b.rotated(a0))
   }
 
   private fun facade92() {
+    reseed(1597501170L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a0 = nv()
     mix("Transform2D.rotated_local", b.rotatedLocal(a0))
   }
 
   private fun facade93() {
+    reseed(935937243L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Transform2D.scaled", b.scaled(a0))
   }
 
   private fun facade94() {
+    reseed(2282704631L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Transform2D.scaled_local", b.scaledLocal(a0))
   }
 
   private fun facade95() {
+    reseed(205337388L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.determinant", b.determinant())
   }
 
   private fun facade96() {
+    reseed(3840743509L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a0 = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a1 = nv()
@@ -5865,32 +6318,38 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade97() {
+    reseed(4113459573L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.is_conformal", b.isConformal())
   }
 
   private fun facade98() {
+    reseed(279613217L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.is_finite", b.isFinite())
   }
 
   private fun facade99() {
+    reseed(2997231894L)
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Transform2D.looking_at", b.lookingAt(a0))
   }
 
   private fun facade100() {
+    reseed(2037519245L)
     val a0 = rb()
     mix("Projection.create_depth_correction", Projection.createDepthCorrection(a0))
   }
 
   private fun facade101() {
+    reseed(3877886108L)
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Projection.create_light_atlas_rect", Projection.createLightAtlasRect(a0))
   }
 
   private fun facade102() {
+    reseed(70092567L)
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -5900,6 +6359,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade103() {
+    reseed(1924306457L)
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -5915,6 +6375,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade104() {
+    reseed(3561263624L)
     val a0 = rs().toLong()
     val a1 = nv()
     val a2 = nv()
@@ -5927,6 +6388,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade105() {
+    reseed(93203008L)
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -5937,6 +6399,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade106() {
+    reseed(370914489L)
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -5949,6 +6412,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade107() {
+    reseed(1296596211L)
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -5959,6 +6423,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade108() {
+    reseed(3680882068L)
     val a0 = nv()
     val a1 = nv()
     val a2 = Vector2(nv(), nv()).normalized()
@@ -5969,11 +6434,13 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade109() {
+    reseed(906607897L)
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("Projection.create_fit_aabb", Projection.createFitAabb(a0))
   }
 
   private fun facade110() {
+    reseed(2124415541L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -5985,6 +6452,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade111() {
+    reseed(2748417366L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -5997,6 +6465,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade112() {
+    reseed(1300385531L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -6009,6 +6478,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade113() {
+    reseed(3005724466L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -6020,6 +6490,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade114() {
+    reseed(352093019L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -6032,12 +6503,14 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade115() {
+    reseed(1735510121L)
     val a0 = nv()
     val a1 = nv()
     mix("Projection.get_fovy", Projection.getFovy(a0, a1))
   }
 
   private fun facade116() {
+    reseed(4257733333L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -6049,6 +6522,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade117() {
+    reseed(1010164118L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -6060,6 +6534,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade118() {
+    reseed(2277952615L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -6071,6 +6546,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade119() {
+    reseed(3088858090L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -6082,6 +6558,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade120() {
+    reseed(2012095392L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -6093,6 +6570,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade121() {
+    reseed(3168976409L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -6104,6 +6582,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade122() {
+    reseed(3181165997L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -6115,6 +6594,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade123() {
+    reseed(3747686722L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -6126,6 +6606,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade124() {
+    reseed(462047092L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -6138,6 +6619,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade125() {
+    reseed(1852854856L)
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -6149,96 +6631,114 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade126() {
+    reseed(727379219L)
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.to_argb32", b.toArgb32())
   }
 
   private fun facade127() {
+    reseed(263067091L)
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.to_abgr32", b.toAbgr32())
   }
 
   private fun facade128() {
+    reseed(1736382735L)
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.to_rgba32", b.toRgba32())
   }
 
   private fun facade129() {
+    reseed(3143797640L)
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.to_argb64", b.toArgb64())
   }
 
   private fun facade130() {
+    reseed(2679485512L)
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.to_abgr64", b.toAbgr64())
   }
 
   private fun facade131() {
+    reseed(4017300276L)
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.to_rgba64", b.toRgba64())
   }
 
   private fun facade132() {
+    reseed(3190090364L)
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Color.lightened", b.lightened(a0))
   }
 
   private fun facade133() {
+    reseed(311710820L)
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Color.darkened", b.darkened(a0))
   }
 
   private fun facade134() {
+    reseed(2800181945L)
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = Color(nv(), nv(), nv(), nv())
     mix("Color.blend", b.blend(a0))
   }
 
   private fun facade135() {
+    reseed(239384130L)
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.srgb_to_linear", b.srgbToLinear())
   }
 
   private fun facade136() {
+    reseed(378897958L)
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.linear_to_srgb", b.linearToSrgb())
   }
 
   private fun facade137() {
+    reseed(1081698678L)
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = Color(nv(), nv(), nv(), nv())
     mix("Color.is_equal_approx", b.isEqualApprox(a0))
   }
 
   private fun facade138() {
+    reseed(2545083323L)
     val a0 = rs().toLong()
     mix("Color.hex", Color.hex(a0))
   }
 
   private fun facade139() {
+    reseed(4192875769L)
     val a0 = rs().toLong()
     mix("Color.hex64", Color.hex64(a0))
   }
 
   private fun facade140() {
+    reseed(1163174751L)
     val a0 = "#ff8000"
     mix("Color.html", Color.html(a0))
   }
 
   private fun facade141() {
+    reseed(502873281L)
     val a0 = "#ff8000"
     mix("Color.html_is_valid", Color.htmlIsValid(a0))
   }
 
   private fun facade142() {
+    reseed(1121670814L)
     val a0 = "#ff8000"
     val a1 = Color(nv(), nv(), nv(), nv())
     mix("Color.from_string", Color.fromString(a0, a1))
   }
 
   private fun facade143() {
+    reseed(4073135496L)
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -6247,6 +6747,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade144() {
+    reseed(1561100125L)
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -6255,11 +6756,13 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade145() {
+    reseed(1227120989L)
     val a0 = rs().toLong()
     mix("Color.from_rgbe9995", Color.fromRgbe9995(a0))
   }
 
   private fun facade146() {
+    reseed(1776734979L)
     val a0 = rs().toLong()
     val a1 = rs().toLong()
     val a2 = rs().toLong()
@@ -6268,36 +6771,42 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade147() {
+    reseed(2858535500L)
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.snapped", b.snapped(a0))
   }
 
   private fun facade148() {
+    reseed(1559312447L)
     val b = Vector2i(ri(), ri())
     val a0 = rs().toLong()
     mix("Vector2i.snappedi", b.snappedi(a0))
   }
 
   private fun facade149() {
+    reseed(3327261133L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.snapped", b.snapped(a0))
   }
 
   private fun facade150() {
+    reseed(3607887148L)
     val b = Vector3i(ri(), ri(), ri())
     val a0 = rs().toLong()
     mix("Vector3i.snappedi", b.snappedi(a0))
   }
 
   private fun facade151() {
+    reseed(3177630110L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.snapped", b.snapped(a0))
   }
 
   private fun facade152() {
+    reseed(533721045L)
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = rs().toLong()
     mix("Vector4i.snappedi", b.snappedi(a0))
@@ -6310,6 +6819,16 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     seed = seed xor (seed ushr 17)
     seed = seed xor ((seed shl 5) and 0xFFFFFFFFL)
     return seed
+  }
+
+  // Every entry draws from a stream of its own, so a new entry changes no other entry's inputs.
+  private var inputRound = 0
+
+  private fun reseed(entry: Long) {
+    seed = (entry xor (inputRound * 2654435761L)) and 0xFFFFFFFFL
+    if (seed == 0L) seed = 2463534242L
+    nextRandom()
+    nextRandom()
   }
 
   // The edge row draws its decimals from EDGE: ±0, NaN, ±INF, .5 ties, a tiny normal.

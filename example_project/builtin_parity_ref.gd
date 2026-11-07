@@ -5,6 +5,7 @@ extends Node2D
 
 const SCALES := [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
 var rng_state := 2463534242
+var input_round := 0
 var TEXT_SAMPLES := ["res://folder/file.tar.gz", "user://a/../b/./c.png", "Hello World", "ünïcödé ÄÖÜ ß", "日本語のテキスト", "emoji 🎉👍 text", "snake_case_name", "camelCaseName", "  padded\t ", "-12.5e3", "a,b,,c", "<tag a=\"v\">&amp;</tag>", "192.168.0.1", "%E3%81%82 x+y"]
 var NODE_PATH_SAMPLES := ["Path/To:prop:sub", "/root/Main/Player", "../Sibling", "%Unique/Child:position:x", ".", "Node", ":only:sub", "", "a::b", ":", "a:", "a//b/", "/", "/:x", "::", "a:b::c", "日本/ü:🎉"]
 var ASCII_SAMPLES := ["Hello World", "snake_case_name", "a,b,,c", "192.168.0.1"]
@@ -23,18 +24,21 @@ var edge_values := [PackedByteArray([0, 0, 0, 0, 0, 0, 0, 0]).decode_double(0),
 
 func _ready() -> void:
 	for i in 256:
+		input_round = i
 		pure_round()
 	report("pure=n=256 " + summary())
 	hashes.clear()
 	hash_order.clear()
 	edge = true
 	for i in 64:
+		input_round = i
 		edge_round()
 	edge = false
 	report("edge=n=64 " + summary())
 	hashes.clear()
 	hash_order.clear()
 	for i in 8:
+		input_round = i
 		facade_round()
 	report("facade=n=8 " + summary())
 	# Task 134 D1: the Web-local methods' components, for the Web build's ulp comparison.
@@ -2873,154 +2877,181 @@ func facade_round() -> void:
 
 
 func pure0() -> void:
+	reseed(2408218736)
 	var l = Vector2(nv(), nv())
 	mix("unary- Vector2", -l)
 
 
 func pure1() -> void:
+	reseed(2941451878)
 	var l = Vector2(nv(), nv())
 	mix("unary+ Vector2", +l)
 
 
 func pure2() -> void:
+	reseed(3770135283)
 	var l = Vector2(nv(), nv())
 	var r = ri()
 	mix("Vector2 * int", l * r)
 
 
 func pure3() -> void:
+	reseed(2545693560)
 	var l = Vector2(nv(), nv())
 	var r = ri()
 	mix("Vector2 / int", l / r)
 
 
 func pure4() -> void:
+	reseed(219221208)
 	var l = Vector2(nv(), nv())
 	var r = nv()
 	mix("Vector2 * float", l * r)
 
 
 func pure5() -> void:
+	reseed(3217091411)
 	var l = Vector2(nv(), nv())
 	var r = nv()
 	mix("Vector2 / float", l / r)
 
 
 func pure6() -> void:
+	reseed(541408971)
 	var l = Vector2(nv(), nv())
 	var r = Vector2(nv(), nv())
 	mix("Vector2 < Vector2", l < r)
 
 
 func pure7() -> void:
+	reseed(1185530214)
 	var l = Vector2(nv(), nv())
 	var r = Vector2(nv(), nv())
 	mix("Vector2 + Vector2", l + r)
 
 
 func pure8() -> void:
+	reseed(652297072)
 	var l = Vector2(nv(), nv())
 	var r = Vector2(nv(), nv())
 	mix("Vector2 - Vector2", l - r)
 
 
 func pure9() -> void:
+	reseed(53276265)
 	var l = Vector2(nv(), nv())
 	var r = Vector2(nv(), nv())
 	mix("Vector2 * Vector2", l * r)
 
 
 func pure10() -> void:
+	reseed(493377282)
 	var l = Vector2(nv(), nv())
 	var r = Vector2(nv(), nv())
 	mix("Vector2 / Vector2", l / r)
 
 
 func pure11() -> void:
+	reseed(2950492876)
 	var l = Vector2(nv(), nv())
 	var r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	mix("Vector2 * Transform2D", l * r)
 
 
 func pure12() -> void:
+	reseed(3239029801)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.direction_to", b.direction_to(a0))
 
 
 func pure13() -> void:
+	reseed(1513576095)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.distance_to", b.distance_to(a0))
 
 
 func pure14() -> void:
+	reseed(4198464593)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.distance_squared_to", b.distance_squared_to(a0))
 
 
 func pure15() -> void:
+	reseed(1572801086)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.length", b.length())
 
 
 func pure16() -> void:
+	reseed(3550342632)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.length_squared", b.length_squared())
 
 
 func pure17() -> void:
+	reseed(2468691926)
 	var b = Vector2(nv(), nv())
 	var a0 = nv()
 	mix("Vector2.limit_length", b.limit_length(a0))
 
 
 func pure18() -> void:
+	reseed(2209434831)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.normalized", b.normalized())
 
 
 func pure19() -> void:
+	reseed(2084264670)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.is_equal_approx", b.is_equal_approx(a0))
 
 
 func pure20() -> void:
+	reseed(970407634)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.is_zero_approx", b.is_zero_approx())
 
 
 func pure21() -> void:
+	reseed(3802917748)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.is_finite", b.is_finite())
 
 
 func pure22() -> void:
+	reseed(3172940786)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.inverse", b.inverse())
 
 
 func pure23() -> void:
+	reseed(2054745108)
 	var b = Vector2(nv(), nv())
 	var a0 = nv()
 	mix("Vector2.posmod", b.posmod(a0))
 
 
 func pure24() -> void:
+	reseed(777788998)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.posmodv", b.posmodv(a0))
 
 
 func pure25() -> void:
+	reseed(1158144939)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.project", b.project(a0))
 
 
 func pure26() -> void:
+	reseed(1710168639)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	var a1 = nv()
@@ -3028,16 +3059,19 @@ func pure26() -> void:
 
 
 func pure27() -> void:
+	reseed(3824829595)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.max_axis_index", b.max_axis_index())
 
 
 func pure28() -> void:
+	reseed(3635196729)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.min_axis_index", b.min_axis_index())
 
 
 func pure29() -> void:
+	reseed(4176435583)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	var a1 = nv()
@@ -3045,71 +3079,84 @@ func pure29() -> void:
 
 
 func pure30() -> void:
+	reseed(2122336217)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.orthogonal", b.orthogonal())
 
 
 func pure31() -> void:
+	reseed(547219716)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.floor", b.floor())
 
 
 func pure32() -> void:
+	reseed(1513214783)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.ceil", b.ceil())
 
 
 func pure33() -> void:
+	reseed(1191847018)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.round", b.round())
 
 
 func pure34() -> void:
+	reseed(2183608290)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.aspect", b.aspect())
 
 
 func pure35() -> void:
+	reseed(3107875105)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.dot", b.dot(a0))
 
 
 func pure36() -> void:
+	reseed(2295000095)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Vector2.slide", b.slide(a0))
 
 
 func pure37() -> void:
+	reseed(78380634)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Vector2.bounce", b.bounce(a0))
 
 
 func pure38() -> void:
+	reseed(3462658799)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Vector2.reflect", b.reflect(a0))
 
 
 func pure39() -> void:
+	reseed(61254490)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.cross", b.cross(a0))
 
 
 func pure40() -> void:
+	reseed(1815746526)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.abs", b.abs())
 
 
 func pure41() -> void:
+	reseed(305833863)
 	var b = Vector2(nv(), nv())
 	mix("Vector2.sign", b.sign())
 
 
 func pure42() -> void:
+	reseed(2844850473)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	var a1 = Vector2(nv(), nv())
@@ -3117,6 +3164,7 @@ func pure42() -> void:
 
 
 func pure43() -> void:
+	reseed(1043887965)
 	var b = Vector2(nv(), nv())
 	var a0 = nv()
 	var a1 = nv()
@@ -3124,187 +3172,220 @@ func pure43() -> void:
 
 
 func pure44() -> void:
+	reseed(3272422798)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.min", b.min(a0))
 
 
 func pure45() -> void:
+	reseed(4123778104)
 	var b = Vector2(nv(), nv())
 	var a0 = nv()
 	mix("Vector2.minf", b.minf(a0))
 
 
 func pure46() -> void:
+	reseed(3036153036)
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.max", b.max(a0))
 
 
 func pure47() -> void:
+	reseed(2356107166)
 	var b = Vector2(nv(), nv())
 	var a0 = nv()
 	mix("Vector2.maxf", b.maxf(a0))
 
 
 func pure48() -> void:
+	reseed(2424996355)
 	var l = Vector3(nv(), nv(), nv())
 	mix("unary- Vector3", -l)
 
 
 func pure49() -> void:
+	reseed(2958229497)
 	var l = Vector3(nv(), nv(), nv())
 	mix("unary+ Vector3", +l)
 
 
 func pure50() -> void:
+	reseed(3377521380)
 	var l = Vector3(nv(), nv(), nv())
 	var r = ri()
 	mix("Vector3 * int", l * r)
 
 
 func pure51() -> void:
+	reseed(1835633447)
 	var l = Vector3(nv(), nv(), nv())
 	var r = ri()
 	mix("Vector3 / int", l / r)
 
 
 func pure52() -> void:
+	reseed(2370979871)
 	var l = Vector3(nv(), nv(), nv())
 	var r = nv()
 	mix("Vector3 * float", l * r)
 
 
 func pure53() -> void:
+	reseed(148931052)
 	var l = Vector3(nv(), nv(), nv())
 	var r = nv()
 	mix("Vector3 / float", l / r)
 
 
 func pure54() -> void:
+	reseed(3343879467)
 	var l = Vector3(nv(), nv(), nv())
 	var r = Vector3(nv(), nv(), nv())
 	mix("Vector3 < Vector3", l < r)
 
 
 func pure55() -> void:
+	reseed(3276956814)
 	var l = Vector3(nv(), nv(), nv())
 	var r = Vector3(nv(), nv(), nv())
 	mix("Vector3 + Vector3", l + r)
 
 
 func pure56() -> void:
+	reseed(1708484320)
 	var l = Vector3(nv(), nv(), nv())
 	var r = Vector3(nv(), nv(), nv())
 	mix("Vector3 - Vector3", l - r)
 
 
 func pure57() -> void:
+	reseed(1882190961)
 	var l = Vector3(nv(), nv(), nv())
 	var r = Vector3(nv(), nv(), nv())
 	mix("Vector3 * Vector3", l * r)
 
 
 func pure58() -> void:
+	reseed(3846203354)
 	var l = Vector3(nv(), nv(), nv())
 	var r = Vector3(nv(), nv(), nv())
 	mix("Vector3 / Vector3", l / r)
 
 
 func pure59() -> void:
+	reseed(1832696475)
 	var l = Vector3(nv(), nv(), nv())
 	var r = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Vector3 * Quaternion", l * r)
 
 
 func pure60() -> void:
+	reseed(1818447147)
 	var l = Vector3(nv(), nv(), nv())
 	var r = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Vector3 * Basis", l * r)
 
 
 func pure61() -> void:
+	reseed(4104719498)
 	var l = Vector3(nv(), nv(), nv())
 	var r = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("Vector3 * Transform3D", l * r)
 
 
 func pure62() -> void:
+	reseed(695953388)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.min_axis_index", b.min_axis_index())
 
 
 func pure63() -> void:
+	reseed(1354666414)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.max_axis_index", b.max_axis_index())
 
 
 func pure64() -> void:
+	reseed(1451728668)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.direction_to", b.direction_to(a0))
 
 
 func pure65() -> void:
+	reseed(4024419308)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.distance_to", b.distance_to(a0))
 
 
 func pure66() -> void:
+	reseed(292019118)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.distance_squared_to", b.distance_squared_to(a0))
 
 
 func pure67() -> void:
+	reseed(4261400983)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.length", b.length())
 
 
 func pure68() -> void:
+	reseed(502161641)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.length_squared", b.length_squared())
 
 
 func pure69() -> void:
+	reseed(2055916247)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector3.limit_length", b.limit_length(a0))
 
 
 func pure70() -> void:
+	reseed(1213793922)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.normalized", b.normalized())
 
 
 func pure71() -> void:
+	reseed(3077200553)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.is_normalized", b.is_normalized())
 
 
 func pure72() -> void:
+	reseed(1139683625)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.is_equal_approx", b.is_equal_approx(a0))
 
 
 func pure73() -> void:
+	reseed(2993431555)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.is_zero_approx", b.is_zero_approx())
 
 
 func pure74() -> void:
+	reseed(888106243)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.is_finite", b.is_finite())
 
 
 func pure75() -> void:
+	reseed(195543569)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.inverse", b.inverse())
 
 
 func pure76() -> void:
+	reseed(2681208398)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	var a1 = Vector3(nv(), nv(), nv())
@@ -3312,6 +3393,7 @@ func pure76() -> void:
 
 
 func pure77() -> void:
+	reseed(3161266424)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = nv()
 	var a1 = nv()
@@ -3319,6 +3401,7 @@ func pure77() -> void:
 
 
 func pure78() -> void:
+	reseed(1937235870)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	var a1 = nv()
@@ -3326,6 +3409,7 @@ func pure78() -> void:
 
 
 func pure79() -> void:
+	reseed(3726347408)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	var a1 = nv()
@@ -3333,218 +3417,257 @@ func pure79() -> void:
 
 
 func pure80() -> void:
+	reseed(1117540114)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.dot", b.dot(a0))
 
 
 func pure81() -> void:
+	reseed(3474009941)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.cross", b.cross(a0))
 
 
 func pure82() -> void:
+	reseed(2199171433)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.abs", b.abs())
 
 
 func pure83() -> void:
+	reseed(1544078475)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.floor", b.floor())
 
 
 func pure84() -> void:
+	reseed(308817102)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.ceil", b.ceil())
 
 
 func pure85() -> void:
+	reseed(2945145221)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.round", b.round())
 
 
 func pure86() -> void:
+	reseed(2511880789)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector3.posmod", b.posmod(a0))
 
 
 func pure87() -> void:
+	reseed(3557825817)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.posmodv", b.posmodv(a0))
 
 
 func pure88() -> void:
+	reseed(254645412)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.project", b.project(a0))
 
 
 func pure89() -> void:
+	reseed(2668297288)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Vector3.slide", b.slide(a0))
 
 
 func pure90() -> void:
+	reseed(547176047)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Vector3.bounce", b.bounce(a0))
 
 
 func pure91() -> void:
+	reseed(2589191412)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Vector3.reflect", b.reflect(a0))
 
 
 func pure92() -> void:
+	reseed(3987136690)
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.sign", b.sign())
 
 
 func pure93() -> void:
+	reseed(887161873)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.min", b.min(a0))
 
 
 func pure94() -> void:
+	reseed(3040479061)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector3.minf", b.minf(a0))
 
 
 func pure95() -> void:
+	reseed(1190438943)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.max", b.max(a0))
 
 
 func pure96() -> void:
+	reseed(740636283)
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector3.maxf", b.maxf(a0))
 
 
 func pure97() -> void:
+	reseed(2508884450)
 	var l = Vector4(nv(), nv(), nv(), nv())
 	mix("unary- Vector4", -l)
 
 
 func pure98() -> void:
+	reseed(2975007116)
 	var l = Vector4(nv(), nv(), nv(), nv())
 	mix("unary+ Vector4", +l)
 
 
 func pure99() -> void:
+	reseed(1367022229)
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = ri()
 	mix("Vector4 * int", l * r)
 
 
 func pure100() -> void:
+	reseed(1680117682)
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = ri()
 	mix("Vector4 / int", l / r)
 
 
 func pure101() -> void:
+	reseed(2303104014)
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = nv()
 	mix("Vector4 * float", l * r)
 
 
 func pure102() -> void:
+	reseed(2290904617)
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = nv()
 	mix("Vector4 / float", l / r)
 
 
 func pure103() -> void:
+	reseed(3123324175)
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4 < Vector4", l < r)
 
 
 func pure104() -> void:
+	reseed(4131127154)
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4 + Vector4", l + r)
 
 
 func pure105() -> void:
+	reseed(3601267420)
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4 - Vector4", l - r)
 
 
 func pure106() -> void:
+	reseed(3678567357)
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4 * Vector4", l * r)
 
 
 func pure107() -> void:
+	reseed(636176142)
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4 / Vector4", l / r)
 
 
 func pure108() -> void:
+	reseed(3563492129)
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Vector4 * Projection", l * r)
 
 
 func pure109() -> void:
+	reseed(2442273319)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.min_axis_index", b.min_axis_index())
 
 
 func pure110() -> void:
+	reseed(1326971597)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.max_axis_index", b.max_axis_index())
 
 
 func pure111() -> void:
+	reseed(3707877544)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.length", b.length())
 
 
 func pure112() -> void:
+	reseed(625522230)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.length_squared", b.length_squared())
 
 
 func pure113() -> void:
+	reseed(3826345756)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.abs", b.abs())
 
 
 func pure114() -> void:
+	reseed(2129315045)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.sign", b.sign())
 
 
 func pure115() -> void:
+	reseed(3690219138)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.floor", b.floor())
 
 
 func pure116() -> void:
+	reseed(4256840069)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.ceil", b.ceil())
 
 
 func pure117() -> void:
+	reseed(4121978548)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.round", b.round())
 
 
 func pure118() -> void:
+	reseed(341271245)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	var a1 = nv()
@@ -3552,18 +3675,21 @@ func pure118() -> void:
 
 
 func pure119() -> void:
+	reseed(1599763954)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector4.posmod", b.posmod(a0))
 
 
 func pure120() -> void:
+	reseed(2674327244)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.posmodv", b.posmodv(a0))
 
 
 func pure121() -> void:
+	reseed(2077365883)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	var a1 = Vector4(nv(), nv(), nv(), nv())
@@ -3571,6 +3697,7 @@ func pure121() -> void:
 
 
 func pure122() -> void:
+	reseed(146329511)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = nv()
 	var a1 = nv()
@@ -3578,203 +3705,239 @@ func pure122() -> void:
 
 
 func pure123() -> void:
+	reseed(3257113105)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.normalized", b.normalized())
 
 
 func pure124() -> void:
+	reseed(3662684755)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.direction_to", b.direction_to(a0))
 
 
 func pure125() -> void:
+	reseed(77677881)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.distance_to", b.distance_to(a0))
 
 
 func pure126() -> void:
+	reseed(3660589391)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.distance_squared_to", b.distance_squared_to(a0))
 
 
 func pure127() -> void:
+	reseed(3489047403)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.dot", b.dot(a0))
 
 
 func pure128() -> void:
+	reseed(636035608)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.inverse", b.inverse())
 
 
 func pure129() -> void:
+	reseed(748306856)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.is_equal_approx", b.is_equal_approx(a0))
 
 
 func pure130() -> void:
+	reseed(1969951556)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.is_zero_approx", b.is_zero_approx())
 
 
 func pure131() -> void:
+	reseed(11997050)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.is_finite", b.is_finite())
 
 
 func pure132() -> void:
+	reseed(2335716888)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.min", b.min(a0))
 
 
 func pure133() -> void:
+	reseed(2810038362)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector4.minf", b.minf(a0))
 
 
 func pure134() -> void:
+	reseed(2706104434)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.max", b.max(a0))
 
 
 func pure135() -> void:
+	reseed(4268867452)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector4.maxf", b.maxf(a0))
 
 
 func pure136() -> void:
+	reseed(3597679725)
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("unary- Quaternion", -l)
 
 
 func pure137() -> void:
+	reseed(2444234883)
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("unary+ Quaternion", +l)
 
 
 func pure138() -> void:
+	reseed(2851289822)
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = ri()
 	mix("Quaternion * int", l * r)
 
 
 func pure139() -> void:
+	reseed(1098717081)
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = ri()
 	mix("Quaternion / int", l / r)
 
 
 func pure140() -> void:
+	reseed(4221021701)
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = nv()
 	mix("Quaternion * float", l * r)
 
 
 func pure141() -> void:
+	reseed(1328898402)
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = nv()
 	mix("Quaternion / float", l / r)
 
 
 func pure142() -> void:
+	reseed(2752083523)
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = Vector3(nv(), nv(), nv())
 	mix("Quaternion * Vector3", l * r)
 
 
 func pure143() -> void:
+	reseed(2392759460)
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion + Quaternion", l + r)
 
 
 func pure144() -> void:
+	reseed(2647852722)
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion - Quaternion", l - r)
 
 
 func pure145() -> void:
+	reseed(2586672685)
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion * Quaternion", l * r)
 
 
 func pure146() -> void:
+	reseed(517160897)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.length", b.length())
 
 
 func pure147() -> void:
+	reseed(1822887831)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.length_squared", b.length_squared())
 
 
 func pure148() -> void:
+	reseed(2179064044)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.normalized", b.normalized())
 
 
 func pure149() -> void:
+	reseed(2943240299)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.is_equal_approx", b.is_equal_approx(a0))
 
 
 func pure150() -> void:
+	reseed(4177444529)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.is_finite", b.is_finite())
 
 
 func pure151() -> void:
+	reseed(4095541124)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.dot", b.dot(a0))
 
 
 func pure152() -> void:
+	reseed(2743723189)
 	var l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	mix("unary- Plane", -l)
 
 
 func pure153() -> void:
+	reseed(1715104491)
 	var l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	mix("unary+ Plane", +l)
 
 
 func pure154() -> void:
+	reseed(915557820)
 	var l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var r = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("Plane * Transform3D", l * r)
 
 
 func pure155() -> void:
+	reseed(3879814381)
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	mix("Plane.get_center", b.get_center())
 
 
 func pure156() -> void:
+	reseed(3539735307)
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Plane.is_point_over", b.is_point_over(a0))
 
 
 func pure157() -> void:
+	reseed(1560040574)
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Plane.distance_to", b.distance_to(a0))
 
 
 func pure158() -> void:
+	reseed(4197163150)
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	var a1 = nv()
@@ -3782,12 +3945,14 @@ func pure158() -> void:
 
 
 func pure159() -> void:
+	reseed(4145482154)
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Plane.project", b.project(a0))
 
 
 func pure160() -> void:
+	reseed(1589364528)
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	var a1 = Vector3(nv(), nv(), nv())
@@ -3795,39 +3960,46 @@ func pure160() -> void:
 
 
 func pure161() -> void:
+	reseed(314846183)
 	var l = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	mix("Rect2 * Transform2D", l * r)
 
 
 func pure162() -> void:
+	reseed(3452985387)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.get_center", b.get_center())
 
 
 func pure163() -> void:
+	reseed(1378255491)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.get_area", b.get_area())
 
 
 func pure164() -> void:
+	reseed(16292519)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.has_area", b.has_area())
 
 
 func pure165() -> void:
+	reseed(3997273460)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Vector2(nv(), nv())
 	mix("Rect2.has_point", b.has_point(a0))
 
 
 func pure166() -> void:
+	reseed(3234829821)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.is_equal_approx", b.is_equal_approx(a0))
 
 
 func pure167() -> void:
+	reseed(585162897)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a1 = rb()
@@ -3835,42 +4007,49 @@ func pure167() -> void:
 
 
 func pure168() -> void:
+	reseed(1583904209)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.encloses", b.encloses(a0))
 
 
 func pure169() -> void:
+	reseed(919617246)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.intersection", b.intersection(a0))
 
 
 func pure170() -> void:
+	reseed(1408174913)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.merge", b.merge(a0))
 
 
 func pure171() -> void:
+	reseed(822394139)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Vector2(nv(), nv())
 	mix("Rect2.expand", b.expand(a0))
 
 
 func pure172() -> void:
+	reseed(1527357237)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Vector2(nv(), nv())
 	mix("Rect2.get_support", b.get_support(a0))
 
 
 func pure173() -> void:
+	reseed(3806890648)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = nv()
 	mix("Rect2.grow", b.grow(a0))
 
 
 func pure174() -> void:
+	reseed(328486878)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = rs()
 	var a1 = nv()
@@ -3878,6 +4057,7 @@ func pure174() -> void:
 
 
 func pure175() -> void:
+	reseed(3521964486)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = nv()
 	var a1 = nv()
@@ -3887,396 +4067,465 @@ func pure175() -> void:
 
 
 func pure176() -> void:
+	reseed(1462396157)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.abs", b.abs())
 
 
 func pure177() -> void:
+	reseed(2471085742)
 	var l = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var r = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("AABB * Transform3D", l * r)
 
 
 func pure178() -> void:
+	reseed(3317731379)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.get_center", b.get_center())
 
 
 func pure179() -> void:
+	reseed(1470041184)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.get_volume", b.get_volume())
 
 
 func pure180() -> void:
+	reseed(2420616412)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.has_volume", b.has_volume())
 
 
 func pure181() -> void:
+	reseed(4140279721)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.has_surface", b.has_surface())
 
 
 func pure182() -> void:
+	reseed(3997791804)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("AABB.has_point", b.has_point(a0))
 
 
 func pure183() -> void:
+	reseed(1542440885)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.is_equal_approx", b.is_equal_approx(a0))
 
 
 func pure184() -> void:
+	reseed(31879161)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.intersects", b.intersects(a0))
 
 
 func pure185() -> void:
+	reseed(1020225673)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.encloses", b.encloses(a0))
 
 
 func pure186() -> void:
+	reseed(954798953)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.merge", b.merge(a0))
 
 
 func pure187() -> void:
+	reseed(3888026430)
 	var l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var r = ri()
 	mix("Basis * int", l * r)
 
 
 func pure188() -> void:
+	reseed(1764391545)
 	var l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var r = ri()
 	mix("Basis / int", l / r)
 
 
 func pure189() -> void:
+	reseed(2817517157)
 	var l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var r = nv()
 	mix("Basis * float", l * r)
 
 
 func pure190() -> void:
+	reseed(4241534530)
 	var l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var r = nv()
 	mix("Basis / float", l / r)
 
 
 func pure191() -> void:
+	reseed(417053667)
 	var l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var r = Vector3(nv(), nv(), nv())
 	mix("Basis * Vector3", l * r)
 
 
 func pure192() -> void:
+	reseed(2590525357)
 	var l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var r = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis * Basis", l * r)
 
 
 func pure193() -> void:
+	reseed(1792232159)
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.inverse", b.inverse())
 
 
 func pure194() -> void:
+	reseed(2777653080)
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.transposed", b.transposed())
 
 
 func pure195() -> void:
+	reseed(3340755916)
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.orthonormalized", b.orthonormalized())
 
 
 func pure196() -> void:
+	reseed(603529372)
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.determinant", b.determinant())
 
 
 func pure197() -> void:
+	reseed(2235769835)
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Basis.scaled", b.scaled(a0))
 
 
 func pure198() -> void:
+	reseed(2709661926)
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.get_scale", b.get_scale())
 
 
 func pure199() -> void:
+	reseed(1619399883)
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var a0 = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.is_equal_approx", b.is_equal_approx(a0))
 
 
 func pure200() -> void:
+	reseed(1745173391)
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.get_rotation_quaternion", b.get_rotation_quaternion())
 
 
 func pure201() -> void:
+	reseed(718197479)
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = ri()
 	mix("Transform3D * int", l * r)
 
 
 func pure202() -> void:
+	reseed(2684542884)
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = ri()
 	mix("Transform3D / int", l / r)
 
 
 func pure203() -> void:
+	reseed(2354633388)
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = nv()
 	mix("Transform3D * float", l * r)
 
 
 func pure204() -> void:
+	reseed(1452311007)
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = nv()
 	mix("Transform3D / float", l / r)
 
 
 func pure205() -> void:
+	reseed(145590810)
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = Vector3(nv(), nv(), nv())
 	mix("Transform3D * Vector3", l * r)
 
 
 func pure206() -> void:
+	reseed(3007220728)
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	mix("Transform3D * Plane", l * r)
 
 
 func pure207() -> void:
+	reseed(3022722904)
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("Transform3D * AABB", l * r)
 
 
 func pure208() -> void:
+	reseed(1698483241)
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("Transform3D * Transform3D", l * r)
 
 
 func pure209() -> void:
+	reseed(116775411)
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = PackedVector3Array([Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())])
 	mix("Transform3D * PackedVector3Array", l * r)
 
 
 func pure210() -> void:
+	reseed(3130060046)
 	var b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("Transform3D.inverse", b.inverse())
 
 
 func pure211() -> void:
+	reseed(1730131442)
 	var b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("Transform3D.affine_inverse", b.affine_inverse())
 
 
 func pure212() -> void:
+	reseed(3141626533)
 	var b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("Transform3D.orthonormalized", b.orthonormalized())
 
 
 func pure213() -> void:
+	reseed(350605992)
 	var b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Transform3D.translated", b.translated(a0))
 
 
 func pure214() -> void:
+	reseed(1956012088)
 	var b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Transform3D.translated_local", b.translated_local(a0))
 
 
 func pure215() -> void:
+	reseed(2321045066)
 	var b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var a0 = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("Transform3D.is_equal_approx", b.is_equal_approx(a0))
 
 
 func pure216() -> void:
+	reseed(2073728526)
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = ri()
 	mix("Transform2D * int", l * r)
 
 
 func pure217() -> void:
+	reseed(3203301385)
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = ri()
 	mix("Transform2D / int", l / r)
 
 
 func pure218() -> void:
+	reseed(3833350709)
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = nv()
 	mix("Transform2D * float", l * r)
 
 
 func pure219() -> void:
+	reseed(1067948050)
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = nv()
 	mix("Transform2D / float", l / r)
 
 
 func pure220() -> void:
+	reseed(2969098240)
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = Vector2(nv(), nv())
 	mix("Transform2D * Vector2", l * r)
 
 
 func pure221() -> void:
+	reseed(1670842623)
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Transform2D * Rect2", l * r)
 
 
 func pure222() -> void:
+	reseed(1632460141)
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	mix("Transform2D * Transform2D", l * r)
 
 
 func pure223() -> void:
+	reseed(844601705)
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = PackedVector2Array([Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv())])
 	mix("Transform2D * PackedVector2Array", l * r)
 
 
 func pure224() -> void:
+	reseed(384113135)
 	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	mix("Transform2D.inverse", b.inverse())
 
 
 func pure225() -> void:
+	reseed(1027120134)
 	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	mix("Transform2D.get_origin", b.get_origin())
 
 
 func pure226() -> void:
+	reseed(2619053927)
 	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var a0 = Vector2(nv(), nv())
 	mix("Transform2D.translated", b.translated(a0))
 
 
 func pure227() -> void:
+	reseed(544027331)
 	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var a0 = Vector2(nv(), nv())
 	mix("Transform2D.translated_local", b.translated_local(a0))
 
 
 func pure228() -> void:
+	reseed(917391560)
 	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var a0 = Vector2(nv(), nv())
 	mix("Transform2D.basis_xform", b.basis_xform(a0))
 
 
 func pure229() -> void:
+	reseed(3527981608)
 	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var a0 = Vector2(nv(), nv())
 	mix("Transform2D.basis_xform_inv", b.basis_xform_inv(a0))
 
 
 func pure230() -> void:
+	reseed(3049468443)
 	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var a0 = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	mix("Transform2D.is_equal_approx", b.is_equal_approx(a0))
 
 
 func pure231() -> void:
+	reseed(2715974335)
 	var l = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	var r = Vector4(nv(), nv(), nv(), nv())
 	mix("Projection * Vector4", l * r)
 
 
 func pure232() -> void:
+	reseed(3788860319)
 	var l = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	var r = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Projection * Projection", l * r)
 
 
 func pure233() -> void:
+	reseed(805697464)
 	var l = Color(nv(), nv(), nv(), nv())
 	mix("unary- Color", -l)
 
 
 func pure234() -> void:
+	reseed(4179669938)
 	var l = Color(nv(), nv(), nv(), nv())
 	mix("unary+ Color", +l)
 
 
 func pure235() -> void:
+	reseed(3518752843)
 	var l = Color(nv(), nv(), nv(), nv())
 	var r = ri()
 	mix("Color * int", l * r)
 
 
 func pure236() -> void:
+	reseed(3081088656)
 	var l = Color(nv(), nv(), nv(), nv())
 	var r = ri()
 	mix("Color / int", l / r)
 
 
 func pure237() -> void:
+	reseed(1542719536)
 	var l = Color(nv(), nv(), nv(), nv())
 	var r = nv()
 	mix("Color * float", l * r)
 
 
 func pure238() -> void:
+	reseed(527383179)
 	var l = Color(nv(), nv(), nv(), nv())
 	var r = nv()
 	mix("Color / float", l / r)
 
 
 func pure239() -> void:
+	reseed(2201858938)
 	var l = Color(nv(), nv(), nv(), nv())
 	var r = Color(nv(), nv(), nv(), nv())
 	mix("Color + Color", l + r)
 
 
 func pure240() -> void:
+	reseed(3587874176)
 	var l = Color(nv(), nv(), nv(), nv())
 	var r = Color(nv(), nv(), nv(), nv())
 	mix("Color - Color", l - r)
 
 
 func pure241() -> void:
+	reseed(2238950341)
 	var l = Color(nv(), nv(), nv(), nv())
 	var r = Color(nv(), nv(), nv(), nv())
 	mix("Color * Color", l * r)
 
 
 func pure242() -> void:
+	reseed(86694990)
 	var l = Color(nv(), nv(), nv(), nv())
 	var r = Color(nv(), nv(), nv(), nv())
 	mix("Color / Color", l / r)
 
 
 func pure243() -> void:
+	reseed(3983162445)
 	var b = Color(nv(), nv(), nv(), nv())
 	var a0 = rb()
 	mix("Color.to_html", b.to_html(a0))
 
 
 func pure244() -> void:
+	reseed(319613249)
 	var b = Color(nv(), nv(), nv(), nv())
 	var a0 = Color(nv(), nv(), nv(), nv())
 	var a1 = Color(nv(), nv(), nv(), nv())
@@ -4284,11 +4533,13 @@ func pure244() -> void:
 
 
 func pure245() -> void:
+	reseed(278459419)
 	var b = Color(nv(), nv(), nv(), nv())
 	mix("Color.inverted", b.inverted())
 
 
 func pure246() -> void:
+	reseed(661654487)
 	var b = Color(nv(), nv(), nv(), nv())
 	var a0 = Color(nv(), nv(), nv(), nv())
 	var a1 = nv()
@@ -4296,134 +4547,158 @@ func pure246() -> void:
 
 
 func pure247() -> void:
+	reseed(3280328687)
 	var b = Color(nv(), nv(), nv(), nv())
 	mix("Color.get_luminance", b.get_luminance())
 
 
 func pure248() -> void:
+	reseed(268937051)
 	var l = Vector2i(ri(), ri())
 	mix("unary- Vector2i", -l)
 
 
 func pure249() -> void:
+	reseed(245756317)
 	var l = Vector2i(ri(), ri())
 	mix("unary+ Vector2i", +l)
 
 
 func pure250() -> void:
+	reseed(3445010572)
 	var l = Vector2i(ri(), ri())
 	var r = ri()
 	mix("Vector2i * int", l * r)
 
 
 func pure251() -> void:
+	reseed(286226511)
 	var l = Vector2i(ri(), ri())
 	var r = rnz()
 	mix("Vector2i / int", l / r)
 
 
 func pure252() -> void:
+	reseed(2208992989)
 	var l = Vector2i(ri(), ri())
 	var r = rnz()
 	mix("Vector2i % int", l % r)
 
 
 func pure253() -> void:
+	reseed(3704012359)
 	var l = Vector2i(ri(), ri())
 	var r = nv()
 	mix("Vector2i * float", l * r)
 
 
 func pure254() -> void:
+	reseed(174201044)
 	var l = Vector2i(ri(), ri())
 	var r = nv()
 	mix("Vector2i / float", l / r)
 
 
 func pure255() -> void:
+	reseed(1369372827)
 	var l = Vector2i(ri(), ri())
 	var r = Vector2i(ri(), ri())
 	mix("Vector2i < Vector2i", l < r)
 
 
 func pure256() -> void:
+	reseed(1364969968)
 	var l = Vector2i(ri(), ri())
 	var r = Vector2i(ri(), ri())
 	mix("Vector2i + Vector2i", l + r)
 
 
 func pure257() -> void:
+	reseed(1505180742)
 	var l = Vector2i(ri(), ri())
 	var r = Vector2i(ri(), ri())
 	mix("Vector2i - Vector2i", l - r)
 
 
 func pure258() -> void:
+	reseed(82796237)
 	var l = Vector2i(ri(), ri())
 	var r = Vector2i(ri(), ri())
 	mix("Vector2i * Vector2i", l * r)
 
 
 func pure259() -> void:
+	reseed(2232094404)
 	var l = Vector2i(ri(), ri())
 	var r = Vector2i(rnz(), rnz())
 	mix("Vector2i / Vector2i", l / r)
 
 
 func pure260() -> void:
+	reseed(1064143102)
 	var l = Vector2i(ri(), ri())
 	var r = Vector2i(rnz(), rnz())
 	mix("Vector2i % Vector2i", l % r)
 
 
 func pure261() -> void:
+	reseed(4099120283)
 	var b = Vector2i(ri(), ri())
 	mix("Vector2i.aspect", b.aspect())
 
 
 func pure262() -> void:
+	reseed(1645239702)
 	var b = Vector2i(ri(), ri())
 	mix("Vector2i.max_axis_index", b.max_axis_index())
 
 
 func pure263() -> void:
+	reseed(3245303556)
 	var b = Vector2i(ri(), ri())
 	mix("Vector2i.min_axis_index", b.min_axis_index())
 
 
 func pure264() -> void:
+	reseed(757457108)
 	var b = Vector2i(ri(), ri())
 	var a0 = Vector2i(ri(), ri())
 	mix("Vector2i.distance_to", b.distance_to(a0))
 
 
 func pure265() -> void:
+	reseed(892286886)
 	var b = Vector2i(ri(), ri())
 	var a0 = Vector2i(ri(), ri())
 	mix("Vector2i.distance_squared_to", b.distance_squared_to(a0))
 
 
 func pure266() -> void:
+	reseed(235317471)
 	var b = Vector2i(ri(), ri())
 	mix("Vector2i.length", b.length())
 
 
 func pure267() -> void:
+	reseed(406270017)
 	var b = Vector2i(ri(), ri())
 	mix("Vector2i.length_squared", b.length_squared())
 
 
 func pure268() -> void:
+	reseed(2688769930)
 	var b = Vector2i(ri(), ri())
 	mix("Vector2i.sign", b.sign())
 
 
 func pure269() -> void:
+	reseed(3750415249)
 	var b = Vector2i(ri(), ri())
 	mix("Vector2i.abs", b.abs())
 
 
 func pure270() -> void:
+	reseed(2146359190)
 	var b = Vector2i(ri(), ri())
 	var a0 = Vector2i(ri(), ri())
 	var a1 = Vector2i(ri(), ri())
@@ -4431,6 +4706,7 @@ func pure270() -> void:
 
 
 func pure271() -> void:
+	reseed(1677592173)
 	var b = Vector2i(ri(), ri())
 	var a0 = ri()
 	var a1 = ri()
@@ -4438,148 +4714,174 @@ func pure271() -> void:
 
 
 func pure272() -> void:
+	reseed(3510021193)
 	var b = Vector2i(ri(), ri())
 	var a0 = Vector2i(ri(), ri())
 	mix("Vector2i.min", b.min(a0))
 
 
 func pure273() -> void:
+	reseed(2031154784)
 	var b = Vector2i(ri(), ri())
 	var a0 = ri()
 	mix("Vector2i.mini", b.mini(a0))
 
 
 func pure274() -> void:
+	reseed(3273854599)
 	var b = Vector2i(ri(), ri())
 	var a0 = Vector2i(ri(), ri())
 	mix("Vector2i.max", b.max(a0))
 
 
 func pure275() -> void:
+	reseed(506495146)
 	var b = Vector2i(ri(), ri())
 	var a0 = ri()
 	mix("Vector2i.maxi", b.maxi(a0))
 
 
 func pure276() -> void:
+	reseed(4094381278)
 	var l = Vector3i(ri(), ri(), ri())
 	mix("unary- Vector3i", -l)
 
 
 func pure277() -> void:
+	reseed(581455792)
 	var l = Vector3i(ri(), ri(), ri())
 	mix("unary+ Vector3i", +l)
 
 
 func pure278() -> void:
+	reseed(2433024929)
 	var l = Vector3i(ri(), ri(), ri())
 	var r = ri()
 	mix("Vector3i * int", l * r)
 
 
 func pure279() -> void:
+	reseed(2419818214)
 	var l = Vector3i(ri(), ri(), ri())
 	var r = rnz()
 	mix("Vector3i / int", l / r)
 
 
 func pure280() -> void:
+	reseed(2687185496)
 	var l = Vector3i(ri(), ri(), ri())
 	var r = rnz()
 	mix("Vector3i % int", l % r)
 
 
 func pure281() -> void:
+	reseed(3113742250)
 	var l = Vector3i(ri(), ri(), ri())
 	var r = nv()
 	mix("Vector3i * float", l * r)
 
 
 func pure282() -> void:
+	reseed(4215552365)
 	var l = Vector3i(ri(), ri(), ri())
 	var r = nv()
 	mix("Vector3i / float", l / r)
 
 
 func pure283() -> void:
+	reseed(877801977)
 	var l = Vector3i(ri(), ri(), ri())
 	var r = Vector3i(ri(), ri(), ri())
 	mix("Vector3i < Vector3i", l < r)
 
 
 func pure284() -> void:
+	reseed(3681701042)
 	var l = Vector3i(ri(), ri(), ri())
 	var r = Vector3i(ri(), ri(), ri())
 	mix("Vector3i + Vector3i", l + r)
 
 
 func pure285() -> void:
+	reseed(2491387052)
 	var l = Vector3i(ri(), ri(), ri())
 	var r = Vector3i(ri(), ri(), ri())
 	mix("Vector3i - Vector3i", l - r)
 
 
 func pure286() -> void:
+	reseed(105969943)
 	var l = Vector3i(ri(), ri(), ri())
 	var r = Vector3i(ri(), ri(), ri())
 	mix("Vector3i * Vector3i", l * r)
 
 
 func pure287() -> void:
+	reseed(3462629302)
 	var l = Vector3i(ri(), ri(), ri())
 	var r = Vector3i(rnz(), rnz(), rnz())
 	mix("Vector3i / Vector3i", l / r)
 
 
 func pure288() -> void:
+	reseed(1730158804)
 	var l = Vector3i(ri(), ri(), ri())
 	var r = Vector3i(rnz(), rnz(), rnz())
 	mix("Vector3i % Vector3i", l % r)
 
 
 func pure289() -> void:
+	reseed(872518043)
 	var b = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.min_axis_index", b.min_axis_index())
 
 
 func pure290() -> void:
+	reseed(1511773513)
 	var b = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.max_axis_index", b.max_axis_index())
 
 
 func pure291() -> void:
+	reseed(1044148789)
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.distance_to", b.distance_to(a0))
 
 
 func pure292() -> void:
+	reseed(3220969291)
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.distance_squared_to", b.distance_squared_to(a0))
 
 
 func pure293() -> void:
+	reseed(3304624780)
 	var b = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.length", b.length())
 
 
 func pure294() -> void:
+	reseed(3895359002)
 	var b = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.length_squared", b.length_squared())
 
 
 func pure295() -> void:
+	reseed(4222841569)
 	var b = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.sign", b.sign())
 
 
 func pure296() -> void:
+	reseed(2253829664)
 	var b = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.abs", b.abs())
 
 
 func pure297() -> void:
+	reseed(3292176863)
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = Vector3i(ri(), ri(), ri())
 	var a1 = Vector3i(ri(), ri(), ri())
@@ -4587,6 +4889,7 @@ func pure297() -> void:
 
 
 func pure298() -> void:
+	reseed(2655818114)
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = ri()
 	var a1 = ri()
@@ -4594,136 +4897,160 @@ func pure298() -> void:
 
 
 func pure299() -> void:
+	reseed(2631592908)
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.min", b.min(a0))
 
 
 func pure300() -> void:
+	reseed(2443244735)
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = ri()
 	mix("Vector3i.mini", b.mini(a0))
 
 
 func pure301() -> void:
+	reseed(2865199646)
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.max", b.max(a0))
 
 
 func pure302() -> void:
+	reseed(1325779285)
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = ri()
 	mix("Vector3i.maxi", b.maxi(a0))
 
 
 func pure303() -> void:
+	reseed(4095116753)
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	mix("unary- Vector4i", -l)
 
 
 func pure304() -> void:
+	reseed(179043199)
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	mix("unary+ Vector4i", +l)
 
 
 func pure305() -> void:
+	reseed(3886032562)
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = ri()
 	mix("Vector4i * int", l * r)
 
 
 func pure306() -> void:
+	reseed(3572937109)
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = rnz()
 	mix("Vector4i / int", l / r)
 
 
 func pure307() -> void:
+	reseed(3548402615)
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = rnz()
 	mix("Vector4i % int", l % r)
 
 
 func pure308() -> void:
+	reseed(2318621993)
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = nv()
 	mix("Vector4i * float", l * r)
 
 
 func pure309() -> void:
+	reseed(2330821390)
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = nv()
 	mix("Vector4i / float", l / r)
 
 
 func pure310() -> void:
+	reseed(735041147)
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i < Vector4i", l < r)
 
 
 func pure311() -> void:
+	reseed(3756608)
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i + Vector4i", l + r)
 
 
 func pure312() -> void:
+	reseed(2387159950)
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i - Vector4i", l - r)
 
 
 func pure313() -> void:
+	reseed(124152869)
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i * Vector4i", l * r)
 
 
 func pure314() -> void:
+	reseed(3970823100)
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = Vector4i(rnz(), rnz(), rnz(), rnz())
 	mix("Vector4i / Vector4i", l / r)
 
 
 func pure315() -> void:
+	reseed(791261798)
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = Vector4i(rnz(), rnz(), rnz(), rnz())
 	mix("Vector4i % Vector4i", l % r)
 
 
 func pure316() -> void:
+	reseed(47588366)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.min_axis_index", b.min_axis_index())
 
 
 func pure317() -> void:
+	reseed(481429676)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.max_axis_index", b.max_axis_index())
 
 
 func pure318() -> void:
+	reseed(3251204525)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.length", b.length())
 
 
 func pure319() -> void:
+	reseed(242646739)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.length_squared", b.length_squared())
 
 
 func pure320() -> void:
+	reseed(2385785324)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.sign", b.sign())
 
 
 func pure321() -> void:
+	reseed(2479388499)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.abs", b.abs())
 
 
 func pure322() -> void:
+	reseed(1814180564)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = Vector4i(ri(), ri(), ri(), ri())
 	var a1 = Vector4i(ri(), ri(), ri(), ri())
@@ -4731,6 +5058,7 @@ func pure322() -> void:
 
 
 func pure323() -> void:
+	reseed(4141211527)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = ri()
 	var a1 = ri()
@@ -4738,99 +5066,116 @@ func pure323() -> void:
 
 
 func pure324() -> void:
+	reseed(1969964159)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.min", b.min(a0))
 
 
 func pure325() -> void:
+	reseed(3990630050)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = ri()
 	mix("Vector4i.mini", b.mini(a0))
 
 
 func pure326() -> void:
+	reseed(2203467729)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.max", b.max(a0))
 
 
 func pure327() -> void:
+	reseed(2026262184)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = ri()
 	mix("Vector4i.maxi", b.maxi(a0))
 
 
 func pure328() -> void:
+	reseed(259203722)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.distance_to", b.distance_to(a0))
 
 
 func pure329() -> void:
+	reseed(3369025712)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.distance_squared_to", b.distance_squared_to(a0))
 
 
 func pure330() -> void:
+	reseed(2561521356)
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.get_center", b.get_center())
 
 
 func pure331() -> void:
+	reseed(3278307100)
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.get_area", b.get_area())
 
 
 func pure332() -> void:
+	reseed(3117956200)
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.has_area", b.has_area())
 
 
 func pure333() -> void:
+	reseed(827932525)
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = Vector2i(ri(), ri())
 	mix("Rect2i.has_point", b.has_point(a0))
 
 
 func pure334() -> void:
+	reseed(275157174)
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.intersects", b.intersects(a0))
 
 
 func pure335() -> void:
+	reseed(3582972378)
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.encloses", b.encloses(a0))
 
 
 func pure336() -> void:
+	reseed(176222145)
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.intersection", b.intersection(a0))
 
 
 func pure337() -> void:
+	reseed(3828809144)
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.merge", b.merge(a0))
 
 
 func pure338() -> void:
+	reseed(3850027988)
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = Vector2i(ri(), ri())
 	mix("Rect2i.expand", b.expand(a0))
 
 
 func pure339() -> void:
+	reseed(938186727)
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = ri()
 	mix("Rect2i.grow", b.grow(a0))
 
 
 func pure340() -> void:
+	reseed(3237362659)
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = rs()
 	var a1 = ri()
@@ -4838,6 +5183,7 @@ func pure340() -> void:
 
 
 func pure341() -> void:
+	reseed(2785431763)
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = ri()
 	var a1 = ri()
@@ -4847,49 +5193,58 @@ func pure341() -> void:
 
 
 func pure342() -> void:
+	reseed(3141125996)
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.abs", b.abs())
 
 
 func pure343() -> void:
+	reseed(2711476823)
 	var l = rid_from(rl())
 	var r = rid_from(rl())
 	mix("RID < RID", l < r)
 
 
 func pure344() -> void:
+	reseed(1101502367)
 	var b = rid_from(rl())
 	mix("RID.is_valid", b.is_valid())
 
 
 func pure345() -> void:
+	reseed(4011005894)
 	var b = rid_from(rl())
 	mix("RID.get_id", b.get_id())
 
 
 func facade0() -> void:
+	reseed(3535864697)
 	var b = Vector2(nv(), nv()).normalized()
 	mix("Vector2.angle", b.angle())
 
 
 func facade1() -> void:
+	reseed(511070983)
 	var b = Vector2(nv(), nv()).normalized()
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Vector2.angle_to", b.angle_to(a0))
 
 
 func facade2() -> void:
+	reseed(3757248414)
 	var b = Vector2(nv(), nv()).normalized()
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Vector2.angle_to_point", b.angle_to_point(a0))
 
 
 func facade3() -> void:
+	reseed(263996382)
 	var b = Vector2(nv(), nv()).normalized()
 	mix("Vector2.is_normalized", b.is_normalized())
 
 
 func facade4() -> void:
+	reseed(2224206610)
 	var b = Vector2(nv(), nv()).normalized()
 	var a0 = Vector2(nv(), nv()).normalized()
 	var a1 = nv()
@@ -4897,6 +5252,7 @@ func facade4() -> void:
 
 
 func facade5() -> void:
+	reseed(3447707336)
 	var b = Vector2(nv(), nv()).normalized()
 	var a0 = Vector2(nv(), nv()).normalized()
 	var a1 = Vector2(nv(), nv()).normalized()
@@ -4906,6 +5262,7 @@ func facade5() -> void:
 
 
 func facade6() -> void:
+	reseed(148442970)
 	var b = Vector2(nv(), nv()).normalized()
 	var a0 = Vector2(nv(), nv()).normalized()
 	var a1 = Vector2(nv(), nv()).normalized()
@@ -4918,6 +5275,7 @@ func facade6() -> void:
 
 
 func facade7() -> void:
+	reseed(4228098245)
 	var b = Vector2(nv(), nv()).normalized()
 	var a0 = Vector2(nv(), nv()).normalized()
 	var a1 = Vector2(nv(), nv()).normalized()
@@ -4927,6 +5285,7 @@ func facade7() -> void:
 
 
 func facade8() -> void:
+	reseed(3295687099)
 	var b = Vector2(nv(), nv()).normalized()
 	var a0 = Vector2(nv(), nv()).normalized()
 	var a1 = Vector2(nv(), nv()).normalized()
@@ -4936,35 +5295,41 @@ func facade8() -> void:
 
 
 func facade9() -> void:
+	reseed(1355399367)
 	var b = Vector2(nv(), nv()).normalized()
 	var a0 = nv()
 	mix("Vector2.rotated", b.rotated(a0))
 
 
 func facade10() -> void:
+	reseed(4108853243)
 	var b = Vector2(nv(), nv()).normalized()
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Vector2.snapped", b.snapped(a0))
 
 
 func facade11() -> void:
+	reseed(644465703)
 	var b = Vector2(nv(), nv()).normalized()
 	var a0 = nv()
 	mix("Vector2.snappedf", b.snappedf(a0))
 
 
 func facade12() -> void:
+	reseed(544734034)
 	var a0 = nv()
 	mix("Vector2.from_angle", Vector2.from_angle(a0))
 
 
 func facade13() -> void:
+	reseed(892044766)
 	var b = Vector3(nv(), nv(), nv()).normalized()
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Vector3.angle_to", b.angle_to(a0))
 
 
 func facade14() -> void:
+	reseed(1949204089)
 	var b = Vector3(nv(), nv(), nv()).normalized()
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -4972,18 +5337,21 @@ func facade14() -> void:
 
 
 func facade15() -> void:
+	reseed(1250882196)
 	var b = Vector3(nv(), nv(), nv()).normalized()
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Vector3.snapped", b.snapped(a0))
 
 
 func facade16() -> void:
+	reseed(1359508214)
 	var b = Vector3(nv(), nv(), nv()).normalized()
 	var a0 = nv()
 	mix("Vector3.snappedf", b.snappedf(a0))
 
 
 func facade17() -> void:
+	reseed(3672682928)
 	var b = Vector3(nv(), nv(), nv()).normalized()
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = nv()
@@ -4991,6 +5359,7 @@ func facade17() -> void:
 
 
 func facade18() -> void:
+	reseed(3550150277)
 	var b = Vector3(nv(), nv(), nv()).normalized()
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = nv()
@@ -4998,6 +5367,7 @@ func facade18() -> void:
 
 
 func facade19() -> void:
+	reseed(4269953967)
 	var b = Vector3(nv(), nv(), nv()).normalized()
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5007,6 +5377,7 @@ func facade19() -> void:
 
 
 func facade20() -> void:
+	reseed(2204301897)
 	var b = Vector3(nv(), nv(), nv()).normalized()
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5019,6 +5390,7 @@ func facade20() -> void:
 
 
 func facade21() -> void:
+	reseed(2832065180)
 	var b = Vector3(nv(), nv(), nv()).normalized()
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5028,6 +5400,7 @@ func facade21() -> void:
 
 
 func facade22() -> void:
+	reseed(3649097212)
 	var b = Vector3(nv(), nv(), nv()).normalized()
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5037,22 +5410,26 @@ func facade22() -> void:
 
 
 func facade23() -> void:
+	reseed(1853164898)
 	var b = Vector3(nv(), nv(), nv()).normalized()
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Vector3.outer", b.outer(a0))
 
 
 func facade24() -> void:
+	reseed(3655102293)
 	var b = Vector3(nv(), nv(), nv()).normalized()
 	mix("Vector3.octahedron_encode", b.octahedron_encode())
 
 
 func facade25() -> void:
+	reseed(2781365193)
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Vector3.octahedron_decode", Vector3.octahedron_decode(a0))
 
 
 func facade26() -> void:
+	reseed(1889978402)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	var a1 = Vector4(nv(), nv(), nv(), nv())
@@ -5062,6 +5439,7 @@ func facade26() -> void:
 
 
 func facade27() -> void:
+	reseed(2568526592)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	var a1 = Vector4(nv(), nv(), nv(), nv())
@@ -5074,49 +5452,58 @@ func facade27() -> void:
 
 
 func facade28() -> void:
+	reseed(1443952833)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.snapped", b.snapped(a0))
 
 
 func facade29() -> void:
+	reseed(599224037)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector4.snappedf", b.snappedf(a0))
 
 
 func facade30() -> void:
+	reseed(3979569692)
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.is_normalized", b.is_normalized())
 
 
 func facade31() -> void:
+	reseed(1777335079)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.is_normalized", b.is_normalized())
 
 
 func facade32() -> void:
+	reseed(2453509247)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.inverse", b.inverse())
 
 
 func facade33() -> void:
+	reseed(1885161605)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.log", b.log())
 
 
 func facade34() -> void:
+	reseed(2076048220)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.exp", b.exp())
 
 
 func facade35() -> void:
+	reseed(1335312816)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.angle_to", b.angle_to(a0))
 
 
 func facade36() -> void:
+	reseed(2527569475)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a1 = nv()
@@ -5124,6 +5511,7 @@ func facade36() -> void:
 
 
 func facade37() -> void:
+	reseed(2437837594)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a1 = nv()
@@ -5131,6 +5519,7 @@ func facade37() -> void:
 
 
 func facade38() -> void:
+	reseed(4164680505)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a1 = Quaternion(nv(), nv(), nv(), nv()).normalized()
@@ -5140,6 +5529,7 @@ func facade38() -> void:
 
 
 func facade39() -> void:
+	reseed(215503487)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a1 = Quaternion(nv(), nv(), nv(), nv()).normalized()
@@ -5152,43 +5542,51 @@ func facade39() -> void:
 
 
 func facade40() -> void:
+	reseed(1943237525)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a0 = rs()
 	mix("Quaternion.get_euler", b.get_euler(a0))
 
 
 func facade41() -> void:
+	reseed(766006827)
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Quaternion.from_euler", Quaternion.from_euler(a0))
 
 
 func facade42() -> void:
+	reseed(2958602301)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.get_axis", b.get_axis())
 
 
 func facade43() -> void:
+	reseed(3847186903)
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.get_angle", b.get_angle())
 
 
 func facade44() -> void:
+	reseed(1263822452)
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	mix("Plane.normalized", b.normalized())
 
 
 func facade45() -> void:
+	reseed(3128367299)
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var a0 = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	mix("Plane.is_equal_approx", b.is_equal_approx(a0))
 
 
 func facade46() -> void:
+	reseed(1069321945)
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	mix("Plane.is_finite", b.is_finite())
 
 
 func facade47() -> void:
+	reseed(1747510588)
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var a0 = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var a1 = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
@@ -5196,6 +5594,7 @@ func facade47() -> void:
 
 
 func facade48() -> void:
+	reseed(3933953357)
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5203,87 +5602,103 @@ func facade48() -> void:
 
 
 func facade49() -> void:
+	reseed(454345663)
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.is_finite", b.is_finite())
 
 
 func facade50() -> void:
+	reseed(3059684661)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.abs", b.abs())
 
 
 func facade51() -> void:
+	reseed(709386439)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.is_finite", b.is_finite())
 
 
 func facade52() -> void:
+	reseed(69938452)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	mix("AABB.intersects_plane", b.intersects_plane(a0))
 
 
 func facade53() -> void:
+	reseed(1669535094)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.intersection", b.intersection(a0))
 
 
 func facade54() -> void:
+	reseed(3123612547)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("AABB.expand", b.expand(a0))
 
 
 func facade55() -> void:
+	reseed(1644480656)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = nv()
 	mix("AABB.grow", b.grow(a0))
 
 
 func facade56() -> void:
+	reseed(753136429)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("AABB.get_support", b.get_support(a0))
 
 
 func facade57() -> void:
+	reseed(2549248724)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.get_longest_axis", b.get_longest_axis())
 
 
 func facade58() -> void:
+	reseed(3756415047)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.get_longest_axis_index", b.get_longest_axis_index())
 
 
 func facade59() -> void:
+	reseed(565661792)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.get_longest_axis_size", b.get_longest_axis_size())
 
 
 func facade60() -> void:
+	reseed(430104980)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.get_shortest_axis", b.get_shortest_axis())
 
 
 func facade61() -> void:
+	reseed(2072013831)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.get_shortest_axis_index", b.get_shortest_axis_index())
 
 
 func facade62() -> void:
+	reseed(239093280)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.get_shortest_axis_size", b.get_shortest_axis_size())
 
 
 func facade63() -> void:
+	reseed(2208861699)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = rs()
 	mix("AABB.get_endpoint", b.get_endpoint(a0))
 
 
 func facade64() -> void:
+	reseed(3783579363)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5291,6 +5706,7 @@ func facade64() -> void:
 
 
 func facade65() -> void:
+	reseed(3646249822)
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5298,6 +5714,7 @@ func facade65() -> void:
 
 
 func facade66() -> void:
+	reseed(2804666462)
 	var b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = nv()
@@ -5305,36 +5722,42 @@ func facade66() -> void:
 
 
 func facade67() -> void:
+	reseed(3393633703)
 	var b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Basis.scaled_local", b.scaled_local(a0))
 
 
 func facade68() -> void:
+	reseed(274287925)
 	var b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
 	var a0 = rs()
 	mix("Basis.get_euler", b.get_euler(a0))
 
 
 func facade69() -> void:
+	reseed(1844290142)
 	var b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Basis.tdotx", b.tdotx(a0))
 
 
 func facade70() -> void:
+	reseed(1861067761)
 	var b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Basis.tdoty", b.tdoty(a0))
 
 
 func facade71() -> void:
+	reseed(1810734904)
 	var b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Basis.tdotz", b.tdotz(a0))
 
 
 func facade72() -> void:
+	reseed(3564409251)
 	var b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
 	var a0 = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
 	var a1 = nv()
@@ -5342,21 +5765,25 @@ func facade72() -> void:
 
 
 func facade73() -> void:
+	reseed(3503827781)
 	var b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
 	mix("Basis.is_conformal", b.is_conformal())
 
 
 func facade74() -> void:
+	reseed(3702803793)
 	var b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
 	mix("Basis.is_finite", b.is_finite())
 
 
 func facade75() -> void:
+	reseed(2210169423)
 	var b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
 	mix("Basis.is_orthonormal", b.is_orthonormal())
 
 
 func facade76() -> void:
+	reseed(1944853062)
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = Vector3(nv(), nv(), nv()).normalized()
 	var a2 = rb()
@@ -5364,17 +5791,20 @@ func facade76() -> void:
 
 
 func facade77() -> void:
+	reseed(3309767200)
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Basis.from_scale", Basis.from_scale(a0))
 
 
 func facade78() -> void:
+	reseed(1434415051)
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = rs()
 	mix("Basis.from_euler", Basis.from_euler(a0, a1))
 
 
 func facade79() -> void:
+	reseed(2519602283)
 	var b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = nv()
@@ -5382,6 +5812,7 @@ func facade79() -> void:
 
 
 func facade80() -> void:
+	reseed(3344312871)
 	var b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = nv()
@@ -5389,18 +5820,21 @@ func facade80() -> void:
 
 
 func facade81() -> void:
+	reseed(3367845720)
 	var b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Transform3D.scaled", b.scaled(a0))
 
 
 func facade82() -> void:
+	reseed(1661445704)
 	var b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Transform3D.scaled_local", b.scaled_local(a0))
 
 
 func facade83() -> void:
+	reseed(2644076473)
 	var b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	var a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -5409,6 +5843,7 @@ func facade83() -> void:
 
 
 func facade84() -> void:
+	reseed(3907275442)
 	var b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
 	var a0 = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
 	var a1 = nv()
@@ -5416,65 +5851,77 @@ func facade84() -> void:
 
 
 func facade85() -> void:
+	reseed(3731026072)
 	var b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
 	mix("Transform3D.is_finite", b.is_finite())
 
 
 func facade86() -> void:
+	reseed(3075929945)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	mix("Transform2D.affine_inverse", b.affine_inverse())
 
 
 func facade87() -> void:
+	reseed(812583482)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	mix("Transform2D.get_rotation", b.get_rotation())
 
 
 func facade88() -> void:
+	reseed(4001630390)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	mix("Transform2D.get_scale", b.get_scale())
 
 
 func facade89() -> void:
+	reseed(452849462)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	mix("Transform2D.get_skew", b.get_skew())
 
 
 func facade90() -> void:
+	reseed(14201020)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	mix("Transform2D.orthonormalized", b.orthonormalized())
 
 
 func facade91() -> void:
+	reseed(533272046)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	var a0 = nv()
 	mix("Transform2D.rotated", b.rotated(a0))
 
 
 func facade92() -> void:
+	reseed(1597501170)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	var a0 = nv()
 	mix("Transform2D.rotated_local", b.rotated_local(a0))
 
 
 func facade93() -> void:
+	reseed(935937243)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Transform2D.scaled", b.scaled(a0))
 
 
 func facade94() -> void:
+	reseed(2282704631)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Transform2D.scaled_local", b.scaled_local(a0))
 
 
 func facade95() -> void:
+	reseed(205337388)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	mix("Transform2D.determinant", b.determinant())
 
 
 func facade96() -> void:
+	reseed(3840743509)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	var a0 = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	var a1 = nv()
@@ -5482,32 +5929,38 @@ func facade96() -> void:
 
 
 func facade97() -> void:
+	reseed(4113459573)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	mix("Transform2D.is_conformal", b.is_conformal())
 
 
 func facade98() -> void:
+	reseed(279613217)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	mix("Transform2D.is_finite", b.is_finite())
 
 
 func facade99() -> void:
+	reseed(2997231894)
 	var b = rotation_2d(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Transform2D.looking_at", b.looking_at(a0))
 
 
 func facade100() -> void:
+	reseed(2037519245)
 	var a0 = rb()
 	mix("Projection.create_depth_correction", Projection.create_depth_correction(a0))
 
 
 func facade101() -> void:
+	reseed(3877886108)
 	var a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Projection.create_light_atlas_rect", Projection.create_light_atlas_rect(a0))
 
 
 func facade102() -> void:
+	reseed(70092567)
 	var a0 = nv()
 	var a1 = nv()
 	var a2 = nv()
@@ -5517,6 +5970,7 @@ func facade102() -> void:
 
 
 func facade103() -> void:
+	reseed(1924306457)
 	var a0 = nv()
 	var a1 = nv()
 	var a2 = nv()
@@ -5529,6 +5983,7 @@ func facade103() -> void:
 
 
 func facade104() -> void:
+	reseed(3561263624)
 	var a0 = rs()
 	var a1 = nv()
 	var a2 = nv()
@@ -5541,6 +5996,7 @@ func facade104() -> void:
 
 
 func facade105() -> void:
+	reseed(93203008)
 	var a0 = nv()
 	var a1 = nv()
 	var a2 = nv()
@@ -5551,6 +6007,7 @@ func facade105() -> void:
 
 
 func facade106() -> void:
+	reseed(370914489)
 	var a0 = nv()
 	var a1 = nv()
 	var a2 = nv()
@@ -5560,6 +6017,7 @@ func facade106() -> void:
 
 
 func facade107() -> void:
+	reseed(1296596211)
 	var a0 = nv()
 	var a1 = nv()
 	var a2 = nv()
@@ -5570,6 +6028,7 @@ func facade107() -> void:
 
 
 func facade108() -> void:
+	reseed(3680882068)
 	var a0 = nv()
 	var a1 = nv()
 	var a2 = Vector2(nv(), nv()).normalized()
@@ -5580,186 +6039,221 @@ func facade108() -> void:
 
 
 func facade109() -> void:
+	reseed(906607897)
 	var a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("Projection.create_fit_aabb", Projection.create_fit_aabb(a0))
 
 
 func facade110() -> void:
+	reseed(2124415541)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Projection.determinant", b.determinant())
 
 
 func facade111() -> void:
+	reseed(2748417366)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	var a0 = nv()
 	mix("Projection.perspective_znear_adjusted", b.perspective_znear_adjusted(a0))
 
 
 func facade112() -> void:
+	reseed(1300385531)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	var a0 = rs()
 	mix("Projection.get_projection_plane", b.get_projection_plane(a0))
 
 
 func facade113() -> void:
+	reseed(3005724466)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Projection.flipped_y", b.flipped_y())
 
 
 func facade114() -> void:
+	reseed(352093019)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Projection.jitter_offseted", b.jitter_offseted(a0))
 
 
 func facade115() -> void:
+	reseed(1735510121)
 	var a0 = nv()
 	var a1 = nv()
 	mix("Projection.get_fovy", Projection.get_fovy(a0, a1))
 
 
 func facade116() -> void:
+	reseed(4257733333)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Projection.get_z_far", b.get_z_far())
 
 
 func facade117() -> void:
+	reseed(1010164118)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Projection.get_z_near", b.get_z_near())
 
 
 func facade118() -> void:
+	reseed(2277952615)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Projection.get_aspect", b.get_aspect())
 
 
 func facade119() -> void:
+	reseed(3088858090)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Projection.get_fov", b.get_fov())
 
 
 func facade120() -> void:
+	reseed(2012095392)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Projection.is_orthogonal", b.is_orthogonal())
 
 
 func facade121() -> void:
+	reseed(3168976409)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Projection.get_viewport_half_extents", b.get_viewport_half_extents())
 
 
 func facade122() -> void:
+	reseed(3181165997)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Projection.get_far_plane_half_extents", b.get_far_plane_half_extents())
 
 
 func facade123() -> void:
+	reseed(3747686722)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Projection.inverse", b.inverse())
 
 
 func facade124() -> void:
+	reseed(462047092)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	var a0 = rs()
 	mix("Projection.get_pixels_per_meter", b.get_pixels_per_meter(a0))
 
 
 func facade125() -> void:
+	reseed(1852854856)
 	var b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Projection.get_lod_multiplier", b.get_lod_multiplier())
 
 
 func facade126() -> void:
+	reseed(727379219)
 	var b = Color(nv(), nv(), nv(), nv())
 	mix("Color.to_argb32", b.to_argb32())
 
 
 func facade127() -> void:
+	reseed(263067091)
 	var b = Color(nv(), nv(), nv(), nv())
 	mix("Color.to_abgr32", b.to_abgr32())
 
 
 func facade128() -> void:
+	reseed(1736382735)
 	var b = Color(nv(), nv(), nv(), nv())
 	mix("Color.to_rgba32", b.to_rgba32())
 
 
 func facade129() -> void:
+	reseed(3143797640)
 	var b = Color(nv(), nv(), nv(), nv())
 	mix("Color.to_argb64", b.to_argb64())
 
 
 func facade130() -> void:
+	reseed(2679485512)
 	var b = Color(nv(), nv(), nv(), nv())
 	mix("Color.to_abgr64", b.to_abgr64())
 
 
 func facade131() -> void:
+	reseed(4017300276)
 	var b = Color(nv(), nv(), nv(), nv())
 	mix("Color.to_rgba64", b.to_rgba64())
 
 
 func facade132() -> void:
+	reseed(3190090364)
 	var b = Color(nv(), nv(), nv(), nv())
 	var a0 = nv()
 	mix("Color.lightened", b.lightened(a0))
 
 
 func facade133() -> void:
+	reseed(311710820)
 	var b = Color(nv(), nv(), nv(), nv())
 	var a0 = nv()
 	mix("Color.darkened", b.darkened(a0))
 
 
 func facade134() -> void:
+	reseed(2800181945)
 	var b = Color(nv(), nv(), nv(), nv())
 	var a0 = Color(nv(), nv(), nv(), nv())
 	mix("Color.blend", b.blend(a0))
 
 
 func facade135() -> void:
+	reseed(239384130)
 	var b = Color(nv(), nv(), nv(), nv())
 	mix("Color.srgb_to_linear", b.srgb_to_linear())
 
 
 func facade136() -> void:
+	reseed(378897958)
 	var b = Color(nv(), nv(), nv(), nv())
 	mix("Color.linear_to_srgb", b.linear_to_srgb())
 
 
 func facade137() -> void:
+	reseed(1081698678)
 	var b = Color(nv(), nv(), nv(), nv())
 	var a0 = Color(nv(), nv(), nv(), nv())
 	mix("Color.is_equal_approx", b.is_equal_approx(a0))
 
 
 func facade138() -> void:
+	reseed(2545083323)
 	var a0 = rs()
 	mix("Color.hex", Color.hex(a0))
 
 
 func facade139() -> void:
+	reseed(4192875769)
 	var a0 = rs()
 	mix("Color.hex64", Color.hex64(a0))
 
 
 func facade140() -> void:
+	reseed(1163174751)
 	var a0 = "#ff8000"
 	mix("Color.html", Color.html(a0))
 
 
 func facade141() -> void:
+	reseed(502873281)
 	var a0 = "#ff8000"
 	mix("Color.html_is_valid", Color.html_is_valid(a0))
 
 
 func facade142() -> void:
+	reseed(1121670814)
 	var a0 = "#ff8000"
 	var a1 = Color(nv(), nv(), nv(), nv())
 	mix("Color.from_string", Color.from_string(a0, a1))
 
 
 func facade143() -> void:
+	reseed(4073135496)
 	var a0 = nv()
 	var a1 = nv()
 	var a2 = nv()
@@ -5768,6 +6262,7 @@ func facade143() -> void:
 
 
 func facade144() -> void:
+	reseed(1561100125)
 	var a0 = nv()
 	var a1 = nv()
 	var a2 = nv()
@@ -5776,11 +6271,13 @@ func facade144() -> void:
 
 
 func facade145() -> void:
+	reseed(1227120989)
 	var a0 = rs()
 	mix("Color.from_rgbe9995", Color.from_rgbe9995(a0))
 
 
 func facade146() -> void:
+	reseed(1776734979)
 	var a0 = rs()
 	var a1 = rs()
 	var a2 = rs()
@@ -5789,42 +6286,49 @@ func facade146() -> void:
 
 
 func facade147() -> void:
+	reseed(2858535500)
 	var b = Vector2i(ri(), ri())
 	var a0 = Vector2i(ri(), ri())
 	mix("Vector2i.snapped", b.snapped(a0))
 
 
 func facade148() -> void:
+	reseed(1559312447)
 	var b = Vector2i(ri(), ri())
 	var a0 = rs()
 	mix("Vector2i.snappedi", b.snappedi(a0))
 
 
 func facade149() -> void:
+	reseed(3327261133)
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.snapped", b.snapped(a0))
 
 
 func facade150() -> void:
+	reseed(3607887148)
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = rs()
 	mix("Vector3i.snappedi", b.snappedi(a0))
 
 
 func facade151() -> void:
+	reseed(3177630110)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.snapped", b.snapped(a0))
 
 
 func facade152() -> void:
+	reseed(533721045)
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = rs()
 	mix("Vector4i.snappedi", b.snappedi(a0))
 
 
 func edge_finite243() -> void:
+	reseed(3983162445)
 	var b = Color(nvf(), nvf(), nvf(), nvf())
 	var a0 = rb()
 	mix("Color.to_html", b.to_html(a0))
@@ -5835,6 +6339,15 @@ func next_random() -> int:
 	rng_state = rng_state ^ (rng_state >> 17)
 	rng_state = rng_state ^ ((rng_state << 5) & 0xFFFFFFFF)
 	return rng_state
+
+
+# Every entry draws from a stream of its own, so a new entry changes no other entry's inputs.
+func reseed(entry: int) -> void:
+	rng_state = (entry ^ (input_round * 2654435761)) & 0xFFFFFFFF
+	if rng_state == 0:
+		rng_state = 2463534242
+	next_random()
+	next_random()
 
 
 func nv() -> float:
