@@ -197,6 +197,7 @@ python3 scripts/gate_red_runs.py --list            # the cases
 python3 scripts/gate_red_runs.py --only doc        # cases whose gate name contains "doc"
 python3 scripts/gate_red_runs.py --strict          # a skipped case fails (implied under CI)
 python3 scripts/gate_red_runs.py --slow            # also the Godot and Gradle smokes
+python3 scripts/gate_red_runs.py --deadline-minutes 65  # stop in time and name the cases not run
 ```
 
 Some cases edit exact sentences in the docs. When you change a page, grep the

@@ -185,14 +185,14 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/export_game_smoke.sh:153` | `buildNativeBootstrap syncExampleAddonJar jlinkGameRuntime >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/export_game_smoke.sh:298` | `system_root="$(cygpath -u "${SYSTEMROOT:-C:\\Windows}" 2>/dev/null \|\| printf '/c/Windows')"` | justified: the fallback is the standard Windows root; a wrong PATH makes the game fail to launch, which is the verdict. |
 | `scripts/export_game_smoke.sh:350` | `export_dir_native="$(cygpath -m "$export_dir" 2>/dev/null \|\| printf '%s' "$export_dir")"` | justified: without cygpath the path is already native; a wrong one fails the launch below. |
-| `scripts/gate_red_runs.py:173` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/gate_red_runs.py:193` | `except OSError:` | justified: a directory a gate filled meanwhile is the gate's own output; it is not ours to delete |
-| `scripts/gate_red_runs.py:212` | `except subprocess.TimeoutExpired:` | justified: reported as exit 124 with the partial output; the case then fails |
-| `scripts/gate_red_runs.py:215` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
-| `scripts/gate_red_runs.py:257` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
-| `scripts/gate_red_runs.py:259` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1693` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:1777` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:180` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:200` | `except OSError:` | justified: a directory a gate filled meanwhile is the gate's own output; it is not ours to delete |
+| `scripts/gate_red_runs.py:220` | `except subprocess.TimeoutExpired:` | justified: reported as exit 124 with the partial output; the case then fails |
+| `scripts/gate_red_runs.py:223` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
+| `scripts/gate_red_runs.py:265` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
+| `scripts/gate_red_runs.py:267` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
+| `scripts/gate_red_runs.py:1702` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1805` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:682` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:725` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -471,6 +471,11 @@ every pull request that touches `scripts/` or `.github/workflows/` (gated by the
 parallel shards (`--shard 1/3` … `3/3`, every third case; about 10 minutes each).
 `gate-red-runs-nightly.yml` runs `--slow` nightly; it installs the Android export template and Godot's Android settings
 (the runner's SDK, a debug keystore) so the export guard's real Android exports run there too. It is not part of `local_ci.sh` (it takes minutes).
+Its twelve shards are sized for the slowest runner: hosted runners differ by a factor of 1.9, and the whole `--slow` set
+takes about 7.5 hours of a slow one. Each case prints its time (`took 123.4s`), so `gh run view <id> --log` is the
+measurement when a shard grows; add shards to the matrix then, the job count is the N of `--shard K/N`. With
+`--deadline-minutes` a shard that runs out of time ends itself before the job's limit: its failures so far, the case it
+stopped on and the cases it never ran are in the log and in an annotation, where a cancelled job would show none of them.
 
 ### 2a. `scripts/gate_red_runs.py` (exercised on this branch)
 

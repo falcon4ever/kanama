@@ -24,14 +24,16 @@ env:
 
 jobs:
   slow:
-    # Sharded like ci.yml's fast set: the whole --slow set outgrew one 90-minute job (cancelled 2026-10-18..20).
-    name: gate red runs (--slow) (${{ matrix.shard }}/4)
+    # Sharded like ci.yml's fast set. The whole --slow set takes about 7.5 hours of a slow runner and these runners
+    # differ by a factor of 1.9, so the job count is set for the slowest: about 45 minutes a shard there. To grow it,
+    # add to the matrix; the job count is the N of --shard K/N.
+    name: gate red runs (--slow) (${{ matrix.shard }}/${{ strategy.job-total }})
     runs-on: ubuntu-24.04
     timeout-minutes: 75
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -99,6 +101,22 @@ jobs:
           } >"$settings"
           cat "$settings"
 
+      # Maven Central has answered 404 for files it holds (2026-11-04), and Gradle then remembers that jar as missing
+      # for a day without asking again, so one bad minute failed every later Gradle case of the shard. The build the
+      # smokes start with is fetched here, where a retry can ask again. Gradle's build cache hands the cases its output.
+      - name: Fetch the build's dependencies
+        timeout-minutes: 12
+        shell: bash
+        run: |
+          refresh=""
+          for attempt in 1 2 3; do
+            ./gradlew -q syncExampleAddonJar $refresh && exit 0
+            echo "::warning::the build failed (attempt $attempt); asking the repositories again in a minute"
+            refresh="--refresh-dependencies"
+            sleep 60
+          done
+          exit 1
+
       - name: Run every gate red run, slow ones included
         shell: bash
         env:
@@ -107,5 +125,7 @@ jobs:
           godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
           chmod +x "$godot_bin"
           # sync_kdoc needs a Godot docs checkout and the iOS kit smokes a Mac with Xcode, which this runner does not
-          # have: skipped by name.
-          KANAMA_GODOT_BIN="$godot_bin" python3 scripts/gate_red_runs.py --slow --strict --allow-skip "sync_kdoc,smoke.sh --ios" --shard ${{ matrix.shard }}/4
+          # have: skipped by name. The deadline is the job's 75 minutes less the 13 the steps above may take: a slow
+          # shard then ends itself, with its failures and the cases it never reached in the log and an annotation.
+          KANAMA_GODOT_BIN="$godot_bin" python3 scripts/gate_red_runs.py --slow --strict --allow-skip "sync_kdoc,smoke.sh --ios" \
+            --deadline-minutes 62 --shard ${{ matrix.shard }}/${{ strategy.job-total }}

@@ -23,11 +23,17 @@ Usage:
     python3 scripts/gate_red_runs.py --slow           # also the Godot/Gradle smokes (needs KANAMA_GODOT_BIN)
     python3 scripts/gate_red_runs.py --list
     python3 scripts/gate_red_runs.py --markdown out.md   # also write the README-gates.md table rows
+    python3 scripts/gate_red_runs.py --deadline-minutes 65   # stop in time, and name the case it stopped on
 
 `--strict` is implied when `CI` is true/1/yes. `--allow-skip NAME[,NAME]` names the cases a runner
 may skip on purpose (CI has no Godot docs checkout: `--allow-skip sync_kdoc`). A case is SKIPPED when
 an environment variable it needs is unset (`requires_env`) or when its gate's baseline says it could
 not run the mutated row (`skip_when`, e.g. no Android export template): never a vacuous red run.
+
+Each case prints its time, and a failure as soon as it happens. A CI job killed at its time limit prints
+nothing more (the python process gets no signal it can answer), so `--deadline-minutes` ends the run from
+inside, a little before that limit: the failures so far, the case it stopped on and the cases it never ran
+reach the log and, on GitHub Actions, an annotation.
 
 Gates that need a device, a browser, a Godot binary or a long export are NOT all here: they carry
 their own `--self-test` or red-run recipe, documented in scripts/README-gates.md.
@@ -50,6 +56,7 @@ from pathlib import Path
 
 SRC = Path(__file__).resolve().parents[1]  # the dev checkout; never mutated
 WORK = SRC  # the throwaway checkout every case runs in (set by main())
+DEADLINE: float | None = None  # the time.monotonic() at which --deadline-minutes ends the run (set by main())
 PY = sys.executable
 
 
@@ -201,13 +208,14 @@ def run(case_: Case) -> tuple[int, str, float]:
     env.update(case_.env)
     # A gate that skips under CI would read as red here for the wrong reason; the harness decides about skips itself.
     env.pop("CI", None)
+    timeout = case_.timeout if DEADLINE is None else min(case_.timeout, max(DEADLINE - time.monotonic(), 0))
     started = time.monotonic()
     proc = subprocess.Popen(
         case_.cmd, cwd=WORK, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
         start_new_session=True,  # its own process group, so a timeout can kill everything the gate spawned
     )
     try:
-        out, _ = proc.communicate(timeout=case_.timeout)
+        out, _ = proc.communicate(timeout=timeout)
         return proc.returncode, out, time.monotonic() - started
     except subprocess.TimeoutExpired:  # justified: reported as exit 124 with the partial output; the case then fails
         try:
@@ -215,7 +223,7 @@ def run(case_: Case) -> tuple[int, str, float]:
         except ProcessLookupError:  # justified: the group already exited between the timeout and the kill
             pass
         out, _ = proc.communicate()
-        return 124, f"timeout after {case_.timeout}s (process group killed)\n{out or ''}", time.monotonic() - started
+        return 124, f"timeout after {timeout:.0f}s (process group killed)\n{out or ''}", time.monotonic() - started
 
 
 def red_excerpt(output: str, expect: str) -> str:
@@ -1673,7 +1681,7 @@ case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selft
 #CASES-END
 
 def main() -> int:
-    global WORK
+    global DEADLINE, WORK
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--only", help="run only the cases whose gate name contains this text")
     parser.add_argument("--slow", action="store_true", help="also run the cases that drive Godot and Gradle (minutes each)")
@@ -1682,6 +1690,7 @@ def main() -> int:
     parser.add_argument("--list", action="store_true")
     parser.add_argument("--markdown", type=Path, help="write the table rows to this file")
     parser.add_argument("--shard", help="K/N: run every N-th selected case starting at the K-th (CI runs N shards in parallel)")
+    parser.add_argument("--deadline-minutes", type=float, help="stop after this many minutes: the unrun cases are named and fail the run")
     args = parser.parse_args()
     strict = args.strict or os.environ.get("CI", "").strip().lower() in ("true", "1", "yes")
     allowed_skips = [s.strip() for s in args.allow_skip.split(",") if s.strip()]
@@ -1710,6 +1719,8 @@ def main() -> int:
     for signum in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT):
         signal.signal(signum, on_signal)
 
+    if args.deadline_minutes is not None:
+        DEADLINE = time.monotonic() + args.deadline_minutes * 60
     before = git_status()
     tmp, WORK = make_workspace()
     try:
@@ -1740,69 +1751,85 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
     failures: list[str] = []
     rows: list[str] = []
     skipped: list[str] = []
-    for c in cases:
+    for index, c in enumerate(cases):
+        if DEADLINE is not None and time.monotonic() >= DEADLINE:
+            not_run = [other.gate for other in cases[index:]]
+            stopped = f"the --deadline-minutes budget ended during {cases[index - 1].gate}" if index else "the --deadline-minutes budget was spent before the first case"
+            failures.append(f"{stopped}; {len(not_run)} of {len(cases)} case(s) not run: {', '.join(not_run)}")
+            print(f"   {failures[-1]}", flush=True)
+            if os.environ.get("GITHUB_ACTIONS"):
+                print(f"::error title=gate_red_runs deadline::{failures[-1]}", flush=True)
+            break
         print(f"== {c.gate}: {c.how}", flush=True)
-
-        def skip(reason: str) -> None:
-            print(f"SKIP: {c.gate}: {reason}", flush=True)
-            skipped.append(c.gate)
-            cell = reason.replace("|", "\\|")
-            rows.append(f"| `{c.gate}` | {c.how} | SKIPPED: {cell} | - |")
-            if strict and not any(a in c.gate for a in allowed_skips):
-                failures.append(f"{c.gate}: SKIPPED ({reason}) in a strict run; provide it, or pass --allow-skip")
-
-        missing_env = [name for name in filter(None, c.requires_env.split(","))
-                       if not Path(os.environ.get(name, "/nonexistent")).exists()]
-        if missing_env:
-            skip(f"needs {' and '.join(missing_env)} to name an existing path")
-            continue
-        for pre in c.pre:
-            pre_rc, pre_out, _ = run(Case(c.gate, pre, [], "", "", env=c.env, timeout=c.timeout))
-            if pre_rc != 0:
-                failures.append(f"{c.gate}: prerequisite {pre} failed (exit {pre_rc}):\n{pre_out[-600:]}")
-        rc, out, _secs = run(c)
-        if rc != 0:
-            failures.append(f"{c.gate}: not green before the mutation (exit {rc}):\n{out[-800:]}")
-            print(f"   baseline NOT green (exit {rc}); skipped", flush=True)
-            continue
-        if c.skip_when and c.skip_when in out:
-            skip(next(line.strip() for line in out.splitlines() if c.skip_when in line))
-            continue
-        try:
-            # Resolved before anything is mutated: a callable reads the values it needs from the clean tree.
-            mutations = c.mutations() if callable(c.mutations) else c.mutations
-            expect = c.expect() if callable(c.expect) else c.expect
-            with Mutator(mutations):
-                red_rc, red_out, red_secs = run(c)
-        except UnappliableMutation as error:
-            failures.append(f"{c.gate}: {error}")
-            print(f"   UNAPPLIABLE: {error}", flush=True)
-            rows.append(f"| `{c.gate}` | {c.how} | UNPROVEN | - |")
-            continue
-        green_rc, green_out, _ = run(c)
-        alternatives = (expect,) if isinstance(expect, str) else expect
-        matched = next((text for text in alternatives if text in red_out), None)
-        ok = True
-        if red_rc == 0:
-            failures.append(f"{c.gate}: STAYED GREEN after the mutation ({c.how}); the gate does not catch it")
-            ok = False
-        elif matched is None:
-            failures.append(
-                f"{c.gate}: failed (exit {red_rc}) but without the expected text {expect!r}:\n{red_out[-800:]}"
-            )
-            ok = False
-        if green_rc != 0:
-            failures.append(f"{c.gate}: NOT green after the revert (exit {green_rc}):\n{green_out[-800:]}")
-            ok = False
-        excerpt = red_excerpt(red_out, matched or alternatives[0]).replace("|", "\\|")
-        print(f"   red   exit {red_rc} in {red_secs:.1f}s: {excerpt}", flush=True)
-        print(f"   green after revert: exit {green_rc}", flush=True)
-        rows.append(
-            f"| `{c.gate}` | {c.how} | `{excerpt}` | {'green' if green_rc == 0 else 'NOT GREEN'} |"
-            if ok
-            else f"| `{c.gate}` | {c.how} | UNPROVEN | - |"
-        )
+        started = time.monotonic()
+        failed_before = len(failures)
+        run_case(c, strict, allowed_skips, failures, rows, skipped)
+        for failure in failures[failed_before:]:
+            print(f"   FAIL: {failure.splitlines()[0]}", flush=True)
+        print(f"   took {time.monotonic() - started:.1f}s", flush=True)
     return failures, rows, skipped
+
+
+def run_case(c: Case, strict: bool, allowed_skips: list[str], failures: list[str], rows: list[str], skipped: list[str]) -> None:
+    def skip(reason: str) -> None:
+        print(f"SKIP: {c.gate}: {reason}", flush=True)
+        skipped.append(c.gate)
+        cell = reason.replace("|", "\\|")
+        rows.append(f"| `{c.gate}` | {c.how} | SKIPPED: {cell} | - |")
+        if strict and not any(a in c.gate for a in allowed_skips):
+            failures.append(f"{c.gate}: SKIPPED ({reason}) in a strict run; provide it, or pass --allow-skip")
+
+    missing_env = [name for name in filter(None, c.requires_env.split(","))
+                   if not Path(os.environ.get(name, "/nonexistent")).exists()]
+    if missing_env:
+        skip(f"needs {' and '.join(missing_env)} to name an existing path")
+        return
+    for pre in c.pre:
+        pre_rc, pre_out, _ = run(Case(c.gate, pre, [], "", "", env=c.env, timeout=c.timeout))
+        if pre_rc != 0:
+            failures.append(f"{c.gate}: prerequisite {pre} failed (exit {pre_rc}):\n{pre_out[-600:]}")
+    rc, out, _secs = run(c)
+    if rc != 0:
+        failures.append(f"{c.gate}: not green before the mutation (exit {rc}):\n{out[-800:]}")
+        print(f"   baseline NOT green (exit {rc}); skipped", flush=True)
+        return
+    if c.skip_when and c.skip_when in out:
+        skip(next(line.strip() for line in out.splitlines() if c.skip_when in line))
+        return
+    try:
+        # Resolved before anything is mutated: a callable reads the values it needs from the clean tree.
+        mutations = c.mutations() if callable(c.mutations) else c.mutations
+        expect = c.expect() if callable(c.expect) else c.expect
+        with Mutator(mutations):
+            red_rc, red_out, red_secs = run(c)
+    except UnappliableMutation as error:
+        failures.append(f"{c.gate}: {error}")
+        print(f"   UNAPPLIABLE: {error}", flush=True)
+        rows.append(f"| `{c.gate}` | {c.how} | UNPROVEN | - |")
+        return
+    green_rc, green_out, _ = run(c)
+    alternatives = (expect,) if isinstance(expect, str) else expect
+    matched = next((text for text in alternatives if text in red_out), None)
+    ok = True
+    if red_rc == 0:
+        failures.append(f"{c.gate}: STAYED GREEN after the mutation ({c.how}); the gate does not catch it")
+        ok = False
+    elif matched is None:
+        failures.append(
+            f"{c.gate}: failed (exit {red_rc}) but without the expected text {expect!r}:\n{red_out[-800:]}"
+        )
+        ok = False
+    if green_rc != 0:
+        failures.append(f"{c.gate}: NOT green after the revert (exit {green_rc}):\n{green_out[-800:]}")
+        ok = False
+    excerpt = red_excerpt(red_out, matched or alternatives[0]).replace("|", "\\|")
+    print(f"   red   exit {red_rc} in {red_secs:.1f}s: {excerpt}", flush=True)
+    print(f"   green after revert: exit {green_rc}", flush=True)
+    rows.append(
+        f"| `{c.gate}` | {c.how} | `{excerpt}` | {'green' if green_rc == 0 else 'NOT GREEN'} |"
+        if ok
+        else f"| `{c.gate}` | {c.how} | UNPROVEN | - |"
+    )
 
 
 if __name__ == "__main__":
